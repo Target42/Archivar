@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v2004 rel. 3 U (http://www.xmlspy.com) by John Doe (Blaupunkt GmbH) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="Protocol">
+		<xs:annotation>
+			<xs:documentation>Comment describing your root element</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Chapter" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Chapter">
+		<xs:complexType>
+			<xs:attribute name="id" type="xs:integer"/>
+			<xs:attribute name="titel" type="xs:string"/>
+			<xs:attribute name="nr" type="xs:integer"/>
+			<xs:attribute name="gr_id" type="xs:integer"/>
+			<xs:attribute name="gr_short" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

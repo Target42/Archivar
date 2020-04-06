@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v2004 rel. 3 U (http://www.xmlspy.com) by John Doe (Blaupunkt GmbH) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="Chapter">
+		<xs:annotation>
+			<xs:documentation>Comment describing your root element</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="top" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="Rem"/>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:integer"/>
+			<xs:attribute name="gr_id" type="xs:integer"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="top">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Rem"/>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:integer"/>
+			<xs:attribute name="pid" type="xs:integer"/>
+			<xs:attribute name="titel" type="xs:string"/>
+			<xs:attribute name="numbering" type="xs:boolean"/>
+			<xs:attribute name="nr" type="xs:integer"/>
+			<xs:attribute name="taid" type="xs:integer"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Rem"/>
+</xs:schema>

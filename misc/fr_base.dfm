@@ -1,0 +1,50 @@
+object BaseFrame: TBaseFrame
+  Left = 0
+  Top = 0
+  Width = 320
+  Height = 60
+  Align = alBottom
+  AutoSize = True
+  TabOrder = 0
+  object StatusBar1: TStatusBar
+    Left = 0
+    Top = 41
+    Width = 320
+    Height = 19
+    Panels = <>
+  end
+  object Panel1: TPanel
+    Left = 0
+    Top = 0
+    Width = 320
+    Height = 41
+    Align = alBottom
+    BevelOuter = bvNone
+    Caption = 'Panel1'
+    ShowCaption = False
+    TabOrder = 1
+    ExplicitTop = -6
+    DesignSize = (
+      320
+      41)
+    object AbortBtn: TBitBtn
+      Left = 16
+      Top = 8
+      Width = 75
+      Height = 25
+      Kind = bkAbort
+      NumGlyphs = 2
+      TabOrder = 0
+    end
+    object OKBtn: TBitBtn
+      Left = 232
+      Top = 8
+      Width = 75
+      Height = 25
+      Anchors = [akTop, akRight]
+      Kind = bkOK
+      NumGlyphs = 2
+      TabOrder = 1
+    end
+  end
+end

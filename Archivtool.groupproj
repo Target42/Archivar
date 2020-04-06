@@ -1,0 +1,48 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{5528771C-AE3B-44BC-80EE-8A08CC8EF32E}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="Server\ArchivServer.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="client\Archivar.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="ArchivServer">
+        <MSBuild Projects="Server\ArchivServer.dproj"/>
+    </Target>
+    <Target Name="ArchivServer:Clean">
+        <MSBuild Projects="Server\ArchivServer.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ArchivServer:Make">
+        <MSBuild Projects="Server\ArchivServer.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Archivar">
+        <MSBuild Projects="client\Archivar.dproj"/>
+    </Target>
+    <Target Name="Archivar:Clean">
+        <MSBuild Projects="client\Archivar.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Archivar:Make">
+        <MSBuild Projects="client\Archivar.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="ArchivServer;Archivar"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="ArchivServer:Clean;Archivar:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="ArchivServer:Make;Archivar:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

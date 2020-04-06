@@ -1,0 +1,422 @@
+object Beschlusform: TBeschlusform
+  Left = 0
+  Top = 0
+  Caption = 'Beschlus'
+  ClientHeight = 429
+  ClientWidth = 723
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  PixelsPerInch = 96
+  TextHeight = 13
+  object Splitter2: TSplitter
+    Left = 273
+    Top = 0
+    Height = 369
+    ExplicitLeft = 456
+    ExplicitTop = 72
+    ExplicitHeight = 100
+  end
+  inline BaseFrame1: TBaseFrame
+    Left = 0
+    Top = 369
+    Width = 723
+    Height = 60
+    Align = alBottom
+    AutoSize = True
+    TabOrder = 0
+    ExplicitTop = 298
+    ExplicitWidth = 676
+    inherited StatusBar1: TStatusBar
+      Width = 723
+      ExplicitWidth = 724
+    end
+    inherited Panel1: TPanel
+      Width = 723
+      ExplicitWidth = 676
+      inherited OKBtn: TBitBtn
+        Left = 635
+        ExplicitLeft = 588
+      end
+    end
+  end
+  object GroupBox1: TGroupBox
+    Left = 0
+    Top = 0
+    Width = 273
+    Height = 369
+    Align = alLeft
+    Caption = 'Teilnehmer'
+    TabOrder = 1
+    object Splitter1: TSplitter
+      Left = 2
+      Top = 197
+      Width = 269
+      Height = 3
+      Cursor = crVSplit
+      Align = alBottom
+      ExplicitTop = 165
+      ExplicitWidth = 67
+    end
+    object ListView1: TListView
+      Left = 2
+      Top = 15
+      Width = 269
+      Height = 182
+      Align = alClient
+      Columns = <
+        item
+          Caption = 'Name'
+          Width = 75
+        end
+        item
+          Caption = 'Vorname'
+          Width = 75
+        end
+        item
+          Caption = 'Abteilung'
+          Width = 75
+        end>
+      SortType = stText
+      TabOrder = 0
+      ViewStyle = vsReport
+      ExplicitLeft = 32
+      ExplicitTop = 32
+      ExplicitWidth = 250
+      ExplicitHeight = 150
+    end
+    object Panel1: TPanel
+      Left = 2
+      Top = 200
+      Width = 269
+      Height = 167
+      Align = alBottom
+      BevelOuter = bvNone
+      Caption = 'Panel1'
+      ShowCaption = False
+      TabOrder = 1
+      object Panel2: TPanel
+        Left = 0
+        Top = 0
+        Width = 269
+        Height = 41
+        Align = alTop
+        BevelOuter = bvNone
+        Caption = 'Panel2'
+        ShowCaption = False
+        TabOrder = 0
+        ExplicitLeft = 104
+        ExplicitTop = 16
+        ExplicitWidth = 185
+        object Label1: TLabel
+          Left = 14
+          Top = 22
+          Width = 77
+          Height = 13
+          Caption = 'Nicht Anwesned'
+        end
+        object SpeedButton1: TSpeedButton
+          Left = 211
+          Top = 13
+          Width = 23
+          Height = 22
+          Glyph.Data = {
+            36060000424D3606000000000000360400002800000020000000100000000100
+            08000000000000020000520B0000520B00000001000000000000000000003300
+            00006600000099000000CC000000FF0000000033000033330000663300009933
+            0000CC330000FF33000000660000336600006666000099660000CC660000FF66
+            000000990000339900006699000099990000CC990000FF99000000CC000033CC
+            000066CC000099CC0000CCCC0000FFCC000000FF000033FF000066FF000099FF
+            0000CCFF0000FFFF000000003300330033006600330099003300CC003300FF00
+            330000333300333333006633330099333300CC333300FF333300006633003366
+            33006666330099663300CC663300FF6633000099330033993300669933009999
+            3300CC993300FF99330000CC330033CC330066CC330099CC3300CCCC3300FFCC
+            330000FF330033FF330066FF330099FF3300CCFF3300FFFF3300000066003300
+            66006600660099006600CC006600FF0066000033660033336600663366009933
+            6600CC336600FF33660000666600336666006666660099666600CC666600FF66
+            660000996600339966006699660099996600CC996600FF99660000CC660033CC
+            660066CC660099CC6600CCCC6600FFCC660000FF660033FF660066FF660099FF
+            6600CCFF6600FFFF660000009900330099006600990099009900CC009900FF00
+            990000339900333399006633990099339900CC339900FF339900006699003366
+            99006666990099669900CC669900FF6699000099990033999900669999009999
+            9900CC999900FF99990000CC990033CC990066CC990099CC9900CCCC9900FFCC
+            990000FF990033FF990066FF990099FF9900CCFF9900FFFF99000000CC003300
+            CC006600CC009900CC00CC00CC00FF00CC000033CC003333CC006633CC009933
+            CC00CC33CC00FF33CC000066CC003366CC006666CC009966CC00CC66CC00FF66
+            CC000099CC003399CC006699CC009999CC00CC99CC00FF99CC0000CCCC0033CC
+            CC0066CCCC0099CCCC00CCCCCC00FFCCCC0000FFCC0033FFCC0066FFCC0099FF
+            CC00CCFFCC00FFFFCC000000FF003300FF006600FF009900FF00CC00FF00FF00
+            FF000033FF003333FF006633FF009933FF00CC33FF00FF33FF000066FF003366
+            FF006666FF009966FF00CC66FF00FF66FF000099FF003399FF006699FF009999
+            FF00CC99FF00FF99FF0000CCFF0033CCFF0066CCFF0099CCFF00CCCCFF00FFCC
+            FF0000FFFF0033FFFF0066FFFF0099FFFF00CCFFFF00FFFFFF00000080000080
+            000000808000800000008000800080800000C0C0C00080808000191919004C4C
+            4C00B2B2B200E5E5E5005A1E1E00783C3C0096646400C8969600FFC8C800465F
+            82005591B9006EB9D7008CD2E600B4E6F000D8E9EC0099A8AC00646F7100E2EF
+            F100C56A31000000000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000EEEEEEEEEEEE
+            EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
+            EE09EEEEEEEEEEEEEEEEEEEEEEEEEEEEEE81EEEEEEEEEEEEEEEEEEEEEEEEEEEE
+            091009EEEEEEEEEEEEEEEEEEEEEEEEEE81AC81EEEEEEEEEEEEEEEEEEEEEEEE09
+            10101009EEEEEEEEEEEEEEEEEEEEEE81ACACAC81EEEEEEEEEEEEEEEEEEEE0910
+            1010101009EEEEEEEEEEEEEEEEEE81ACACACACAC81EEEEEEEEEEEEEEEE091010
+            101010101009EEEEEEEEEEEEEE81ACACACACACACAC81EEEEEEEEEEEE09101010
+            10101010101009EEEEEEEEEE81ACACACACACACACACAC81EEEEEEEEEE09101010
+            10101010101009EEEEEEEEEE81ACACACACACACACACAC81EEEEEEEEEE09090909
+            10101009090909EEEEEEEEEE81818181ACACAC81818181EEEEEEEEEEEEEEEE09
+            10101009EEEEEEEEEEEEEEEEEEEEEE81ACACAC81EEEEEEEEEEEEEEEEEEEEEE09
+            10101009EEEEEEEEEEEEEEEEEEEEEE81ACACAC81EEEEEEEEEEEEEEEEEEEEEE09
+            10101009EEEEEEEEEEEEEEEEEEEEEE81ACACAC81EEEEEEEEEEEEEEEEEEEEEE09
+            10101009EEEEEEEEEEEEEEEEEEEEEE81ACACAC81EEEEEEEEEEEEEEEEEEEEEE09
+            10101009EEEEEEEEEEEEEEEEEEEEEE81ACACAC81EEEEEEEEEEEEEEEEEEEEEE09
+            09090909EEEEEEEEEEEEEEEEEEEEEE8181818181EEEEEEEEEEEEEEEEEEEEEEEE
+            EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE}
+          NumGlyphs = 2
+        end
+        object SpeedButton2: TSpeedButton
+          Left = 240
+          Top = 13
+          Width = 23
+          Height = 22
+          Glyph.Data = {
+            36060000424D3606000000000000360400002800000020000000100000000100
+            08000000000000020000520B0000520B00000001000000000000000000003300
+            00006600000099000000CC000000FF0000000033000033330000663300009933
+            0000CC330000FF33000000660000336600006666000099660000CC660000FF66
+            000000990000339900006699000099990000CC990000FF99000000CC000033CC
+            000066CC000099CC0000CCCC0000FFCC000000FF000033FF000066FF000099FF
+            0000CCFF0000FFFF000000003300330033006600330099003300CC003300FF00
+            330000333300333333006633330099333300CC333300FF333300006633003366
+            33006666330099663300CC663300FF6633000099330033993300669933009999
+            3300CC993300FF99330000CC330033CC330066CC330099CC3300CCCC3300FFCC
+            330000FF330033FF330066FF330099FF3300CCFF3300FFFF3300000066003300
+            66006600660099006600CC006600FF0066000033660033336600663366009933
+            6600CC336600FF33660000666600336666006666660099666600CC666600FF66
+            660000996600339966006699660099996600CC996600FF99660000CC660033CC
+            660066CC660099CC6600CCCC6600FFCC660000FF660033FF660066FF660099FF
+            6600CCFF6600FFFF660000009900330099006600990099009900CC009900FF00
+            990000339900333399006633990099339900CC339900FF339900006699003366
+            99006666990099669900CC669900FF6699000099990033999900669999009999
+            9900CC999900FF99990000CC990033CC990066CC990099CC9900CCCC9900FFCC
+            990000FF990033FF990066FF990099FF9900CCFF9900FFFF99000000CC003300
+            CC006600CC009900CC00CC00CC00FF00CC000033CC003333CC006633CC009933
+            CC00CC33CC00FF33CC000066CC003366CC006666CC009966CC00CC66CC00FF66
+            CC000099CC003399CC006699CC009999CC00CC99CC00FF99CC0000CCCC0033CC
+            CC0066CCCC0099CCCC00CCCCCC00FFCCCC0000FFCC0033FFCC0066FFCC0099FF
+            CC00CCFFCC00FFFFCC000000FF003300FF006600FF009900FF00CC00FF00FF00
+            FF000033FF003333FF006633FF009933FF00CC33FF00FF33FF000066FF003366
+            FF006666FF009966FF00CC66FF00FF66FF000099FF003399FF006699FF009999
+            FF00CC99FF00FF99FF0000CCFF0033CCFF0066CCFF0099CCFF00CCCCFF00FFCC
+            FF0000FFFF0033FFFF0066FFFF0099FFFF00CCFFFF00FFFFFF00000080000080
+            000000808000800000008000800080800000C0C0C00080808000191919004C4C
+            4C00B2B2B200E5E5E5005A1E1E00783C3C0096646400C8969600FFC8C800465F
+            82005591B9006EB9D7008CD2E600B4E6F000D8E9EC0099A8AC00646F7100E2EF
+            F100C56A31000000000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000000000000000000EEEEEEEEEEEE
+            EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE09
+            09090909EEEEEEEEEEEEEEEEEEEEEE8181818181EEEEEEEEEEEEEEEEEEEEEE09
+            10101009EEEEEEEEEEEEEEEEEEEEEE81ACACAC81EEEEEEEEEEEEEEEEEEEEEE09
+            10101009EEEEEEEEEEEEEEEEEEEEEE81ACACAC81EEEEEEEEEEEEEEEEEEEEEE09
+            10101009EEEEEEEEEEEEEEEEEEEEEE81ACACAC81EEEEEEEEEEEEEEEEEEEEEE09
+            10101009EEEEEEEEEEEEEEEEEEEEEE81ACACAC81EEEEEEEEEEEEEEEEEEEEEE09
+            10101009EEEEEEEEEEEEEEEEEEEEEE81ACACAC81EEEEEEEEEEEEEEEE09090909
+            10101009090909EEEEEEEEEE81818181ACACAC81818181EEEEEEEEEE09101010
+            10101010101009EEEEEEEEEE81ACACACACACACACACAC81EEEEEEEEEE09101010
+            10101010101009EEEEEEEEEE81ACACACACACACACACAC81EEEEEEEEEEEE091010
+            101010101009EEEEEEEEEEEEEE81ACACACACACACAC81EEEEEEEEEEEEEEEE0910
+            1010101009EEEEEEEEEEEEEEEEEE81ACACACACAC81EEEEEEEEEEEEEEEEEEEE09
+            10101009EEEEEEEEEEEEEEEEEEEEEE81ACACAC81EEEEEEEEEEEEEEEEEEEEEEEE
+            091009EEEEEEEEEEEEEEEEEEEEEEEEEE81AC81EEEEEEEEEEEEEEEEEEEEEEEEEE
+            EE09EEEEEEEEEEEEEEEEEEEEEEEEEEEEEE81EEEEEEEEEEEEEEEEEEEEEEEEEEEE
+            EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE}
+          NumGlyphs = 2
+        end
+      end
+      object ListView2: TListView
+        Left = 0
+        Top = 41
+        Width = 269
+        Height = 126
+        Align = alClient
+        Columns = <
+          item
+            Caption = 'Name'
+            Width = 75
+          end
+          item
+            Caption = 'Vorname'
+            Width = 75
+          end
+          item
+            Caption = 'Abteilung'
+            Width = 75
+          end>
+        SortType = stText
+        TabOrder = 1
+        ViewStyle = vsReport
+        ExplicitLeft = 32
+        ExplicitTop = 32
+        ExplicitWidth = 250
+        ExplicitHeight = 150
+      end
+    end
+  end
+  object Panel3: TPanel
+    Left = 276
+    Top = 0
+    Width = 447
+    Height = 369
+    Align = alClient
+    BevelOuter = bvNone
+    Caption = 'Panel3'
+    ShowCaption = False
+    TabOrder = 2
+    ExplicitLeft = 376
+    ExplicitTop = 80
+    ExplicitWidth = 185
+    ExplicitHeight = 41
+    object GroupBox2: TGroupBox
+      Left = 0
+      Top = 0
+      Width = 447
+      Height = 280
+      Align = alClient
+      Caption = 'Bechlustext'
+      TabOrder = 0
+      ExplicitLeft = 80
+      ExplicitTop = 48
+      ExplicitWidth = 185
+      ExplicitHeight = 105
+      object Splitter3: TSplitter
+        Left = 293
+        Top = 15
+        Height = 263
+        Align = alRight
+        ExplicitLeft = 264
+        ExplicitTop = 40
+        ExplicitHeight = 100
+      end
+      object Panel5: TPanel
+        Left = 296
+        Top = 15
+        Width = 149
+        Height = 263
+        Align = alRight
+        BevelOuter = bvNone
+        Caption = 'Textbausteine'
+        ShowCaption = False
+        TabOrder = 0
+        VerticalAlignment = taAlignTop
+        ExplicitHeight = 222
+        object Label2: TLabel
+          Left = 0
+          Top = 0
+          Width = 149
+          Height = 25
+          Align = alTop
+          Alignment = taCenter
+          Caption = 'Textbausteine'
+          ExplicitWidth = 185
+        end
+        object ListBox1: TListBox
+          Left = 0
+          Top = 25
+          Width = 149
+          Height = 238
+          Align = alClient
+          ItemHeight = 13
+          TabOrder = 0
+          ExplicitLeft = 64
+          ExplicitTop = 48
+          ExplicitWidth = 121
+          ExplicitHeight = 97
+        end
+      end
+      inline EditFrame1: TEditFrame
+        Left = 2
+        Top = 15
+        Width = 291
+        Height = 263
+        Align = alClient
+        TabOrder = 1
+        ExplicitLeft = 10
+        ExplicitTop = 23
+        ExplicitWidth = 291
+        ExplicitHeight = 222
+        inherited RE: TRichEdit
+          Width = 291
+          Height = 263
+        end
+      end
+    end
+    object GroupBox3: TGroupBox
+      Left = 0
+      Top = 280
+      Width = 447
+      Height = 89
+      Align = alBottom
+      Caption = 'Abstimmung'
+      TabOrder = 1
+      ExplicitWidth = 400
+      DesignSize = (
+        447
+        89)
+      object Button1: TButton
+        Left = 6
+        Top = 24
+        Width = 75
+        Height = 41
+        Caption = 'Zustimmung Einstimmig'
+        TabOrder = 0
+        WordWrap = True
+      end
+      object Button2: TButton
+        Left = 359
+        Top = 24
+        Width = 75
+        Height = 41
+        Anchors = [akTop, akRight]
+        Caption = 'Ablehnung Einstimmig'
+        TabOrder = 1
+        WordWrap = True
+      end
+      object LabeledEdit1: TLabeledEdit
+        Left = 87
+        Top = 40
+        Width = 50
+        Height = 21
+        EditLabel.Width = 57
+        EditLabel.Height = 13
+        EditLabel.Caption = 'Zustimmung'
+        NumbersOnly = True
+        TabOrder = 2
+      end
+      object LabeledEdit2: TLabeledEdit
+        Left = 151
+        Top = 40
+        Width = 50
+        Height = 21
+        EditLabel.Width = 51
+        EditLabel.Height = 13
+        EditLabel.Caption = 'Ablehnung'
+        NumbersOnly = True
+        TabOrder = 3
+      end
+      object LabeledEdit3: TLabeledEdit
+        Left = 215
+        Top = 40
+        Width = 50
+        Height = 21
+        EditLabel.Width = 60
+        EditLabel.Height = 13
+        EditLabel.Caption = 'Enhaltungen'
+        NumbersOnly = True
+        TabOrder = 4
+      end
+    end
+  end
+end
