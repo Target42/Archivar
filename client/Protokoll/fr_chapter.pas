@@ -6,7 +6,8 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, xsd_chapter,
   Datasnap.DBClient, Data.DB, Datasnap.DSConnect, Vcl.ComCtrls, Vcl.ExtCtrls,
-  Vcl.StdCtrls, u_chapter, Vcl.Buttons;
+  Vcl.StdCtrls, u_chapter, Vcl.Buttons, System.Generics.Collections,
+  fr_taskList2;
 
 type
   TChapterFrame = class(TFrame)
@@ -24,6 +25,11 @@ type
     SpeedButton5: TSpeedButton;
     SpeedButton6: TSpeedButton;
     SpeedButton7: TSpeedButton;
+    GroupBox2: TGroupBox;
+    Panel2: TPanel;
+    ComboBox1: TComboBox;
+    Label1: TLabel;
+    TaskList2Frame1: TTaskList2Frame;
     procedure SpeedButton8Click(Sender: TObject);
     procedure SpeedButton1Click(Sender: TObject);
     procedure SpeedButton4Click(Sender: TObject);
@@ -31,10 +37,14 @@ type
     procedure SpeedButton6Click(Sender: TObject);
     procedure SpeedButton7Click(Sender: TObject);
     procedure SpeedButton2Click(Sender: TObject);
+    procedure ComboBox1Change(Sender: TObject);
+    procedure TVDragOver(Sender, Source: TObject; X, Y: Integer;
+      State: TDragState; var Accept: Boolean);
   private
     m_id   : integer;
     m_xCp  : IXMLChapter;
     m_root : TChapter;
+    m_cpList : TList<TChapter>;
 
     function GetCP_ID: integer;
     procedure SetCP_ID(const Value: integer);
@@ -56,8 +66,8 @@ type
 implementation
 
 uses
-  m_glob_client, Xml.XMLIntf, Xml.XMLDoc, System.Generics.Collections,
-  f_chapterEdit;
+  m_glob_client, Xml.XMLIntf, Xml.XMLDoc,
+  f_chapterEdit, u_gremium;
 
 {$R *.dfm}
 
@@ -110,6 +120,17 @@ begin
   list.Free;
 end;
 
+procedure TChapterFrame.ComboBox1Change(Sender: TObject);
+var
+  gr : TGremium;
+begin
+  if ComboBox1.ItemIndex = -1 then
+    exit;
+
+  gr := TGremium(ComboBox1.Items.Objects[ ComboBox1.ItemIndex]);
+  TaskList2Frame1.GR_ID := gr.ID;
+end;
+
 function TChapterFrame.GetCP_ID: integer;
 begin
   Result := m_id;
@@ -138,12 +159,21 @@ begin
 end;
 
 procedure TChapterFrame.prepare;
+var
+  i : integer;
 begin
-  m_root := TChapter.create(NIL);
+  m_root  := TChapter.create(NIL);
+  m_cpList:= TList<TChapter>.create;
 
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
 
   m_xCp := NewChapter;
+
+  for i := 0 to pred(GM.Gremien.Count) do
+  begin
+    ComboBox1.Items.AddObject(GM.Gremien.Items[i].Name, GM.Gremien.Items[i]);
+  end;
+  TaskList2Frame1.prepare;
 end;
 
 procedure TChapterFrame.save;
@@ -213,6 +243,8 @@ end;
 
 procedure TChapterFrame.Shutdown;
 begin
+  TaskList2Frame1.shutdown;
+  m_cpList.free;
   ChapterTab.Close;
   m_root.Free;
 end;
@@ -340,6 +372,12 @@ begin
     TV.Selected.Expand(false);
 end;
 
+procedure TChapterFrame.TVDragOver(Sender, Source: TObject; X, Y: Integer;
+  State: TDragState; var Accept: Boolean);
+begin
+  Accept := true;
+end;
+
 procedure TChapterFrame.updateTree;
 var
   old : TChapter;
@@ -353,6 +391,7 @@ var
     for i := 0 to pred(childs.Count) do
       begin
         cp := childs.Items[i];
+        m_cpList.add(cp);
         node := TV.Items.AddChildObject(root, cp.fullTitle, cp);
         if cp = old then
           TV.Selected := node;
@@ -362,6 +401,7 @@ var
 
 begin
   old := NIL;
+  m_cpList.Clear;
   TV.Items.BeginUpdate;
   if Assigned(TV.Selected) then
     old := TV.Selected.Data;

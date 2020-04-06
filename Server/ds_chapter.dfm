@@ -44,8 +44,32 @@ object dsChapter: TdsChapter
         ParamType = ptInput
       end>
   end
-  object DataSetProvider1: TDataSetProvider
-    Left = 144
-    Top = 88
+  object ListTasksQry: TIBQuery
+    Database = DBMod.IBDatabase1
+    Transaction = IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    ParamCheck = True
+    SQL.Strings = (
+      'select * from TO_OPEN a,  TA_TASK b,  TY_TASKTYPE c'
+      'where '
+      'a.gr_ID = :GR_ID'
+      'and'
+      'a.ta_id = b.ta_id'
+      'and'
+      'b.ty_id = c.ty_id')
+    Left = 168
+    Top = 120
+    ParamData = <
+      item
+        DataType = ftInteger
+        Name = 'GR_ID'
+        ParamType = ptInput
+      end>
+  end
+  object ListTasks: TDataSetProvider
+    DataSet = ListTasksQry
+    Left = 160
+    Top = 176
   end
 end

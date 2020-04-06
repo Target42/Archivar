@@ -13,7 +13,8 @@ type
     IBTransaction1: TIBTransaction;
     ChapterTab: TDataSetProvider;
     TACp: TIBQuery;
-    DataSetProvider1: TDataSetProvider;
+    ListTasksQry: TIBQuery;
+    ListTasks: TDataSetProvider;
   private
     { Private-Deklarationen }
   public

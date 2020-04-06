@@ -2,8 +2,8 @@ object MainForm: TMainForm
   Left = 0
   Top = 0
   Caption = 'Archivar'
-  ClientHeight = 593
-  ClientWidth = 978
+  ClientHeight = 678
+  ClientWidth = 1126
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,17 +20,17 @@ object MainForm: TMainForm
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter
-    Left = 281
+    Left = 241
     Top = 0
-    Height = 381
+    Height = 466
     ExplicitLeft = 568
     ExplicitTop = 96
     ExplicitHeight = 100
   end
   object Splitter2: TSplitter
     Left = 0
-    Top = 381
-    Width = 978
+    Top = 466
+    Width = 1126
     Height = 3
     Cursor = crVSplit
     Align = alBottom
@@ -39,10 +39,10 @@ object MainForm: TMainForm
     ExplicitWidth = 301
   end
   object Image1: TImage
-    Left = 284
+    Left = 244
     Top = 0
-    Width = 694
-    Height = 381
+    Width = 882
+    Height = 466
     Align = alClient
     Center = True
     ExplicitLeft = 392
@@ -52,8 +52,8 @@ object MainForm: TMainForm
   end
   object StatusBar1: TStatusBar
     Left = 0
-    Top = 574
-    Width = 978
+    Top = 659
+    Width = 1126
     Height = 19
     Panels = <
       item
@@ -65,20 +65,24 @@ object MainForm: TMainForm
       item
         Width = 50
       end>
+    ExplicitTop = 574
+    ExplicitWidth = 978
   end
   object GroupBox2: TGroupBox
     Left = 0
-    Top = 384
-    Width = 978
+    Top = 469
+    Width = 1126
     Height = 190
     Align = alBottom
     Caption = 'Aufgaben'
     TabOrder = 1
     Visible = False
+    ExplicitTop = 384
+    ExplicitWidth = 978
     inline TaskListFrame1: TTaskListFrame
       Left = 2
       Top = 15
-      Width = 974
+      Width = 1122
       Height = 173
       Align = alClient
       TabOrder = 0
@@ -87,7 +91,7 @@ object MainForm: TMainForm
       ExplicitWidth = 974
       ExplicitHeight = 173
       inherited DBGrid1: TDBGrid
-        Width = 974
+        Width = 1122
         Height = 173
       end
       inherited ActionList1: TActionList
@@ -99,26 +103,28 @@ object MainForm: TMainForm
   object PageControl1: TPageControl
     Left = 0
     Top = 0
-    Width = 281
-    Height = 381
-    ActivePage = TabSheet2
+    Width = 241
+    Height = 466
+    ActivePage = TabSheet1
     Align = alLeft
     TabOrder = 2
     Visible = False
     object TabSheet1: TTabSheet
       Caption = 'Gremien'
+      ExplicitWidth = 273
+      ExplicitHeight = 353
       inline GremiumTreeFrame1: TGremiumTreeFrame
         Left = 0
         Top = 0
-        Width = 273
-        Height = 353
+        Width = 233
+        Height = 438
         Align = alClient
         TabOrder = 0
         ExplicitWidth = 273
         ExplicitHeight = 353
         inherited TV: TTreeView
-          Width = 273
-          Height = 353
+          Width = 233
+          Height = 438
           ExplicitWidth = 273
           ExplicitHeight = 353
         end
@@ -127,18 +133,20 @@ object MainForm: TMainForm
     object TabSheet2: TTabSheet
       Caption = 'Lesezeichen'
       ImageIndex = 1
+      ExplicitWidth = 273
+      ExplicitHeight = 353
       inline BookmarkFrame1: TBookmarkFrame
         Left = 0
         Top = 0
-        Width = 273
-        Height = 353
+        Width = 233
+        Height = 438
         Align = alClient
         TabOrder = 0
         ExplicitWidth = 273
         ExplicitHeight = 353
         inherited LV: TListView
-          Width = 273
-          Height = 353
+          Width = 233
+          Height = 438
           ExplicitWidth = 273
           ExplicitHeight = 353
         end

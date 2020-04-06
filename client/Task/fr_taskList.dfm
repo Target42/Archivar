@@ -1,15 +1,17 @@
 object TaskListFrame: TTaskListFrame
   Left = 0
   Top = 0
-  Width = 451
-  Height = 305
+  Width = 922
+  Height = 292
   Align = alClient
   TabOrder = 0
+  ExplicitWidth = 451
+  ExplicitHeight = 305
   object DBGrid1: TDBGrid
     Left = 0
     Top = 0
-    Width = 451
-    Height = 305
+    Width = 922
+    Height = 292
     Align = alClient
     DataSource = TaskSrc
     Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgMultiSelect, dgTitleClick, dgTitleHotTrack]

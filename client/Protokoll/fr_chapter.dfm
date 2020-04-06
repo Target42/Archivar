@@ -1,10 +1,11 @@
 object ChapterFrame: TChapterFrame
   Left = 0
   Top = 0
-  Width = 451
+  Width = 749
   Height = 305
   Align = alClient
   TabOrder = 0
+  ExplicitWidth = 451
   object Splitter1: TSplitter
     Left = 225
     Top = 0
@@ -375,6 +376,69 @@ object ChapterFrame: TChapterFrame
       Align = alClient
       Indent = 19
       TabOrder = 1
+      OnDragOver = TVDragOver
+    end
+  end
+  object GroupBox2: TGroupBox
+    Left = 228
+    Top = 0
+    Width = 521
+    Height = 305
+    Align = alClient
+    Caption = 'Aufgaben'
+    TabOrder = 1
+    ExplicitWidth = 223
+    object Panel2: TPanel
+      Left = 2
+      Top = 15
+      Width = 517
+      Height = 41
+      Align = alTop
+      BevelOuter = bvNone
+      Caption = 'Panel2'
+      ShowCaption = False
+      TabOrder = 0
+      ExplicitWidth = 219
+      object Label1: TLabel
+        Left = 16
+        Top = 11
+        Width = 41
+        Height = 13
+        Caption = 'Gremium'
+      end
+      object ComboBox1: TComboBox
+        Left = 72
+        Top = 8
+        Width = 233
+        Height = 21
+        Sorted = True
+        TabOrder = 0
+        OnChange = ComboBox1Change
+      end
+    end
+    inline TaskList2Frame1: TTaskList2Frame
+      Left = 2
+      Top = 56
+      Width = 517
+      Height = 247
+      Align = alClient
+      TabOrder = 1
+      ExplicitLeft = 2
+      ExplicitTop = 56
+      ExplicitWidth = 219
+      ExplicitHeight = 247
+      inherited LV: TListView
+        Width = 517
+        Height = 215
+        ExplicitWidth = 219
+        ExplicitHeight = 215
+      end
+      inherited Panel1: TPanel
+        Top = 215
+        Width = 517
+        ExplicitTop = 215
+        ExplicitWidth = 219
+      end
     end
   end
   object DSProviderConnection1: TDSProviderConnection

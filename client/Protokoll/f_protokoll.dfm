@@ -63,7 +63,6 @@ object ProtokollForm: TProtokollForm
           Caption = 'Panel2'
           ShowCaption = False
           TabOrder = 0
-          ExplicitTop = 233
           object SpeedButton1: TSpeedButton
             Left = 16
             Top = 6
@@ -311,7 +310,6 @@ object ProtokollForm: TProtokollForm
           TabOrder = 1
           ViewStyle = vsReport
           OnChange = LVChange
-          ExplicitHeight = 218
         end
       end
       object Panel3: TPanel
@@ -348,6 +346,10 @@ object ProtokollForm: TProtokollForm
               Height = 196
               ExplicitHeight = 196
             end
+          end
+          inherited DSProviderConnection1: TDSProviderConnection
+            Left = 88
+            Top = 65520
           end
         end
       end
