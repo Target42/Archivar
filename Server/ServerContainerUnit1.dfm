@@ -139,6 +139,6 @@ object ServerContainer1: TServerContainer1
     Server = DSServer1
     LifeCycle = 'Invocation'
     Left = 256
-    Top = 256
+    Top = 248
   end
 end

@@ -3,7 +3,7 @@ unit u_taskEntry;
 interface
 
 uses
-  Data.DB;
+  Data.DB, System.Generics.Collections;
 type
   TTaskEntry = class(TObject)
   private
@@ -32,6 +32,8 @@ type
     procedure setData( dataset : TDataSet );
 
   end;
+  TEntryList = TList<TTaskEntry>;
+  TNotifyTaskEntryEvent = procedure (Sender: TObject; var dataList : TEntryList) of object;
 
 implementation
 

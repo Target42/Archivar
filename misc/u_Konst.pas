@@ -10,7 +10,8 @@ const
   taskWorkEnd     = $08;
   taskWaitForInfo = $10;
 
-  taskAll =  taskNew or taskRead or taskInWork or taskWorkEnd or taskWaitForInfo;
+  taskAll      =  taskNew or taskRead or taskInWork or taskWorkEnd or taskWaitForInfo;
+  taskProtocol =  taskInWork or taskWorkEnd or taskWaitForInfo;
 
 
 function flagsToStr( flags : integer ) : string;

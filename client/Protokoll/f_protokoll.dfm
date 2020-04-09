@@ -288,69 +288,30 @@ object ProtokollForm: TProtokollForm
             ShowHint = True
             OnClick = SpeedButton5Click
           end
+          object Button4: TButton
+            Left = 16
+            Top = 34
+            Width = 75
+            Height = 25
+            Caption = 'Button4'
+            TabOrder = 0
+            OnClick = Button4Click
+          end
         end
-        object LV: TListView
+        object TV: TTreeView
           Left = 2
           Top = 15
           Width = 205
           Height = 196
           Align = alClient
-          Columns = <
-            item
-              Caption = 'Nr'
-              Width = 40
-            end
-            item
-              Caption = 'Titel'
-              Width = 125
-            end>
+          Images = GM.ImageList2
+          Indent = 19
           ReadOnly = True
-          RowSelect = True
-          SortType = stText
           TabOrder = 1
-          ViewStyle = vsReport
-          OnChange = LVChange
-        end
-      end
-      object Panel3: TPanel
-        Left = 212
-        Top = 0
-        Width = 668
-        Height = 276
-        Align = alClient
-        BevelOuter = bvNone
-        Caption = 'Panel3'
-        ShowCaption = False
-        TabOrder = 1
-        inline ChapterFrame1: TChapterFrame
-          Left = 0
-          Top = 0
-          Width = 668
-          Height = 276
-          Align = alClient
-          TabOrder = 0
-          ExplicitWidth = 668
-          ExplicitHeight = 276
-          inherited Splitter1: TSplitter
-            Height = 276
-            ExplicitHeight = 276
-          end
-          inherited GroupBox1: TGroupBox
-            Height = 276
-            ExplicitHeight = 276
-            inherited Panel1: TPanel
-              Top = 211
-              ExplicitTop = 211
-            end
-            inherited TV: TTreeView
-              Height = 196
-              ExplicitHeight = 196
-            end
-          end
-          inherited DSProviderConnection1: TDSProviderConnection
-            Left = 88
-            Top = 65520
-          end
+          ExplicitLeft = 24
+          ExplicitTop = 24
+          ExplicitWidth = 121
+          ExplicitHeight = 97
         end
       end
     end

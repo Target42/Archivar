@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Data.DB,
   Datasnap.DBClient, Datasnap.DSConnect, System.Generics.Collections, u_taskEntry,
-  Vcl.StdCtrls, Vcl.ExtCtrls;
+  Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Buttons;
 
 type
   TTaskList2Frame = class(TFrame)
@@ -19,7 +19,12 @@ type
     CheckBox3: TCheckBox;
     CheckBox4: TCheckBox;
     CheckBox5: TCheckBox;
+    Panel2: TPanel;
+    SpeedButton1: TSpeedButton;
+    SpeedButton2: TSpeedButton;
     procedure CheckBox1Click(Sender: TObject);
+    procedure SpeedButton2Click(Sender: TObject);
+    procedure SpeedButton1Click(Sender: TObject);
   private
     m_id : integer;
     m_filter : integer;
@@ -27,6 +32,7 @@ type
 
     m_all  : TList<TTaskEntry>;
     m_list : TList<TTaskEntry>;
+    FOnTaskEntry: TNotifyTaskEntryEvent;
 
     procedure setGRID( value : integer );
     procedure setFilter( value : integer );
@@ -36,8 +42,11 @@ type
     function getItem( inx : integer ) :TTaskEntry;
     function getCount : integer;
   public
+
     property GR_ID : integer read m_id write setGRID;
     property Filter : integer read m_filter write setFilter;
+
+    property OnTaskEntry: TNotifyTaskEntryEvent read FOnTaskEntry write FOnTaskEntry;
 
     procedure prepare;
     procedure shutdown;
@@ -96,9 +105,11 @@ procedure TTaskList2Frame.prepare;
 begin
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
 
+  FOnTaskEntry := NIL;
+
   m_all  := TList<TTaskEntry>.create;
   m_list := TList<TTaskEntry>.create;
-  m_filter := taskAll;
+  m_filter := taskProtocol;
 
   m_noChange := true;
 
@@ -149,6 +160,7 @@ begin
 
   ListTasksQry.ParamByName('GR_ID').AsInteger := m_id;
   ListTasksQry.Open;
+  ListTasksQry.Refresh;
   while not ListTasksQry.Eof do
   begin
     entry := TTaskEntry.Create;
@@ -165,6 +177,39 @@ begin
   clear;
   m_all.Free;
   m_list.Free;
+end;
+
+procedure TTaskList2Frame.SpeedButton1Click(Sender: TObject);
+var
+  list : TEntryList;
+  i    : integer;
+begin
+  if not Assigned(FOnTaskEntry) or not Assigned(LV.Selected) then
+    exit;
+  list := TEntryList.Create;
+  for i := 0 to pred(LV.Items.Count) do
+  begin
+    if LV.Items.Item[i].Selected then
+      list.Add(LV.Items.Item[i].data);
+  end;
+  FOnTaskEntry(self, list );
+  list.Free
+end;
+
+procedure TTaskList2Frame.SpeedButton2Click(Sender: TObject);
+var
+  i : integer;
+  list : TEntryList;
+begin
+  list := TEntryList.Create;
+
+  for i := 0 to pred(LV.Items.Count) do
+    begin
+      list.Add(LV.Items.Item[i].data);
+    end;
+  if Assigned(FOnTaskEntry) then
+    FOnTaskEntry(self, list);
+  list.Free;
 end;
 
 end.

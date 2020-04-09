@@ -48,6 +48,7 @@ type
       FNr: integer;
       FNumbering: boolean;
     FTAID: integer;
+    FData: Pointer;
     public
       constructor create(owner : TChapter);
       Destructor Destroy; override;
@@ -60,6 +61,7 @@ type
       property Nr: integer read FNr write FNr;
       property Numbering: boolean read FNumbering write FNumbering;
       property TAID: integer read FTAID write FTAID;
+      property Data: Pointer read FData write FData;
 
       procedure up;
       procedure down;
@@ -70,6 +72,7 @@ type
       function newChapter : TChapter;
 
       function fullTitle: string;
+      procedure reindex;
   end;
 
 implementation
@@ -208,6 +211,7 @@ procedure TChapter.add(cp: TChapter);
 begin
   m_childs.add(cp);
   cp.Owner := self;
+
  m_childs.renumber;
 end;
 
@@ -221,6 +225,7 @@ begin
   FTAID     := 0;
   FNumbering:= true;
   FName     := 'Titel';
+  FData     := NIL;
 end;
 
 destructor TChapter.Destroy;
@@ -241,13 +246,38 @@ begin
     Result := IntToStr( nr ) +' ';
   Result := Result + FName;
 
+  if FTAID <> 0 then
+    Result := Result + Format(' (%d)', [FTAID]);
+
 end;
 
 function TChapter.newChapter: TChapter;
 begin
   Result := TChapter.create(self);
   add(Result);
-  Result.Nr := m_childs.findMax+1;
+  m_childs.renumber;
+end;
+
+procedure TChapter.reindex;
+var
+  inx : integer;
+
+  procedure indexChilds( root : TChapter; pid : integer );
+  var
+    i : integer;
+  begin
+    Inc(inx);
+    root.ID   := inx;
+    root.PID  := pid;
+    for i := 0 to pred(root.Childs.Count) do
+    begin
+      indexChilds(root.Childs.Items[i], root.ID);
+    end;
+  end;
+begin
+  inx := -1;
+
+  indexChilds(self, 0);
 end;
 
 procedure TChapter.remove(cp: TChapter);

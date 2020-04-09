@@ -3,7 +3,7 @@ unit u_titel;
 interface
 
 uses
-  System.Generics.Collections;
+  System.Generics.Collections, xsd_chapter;
 
 type
   TChapterTitle = class;
@@ -31,11 +31,12 @@ type
 
   TChapterTitle = class
     private
-      m_owner : TChapterTitleList;
-      FNr: integer;
-      FText: string;
-    FID: integer;
-    FModified: boolean;
+      m_owner   : TChapterTitleList;
+      FNr       : integer;
+      FText     : string;
+      FID       : integer;
+      FModified : boolean;
+      m_xCp     : IXMLChapter;
     public
       constructor create(owner : TChapterTitleList);
       Destructor Destroy; override;
@@ -44,9 +45,13 @@ type
       property Nr: integer read FNr write FNr;
       property Text: string read FText write FText;
       property Modified: boolean read FModified write FModified;
+      property xChapter : IXMLChapter read m_xCp write m_xCp;
 
       procedure up;
       procedure down;
+
+      function FullTitle : string;
+
   end;
 
 
@@ -61,13 +66,16 @@ uses
 
 constructor TChapterTitle.create(owner : TChapterTitleList);
 begin
-  m_owner := owner;
-  FNr := 0;
+  m_xCp     := NewChapter;
+  m_owner   := owner;
+  FNr       := 0;
   FModified := false;
 end;
 
 destructor TChapterTitle.Destroy;
 begin
+  m_xCp     := NIL;
+  m_owner   := NIL;
 
   inherited;
 end;
@@ -75,6 +83,11 @@ end;
 procedure TChapterTitle.down;
 begin
   m_owner.down(self);
+end;
+
+function TChapterTitle.FullTitle: string;
+begin
+  Result := Format('%d. %s', [FNr, FText]);
 end;
 
 procedure TChapterTitle.up;

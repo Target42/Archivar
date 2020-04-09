@@ -35,6 +35,7 @@ type
     JvComputerInfoEx1: TJvComputerInfoEx;
     DSClientCallbackChannelManager1: TDSClientCallbackChannelManager;
     ImageList1: TImageList;
+    ImageList2: TImageList;
     procedure SQLConnection1AfterConnect(Sender: TObject);
     procedure SQLConnection1AfterDisconnect(Sender: TObject);
     procedure DataModuleCreate(Sender: TObject);

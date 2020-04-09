@@ -174,10 +174,9 @@ begin
   else
   begin
     TaskTab.Open;
-    TaskHeaderFrame1.DataSource := TaskSrc;
     EinstellungTab.Open;
-
     TaskTab.Locate('TA_ID', VarArrayOf([m_ta_id]), opts);
+    TaskHeaderFrame1.DataSource := TaskSrc;
     DBEdit1.SetFocus;
 
     m_info.loadFromClientBlob(EinstellungTab, 'es_data');

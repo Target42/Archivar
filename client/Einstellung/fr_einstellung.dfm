@@ -157,7 +157,7 @@ object Einstellungsframe: TEinstellungsframe
         Height = 21
         DataField = 'ES_EXTERN'
         DataSource = ESSrc
-        TabOrder = 1
+        TabOrder = 10
         OnChange = TaskHeaderFrame1DBEdit1Change
       end
       object DBEdit11: TDBEdit
@@ -167,7 +167,7 @@ object Einstellungsframe: TEinstellungsframe
         Height = 21
         DataField = 'ES_TH'
         DataSource = ESSrc
-        TabOrder = 2
+        TabOrder = 9
         OnChange = TaskHeaderFrame1DBEdit1Change
       end
       object DBEdit2: TDBEdit
@@ -177,7 +177,7 @@ object Einstellungsframe: TEinstellungsframe
         Height = 21
         DataField = 'ES_VORNAME'
         DataSource = ESSrc
-        TabOrder = 3
+        TabOrder = 1
         OnChange = TaskHeaderFrame1DBEdit1Change
       end
       object DBEdit3: TDBEdit
@@ -187,7 +187,7 @@ object Einstellungsframe: TEinstellungsframe
         Height = 21
         DataField = 'ES_DEPARTMENT'
         DataSource = ESSrc
-        TabOrder = 4
+        TabOrder = 2
         OnChange = TaskHeaderFrame1DBEdit1Change
       end
       object DBEdit4: TDBEdit
@@ -197,7 +197,7 @@ object Einstellungsframe: TEinstellungsframe
         Height = 21
         DataField = 'ES_TERMIN'
         DataSource = ESSrc
-        TabOrder = 5
+        TabOrder = 3
         OnChange = TaskHeaderFrame1DBEdit1Change
       end
       object DBEdit5: TDBEdit
@@ -207,7 +207,7 @@ object Einstellungsframe: TEinstellungsframe
         Height = 21
         DataField = 'ES_AUSSCHREIBUNG'
         DataSource = ESSrc
-        TabOrder = 6
+        TabOrder = 4
         OnChange = TaskHeaderFrame1DBEdit1Change
       end
       object DBEdit6: TDBEdit
@@ -217,7 +217,7 @@ object Einstellungsframe: TEinstellungsframe
         Height = 21
         DataField = 'ES_EINSTELLUNG'
         DataSource = ESSrc
-        TabOrder = 7
+        TabOrder = 5
         OnChange = TaskHeaderFrame1DBEdit1Change
       end
       object DBEdit7: TDBEdit
@@ -227,7 +227,7 @@ object Einstellungsframe: TEinstellungsframe
         Height = 21
         DataField = 'ES_BEWERBER'
         DataSource = ESSrc
-        TabOrder = 8
+        TabOrder = 6
         OnChange = TaskHeaderFrame1DBEdit1Change
       end
       object DBEdit8: TDBEdit
@@ -237,7 +237,7 @@ object Einstellungsframe: TEinstellungsframe
         Height = 21
         DataField = 'ES_INTERN'
         DataSource = ESSrc
-        TabOrder = 9
+        TabOrder = 7
         OnChange = TaskHeaderFrame1DBEdit1Change
       end
       object DBEdit9: TDBEdit
@@ -247,7 +247,7 @@ object Einstellungsframe: TEinstellungsframe
         Height = 21
         DataField = 'ES_KONZERN'
         DataSource = ESSrc
-        TabOrder = 10
+        TabOrder = 8
         OnChange = TaskHeaderFrame1DBEdit1Change
       end
     end

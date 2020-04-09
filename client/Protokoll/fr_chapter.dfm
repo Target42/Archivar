@@ -1,7 +1,7 @@
 object ChapterFrame: TChapterFrame
   Left = 0
   Top = 0
-  Width = 749
+  Width = 813
   Height = 305
   Align = alClient
   TabOrder = 0
@@ -22,6 +22,15 @@ object ChapterFrame: TChapterFrame
     Align = alLeft
     Caption = 'Struktur'
     TabOrder = 0
+    object Label2: TLabel
+      Left = 2
+      Top = 15
+      Width = 221
+      Height = 13
+      Align = alTop
+      Alignment = taCenter
+      ExplicitWidth = 3
+    end
     object Panel1: TPanel
       Left = 2
       Top = 240
@@ -198,6 +207,7 @@ object ChapterFrame: TChapterFrame
           3F55B4513F55B4513F55B351412FFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
+        OnClick = SpeedButton3Click
       end
       object SpeedButton4: TSpeedButton
         Left = 117
@@ -370,19 +380,24 @@ object ChapterFrame: TChapterFrame
     end
     object TV: TTreeView
       Left = 2
-      Top = 15
+      Top = 28
       Width = 221
-      Height = 225
+      Height = 212
       Align = alClient
+      DragMode = dmAutomatic
+      Images = GM.ImageList2
       Indent = 19
       TabOrder = 1
+      OnDblClick = TVDblClick
+      OnDragDrop = TVDragDrop
       OnDragOver = TVDragOver
+      ExplicitLeft = 3
     end
   end
   object GroupBox2: TGroupBox
     Left = 228
     Top = 0
-    Width = 521
+    Width = 585
     Height = 305
     Align = alClient
     Caption = 'Aufgaben'
@@ -391,7 +406,7 @@ object ChapterFrame: TChapterFrame
     object Panel2: TPanel
       Left = 2
       Top = 15
-      Width = 517
+      Width = 581
       Height = 41
       Align = alTop
       BevelOuter = bvNone
@@ -419,7 +434,7 @@ object ChapterFrame: TChapterFrame
     inline TaskList2Frame1: TTaskList2Frame
       Left = 2
       Top = 56
-      Width = 517
+      Width = 581
       Height = 247
       Align = alClient
       TabOrder = 1
@@ -428,16 +443,23 @@ object ChapterFrame: TChapterFrame
       ExplicitWidth = 219
       ExplicitHeight = 247
       inherited LV: TListView
-        Width = 517
-        Height = 215
-        ExplicitWidth = 219
-        ExplicitHeight = 215
+        Width = 532
+        Height = 206
+        ExplicitWidth = 170
+        ExplicitHeight = 206
       end
       inherited Panel1: TPanel
-        Top = 215
-        Width = 517
-        ExplicitTop = 215
+        Top = 206
+        Width = 581
+        ExplicitTop = 206
         ExplicitWidth = 219
+      end
+      inherited Panel2: TPanel
+        Height = 206
+        ExplicitHeight = 206
+        inherited SpeedButton2: TSpeedButton
+          OnClick = TaskList2Frame1SpeedButton2Click
+        end
       end
     end
   end

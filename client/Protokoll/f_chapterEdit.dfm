@@ -1,6 +1,7 @@
 object ChapterEditForm: TChapterEditForm
   Left = 0
   Top = 0
+  ActiveControl = LabeledEdit1
   Caption = 'TOP'
   ClientHeight = 302
   ClientWidth = 504

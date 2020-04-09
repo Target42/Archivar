@@ -49,7 +49,8 @@ uses
   xsd_chapter in '..\misc\xsd_chapter.pas',
   f_chapterEdit in 'Protokoll\f_chapterEdit.pas' {ChapterEditForm},
   fr_taskList2 in 'Task\fr_taskList2.pas' {TaskList2Frame: TFrame},
-  u_taskEntry in 'Task\u_taskEntry.pas';
+  u_taskEntry in 'Task\u_taskEntry.pas',
+  f_chapter_content in 'Protokoll\f_chapter_content.pas' {ChapterContentForm};
 
 {$R *.res}
 
