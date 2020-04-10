@@ -1,11 +1,10 @@
 object ChapterFrame: TChapterFrame
   Left = 0
   Top = 0
-  Width = 813
+  Width = 451
   Height = 305
   Align = alClient
   TabOrder = 0
-  ExplicitWidth = 451
   object Splitter1: TSplitter
     Left = 225
     Top = 0
@@ -385,35 +384,31 @@ object ChapterFrame: TChapterFrame
       Height = 212
       Align = alClient
       DragMode = dmAutomatic
-      Images = GM.ImageList2
       Indent = 19
       TabOrder = 1
       OnDblClick = TVDblClick
       OnDragDrop = TVDragDrop
       OnDragOver = TVDragOver
-      ExplicitLeft = 3
     end
   end
   object GroupBox2: TGroupBox
     Left = 228
     Top = 0
-    Width = 585
+    Width = 223
     Height = 305
     Align = alClient
     Caption = 'Aufgaben'
     TabOrder = 1
-    ExplicitWidth = 223
     object Panel2: TPanel
       Left = 2
       Top = 15
-      Width = 581
+      Width = 219
       Height = 41
       Align = alTop
       BevelOuter = bvNone
       Caption = 'Panel2'
       ShowCaption = False
       TabOrder = 0
-      ExplicitWidth = 219
       object Label1: TLabel
         Left = 16
         Top = 11
@@ -434,7 +429,7 @@ object ChapterFrame: TChapterFrame
     inline TaskList2Frame1: TTaskList2Frame
       Left = 2
       Top = 56
-      Width = 581
+      Width = 219
       Height = 247
       Align = alClient
       TabOrder = 1
@@ -443,14 +438,14 @@ object ChapterFrame: TChapterFrame
       ExplicitWidth = 219
       ExplicitHeight = 247
       inherited LV: TListView
-        Width = 532
+        Width = 170
         Height = 206
         ExplicitWidth = 170
         ExplicitHeight = 206
       end
       inherited Panel1: TPanel
         Top = 206
-        Width = 581
+        Width = 219
         ExplicitTop = 206
         ExplicitWidth = 219
       end

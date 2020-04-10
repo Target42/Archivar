@@ -217,6 +217,7 @@ begin
   begin
     ComboBox1.Items.AddObject(GM.Gremien.Items[i].Name, GM.Gremien.Items[i]);
   end;
+  TV.Images := GM.ImageList2;
   TaskList2Frame1.prepare;
   TaskList2Frame1.OnTaskEntry := doNewTaskEntry;
 end;

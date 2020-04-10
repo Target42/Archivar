@@ -331,6 +331,7 @@ end;
 
 procedure TProtokollForm.FormCreate(Sender: TObject);
 begin
+  TV.Images := GM.ImageList2;
   Application.CreateForm(TTitelEditform, m_TitelEditform);
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
   m_locked := true;
@@ -401,9 +402,9 @@ begin
     begin
       if m_cpList.Items[i].Modified then
       begin
-        UpdateCPQry.ParamByName('PR_ID').AsInteger := m_id;
-        UpdateCPQry.ParamByName('CP_NR').AsInteger := m_cpList.Items[i].Nr;
-        UpdateCPQry.ParamByName('CP_TEXT').AsString:= m_cpList.Items[i].Text;
+        UpdateCPQry.ParamByName('CP_ID').AsInteger  := m_cpList.Items[i].ID;
+        UpdateCPQry.ParamByName('CP_NR').AsInteger  := m_cpList.Items[i].Nr;
+        UpdateCPQry.ParamByName('CP_TITLE').AsString:= m_cpList.Items[i].Text;
         UpdateCPQry.Execute;
         m_cpList.Items[i].Modified := false;
       end;

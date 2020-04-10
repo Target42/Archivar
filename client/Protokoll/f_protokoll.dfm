@@ -304,14 +304,9 @@ object ProtokollForm: TProtokollForm
           Width = 205
           Height = 196
           Align = alClient
-          Images = GM.ImageList2
           Indent = 19
           ReadOnly = True
           TabOrder = 1
-          ExplicitLeft = 24
-          ExplicitTop = 24
-          ExplicitWidth = 121
-          ExplicitHeight = 97
         end
       end
     end
@@ -558,8 +553,9 @@ object ProtokollForm: TProtokollForm
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsProtocol'
-    Left = 208
-    Top = 160
+    SQLConnection = GM.SQLConnection1
+    Left = 304
+    Top = 96
   end
   object PRTab: TClientDataSet
     Aggregates = <>
