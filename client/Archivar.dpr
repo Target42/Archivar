@@ -50,7 +50,15 @@ uses
   f_chapterEdit in 'Protokoll\f_chapterEdit.pas' {ChapterEditForm},
   fr_taskList2 in 'Task\fr_taskList2.pas' {TaskList2Frame: TFrame},
   u_taskEntry in 'Task\u_taskEntry.pas',
-  f_chapter_content in 'Protokoll\f_chapter_content.pas' {ChapterContentForm};
+  f_chapter_content in 'Protokoll\f_chapter_content.pas' {ChapterContentForm},
+  f_datafields in 'Datafields\f_datafields.pas' {DataFieldForm},
+  f_datafield_edit in 'Datafields\f_datafield_edit.pas' {DatafieldEditform},
+  i_datafields in 'Datafields\i_datafields.pas',
+  u_PropertyImpl in 'Datafields\u_PropertyImpl.pas',
+  u_DataFieldImpl in 'Datafields\u_DataFieldImpl.pas',
+  u_DataFieldLislImpl in 'Datafields\u_DataFieldLislImpl.pas',
+  xsd_DataField in '..\misc\xsd_DataField.pas',
+  xsd_Task in '..\misc\xsd_Task.pas';
 
 {$R *.res}
 

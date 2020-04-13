@@ -252,19 +252,11 @@ begin
   DeleteTrans.StartTransaction;
 
   s := 'O';
-  flags := taskNew;
 
+  flags := taskNew;
   try
     FindTask.ParamByName('TA_ID').AsInteger := taid;
 
-    FindTask.open;
-    if not FindTask.IsEmpty then
-    begin
-      flags := FindTask.FieldByName('TA_FLAGS').AsInteger;
-    end;
-    FindTask.Close;
-
-    flags := taskNew;
     SetFlagQry.ParamByName('TA_ID').AsInteger     := taid;
     SetFlagQry.ParamByName('TA_FLAGS').AsInteger  := flags;
     SetFlagQry.ExecSQL;

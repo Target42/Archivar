@@ -27,7 +27,8 @@ uses
   ds_protocol in 'ds_protocol.pas' {dsProtocol: TDSServerModule},
   ds_image in 'ds_image.pas' {dsImage: TDSServerModule},
   u_berTypes in '..\misc\u_berTypes.pas',
-  ds_chapter in 'ds_chapter.pas' {dsChapter: TDSServerModule};
+  ds_chapter in 'ds_chapter.pas' {dsChapter: TDSServerModule},
+  ds_taskEdit in 'ds_taskEdit.pas' {dsTaskEdit: TDSServerModule};
 
 var
   MyDummyBoolean : Boolean;

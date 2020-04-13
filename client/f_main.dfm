@@ -65,8 +65,6 @@ object MainForm: TMainForm
       item
         Width = 50
       end>
-    ExplicitTop = 574
-    ExplicitWidth = 978
   end
   object GroupBox2: TGroupBox
     Left = 0
@@ -77,8 +75,6 @@ object MainForm: TMainForm
     Caption = 'Aufgaben'
     TabOrder = 1
     Visible = False
-    ExplicitTop = 384
-    ExplicitWidth = 978
     inline TaskListFrame1: TTaskListFrame
       Left = 2
       Top = 15
@@ -88,7 +84,7 @@ object MainForm: TMainForm
       TabOrder = 0
       ExplicitLeft = 2
       ExplicitTop = 15
-      ExplicitWidth = 974
+      ExplicitWidth = 1122
       ExplicitHeight = 173
       inherited DBGrid1: TDBGrid
         Width = 1122
@@ -111,8 +107,6 @@ object MainForm: TMainForm
     Visible = False
     object TabSheet1: TTabSheet
       Caption = 'Gremien'
-      ExplicitWidth = 273
-      ExplicitHeight = 353
       inline GremiumTreeFrame1: TGremiumTreeFrame
         Left = 0
         Top = 0
@@ -120,21 +114,19 @@ object MainForm: TMainForm
         Height = 438
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 273
-        ExplicitHeight = 353
+        ExplicitWidth = 233
+        ExplicitHeight = 438
         inherited TV: TTreeView
           Width = 233
           Height = 438
-          ExplicitWidth = 273
-          ExplicitHeight = 353
+          ExplicitWidth = 233
+          ExplicitHeight = 438
         end
       end
     end
     object TabSheet2: TTabSheet
       Caption = 'Lesezeichen'
       ImageIndex = 1
-      ExplicitWidth = 273
-      ExplicitHeight = 353
       inline BookmarkFrame1: TBookmarkFrame
         Left = 0
         Top = 0
@@ -142,19 +134,19 @@ object MainForm: TMainForm
         Height = 438
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 273
-        ExplicitHeight = 353
+        ExplicitWidth = 233
+        ExplicitHeight = 438
         inherited LV: TListView
           Width = 233
           Height = 438
-          ExplicitWidth = 273
-          ExplicitHeight = 353
+          ExplicitWidth = 233
+          ExplicitHeight = 438
         end
       end
     end
   end
   object MainMenu1: TMainMenu
-    Left = 40
+    Left = 152
     Top = 32
     object Programm1: TMenuItem
       Caption = '&Programm'
@@ -213,6 +205,12 @@ object MainForm: TMainForm
       object Mitglieder1: TMenuItem
         Action = ac_ad_person
       end
+      object N3: TMenuItem
+        Caption = '-'
+      end
+      object Datenfelder1: TMenuItem
+        Action = ac_ad_datafields
+      end
     end
     object Fenster1: TMenuItem
       Caption = 'Fenster'
@@ -235,8 +233,8 @@ object MainForm: TMainForm
     end
   end
   object ActionList1: TActionList
-    Left = 32
-    Top = 88
+    Left = 128
+    Top = 120
     object ac_prg_close: TAction
       Category = 'Program'
       Caption = 'Ende'
@@ -329,10 +327,15 @@ object MainForm: TMainForm
       Enabled = False
       OnExecute = ac_ta_loadExecute
     end
+    object ac_ad_datafields: TAction
+      Category = 'Admin'
+      Caption = 'Datenfelder'
+      OnExecute = ac_ad_datafieldsExecute
+    end
   end
   object ApplicationEvents1: TApplicationEvents
     OnMessage = ApplicationEvents1Message
-    Left = 32
-    Top = 144
+    Left = 136
+    Top = 168
   end
 end

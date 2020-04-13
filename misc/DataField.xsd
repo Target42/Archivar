@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v2004 rel. 3 U (http://www.xmlspy.com) by John Doe (Blaupunkt GmbH) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="DataField">
+		<xs:annotation>
+			<xs:documentation>Comment describing your root element</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Property" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element name="Text"/>
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string"/>
+			<xs:attribute name="datatype" type="xs:string"/>
+			<xs:attribute name="clid" type="xs:string"/>
+			<xs:attribute name="isGlobal" type="xs:boolean"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="value"/>
+	<xs:element name="Property">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="value"/>
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string"/>
+			<xs:attribute name="typ" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

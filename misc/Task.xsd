@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v2004 rel. 3 U (http://www.xmlspy.com) by John Doe (Blaupunkt GmbH) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:import schemaLocation="DataField.xsd"/>
+	<xs:element name="Task">
+		<xs:annotation>
+			<xs:documentation>Comment describing your root element</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Rem"/>
+				<xs:element ref="Datafields"/>
+				<xs:element ref="Forms"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Rem"/>
+	<xs:element name="Datafields">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="DataField" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Control">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Property" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string"/>
+			<xs:attribute name="typ" type="xs:string"/>
+			<xs:attribute name="parent" type="xs:string"/>
+			<xs:attribute name="datafield" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Form">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Control" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string"/>
+			<xs:attribute name="mainform" type="xs:boolean"/>
+			<xs:attribute name="clid" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Forms">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Form" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

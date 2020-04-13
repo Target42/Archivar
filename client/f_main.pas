@@ -67,6 +67,9 @@ type
     Neue2: TMenuItem;
     ac_ta_load: TAction;
     Laden2: TMenuItem;
+    ac_ad_datafields: TAction;
+    Datenfelder1: TMenuItem;
+    N3: TMenuItem;
     procedure ac_prg_closeExecute(Sender: TObject);
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure ac_prg_disconExecute(Sender: TObject);
@@ -80,6 +83,7 @@ type
     procedure ac_ad_picsExecute(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure ac_ta_loadExecute(Sender: TObject);
+    procedure ac_ad_datafieldsExecute(Sender: TObject);
   private
     procedure setPanel( id : integer ; text : string );
     procedure loadLogo;
@@ -95,9 +99,19 @@ implementation
 uses
   m_glob_client, f_gremiumForm, f_personen, f_task_new, f_gremiumList,
   f_protokoll, u_stub, System.JSON, u_json, f_protokoll_list, u_gremium, m_BookMarkHandler, m_WindowHandler,
-  f_images, System.IOUtils, f_taksListForm, u_berTypes;
+  f_images, System.IOUtils, f_taksListForm, u_berTypes, f_datafields;
 
 {$R *.dfm}
+
+procedure TMainForm.ac_ad_datafieldsExecute(Sender: TObject);
+begin
+  try
+    Application.CreateForm(TDataFieldForm, DataFieldForm);
+    DataFieldForm.ShowModal;
+  finally
+    DataFieldForm.free;
+  end;
+end;
 
 procedure TMainForm.ac_ad_gremiumExecute(Sender: TObject);
 begin
