@@ -57,7 +57,13 @@ uses
   u_PropertyImpl in 'Datafields\u_PropertyImpl.pas',
   u_DataFieldImpl in 'Datafields\u_DataFieldImpl.pas',
   u_DataFieldLislImpl in 'Datafields\u_DataFieldLislImpl.pas',
+  f_taskEditor in 'TaskEditor\f_taskEditor.pas' {TaksEditorForm},
+  i_taskEdit in 'TaskEditor\i_taskEdit.pas',
+  u_TaskImpl in 'TaskEditor\u_TaskImpl.pas',
+  f_tableField_editor in 'TaskEditor\f_tableField_editor.pas' {TableFieldEditorForm},
   xsd_DataField in '..\misc\xsd_DataField.pas',
+  u_DataField2XML in 'Datafields\u_DataField2XML.pas',
+  u_TaskDataField2XML in 'TaskEditor\u_TaskDataField2XML.pas',
   xsd_Task in '..\misc\xsd_Task.pas';
 
 {$R *.res}
@@ -75,5 +81,6 @@ begin
   Application.CreateForm(TWindowHandler, WindowHandler);
   Application.CreateForm(TBookMarkHandler, BookMarkHandler);
   Application.CreateForm(TMainForm, MainForm);
+  Application.CreateForm(TTaksEditorForm, TaksEditorForm);
   Application.Run;
 end.

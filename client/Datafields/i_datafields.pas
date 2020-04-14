@@ -29,8 +29,12 @@ type
     function  getRem : string;
     procedure setIsGlobal( value : boolean );
     function  getIsGlobal : boolean;
+    procedure setRequired( value : boolean );
+    function  getRequired : boolean;
 
     function  GetItems : TList<IProperty>;
+    function  getChilds : IDataFieldList;
+    procedure setChilds( value : IDataFieldList);
     procedure config( const arr : array of TPropertyEntry);
   //public
 
@@ -38,15 +42,16 @@ type
     property CLID  : string read GetCLID write SetCLID;
     property Typ   : string read GetTyp  write SetTyp;
     property Rem   : string read getRem write setRem;
+    property Required : boolean read getRequired write setRequired;
     property isGlobal : boolean read getIsGlobal write setIsGlobal;
 
-    property Items : TList<IProperty> read GetItems;
+    property Properties : TList<IProperty> read GetItems;
+    property Childs     : IDataFieldList read getChilds write setChilds;
+
     function getPropertyByName( name : string ) : IProperty;
 
-    procedure loadFromStream( st : TStream );
-    procedure saveToStream(st  : TStream );
-
     procedure release;
+    function clone : IDataField;
   end;
 
   IDataFieldList = interface
@@ -54,11 +59,18 @@ type
   // private
     procedure SetItems( inx : integer ; const value : IDataField );
     function  GetItems( inx : integer ) :IDataField;
+    function  getCount : integer;
   // public
     property Items[ inx : integer ] : IDataField read GetItems write SetItems;
+    property Count : integer read getCount;
+
     function getByName( name : string ) : IDataField;
+    procedure add( value : IDataField );
+    function newField( name, typ : string ) : IDataField;
+    procedure delete( value : IDataField );
 
     procedure release;
+    function clone : IDataFieldList;
   end;
 
   IProperty = interface
@@ -88,16 +100,16 @@ implementation
 
 procedure DataTypeFillList( items : TStrings );
 begin
-  items.Add('string');
-  items.Add('integer');
-  items.Add('date');
-  items.Add('time');
-  items.Add('datetime');
   items.Add('bool');
+  items.Add('date');
+  items.Add('datetime');
   items.Add('enum');
   items.Add('float');
+  items.Add('integer');
+  items.Add('string');
   items.Add('text');
-
+  items.Add('time');
+//  items.Add('table');
 end;
 
 end.

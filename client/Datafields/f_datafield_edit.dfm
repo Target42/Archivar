@@ -32,7 +32,6 @@ object DatafieldEditform: TDatafieldEditform
     end
     inherited Panel1: TPanel
       Width = 263
-      ExplicitTop = -6
       ExplicitWidth = 263
       inherited OKBtn: TBitBtn
         Left = 175
@@ -45,7 +44,7 @@ object DatafieldEditform: TDatafieldEditform
     Left = 0
     Top = 0
     Width = 263
-    Height = 113
+    Height = 131
     Align = alTop
     BevelOuter = bvNone
     Caption = 'Panel1'
@@ -63,14 +62,16 @@ object DatafieldEditform: TDatafieldEditform
       Top = 24
       Width = 113
       Height = 21
+      CharCase = ecUpperCase
       EditLabel.Width = 27
       EditLabel.Height = 13
       EditLabel.Caption = 'Name'
       TabOrder = 0
+      OnKeyPress = LabeledEdit1KeyPress
     end
     object ComboBox1: TComboBox
       Left = 152
-      Top = 24
+      Top = 27
       Width = 89
       Height = 21
       Sorted = True
@@ -88,12 +89,29 @@ object DatafieldEditform: TDatafieldEditform
       EditLabel.Caption = 'Beschreibung'
       TabOrder = 2
     end
+    object CheckBox1: TCheckBox
+      Left = 16
+      Top = 108
+      Width = 97
+      Height = 17
+      Caption = 'Erforderlich'
+      TabOrder = 3
+    end
+    object Button1: TButton
+      Left = 152
+      Top = 100
+      Width = 89
+      Height = 25
+      Caption = 'Tabellenfelder'
+      TabOrder = 4
+      OnClick = Button1Click
+    end
   end
   object GroupBox1: TGroupBox
     Left = 0
-    Top = 113
+    Top = 131
     Width = 263
-    Height = 158
+    Height = 140
     Align = alClient
     Caption = 'Eigenschaften'
     TabOrder = 2
@@ -101,7 +119,7 @@ object DatafieldEditform: TDatafieldEditform
       Left = 2
       Top = 15
       Width = 259
-      Height = 141
+      Height = 123
       Align = alClient
       TabOrder = 0
       OnExit = VEExit

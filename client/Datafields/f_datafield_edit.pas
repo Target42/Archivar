@@ -17,12 +17,16 @@ type
     Label1: TLabel;
     ComboBox1: TComboBox;
     LabeledEdit2: TLabeledEdit;
+    CheckBox1: TCheckBox;
+    Button1: TButton;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure ComboBox1Change(Sender: TObject);
     procedure VEKeyPress(Sender: TObject; var Key: Char);
     procedure VEExit(Sender: TObject);
     procedure BaseFrame1OKBtnClick(Sender: TObject);
+    procedure LabeledEdit1KeyPress(Sender: TObject; var Key: Char);
+    procedure Button1Click(Sender: TObject);
   private
     m_tab      : TDataSet;
     m_data     : IDataField;
@@ -43,26 +47,44 @@ var
 implementation
 
 uses
-  u_DataFieldImpl, m_glob_client, win.comObj;
+  u_DataFieldImpl, m_glob_client, win.comObj, f_tableField_editor,
+  u_DataField2XML;
 
 {$R *.dfm}
 
 procedure TDatafieldEditform.BaseFrame1OKBtnClick(Sender: TObject);
 var
   st : TStream;
+  xw : TDataField2XML;
 begin
   m_data.Name := trim(LabeledEdit1.Text);
   m_data.Rem  := LabeledEdit2.Text;
+  m_data.Required := CheckBox1.Checked;
 
   if Assigned(m_tab) then
   begin
+    xw :=  TDataField2XML.create;
     m_tab.FieldByName('DA_NAME').AsString := m_data.Name;
     m_tab.FieldByName('DA_TYPE').AsString := m_data.Typ;
     m_tab.FieldByName('DA_REM').AsString := m_data.Rem;
 
     st := m_tab.CreateBlobStream( m_tab.FieldByName('DA_PROPS'), bmWrite );
-    m_data.saveToStream(st);
+    xw.saveToStream(m_data, st);
+    xw.Free;
     st.Free;
+  end;
+end;
+
+procedure TDatafieldEditform.Button1Click(Sender: TObject);
+var
+  TableFieldEditorForm : TTableFieldEditorForm;
+begin
+  try
+    Application.CreateForm(TTableFieldEditorForm, TableFieldEditorForm);
+    TableFieldEditorForm.Root := m_data;
+    TableFieldEditorForm.ShowModal;
+  finally
+    TableFieldEditorForm.free;
   end;
 end;
 
@@ -83,7 +105,8 @@ end;
 
 procedure TDatafieldEditform.FormDestroy(Sender: TObject);
 begin
-  m_data.Release;
+  if Assigned(m_tab) then
+    m_data.Release;
   m_data := NIL;
 end;
 
@@ -92,19 +115,40 @@ begin
   Result := m_data;
 end;
 
+procedure TDatafieldEditform.LabeledEdit1KeyPress(Sender: TObject;
+  var Key: Char);
+begin
+  if key < ' '  then
+    exit;
+
+  if key = ' ' then
+    key := '_';
+
+ if not CharInSet(key, ['a'..'z', 'A'..'Z', '_', '0'..'9']) then
+   Key := #0;
+end;
+
 procedure TDatafieldEditform.setDataField(const Value: IDataField);
 begin
   m_data := value;
+
   if not Assigned(m_data) then
     exit;
 
   m_noChange := true;
 
+  ComboBox1.Text      := '';
   LabeledEdit1.Text   := m_data.Name;
   ComboBox1.ItemIndex := ComboBox1.Items.IndexOf(m_data.Typ);
   LabeledEdit2.Text   := m_data.Rem;
+  CheckBox1.Checked   := m_data.Required;
 
   setProps;
+  if (m_data.isGlobal and not Assigned(m_tab)) or ( ComboBox1.ItemIndex = -1 ) then
+  begin
+    ComboBox1.Enabled := false;
+    CheckBox1.Enabled := false;
+  end;
 
   m_noChange := false;
 end;
@@ -113,8 +157,10 @@ procedure TDatafieldEditform.setDataSet(dataset: TDataSet);
 var
   st : TStream;
   ds : IDataField;
+  xw : TDataField2XML;
 begin
   m_tab := dataset;
+  xw := TDataField2XML.create;
 
   if m_tab.State = dsInsert then
   begin
@@ -124,11 +170,8 @@ begin
     m_tab.FieldByName('DA_CLID').AsString := CreateClassID;
   end;
 
-  ds := TDataField.create( m_tab.FieldByName('DA_NAME').AsString,
-    m_tab.FieldByName('DA_TYPE').AsString);
-
   st := m_tab.CreateBlobStream(m_tab.FieldByName('DA_PROPS'), bmRead );
-  ds.loadFromStream(st);
+  ds := xw.loadFromStream(st);
 
   ds.CLID := m_tab.FieldByName('DA_CLID').AsString;
   ds.Rem  := m_tab.FieldByName('DA_REM').AsString;
@@ -136,6 +179,7 @@ begin
 
   setDataField(ds);
 
+  xw.Free;
   st.Free;
 end;
 
@@ -148,10 +192,12 @@ begin
   if not Assigned(m_data) then
     exit;
 
+  Button1.Visible := m_data.Typ = 'table';
+  VE.Enabled := (not m_data.isGlobal) or (m_data.isGlobal and Assigned(m_tab));
   VE.Strings.Clear;
-  for i := 0 to pred(m_data.Items.Count) do
+  for i := 0 to pred(m_data.Properties.Count) do
   begin
-    p := m_data.Items.Items[i];
+    p := m_data.Properties.Items[i];
     VE.InsertRow(p.Name, p.Value, true);
     ip := VE.ItemProps[p.Name];
     if Assigned(ip) then

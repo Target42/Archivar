@@ -14,6 +14,8 @@ type
       m_typ  : string;
       m_rem  : string;
       m_glob : boolean;
+      m_required : boolean;
+      m_childs: IDataFieldList;
 
       procedure SetName( value : string );
       function  GetName : string;
@@ -25,8 +27,12 @@ type
       function  getRem : string;
       procedure setIsGlobal( value : boolean );
       function  getIsGlobal : boolean;
+      procedure setRequired( value : boolean );
+      function  getRequired : boolean;
 
       function  GetItems : TList<IProperty>;
+      function  getChilds : IDataFieldList;
+      procedure setChilds( value : IDataFieldList);
 
       procedure config( const arr : array of TPropertyEntry);
 
@@ -41,19 +47,21 @@ type
       property Rem   : string read getRem write setRem;
       property isGlobal : boolean read getIsGlobal write setIsGlobal;
 
-      property Items : TList<IProperty> read GetItems;
+      property Properties : TList<IProperty> read GetItems;
+      property Childs     : IDataFieldList read getChilds write setChilds;
+
       function getPropertyByName( name : string ) : IProperty;
 
       procedure release;
+      function clone : IDataField;
 
-      procedure loadFromStream( st : TStream );
-      procedure saveToStream(st  : TStream );
   end;
 
 implementation
 
 uses
-  Win.ComObj, xsd_DataField, Xml.XMLIntf, Xml.XMLDoc, u_PropertyImpl;
+  Win.ComObj, xsd_DataField, Xml.XMLIntf, Xml.XMLDoc, u_PropertyImpl,
+  u_DataFieldLislImpl;
 
 
 const
@@ -104,10 +112,36 @@ const
   (
     (name:'Default';      typ:'bool';       value:'false')
   );
+  TableProps : array[1..2] of TPropertyEntry =
+  (
+    (name:'MinLines';      typ:'integer';       value:'0'),
+    (name:'MaxLines';      typ:'integer';       value:'0')
+  );
 
 
 { TDataField }
 
+
+function TDataField.clone: IDataField;
+var
+  i : integer;
+  p : IProperty;
+begin
+  Result := TDataField.Create;
+  Result.Name     := m_name;
+  Result.CLID     := m_clid;
+  Result.Required := m_required;
+  Result.isGlobal := m_glob;
+  Result.Typ      := m_typ;
+
+  for i := 0 to pred(m_list.Count) do
+  begin
+    p := Result.getPropertyByName(m_list[i].Name);
+    if Assigned(p) then
+      p.Value := m_list[i].Value;
+  end;
+  Result.Childs := self.Childs.clone;
+end;
 
 procedure TDataField.config(const arr: array of TPropertyEntry);
 var
@@ -123,14 +157,18 @@ end;
 
 constructor TDataField.Create;
 begin
-  m_glob := false;
+  m_glob      := false;
+  m_required  := false;
   m_list := TList<IProperty>.create;
+  m_childs := TDataFieldList.create;
 end;
 
 constructor TDataField.Create(name, typ: string);
 begin
-  m_glob := false;
+  m_glob      := false;
+  m_required  := false;
   m_list := TList<IProperty>.create;
+  m_childs := TDataFieldList.create;
   m_name := name;
 
   SetTyp(typ);
@@ -142,6 +180,11 @@ begin
 
   m_list.Free;
   inherited;
+end;
+
+function TDataField.getChilds: IDataFieldList;
+begin
+  Result := m_childs;
 end;
 
 function TDataField.GetCLID: string;
@@ -184,52 +227,16 @@ begin
   Result := m_rem;
 end;
 
+function TDataField.getRequired: boolean;
+begin
+  Result := m_required;
+end;
+
 function TDataField.GetTyp: string;
 begin
   Result := m_typ;
 end;
 
-procedure TDataField.loadFromStream(st: TStream);
-var
-  xData : IXMLDataField;
-  xml   : IXMLDocument;
-  procedure addProps;
-  var
-    i : integer;
-    xp : IXMLProperty_;
-    p  : IProperty;
-  begin
-    for i := 0 to pred(xData.Property_.Count) do
-    begin
-      xp := xData.Property_[i];
-      p  := getPropertyByName(xp.Name);
-      if Assigned(p) then
-        p.Value := xp.Value;
-    end;
-  end;
-
-begin
-  xData := NIL;
-  xml := NewXMLDocument;
-  if Assigned(st) and (st.Size > 0 ) then
-  begin
-    xml.LoadFromStream(st);
-    xData := xml.GetDocBinding('DataField', TXMLDataField, TargetNamespace) as IXMLDataField;
-  end;
-
-  if not Assigned(xData) then
-  begin
-    xData := NewDataField;
-    xData.Datatype := 'string';
-  end;
-
-  m_name := xData.Name;
-  m_clid := xData.Clid;
-  m_rem  := xData.Text;
-
-  SetTyp(xData.Datatype);
-  addProps;
-end;
 
 procedure TDataField.release;
 var
@@ -239,40 +246,15 @@ begin
   begin
     m_list[i].release;
   end;
+
+  m_childs.release;
   m_list.Clear;
 end;
 
-procedure TDataField.saveToStream(st  : TStream );
-var
-  xData : IXMLDataField;
-
-  procedure addProps;
-  var
-    i : integer;
-    xp : IXMLProperty_;
-    p  : IProperty;
-  begin
-    for i := 0 to pred(m_list.Count) do
-    begin
-      xp := xData.Property_.Add;
-      p  := m_list[i];
-      xp.Name   := p.Name;
-      xp.Typ    := p.Typ;
-      xp.Value  := p.Value;
-    end;
-  end;
-
+procedure TDataField.setChilds(value: IDataFieldList);
 begin
-  xData           := NewDataField;
-  xData.Name      := m_name;
-  xData.Clid      := m_clid;
-  xData.Datatype  := m_typ;
-  xData.Text      := m_rem;
-  xData. IsGlobal := m_glob;
-
-  addProps;
-
-  xData.OwnerDocument.SaveToStream(st);
+  m_childs.release;
+  m_childs := value;
 end;
 
 procedure TDataField.SetCLID(value: string);
@@ -293,6 +275,11 @@ end;
 procedure TDataField.setRem(value: string);
 begin
   m_rem := value;
+end;
+
+procedure TDataField.setRequired(value: boolean);
+begin
+  m_required := value;
 end;
 
 procedure TDataField.SetTyp(value: string);
@@ -316,7 +303,9 @@ begin
   else if m_typ = 'enum' then
     config(EnumProps)
   else if m_typ = 'text' then
-    config(TextProps);
+    config(TextProps)
+  else if m_typ = 'table' then
+    config(TableProps);
 end;
 
 end.
