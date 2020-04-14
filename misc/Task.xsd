@@ -30,7 +30,7 @@
 			<xs:attribute name="name" type="xs:string"/>
 			<xs:attribute name="typ" type="xs:string"/>
 			<xs:attribute name="parent" type="xs:string"/>
-			<xs:attribute name="datafield" type="xs:string"/>
+			<xs:attribute name="field" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="Form">

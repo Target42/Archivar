@@ -3,7 +3,7 @@
 {                                                          }
 {                     XML-Datenbindung                     }
 {                                                          }
-{         Generiert am: 13.04.2020 09:04:34                }
+{         Generiert am: 14.04.2020 20:06:08                }
 {       Generiert von: D:\git\ber.git\misc\DataField.xsd   }
 {                                                          }
 {**********************************************************}
@@ -19,38 +19,56 @@ type
 { Forward-Deklarationen }
 
   IXMLDataField = interface;
+  IXMLProperties = interface;
   IXMLProperty_ = interface;
-  IXMLProperty_List = interface;
+  IXMLChilds = interface;
 
 { IXMLDataField }
 
   IXMLDataField = interface(IXMLNode)
-    ['{0B2C9A32-7A89-4BBF-9C5E-3820FAD5A603}']
+    ['{6381BBC5-F48E-4839-809E-4F8FD47A71B5}']
     { Eigenschaftszugriff }
     function Get_Name: UnicodeString;
     function Get_Datatype: UnicodeString;
     function Get_Clid: UnicodeString;
     function Get_IsGlobal: Boolean;
-    function Get_Property_: IXMLProperty_List;
+    function Get_Required: Boolean;
+    function Get_Properties: IXMLProperties;
+    function Get_Childs: IXMLChilds;
     function Get_Text: UnicodeString;
     procedure Set_Name(Value: UnicodeString);
     procedure Set_Datatype(Value: UnicodeString);
     procedure Set_Clid(Value: UnicodeString);
     procedure Set_IsGlobal(Value: Boolean);
+    procedure Set_Required(Value: Boolean);
     procedure Set_Text(Value: UnicodeString);
     { Methoden & Eigenschaften }
     property Name: UnicodeString read Get_Name write Set_Name;
     property Datatype: UnicodeString read Get_Datatype write Set_Datatype;
     property Clid: UnicodeString read Get_Clid write Set_Clid;
     property IsGlobal: Boolean read Get_IsGlobal write Set_IsGlobal;
-    property Property_: IXMLProperty_List read Get_Property_;
+    property Required: Boolean read Get_Required write Set_Required;
+    property Properties: IXMLProperties read Get_Properties;
+    property Childs: IXMLChilds read Get_Childs;
     property Text: UnicodeString read Get_Text write Set_Text;
+  end;
+
+{ IXMLProperties }
+
+  IXMLProperties = interface(IXMLNodeCollection)
+    ['{E4C48889-558B-430E-898E-9BD88863A403}']
+    { Eigenschaftszugriff }
+    function Get_Property_(Index: Integer): IXMLProperty_;
+    { Methoden & Eigenschaften }
+    function Add: IXMLProperty_;
+    function Insert(const Index: Integer): IXMLProperty_;
+    property Property_[Index: Integer]: IXMLProperty_ read Get_Property_; default;
   end;
 
 { IXMLProperty_ }
 
   IXMLProperty_ = interface(IXMLNode)
-    ['{C07C20BF-3A3E-41A8-8D74-3514452B2039}']
+    ['{A58FA47C-EAE9-44A3-8431-AD45D0BB5AE1}']
     { Eigenschaftszugriff }
     function Get_Name: UnicodeString;
     function Get_Typ: UnicodeString;
@@ -64,42 +82,56 @@ type
     property Value: UnicodeString read Get_Value write Set_Value;
   end;
 
-{ IXMLProperty_List }
+{ IXMLChilds }
 
-  IXMLProperty_List = interface(IXMLNodeCollection)
-    ['{AE852D81-339E-4B94-A828-3EE6FA9C997C}']
+  IXMLChilds = interface(IXMLNodeCollection)
+    ['{ED3EBEE6-C2A1-4C4C-B410-966168D6ACE6}']
+    { Eigenschaftszugriff }
+    function Get_DataField(Index: Integer): IXMLDataField;
     { Methoden & Eigenschaften }
-    function Add: IXMLProperty_;
-    function Insert(const Index: Integer): IXMLProperty_;
-
-    function Get_Item(Index: Integer): IXMLProperty_;
-    property Items[Index: Integer]: IXMLProperty_ read Get_Item; default;
+    function Add: IXMLDataField;
+    function Insert(const Index: Integer): IXMLDataField;
+    property DataField[Index: Integer]: IXMLDataField read Get_DataField; default;
   end;
 
 { Forward-Deklarationen }
 
   TXMLDataField = class;
+  TXMLProperties = class;
   TXMLProperty_ = class;
-  TXMLProperty_List = class;
+  TXMLChilds = class;
 
 { TXMLDataField }
 
   TXMLDataField = class(TXMLNode, IXMLDataField)
-  private
-    FProperty_: IXMLProperty_List;
   protected
     { IXMLDataField }
     function Get_Name: UnicodeString;
     function Get_Datatype: UnicodeString;
     function Get_Clid: UnicodeString;
     function Get_IsGlobal: Boolean;
-    function Get_Property_: IXMLProperty_List;
+    function Get_Required: Boolean;
+    function Get_Properties: IXMLProperties;
+    function Get_Childs: IXMLChilds;
     function Get_Text: UnicodeString;
     procedure Set_Name(Value: UnicodeString);
     procedure Set_Datatype(Value: UnicodeString);
     procedure Set_Clid(Value: UnicodeString);
     procedure Set_IsGlobal(Value: Boolean);
+    procedure Set_Required(Value: Boolean);
     procedure Set_Text(Value: UnicodeString);
+  public
+    procedure AfterConstruction; override;
+  end;
+
+{ TXMLProperties }
+
+  TXMLProperties = class(TXMLNodeCollection, IXMLProperties)
+  protected
+    { IXMLProperties }
+    function Get_Property_(Index: Integer): IXMLProperty_;
+    function Add: IXMLProperty_;
+    function Insert(const Index: Integer): IXMLProperty_;
   public
     procedure AfterConstruction; override;
   end;
@@ -117,15 +149,16 @@ type
     procedure Set_Value(Value: UnicodeString);
   end;
 
-{ TXMLProperty_List }
+{ TXMLChilds }
 
-  TXMLProperty_List = class(TXMLNodeCollection, IXMLProperty_List)
+  TXMLChilds = class(TXMLNodeCollection, IXMLChilds)
   protected
-    { IXMLProperty_List }
-    function Add: IXMLProperty_;
-    function Insert(const Index: Integer): IXMLProperty_;
-
-    function Get_Item(Index: Integer): IXMLProperty_;
+    { IXMLChilds }
+    function Get_DataField(Index: Integer): IXMLDataField;
+    function Add: IXMLDataField;
+    function Insert(const Index: Integer): IXMLDataField;
+  public
+    procedure AfterConstruction; override;
   end;
 
 { Globale Funktionen }
@@ -162,8 +195,8 @@ end;
 
 procedure TXMLDataField.AfterConstruction;
 begin
-  RegisterChildNode('Property', TXMLProperty_);
-  FProperty_ := CreateCollection(TXMLProperty_List, IXMLProperty_, 'Property') as IXMLProperty_List;
+  RegisterChildNode('Properties', TXMLProperties);
+  RegisterChildNode('Childs', TXMLChilds);
   inherited;
 end;
 
@@ -207,9 +240,24 @@ begin
   SetAttribute('isGlobal', Value);
 end;
 
-function TXMLDataField.Get_Property_: IXMLProperty_List;
+function TXMLDataField.Get_Required: Boolean;
 begin
-  Result := FProperty_;
+  Result := AttributeNodes['required'].NodeValue;
+end;
+
+procedure TXMLDataField.Set_Required(Value: Boolean);
+begin
+  SetAttribute('required', Value);
+end;
+
+function TXMLDataField.Get_Properties: IXMLProperties;
+begin
+  Result := ChildNodes['Properties'] as IXMLProperties;
+end;
+
+function TXMLDataField.Get_Childs: IXMLChilds;
+begin
+  Result := ChildNodes['Childs'] as IXMLChilds;
 end;
 
 function TXMLDataField.Get_Text: UnicodeString;
@@ -220,6 +268,31 @@ end;
 procedure TXMLDataField.Set_Text(Value: UnicodeString);
 begin
   ChildNodes['Text'].NodeValue := Value;
+end;
+
+{ TXMLProperties }
+
+procedure TXMLProperties.AfterConstruction;
+begin
+  RegisterChildNode('Property', TXMLProperty_);
+  ItemTag := 'Property';
+  ItemInterface := IXMLProperty_;
+  inherited;
+end;
+
+function TXMLProperties.Get_Property_(Index: Integer): IXMLProperty_;
+begin
+  Result := List[Index] as IXMLProperty_;
+end;
+
+function TXMLProperties.Add: IXMLProperty_;
+begin
+  Result := AddItem(-1) as IXMLProperty_;
+end;
+
+function TXMLProperties.Insert(const Index: Integer): IXMLProperty_;
+begin
+  Result := AddItem(Index) as IXMLProperty_;
 end;
 
 { TXMLProperty_ }
@@ -254,21 +327,29 @@ begin
   ChildNodes['value'].NodeValue := Value;
 end;
 
-{ TXMLProperty_List }
+{ TXMLChilds }
 
-function TXMLProperty_List.Add: IXMLProperty_;
+procedure TXMLChilds.AfterConstruction;
 begin
-  Result := AddItem(-1) as IXMLProperty_;
+  RegisterChildNode('DataField', TXMLDataField);
+  ItemTag := 'DataField';
+  ItemInterface := IXMLDataField;
+  inherited;
 end;
 
-function TXMLProperty_List.Insert(const Index: Integer): IXMLProperty_;
+function TXMLChilds.Get_DataField(Index: Integer): IXMLDataField;
 begin
-  Result := AddItem(Index) as IXMLProperty_;
+  Result := List[Index] as IXMLDataField;
 end;
 
-function TXMLProperty_List.Get_Item(Index: Integer): IXMLProperty_;
+function TXMLChilds.Add: IXMLDataField;
 begin
-  Result := List[Index] as IXMLProperty_;
+  Result := AddItem(-1) as IXMLDataField;
+end;
+
+function TXMLChilds.Insert(const Index: Integer): IXMLDataField;
+begin
+  Result := AddItem(Index) as IXMLDataField;
 end;
 
 end.

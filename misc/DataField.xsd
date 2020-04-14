@@ -7,13 +7,15 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="Property" minOccurs="0" maxOccurs="unbounded"/>
-				<xs:element name="Text"/>
+				<xs:element ref="Properties"/>
+				<xs:element ref="Childs"/>
+				<xs:element ref="Text"/>
 			</xs:sequence>
 			<xs:attribute name="name" type="xs:string"/>
 			<xs:attribute name="datatype" type="xs:string"/>
 			<xs:attribute name="clid" type="xs:string"/>
 			<xs:attribute name="isGlobal" type="xs:boolean"/>
+			<xs:attribute name="required" type="xs:boolean"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="value"/>
@@ -26,4 +28,19 @@
 			<xs:attribute name="typ" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
+	<xs:element name="Properties">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Property" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Childs">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="DataField" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Text"/>
 </xs:schema>
