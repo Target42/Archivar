@@ -30,7 +30,7 @@ object TaksEditorForm: TTaksEditorForm
     Top = 0
     Width = 635
     Height = 396
-    ActivePage = TabSheet1
+    ActivePage = TabSheet2
     Align = alClient
     TabOrder = 1
     object TabSheet1: TTabSheet
@@ -171,6 +171,41 @@ object TaksEditorForm: TTaksEditorForm
             ExplicitWidth = 623
             ExplicitHeight = 133
           end
+        end
+      end
+    end
+    object TabSheet2: TTabSheet
+      Caption = 'TabSheet2'
+      ImageIndex = 1
+      inline EditorFrame1: TEditorFrame
+        Left = 0
+        Top = 0
+        Width = 627
+        Height = 368
+        Align = alClient
+        TabOrder = 0
+        ExplicitWidth = 627
+        ExplicitHeight = 368
+        inherited GroupBox2: TGroupBox
+          Height = 368
+          ExplicitHeight = 368
+          inherited TV: TTreeView
+            Height = 351
+            ExplicitHeight = 351
+          end
+        end
+        inherited EditPanel: TPanel
+          Width = 257
+          Height = 368
+          ExplicitWidth = 257
+          ExplicitHeight = 368
+        end
+        inherited Panel1: TPanel
+          Left = 442
+          Height = 368
+          ExplicitLeft = 442
+          ExplicitTop = 0
+          ExplicitHeight = 368
         end
       end
     end

@@ -18,6 +18,9 @@ type
   end;
 implementation
 
+uses
+  u_DataFieldImpl;
+
 { TaskDataField2XML }
 
 
@@ -66,8 +69,33 @@ begin
 end;
 
 function TaskDataField2XML.xml2DataField(xdf: IXMLDataField): IDataField;
+var
+  i : integer;
+  p : IProperty;
+  xp: IXMLProperty_;
+  xc: IXMLDataField;
 begin
+  Result          := TDataField.create;
+  Result.Name     := xdf.Name;
+  Result.Typ      := xdf.Datatype;
+  Result.CLID     := xdf.Clid;
+  Result.isGlobal := xdf.IsGlobal;
+  Result.Required := xdf.Required;
+  Result.Rem      := xdf.Text;
 
+  for i := 0 to pred(xdf.Properties.Count) do
+  begin
+    xp := xdf.Properties[i];
+    p := Result.getPropertyByName(xp.Name);
+    if Assigned(p) then
+      p.Value := xp.Value;
+  end;
+
+  for i := 0 to pred(xdf.Childs.Count) do
+  begin
+    xc := xdf.Childs[i];
+    Result.Childs.add(xml2DataField(xc));
+  end;
 end;
 
 end.

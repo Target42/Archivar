@@ -64,7 +64,9 @@ uses
   xsd_DataField in '..\misc\xsd_DataField.pas',
   u_DataField2XML in 'Datafields\u_DataField2XML.pas',
   u_TaskDataField2XML in 'TaskEditor\u_TaskDataField2XML.pas',
-  xsd_Task in '..\misc\xsd_Task.pas';
+  u_Task2XML in 'TaskEditor\u_Task2XML.pas',
+  xsd_Task in '..\misc\xsd_Task.pas',
+  fr_Formeditor in 'TaskEditor\fr_Formeditor.pas' {EditorFrame: TFrame};
 
 {$R *.res}
 

@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_editForm, Vcl.ExtCtrls,
-  Vcl.StdCtrls, Vcl.ComCtrls, Vcl.Buttons, i_taskEdit;
+  Vcl.StdCtrls, Vcl.ComCtrls, Vcl.Buttons, i_taskEdit, fr_Formeditor;
 
 type
   TTaksEditorForm = class(TForm)
@@ -15,7 +15,6 @@ type
     GroupBox1: TGroupBox;
     Splitter1: TSplitter;
     GroupBox2: TGroupBox;
-    EditFrame1: TEditFrame;
     LV: TListView;
     Panel1: TPanel;
     BitBtn1: TBitBtn;
@@ -24,6 +23,9 @@ type
     BitBtn4: TBitBtn;
     BitBtn5: TBitBtn;
     SpeedButton1: TSpeedButton;
+    TabSheet2: TTabSheet;
+    EditFrame1: TEditFrame;
+    EditorFrame1: TEditorFrame;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
@@ -32,7 +34,6 @@ type
     procedure BitBtn4Click(Sender: TObject);
   private
     m_task : ITask;
-
     procedure setTask( value : ITask );
     procedure updateVarList;
   public
@@ -45,7 +46,7 @@ var
 implementation
 
 uses
-  u_TaskImpl, i_datafields, f_datafield_edit;
+  u_TaskImpl, i_datafields, f_datafield_edit, u_Task2XML;
 
 {$R *.dfm}
 
@@ -119,14 +120,35 @@ begin
 end;
 
 procedure TTaksEditorForm.FormCreate(Sender: TObject);
+var
+  xw : Task2XML;
 begin
   m_task := NIL;
-  setTask(TTask.create);
+  EditorFrame1.init;
+  if FileExists('task.xml') then
+  begin
+    xw := Task2XML.create;
+    try
+      setTask( xw.load('task.xml'));
+    except
+      setTask(TTask.create);
+    end;
+  end;
+
 end;
 
 procedure TTaksEditorForm.FormDestroy(Sender: TObject);
+var
+  xw : Task2XML;
 begin
-  //
+  xw := Task2XML.Create;
+  try
+    xw.save(m_task, 'task.xml');
+  except
+
+  end;
+  xw.Free;
+  EditorFrame1.release;
 end;
 
 procedure TTaksEditorForm.setTask(value: ITask);
