@@ -189,12 +189,13 @@ var
   p   : IProperty;
   ip  : TItemProp;
 begin
+  VE.Strings.Clear;
   if not Assigned(m_data) then
     exit;
 
   Button1.Visible := m_data.Typ = 'table';
   VE.Enabled := (not m_data.isGlobal) or (m_data.isGlobal and Assigned(m_tab));
-  VE.Strings.Clear;
+
   for i := 0 to pred(m_data.Properties.Count) do
   begin
     p := m_data.Properties.Items[i];

@@ -19,7 +19,7 @@ uses
   fr_task_head in 'Task\fr_task_head.pas' {TaskHeaderFrame: TFrame},
   f_taskEdit in 'Task\f_taskEdit.pas' {TaskEditForm},
   fr_gremiumTree in 'misc\fr_gremiumTree.pas' {GremiumTreeFrame: TFrame},
-  u_ITask in 'misc\u_ITask.pas',
+  u_ITaskType in 'misc\u_ITaskType.pas',
   u_gremium in 'Gremium\u_gremium.pas',
   fr_taskList in 'Task\fr_taskList.pas' {TaskListFrame: TFrame},
   m_WindowHandler in 'misc\m_WindowHandler.pas' {WindowHandler: TDataModule},
@@ -66,7 +66,11 @@ uses
   u_TaskDataField2XML in 'TaskEditor\u_TaskDataField2XML.pas',
   u_Task2XML in 'TaskEditor\u_Task2XML.pas',
   xsd_Task in '..\misc\xsd_Task.pas',
-  fr_Formeditor in 'TaskEditor\fr_Formeditor.pas' {EditorFrame: TFrame};
+  fr_Formeditor in 'TaskEditor\fr_Formeditor.pas' {EditorFrame: TFrame},
+  u_TaskFormImpl in 'TaskEditor\u_TaskFormImpl.pas',
+  u_TaskCtrlImpl in 'TaskEditor\u_TaskCtrlImpl.pas',
+  u_TaskCtrlPropImpl in 'TaskEditor\u_TaskCtrlPropImpl.pas',
+  fr_propertyEditor in 'TaskEditor\fr_propertyEditor.pas' {Frame1: TFrame};
 
 {$R *.res}
 

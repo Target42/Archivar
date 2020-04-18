@@ -5,12 +5,12 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB,
-  Datasnap.DBClient, Datasnap.DSConnect, fr_task_head, u_ITask, Vcl.StdCtrls,
+  Datasnap.DBClient, Datasnap.DSConnect, fr_task_head, Vcl.StdCtrls,
   fr_editForm, Vcl.ExtCtrls, Vcl.Mask, Vcl.DBCtrls, Vcl.Buttons, xsd_data,
-  u_addInfo, Vcl.ComCtrls;
+  u_addInfo, Vcl.ComCtrls, u_ITaskType;
 
 type
-  TEinstellungsframe = class(TFrame, ITask)
+  TEinstellungsframe = class(TFrame, ITaskType)
     DSProviderConnection1: TDSProviderConnection;
     TaskTab: TClientDataSet;
     TaskSrc: TDataSource;

@@ -1,10 +1,10 @@
-unit u_ITask;
+unit u_ITaskType;
 
 interface
 
 
 type
-  ITask = interface
+  ITaskType = interface
     ['{AFEF769A-D577-4AAA-8E36-313E880FA16B}']
     procedure setID( value : integer );
     function  getID : integer;

@@ -14,7 +14,6 @@ object Einstellungsframe: TEinstellungsframe
     TabOrder = 0
     ExplicitHeight = 138
     inherited GroupBox1: TGroupBox
-      Width = 451
       Height = 138
       ExplicitHeight = 138
       inherited Label3: TLabel
@@ -274,7 +273,6 @@ object Einstellungsframe: TEinstellungsframe
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsEinstellung'
-    SQLConnection = GM.SQLConnection1
     Left = 360
     Top = 16
   end

@@ -1,27 +1,24 @@
 object EditorFrame: TEditorFrame
   Left = 0
   Top = 0
-  Width = 775
-  Height = 558
+  Width = 451
+  Height = 305
   Align = alClient
   TabOrder = 0
   OnMouseDown = FrameMouseDown
-  ExplicitWidth = 451
-  ExplicitHeight = 305
   object GroupBox2: TGroupBox
     Left = 0
     Top = 0
     Width = 185
-    Height = 558
+    Height = 305
     Align = alLeft
     Caption = 'Struktur'
     TabOrder = 0
-    ExplicitHeight = 305
     object TV: TTreeView
       Left = 2
       Top = 15
       Width = 181
-      Height = 541
+      Height = 288
       Align = alClient
       DragMode = dmAutomatic
       HideSelection = False
@@ -30,23 +27,20 @@ object EditorFrame: TEditorFrame
       OnChange = TVChange
       OnDragDrop = TVDragDrop
       OnDragOver = TVDragOver
-      ExplicitHeight = 288
     end
   end
   object Panel1: TPanel
-    Left = 590
+    Left = 266
     Top = 0
     Width = 185
-    Height = 558
+    Height = 305
     Align = alRight
     Caption = 'Panel1'
     ShowCaption = False
     TabOrder = 1
-    ExplicitLeft = 266
-    ExplicitHeight = 305
     object GroupBox1: TGroupBox
       Left = 1
-      Top = 312
+      Top = 59
       Width = 183
       Height = 245
       Align = alBottom
@@ -71,15 +65,14 @@ object EditorFrame: TEditorFrame
         ViewStyle = vsReport
         OnClick = LVClick
         OnKeyPress = LVKeyPress
-        ExplicitHeight = 180
       end
     end
   end
   object EditPanel: TPanel
     Left = 185
     Top = 0
-    Width = 405
-    Height = 558
+    Width = 81
+    Height = 305
     Align = alClient
     Caption = 'EditPanel'
     Color = 16776176
@@ -87,8 +80,6 @@ object EditorFrame: TEditorFrame
     ShowCaption = False
     TabOrder = 2
     OnMouseDown = EditPanelMouseDown
-    ExplicitWidth = 81
-    ExplicitHeight = 305
   end
   object ApplicationEvents1: TApplicationEvents
     OnMessage = ApplicationEvents1Message

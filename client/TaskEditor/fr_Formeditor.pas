@@ -5,17 +5,10 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
-  System.Contnrs, Vcl.AppEvnts, Vcl.StdCtrls, Vcl.ComCtrls, Vcl.ExtCtrls;
+  System.Contnrs, Vcl.AppEvnts, Vcl.StdCtrls, Vcl.ComCtrls, Vcl.ExtCtrls,
+  i_taskEdit;
 
 type
-  TControlType = (ctNone,
-    ctEdit, ctLabeledEdit,
-    ctLabel,
-    ctGroupBox, ctPanel,
-    ctMemo, ctRichEdit,
-    ctRadio, ctRadioGrp
-    );
-
   TCtrlEntry = record
     name : String;
     typ  : TControlType;
@@ -49,6 +42,7 @@ type
     m_inReposition      : boolean;
 
     m_newType           : TControlType;
+    m_form              : ITaskForm;
 
     procedure createNodes;
     procedure setNodesVisible( value : Boolean);
@@ -68,10 +62,6 @@ type
 
     procedure SelectControl( c : TControl);
 
-    function newEdit(     parent : TWinControl; x, y : Integer) :  TControl;
-    function newLabel(    parent : TWinControl; x, y : Integer) :  TControl;
-    function newGroupbox( parent : TWinControl; x, y : Integer) :  TControl;
-
     procedure updateLV;
     procedure fillGroup( name : string; data : array of TCtrlEntry);
   public
@@ -82,7 +72,7 @@ type
 implementation
 
 uses
-  System.Types;
+  System.Types, u_TaskFormImpl;
 
 {$R *.dfm}
 
@@ -271,7 +261,7 @@ end;
 procedure TEditorFrame.EditPanelMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 var
-  ctrl : TControl;
+  ctrl : ITaskCtrl;
 begin
   setNodesVisible(false);
 
@@ -281,13 +271,11 @@ begin
     exit;
   end;
 
-  case m_newType of
-    ctEdit      : ctrl := newEdit(      Sender as TWinControl, X, y );
-    ctLabel     : ctrl := newLabel(     Sender as TWinControl, X, Y );
-    ctGroupBox  : ctrl := newGroupBox(  Sender as TWinControl, X, Y );
-  end;
+  ctrl := m_form.createControl(Sender as TControl, m_newType, x, y);
+  ctrl.setMouse( ControlMouseDown, ControlMouseMove, ControlMouseUp );
 
   updateTree;
+
   m_newType := ctNone;
 end;
 
@@ -348,7 +336,10 @@ begin
   FNodePositioning    := false;
   m_inReposition      := falsE;
 
-  m_newType := ctNone;
+  m_newType   := ctNone;
+
+  m_form      := TaskFormImpl.create;
+  m_form.Root := EditPanel;
 
   createNodes;
   updateLV;
@@ -374,56 +365,6 @@ begin
   end;
 end;
 
-function TEditorFrame.newEdit(parent: TWinControl; x, y: Integer): TControl;
-var
-  ed : TEdit;
-begin
-  ed := TEdit.Create(parent as TComponent);
-  ed.Parent := parent as TWinControl;
-  ed.Name := 'Edit'+intToStr(GetTickCount);
-  ed.Top  := y;
-  ed.Left := X;
-
-  ed.OnMouseDown := ControlMouseDown;
-  ed.OnMouseMove := ControlMouseMove;
-  ed.OnMouseUp   := ControlMouseUp;
-
-  Result := ed;
-end;
-
-function TEditorFrame.newGroupbox(parent: TWinControl; x, y: Integer): TControl;
-var
-  grp : TGroupBox;
-begin
-  grp := TGroupBox.Create(Parent as TComponent);
-  grp.Parent := Parent as TWinControl;
-  grp.Name := 'GroupBox'+intToStr(GetTickCount);
-  grp.Top  := y;
-  grp.Left := X;
-
-  grp.OnMouseDown := ControlMouseDown;
-  grp.OnMouseMove := ControlMouseMove;
-  grp.OnMouseUp   := ControlMouseUp;
-
-  Result := grp;
-end;
-
-function TEditorFrame.newLabel(parent: TWinControl; x, y: Integer): TControl;
-var
-  lab : TLabel;
-begin
-  lab := TLabel.Create(parent as TComponent);
-  lab.Parent := parent as TWinControl;
-  lab.Name := 'Label'+intToStr(GetTickCount);
-  lab.Top  := y;
-  lab.Left := X;
-
-  lab.OnMouseDown := ControlMouseDown;
-  lab.OnMouseMove := ControlMouseMove;
-  lab.OnMouseUp   := ControlMouseUp;
-
-  Result := lab;
-end;
 
 procedure TEditorFrame.NodeMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: integer);
@@ -538,6 +479,8 @@ end;
 
 procedure TEditorFrame.release;
 begin
+  m_form.release;
+  m_form := NIL;
   FNodes.Free;
 end;
 

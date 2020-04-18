@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.ComCtrls, u_ITask, fr_file, System.Actions,
+  Vcl.Controls, Vcl.Forms, Vcl.ComCtrls, u_ITaskType, fr_file, System.Actions,
   Vcl.ActnList, Vcl.Menus;
 
 type
@@ -35,7 +35,7 @@ type
   private
     m_ta_id : integer;
     m_ty_id : integeR;
-    m_edit  : ITask;
+    m_edit  : ITaskType;
     m_ro    : boolean;
     procedure setRO( value : boolean );
     function  getRO : boolean;

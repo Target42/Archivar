@@ -32,6 +32,7 @@ object DatafieldEditform: TDatafieldEditform
     end
     inherited Panel1: TPanel
       Width = 263
+      ExplicitTop = -6
       ExplicitWidth = 263
       inherited OKBtn: TBitBtn
         Left = 175

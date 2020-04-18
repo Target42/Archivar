@@ -159,7 +159,7 @@
             <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
-        <DCCReference Include="misc\u_ITask.pas"/>
+        <DCCReference Include="misc\u_ITaskType.pas"/>
         <DCCReference Include="Gremium\u_gremium.pas"/>
         <DCCReference Include="Task\fr_taskList.pas">
             <Form>TaskListFrame</Form>
@@ -275,6 +275,14 @@
         <DCCReference Include="..\misc\xsd_Task.pas"/>
         <DCCReference Include="TaskEditor\fr_Formeditor.pas">
             <Form>EditorFrame</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="TaskEditor\u_TaskFormImpl.pas"/>
+        <DCCReference Include="TaskEditor\u_TaskCtrlImpl.pas"/>
+        <DCCReference Include="TaskEditor\u_TaskCtrlPropImpl.pas"/>
+        <DCCReference Include="TaskEditor\fr_propertyEditor.pas">
+            <Form>Frame1</Form>
             <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>

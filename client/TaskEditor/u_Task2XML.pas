@@ -50,8 +50,8 @@ begin
   end;
   Result := TTask.create;
 
+  xw := TaskDataField2XML.create;
   try
-    xw := TaskDataField2XML.create;
     for i := 0 to pred(m_xTask.Datafields.Count) do
       Result.Fields.add(xw.xml2DataField(m_xTask.Datafields[i]));
   finally
@@ -74,8 +74,8 @@ begin
   task.CLID := m_xTask.Clid;
 
 
+  xw := TaskDataField2XML.create;
   try
-    xw := TaskDataField2XML.create;
     for i := 0 to pred(task.Fields.Count) do
       xw.DataField2XML( task.Fields.Items[i], m_xTask.Datafields.Add );
   finally
