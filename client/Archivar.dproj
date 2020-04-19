@@ -272,7 +272,6 @@
         <DCCReference Include="Datafields\u_DataField2XML.pas"/>
         <DCCReference Include="TaskEditor\u_TaskDataField2XML.pas"/>
         <DCCReference Include="TaskEditor\u_Task2XML.pas"/>
-        <DCCReference Include="..\misc\xsd_Task.pas"/>
         <DCCReference Include="TaskEditor\fr_Formeditor.pas">
             <Form>EditorFrame</Form>
             <FormType>dfm</FormType>
@@ -282,10 +281,11 @@
         <DCCReference Include="TaskEditor\u_TaskCtrlImpl.pas"/>
         <DCCReference Include="TaskEditor\u_TaskCtrlPropImpl.pas"/>
         <DCCReference Include="TaskEditor\fr_propertyEditor.pas">
-            <Form>Frame1</Form>
+            <Form>PropertyFrame</Form>
             <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
+        <DCCReference Include="..\misc\xsd_Task.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

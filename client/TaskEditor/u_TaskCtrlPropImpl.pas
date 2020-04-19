@@ -11,6 +11,7 @@ type
     m_ctrl  : TControl;
     m_name  : string;
     m_typ   : string;
+    m_value : string;
     m_list  : TStringList;
 
     procedure setName( value : string );
@@ -19,15 +20,14 @@ type
     function  getValue : string;
     procedure setTyp( value : string );
     function  getTyp : string;
+    procedure setControl( value : TControl );
+    function  getControl : TControl;
   public
 
-    constructor create( name, typ : string; ctrl : Tcontrol );
+    constructor create( name, typ : string; ctrl : Tcontrol ); overload;
+    constructor create( name, typ : string ); overload;
 
     Destructor Destroy; override;
-
-    property Name  : string read getName write setName;
-    property Value : string read getValue write setValue;
-    property Typ   : string read getTyp write setTyp;
 
     procedure release;
 
@@ -35,6 +35,7 @@ type
     function  hasEditor : boolean;
     procedure fillPickList( list : TStrings );
 
+    procedure config;
   end;
 
 implementation
@@ -47,11 +48,34 @@ uses
 
 constructor TaskCtrlPropImpl.create(name, typ: string; ctrl: Tcontrol);
 begin
-  m_name := name;
-  m_ctrl := ctrl;
   m_list := TStringList.Create;
   m_list.StrictDelimiter := true;
   m_list.Delimiter := ';';
+  m_name    := name;
+  m_ctrl    := ctrl;
+  setTyp(typ);
+  m_value   := 'Undefined!';
+end;
+
+procedure TaskCtrlPropImpl.config;
+begin
+  if not Assigned(m_ctrl) then
+    exit;
+
+  setValue(m_value);
+
+end;
+
+constructor TaskCtrlPropImpl.create(name, typ: string);
+begin
+  m_list  := TStringList.Create;
+  m_list.StrictDelimiter := true;
+  m_list.Delimiter := ';';
+
+  m_name    := name;
+  m_ctrl    := NIL;
+  setTyp(typ);
+  m_value   := 'Undefined!';
 end;
 
 destructor TaskCtrlPropImpl.Destroy;
@@ -63,6 +87,11 @@ end;
 procedure TaskCtrlPropImpl.fillPickList(list: TStrings);
 begin
   list.Assign(m_list);
+end;
+
+function TaskCtrlPropImpl.getControl: TControl;
+begin
+  Result := m_ctrl;
 end;
 
 function TaskCtrlPropImpl.getName: string;
@@ -77,7 +106,7 @@ end;
 
 function TaskCtrlPropImpl.getValue: string;
 begin
-  Result := 'Undefined!';
+  Result := m_value;
   if not Assigned(m_ctrl) then
     exit;
 
@@ -122,11 +151,12 @@ begin
     if SameText(m_name, 'Caption') then
       Result := (m_ctrl as TLabeledEdit).EditLabel.Caption;
   end;
+  m_value := Result;
 end;
 
 function TaskCtrlPropImpl.hasEditor: boolean;
 begin
-
+  Result := false;
 end;
 
 function TaskCtrlPropImpl.isList: boolean;
@@ -137,6 +167,13 @@ end;
 procedure TaskCtrlPropImpl.release;
 begin
 
+end;
+
+procedure TaskCtrlPropImpl.setControl(value: TControl);
+begin
+  if Assigned(m_ctrl) then
+    getValue;
+  m_ctrl := value;
 end;
 
 procedure TaskCtrlPropImpl.setName(value: string);
@@ -153,6 +190,8 @@ end;
 
 procedure TaskCtrlPropImpl.setValue(value: string);
 begin
+  m_value := value;
+
   if not Assigned(m_ctrl) then
     exit;
   if m_ctrl is TWinControl then

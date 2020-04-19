@@ -2,8 +2,8 @@ object TaksEditorForm: TTaksEditorForm
   Left = 0
   Top = 0
   Caption = 'Aufgabeneditor'
-  ClientHeight = 415
-  ClientWidth = 635
+  ClientHeight = 499
+  ClientWidth = 802
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,25 +20,27 @@ object TaksEditorForm: TTaksEditorForm
   TextHeight = 13
   object StatusBar1: TStatusBar
     Left = 0
-    Top = 396
-    Width = 635
+    Top = 480
+    Width = 802
     Height = 19
     Panels = <>
   end
   object PageControl1: TPageControl
     Left = 0
     Top = 0
-    Width = 635
-    Height = 396
+    Width = 802
+    Height = 480
     ActivePage = TabSheet2
     Align = alClient
     TabOrder = 1
     object TabSheet1: TTabSheet
       Caption = 'Allgemeines'
+      ExplicitWidth = 296
+      ExplicitHeight = 154
       object Splitter1: TSplitter
         Left = 0
-        Top = 215
-        Width = 627
+        Top = 299
+        Width = 794
         Height = 3
         Cursor = crVSplit
         Align = alBottom
@@ -48,16 +50,16 @@ object TaksEditorForm: TTaksEditorForm
       object GroupBox1: TGroupBox
         Left = 0
         Top = 0
-        Width = 627
-        Height = 215
+        Width = 794
+        Height = 299
         Align = alClient
         Caption = 'Datenfelder'
         TabOrder = 0
         object LV: TListView
           Left = 2
           Top = 15
-          Width = 623
-          Height = 157
+          Width = 790
+          Height = 241
           Align = alClient
           Columns = <
             item
@@ -86,8 +88,8 @@ object TaksEditorForm: TTaksEditorForm
         end
         object Panel1: TPanel
           Left = 2
-          Top = 172
-          Width = 623
+          Top = 256
+          Width = 790
           Height = 41
           Align = alBottom
           BevelOuter = bvNone
@@ -148,27 +150,29 @@ object TaksEditorForm: TTaksEditorForm
       end
       object GroupBox2: TGroupBox
         Left = 0
-        Top = 218
-        Width = 627
+        Top = 302
+        Width = 794
         Height = 150
         Align = alBottom
         Caption = 'Beschreibung'
         TabOrder = 1
+        ExplicitTop = 4
+        ExplicitWidth = 296
         inline EditFrame1: TEditFrame
           Left = 2
           Top = 15
-          Width = 623
+          Width = 790
           Height = 133
           Align = alClient
           TabOrder = 0
           ExplicitLeft = 2
           ExplicitTop = 15
-          ExplicitWidth = 623
+          ExplicitWidth = 292
           ExplicitHeight = 133
           inherited RE: TRichEdit
-            Width = 623
+            Width = 790
             Height = 133
-            ExplicitWidth = 623
+            ExplicitWidth = 790
             ExplicitHeight = 133
           end
         end
@@ -180,32 +184,55 @@ object TaksEditorForm: TTaksEditorForm
       inline EditorFrame1: TEditorFrame
         Left = 0
         Top = 0
-        Width = 627
-        Height = 368
+        Width = 794
+        Height = 452
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 627
-        ExplicitHeight = 368
+        ExplicitWidth = 794
+        ExplicitHeight = 452
+        inherited Splitter2: TSplitter
+          Height = 452
+          ExplicitHeight = 452
+        end
+        inherited Splitter3: TSplitter
+          Left = 606
+          Height = 452
+          ExplicitLeft = 606
+          ExplicitHeight = 452
+        end
         inherited GroupBox2: TGroupBox
-          Height = 368
-          ExplicitHeight = 368
+          Height = 452
+          ExplicitHeight = 452
           inherited TV: TTreeView
-            Height = 351
-            ExplicitHeight = 351
+            Height = 435
+            ExplicitHeight = 435
+          end
+        end
+        inherited Panel1: TPanel
+          Left = 609
+          Height = 452
+          ExplicitLeft = 609
+          ExplicitHeight = 452
+          inherited Splitter1: TSplitter
+            Height = 205
+            ExplicitHeight = 121
+          end
+          inherited PropertyFrame1: TPropertyFrame
+            Height = 205
+            ExplicitHeight = 205
+            inherited VE: TValueListEditor
+              Height = 124
+              ExplicitHeight = 124
+            end
           end
         end
         inherited EditPanel: TPanel
-          Width = 257
-          Height = 368
-          ExplicitWidth = 257
-          ExplicitHeight = 368
-        end
-        inherited Panel1: TPanel
-          Left = 442
-          Height = 368
-          ExplicitLeft = 442
+          Width = 418
+          Height = 452
+          ExplicitLeft = 188
           ExplicitTop = 0
-          ExplicitHeight = 368
+          ExplicitWidth = 418
+          ExplicitHeight = 452
         end
       end
     end

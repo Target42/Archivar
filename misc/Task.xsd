@@ -28,11 +28,12 @@
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="Property" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="Control" minOccurs="0" maxOccurs="unbounded"/>
 			</xs:sequence>
-			<xs:attribute name="name" type="xs:string"/>
-			<xs:attribute name="typ" type="xs:string"/>
-			<xs:attribute name="parent" type="xs:string"/>
+			<xs:attribute name="clid" type="xs:string"/>
+			<xs:attribute name="ctrlType" type="xs:string"/>
 			<xs:attribute name="field" type="xs:string"/>
+			<xs:attribute name="fieldclid" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="Form">

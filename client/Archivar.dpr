@@ -65,12 +65,12 @@ uses
   u_DataField2XML in 'Datafields\u_DataField2XML.pas',
   u_TaskDataField2XML in 'TaskEditor\u_TaskDataField2XML.pas',
   u_Task2XML in 'TaskEditor\u_Task2XML.pas',
-  xsd_Task in '..\misc\xsd_Task.pas',
   fr_Formeditor in 'TaskEditor\fr_Formeditor.pas' {EditorFrame: TFrame},
   u_TaskFormImpl in 'TaskEditor\u_TaskFormImpl.pas',
   u_TaskCtrlImpl in 'TaskEditor\u_TaskCtrlImpl.pas',
   u_TaskCtrlPropImpl in 'TaskEditor\u_TaskCtrlPropImpl.pas',
-  fr_propertyEditor in 'TaskEditor\fr_propertyEditor.pas' {Frame1: TFrame};
+  fr_propertyEditor in 'TaskEditor\fr_propertyEditor.pas' {PropertyFrame: TFrame},
+  xsd_Task in '..\misc\xsd_Task.pas';
 
 {$R *.res}
 

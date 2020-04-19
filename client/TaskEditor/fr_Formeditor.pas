@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
   System.Contnrs, Vcl.AppEvnts, Vcl.StdCtrls, Vcl.ComCtrls, Vcl.ExtCtrls,
-  i_taskEdit;
+  i_taskEdit, fr_propertyEditor;
 
 type
   TCtrlEntry = record
@@ -22,6 +22,10 @@ type
     EditPanel: TPanel;
     GroupBox1: TGroupBox;
     LV: TListView;
+    Splitter1: TSplitter;
+    PropertyFrame1: TPropertyFrame;
+    Splitter2: TSplitter;
+    Splitter3: TSplitter;
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure FrameMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -64,8 +68,14 @@ type
 
     procedure updateLV;
     procedure fillGroup( name : string; data : array of TCtrlEntry);
+
+    procedure setPropEditor( ctrl : TControl );
+
+    procedure setTaskForm( value : ITaskForm );
+    procedure setMouseHooks;
   public
     procedure init;
+    property Form : ITaskForm read m_form write setTaskForm;
     procedure release;
   end;
 
@@ -179,6 +189,7 @@ begin
     EditPanelMouseDown(Sender, Button, Shift, X, Y );
     exit;
   end;
+
   if Sender is TControl then
   begin
     SelectControl(Sender as TControl);
@@ -338,8 +349,6 @@ begin
 
   m_newType   := ctNone;
 
-  m_form      := TaskFormImpl.create;
-  m_form.Root := EditPanel;
 
   createNodes;
   updateLV;
@@ -474,12 +483,12 @@ begin
     pan.Left:= TopLeft.X;
   end;
   FCurrentNodeControl := AroundControl;
+  setPropEditor(FCurrentNodeControl);
   setNodesVisible(true);
 end;
 
 procedure TEditorFrame.release;
 begin
-  m_form.release;
   m_form := NIL;
   FNodes.Free;
 end;
@@ -488,10 +497,25 @@ procedure TEditorFrame.SelectControl(c: TControl);
 begin
   setNodesVisible(false);
   FCurrentNodeControl := c;
+  setPropEditor(c);
 
   GetCursorPos(FOldPos);
   SetCapture(getHandle(c));
   PositionNodes(c);
+end;
+
+procedure TEditorFrame.setMouseHooks;
+  procedure addHook( ctrl : ITaskCtrl );
+  var
+    i : integer;
+  begin
+    ctrl.setMouse( ControlMouseDown, ControlMouseMove, ControlMouseUp);
+    for i := 0 to pred( ctrl.Childs.Count) do
+      addHook( ctrl.Childs.Items[i]);
+  end;
+begin
+  if Assigned(m_form) then
+    addHook(m_form.Base);
 end;
 
 procedure TEditorFrame.setNodesVisible(value: Boolean);
@@ -500,6 +524,39 @@ var
 begin
   for i := 0 to 7 do
     (FNodes.Items[i] as TWinControl).Visible := value;
+end;
+
+procedure TEditorFrame.setPropEditor(ctrl: TControl);
+var
+  el : ITaskCtrl;
+begin
+  el := m_form.Base.findCtrl(ctrl);
+  PropertyFrame1.Ctrl := el;
+end;
+
+procedure TEditorFrame.setTaskForm(value: ITaskForm);
+begin
+  if Assigned(m_form) then
+  begin
+    m_form.Base.dropControls;
+  end;
+
+  PropertyFrame1.Ctrl := NIL;
+  m_form := NIL;
+
+
+  m_form := value;
+  if Assigned(m_form) then
+  begin
+    m_form.Base.Control := EditPanel;
+    m_form.Base.build;
+    setMouseHooks;
+  end;
+
+  GroupBox2.Enabled := Assigned(m_form);
+  Panel1.Enabled    := Assigned(m_form);
+
+  updateTree;
 end;
 
 procedure TEditorFrame.TVChange(Sender: TObject; Node: TTreeNode);

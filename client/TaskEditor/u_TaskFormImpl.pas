@@ -12,7 +12,6 @@ type
     m_clid : string;
     m_list : Tlist<ITaskCtrl>;
     m_isMain : boolean;
-    m_root : TWinControl;
     m_base : ITaskCtrl;
 
     procedure setName( value : string );
@@ -21,22 +20,15 @@ type
     function  getCLID : string;
     procedure setMainForm( value : boolean );
     function  getMainForm : Boolean;
-    function  getControls : Tlist<ITaskCtrl>;
-    procedure setRoot( value : TWinControl );
-    function  getRoot : TWinControl;
+    function  getBase : ITaskCtrl;
 
   public
 
     constructor Create;
     Destructor Destroy; override;
 
-    property Name  : string read getName write setName;
-    property CLID   : string read getCLID write setCLID;
-    property MainForm : boolean read getMainForm write setMainForm;
-    property Controls : Tlist<ITaskCtrl> read getControls;
-    property Root     : TWinControl read getRoot write setRoot;
-
     procedure release;
+    function newControl : ITaskCtrl;
 
     function createControl( parent : TControl; newType : TControlType; x, y : integer ) : ITaskCtrl;
   end;
@@ -53,8 +45,9 @@ begin
   m_list := Tlist<ITaskCtrl>.create;
   m_isMain := false;
   m_clid   := CreateClassID;
-  m_root   := NIL;
-  m_base   := NIL;
+  m_base   := TaskCtrlImpl.create;
+  (m_base as TaskCtrlImpl).isBase := true;
+  m_name   := 'Form';
 end;
 
 function TaskFormImpl.createControl(parent: TControl; newType: TControlType; x,
@@ -74,19 +67,18 @@ end;
 destructor TaskFormImpl.Destroy;
 begin
   m_base := NIL;
-  m_root := NIL;
   m_list.Free;
   inherited;
+end;
+
+function TaskFormImpl.getBase: ITaskCtrl;
+begin
+  Result := m_base;
 end;
 
 function TaskFormImpl.getCLID: string;
 begin
   Result := m_clid;
-end;
-
-function TaskFormImpl.getControls: Tlist<ITaskCtrl>;
-begin
-  Result := m_list;
 end;
 
 function TaskFormImpl.getMainForm: Boolean;
@@ -99,9 +91,10 @@ begin
   Result := m_name;
 end;
 
-function TaskFormImpl.getRoot: TWinControl;
+function TaskFormImpl.newControl: ITaskCtrl;
 begin
-  Result := m_root;
+  Result := TaskCtrlImpl.Create;
+  m_list.Add(Result);
 end;
 
 procedure TaskFormImpl.release;
@@ -130,16 +123,5 @@ begin
   m_name := value;
 end;
 
-procedure TaskFormImpl.setRoot(value: TWinControl);
-begin
-  m_root := value;
-  if Assigned(m_base) then
-  begin
-    m_base.release;
-  end;
-  m_base := TaskCtrlImpl.create;
-  m_base.Control := value;
-
-end;
 
 end.

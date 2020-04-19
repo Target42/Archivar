@@ -125,6 +125,7 @@ var
 begin
   m_task := NIL;
   EditorFrame1.init;
+
   if FileExists('task.xml') then
   begin
     xw := Task2XML.create;
@@ -133,22 +134,31 @@ begin
     except
       setTask(TTask.create);
     end;
-  end;
+    xw.Free;
+  end
+  else
+    setTask(TTask.create);
 
+  if m_task.Forms.Count = 0 then
+    EditorFrame1.Form := m_task.NewForm
+  else
+    EditorFrame1.Form := m_task.Forms[0];
 end;
 
 procedure TTaksEditorForm.FormDestroy(Sender: TObject);
 var
   xw : Task2XML;
 begin
+  EditorFrame1.Form := NIL;
   xw := Task2XML.Create;
   try
-    xw.save(m_task, 'task.xml');
+//    xw.save(m_task, 'task.xml');
   except
 
   end;
   xw.Free;
   EditorFrame1.release;
+  m_task.release;
 end;
 
 procedure TTaksEditorForm.setTask(value: ITask);

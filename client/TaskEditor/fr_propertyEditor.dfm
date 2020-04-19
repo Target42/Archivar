@@ -1,34 +1,50 @@
-object Frame1: TFrame1
+object PropertyFrame: TPropertyFrame
   Left = 0
   Top = 0
-  Width = 342
-  Height = 329
+  Width = 451
+  Height = 305
   Align = alClient
   TabOrder = 0
-  ExplicitWidth = 320
-  ExplicitHeight = 240
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 342
-    Height = 89
+    Width = 451
+    Height = 81
     Align = alTop
+    BevelOuter = bvNone
     Caption = 'Panel1'
+    ShowCaption = False
     TabOrder = 0
+    object Label1: TLabel
+      Left = 16
+      Top = 16
+      Width = 47
+      Height = 13
+      Caption = 'Datenfeld'
+    end
+    object ComboBox1: TComboBox
+      Left = 16
+      Top = 35
+      Width = 145
+      Height = 21
+      TabOrder = 0
+      Text = 'ComboBox1'
+    end
   end
   object VE: TValueListEditor
     Left = 0
-    Top = 89
-    Width = 342
-    Height = 240
+    Top = 81
+    Width = 451
+    Height = 224
     Align = alClient
+    DefaultColWidth = 100
     TabOrder = 1
-    ExplicitLeft = 33
-    ExplicitTop = 112
-    ExplicitWidth = 306
-    ExplicitHeight = 300
+    OnExit = VEExit
+    OnKeyPress = VEKeyPress
+    ExplicitTop = 89
+    ExplicitHeight = 216
     ColWidths = (
-      150
-      186)
+      100
+      345)
   end
 end

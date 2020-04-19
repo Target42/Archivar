@@ -28,6 +28,8 @@ type
     property Fields : IDataFieldList read getFields;
     property Forms  : TList<ITaskForm> read getForms;
 
+    function NewForm : ITaskForm;
+
     procedure release;
 
   end;
@@ -35,7 +37,7 @@ implementation
 
 { TTask }
 uses
-  System.Win.ComObj, u_DataFieldLislImpl;
+  System.Win.ComObj, u_DataFieldLislImpl, u_TaskFormImpl;
 
 constructor TTask.create;
 begin
@@ -69,6 +71,12 @@ end;
 function TTask.getName: string;
 begin
   Result := m_name;
+end;
+
+function TTask.NewForm: ITaskForm;
+begin
+  Result := TaskFormImpl.create;
+  m_forms.Add(Result);
 end;
 
 procedure TTask.release;

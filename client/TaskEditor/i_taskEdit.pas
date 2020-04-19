@@ -39,6 +39,8 @@ type
     property Fields : IDataFieldList read getFields;
     property Forms  : TList<ITaskForm> read getForms;
 
+    function NewForm : ITaskForm;
+
     procedure release;
   end;
 
@@ -52,19 +54,17 @@ type
 
     procedure setMainForm( value : boolean );
     function  getMainForm : Boolean;
-    function  getControls : Tlist<ITaskCtrl>;
 
-    procedure setRoot( value : TWinControl );
-    function  getRoot : TWinControl;
+    function  getBase : ITaskCtrl;
   //public
     property Name  : string read getName write setName;
 
     property CLID   : string read getCLID write setCLID;
     property MainForm : boolean read getMainForm write setMainForm;
-    property Controls : Tlist<ITaskCtrl> read getControls;
-    property Root     : TWinControl read getRoot write setRoot;
+    property Base     : ITaskCtrl read getBase;
 
     procedure release;
+    function newControl : ITaskCtrl;
 
     function createControl( parent : TControl; newType : TControlType; x, y : integer ) : ITaskCtrl;
   end;
@@ -82,20 +82,35 @@ type
     function  getProps : TList<ITaskCtrlProp>;
     procedure setParent( value : ITaskCtrl );
     function  getParent : ITaskCtrl;
+    procedure setCLID( value : string );
+    function  getCLID : string;
+
+    procedure setControlClass( value : string );
+    function  getControlClass : string;
+
   // public
-    property DataField : IDataField read getDataField write setDataField;
-    property Control   : TControl read getControl write setControl;
-    property Childs    : TList<ITaskCtrl> read getChilds;
-    property Props     : TList<ITaskCtrlProp> read getProps;
-    property Parent    : ITaskCtrl read getParent write setParent;
+
+    property Control        : TControl              read getControl       write setControl;
+    property ControlClass   : string                read getControlClass  write setControlClass;
+    property CLID           : string                read getCLID          write setCLID;
+    property DataField      : IDataField            read getDataField     write setDataField;
+    property Childs         : TList<ITaskCtrl>      read getChilds;
+    property Props          : TList<ITaskCtrlProp>  read getProps;
+    property Parent         : ITaskCtrl             read getParent        write setParent;
 
     procedure release;
 
     function findCtrl( name : string ) : ITaskCtrl; overload;
     function findCtrl( ctrl : TControl): ITaskCtrl; overload;
 
-    function NewChild( newType : TControlType; x, y : integer ) : ITaskCtrl;
+    function NewChild( newType : TControlType; x, y : integer ) : ITaskCtrl;   overload;
+    function NewChild : ITaskCtrl;   overload;
     procedure setMouse( md : TControlMouseDown; mv : TControlMouseMove; mu : TControlMouseUp );
+
+    function getPropertyByName( name : string ) : ITaskCtrlProp;
+    procedure build;
+    procedure dropControls;
+    procedure clearProps;
   end;
 
   ITaskCtrlProp   = interface
@@ -107,16 +122,23 @@ type
     function  getValue : string;
     procedure setTyp( value : string );
     function  getTyp : string;
+    procedure setControl( value : TControl );
+    function  getControl : TControl;
+
   //public
-    property Name  : string read getName write setName;
-    property Value : string read getValue write setValue;
-    property Typ   : string read getTyp write setTyp;
+    property Name     : string    read getName    write setName;
+    property Value    : string    read getValue   write setValue;
+    property Typ      : string    read getTyp     write setTyp;
+
+    property Control  : TControl  read getControl write setControl;
 
     procedure release;
 
     function  isList : boolean;
     function  hasEditor : boolean;
     procedure fillPickList( list : TStrings );
+
+    procedure config;
 
   end;
 

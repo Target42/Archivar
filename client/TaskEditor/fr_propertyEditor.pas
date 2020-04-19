@@ -5,12 +5,16 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Grids, Vcl.ValEdit,
-  Vcl.ExtCtrls, i_taskEdit;
+  Vcl.ExtCtrls, i_taskEdit, Vcl.StdCtrls;
 
 type
-  TFrame1 = class(TFrame)
+  TPropertyFrame = class(TFrame)
     Panel1: TPanel;
     VE: TValueListEditor;
+    ComboBox1: TComboBox;
+    Label1: TLabel;
+    procedure VEKeyPress(Sender: TObject; var Key: Char);
+    procedure VEExit(Sender: TObject);
   private
     m_ctrl : ITaskCtrl;
 
@@ -26,14 +30,14 @@ implementation
 
 { TFrame1 }
 
-procedure TFrame1.setCrtl(value: ITaskCtrl);
+procedure TPropertyFrame.setCrtl(value: ITaskCtrl);
 begin
   m_ctrl := value;
 
   updateProps;
 end;
 
-procedure TFrame1.updateProps;
+procedure TPropertyFrame.updateProps;
 var
   i   : Integer;
   p   : ITaskCtrlProp;
@@ -58,6 +62,34 @@ begin
         ip.ReadOnly := true;
       end;
     end;
+  end;
+end;
+
+procedure TPropertyFrame.VEExit(Sender: TObject);
+var
+  row       : Integer;
+  val, key  : string;
+  p         : ITaskCtrlProp;
+begin
+  if not Assigned(m_ctrl) then
+    exit;
+
+  row := VE.Row;
+  val := VE.Cells[1, row];
+  key := VE.Keys[row];
+  p := m_ctrl.getPropertyByName(key);
+  if  Assigned(p) then
+  begin
+    p.Value := val;
+    VE.Cells[1,row] := p.Value;
+  end;
+end;
+
+procedure TPropertyFrame.VEKeyPress(Sender: TObject; var Key: Char);
+begin
+  if Key = #13 then
+  begin
+    VEExit(Sender);
   end;
 end;
 
