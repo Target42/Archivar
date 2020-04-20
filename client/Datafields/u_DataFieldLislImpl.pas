@@ -9,6 +9,7 @@ type
   TDataFieldList = class(TInterfacedObject, IDataFieldList )
   private
     m_list : TList<IDataField>;
+    m_listener : Tlist<TDataListChange>;
 
     procedure SetItems( inx : integer ; const value : IDataField );
     function  GetItems( inx : integer ) :IDataField;
@@ -26,6 +27,11 @@ type
     procedure release;
 
     function clone : IDataFieldList;
+
+    procedure RegisterListener( evt : TDataListChange );
+    procedure UnregisterListener( evt : TDataListChange );
+
+    procedure inform( event : TDataListChangeType; value : IDataField );
   end;
 
 implementation
@@ -37,8 +43,13 @@ uses
 
 procedure TDataFieldList.add(value: IDataField);
 begin
+  value.Owner := self;
+
   if not m_list.Contains(value) then
+  begin
     m_list.Add( value);
+    inform(dlcNew, value);
+  end;
 end;
 
 function TDataFieldList.clone: IDataFieldList;
@@ -54,20 +65,23 @@ end;
 
 constructor TDataFieldList.create;
 begin
-  m_list := TList<IDataField>.create;
+  m_list      := TList<IDataField>.create;
+  m_listener  := Tlist<TDataListChange>.create;
 end;
 
 procedure TDataFieldList.delete(value: IDataField);
 begin
+  inform(dlcDelete, value);
   m_list.Remove(value);
   value.release;
 end;
 
 destructor TDataFieldList.Destroy;
 begin
-  release;
   m_list.Free;
 
+  m_listener.Clear;
+  m_listener.Free;
   inherited;
 end;
 
@@ -96,10 +110,27 @@ begin
   Result := m_list[inx];
 end;
 
+procedure TDataFieldList.inform(event: TDataListChangeType; value: IDataField);
+var
+  i : integer;
+begin
+  for i := 0 to pred(m_listener.Count) do
+  begin
+    m_listener[i](event, value);
+  end;
+end;
+
 function TDataFieldList.newField( name, typ : string ): IDataField;
 begin
   Result := TDataField.create(name, typ);
   m_list.Add(Result);
+  inform( dlcNew, Result);
+end;
+
+procedure TDataFieldList.RegisterListener(evt: TDataListChange);
+begin
+  if not m_listener.Contains(evt) then
+    m_listener.Add(evt);
 end;
 
 procedure TDataFieldList.release;
@@ -114,6 +145,11 @@ end;
 procedure TDataFieldList.SetItems(inx: integer; const value: IDataField);
 begin
   m_list[inx] := value;
+end;
+
+procedure TDataFieldList.UnregisterListener(evt: TDataListChange);
+begin
+  m_listener.Remove(evt);
 end;
 
 end.

@@ -75,7 +75,7 @@ end;
 
 function TTask.NewForm: ITaskForm;
 begin
-  Result := TaskFormImpl.create;
+  Result := TaskFormImpl.create(self);
   m_forms.Add(Result);
 end;
 
@@ -83,6 +83,8 @@ procedure TTask.release;
 var
   i : integer;
 begin
+  m_fields.release;
+
   for i := 0 to pred(m_forms.Count) do
     m_forms[i].release;
   m_forms.Clear;

@@ -8,6 +8,7 @@ uses
 type
   TaskFormImpl = class( TInterfacedObject, ITaskForm )
   private
+    m_owner : ITask;
     m_name : string;
     m_clid : string;
     m_list : Tlist<ITaskCtrl>;
@@ -21,10 +22,10 @@ type
     procedure setMainForm( value : boolean );
     function  getMainForm : Boolean;
     function  getBase : ITaskCtrl;
-
+    function getOwner : ITask;
   public
 
-    constructor Create;
+    constructor Create(Owner : ITask );
     Destructor Destroy; override;
 
     procedure release;
@@ -40,12 +41,13 @@ uses
 
 { TaskFormImpl }
 
-constructor TaskFormImpl.Create;
+constructor TaskFormImpl.Create(owner : ITask);
 begin
+  m_owner := owner;
   m_list := Tlist<ITaskCtrl>.create;
   m_isMain := false;
   m_clid   := CreateClassID;
-  m_base   := TaskCtrlImpl.create;
+  m_base   := TaskCtrlImpl.create(self);
   (m_base as TaskCtrlImpl).isBase := true;
   m_name   := 'Form';
 end;
@@ -91,9 +93,14 @@ begin
   Result := m_name;
 end;
 
+function TaskFormImpl.getOwner: ITask;
+begin
+  Result := m_owner;
+end;
+
 function TaskFormImpl.newControl: ITaskCtrl;
 begin
-  Result := TaskCtrlImpl.Create;
+  Result := TaskCtrlImpl.Create(self);
   m_list.Add(Result);
 end;
 
@@ -101,6 +108,7 @@ procedure TaskFormImpl.release;
 var
   i : integer;
 begin
+  m_owner := NIL;
   for i := 0 to pred(m_list.Count) do
     m_list[i].release;
 

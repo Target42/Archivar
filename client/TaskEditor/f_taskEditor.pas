@@ -139,20 +139,16 @@ begin
   else
     setTask(TTask.create);
 
-  if m_task.Forms.Count = 0 then
-    EditorFrame1.Form := m_task.NewForm
-  else
-    EditorFrame1.Form := m_task.Forms[0];
+  EditorFrame1.Task := m_task;
 end;
 
 procedure TTaksEditorForm.FormDestroy(Sender: TObject);
 var
   xw : Task2XML;
 begin
-  EditorFrame1.Form := NIL;
   xw := Task2XML.Create;
   try
-//    xw.save(m_task, 'task.xml');
+    xw.save(m_task, 'task.xml');
   except
 
   end;

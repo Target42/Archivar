@@ -36,8 +36,11 @@ type
     function  getChilds : IDataFieldList;
     procedure setChilds( value : IDataFieldList);
     procedure config( const arr : array of TPropertyEntry);
+    procedure setOwner( value : IDataFieldList );
+    function  getOwner : IDataFieldList;
   //public
 
+    property Owner : IDataFieldList read getOwner write setOwner;
     property Name  : string read GetName write SetName;
     property CLID  : string read GetCLID write SetCLID;
     property Typ   : string read GetTyp  write SetTyp;
@@ -53,6 +56,9 @@ type
     procedure release;
     function clone : IDataField;
   end;
+
+  TDataListChangeType = (dlcNew, dlcChange, dlcDelete );
+  TDataListChange = procedure(event : TDataListChangeType; value : IDataField) of object;
 
   IDataFieldList = interface
     ['{6D8526CD-E42E-44C2-A2C1-FB879673DB1E}']
@@ -71,6 +77,10 @@ type
 
     procedure release;
     function clone : IDataFieldList;
+
+    procedure RegisterListener( evt : TDataListChange );
+    procedure UnregisterListener( evt : TDataListChange );
+    procedure inform( event : TDataListChangeType; value : IDataField );
   end;
 
   IProperty = interface

@@ -56,9 +56,11 @@ type
     function  getMainForm : Boolean;
 
     function  getBase : ITaskCtrl;
+    function  getOwner :ITask;
   //public
     property Name  : string read getName write setName;
 
+    property Owner  : ITask read getOwner;
     property CLID   : string read getCLID write setCLID;
     property MainForm : boolean read getMainForm write setMainForm;
     property Base     : ITaskCtrl read getBase;
@@ -87,6 +89,7 @@ type
 
     procedure setControlClass( value : string );
     function  getControlClass : string;
+    function  getOwner : ITaskForm;
 
   // public
 
@@ -97,6 +100,7 @@ type
     property Childs         : TList<ITaskCtrl>      read getChilds;
     property Props          : TList<ITaskCtrlProp>  read getProps;
     property Parent         : ITaskCtrl             read getParent        write setParent;
+    property Owner          : ITaskForm             read getOwner;
 
     procedure release;
 

@@ -8,6 +8,7 @@ uses
 type
   TaskCtrlPropImpl = class(TInterfacedObject, ITaskCtrlProp )
   private
+    m_owner : ITaskCtrl;
     m_ctrl  : TControl;
     m_name  : string;
     m_typ   : string;
@@ -24,8 +25,8 @@ type
     function  getControl : TControl;
   public
 
-    constructor create( name, typ : string; ctrl : Tcontrol ); overload;
-    constructor create( name, typ : string ); overload;
+    constructor create( owner : ITaskCtrl; name, typ : string; ctrl : Tcontrol ); overload;
+    constructor create( owner : ITaskCtrl; name, typ : string ); overload;
 
     Destructor Destroy; override;
 
@@ -46,9 +47,10 @@ uses
 { TaskCtrlPropImpl }
 
 
-constructor TaskCtrlPropImpl.create(name, typ: string; ctrl: Tcontrol);
+constructor TaskCtrlPropImpl.create(owner : ITaskCtrl; name, typ: string; ctrl: Tcontrol);
 begin
-  m_list := TStringList.Create;
+  m_owner := owner;
+  m_list  := TStringList.Create;
   m_list.StrictDelimiter := true;
   m_list.Delimiter := ';';
   m_name    := name;
@@ -66,8 +68,9 @@ begin
 
 end;
 
-constructor TaskCtrlPropImpl.create(name, typ: string);
+constructor TaskCtrlPropImpl.create(owner : ITaskCtrl; name, typ: string);
 begin
+  m_owner := owner;
   m_list  := TStringList.Create;
   m_list.StrictDelimiter := true;
   m_list.Delimiter := ';';
@@ -85,7 +88,18 @@ begin
 end;
 
 procedure TaskCtrlPropImpl.fillPickList(list: TStrings);
+var
+  i : integer;
 begin
+  if SameText(m_typ, 'TaskDataField') then
+  begin
+    m_list.Clear;
+    m_list.Add('');
+    for i := 0 to pred(m_owner.Owner.Owner.Fields.Count) do
+    begin
+      m_list.Add(m_owner.Owner.Owner.Fields.Items[i].Name);
+    end;
+  end;
   list.Assign(m_list);
 end;
 
@@ -109,6 +123,13 @@ begin
   Result := m_value;
   if not Assigned(m_ctrl) then
     exit;
+
+  if SameText( m_name, 'Datafield') then
+  begin
+    Result := '';
+    if Assigned(m_owner.DataField) then
+      Result := m_owner.DataField.Name;
+  end;
 
   if m_ctrl is TWinControl then
   begin
@@ -161,12 +182,12 @@ end;
 
 function TaskCtrlPropImpl.isList: boolean;
 begin
-  Result := m_list.count > 0;
+  Result := (m_list.count > 0 ) or  SameText( m_typ, 'TaskDataField');
 end;
 
 procedure TaskCtrlPropImpl.release;
 begin
-
+  m_owner := NIL;
 end;
 
 procedure TaskCtrlPropImpl.setControl(value: TControl);
@@ -194,6 +215,11 @@ begin
 
   if not Assigned(m_ctrl) then
     exit;
+  if SameText( m_name, 'Datafield') then
+  begin
+    m_owner.DataField := m_owner.Owner.Owner.Fields.getByName(m_value);
+  end;
+
   if m_ctrl is TWinControl then
   begin
     if SameText(m_name, 'name') then

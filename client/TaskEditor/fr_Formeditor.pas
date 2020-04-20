@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
   System.Contnrs, Vcl.AppEvnts, Vcl.StdCtrls, Vcl.ComCtrls, Vcl.ExtCtrls,
-  i_taskEdit, fr_propertyEditor;
+  i_taskEdit, fr_propertyEditor, Vcl.Buttons;
 
 type
   TCtrlEntry = record
@@ -26,6 +26,15 @@ type
     PropertyFrame1: TPropertyFrame;
     Splitter2: TSplitter;
     Splitter3: TSplitter;
+    Panel2: TPanel;
+    GroupBox3: TGroupBox;
+    LB: TListBox;
+    Panel3: TPanel;
+    Splitter4: TSplitter;
+    SpeedButton1: TSpeedButton;
+    SpeedButton2: TSpeedButton;
+    SpeedButton3: TSpeedButton;
+    SpeedButton4: TSpeedButton;
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure FrameMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -37,6 +46,7 @@ type
     procedure TVChange(Sender: TObject; Node: TTreeNode);
     procedure LVKeyPress(Sender: TObject; var Key: Char);
     procedure LVClick(Sender: TObject);
+    procedure LBClick(Sender: TObject);
   private
 
     FNodes              : TObjectList;
@@ -46,6 +56,7 @@ type
     m_inReposition      : boolean;
 
     m_newType           : TControlType;
+    m_task              : ITask;
     m_form              : ITaskForm;
 
     procedure createNodes;
@@ -72,10 +83,14 @@ type
     procedure setPropEditor( ctrl : TControl );
 
     procedure setTaskForm( value : ITaskForm );
+    procedure setTask( value : ITask );
+
     procedure setMouseHooks;
   public
     procedure init;
-    property Form : ITaskForm read m_form write setTaskForm;
+
+    property Task : ITask read m_task write setTask;
+
     procedure release;
   end;
 
@@ -346,14 +361,28 @@ begin
   FCurrentNodeControl := NIL;
   FNodePositioning    := false;
   m_inReposition      := falsE;
-
+  m_task              := NIL;
   m_newType   := ctNone;
-
 
   createNodes;
   updateLV;
 
   updateTree;
+  PropertyFrame1.init;
+end;
+
+procedure TEditorFrame.LBClick(Sender: TObject);
+var
+  inx : integer;
+  frm : ITaskForm;
+begin
+  inx := LB.ItemIndex;
+  if inx = -1 then
+    exit;
+
+  inx := integer(LB.Items.Objects[ inx]);
+  frm := m_task.Forms.Items[inx];
+  setTaskForm( frm);
 end;
 
 procedure TEditorFrame.LVClick(Sender: TObject);
@@ -489,7 +518,10 @@ end;
 
 procedure TEditorFrame.release;
 begin
+  PropertyFrame1.release;
+
   m_form := NIL;
+  m_task := NIL;
   FNodes.Free;
 end;
 
@@ -534,6 +566,19 @@ begin
   PropertyFrame1.Ctrl := el;
 end;
 
+procedure TEditorFrame.setTask(value: ITask);
+var
+  i : integer;
+begin
+  m_task := value;
+  PropertyFrame1.DataFields := m_task.Fields;
+  for i := 0 to pred( m_task.Forms.Count) do
+    begin
+      LB.Items.AddObject( m_task.Forms.Items[i].Name, TObject(i));
+    end;
+
+end;
+
 procedure TEditorFrame.setTaskForm(value: ITaskForm);
 begin
   if Assigned(m_form) then
@@ -543,7 +588,6 @@ begin
 
   PropertyFrame1.Ctrl := NIL;
   m_form := NIL;
-
 
   m_form := value;
   if Assigned(m_form) then
@@ -612,6 +656,7 @@ begin
     Accept := (cmp is TGroupBox) or ( cmp is TPanel);
   end;
 end;
+
 
 procedure TEditorFrame.updateLV;
 begin

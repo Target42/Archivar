@@ -5,36 +5,75 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Grids, Vcl.ValEdit,
-  Vcl.ExtCtrls, i_taskEdit, Vcl.StdCtrls;
+  Vcl.ExtCtrls, i_taskEdit, Vcl.StdCtrls, i_datafields;
 
 type
   TPropertyFrame = class(TFrame)
-    Panel1: TPanel;
     VE: TValueListEditor;
-    ComboBox1: TComboBox;
-    Label1: TLabel;
     procedure VEKeyPress(Sender: TObject; var Key: Char);
     procedure VEExit(Sender: TObject);
+
+
   private
     m_ctrl : ITaskCtrl;
+    m_data : IDataFieldList;
 
     procedure setCrtl( value : ITaskCtrl );
+    procedure setDataFields( value : IDataFieldList );
     procedure updateProps;
+    procedure doInform(event : TDataListChangeType; value : IDataField);
   public
+    property DataFields : IDataFieldList write setDataFields;
     property Ctrl : ITaskCtrl read m_ctrl write setCrtl;
+
+    procedure init;
+    procedure release;
   end;
 
 implementation
+
 
 {$R *.dfm}
 
 { TFrame1 }
 
+procedure TPropertyFrame.doInform(event: TDataListChangeType;
+  value: IDataField);
+begin
+  updateProps;
+end;
+
+
+procedure TPropertyFrame.init;
+begin
+  m_ctrl := NIL;
+  m_data := NIL;
+
+end;
+
+procedure TPropertyFrame.release;
+begin
+  if Assigned(m_data) then
+    m_data.UnregisterListener(doInform);
+end;
+
 procedure TPropertyFrame.setCrtl(value: ITaskCtrl);
+var
+  inx : Integer;
 begin
   m_ctrl := value;
 
   updateProps;
+end;
+
+procedure TPropertyFrame.setDataFields(value: IDataFieldList);
+begin
+  if Assigned(m_data) then
+    m_data.UnregisterListener(doInform);
+
+  m_data := value;
+  m_data.RegisterListener(doInform);
+
 end;
 
 procedure TPropertyFrame.updateProps;

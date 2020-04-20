@@ -8,6 +8,7 @@ uses
 type
   TaskCtrlImpl = class(TInterfacedObject, ITaskCtrl)
   private
+    m_owner     : ITaskForm;
     m_clid      :  string;
     m_dataField : IDataField;
     m_ctrl      : TControl;
@@ -39,9 +40,9 @@ type
     function newEdit(     parent : TWinControl; x, y : Integer) :  TControl;
     function newLabel(    parent : TWinControl; x, y : Integer) :  TControl;
     function newGroupbox( parent : TWinControl; x, y : Integer) :  TControl;
-
+    function  getOwner : ITaskForm;
    public
-    constructor Create;
+    constructor Create(owner : ITaskForm);
     destructor Destroy; override;
 
     property isBase : boolean read m_isBase write m_isBase;
@@ -107,8 +108,9 @@ begin
 
 end;
 
-constructor TaskCtrlImpl.Create;
+constructor TaskCtrlImpl.Create(owner : ITaskForm);
 begin
+  m_owner     := owner;
   m_clid      := CreateClassID;
   m_dataField := NIL;
   m_parent    := NIL;
@@ -125,7 +127,7 @@ var
   ctrl : TControl;
   win  : TWinControl;
 begin
-  Result := TaskCtrlImpl.Create;
+  Result := TaskCtrlImpl.Create(m_owner);
   Result.Parent := self;
   m_list.Add(Result);
 
@@ -227,6 +229,11 @@ begin
   Result := m_dataField;
 end;
 
+function TaskCtrlImpl.getOwner: ITaskForm;
+begin
+  Result := m_owner;
+end;
+
 function TaskCtrlImpl.getParent: ITaskCtrl;
 begin
   Result := m_parent;
@@ -254,7 +261,7 @@ end;
 
 function TaskCtrlImpl.NewChild: ITaskCtrl;
 begin
-  Result := TaskCtrlImpl.Create;
+  Result := TaskCtrlImpl.Create(m_owner);
   Result.Parent := self;
   m_list.Add(Result);
 end;
@@ -306,7 +313,8 @@ procedure TaskCtrlImpl.release;
 var
   i : integer;
 begin
-  m_parent := NIL;
+  m_parent  := NIL;
+  m_owner   := NIL;
 
   for i := 0 to pred(m_list.Count) do
     m_list[i].release;
@@ -349,24 +357,27 @@ procedure TaskCtrlImpl.setControlClass(value: string);
 begin
   m_ctrlClass := value;
 
-  m_props.Add(TaskCtrlPropImpl.create('Name',       'String'));
-  m_props.Add(TaskCtrlPropImpl.create('Top',        'integer'));
-  m_props.Add(TaskCtrlPropImpl.create('Left',       'integer'));
-  m_props.Add(TaskCtrlPropImpl.create('Height',     'integer'));
-  m_props.Add(TaskCtrlPropImpl.create('Enabled',    'boolean'));
-  m_props.Add(TaskCtrlPropImpl.create('Visible',    'boolean'));
+  m_props.Add(TaskCtrlPropImpl.create(self, 'Name',       'String'));
+  m_props.Add(TaskCtrlPropImpl.create(self, 'Top',        'integer'));
+  m_props.Add(TaskCtrlPropImpl.create(self, 'Left',       'integer'));
+  m_props.Add(TaskCtrlPropImpl.create(self, 'Height',     'integer'));
+  m_props.Add(TaskCtrlPropImpl.create(self, 'Enabled',    'boolean'));
+  m_props.Add(TaskCtrlPropImpl.create(self, 'Visible',    'boolean'));
 
   if SameText(m_ctrlClass, 'TLabel') or SameText( m_ctrlClass, 'TGroupBox') then
   begin
-    m_props.Add(TaskCtrlPropImpl.create('Caption',    'string'));
+    m_props.Add(TaskCtrlPropImpl.create(self, 'Caption',    'string'));
   end;
   if sameText(m_ctrlClass, 'TEdit') or SameText(m_ctrlClass, 'TLabeledEdit') then
   begin
-    m_props.Add(TaskCtrlPropImpl.create('Text',       'string'));
+    m_props.Add(TaskCtrlPropImpl.create(self, 'Text',       'string'));
+    m_props.Add(TaskCtrlPropImpl.create(self, 'Datafield',  'TaskDataField'));
+
   end;
   if  SameText( m_ctrlClass, 'TLabeledEdit') then
   begin
-    m_props.Add(TaskCtrlPropImpl.create('Caption',    'string'));
+    m_props.Add(TaskCtrlPropImpl.create(self, 'Caption',    'string'));
+    m_props.Add(TaskCtrlPropImpl.create(self, 'Datafield',  'TaskDataField'));
   end;
 
   m_props.Sort(

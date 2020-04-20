@@ -8,6 +8,7 @@ uses
 type
   TDataField = class(TInterfacedObject, IDataField)
     private
+      m_owner:IDataFieldList;
       m_list : TList<IProperty>;
       m_name : string;
       m_clid : string;
@@ -35,6 +36,9 @@ type
       procedure setChilds( value : IDataFieldList);
 
       procedure config( const arr : array of TPropertyEntry);
+
+      procedure setOwner( value : IDataFieldList );
+      function  getOwner : IDataFieldList;
 
     public
       constructor Create; overload;
@@ -157,6 +161,7 @@ end;
 
 constructor TDataField.Create;
 begin
+  m_owner     := NIL;
   m_glob      := false;
   m_required  := false;
   m_list := TList<IProperty>.create;
@@ -165,6 +170,7 @@ end;
 
 constructor TDataField.Create(name, typ: string);
 begin
+  m_owner     := NIL;
   m_glob      := false;
   m_required  := false;
   m_list := TList<IProperty>.create;
@@ -176,8 +182,6 @@ end;
 
 destructor TDataField.Destroy;
 begin
-  release;
-
   m_list.Free;
   inherited;
 end;
@@ -205,6 +209,11 @@ end;
 function TDataField.GetName: string;
 begin
   Result := m_name;
+end;
+
+function TDataField.getOwner: IDataFieldList;
+begin
+  Result := m_owner;
 end;
 
 function TDataField.getPropertyByName(name: string): IProperty;
@@ -242,6 +251,8 @@ procedure TDataField.release;
 var
   i : integer;
 begin
+  m_owner := NIL;
+
   for i := 0 to pred(m_list.Count) do
   begin
     m_list[i].release;
@@ -270,6 +281,13 @@ end;
 procedure TDataField.SetName(value: string);
 begin
   m_name := value;
+  if Assigned(m_owner) then
+    m_owner.inform(dlcChange, self);
+end;
+
+procedure TDataField.setOwner(value: IDataFieldList);
+begin
+  m_owner := value;
 end;
 
 procedure TDataField.setRem(value: string);

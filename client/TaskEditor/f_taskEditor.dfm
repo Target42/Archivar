@@ -35,8 +35,6 @@ object TaksEditorForm: TTaksEditorForm
     TabOrder = 1
     object TabSheet1: TTabSheet
       Caption = 'Allgemeines'
-      ExplicitWidth = 296
-      ExplicitHeight = 154
       object Splitter1: TSplitter
         Left = 0
         Top = 299
@@ -156,8 +154,6 @@ object TaksEditorForm: TTaksEditorForm
         Align = alBottom
         Caption = 'Beschreibung'
         TabOrder = 1
-        ExplicitTop = 4
-        ExplicitWidth = 296
         inline EditFrame1: TEditFrame
           Left = 2
           Top = 15
@@ -167,7 +163,7 @@ object TaksEditorForm: TTaksEditorForm
           TabOrder = 0
           ExplicitLeft = 2
           ExplicitTop = 15
-          ExplicitWidth = 292
+          ExplicitWidth = 790
           ExplicitHeight = 133
           inherited RE: TRichEdit
             Width = 790
@@ -179,7 +175,7 @@ object TaksEditorForm: TTaksEditorForm
       end
     end
     object TabSheet2: TTabSheet
-      Caption = 'TabSheet2'
+      Caption = 'Formulare'
       ImageIndex = 1
       inline EditorFrame1: TEditorFrame
         Left = 0
@@ -199,14 +195,6 @@ object TaksEditorForm: TTaksEditorForm
           Height = 452
           ExplicitLeft = 606
           ExplicitHeight = 452
-        end
-        inherited GroupBox2: TGroupBox
-          Height = 452
-          ExplicitHeight = 452
-          inherited TV: TTreeView
-            Height = 435
-            ExplicitHeight = 435
-          end
         end
         inherited Panel1: TPanel
           Left = 609
@@ -229,10 +217,38 @@ object TaksEditorForm: TTaksEditorForm
         inherited EditPanel: TPanel
           Width = 418
           Height = 452
-          ExplicitLeft = 188
-          ExplicitTop = 0
           ExplicitWidth = 418
           ExplicitHeight = 452
+        end
+        inherited Panel2: TPanel
+          Height = 452
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitHeight = 452
+          inherited GroupBox2: TGroupBox
+            Height = 256
+            ExplicitTop = 196
+            ExplicitHeight = 256
+            inherited TV: TTreeView
+              Height = 239
+              ExplicitLeft = 2
+              ExplicitTop = 15
+              ExplicitHeight = 239
+            end
+          end
+          inherited GroupBox3: TGroupBox
+            inherited LB: TListBox
+              ExplicitLeft = 2
+              ExplicitTop = 15
+              ExplicitWidth = 181
+              ExplicitHeight = 135
+            end
+            inherited Panel3: TPanel
+              ExplicitLeft = 2
+              ExplicitTop = 150
+              ExplicitWidth = 181
+            end
+          end
         end
       end
     end
