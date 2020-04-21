@@ -15,8 +15,6 @@ object PropertyFrame: TPropertyFrame
     TabOrder = 0
     OnExit = VEExit
     OnKeyPress = VEKeyPress
-    ExplicitTop = 81
-    ExplicitHeight = 224
     ColWidths = (
       100
       345)

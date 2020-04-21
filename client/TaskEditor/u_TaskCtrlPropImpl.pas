@@ -133,44 +133,33 @@ begin
 
   if m_ctrl is TWinControl then
   begin
-    if SameText(m_name, 'name') then
-      Result := (m_ctrl as TWinControl).Name
-    else if SameText(m_name, 'Top') then
-      Result := IntToStr((m_ctrl as TWinControl).top)
-    else if SameText(m_name, 'Left') then
-      Result := IntToStr((m_ctrl as TWinControl).left)
-    else if SameText(m_name, 'Width') then
-      Result := IntToStr((m_ctrl as TWinControl).Width)
-    else if SameText(m_name, 'height') then
-      Result := IntToStr((m_ctrl as TWinControl).Height)
-    else if SameText(m_name, 'Enabled') then
-      Result := BoolToStr((m_ctrl as TWinControl).Enabled, true)
-    else if SameText(m_name, 'Visible') then
-      Result := BoolToStr((m_ctrl as TWinControl).visible, true)
+    if SameText(m_name, 'name') then          Result := (m_ctrl as TWinControl).Name
+    else if SameText(m_name, 'Top') then      Result := IntToStr((m_ctrl as TWinControl).top)
+    else if SameText(m_name, 'Left') then     Result := IntToStr((m_ctrl as TWinControl).left)
+    else if SameText(m_name, 'Width') then    Result := IntToStr((m_ctrl as TWinControl).Width)
+    else if SameText(m_name, 'height') then   Result := IntToStr((m_ctrl as TWinControl).Height)
+    else if SameText(m_name, 'Enabled') then  Result := BoolToStr((m_ctrl as TWinControl).Enabled, true)
+    else if SameText(m_name, 'Visible') then  Result := BoolToStr((m_ctrl as TWinControl).visible, true)
   end;
 
   if m_ctrl is TLabel then
   begin
-    if SameText(m_name, 'Caption') then
-      Result := (m_ctrl as TLabel).Caption
+    if SameText(m_name, 'Caption') then       Result := (m_ctrl as TLabel).Caption
   end;
 
   if m_ctrl is TGroupbox then
   begin
-    if SameText(m_name, 'Caption') then
-      Result := (m_ctrl as TGroupbox).Caption
+    if SameText(m_name, 'Caption') then       Result := (m_ctrl as TGroupbox).Caption
   end;
 
   if m_ctrl is TCustomEdit then
   begin
-    if SameText(m_name, 'Text') then
-      Result := (m_ctrl as TCustomEdit).Text;
+    if SameText(m_name, 'Text') then          Result := (m_ctrl as TCustomEdit).Text;
   end;
 
   if m_ctrl is TLabeledEdit then
   begin
-    if SameText(m_name, 'Caption') then
-      Result := (m_ctrl as TLabeledEdit).EditLabel.Caption;
+    if SameText(m_name, 'Caption') then       Result := (m_ctrl as TLabeledEdit).EditLabel.Caption;
   end;
   m_value := Result;
 end;
@@ -223,43 +212,41 @@ begin
   if m_ctrl is TWinControl then
   begin
     if SameText(m_name, 'name') then
-      (m_ctrl as TWinControl).Name := value
-    else if SameText(m_name, 'Top') then
-      (m_ctrl as TWinControl).top := StrToInt( value )
-    else if SameText(m_name, 'Left') then
-      (m_ctrl as TWinControl).left := StrToint( value )
-    else if SameText(m_name, 'Width') then
-      (m_ctrl as TWinControl).Width := StrToInt( value )
-    else if SameText(m_name, 'height') then
-      (m_ctrl as TWinControl).Height  := StrToInt( value )
-    else if SameText(m_name, 'Enabled') then
-      (m_ctrl as TWinControl).Enabled := StrToBool(value)
-    else if SameText(m_name, 'Visible') then
-      (m_ctrl as TWinControl).visible := StrToBool(value);
+    begin
+      m_value := (m_ctrl as TWinControl).Name;
+      try
+        (m_ctrl as TWinControl).Name := value;
+      except
+
+      end;
+      m_value := (m_ctrl as TWinControl).Name;
+    end
+    else if SameText(m_name, 'Top') then      (m_ctrl as TWinControl).top := StrToInt( value )
+    else if SameText(m_name, 'Left') then     (m_ctrl as TWinControl).left := StrToint( value )
+    else if SameText(m_name, 'Width') then    (m_ctrl as TWinControl).Width := StrToInt( value )
+    else if SameText(m_name, 'height') then   (m_ctrl as TWinControl).Height  := StrToInt( value )
+    else if SameText(m_name, 'Enabled') then  (m_ctrl as TWinControl).Enabled := StrToBool(value)
+    else if SameText(m_name, 'Visible') then  (m_ctrl as TWinControl).visible := StrToBool(value);
   end;
 
   if m_ctrl is TLabel then
   begin
-    if SameText(m_name, 'Caption') then
-      (m_ctrl as TLabel).Caption := value;
+    if SameText(m_name, 'Caption') then       (m_ctrl as TLabel).Caption := value;
   end;
 
   if m_ctrl is TGroupbox then
   begin
-    if SameText(m_name, 'Caption') then
-      (m_ctrl as TGroupbox).Caption := value;
+    if SameText(m_name, 'Caption') then       (m_ctrl as TGroupbox).Caption := value;
   end;
 
   if m_ctrl is TCustomEdit then
   begin
-    if SameText(m_name, 'Text') then
-      (m_ctrl as TCustomEdit).Text := value;
+    if SameText(m_name, 'Text') then          (m_ctrl as TCustomEdit).Text := value;
   end;
 
   if m_ctrl is TLabeledEdit then
   begin
-    if SameText(m_name, 'Caption') then
-      (m_ctrl as TLabeledEdit).EditLabel.Caption := value;
+    if SameText(m_name, 'Caption') then       (m_ctrl as TLabeledEdit).EditLabel.Caption := value;
   end;
 
 end;

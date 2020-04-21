@@ -8,6 +8,9 @@ uses
   Vcl.ExtCtrls, i_taskEdit, Vcl.StdCtrls, i_datafields;
 
 type
+  TPropertyChanged = procedure of object;
+
+type
   TPropertyFrame = class(TFrame)
     VE: TValueListEditor;
     procedure VEKeyPress(Sender: TObject; var Key: Char);
@@ -17,17 +20,21 @@ type
   private
     m_ctrl : ITaskCtrl;
     m_data : IDataFieldList;
+    m_pchanged : TPropertyChanged;
 
     procedure setCrtl( value : ITaskCtrl );
     procedure setDataFields( value : IDataFieldList );
-    procedure updateProps;
+
     procedure doInform(event : TDataListChangeType; value : IDataField);
   public
     property DataFields : IDataFieldList write setDataFields;
     property Ctrl : ITaskCtrl read m_ctrl write setCrtl;
+    property PropertyChanged : TPropertyChanged read m_pchanged write m_pchanged;
 
     procedure init;
     procedure release;
+
+    procedure updateProps;
   end;
 
 implementation
@@ -48,7 +55,7 @@ procedure TPropertyFrame.init;
 begin
   m_ctrl := NIL;
   m_data := NIL;
-
+  m_pchanged := NIL;
 end;
 
 procedure TPropertyFrame.release;
@@ -58,8 +65,6 @@ begin
 end;
 
 procedure TPropertyFrame.setCrtl(value: ITaskCtrl);
-var
-  inx : Integer;
 begin
   m_ctrl := value;
 
@@ -122,6 +127,8 @@ begin
     p.Value := val;
     VE.Cells[1,row] := p.Value;
   end;
+  if SameText(key, 'name') and Assigned(m_pchanged) then
+    m_pchanged;
 end;
 
 procedure TPropertyFrame.VEKeyPress(Sender: TObject; var Key: Char);

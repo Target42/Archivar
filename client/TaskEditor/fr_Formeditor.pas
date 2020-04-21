@@ -35,6 +35,9 @@ type
     SpeedButton2: TSpeedButton;
     SpeedButton3: TSpeedButton;
     SpeedButton4: TSpeedButton;
+    Panel4: TPanel;
+    SpeedButton5: TSpeedButton;
+    SpeedButton6: TSpeedButton;
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure FrameMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -47,6 +50,9 @@ type
     procedure LVKeyPress(Sender: TObject; var Key: Char);
     procedure LVClick(Sender: TObject);
     procedure LBClick(Sender: TObject);
+    procedure SpeedButton5Click(Sender: TObject);
+    procedure SpeedButton6Click(Sender: TObject);
+    procedure TVEdited(Sender: TObject; Node: TTreeNode; var S: string);
   private
 
     FNodes              : TObjectList;
@@ -86,6 +92,8 @@ type
     procedure setTask( value : ITask );
 
     procedure setMouseHooks;
+
+    procedure doPropertyChanged;
   public
     procedure init;
 
@@ -102,10 +110,11 @@ uses
 {$R *.dfm}
 
 const
-  EditList : array[1..2] of TCtrlEntry =
+  EditList : array[1..3] of TCtrlEntry =
   (
     (name:'TEdit';        typ:ctEdit),
-    (name:'TLabledEdit';  typ:ctLabeledEdit)
+    (name:'TLabledEdit';  typ:ctLabeledEdit),
+    (name:'TComboBox';    typ:ctComboBox)
   );
   ContainerList : array[1..2] of TCtrlEntry =
   (
@@ -127,6 +136,10 @@ const
     (name:'TRadioBtn';          typ:ctRadio),
     (name:'TRadioGroup';        typ:ctRadioGrp)
   );
+  TableList : array[1..1] of TCtrlEntry =
+  (
+    (name:'TTable';         typ:ctTable)
+  );
 
 
 { TFrame1 }
@@ -139,9 +152,9 @@ var
   p   : TPoint;
   shift : TShiftState;
 begin
-  if not FNodePositioning then
+  Handled := false;
+  if FNodePositioning then
   begin
-    Handled := false;
     exit;
   end;
 
@@ -284,6 +297,11 @@ begin
     end;
 end;
 
+procedure TEditorFrame.doPropertyChanged;
+begin
+  updateTree;
+end;
+
 procedure TEditorFrame.EditPanelMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 var
@@ -326,8 +344,16 @@ begin
 end;
 
 function TEditorFrame.findCtrl(var pkt: TPoint): TComponent;
+var
+  tctrl : ITaskCtrl;
 begin
   Result := NIL;
+  if not Assigned(m_form) or not Assigned(m_form.Base) then
+    exit;
+
+  tctrl := m_form.Base.find(pkt);
+  if Assigned(tctrl) then
+    Result := tctrl.Control;
 end;
 
 procedure TEditorFrame.FrameMouseDown(Sender: TObject; Button: TMouseButton;
@@ -369,6 +395,7 @@ begin
 
   updateTree;
   PropertyFrame1.init;
+  PropertyFrame1.PropertyChanged := doPropertyChanged;
 end;
 
 procedure TEditorFrame.LBClick(Sender: TObject);
@@ -603,6 +630,40 @@ begin
   updateTree;
 end;
 
+procedure TEditorFrame.SpeedButton5Click(Sender: TObject);
+var
+  ctrl : TControl;
+  tctrl : ITaskCtrl;
+begin
+  if not Assigned(TV.Selected) then
+    exit;
+  ctrl := TControl(TV.Selected.Data);
+
+  if ctrl = FCurrentNodeControl then
+  begin
+    setNodesVisible(false);
+    ReleaseCapture;
+    FCurrentNodeControl := NIL;
+  end;
+
+  tctrl := m_form.Base.findCtrl(ctrl.Name);
+  if Assigned(tctrl) then
+  begin
+    tctrl.drop;
+    tctrl.release;
+    ctrl.Free;
+  end;
+
+  updateTree;
+end;
+
+procedure TEditorFrame.SpeedButton6Click(Sender: TObject);
+begin
+  if not Assigned(Tv.Selected) then
+    exit;
+  TV.Selected.EditText;
+end;
+
 procedure TEditorFrame.TVChange(Sender: TObject; Node: TTreeNode);
 begin
   if not Assigned(node) then
@@ -658,6 +719,21 @@ begin
 end;
 
 
+procedure TEditorFrame.TVEdited(Sender: TObject; Node: TTreeNode;
+  var S: string);
+var
+  ctrl : TControl;
+begin
+  ctrl := TControl(Node.Data);
+
+  try
+    ctrl.Name := s;
+  except
+    s := ctrl.Name;
+  end;
+  PropertyFrame1.updateProps;
+end;
+
 procedure TEditorFrame.updateLV;
 begin
   LV.Items.BeginUpdate;
@@ -666,6 +742,7 @@ begin
   fillGroup('Container',  ContainerList);
   fillGroup('Edit',       EditList);
   fillGroup('Label',      TextList);
+  fillGroup('Table',      TableList);
   fillGroup('Text',       TextFieldList);
   fillGroup('TextFields', TextFieldList);
 
@@ -673,7 +750,8 @@ begin
 end;
 
 procedure TEditorFrame.updateTree;
-
+var
+  old : Pointer;
   procedure add( root :  TTreeNode; cmp :  TWinControl );
   var
     node : TTreeNode;
@@ -689,11 +767,17 @@ procedure TEditorFrame.updateTree;
 
         if not Assigned(root) then
           node.expand(true);
+
+        if cmp.Controls[i] = old then
+          TV.Selected := node;
       end;
     end;
   end;
 begin
+  old := NIL;
   TV.Items.beginUpdate;
+  if Assigned(TV.Selected) then
+    old := TV.Selected.Data;
   TV.Items.Clear;
   add( Nil, EditPanel );
   TV.Items.EndUpdate;

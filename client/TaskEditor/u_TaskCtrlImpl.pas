@@ -3,7 +3,8 @@ unit u_TaskCtrlImpl;
 interface
 
 uses
-  i_taskEdit, i_datafields, System.Generics.Collections, Vcl.Controls;
+  i_taskEdit, i_datafields, System.Generics.Collections, Vcl.Controls,
+  System.Types;
 
 type
   TaskCtrlImpl = class(TInterfacedObject, ITaskCtrl)
@@ -36,11 +37,16 @@ type
     procedure setControlClass( value : string );
     function  getControlClass : string;
 
-    function createControl( p : ITaskCtrl; newType : TControlType; x, y : integer) : ITaskCtrl;
-    function newEdit(     parent : TWinControl; x, y : Integer) :  TControl;
-    function newLabel(    parent : TWinControl; x, y : Integer) :  TControl;
-    function newGroupbox( parent : TWinControl; x, y : Integer) :  TControl;
     function  getOwner : ITaskForm;
+
+    function createControl( p : ITaskCtrl; newType : TControlType; x, y : integer) : ITaskCtrl;
+    function newLabeldEdit(     parent : TWinControl; x, y : Integer) :  TControl;
+    function newEdit(           parent : TWinControl; x, y : Integer) :  TControl;
+    function newCombobox(       parent : TWinControl; x, y : Integer) :  TControl;
+    function newLabel(          parent : TWinControl; x, y : Integer) :  TControl;
+    function newGroupbox(       parent : TWinControl; x, y : Integer) :  TControl;
+    function newTable(          parent : TWinControl; x, y : Integer) :  TControl;
+
    public
     constructor Create(owner : ITaskForm);
     destructor Destroy; override;
@@ -51,6 +57,7 @@ type
 
     function findCtrl( name : string ) : ITaskCtrl; overload;
     function findCtrl( ctrl : TControl): ITaskCtrl; overload;
+    function find( pkt : TPoint ) : ITaskCtrl;
 
     function NewChild( newType : TControlType; x, y : integer ) : ITaskCtrl; overload;
     function NewChild : ITaskCtrl;   overload;
@@ -58,15 +65,17 @@ type
 
     function getPropertyByName( name : string ) : ITaskCtrlProp;
     procedure build;
+
     procedure dropControls;
     procedure clearProps;
+    procedure drop;
   end;
 
 implementation
 
 uses
   System.SysUtils, Vcl.StdCtrls, System.Classes, Winapi.Windows,
-  u_TaskCtrlPropImpl, Vcl.ExtCtrls, Generics.Defaults, Win.ComObj;
+  u_TaskCtrlPropImpl, Vcl.ExtCtrls, Generics.Defaults, Win.ComObj, Vcl.Grids;
 
 { TaskCtrlImpl }
 
@@ -80,8 +89,14 @@ begin
       m_ctrl := newEdit( m_parent.Control as TWinControl, 0, 0 )
     else if SameText(m_ctrlClass, 'TLabel') then
       m_ctrl := newLabel( m_parent.Control as TWinControl, 0, 0 )
+    else if SameText(m_ctrlClass, 'TLabeledEdit') then
+      m_ctrl := newLabeldEdit( m_parent.Control as TWinControl, 0, 0 )
     else if SameText(m_ctrlClass, 'TGroupBox') then
-      m_ctrl := newGroupbox( m_parent.Control as TWinControl, 0, 0 );
+      m_ctrl := newGroupbox( m_parent.Control as TWinControl, 0, 0 )
+    else if SameText(m_ctrlClass, 'TComboBox') then
+      m_ctrl := newCombobox( m_parent.Control as TWinControl, 0, 0 )
+    else if SameText(m_ctrlClass, 'TStringGrid') then
+      m_ctrl := newTable( m_parent.Control as TWinControl, 0, 0 );
 
     if Assigned( m_ctrl) then
     begin
@@ -136,7 +151,8 @@ begin
   case newType of
     ctNone: ;
     ctEdit:         ctrl := newEdit( win, x, y );
-    ctLabeledEdit: ;
+    ctLabeledEdit:  ctrl := newLabeldEdit(win, x, y );
+    ctComboBox:     ctrl := newCombobox(win, x, y );
     ctLabel:        ctrl := newLabel(win, x, y );
     ctGroupBox:     ctrl := newGroupbox( win, x, y);
     ctPanel: ;
@@ -144,6 +160,8 @@ begin
     ctRichEdit: ;
     ctRadio: ;
     ctRadioGrp: ;
+    ctCheckBox: ;
+    ctTable:        ctrl := newTable( win, x, y);
   end;
   Result.Control := ctrl;
 
@@ -154,6 +172,12 @@ begin
   m_props.Free;
   m_list.Free;
   inherited;
+end;
+
+procedure TaskCtrlImpl.drop;
+begin
+  m_parent.Childs.Remove(self);
+  release;
 end;
 
 procedure TaskCtrlImpl.dropControls;
@@ -168,6 +192,29 @@ begin
     m_list[i].dropControls;
 
   m_ctrl := NIL;
+end;
+
+function TaskCtrlImpl.find(pkt: TPoint): ITaskCtrl;
+var
+  i : integer;
+  re : TRect;
+begin
+  Result := NIL;
+  for i := 0 to pred(m_list.Count) do
+    begin
+      Result := m_list[i].find(pkt);
+      if Assigned(Result) then
+        break;
+    end;
+  if not Assigned(Result) and not m_isBase then
+  begin
+    if Assigned(m_ctrl) then
+    begin
+      re := Rect( m_ctrl.Left, m_ctrl.Top, m_ctrl.Left + m_ctrl.left, m_ctrl.Top + m_ctrl.Height );
+      if re.Contains(pkt) then
+        Result := self;
+    end;
+  end;
 end;
 
 function TaskCtrlImpl.findCtrl(ctrl: TControl): ITaskCtrl;
@@ -271,6 +318,19 @@ begin
   Result := createControl( self, newType, x, y );
 end;
 
+function TaskCtrlImpl.newCombobox(parent: TWinControl; x, y: Integer): TControl;
+var
+  cb : TComboBox;
+begin
+  cb := TComboBox.Create(parent as TComponent);
+  cb.Parent := parent as TWinControl;
+  cb.Name := 'comboBox'+intToStr(GetTickCount);
+  cb.Top  := y;
+  cb.Left := X;
+
+  Result := cb;
+end;
+
 function TaskCtrlImpl.newEdit(parent: TWinControl; x, y: Integer): TControl;
 var
   ed : TEdit;
@@ -309,6 +369,32 @@ begin
   Result := lab;
 end;
 
+function TaskCtrlImpl.newLabeldEdit(parent: TWinControl; x,
+  y: Integer): TControl;
+var
+  ed : TLabeledEdit;
+begin
+  ed := TLabeledEdit.Create(parent as TComponent);
+  ed.Parent := parent as TWinControl;
+  ed.Name := 'LabeledEdit'+intToStr(GetTickCount);
+  ed.Top  := y;
+  ed.Left := X;
+  Result := ed;
+end;
+
+function TaskCtrlImpl.newTable(parent: TWinControl; x, y: Integer): TControl;
+var
+  sg : TStringGrid;
+begin
+  sg := TStringGrid.Create(parent as TComponent);
+  sg.Parent := parent as TWinControl;
+  sg.Name := 'Table'+intToStr(GetTickCount);
+
+  sg.Top  := y;
+  sg.Left := X;
+  Result := sg;
+end;
+
 procedure TaskCtrlImpl.release;
 var
   i : integer;
@@ -337,6 +423,8 @@ var
   needConfig : boolean;
 begin
   m_ctrl := value;
+  if not Assigned(m_ctrl) then
+    exit;
   if m_isBase then
     exit;
 
@@ -357,6 +445,9 @@ procedure TaskCtrlImpl.setControlClass(value: string);
 begin
   m_ctrlClass := value;
 
+  if m_isBase then
+    exit;
+
   m_props.Add(TaskCtrlPropImpl.create(self, 'Name',       'String'));
   m_props.Add(TaskCtrlPropImpl.create(self, 'Top',        'integer'));
   m_props.Add(TaskCtrlPropImpl.create(self, 'Left',       'integer'));
@@ -368,6 +459,7 @@ begin
   begin
     m_props.Add(TaskCtrlPropImpl.create(self, 'Caption',    'string'));
   end;
+
   if sameText(m_ctrlClass, 'TEdit') or SameText(m_ctrlClass, 'TLabeledEdit') then
   begin
     m_props.Add(TaskCtrlPropImpl.create(self, 'Text',       'string'));
@@ -378,6 +470,10 @@ begin
   begin
     m_props.Add(TaskCtrlPropImpl.create(self, 'Caption',    'string'));
     m_props.Add(TaskCtrlPropImpl.create(self, 'Datafield',  'TaskDataField'));
+  end;
+  if SameText(m_ctrlClass, 'TComboBox') then
+  begin
+    m_props.Add(TaskCtrlPropImpl.create(self, 'Items',    'TStringList'));
   end;
 
   m_props.Sort(
@@ -417,6 +513,18 @@ begin
     ( m_ctrl as TGroupBox).OnMouseDown  := md;
     ( m_ctrl as TGroupBox).OnMouseUp    := mu;
     ( m_ctrl as TGroupBox).OnMouseMove  := mv;
+  end
+  else if m_ctrl is TStringGrid then
+  begin
+    ( m_ctrl as TStringGrid).OnMouseDown  := md;
+    ( m_ctrl as TStringGrid).OnMouseUp    := mu;
+    ( m_ctrl as TStringGrid).OnMouseMove  := mv;
+  end
+  else if m_ctrl is TLabeledEdit then
+  begin
+    ( m_ctrl as TLabeledEdit).OnMouseDown  := md;
+    ( m_ctrl as TLabeledEdit).OnMouseUp    := mu;
+    ( m_ctrl as TLabeledEdit).OnMouseMove  := mv;
   end;
 end;
 

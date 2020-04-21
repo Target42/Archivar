@@ -3,15 +3,17 @@ unit i_taskEdit;
 interface
 
 uses
-  i_datafields, System.Generics.Collections, Vcl.Controls, System.Classes;
+  i_datafields, System.Generics.Collections, Vcl.Controls, System.Classes,
+  Winapi.Windows;
 
 type
   TControlType = (ctNone,
-    ctEdit, ctLabeledEdit,
+    ctEdit, ctLabeledEdit, ctComboBox,
     ctLabel,
     ctGroupBox, ctPanel,
     ctMemo, ctRichEdit,
-    ctRadio, ctRadioGrp
+    ctRadio, ctRadioGrp, ctCheckBox,
+    ctTable
     );
 type
   TControlMouseDown = procedure ( Sender : TObject; Button : TMouseButton; Shift : TShiftState; X, Y : integer) of object;
@@ -115,6 +117,9 @@ type
     procedure build;
     procedure dropControls;
     procedure clearProps;
+    procedure drop;
+
+    function find( pkt : TPoint ) : ITaskCtrl;
   end;
 
   ITaskCtrlProp   = interface
