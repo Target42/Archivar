@@ -77,7 +77,8 @@ uses
   u_TaskCtrlGroupBox in 'TaskEditor\controls\u_TaskCtrlGroupBox.pas',
   u_TaskCtrlLabeledEdit in 'TaskEditor\controls\u_TaskCtrlLabeledEdit.pas',
   u_TaskCtrlTable in 'TaskEditor\controls\u_TaskCtrlTable.pas',
-  u_TaskCtrlComboBox in 'TaskEditor\controls\u_TaskCtrlComboBox.pas';
+  u_TaskCtrlComboBox in 'TaskEditor\controls\u_TaskCtrlComboBox.pas',
+  u_typeHelper in 'TaskEditor\u_typeHelper.pas';
 
 {$R *.res}
 
