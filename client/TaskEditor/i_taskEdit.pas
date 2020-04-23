@@ -148,6 +148,7 @@ type
     function  isList : boolean;
     function  hasEditor : boolean;
     procedure fillPickList( list : TStrings );
+    procedure ShowEditor;
 
     procedure config;
   end;

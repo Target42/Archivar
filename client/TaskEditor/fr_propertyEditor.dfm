@@ -13,6 +13,7 @@ object PropertyFrame: TPropertyFrame
     Align = alClient
     DefaultColWidth = 100
     TabOrder = 0
+    OnEditButtonClick = VEEditButtonClick
     OnExit = VEExit
     OnKeyPress = VEKeyPress
     ColWidths = (

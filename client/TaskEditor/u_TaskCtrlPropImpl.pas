@@ -38,6 +38,9 @@ type
 
     function  getLabeledEditProps : string;
     procedure setLabeledEditProps( value : string );
+
+    function  getComboBoxProps : string;
+    procedure setComboBoxProps( value : string );
   public
 
     constructor create( owner : ITaskCtrl; name, typ : string; ctrl : Tcontrol ); overload;
@@ -50,6 +53,7 @@ type
     function  isList : boolean;
     function  hasEditor : boolean;
     procedure fillPickList( list : TStrings );
+    procedure ShowEditor;
 
     procedure config;
   end;
@@ -57,7 +61,8 @@ type
 implementation
 
 uses
-  System.SysUtils, Vcl.StdCtrls, Vcl.ExtCtrls, u_typeHelper;
+  System.SysUtils, Vcl.StdCtrls, Vcl.ExtCtrls, u_typeHelper, Vcl.Dialogs,
+  f_itemsEditor, Vcl.Forms;
 
 
 { TaskCtrlPropImpl }
@@ -115,10 +120,15 @@ begin
       m_list.Add(m_owner.Owner.Owner.Fields.Items[i].Name);
     end;
   end
-  else if SameText(m_typ, 'TAlign') then         fillAlignList(list)
-  else if SameText(m_typ, 'TEditCharCase') then  fillTEditcharList(list);
+  else if SameText(m_typ, 'TAlign') then         fillAlignList(m_list)
+  else if SameText(m_typ, 'TEditCharCase') then  fillTEditcharList(m_list);
 
   list.Assign(m_list);
+end;
+
+function TaskCtrlPropImpl.getComboBoxProps: string;
+begin
+  if SameText(m_name, 'Items') then Result := (m_ctrl as TComboBox).Items.Text;
 end;
 
 function TaskCtrlPropImpl.getControl: TControl;
@@ -185,31 +195,39 @@ begin
   else if SameText(m_name, 'Width') then    Result := IntToStr(m_ctrl.Width)
   else if SameText(m_name, 'height') then   Result := IntToStr(m_ctrl.Height)
   else if SameText(m_name, 'Enabled') then  Result := BoolToStr(m_ctrl.Enabled, true)
-  else if SameText(m_name, 'Visible') then  Result := BoolToStr(m_ctrl.visible, true);
+  else if SameText(m_name, 'Visible') then  Result := BoolToStr(m_ctrl.visible, true)
+  else if SameText(m_name, 'Align') then    Result := TAlign2Text(m_ctrl.Align);
 
 
   if m_ctrl is TLabel then        Result := getLabelProps;
   if m_ctrl is TGroupbox then     Result := getGroupboxProps;
   if m_ctrl is TCustomEdit then   Result := getCustomEditProps;
   if m_ctrl is TEdit then         Result := getEditProps;
-  if m_ctrl is TLabeledEdit then  Result :=  getLabeledEditProps;
+  if m_ctrl is TLabeledEdit then  Result := getLabeledEditProps;
+  if m_ctrl is TComboBox then     Result := getComboBoxProps;
 
   m_value := Result;
 end;
 
 function TaskCtrlPropImpl.hasEditor: boolean;
 begin
-  Result := false;
+  Result := SameText( m_typ, 'TStringList');
 end;
 
 function TaskCtrlPropImpl.isList: boolean;
 begin
-  Result := (m_list.count > 0 ) or  SameText( m_typ, 'TaskDataField');
+  Result := (m_list.count > 0 ) or  SameText( m_typ, 'TaskDataField') or
+    SameText( m_typ, 'TAlign') or SameText(m_typ, 'TEditCharCase');
 end;
 
 procedure TaskCtrlPropImpl.release;
 begin
   m_owner := NIL;
+end;
+
+procedure TaskCtrlPropImpl.setComboBoxProps(value: string);
+begin
+  if SameText(m_name, 'Items') then  (m_ctrl as TComboBox).Items.Text := value;
 end;
 
 procedure TaskCtrlPropImpl.setControl(value: TControl);
@@ -286,13 +304,32 @@ begin
   else if SameText(m_name, 'Width') then    m_ctrl.Width := StrToInt( value )
   else if SameText(m_name, 'height') then   m_ctrl.Height  := StrToInt( value )
   else if SameText(m_name, 'Enabled') then  m_ctrl.Enabled := StrToBool(value)
-  else if SameText(m_name, 'Visible') then  m_ctrl.visible := StrToBool(value);
+  else if SameText(m_name, 'Visible') then  m_ctrl.visible := StrToBool(value)
+  else if SameText(m_name, 'Align') then    m_ctrl.Align := Text2TAlign(value);
+
 
   if m_ctrl is TLabel then      setLabelProps(value);
   if m_ctrl is TGroupbox then   setGroupboxProps(value);
   if m_ctrl is TCustomEdit then setCustomEditProps(value);
   if m_ctrl is TEdit then       setdEditProps( value );
   if m_ctrl is TLabeledEdit then setLabeledEditProps(value);
+  if m_ctrl is TComboBox then    setComboBoxProps(value);
+end;
+
+procedure TaskCtrlPropImpl.ShowEditor;
+var
+  ItemsEditorForm : TItemsEditorForm;
+begin
+  if m_ctrl is TComboBox then
+  begin
+    Application.CreateForm(TItemsEditorForm, ItemsEditorForm);
+    ItemsEditorForm.Memo1.Lines.Assign( (m_ctrl as TComboBox).Items );
+    if ItemsEditorForm.ShowModal = mrOk then
+    begin
+      (m_ctrl as TComboBox).Items.Assign(ItemsEditorForm.Memo1.Lines);
+    end;
+    ItemsEditorForm.Free;
+  end;
 end;
 
 end.

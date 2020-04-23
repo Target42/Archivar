@@ -23,8 +23,6 @@ type
     function  newControl(parent : TWinControl; x, y : Integer) :  TControl; virtual;
     procedure doSetMouse( md : TControlMouseDown; mv : TControlMouseMove; mu : TControlMouseUp ); virtual;
 
-    function hasText( name : string; var value : string ) : boolean; virtual;
-
   private
     procedure setDataField( value : IDataField );
     function  getDataField : IDataField;
@@ -87,7 +85,7 @@ var
 begin
   if not Assigned(m_ctrl) and (m_ctrlClass <> '')then
   begin
-    m_ctrl := Self.newControl( m_parent.Control as TWinControl, 0, 0 );
+    m_ctrl := newControl( m_parent.Control as TWinControl, 0, 0 );
 
     if Assigned( m_ctrl) then
     begin
@@ -124,19 +122,6 @@ begin
   m_isBase    := false;
 
 end;
-
-{function TaskCtrlImpl.createControl(p: ITaskCtrl; newType: TControlType; x,
-  y: integer): ITaskCtrl;
-var
-  win  : TWinControl;
-begin
-  Result := TTaskControlFactory.GetInstance.createControl(m_owner, p, newType, x, y);
-  Result.Parent := self;
-  m_list.Add(Result);
-
-  win  := m_ctrl as TWinControl;
-  Result.Control := Result.newControl(win, x, y );
-end;}
 
 destructor TaskCtrlImpl.Destroy;
 begin
@@ -282,19 +267,6 @@ begin
   Result := m_props;
 end;
 
-function TaskCtrlImpl.hasText(name: string; var value: string): boolean;
-begin
-  Result := false;
-
-  if name = 'test' then
-  begin
-    value := 'Hallo welt';
-    Result := true;
-  end;
-
-
-end;
-
 function TaskCtrlImpl.NewChild( clName : string ): ITaskCtrl;
 begin
   Result := TTaskControlFactory.GetInstance.createControl( m_owner, m_parent, clName);
@@ -311,7 +283,6 @@ begin
   Result.Control := Result.newControl(m_ctrl as TWinControl, x, y );
 
 end;
-
 
 function TaskCtrlImpl.newControl(parent: TWinControl; x, y: Integer): TControl;
 begin
@@ -384,6 +355,7 @@ begin
   m_props.Add(TaskCtrlPropImpl.create(self, 'Height',     'integer'));
   m_props.Add(TaskCtrlPropImpl.create(self, 'Enabled',    'boolean'));
   m_props.Add(TaskCtrlPropImpl.create(self, 'Visible',    'boolean'));
+  m_props.Add(TaskCtrlPropImpl.create(self, 'Align',      'TAlign'));
 
 end;
 

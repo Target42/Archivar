@@ -15,6 +15,7 @@ type
     VE: TValueListEditor;
     procedure VEKeyPress(Sender: TObject; var Key: Char);
     procedure VEExit(Sender: TObject);
+    procedure VEEditButtonClick(Sender: TObject);
 
 
   private
@@ -91,7 +92,6 @@ begin
 
   if not Assigned(m_ctrl) then
     exit;
-
   for i := 0 to pred(m_ctrl.Props.Count) do
   begin
     p := m_ctrl.Props.Items[i];
@@ -104,9 +104,37 @@ begin
         ip.EditStyle := esPickList;
         p.fillPickList(ip.PickList);
         ip.ReadOnly := true;
+      end
+      else if p.hasEditor then
+      begin
+        ip.EditStyle := esEllipsis;
+        ip.ReadOnly := true;
+        VE.Values[ p.Name ] := '(...)';
       end;
     end;
   end;
+end;
+
+procedure TPropertyFrame.VEEditButtonClick(Sender: TObject);
+var
+  row  : Integer;
+  key  : string;
+  p    : ITaskCtrlProp;
+begin
+  if not Assigned(m_ctrl) then
+    exit;
+
+  row := VE.Row;
+  key := VE.Keys[row];
+  p := m_ctrl.getPropertyByName(key);
+  if  Assigned(p) then
+  begin
+    p.ShowEditor;
+    VE.Cells[1,row] := '(...)';
+  end;
+
+  if SameText(key, 'name') and Assigned(m_pchanged) then
+    m_pchanged;
 end;
 
 procedure TPropertyFrame.VEExit(Sender: TObject);
@@ -124,8 +152,11 @@ begin
   p := m_ctrl.getPropertyByName(key);
   if  Assigned(p) then
   begin
-    p.Value := val;
-    VE.Cells[1,row] := p.Value;
+    if not p.hasEditor then
+    begin
+      p.Value := val;
+      VE.Cells[1,row] := p.Value;
+    end;
   end;
   if SameText(key, 'name') and Assigned(m_pchanged) then
     m_pchanged;

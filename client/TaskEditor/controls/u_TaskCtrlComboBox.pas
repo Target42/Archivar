@@ -10,8 +10,6 @@ type
       procedure setControlTypeProps; override;
       function  newControl(parent : TWinControl; x, y : Integer) :  TControl; override;
       procedure doSetMouse( md : TControlMouseDown; mv : TControlMouseMove; mu : TControlMouseUp ); override;
-
-      function hasText( name : string; var value : string ) : boolean; override;
     private
 
     public
@@ -44,11 +42,6 @@ begin
 
 end;
 
-function TaskCtrlComboBox.hasText(name: string; var value: string): boolean;
-begin
-  Result := inherited hasText( name, value );
-end;
-
 function TaskCtrlComboBox.newControl(parent: TWinControl; x,
   y: Integer): TControl;
 var
@@ -68,9 +61,8 @@ var
   s : string;
 begin
   inherited;
-  hasText('test', s);
-  m_props.Add(TaskCtrlPropImpl.create(self, 'Items',    'TStringList'));
 
+  m_props.Add(TaskCtrlPropImpl.create(self, 'Items',    'TStringList'));
 
 end;
 

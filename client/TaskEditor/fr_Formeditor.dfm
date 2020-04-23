@@ -1,40 +1,40 @@
 object EditorFrame: TEditorFrame
   Left = 0
   Top = 0
-  Width = 783
-  Height = 541
+  Width = 451
+  Height = 305
   Align = alClient
   TabOrder = 0
   OnMouseDown = FrameMouseDown
-  ExplicitWidth = 451
-  ExplicitHeight = 305
   object Splitter2: TSplitter
     Left = 185
     Top = 0
-    Height = 541
+    Height = 305
     ExplicitLeft = 296
     ExplicitTop = 48
     ExplicitHeight = 100
   end
   object Splitter3: TSplitter
-    Left = 557
+    Left = 225
     Top = 0
-    Height = 541
+    Height = 305
     Align = alRight
     ExplicitLeft = 312
     ExplicitTop = 88
     ExplicitHeight = 100
   end
   object Panel1: TPanel
-    Left = 560
+    Left = 228
     Top = 0
     Width = 223
-    Height = 541
+    Height = 305
     Align = alRight
     Caption = 'Panel1'
     Enabled = False
     ShowCaption = False
     TabOrder = 0
+    ExplicitLeft = 560
+    ExplicitHeight = 541
     object Splitter1: TSplitter
       Left = 1
       Top = 246
@@ -103,8 +103,8 @@ object EditorFrame: TEditorFrame
   object EditPanel: TPanel
     Left = 188
     Top = 0
-    Width = 369
-    Height = 541
+    Width = 37
+    Height = 305
     Align = alClient
     Caption = 'EditPanel'
     Color = 16776176
@@ -113,19 +113,17 @@ object EditorFrame: TEditorFrame
     TabOrder = 1
     OnMouseDown = EditPanelMouseDown
     ExplicitWidth = 75
-    ExplicitHeight = 305
   end
   object Panel2: TPanel
     Left = 0
     Top = 0
     Width = 185
-    Height = 541
+    Height = 305
     Align = alLeft
     BevelOuter = bvNone
     Caption = 'Panel2'
     ShowCaption = False
     TabOrder = 2
-    ExplicitHeight = 305
     object Splitter4: TSplitter
       Left = 0
       Top = 193
@@ -139,17 +137,16 @@ object EditorFrame: TEditorFrame
       Left = 0
       Top = 196
       Width = 185
-      Height = 345
+      Height = 109
       Align = alClient
       Caption = 'Struktur'
       Enabled = False
       TabOrder = 0
-      ExplicitHeight = 109
       object TV: TTreeView
         Left = 2
         Top = 15
         Width = 181
-        Height = 287
+        Height = 51
         Align = alClient
         DragMode = dmAutomatic
         HideSelection = False
@@ -163,7 +160,7 @@ object EditorFrame: TEditorFrame
       end
       object Panel4: TPanel
         Left = 2
-        Top = 302
+        Top = 66
         Width = 181
         Height = 41
         Align = alBottom

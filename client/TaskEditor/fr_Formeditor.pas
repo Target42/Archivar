@@ -221,6 +221,7 @@ begin
   if Sender is TControl then
   begin
     SelectControl(Sender as TControl);
+    setPropEditor( FCurrentNodeControl );
     m_inReposition := true;
   end;
 end;
@@ -539,7 +540,7 @@ begin
     pan.Left:= TopLeft.X;
   end;
   FCurrentNodeControl := AroundControl;
-  setPropEditor(FCurrentNodeControl);
+//  setPropEditor(FCurrentNodeControl);
   setNodesVisible(true);
 end;
 
@@ -556,7 +557,7 @@ procedure TEditorFrame.SelectControl(c: TControl);
 begin
   setNodesVisible(false);
   FCurrentNodeControl := c;
-  setPropEditor(c);
+//  setPropEditor(c);
 
   GetCursorPos(FOldPos);
   SetCapture(getHandle(c));

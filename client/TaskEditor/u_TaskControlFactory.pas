@@ -41,7 +41,7 @@ begin
   m_map.Add(LowerCase('TLabledEdit'),  ctLabeledEdit);
   m_map.Add(LowerCase('TComboBox'),    ctComboBox );
   m_map.Add(LowerCase('TGroupBox'),    ctGroupBox );
-  m_map.Add(LowerCase('TTable'),       ctTable );
+  m_map.Add(LowerCase('TStringGrid'),  ctTable );
 end;
 
 function TTaskControlFactory.createControl(frm : ITaskForm; p: ITaskCtrl;
@@ -75,7 +75,7 @@ begin
     ctRadio: ;
     ctRadioGrp: ;
     ctCheckBox: ;
-    ctTable:      Result := TaskCtrlTable.create( frm );
+    ctTable:       Result := TaskCtrlTable.create( frm );
   else
     Result := TaskCtrlImpl.create(frm);
   end;

@@ -62,7 +62,6 @@ begin
   inherited;
   m_props.Add(TaskCtrlPropImpl.create(self, 'Text',       'string'));
   m_props.Add(TaskCtrlPropImpl.create(self, 'Datafield',  'TaskDataField'));
-  m_props.Add(TaskCtrlPropImpl.create(self, 'Align',      'TAlign' ));
   m_props.Add(TaskCtrlPropImpl.create(self, 'CharCase',   'TEditCharCase'));
 
 end;
