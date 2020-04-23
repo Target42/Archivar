@@ -286,6 +286,13 @@
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="..\misc\xsd_Task.pas"/>
+        <DCCReference Include="TaskEditor\u_TaskControlFactory.pas"/>
+        <DCCReference Include="TaskEditor\controls\u_TaskCtrlLabel.pas"/>
+        <DCCReference Include="TaskEditor\controls\u_TaskCtrlEdit.pas"/>
+        <DCCReference Include="TaskEditor\controls\u_TaskCtrlGroupBox.pas"/>
+        <DCCReference Include="TaskEditor\controls\u_TaskCtrlLabeledEdit.pas"/>
+        <DCCReference Include="TaskEditor\controls\u_TaskCtrlTable.pas"/>
+        <DCCReference Include="TaskEditor\controls\u_TaskCtrlComboBox.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

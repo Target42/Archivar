@@ -121,6 +121,7 @@ end;
 function TaskCtrlPropImpl.getValue: string;
 begin
   Result := m_value;
+
   if not Assigned(m_ctrl) then
     exit;
 
@@ -133,7 +134,7 @@ begin
 
   if m_ctrl is TWinControl then
   begin
-    if SameText(m_name, 'name') then          Result := (m_ctrl as TWinControl).Name
+    if      SameText(m_name, 'name') then     Result := (m_ctrl as TWinControl).Name
     else if SameText(m_name, 'Top') then      Result := IntToStr((m_ctrl as TWinControl).top)
     else if SameText(m_name, 'Left') then     Result := IntToStr((m_ctrl as TWinControl).left)
     else if SameText(m_name, 'Width') then    Result := IntToStr((m_ctrl as TWinControl).Width)
@@ -142,9 +143,20 @@ begin
     else if SameText(m_name, 'Visible') then  Result := BoolToStr((m_ctrl as TWinControl).visible, true)
   end;
 
+  if m_ctrl is TGraphicControl then
+  begin
+    if      SameText(m_name, 'name') then     Result := (m_ctrl as TGraphicControl).Name
+    else if SameText(m_name, 'Top') then      Result := IntToStr((m_ctrl as TGraphicControl).top)
+    else if SameText(m_name, 'Left') then     Result := IntToStr((m_ctrl as TGraphicControl).left)
+    else if SameText(m_name, 'Width') then    Result := IntToStr((m_ctrl as TGraphicControl).Width)
+    else if SameText(m_name, 'height') then   Result := IntToStr((m_ctrl as TGraphicControl).Height)
+    else if SameText(m_name, 'Enabled') then  Result := BoolToStr((m_ctrl as TGraphicControl).Enabled, true)
+    else if SameText(m_name, 'Visible') then  Result := BoolToStr((m_ctrl as TGraphicControl).visible, true);
+  end;
+
   if m_ctrl is TLabel then
   begin
-    if SameText(m_name, 'Caption') then       Result := (m_ctrl as TLabel).Caption
+    if SameText(m_name, 'Caption') then  Result := (m_ctrl as TLabel).Caption
   end;
 
   if m_ctrl is TGroupbox then
@@ -207,6 +219,7 @@ begin
   if SameText( m_name, 'Datafield') then
   begin
     m_owner.DataField := m_owner.Owner.Owner.Fields.getByName(m_value);
+    exit;
   end;
 
   if m_ctrl is TWinControl then

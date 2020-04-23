@@ -75,6 +75,7 @@ type
 
   ITaskCtrl = interface
   ['{7F80E65B-6A8A-4B4E-B6D9-52566A9BC95F}']
+  // protected
   //private
     procedure setDataField( value : IDataField );
     function  getDataField : IDataField;
@@ -108,9 +109,10 @@ type
 
     function findCtrl( name : string ) : ITaskCtrl; overload;
     function findCtrl( ctrl : TControl): ITaskCtrl; overload;
+    function newControl(parent : TWinControl; x, y : Integer) :  TControl;
 
     function NewChild( newType : TControlType; x, y : integer ) : ITaskCtrl;   overload;
-    function NewChild : ITaskCtrl;   overload;
+    function NewChild( clName : string ) : ITaskCtrl;   overload;
     procedure setMouse( md : TControlMouseDown; mv : TControlMouseMove; mu : TControlMouseUp );
 
     function getPropertyByName( name : string ) : ITaskCtrlProp;
@@ -148,8 +150,13 @@ type
     procedure fillPickList( list : TStrings );
 
     procedure config;
+  end;
+
+  ITaskControlFactory = interface
+    ['{D9DFBE26-F5EB-4D8E-B660-F09A7F0FAFA2}']
 
   end;
+
 
 implementation
 

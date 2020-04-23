@@ -98,7 +98,7 @@ begin
   // childs
   for i := 0 to pred(xCtrl.Control.Count) do
   begin
-    loadCtrl( ctrl.NewChild, xCtrl.Control[i]);
+    loadCtrl( ctrl.NewChild(xCtrl.Control[i].CtrlType) , xCtrl.Control[i]);
   end;
 end;
 

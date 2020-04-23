@@ -70,7 +70,14 @@ uses
   u_TaskCtrlImpl in 'TaskEditor\u_TaskCtrlImpl.pas',
   u_TaskCtrlPropImpl in 'TaskEditor\u_TaskCtrlPropImpl.pas',
   fr_propertyEditor in 'TaskEditor\fr_propertyEditor.pas' {PropertyFrame: TFrame},
-  xsd_Task in '..\misc\xsd_Task.pas';
+  xsd_Task in '..\misc\xsd_Task.pas',
+  u_TaskControlFactory in 'TaskEditor\u_TaskControlFactory.pas',
+  u_TaskCtrlLabel in 'TaskEditor\controls\u_TaskCtrlLabel.pas',
+  u_TaskCtrlEdit in 'TaskEditor\controls\u_TaskCtrlEdit.pas',
+  u_TaskCtrlGroupBox in 'TaskEditor\controls\u_TaskCtrlGroupBox.pas',
+  u_TaskCtrlLabeledEdit in 'TaskEditor\controls\u_TaskCtrlLabeledEdit.pas',
+  u_TaskCtrlTable in 'TaskEditor\controls\u_TaskCtrlTable.pas',
+  u_TaskCtrlComboBox in 'TaskEditor\controls\u_TaskCtrlComboBox.pas';
 
 {$R *.res}
 
