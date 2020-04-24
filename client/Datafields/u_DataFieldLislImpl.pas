@@ -8,14 +8,18 @@ uses
 type
   TDataFieldList = class(TInterfacedObject, IDataFieldList )
   private
+    m_owner : IDataField;
     m_list : TList<IDataField>;
     m_listener : Tlist<TDataListChange>;
 
     procedure SetItems( inx : integer ; const value : IDataField );
     function  GetItems( inx : integer ) :IDataField;
     function  getCount : integer;
+    procedure setOwner( value : IDataField );
+    function  getOwner :IDataField;
+
   public
-    constructor create;
+    constructor create (Owner :IDataField );
     Destructor Destroy; override;
 
     property Items[ inx : integer ] : IDataField read GetItems write SetItems;
@@ -56,15 +60,16 @@ function TDataFieldList.clone: IDataFieldList;
 var
   i : integer;
 begin
-  Result := TDataFieldList.create;
+  Result := TDataFieldList.create(m_owner);
   for i := 0 to pred(m_list.Count) do
   begin
     Result.Add( m_list[i].clone );
   end;
 end;
 
-constructor TDataFieldList.create;
+constructor TDataFieldList.create(Owner :IDataField );
 begin
+  m_owner     := Owner;
   m_list      := TList<IDataField>.create;
   m_listener  := Tlist<TDataListChange>.create;
 end;
@@ -110,6 +115,11 @@ begin
   Result := m_list[inx];
 end;
 
+function TDataFieldList.getOwner: IDataField;
+begin
+  Result := m_owner;
+end;
+
 procedure TDataFieldList.inform(event: TDataListChangeType; value: IDataField);
 var
   i : integer;
@@ -137,6 +147,7 @@ procedure TDataFieldList.release;
 var
   i : integer;
 begin
+  m_owner := NIL;
   for i := 0 to pred(m_list.Count) do
     m_list[i].Release;
   m_list.Clear;
@@ -145,6 +156,11 @@ end;
 procedure TDataFieldList.SetItems(inx: integer; const value: IDataField);
 begin
   m_list[inx] := value;
+end;
+
+procedure TDataFieldList.setOwner(value: IDataField);
+begin
+  m_owner := value;
 end;
 
 procedure TDataFieldList.UnregisterListener(evt: TDataListChange);

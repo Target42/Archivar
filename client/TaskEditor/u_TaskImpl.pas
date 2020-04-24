@@ -41,7 +41,7 @@ uses
 
 constructor TTask.create;
 begin
-  m_fields  := TDataFieldList.create;
+  m_fields  := TDataFieldList.create(NIL);
   m_forms   := TList<ITaskForm>.create;
   m_clid    := CreateClassID;
 end;

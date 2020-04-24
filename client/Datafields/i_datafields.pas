@@ -40,13 +40,13 @@ type
     function  getOwner : IDataFieldList;
   //public
 
-    property Owner : IDataFieldList read getOwner write setOwner;
-    property Name  : string read GetName write SetName;
-    property CLID  : string read GetCLID write SetCLID;
-    property Typ   : string read GetTyp  write SetTyp;
-    property Rem   : string read getRem write setRem;
-    property Required : boolean read getRequired write setRequired;
-    property isGlobal : boolean read getIsGlobal write setIsGlobal;
+    property Owner : IDataFieldList   read getOwner     write setOwner;
+    property Name  : string           read GetName      write SetName;
+    property CLID  : string           read GetCLID      write SetCLID;
+    property Typ   : string           read GetTyp       write SetTyp;
+    property Rem   : string           read getRem       write setRem;
+    property Required : boolean       read getRequired  write setRequired;
+    property isGlobal : boolean       read getIsGlobal  write setIsGlobal;
 
     property Properties : TList<IProperty> read GetItems;
     property Childs     : IDataFieldList read getChilds write setChilds;
@@ -66,7 +66,11 @@ type
     procedure SetItems( inx : integer ; const value : IDataField );
     function  GetItems( inx : integer ) :IDataField;
     function  getCount : integer;
+    procedure setOwner( value : IDataField );
+    function  getOwner :IDataField;
+
   // public
+    property Owner : IDataField read getOwner write setOwner;
     property Items[ inx : integer ] : IDataField read GetItems write SetItems;
     property Count : integer read getCount;
 

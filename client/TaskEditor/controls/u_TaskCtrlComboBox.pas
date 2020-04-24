@@ -57,13 +57,13 @@ begin
 end;
 
 procedure TaskCtrlComboBox.setControlTypeProps;
-var
-  s : string;
 begin
   inherited;
 
-  m_props.Add(TaskCtrlPropImpl.create(self, 'Items',    'TStringList'));
-
+  m_props.Add(TaskCtrlPropImpl.create(self, 'Items',      'TStringList'));
+  m_props.Add(TaskCtrlPropImpl.create(self, 'Datafield',  'TaskDataField'));
+  m_props.Add(TaskCtrlPropImpl.create(self, 'ItemIndex',  'integer'));
+  m_props.Add(TaskCtrlPropImpl.create(self, 'Text',       'string'));
 end;
 
 end.

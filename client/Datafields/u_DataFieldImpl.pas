@@ -165,7 +165,7 @@ begin
   m_glob      := false;
   m_required  := false;
   m_list := TList<IProperty>.create;
-  m_childs := TDataFieldList.create;
+  m_childs := TDataFieldList.create(self);
 end;
 
 constructor TDataField.Create(name, typ: string);
@@ -174,7 +174,7 @@ begin
   m_glob      := false;
   m_required  := false;
   m_list := TList<IProperty>.create;
-  m_childs := TDataFieldList.create;
+  m_childs := TDataFieldList.create(self);
   m_name := name;
 
   SetTyp(typ);

@@ -68,6 +68,9 @@ type
     procedure dropControls;
     procedure clearProps;
     procedure drop;
+
+    procedure up;
+    procedure down;
   end;
 
 implementation
@@ -133,6 +136,17 @@ end;
 procedure TaskCtrlImpl.doSetMouse(md: TControlMouseDown; mv: TControlMouseMove;
   mu: TControlMouseUp);
 begin
+end;
+
+procedure TaskCtrlImpl.down;
+var
+  inx : integer;
+begin
+  inx := m_parent.Childs.IndexOf(self);
+  if inx = m_list.Count-1 then
+    exit;
+
+  m_list.Exchange( inx, inx +1 );
 end;
 
 procedure TaskCtrlImpl.drop;
@@ -388,6 +402,17 @@ begin
       end
     )
   );
+end;
+
+procedure TaskCtrlImpl.up;
+var
+  inx : integer;
+begin
+  inx := m_parent.Childs.IndexOf(self);
+  if inx = 0 then
+    exit;
+
+  m_list.Exchange( inx, inx -1 );
 end;
 
 end.

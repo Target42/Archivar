@@ -24,18 +24,19 @@ object TableFieldEditorForm: TTableFieldEditorForm
     Align = alBottom
     AutoSize = True
     TabOrder = 0
-    ExplicitLeft = 184
-    ExplicitTop = 176
+    ExplicitTop = 163
+    ExplicitWidth = 507
     inherited StatusBar1: TStatusBar
       Width = 507
       ExplicitWidth = 507
     end
     inherited Panel1: TPanel
       Width = 507
+      ExplicitWidth = 507
       inherited OKBtn: TBitBtn
         Left = 419
         OnClick = BaseFrame1OKBtnClick
-        ExplicitLeft = 363
+        ExplicitLeft = 419
       end
     end
   end
@@ -214,9 +215,5 @@ object TableFieldEditorForm: TTableFieldEditorForm
     RowSelect = True
     TabOrder = 2
     ViewStyle = vsReport
-    ExplicitLeft = 80
-    ExplicitTop = 16
-    ExplicitWidth = 250
-    ExplicitHeight = 150
   end
 end

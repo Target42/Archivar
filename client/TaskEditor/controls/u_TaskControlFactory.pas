@@ -29,7 +29,7 @@ implementation
 uses
   Winapi.Windows, System.SysUtils, u_TaskCtrlImpl, u_TaskCtrlLabel, u_TaskCtrlEdit,
   u_TaskCtrlGroupBox, u_TaskCtrlTable, u_TaskCtrlComboBox,
-  u_TaskCtrlLabeledEdit;
+  u_TaskCtrlLabeledEdit, u_TaskCtrlTableField;
 
 constructor TTaskControlFactory.Create;
 begin
@@ -76,6 +76,7 @@ begin
     ctRadioGrp: ;
     ctCheckBox: ;
     ctTable:       Result := TaskCtrlTable.create( frm );
+    ctTableField:  Result := TaskCtrlTableField.create( frm );
   else
     Result := TaskCtrlImpl.create(frm);
   end;

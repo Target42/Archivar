@@ -13,7 +13,7 @@ type
     ctGroupBox, ctPanel,
     ctMemo, ctRichEdit,
     ctRadio, ctRadioGrp, ctCheckBox,
-    ctTable
+    ctTable, ctTableField
     );
 type
   TControlMouseDown = procedure ( Sender : TObject; Button : TMouseButton; Shift : TShiftState; X, Y : integer) of object;
@@ -122,6 +122,9 @@ type
     procedure drop;
 
     function find( pkt : TPoint ) : ITaskCtrl;
+
+    procedure up;
+    procedure down;
   end;
 
   ITaskCtrlProp   = interface

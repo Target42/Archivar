@@ -264,7 +264,7 @@
         </DCCReference>
         <DCCReference Include="TaskEditor\i_taskEdit.pas"/>
         <DCCReference Include="TaskEditor\u_TaskImpl.pas"/>
-        <DCCReference Include="TaskEditor\f_tableField_editor.pas">
+        <DCCReference Include="TaskEditor\Forms\f_tableField_editor.pas">
             <Form>TableFieldEditorForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
@@ -272,7 +272,7 @@
         <DCCReference Include="Datafields\u_DataField2XML.pas"/>
         <DCCReference Include="TaskEditor\u_TaskDataField2XML.pas"/>
         <DCCReference Include="TaskEditor\u_Task2XML.pas"/>
-        <DCCReference Include="TaskEditor\fr_Formeditor.pas">
+        <DCCReference Include="TaskEditor\Forms\fr_Formeditor.pas">
             <Form>EditorFrame</Form>
             <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
@@ -280,20 +280,33 @@
         <DCCReference Include="TaskEditor\u_TaskFormImpl.pas"/>
         <DCCReference Include="TaskEditor\u_TaskCtrlImpl.pas"/>
         <DCCReference Include="TaskEditor\u_TaskCtrlPropImpl.pas"/>
-        <DCCReference Include="TaskEditor\fr_propertyEditor.pas">
+        <DCCReference Include="TaskEditor\Forms\fr_propertyEditor.pas">
             <Form>PropertyFrame</Form>
             <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="..\misc\xsd_Task.pas"/>
-        <DCCReference Include="TaskEditor\u_TaskControlFactory.pas"/>
+        <DCCReference Include="TaskEditor\controls\u_TaskControlFactory.pas"/>
         <DCCReference Include="TaskEditor\controls\u_TaskCtrlLabel.pas"/>
         <DCCReference Include="TaskEditor\controls\u_TaskCtrlEdit.pas"/>
         <DCCReference Include="TaskEditor\controls\u_TaskCtrlGroupBox.pas"/>
         <DCCReference Include="TaskEditor\controls\u_TaskCtrlLabeledEdit.pas"/>
         <DCCReference Include="TaskEditor\controls\u_TaskCtrlTable.pas"/>
         <DCCReference Include="TaskEditor\controls\u_TaskCtrlComboBox.pas"/>
-        <DCCReference Include="TaskEditor\u_typeHelper.pas"/>
+        <DCCReference Include="misc\u_typeHelper.pas"/>
+        <DCCReference Include="TaskEditor\PropEdits\f_itemsEditor.pas">
+            <Form>ItemsEditorForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="TaskEditor\Forms\f_tableColumns.pas">
+            <Form>TableColumnsForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="TaskEditor\Forms\f_table_Column.pas">
+            <Form>TableCloumnForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="TaskEditor\controls\u_TaskCtrlTableField.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

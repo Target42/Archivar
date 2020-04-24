@@ -62,7 +62,7 @@ implementation
 
 uses
   System.SysUtils, Vcl.StdCtrls, Vcl.ExtCtrls, u_typeHelper, Vcl.Dialogs,
-  f_itemsEditor, Vcl.Forms;
+  f_itemsEditor, Vcl.Forms, Vcl.Grids, f_tableColumns;
 
 
 { TaskCtrlPropImpl }
@@ -110,14 +110,16 @@ end;
 procedure TaskCtrlPropImpl.fillPickList(list: TStrings);
 var
   i : integer;
+  task : ITask;
 begin
   if SameText(m_typ, 'TaskDataField') then
   begin
+    task := m_owner.Owner.Owner;
     m_list.Clear;
     m_list.Add('');
-    for i := 0 to pred(m_owner.Owner.Owner.Fields.Count) do
+    for i := 0 to pred(task.Fields.Count) do
     begin
-      m_list.Add(m_owner.Owner.Owner.Fields.Items[i].Name);
+      m_list.Add(task.Fields.Items[i].Name);
     end;
   end
   else if SameText(m_typ, 'TAlign') then         fillAlignList(m_list)
@@ -128,7 +130,9 @@ end;
 
 function TaskCtrlPropImpl.getComboBoxProps: string;
 begin
-  if SameText(m_name, 'Items') then Result := (m_ctrl as TComboBox).Items.Text;
+  if      SameText(m_name, 'Items') then      Result := (m_ctrl as TComboBox).Items.Text
+  else if SameText(m_name, 'ItemIndex') then  Result := IntToStr((m_ctrl as TComboBox).ItemIndex)
+  else if SameText(m_name, 'Text') then       Result := (m_ctrl as TComboBox).Text;
 end;
 
 function TaskCtrlPropImpl.getControl: TControl;
@@ -211,7 +215,7 @@ end;
 
 function TaskCtrlPropImpl.hasEditor: boolean;
 begin
-  Result := SameText( m_typ, 'TStringList');
+  Result := SameText( m_typ, 'TStringList') or SameText( m_typ, 'TFields');
 end;
 
 function TaskCtrlPropImpl.isList: boolean;
@@ -227,7 +231,9 @@ end;
 
 procedure TaskCtrlPropImpl.setComboBoxProps(value: string);
 begin
-  if SameText(m_name, 'Items') then  (m_ctrl as TComboBox).Items.Text := value;
+  if      SameText(m_name, 'Items') then      (m_ctrl as TComboBox).Items.Text := value
+  else if SameText(m_name, 'ItemIndex') then  try (m_ctrl as TComboBox).ItemIndex := StrToint( value); except end
+  else if SameText(m_name, 'Text') then       (m_ctrl as TComboBox).Text := value;
 end;
 
 procedure TaskCtrlPropImpl.setControl(value: TControl);
@@ -318,7 +324,8 @@ end;
 
 procedure TaskCtrlPropImpl.ShowEditor;
 var
-  ItemsEditorForm : TItemsEditorForm;
+  ItemsEditorForm  : TItemsEditorForm;
+  TableColumnsForm : TTableColumnsForm;
 begin
   if m_ctrl is TComboBox then
   begin
@@ -329,7 +336,20 @@ begin
       (m_ctrl as TComboBox).Items.Assign(ItemsEditorForm.Memo1.Lines);
     end;
     ItemsEditorForm.Free;
+  end
+  else if m_ctrl is TStringGrid then
+  begin
+    if not Assigned(m_owner.DataField) then
+    begin
+      ShowMessage('Es wurde noch kein Datenfeld zugewiesen!');
+      exit;
+    end;
+    Application.CreateForm(TTableColumnsForm, TableColumnsForm);
+    TableColumnsForm.DataField := m_owner.DataField;
+    TableColumnsForm.ShowModal;
+    TableColumnsForm.Free;
   end;
+
 end;
 
 end.

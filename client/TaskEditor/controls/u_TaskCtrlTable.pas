@@ -60,7 +60,8 @@ end;
 procedure TaskCtrlTable.setControlTypeProps;
 begin
   inherited;
-
+  m_props.Add(TaskCtrlPropImpl.create(self, 'Fields',   'TFields'));
+  m_props.Add(TaskCtrlPropImpl.create(self, 'Datafield',  'TaskDataField'));
 end;
 
 end.

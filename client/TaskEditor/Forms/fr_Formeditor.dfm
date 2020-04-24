@@ -33,13 +33,11 @@ object EditorFrame: TEditorFrame
     Enabled = False
     ShowCaption = False
     TabOrder = 0
-    ExplicitLeft = 560
-    ExplicitHeight = 541
     object Splitter1: TSplitter
       Left = 1
       Top = 246
       Width = 221
-      Height = 294
+      Height = 58
       Align = alClient
       ExplicitLeft = 88
       ExplicitTop = 264
@@ -54,7 +52,6 @@ object EditorFrame: TEditorFrame
       Align = alTop
       Caption = 'Controls'
       TabOrder = 0
-      ExplicitWidth = 183
       object LV: TListView
         Left = 2
         Top = 15
@@ -74,26 +71,25 @@ object EditorFrame: TEditorFrame
         ViewStyle = vsReport
         OnClick = LVClick
         OnKeyPress = LVKeyPress
-        ExplicitWidth = 179
       end
     end
     inline PropertyFrame1: TPropertyFrame
       Left = 1
       Top = 246
       Width = 221
-      Height = 294
+      Height = 58
       Align = alClient
       TabOrder = 1
       ExplicitLeft = 1
       ExplicitTop = 246
-      ExplicitWidth = 183
+      ExplicitWidth = 221
       ExplicitHeight = 58
       inherited VE: TValueListEditor
         Width = 221
-        Height = 294
+        Height = 58
         DefaultColWidth = 75
-        ExplicitWidth = 180
-        ExplicitHeight = 294
+        ExplicitWidth = 221
+        ExplicitHeight = 58
         ColWidths = (
           75
           140)
@@ -112,7 +108,6 @@ object EditorFrame: TEditorFrame
     ShowCaption = False
     TabOrder = 1
     OnMouseDown = EditPanelMouseDown
-    ExplicitWidth = 75
   end
   object Panel2: TPanel
     Left = 0
@@ -156,7 +151,6 @@ object EditorFrame: TEditorFrame
         OnDragDrop = TVDragDrop
         OnDragOver = TVDragOver
         OnEdited = TVEdited
-        ExplicitHeight = 92
       end
       object Panel4: TPanel
         Left = 2
@@ -168,9 +162,6 @@ object EditorFrame: TEditorFrame
         Caption = 'Panel4'
         ShowCaption = False
         TabOrder = 1
-        ExplicitLeft = 32
-        ExplicitTop = 280
-        ExplicitWidth = 185
         object SpeedButton5: TSpeedButton
           Left = 88
           Top = 6
