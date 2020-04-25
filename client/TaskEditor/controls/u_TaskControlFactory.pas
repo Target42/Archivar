@@ -42,6 +42,7 @@ begin
   m_map.Add(LowerCase('TComboBox'),    ctComboBox );
   m_map.Add(LowerCase('TGroupBox'),    ctGroupBox );
   m_map.Add(LowerCase('TStringGrid'),  ctTable );
+  m_map.Add(LowerCase('TTableField'),  ctTableField );
 end;
 
 function TTaskControlFactory.createControl(frm : ITaskForm; p: ITaskCtrl;

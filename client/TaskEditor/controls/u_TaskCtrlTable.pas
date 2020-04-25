@@ -16,6 +16,7 @@ type
     public
       constructor Create(owner : ITaskForm);
       destructor Destroy; override;
+      procedure updateControl; override;
   end;
 
 implementation
@@ -62,6 +63,39 @@ begin
   inherited;
   m_props.Add(TaskCtrlPropImpl.create(self, 'Fields',   'TFields'));
   m_props.Add(TaskCtrlPropImpl.create(self, 'Datafield',  'TaskDataField'));
+end;
+
+procedure TaskCtrlTable.updateControl;
+var
+  sg : TStringGrid;
+  x, y  : integer;
+begin
+  if not Assigned(m_ctrl) then
+    exit;
+  sg := m_ctrl as TStringGrid;
+
+  SG.Cells[0,0] := 'Nr';
+
+  if m_list.Count > 0 then
+  begin
+    sg.ColCount := m_list.Count + 1;
+    for x := 0 to pred(m_list.Count) do
+    begin
+      SG.Cells[x+1, 0] := m_list[x].propertyValue('Header');
+      SG.ColWidths[x+1] := StrToint(m_list[x].propertyValue('Width'));
+    end;
+  end
+  else
+  begin
+    for x := 1 to pred(SG.ColCount) do
+      SG.Cells[ x, 0 ] := char( 64 + x );
+  end;
+  for y := 1 to pred(SG.RowCount) do
+    SG.Cells[0, y] := IntToStr( y );
+
+  for y := 1 to pred(SG.RowCount) do
+    for x := 1 to pred(sg.ColCount) do
+      SG.Cells[X, y ] := SG.Cells[x, 0]+SG.Cells[0, y];
 end;
 
 end.

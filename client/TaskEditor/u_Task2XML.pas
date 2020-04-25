@@ -85,7 +85,7 @@ begin
   ctrl.ControlClass := xCtrl.CtrlType;
 
   // datenfeld ....
-  ctrl.DataField   := m_task.Fields.getByName(xCtrl.Field);
+  ctrl.DataField   := m_task.Fields.getByCLID(xCtrl.Fieldclid);
 
   // properties
   for i := 0 to pred(xCtrl.Property_.Count) do

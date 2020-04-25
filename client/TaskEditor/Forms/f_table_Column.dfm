@@ -3,8 +3,8 @@ object TableCloumnForm: TTableCloumnForm
   Top = 0
   BorderStyle = bsDialog
   Caption = 'Tabellenspalte'
-  ClientHeight = 172
-  ClientWidth = 276
+  ClientHeight = 180
+  ClientWidth = 345
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -18,31 +18,33 @@ object TableCloumnForm: TTableCloumnForm
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
-    Left = 16
-    Top = 51
+    Left = 176
+    Top = 53
     Width = 47
     Height = 13
     Caption = 'Datenfeld'
   end
   inline BaseFrame1: TBaseFrame
     Left = 0
-    Top = 112
-    Width = 276
+    Top = 120
+    Width = 345
     Height = 60
     Align = alBottom
     AutoSize = True
     TabOrder = 0
-    ExplicitLeft = 184
-    ExplicitTop = 104
+    ExplicitTop = 112
+    ExplicitWidth = 276
     inherited StatusBar1: TStatusBar
-      Width = 276
-      ExplicitWidth = 266
+      Width = 345
+      ExplicitWidth = 276
     end
     inherited Panel1: TPanel
-      Width = 276
+      Width = 345
+      ExplicitWidth = 276
       inherited OKBtn: TBitBtn
-        Left = 188
-        ExplicitLeft = 363
+        Left = 257
+        OnClick = BaseFrame1OKBtnClick
+        ExplicitLeft = 188
       end
     end
   end
@@ -68,12 +70,23 @@ object TableCloumnForm: TTableCloumnForm
     TabOrder = 2
   end
   object ComboBox1: TComboBox
-    Left = 16
-    Top = 70
+    Left = 176
+    Top = 72
     Width = 145
     Height = 21
     Sorted = True
     TabOrder = 3
     Text = 'ComboBox1'
+  end
+  object LabeledEdit3: TLabeledEdit
+    Left = 16
+    Top = 72
+    Width = 145
+    Height = 21
+    EditLabel.Width = 28
+    EditLabel.Height = 13
+    EditLabel.Caption = 'Prefix'
+    Enabled = False
+    TabOrder = 4
   end
 end

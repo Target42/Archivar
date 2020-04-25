@@ -23,6 +23,9 @@ type
     function  newControl(parent : TWinControl; x, y : Integer) :  TControl; virtual;
     procedure doSetMouse( md : TControlMouseDown; mv : TControlMouseMove; mu : TControlMouseUp ); virtual;
 
+    procedure setControlClass( value : string );
+    function  getControlClass : string;
+
   private
     procedure setDataField( value : IDataField );
     function  getDataField : IDataField;
@@ -39,8 +42,6 @@ type
     procedure setCLID( value : string );
     function  getCLID : string;
 
-    procedure setControlClass( value : string );
-    function  getControlClass : string;
 
     function  getOwner : ITaskForm;
 
@@ -63,6 +64,7 @@ type
     procedure setMouse( md : TControlMouseDown; mv : TControlMouseMove; mu : TControlMouseUp );
 
     function getPropertyByName( name : string ) : ITaskCtrlProp;
+    function propertyValue( name : string ) : string;
     procedure build;
 
     procedure dropControls;
@@ -71,6 +73,8 @@ type
 
     procedure up;
     procedure down;
+
+    procedure updateControl; virtual;
   end;
 
 implementation
@@ -86,9 +90,10 @@ procedure TaskCtrlImpl.build;
 var
   i : integer;
 begin
-  if not Assigned(m_ctrl) and (m_ctrlClass <> '')then
+  if not Assigned(m_ctrl) and (m_ctrlClass <> '') then
   begin
     m_ctrl := newControl( m_parent.Control as TWinControl, 0, 0 );
+    updateControl;
 
     if Assigned( m_ctrl) then
     begin
@@ -304,6 +309,17 @@ begin
 end;
 
 
+function TaskCtrlImpl.propertyValue(name: string): string;
+var
+  p : ITaskCtrlProp;
+begin
+  Result := '';
+
+  p := self.getPropertyByName(name);
+  if Assigned(p) then
+    Result := p.Value;
+end;
+
 procedure TaskCtrlImpl.release;
 var
   i : integer;
@@ -352,6 +368,9 @@ end;
 
 procedure TaskCtrlImpl.setControlClass(value: string);
 begin
+  if (m_ctrlClass = value) and ( m_props.Count >0 ) then
+    exit;
+
   m_ctrlClass := value;
 
   if m_isBase then
@@ -413,6 +432,11 @@ begin
     exit;
 
   m_list.Exchange( inx, inx -1 );
+end;
+
+procedure TaskCtrlImpl.updateControl;
+begin
+
 end;
 
 end.

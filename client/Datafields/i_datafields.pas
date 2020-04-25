@@ -75,6 +75,7 @@ type
     property Count : integer read getCount;
 
     function getByName( name : string ) : IDataField;
+    function getByCLID( clid : string ) : IDataField;
     procedure add( value : IDataField );
     function newField( name, typ : string ) : IDataField;
     procedure delete( value : IDataField );

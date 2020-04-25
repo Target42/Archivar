@@ -25,17 +25,17 @@ object TableColumnsForm: TTableColumnsForm
     AutoSize = True
     TabOrder = 0
     ExplicitTop = 239
-    ExplicitWidth = 635
+    ExplicitWidth = 477
     inherited StatusBar1: TStatusBar
       Width = 477
-      ExplicitWidth = 474
+      ExplicitWidth = 477
     end
     inherited Panel1: TPanel
       Width = 477
-      ExplicitWidth = 635
+      ExplicitWidth = 477
       inherited OKBtn: TBitBtn
         Left = 389
-        ExplicitLeft = 547
+        ExplicitLeft = 389
       end
     end
   end
@@ -49,9 +49,6 @@ object TableColumnsForm: TTableColumnsForm
     Caption = 'Panel1'
     ShowCaption = False
     TabOrder = 1
-    ExplicitLeft = 352
-    ExplicitTop = 128
-    ExplicitWidth = 185
     object SpeedButton1: TSpeedButton
       Left = 16
       Top = 13
@@ -254,6 +251,7 @@ object TableColumnsForm: TTableColumnsForm
         FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
         FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
       TabOrder = 1
+      OnClick = BitBtn2Click
     end
     object BitBtn3: TBitBtn
       Left = 288
@@ -321,9 +319,5 @@ object TableColumnsForm: TTableColumnsForm
     RowSelect = True
     TabOrder = 2
     ViewStyle = vsReport
-    ExplicitLeft = 128
-    ExplicitTop = 32
-    ExplicitWidth = 250
-    ExplicitHeight = 150
   end
 end

@@ -24,6 +24,7 @@ type
 
     property Items[ inx : integer ] : IDataField read GetItems write SetItems;
     function getByName( name : string ) : IDataField;
+    function getByCLID( clid : string ) : IDataField;
 
     procedure add( value : IDataField );
     function newField( name, typ : string ) : IDataField;
@@ -88,6 +89,30 @@ begin
   m_listener.Clear;
   m_listener.Free;
   inherited;
+end;
+
+function TDataFieldList.getByCLID(clid: string): IDataField;
+var
+  i : integer;
+begin
+  Result := NIL;
+  for i := 0 to pred(m_list.Count) do
+  begin
+    if SameText( clid, m_list[i].clid) then
+    begin
+      Result := m_list[i];
+      break;
+    end;
+  end;
+  if not Assigned(Result) then
+  begin
+    for i := 0 to pred(m_list.Count) do
+    begin
+      Result := m_list[i].Childs.getByCLID( clid );
+      if Assigned(Result) then
+        exit;
+    end;
+  end;
 end;
 
 function TDataFieldList.getByName(name: string): IDataField;

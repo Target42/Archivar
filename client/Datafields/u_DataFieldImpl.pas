@@ -164,8 +164,9 @@ begin
   m_owner     := NIL;
   m_glob      := false;
   m_required  := false;
-  m_list := TList<IProperty>.create;
-  m_childs := TDataFieldList.create(self);
+  m_list      := TList<IProperty>.create;
+  m_childs    := TDataFieldList.create(self);
+  m_clid      := CreateClassID;
 end;
 
 constructor TDataField.Create(name, typ: string);
@@ -176,6 +177,7 @@ begin
   m_list := TList<IProperty>.create;
   m_childs := TDataFieldList.create(self);
   m_name := name;
+  m_clid      := CreateClassID;
 
   SetTyp(typ);
 end;
@@ -271,6 +273,9 @@ end;
 procedure TDataField.SetCLID(value: string);
 begin
   m_clid := value;
+  if m_clid = '' then
+   m_clid  := CreateClassID;
+
 end;
 
 procedure TDataField.setIsGlobal(value: boolean);

@@ -29,7 +29,9 @@ uses
 
 constructor TaskCtrlTableField.Create(owner: ITaskForm);
 begin
+  inherited;
 
+  setControlClass( 'TTableField' );
 end;
 
 destructor TaskCtrlTableField.Destroy;
@@ -41,6 +43,7 @@ end;
 procedure TaskCtrlTableField.doSetMouse(md: TControlMouseDown;
   mv: TControlMouseMove; mu: TControlMouseUp);
 begin
+
 end;
 
 function TaskCtrlTableField.newControl(parent: TWinControl; x,
@@ -54,7 +57,7 @@ begin
 //  inherited;
   m_props.Add(TaskCtrlPropImpl.create(self, 'Header',       'string'));
   m_props.Add(TaskCtrlPropImpl.create(self, 'Width',        'integer'));
-  m_props.Add(TaskCtrlPropImpl.create(self, 'Datafield',  'TaskDataField'));
+  m_props.Add(TaskCtrlPropImpl.create(self, 'Datafield',    'TaskDataField'));
 
 end;
 

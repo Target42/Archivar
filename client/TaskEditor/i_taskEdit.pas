@@ -110,12 +110,14 @@ type
     function findCtrl( name : string ) : ITaskCtrl; overload;
     function findCtrl( ctrl : TControl): ITaskCtrl; overload;
     function newControl(parent : TWinControl; x, y : Integer) :  TControl;
+    procedure updateControl;
 
     function NewChild( newType : TControlType; x, y : integer ) : ITaskCtrl;   overload;
     function NewChild( clName : string ) : ITaskCtrl;   overload;
     procedure setMouse( md : TControlMouseDown; mv : TControlMouseMove; mu : TControlMouseUp );
 
     function getPropertyByName( name : string ) : ITaskCtrlProp;
+    function propertyValue( name : string ) : string;
     procedure build;
     procedure dropControls;
     procedure clearProps;

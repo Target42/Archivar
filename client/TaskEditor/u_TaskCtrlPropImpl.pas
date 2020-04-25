@@ -345,7 +345,7 @@ begin
       exit;
     end;
     Application.CreateForm(TTableColumnsForm, TableColumnsForm);
-    TableColumnsForm.DataField := m_owner.DataField;
+    TableColumnsForm.Table := m_owner;
     TableColumnsForm.ShowModal;
     TableColumnsForm.Free;
   end;
