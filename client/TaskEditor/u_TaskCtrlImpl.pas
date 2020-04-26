@@ -4,7 +4,7 @@ interface
 
 uses
   i_taskEdit, i_datafields, System.Generics.Collections, Vcl.Controls,
-  System.Types;
+  System.Types, System.Classes;
 
 type
   TaskCtrlImpl = class(TInterfacedObject, ITaskCtrl)
@@ -26,6 +26,10 @@ type
     procedure setControlClass( value : string );
     function  getControlClass : string;
 
+    function getTableCtrlIF : ITaskCtrlTable; virtual;
+    function CtrlValue : string; virtual;
+    procedure setCtrlValue( value : string ); virtual;
+
   private
     procedure setDataField( value : IDataField );
     function  getDataField : IDataField;
@@ -42,10 +46,10 @@ type
     procedure setCLID( value : string );
     function  getCLID : string;
 
-
     function  getOwner : ITaskForm;
 
     procedure sortProps;
+
 
    public
     constructor Create(owner : ITaskForm);
@@ -67,20 +71,23 @@ type
     function propertyValue( name : string ) : string;
     procedure build;
 
-    procedure dropControls;
-    procedure clearProps;
+    procedure dropControls; virtual;
     procedure drop;
 
     procedure up;
     procedure down;
 
     procedure updateControl; virtual;
+    procedure check( list : TStringList ); virtual;
+
+    procedure setData( value : string );
+    function getData( var name, value : string ) : boolean;
   end;
 
 implementation
 
 uses
-  System.SysUtils, Vcl.StdCtrls, System.Classes, Winapi.Windows,
+  System.SysUtils, Vcl.StdCtrls, Winapi.Windows,
   u_TaskCtrlPropImpl, Vcl.ExtCtrls, Generics.Defaults, Win.ComObj, Vcl.Grids,
   u_TaskCtrlLabel, u_TaskControlFactory;
 
@@ -109,15 +116,20 @@ begin
     m_list[i].build;
 end;
 
-procedure TaskCtrlImpl.clearProps;
+procedure TaskCtrlImpl.check(list: TStringList);
 var
   i : integer;
 begin
-  for i := 0 to pred(m_props.Count) do
-    m_props[i].release;
-  m_props.Clear;
-end;
+  if not Assigned( m_dataField ) and Assigned(Self.getPropertyByName('Datafield')) then
+  begin
+    list.Add('Datenfeld "'+self.propertyValue('name')+'" fehlt');
+  end;
 
+  for i := 0 to pred(m_list.Count) do
+  begin
+    m_list[i].check(list);
+  end;
+end;
 constructor TaskCtrlImpl.Create(owner : ITaskForm);
 begin
   m_owner     := owner;
@@ -129,6 +141,11 @@ begin
   m_props     := TList<ITaskCtrlProp>.create;
   m_isBase    := false;
 
+end;
+
+function TaskCtrlImpl.CtrlValue: string;
+begin
+  Result := '';
 end;
 
 destructor TaskCtrlImpl.Destroy;
@@ -170,8 +187,12 @@ begin
 
   for i := 0 to pred(m_list.Count) do
     m_list[i].dropControls;
-
-  m_ctrl := NIL;
+  if not m_isBase then
+  begin
+    if Assigned(m_ctrl) then
+      m_ctrl.Free;
+    m_ctrl := NIL;
+  end;
 end;
 
 function TaskCtrlImpl.find(pkt: TPoint): ITaskCtrl;
@@ -251,6 +272,16 @@ begin
   Result := m_ctrlClass;
 end;
 
+function TaskCtrlImpl.getData( var name, value :string) : boolean;
+begin
+  Result := false;
+  if Assigned( m_dataField ) then
+  begin
+    name := propertyValue('name');
+    value := CtrlValue;
+  end;
+end;
+
 function TaskCtrlImpl.getDataField: IDataField;
 begin
   Result := m_dataField;
@@ -284,6 +315,11 @@ end;
 function TaskCtrlImpl.getProps: TList<ITaskCtrlProp>;
 begin
   Result := m_props;
+end;
+
+function TaskCtrlImpl.getTableCtrlIF: ITaskCtrlTable;
+begin
+  Result := NIL;
 end;
 
 function TaskCtrlImpl.NewChild( clName : string ): ITaskCtrl;
@@ -392,6 +428,16 @@ begin
 
 end;
 
+procedure TaskCtrlImpl.setCtrlValue(value: string);
+begin
+ // nix
+end;
+
+procedure TaskCtrlImpl.setData(value: string);
+begin
+  setCtrlValue(value);
+end;
+
 procedure TaskCtrlImpl.setDataField(value: IDataField);
 begin
   m_dataField := value;
@@ -436,7 +482,8 @@ end;
 
 procedure TaskCtrlImpl.updateControl;
 begin
-
+ // nix
 end;
+
 
 end.

@@ -25,6 +25,7 @@ type
   ITaskForm       = interface;
   ITaskCtrl       = interface;
   ITaskCtrlProp   = interface;
+  ITaskCtrlTable  = interface;
 
   ITask = interface
     ['{5056AAD9-1DCC-4A50-B316-A9DDBE1CFD1D}']
@@ -94,6 +95,7 @@ type
     function  getControlClass : string;
     function  getOwner : ITaskForm;
 
+    function getTableCtrlIF : ITaskCtrlTable;
   // public
 
     property Control        : TControl              read getControl       write setControl;
@@ -104,29 +106,34 @@ type
     property Props          : TList<ITaskCtrlProp>  read getProps;
     property Parent         : ITaskCtrl             read getParent        write setParent;
     property Owner          : ITaskForm             read getOwner;
+    property TableCtrlIF    : ITaskCtrlTable        read getTableCtrlIF;
 
     procedure release;
 
     function findCtrl( name : string ) : ITaskCtrl; overload;
     function findCtrl( ctrl : TControl): ITaskCtrl; overload;
     function newControl(parent : TWinControl; x, y : Integer) :  TControl;
-    procedure updateControl;
 
     function NewChild( newType : TControlType; x, y : integer ) : ITaskCtrl;   overload;
     function NewChild( clName : string ) : ITaskCtrl;   overload;
+    procedure up;
+    procedure down;
+
+
     procedure setMouse( md : TControlMouseDown; mv : TControlMouseMove; mu : TControlMouseUp );
+    function find( pkt : TPoint ) : ITaskCtrl;
+    procedure check( list : TStringList );
+
+    procedure setData( value : string );
+    function getData( var name, value :string ) : boolean;
 
     function getPropertyByName( name : string ) : ITaskCtrlProp;
     function propertyValue( name : string ) : string;
+
     procedure build;
     procedure dropControls;
-    procedure clearProps;
     procedure drop;
-
-    function find( pkt : TPoint ) : ITaskCtrl;
-
-    procedure up;
-    procedure down;
+    procedure updateControl;
   end;
 
   ITaskCtrlProp   = interface
@@ -149,18 +156,30 @@ type
     property Control  : TControl  read getControl write setControl;
 
     procedure release;
+    procedure config;
 
     function  isList : boolean;
     function  hasEditor : boolean;
     procedure fillPickList( list : TStrings );
     procedure ShowEditor;
 
-    procedure config;
+
   end;
 
-  ITaskControlFactory = interface
+  ITaskCtrlTable = interface
     ['{D9DFBE26-F5EB-4D8E-B660-F09A7F0FAFA2}']
+  // private
+    function getCell( row, col : integer) : string;
+    procedure setCell( row, col : integer; value : string );
+  // public
+    function addRow : integer;
+    function RowCount : integer;
+    function ColCount : integer;
+    procedure deleteRow( row : integer );
+    function ColDatafield( col : integer ) : string;
 
+
+    property Cell[ row, col : integer] : string read getCell write setCell;
   end;
 
 

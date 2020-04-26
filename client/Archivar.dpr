@@ -57,14 +57,14 @@ uses
   u_PropertyImpl in 'Datafields\u_PropertyImpl.pas',
   u_DataFieldImpl in 'Datafields\u_DataFieldImpl.pas',
   u_DataFieldLislImpl in 'Datafields\u_DataFieldLislImpl.pas',
-  f_taskEditor in 'TaskEditor\f_taskEditor.pas' {TaksEditorForm},
+  f_taskEditor in 'TaskEditor\Forms\f_taskEditor.pas' {TaksEditorForm},
   i_taskEdit in 'TaskEditor\i_taskEdit.pas',
   u_TaskImpl in 'TaskEditor\u_TaskImpl.pas',
   f_tableField_editor in 'TaskEditor\Forms\f_tableField_editor.pas' {TableFieldEditorForm},
   xsd_DataField in '..\misc\xsd_DataField.pas',
   u_DataField2XML in 'Datafields\u_DataField2XML.pas',
-  u_TaskDataField2XML in 'TaskEditor\u_TaskDataField2XML.pas',
-  u_Task2XML in 'TaskEditor\u_Task2XML.pas',
+  u_TaskDataField2XML in 'TaskEditor\Writer\u_TaskDataField2XML.pas',
+  u_Task2XML in 'TaskEditor\Writer\u_Task2XML.pas',
   fr_Formeditor in 'TaskEditor\Forms\fr_Formeditor.pas' {EditorFrame: TFrame},
   u_TaskFormImpl in 'TaskEditor\u_TaskFormImpl.pas',
   u_TaskCtrlImpl in 'TaskEditor\u_TaskCtrlImpl.pas',
@@ -82,7 +82,9 @@ uses
   f_itemsEditor in 'TaskEditor\PropEdits\f_itemsEditor.pas' {ItemsEditorForm},
   f_tableColumns in 'TaskEditor\Forms\f_tableColumns.pas' {TableColumnsForm},
   f_table_Column in 'TaskEditor\Forms\f_table_Column.pas' {TableCloumnForm},
-  u_TaskCtrlTableField in 'TaskEditor\controls\u_TaskCtrlTableField.pas';
+  u_TaskCtrlTableField in 'TaskEditor\controls\u_TaskCtrlTableField.pas',
+  xsd_TaskData in '..\misc\xsd_TaskData.pas',
+  u_taskForm2XML in 'TaskEditor\Writer\u_taskForm2XML.pas';
 
 {$R *.res}
 

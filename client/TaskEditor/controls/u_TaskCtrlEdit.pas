@@ -11,6 +11,9 @@ type
       procedure setControlTypeProps; override;
       function  newControl(parent : TWinControl; x, y : Integer) :  TControl; override;
       procedure doSetMouse( md : TControlMouseDown; mv : TControlMouseMove; mu : TControlMouseUp ); override;
+
+      function CtrlValue : string; override;
+      procedure setCtrlValue( value : string ); override;
     private
 
     public
@@ -28,6 +31,14 @@ uses
 constructor TaskCtrlEdit.Create(owner: ITaskForm);
 begin
   inherited;
+end;
+
+function TaskCtrlEdit.CtrlValue: string;
+begin
+  Result := '';
+
+  if Assigned( m_ctrl) then
+    Result := trim( ( m_ctrl as TEdit).Text);
 end;
 
 destructor TaskCtrlEdit.Destroy;
@@ -64,6 +75,13 @@ begin
   m_props.Add(TaskCtrlPropImpl.create(self, 'Datafield',  'TaskDataField'));
   m_props.Add(TaskCtrlPropImpl.create(self, 'CharCase',   'TEditCharCase'));
 
+end;
+
+procedure TaskCtrlEdit.setCtrlValue(value: string);
+begin
+  inherited;
+  if Assigned( m_ctrl) then
+    ( m_ctrl as TEdit).Text := value;
 end;
 
 end.

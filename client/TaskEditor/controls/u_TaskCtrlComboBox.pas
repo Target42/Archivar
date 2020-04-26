@@ -10,6 +10,9 @@ type
       procedure setControlTypeProps; override;
       function  newControl(parent : TWinControl; x, y : Integer) :  TControl; override;
       procedure doSetMouse( md : TControlMouseDown; mv : TControlMouseMove; mu : TControlMouseUp ); override;
+      function CtrlValue : string; override;
+      procedure setCtrlValue( value : string ); override;
+
     private
 
     public
@@ -27,6 +30,20 @@ uses
 constructor TaskCtrlComboBox.Create(owner: ITaskForm);
 begin
   inherited;
+end;
+
+function TaskCtrlComboBox.CtrlValue: string;
+var
+  cb : TComboBox;
+begin
+  Result := '';
+
+  if Assigned(m_ctrl) then
+  begin
+    cb := m_ctrl as TComboBox;
+    if cb.ItemIndex <> -1 then
+      Result := cb.Items.Strings[cb.ItemIndex];
+  end;
 end;
 
 destructor TaskCtrlComboBox.Destroy;
@@ -64,6 +81,18 @@ begin
   m_props.Add(TaskCtrlPropImpl.create(self, 'Datafield',  'TaskDataField'));
   m_props.Add(TaskCtrlPropImpl.create(self, 'ItemIndex',  'integer'));
   m_props.Add(TaskCtrlPropImpl.create(self, 'Text',       'string'));
+end;
+
+procedure TaskCtrlComboBox.setCtrlValue(value: string);
+var
+  cb : TComboBox;
+begin
+  inherited;
+  if Assigned(m_ctrl) then
+  begin
+    cb := m_ctrl as TComboBox;
+    cb.ItemIndex := cb.Items.IndexOf(value);
+  end;
 end;
 
 end.

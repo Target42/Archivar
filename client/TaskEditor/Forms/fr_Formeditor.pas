@@ -38,6 +38,8 @@ type
     Panel4: TPanel;
     SpeedButton5: TSpeedButton;
     SpeedButton6: TSpeedButton;
+    SpeedButton7: TSpeedButton;
+    SpeedButton8: TSpeedButton;
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure FrameMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -53,6 +55,8 @@ type
     procedure SpeedButton5Click(Sender: TObject);
     procedure SpeedButton6Click(Sender: TObject);
     procedure TVEdited(Sender: TObject; Node: TTreeNode; var S: string);
+    procedure SpeedButton7Click(Sender: TObject);
+    procedure SpeedButton8Click(Sender: TObject);
   private
 
     FNodes              : TObjectList;
@@ -105,7 +109,7 @@ type
 implementation
 
 uses
-  System.Types, u_TaskFormImpl;
+  System.Types, u_TaskFormImpl, u_taskForm2XML;
 
 {$R *.dfm}
 
@@ -663,6 +667,34 @@ begin
   if not Assigned(Tv.Selected) then
     exit;
   TV.Selected.EditText;
+end;
+
+procedure TEditorFrame.SpeedButton7Click(Sender: TObject);
+var
+  list : TStringList;
+
+begin
+  list := TStringList.Create;
+
+  m_form.Base.check( list );
+  if list.Count = 0 then
+    ShowMessage( 'Keine Fehler gefunden')
+  else
+    ShowMessage('Fehler'+sLineBreak+list.Text);
+  list.Free;
+end;
+
+procedure TEditorFrame.SpeedButton8Click(Sender: TObject);
+var
+  writer : TTaskForm2XML;
+begin
+  // save data ..
+  if not Assigned(m_form) then
+    exit;
+  writer := TTaskForm2XML.create;
+  writer.save('formdata.xml', m_form);
+  writer.Free;
+
 end;
 
 procedure TEditorFrame.TVChange(Sender: TObject; Node: TTreeNode);

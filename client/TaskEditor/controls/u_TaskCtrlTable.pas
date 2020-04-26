@@ -3,36 +3,98 @@ unit u_TaskCtrlTable;
 interface
 
 uses
-  u_TaskCtrlImpl, i_taskEdit, Vcl.Controls, System.Classes;
+  u_TaskCtrlImpl, i_taskEdit, Vcl.Controls, System.Classes,
+  System.Generics.Collections, Vcl.Grids;
 
 type
-  TaskCtrlTable = class(TaskCtrlImpl)
+  TaskCtrlTable = class(TaskCtrlImpl, ITaskCtrlTable)
     protected
       procedure setControlTypeProps; override;
       function  newControl(parent : TWinControl; x, y : Integer) :  TControl; override;
       procedure doSetMouse( md : TControlMouseDown; mv : TControlMouseMove; mu : TControlMouseUp ); override;
-    private
 
+      function getTableCtrlIF : ITaskCtrlTable; override;
+    private
+      m_sg : TStringGrid;
+      function getCell( row, col : integer) : string;
+      procedure setCell( row, col : integer; value : string );
+      procedure renumber;
     public
+
       constructor Create(owner : ITaskForm);
       destructor Destroy; override;
+
       procedure updateControl; override;
+
+      procedure dropControls; override;
+
+      function addRow : integer;
+      function RowCount : integer;
+      function ColCount : integer;
+      procedure deleteRow( row : integer );
+      function ColDatafield( col : integer ) : string;
   end;
 
 implementation
 
 uses
-  u_TaskCtrlPropImpl, Vcl.StdCtrls, System.SysUtils, Winapi.Windows, Vcl.Grids;
+  u_TaskCtrlPropImpl, Vcl.StdCtrls, System.SysUtils, Winapi.Windows;
 { TaskCtrlTable }
+
+function TaskCtrlTable.addRow: integer;
+var
+  x : integer;
+begin
+  Result := -1;
+  if not Assigned(m_sg) then
+    exit;
+  m_sg.RowCount := m_sg.RowCount + 1;
+  for x := 0 to pred(m_sg.ColCount)  do
+    m_sg.Cells[m_sg.RowCount-1, x] := '';
+
+  renumber;
+  Result := m_sg.RowCount;
+end;
+
+function TaskCtrlTable.ColCount: integer;
+begin
+  Result := m_list.Count;
+end;
+
+
+function TaskCtrlTable.ColDatafield(col: integer): string;
+begin
+  Result := '';
+  if not Assigned(m_sg) then
+    exit;
+  if Assigned(m_list.Items[col-1].DataField) then
+    Result := m_list.Items[col-1].DataField.Name;
+end;
 
 constructor TaskCtrlTable.Create(owner: ITaskForm);
 begin
   inherited;
+  m_sg := NIL;
+end;
+
+procedure TaskCtrlTable.deleteRow(row: integer);
+var
+  y, x : integer;
+begin
+  if not Assigned(m_sg) then
+    exit;
+
+  for y := row+1 to pred(m_sg.RowCount) do
+    for x := 1 to pred(m_sg.ColCount) do
+      m_sg.Cells[ x, y-1] := m_sg.Cells[x, y];
+
+  m_sg.RowCount := m_sg.RowCount - 1;
+
+  renumber;
 end;
 
 destructor TaskCtrlTable.Destroy;
 begin
-
   inherited;
 end;
 
@@ -45,17 +107,56 @@ begin
 
 end;
 
-function TaskCtrlTable.newControl(parent: TWinControl; x, y: Integer): TControl;
-var
-  sg : TStringGrid;
+procedure TaskCtrlTable.dropControls;
 begin
-  sg := TStringGrid.Create(parent as TComponent);
-  sg.Parent := parent as TWinControl;
-  sg.Name := 'Table'+intToStr(GetTickCount);
+  inherited;
+  m_sg := NIL;
+end;
 
-  sg.Top  := y;
-  sg.Left := X;
-  Result := sg;
+function TaskCtrlTable.getCell(row, col: integer): string;
+begin
+  Result := '';
+  if not Assigned(m_sg) then
+    exit;
+  Result := m_sg.Cells[ col, row ];
+end;
+
+function TaskCtrlTable.getTableCtrlIF: ITaskCtrlTable;
+begin
+  Result := self;
+end;
+
+function TaskCtrlTable.newControl(parent: TWinControl; x, y: Integer): TControl;
+begin
+  m_sg := TStringGrid.Create(parent as TComponent);
+  m_sg.Parent := parent as TWinControl;
+  m_sg.Name := 'Table'+intToStr(GetTickCount);
+
+  m_sg.Top  := y;
+  m_sg.Left := X;
+  Result := m_sg;
+
+end;
+
+procedure TaskCtrlTable.renumber;
+var
+  y : integer;
+begin
+  for y := 1 to pred(m_sg.RowCount) do
+    m_sg.Cells[0, y] := IntToStr(y);
+end;
+
+function TaskCtrlTable.RowCount: integer;
+begin
+  Result := m_sg.RowCount - 1;
+end;
+
+
+procedure TaskCtrlTable.setCell(row, col: integer; value: string);
+begin
+  if not Assigned(m_ctrl) then
+    exit;
+  m_sg.Cells[ col, row] := value;
 end;
 
 procedure TaskCtrlTable.setControlTypeProps;
