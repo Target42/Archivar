@@ -43,6 +43,7 @@ type
     property Forms  : TList<ITaskForm> read getForms;
 
     function NewForm : ITaskForm;
+    function getFormByCLID( clid : string ) : ITaskForm;
 
     procedure release;
   end;
@@ -110,6 +111,9 @@ type
 
     procedure release;
 
+    function containData : boolean;
+
+    function findCtrlByCLID( clid : string ) : ITaskCtrl;
     function findCtrl( name : string ) : ITaskCtrl; overload;
     function findCtrl( ctrl : TControl): ITaskCtrl; overload;
     function newControl(parent : TWinControl; x, y : Integer) :  TControl;
@@ -171,13 +175,17 @@ type
   // private
     function getCell( row, col : integer) : string;
     procedure setCell( row, col : integer; value : string );
+
+    function getRowCount : integer;
+    procedure setRowCount( value : integer );
   // public
-    function addRow : integer;
-    function RowCount : integer;
+    property RowCount : integer read getRowCount write setRowCount;
+
     function ColCount : integer;
     procedure deleteRow( row : integer );
-    function ColDatafield( col : integer ) : string;
 
+    function addRow : integer;
+    function ColDatafield( col : integer ) : string;
 
     property Cell[ row, col : integer] : string read getCell write setCell;
   end;

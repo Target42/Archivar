@@ -30,6 +30,7 @@ uses
 constructor TaskCtrlComboBox.Create(owner: ITaskForm);
 begin
   inherited;
+  m_canContainData := true;
 end;
 
 function TaskCtrlComboBox.CtrlValue: string;
@@ -42,8 +43,12 @@ begin
   begin
     cb := m_ctrl as TComboBox;
     if cb.ItemIndex <> -1 then
-      Result := cb.Items.Strings[cb.ItemIndex];
-  end;
+      Result := cb.Items.Strings[cb.ItemIndex]
+    else
+      Result := cb.Text;
+  end
+  else
+    Result := propertyValue('Text');
 end;
 
 destructor TaskCtrlComboBox.Destroy;
@@ -87,12 +92,11 @@ procedure TaskCtrlComboBox.setCtrlValue(value: string);
 var
   cb : TComboBox;
 begin
-  inherited;
   if Assigned(m_ctrl) then
   begin
     cb := m_ctrl as TComboBox;
     cb.ItemIndex := cb.Items.IndexOf(value);
-  end;
+  end
 end;
 
 end.

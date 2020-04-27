@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- edited with XMLSPY v2004 rel. 3 U (http://www.xmlspy.com) by John Doe (Blaupunkt GmbH) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+	<xs:element name="List">
+		<xs:annotation>
+			<xs:documentation>Comment describing your root element</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Values"/>
+				<xs:element ref="Tables"/>
+			</xs:sequence>
+			<xs:attribute name="clid" type="xs:string"/>
+			<xs:attribute name="taskclid" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Value"/>
+	<xs:element name="Field">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Value"/>
+			</xs:sequence>
+			<xs:attribute name="field" type="xs:string"/>
+			<xs:attribute name="fieldclid" type="xs:string"/>
+			<xs:attribute name="ctrlclid" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Row">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Value" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Rows">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Row" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Header">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Field" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Table">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Header"/>
+				<xs:element ref="Rows"/>
+			</xs:sequence>
+			<xs:attribute name="ctrlclid" type="xs:string"/>
+			<xs:attribute name="field" type="xs:string"/>
+			<xs:attribute name="fieldclid" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Data">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Value"/>
+			</xs:sequence>
+			<xs:attribute name="field" type="xs:string"/>
+			<xs:attribute name="fieldclid" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Tables">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Table" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Values">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Field" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

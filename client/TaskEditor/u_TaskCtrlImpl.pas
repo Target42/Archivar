@@ -18,6 +18,7 @@ type
     m_props     : TList<ITaskCtrlProp>;
     m_parent    : ITaskCtrl;
     m_isBase    : boolean;
+    m_canContainData : boolean;
 
     procedure setControlTypeProps; virtual;
     function  newControl(parent : TWinControl; x, y : Integer) :  TControl; virtual;
@@ -59,6 +60,7 @@ type
 
     procedure release;
 
+    function findCtrlByCLID( clid : string ) : ITaskCtrl;
     function findCtrl( name : string ) : ITaskCtrl; overload;
     function findCtrl( ctrl : TControl): ITaskCtrl; overload;
     function find( pkt : TPoint ) : ITaskCtrl;
@@ -82,6 +84,8 @@ type
 
     procedure setData( value : string );
     function getData( var name, value : string ) : boolean;
+
+    function containData : boolean;
   end;
 
 implementation
@@ -130,6 +134,11 @@ begin
     m_list[i].check(list);
   end;
 end;
+function TaskCtrlImpl.containData: boolean;
+begin
+  Result := m_canContainData;
+end;
+
 constructor TaskCtrlImpl.Create(owner : ITaskForm);
 begin
   m_owner     := owner;
@@ -140,6 +149,7 @@ begin
   m_list      := TList<ITaskCtrl>.create;
   m_props     := TList<ITaskCtrlProp>.create;
   m_isBase    := false;
+  m_canContainData := false;
 
 end;
 
@@ -222,6 +232,7 @@ function TaskCtrlImpl.findCtrl(ctrl: TControl): ITaskCtrl;
 var
   i : integer;
 begin
+  Result := NIL;
   if m_ctrl = ctrl then
     Result := self
   else
@@ -235,10 +246,29 @@ begin
   end;
 end;
 
+function TaskCtrlImpl.findCtrlByCLID(clid: string): ITaskCtrl;
+var
+  i : integer;
+begin
+  Result := NIL;
+  if SameText( m_clid, clid ) then
+    Result := self
+  else
+  begin
+    for i := 0 to pred(m_list.Count) do
+    begin
+      Result := m_list[i].findCtrlByCLID(clid);
+      if Assigned(Result) then
+        break;
+    end;
+  end;
+end;
+
 function TaskCtrlImpl.findCtrl(name: string): ITaskCtrl;
 var
   i : integer;
 begin
+  Result := NIL;
   if SameText( m_ctrl.Name, name ) then
     Result := self
   else
@@ -275,11 +305,8 @@ end;
 function TaskCtrlImpl.getData( var name, value :string) : boolean;
 begin
   Result := false;
-  if Assigned( m_dataField ) then
-  begin
-    name := propertyValue('name');
-    value := CtrlValue;
-  end;
+  name := propertyValue('name');
+  value := CtrlValue;
 end;
 
 function TaskCtrlImpl.getDataField: IDataField;

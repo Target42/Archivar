@@ -83,8 +83,8 @@ uses
   f_tableColumns in 'TaskEditor\Forms\f_tableColumns.pas' {TableColumnsForm},
   f_table_Column in 'TaskEditor\Forms\f_table_Column.pas' {TableCloumnForm},
   u_TaskCtrlTableField in 'TaskEditor\controls\u_TaskCtrlTableField.pas',
-  xsd_TaskData in '..\misc\xsd_TaskData.pas',
-  u_taskForm2XML in 'TaskEditor\Writer\u_taskForm2XML.pas';
+  u_taskForm2XML in 'TaskEditor\Writer\u_taskForm2XML.pas',
+  xsd_TaskData in '..\misc\xsd_TaskData.pas';
 
 {$R *.res}
 

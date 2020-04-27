@@ -19,6 +19,8 @@ type
       function getCell( row, col : integer) : string;
       procedure setCell( row, col : integer; value : string );
       procedure renumber;
+      function getRowCount : integer;
+      procedure setRowCount( value : integer );
     public
 
       constructor Create(owner : ITaskForm);
@@ -29,7 +31,7 @@ type
       procedure dropControls; override;
 
       function addRow : integer;
-      function RowCount : integer;
+
       function ColCount : integer;
       procedure deleteRow( row : integer );
       function ColDatafield( col : integer ) : string;
@@ -75,6 +77,7 @@ constructor TaskCtrlTable.Create(owner: ITaskForm);
 begin
   inherited;
   m_sg := NIL;
+  m_canContainData := true;
 end;
 
 procedure TaskCtrlTable.deleteRow(row: integer);
@@ -121,6 +124,14 @@ begin
   Result := m_sg.Cells[ col, row ];
 end;
 
+function TaskCtrlTable.getRowCount: integer;
+begin
+  Result := 0;
+
+  if Assigned(m_sg) then
+    Result := m_sg.RowCount;
+end;
+
 function TaskCtrlTable.getTableCtrlIF: ITaskCtrlTable;
 begin
   Result := self;
@@ -146,11 +157,6 @@ begin
     m_sg.Cells[0, y] := IntToStr(y);
 end;
 
-function TaskCtrlTable.RowCount: integer;
-begin
-  Result := m_sg.RowCount - 1;
-end;
-
 
 procedure TaskCtrlTable.setCell(row, col: integer; value: string);
 begin
@@ -164,6 +170,12 @@ begin
   inherited;
   m_props.Add(TaskCtrlPropImpl.create(self, 'Fields',   'TFields'));
   m_props.Add(TaskCtrlPropImpl.create(self, 'Datafield',  'TaskDataField'));
+end;
+
+procedure TaskCtrlTable.setRowCount(value: integer);
+begin
+  if Assigned(m_sg) then
+    m_sg.RowCount := value + 1;
 end;
 
 procedure TaskCtrlTable.updateControl;

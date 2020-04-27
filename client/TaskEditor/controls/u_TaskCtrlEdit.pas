@@ -31,6 +31,7 @@ uses
 constructor TaskCtrlEdit.Create(owner: ITaskForm);
 begin
   inherited;
+  m_canContainData := true;
 end;
 
 function TaskCtrlEdit.CtrlValue: string;
@@ -38,7 +39,9 @@ begin
   Result := '';
 
   if Assigned( m_ctrl) then
-    Result := trim( ( m_ctrl as TEdit).Text);
+    Result := trim( ( m_ctrl as TEdit).Text)
+  else
+    Result := self.propertyValue('Text');
 end;
 
 destructor TaskCtrlEdit.Destroy;

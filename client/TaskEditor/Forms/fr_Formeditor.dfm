@@ -1,8 +1,8 @@
 object EditorFrame: TEditorFrame
   Left = 0
   Top = 0
-  Width = 633
-  Height = 391
+  Width = 720
+  Height = 408
   Align = alClient
   TabOrder = 0
   OnMouseDown = FrameMouseDown
@@ -11,25 +11,25 @@ object EditorFrame: TEditorFrame
   object Splitter2: TSplitter
     Left = 185
     Top = 0
-    Height = 391
+    Height = 408
     ExplicitLeft = 296
     ExplicitTop = 48
     ExplicitHeight = 100
   end
   object Splitter3: TSplitter
-    Left = 407
+    Left = 494
     Top = 0
-    Height = 391
+    Height = 408
     Align = alRight
     ExplicitLeft = 312
     ExplicitTop = 88
     ExplicitHeight = 100
   end
   object Panel1: TPanel
-    Left = 410
+    Left = 497
     Top = 0
     Width = 223
-    Height = 391
+    Height = 408
     Align = alRight
     Caption = 'Panel1'
     Enabled = False
@@ -41,7 +41,7 @@ object EditorFrame: TEditorFrame
       Left = 1
       Top = 246
       Width = 221
-      Height = 144
+      Height = 161
       Align = alClient
       ExplicitLeft = 88
       ExplicitTop = 264
@@ -81,7 +81,7 @@ object EditorFrame: TEditorFrame
       Left = 1
       Top = 246
       Width = 221
-      Height = 144
+      Height = 161
       Align = alClient
       TabOrder = 1
       ExplicitLeft = 1
@@ -90,7 +90,7 @@ object EditorFrame: TEditorFrame
       ExplicitHeight = 58
       inherited VE: TValueListEditor
         Width = 221
-        Height = 144
+        Height = 161
         DefaultColWidth = 75
         ExplicitWidth = 221
         ExplicitHeight = 58
@@ -103,8 +103,8 @@ object EditorFrame: TEditorFrame
   object EditPanel: TPanel
     Left = 188
     Top = 0
-    Width = 219
-    Height = 391
+    Width = 306
+    Height = 408
     Align = alClient
     Caption = 'EditPanel'
     Color = 16776176
@@ -119,7 +119,7 @@ object EditorFrame: TEditorFrame
     Left = 0
     Top = 0
     Width = 185
-    Height = 391
+    Height = 408
     Align = alLeft
     BevelOuter = bvNone
     Caption = 'Panel2'
@@ -139,7 +139,7 @@ object EditorFrame: TEditorFrame
       Left = 0
       Top = 196
       Width = 185
-      Height = 195
+      Height = 212
       Align = alClient
       Caption = 'Struktur'
       Enabled = False
@@ -149,7 +149,7 @@ object EditorFrame: TEditorFrame
         Left = 2
         Top = 15
         Width = 181
-        Height = 137
+        Height = 154
         Align = alClient
         DragMode = dmAutomatic
         HideSelection = False
@@ -163,7 +163,7 @@ object EditorFrame: TEditorFrame
       end
       object Panel4: TPanel
         Left = 2
-        Top = 152
+        Top = 169
         Width = 181
         Height = 41
         Align = alBottom
@@ -476,6 +476,13 @@ object EditorFrame: TEditorFrame
           Width = 23
           Height = 22
           OnClick = SpeedButton8Click
+        end
+        object SpeedButton9: TSpeedButton
+          Left = 104
+          Top = 40
+          Width = 23
+          Height = 22
+          OnClick = SpeedButton9Click
         end
       end
     end

@@ -32,13 +32,15 @@ uses
 constructor TaskCtrlLabeledEdit.Create(owner: ITaskForm);
 begin
   inherited;
+  m_canContainData := true;
 end;
 
 function TaskCtrlLabeledEdit.CtrlValue: string;
 begin
   if Assigned(m_ctrl) then
-    Result := trim((m_ctrl as TLabeledEdit).Text);
-
+    Result := trim((m_ctrl as TLabeledEdit).Text)
+  else
+    Result := self.propertyValue('Text');
 end;
 
 destructor TaskCtrlLabeledEdit.Destroy;
@@ -81,7 +83,6 @@ end;
 
 procedure TaskCtrlLabeledEdit.setCtrlValue(value: string);
 begin
-  inherited;
   if Assigned(m_ctrl) then
     (m_ctrl as TLabeledEdit).Text := value;
 

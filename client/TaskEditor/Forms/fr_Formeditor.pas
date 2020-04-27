@@ -40,6 +40,7 @@ type
     SpeedButton6: TSpeedButton;
     SpeedButton7: TSpeedButton;
     SpeedButton8: TSpeedButton;
+    SpeedButton9: TSpeedButton;
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure FrameMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -57,6 +58,7 @@ type
     procedure TVEdited(Sender: TObject; Node: TTreeNode; var S: string);
     procedure SpeedButton7Click(Sender: TObject);
     procedure SpeedButton8Click(Sender: TObject);
+    procedure SpeedButton9Click(Sender: TObject);
   private
 
     FNodes              : TObjectList;
@@ -695,6 +697,18 @@ begin
   writer.save('formdata.xml', m_form);
   writer.Free;
 
+end;
+
+procedure TEditorFrame.SpeedButton9Click(Sender: TObject);
+var
+  writer : TTaskForm2XML;
+begin
+  // save data ..
+  if not Assigned(m_form) then
+    exit;
+  writer := TTaskForm2XML.create;
+  writer.load('formdata.xml', m_form);
+  writer.Free;
 end;
 
 procedure TEditorFrame.TVChange(Sender: TObject; Node: TTreeNode);

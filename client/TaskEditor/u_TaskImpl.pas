@@ -29,6 +29,7 @@ type
     property Forms  : TList<ITaskForm> read getForms;
 
     function NewForm : ITaskForm;
+    function getFormByCLID( clid : string ) : ITaskForm;
 
     procedure release;
 
@@ -37,7 +38,7 @@ implementation
 
 { TTask }
 uses
-  System.Win.ComObj, u_DataFieldLislImpl, u_TaskFormImpl;
+  System.Win.ComObj, u_DataFieldLislImpl, u_TaskFormImpl, System.SysUtils;
 
 constructor TTask.create;
 begin
@@ -61,6 +62,21 @@ end;
 function TTask.getFields: IDataFieldList;
 begin
   Result := m_fields;
+end;
+
+function TTask.getFormByCLID(clid: string): ITaskForm;
+var
+  i : integer;
+begin
+  Result := NIL;
+  for i := 0 to pred(m_forms.Count) do
+  begin
+    if SameText( m_forms[i].CLID, clid) then
+    begin
+      Result := m_forms[i];
+      break;
+    end;
+  end;
 end;
 
 function TTask.getForms: TList<ITaskForm>;

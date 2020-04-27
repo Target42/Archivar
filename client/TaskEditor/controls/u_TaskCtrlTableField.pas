@@ -32,6 +32,7 @@ begin
   inherited;
 
   setControlClass( 'TTableField' );
+  m_canContainData := true;
 end;
 
 destructor TaskCtrlTableField.Destroy;
