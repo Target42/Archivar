@@ -16,6 +16,7 @@ object PropertyFrame: TPropertyFrame
     OnEditButtonClick = VEEditButtonClick
     OnExit = VEExit
     OnKeyPress = VEKeyPress
+    OnStringsChange = VEStringsChange
     ColWidths = (
       100
       345)

@@ -24,22 +24,22 @@ type
     procedure setControl( value : TControl );
     function  getControl : TControl;
 
-    function  getLabelProps : string;
+    function  getLabelProps( var value : string ) : boolean;
     procedure setLabelProps( value : string );
 
-    function  getGroupboxProps : string;
+    function  getGroupboxProps( var value : string ) : boolean;
     procedure setGroupboxProps( value : string );
 
-    function  getCustomEditProps : string;
+    function  getCustomEditProps( var value : string ) : boolean;
     procedure setCustomEditProps( value : string );
 
-    function  getEditProps : string;
+    function  getEditProps( var value : string ) : boolean;
     procedure setdEditProps( value : string );
 
-    function  getLabeledEditProps : string;
+    function  getLabeledEditProps( var value : string ) : boolean;
     procedure setLabeledEditProps( value : string );
 
-    function  getComboBoxProps : string;
+    function  getComboBoxProps( var value : string ) : boolean;
     procedure setComboBoxProps( value : string );
   public
 
@@ -128,11 +128,14 @@ begin
   list.Assign(m_list);
 end;
 
-function TaskCtrlPropImpl.getComboBoxProps: string;
+function TaskCtrlPropImpl.getComboBoxProps( var value : string ) : boolean;
 begin
-  if      SameText(m_name, 'Items') then      Result := (m_ctrl as TComboBox).Items.Text
-  else if SameText(m_name, 'ItemIndex') then  Result := IntToStr((m_ctrl as TComboBox).ItemIndex)
-  else if SameText(m_name, 'Text') then       Result := (m_ctrl as TComboBox).Text;
+  Result := true;
+
+  if      SameText(m_name, 'Items') then      value := (m_ctrl as TComboBox).Items.Text
+  else if SameText(m_name, 'ItemIndex') then  value := IntToStr((m_ctrl as TComboBox).ItemIndex)
+  else if SameText(m_name, 'Text') then       value := (m_ctrl as TComboBox).Text
+  else Result := false;
 end;
 
 function TaskCtrlPropImpl.getControl: TControl;
@@ -140,32 +143,48 @@ begin
   Result := m_ctrl;
 end;
 
-function TaskCtrlPropImpl.getCustomEditProps: string;
+function TaskCtrlPropImpl.getCustomEditProps( var value : string ) : boolean;
 begin
-  if SameText(m_name, 'Text') then          Result := (m_ctrl as TCustomEdit).Text;
+  Result := true;
+  if SameText(m_name, 'Text') then          value := (m_ctrl as TCustomEdit).Text
+  else
+    Result := false;
+
 end;
 
-function TaskCtrlPropImpl.getEditProps: string;
+function TaskCtrlPropImpl.getEditProps( var value : string ) : boolean;
 begin
-  if      SameText(m_name, 'CharCase') then   Result := TEditCharCase2Text((m_ctrl as TEdit).CharCase)
-  else if SameText(m_name, 'Align') then      Result := TAlign2Text((m_ctrl as TEdit).Align);
+  Result := true;
+  if      SameText(m_name, 'CharCase') then   value := TEditCharCase2Text((m_ctrl as TEdit).CharCase)
+  else if SameText(m_name, 'Align') then      value := TAlign2Text((m_ctrl as TEdit).Align)
+  else
+    Result := false;
 end;
 
-function TaskCtrlPropImpl.getGroupboxProps: string;
+function TaskCtrlPropImpl.getGroupboxProps( var value : string ) : boolean;
 begin
-  if SameText(m_name, 'Caption') then       Result := (m_ctrl as TGroupbox).Caption;
+  Result := true;
+  if SameText(m_name, 'Caption') then       value := (m_ctrl as TGroupbox).Caption
+  else
+    Result := false;
 end;
 
-function TaskCtrlPropImpl.getLabeledEditProps: string;
+function TaskCtrlPropImpl.getLabeledEditProps( var value : string ) : boolean;
 begin
-  if      SameText(m_name, 'Caption') then    Result := (m_ctrl as TLabeledEdit).EditLabel.Caption
-  else if SameText(m_name, 'CharCase') then   Result := TEditCharCase2Text((m_ctrl as TLabeledEdit).CharCase)
-  else if SameText(m_name, 'Align') then      Result := TAlign2Text((m_ctrl as TLabeledEdit).Align);
+  Result := true;
+  if      SameText(m_name, 'Caption') then    value := (m_ctrl as TLabeledEdit).EditLabel.Caption
+  else if SameText(m_name, 'CharCase') then   value := TEditCharCase2Text((m_ctrl as TLabeledEdit).CharCase)
+  else if SameText(m_name, 'Align') then      value := TAlign2Text((m_ctrl as TLabeledEdit).Align)
+  else
+    Result := false;
 end;
 
-function TaskCtrlPropImpl.getLabelProps: string;
+function TaskCtrlPropImpl.getLabelProps( var value : string ) : boolean;
 begin
-  if SameText(m_name, 'Caption') then  Result := (m_ctrl as TLabel).Caption;
+  Result := true;
+  if SameText(m_name, 'Caption') then  value := (m_ctrl as TLabel).Caption
+  else
+    Result := false;
 end;
 
 function TaskCtrlPropImpl.getName: string;
@@ -179,6 +198,8 @@ begin
 end;
 
 function TaskCtrlPropImpl.getValue: string;
+var
+  ValueSet : boolean;
 begin
   Result := m_value;
 
@@ -190,9 +211,11 @@ begin
     Result := '';
     if Assigned(m_owner.DataField) then
       Result := m_owner.DataField.Name;
+    m_value := Result;
     exit;
   end;
 
+  ValueSet := true;
   if      SameText(m_name, 'name') then     Result := m_ctrl.Name
   else if SameText(m_name, 'Top') then      Result := IntToStr(m_ctrl.top)
   else if SameText(m_name, 'Left') then     Result := IntToStr(m_ctrl.left)
@@ -200,15 +223,19 @@ begin
   else if SameText(m_name, 'height') then   Result := IntToStr(m_ctrl.Height)
   else if SameText(m_name, 'Enabled') then  Result := BoolToStr(m_ctrl.Enabled, true)
   else if SameText(m_name, 'Visible') then  Result := BoolToStr(m_ctrl.visible, true)
-  else if SameText(m_name, 'Align') then    Result := TAlign2Text(m_ctrl.Align);
+  else if SameText(m_name, 'Align') then    Result := TAlign2Text(m_ctrl.Align)
+  else
+    ValueSet := false;
 
-
-  if m_ctrl is TLabel then        Result := getLabelProps;
-  if m_ctrl is TGroupbox then     Result := getGroupboxProps;
-  if m_ctrl is TCustomEdit then   Result := getCustomEditProps;
-  if m_ctrl is TEdit then         Result := getEditProps;
-  if m_ctrl is TLabeledEdit then  Result := getLabeledEditProps;
-  if m_ctrl is TComboBox then     Result := getComboBoxProps;
+  if not ValueSet then
+  begin
+    if      (not ValueSet) and (m_ctrl is TLabel) then             ValueSet := getLabelProps(Result);
+    if (not ValueSet) and (m_ctrl is TGroupbox) then          ValueSet := getGroupboxProps(Result);
+    if (not ValueSet) and (m_ctrl is TCustomEdit) then        ValueSet := getCustomEditProps(Result);
+    if (not ValueSet) and (m_ctrl is TEdit) then              ValueSet := getEditProps(Result);
+    if (not ValueSet) and (m_ctrl is TLabeledEdit) then       ValueSet := getLabeledEditProps(Result);
+    if (not ValueSet) and (m_ctrl is TComboBox) then          ValueSet := getComboBoxProps(Result);
+  end;
 
   m_value := Result;
 end;

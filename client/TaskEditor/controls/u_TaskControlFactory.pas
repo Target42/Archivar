@@ -38,7 +38,7 @@ begin
 
   m_map.Add(LowerCase('TLabel'),       ctLabel);
   m_map.Add(LowerCase('TEdit'),        ctEdit);
-  m_map.Add(LowerCase('TLabledEdit'),  ctLabeledEdit);
+  m_map.Add(LowerCase('TLabeledEdit'), ctLabeledEdit);
   m_map.Add(LowerCase('TComboBox'),    ctComboBox );
   m_map.Add(LowerCase('TGroupBox'),    ctGroupBox );
   m_map.Add(LowerCase('TStringGrid'),  ctTable );

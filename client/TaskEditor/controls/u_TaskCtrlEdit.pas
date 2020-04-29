@@ -69,6 +69,7 @@ begin
   ed.Left := X;
 
   Result := ed;
+  m_ctrl := ed;
 end;
 
 procedure TaskCtrlEdit.setControlTypeProps;

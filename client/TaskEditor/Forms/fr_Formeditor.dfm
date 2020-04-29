@@ -1,8 +1,8 @@
 object EditorFrame: TEditorFrame
   Left = 0
   Top = 0
-  Width = 720
-  Height = 408
+  Width = 637
+  Height = 496
   Align = alClient
   TabOrder = 0
   OnMouseDown = FrameMouseDown
@@ -11,25 +11,25 @@ object EditorFrame: TEditorFrame
   object Splitter2: TSplitter
     Left = 185
     Top = 0
-    Height = 408
+    Height = 496
     ExplicitLeft = 296
     ExplicitTop = 48
     ExplicitHeight = 100
   end
   object Splitter3: TSplitter
-    Left = 494
+    Left = 411
     Top = 0
-    Height = 408
+    Height = 496
     Align = alRight
     ExplicitLeft = 312
     ExplicitTop = 88
     ExplicitHeight = 100
   end
   object Panel1: TPanel
-    Left = 497
+    Left = 414
     Top = 0
     Width = 223
-    Height = 408
+    Height = 496
     Align = alRight
     Caption = 'Panel1'
     Enabled = False
@@ -41,7 +41,7 @@ object EditorFrame: TEditorFrame
       Left = 1
       Top = 246
       Width = 221
-      Height = 161
+      Height = 249
       Align = alClient
       ExplicitLeft = 88
       ExplicitTop = 264
@@ -81,7 +81,7 @@ object EditorFrame: TEditorFrame
       Left = 1
       Top = 246
       Width = 221
-      Height = 161
+      Height = 249
       Align = alClient
       TabOrder = 1
       ExplicitLeft = 1
@@ -90,7 +90,7 @@ object EditorFrame: TEditorFrame
       ExplicitHeight = 58
       inherited VE: TValueListEditor
         Width = 221
-        Height = 161
+        Height = 249
         DefaultColWidth = 75
         ExplicitWidth = 221
         ExplicitHeight = 58
@@ -103,8 +103,8 @@ object EditorFrame: TEditorFrame
   object EditPanel: TPanel
     Left = 188
     Top = 0
-    Width = 306
-    Height = 408
+    Width = 223
+    Height = 496
     Align = alClient
     Caption = 'EditPanel'
     Color = 16776176
@@ -119,7 +119,7 @@ object EditorFrame: TEditorFrame
     Left = 0
     Top = 0
     Width = 185
-    Height = 408
+    Height = 496
     Align = alLeft
     BevelOuter = bvNone
     Caption = 'Panel2'
@@ -139,31 +139,44 @@ object EditorFrame: TEditorFrame
       Left = 0
       Top = 196
       Width = 185
-      Height = 212
+      Height = 300
       Align = alClient
       Caption = 'Struktur'
       Enabled = False
       TabOrder = 0
       ExplicitHeight = 109
+      object Splitter5: TSplitter
+        Left = 2
+        Top = 157
+        Width = 181
+        Height = 3
+        Cursor = crVSplit
+        Align = alBottom
+        ExplicitTop = 15
+        ExplicitWidth = 153
+      end
       object TV: TTreeView
         Left = 2
         Top = 15
         Width = 181
-        Height = 154
+        Height = 142
         Align = alClient
         DragMode = dmAutomatic
         HideSelection = False
         Indent = 19
+        ReadOnly = True
+        RowSelect = True
         TabOrder = 0
         OnChange = TVChange
+        OnClick = TVClick
         OnDragDrop = TVDragDrop
         OnDragOver = TVDragOver
         OnEdited = TVEdited
-        ExplicitHeight = 51
+        ExplicitHeight = 150
       end
       object Panel4: TPanel
         Left = 2
-        Top = 169
+        Top = 257
         Width = 181
         Height = 41
         Align = alBottom
@@ -256,6 +269,16 @@ object EditorFrame: TEditorFrame
             FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
           OnClick = SpeedButton6Click
         end
+      end
+      object TV2: TTreeView
+        Left = 2
+        Top = 160
+        Width = 181
+        Height = 97
+        Align = alBottom
+        Indent = 19
+        TabOrder = 2
+        ExplicitTop = -31
       end
     end
     object GroupBox3: TGroupBox

@@ -16,12 +16,14 @@ type
     procedure VEKeyPress(Sender: TObject; var Key: Char);
     procedure VEExit(Sender: TObject);
     procedure VEEditButtonClick(Sender: TObject);
+    procedure VEStringsChange(Sender: TObject);
 
 
   private
     m_ctrl : ITaskCtrl;
     m_data : IDataFieldList;
     m_pchanged : TPropertyChanged;
+    m_updateFlag : boolean;
 
     procedure setCrtl( value : ITaskCtrl );
     procedure setDataFields( value : IDataFieldList );
@@ -57,6 +59,7 @@ begin
   m_ctrl := NIL;
   m_data := NIL;
   m_pchanged := NIL;
+  m_updateFlag := false;
 end;
 
 procedure TPropertyFrame.release;
@@ -88,10 +91,15 @@ var
   p   : ITaskCtrlProp;
   ip  : TItemProp;
 begin
+  m_updateFlag := true;
   VE.Strings.Clear;
 
   if not Assigned(m_ctrl) then
+  begin
+    m_updateFlag := false;
     exit;
+  end;
+
   for i := 0 to pred(m_ctrl.Props.Count) do
   begin
     p := m_ctrl.Props.Items[i];
@@ -113,6 +121,7 @@ begin
       end;
     end;
   end;
+  m_updateFlag := false;
 end;
 
 procedure TPropertyFrame.VEEditButtonClick(Sender: TObject);
@@ -167,6 +176,25 @@ begin
   if Key = #13 then
   begin
     VEExit(Sender);
+  end;
+end;
+
+procedure TPropertyFrame.VEStringsChange(Sender: TObject);
+var
+  p   : ITaskCtrlProp;
+  key, val : string;
+begin
+  if m_updateFlag then
+    exit;
+
+  key := VE.Keys[ VE.Row];
+  val := VE.Values[key];
+
+  p := Ctrl.getPropertyByName(key);
+  if Assigned(p) then
+  begin
+    if not p.hasEditor then
+      p.Value := val;
   end;
 end;
 

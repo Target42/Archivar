@@ -193,10 +193,15 @@ var
 begin
   // get the current values
   for i := 0 to pred(m_props.Count) do
+  begin
     m_props[i].Value;
+    m_props[i].Control := NIL;
+  end;
 
+  // call drop before the drop is executed
   for i := 0 to pred(m_list.Count) do
     m_list[i].dropControls;
+
   if not m_isBase then
   begin
     if Assigned(m_ctrl) then
@@ -251,7 +256,7 @@ var
   i : integer;
 begin
   Result := NIL;
-  if SameText( m_clid, clid ) then
+  if Assigned(m_ctrl) and SameText( m_clid, clid ) then
     Result := self
   else
   begin
@@ -269,7 +274,7 @@ var
   i : integer;
 begin
   Result := NIL;
-  if SameText( m_ctrl.Name, name ) then
+  if Assigned(m_ctrl) and SameText( m_ctrl.Name, name ) then
     Result := self
   else
   begin
@@ -362,8 +367,7 @@ begin
   Result.Parent := self;
   m_list.Add(Result);
 
-  Result.Control := Result.newControl(m_ctrl as TWinControl, x, y );
-
+  Result.Control :=  Result.newControl(m_ctrl as TWinControl, x, y );
 end;
 
 function TaskCtrlImpl.newControl(parent: TWinControl; x, y: Integer): TControl;
