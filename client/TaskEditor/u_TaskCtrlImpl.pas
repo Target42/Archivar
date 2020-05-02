@@ -20,6 +20,7 @@ type
     m_isBase    : boolean;
 
     m_canContainData : boolean;
+    m_isContainer    : boolean;
     m_required  : boolean;
 
     procedure setControlTypeProps; virtual;
@@ -93,6 +94,7 @@ type
     function getData( var name, value : string ) : boolean;
 
     function containData : boolean;
+    function isContainer : boolean;
   end;
 
 implementation
@@ -163,6 +165,7 @@ begin
   m_props     := TList<ITaskCtrlProp>.create;
   m_isBase    := false;
   m_canContainData := false;
+  m_isContainer := false;
   m_required  := false;
 
 end;
@@ -192,7 +195,7 @@ begin
   if inx = m_list.Count-1 then
     exit;
 
-  m_list.Exchange( inx, inx +1 );
+  m_parent.Childs.Exchange( inx, inx +1 );
 end;
 
 procedure TaskCtrlImpl.drop;
@@ -373,6 +376,11 @@ begin
   Result := NIL;
 end;
 
+function TaskCtrlImpl.isContainer: boolean;
+begin
+  Result := m_isContainer;
+end;
+
 function TaskCtrlImpl.NewChild( clName : string ): ITaskCtrl;
 begin
   Result := TTaskControlFactory.GetInstance.createControl( m_owner, m_parent, clName);
@@ -541,7 +549,7 @@ begin
   if inx = 0 then
     exit;
 
-  m_list.Exchange( inx, inx -1 );
+  m_parent.Childs.Exchange( inx, inx -1 );
 end;
 
 procedure TaskCtrlImpl.updateControl;

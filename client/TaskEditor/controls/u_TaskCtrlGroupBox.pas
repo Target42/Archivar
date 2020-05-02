@@ -28,6 +28,7 @@ uses
 constructor TaskCtrlGroupBox.Create(owner: ITaskForm);
 begin
   inherited;
+  m_isContainer := true;
 end;
 
 destructor TaskCtrlGroupBox.Destroy;

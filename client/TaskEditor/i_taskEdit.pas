@@ -117,6 +117,7 @@ type
     procedure release;
 
     function containData : boolean;
+    function isContainer : boolean;
 
     function findCtrlByCLID( clid : string ) : ITaskCtrl;
     function findCtrl( name : string ) : ITaskCtrl; overload;

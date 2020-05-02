@@ -66,7 +66,7 @@ end;
 procedure TaskCtrlRichEdit.setControlTypeProps;
 begin
   inherited;
-
+  m_props.Add(TaskCtrlPropImpl.create(self, 'Text',       'TStrings'));
 end;
 
 end.

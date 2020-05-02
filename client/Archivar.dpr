@@ -92,7 +92,8 @@ uses
   u_TaskCtrlPanel in 'TaskEditor\controls\u_TaskCtrlPanel.pas',
   u_TaskCtrlMemo in 'TaskEditor\controls\u_TaskCtrlMemo.pas',
   u_TaskCtrlRichEdit in 'TaskEditor\controls\u_TaskCtrlRichEdit.pas',
-  u_TaskCtrlSpliter in 'TaskEditor\controls\u_TaskCtrlSpliter.pas';
+  u_TaskCtrlSpliter in 'TaskEditor\controls\u_TaskCtrlSpliter.pas',
+  f_itemsTStringsEditor in 'TaskEditor\PropEdits\f_itemsTStringsEditor.pas' {StringEditorForm};
 
 {$R *.res}
 

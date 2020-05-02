@@ -63,7 +63,7 @@ end;
 procedure TaskCtrlMemo.setControlTypeProps;
 begin
   inherited;
-
+  m_props.Add(TaskCtrlPropImpl.create(self, 'Text',       'string'));
 end;
 
 end.

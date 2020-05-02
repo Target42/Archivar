@@ -27,6 +27,7 @@ uses
 constructor TaskCtrlPanel.Create(owner: ITaskForm);
 begin
   inherited;
+  m_isContainer := true;
 end;
 
 destructor TaskCtrlPanel.Destroy;

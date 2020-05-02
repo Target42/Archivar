@@ -17,10 +17,13 @@ type
 
     procedure setName( value : string );
     function  getName : string;
+
     procedure setValue( value : string );
     function  getValue : string;
+
     procedure setTyp( value : string );
     function  getTyp : string;
+
     procedure setControl( value : TControl );
     function  getControl : TControl;
 
@@ -41,6 +44,12 @@ type
 
     function  getComboBoxProps( var value : string ) : boolean;
     procedure setComboBoxProps( value : string );
+
+    function  getMemoProps( var value : string ) : boolean;
+    procedure setMemoProps( value : string );
+
+    function  getRichEditProps( var value : string ) : boolean;
+    procedure setRichEditProps( value : string );
   public
 
     constructor create( owner : ITaskCtrl; name, typ : string; ctrl : Tcontrol ); overload;
@@ -62,7 +71,8 @@ implementation
 
 uses
   System.SysUtils, Vcl.StdCtrls, Vcl.ExtCtrls, u_typeHelper, Vcl.Dialogs,
-  f_itemsEditor, Vcl.Forms, Vcl.Grids, f_tableColumns, u_helper;
+  f_itemsEditor, Vcl.Forms, Vcl.Grids, f_tableColumns, u_helper, Vcl.ComCtrls,
+  f_itemsTStringsEditor;
 
 
 { TaskCtrlPropImpl }
@@ -191,9 +201,25 @@ begin
     Result := false;
 end;
 
+function TaskCtrlPropImpl.getMemoProps(var value: string): boolean;
+begin
+  Result := true;
+  if SameText(m_name, 'Text') then  value := (m_ctrl as TMemo).Lines.Text
+  else
+    Result := false;
+end;
+
 function TaskCtrlPropImpl.getName: string;
 begin
   Result := m_name;
+end;
+
+function TaskCtrlPropImpl.getRichEditProps(var value: string): boolean;
+begin
+  Result := true;
+  if SameText(m_name, 'Text') then  value := (m_ctrl as TRichEdit).Lines.Text
+  else
+    Result := false;
 end;
 
 function TaskCtrlPropImpl.getTyp: string;
@@ -247,7 +273,7 @@ end;
 
 function TaskCtrlPropImpl.hasEditor: boolean;
 begin
-  Result := SameText( m_typ, 'TStringList') or SameText( m_typ, 'TFields');
+  Result := SameText( m_typ, 'TStringList') or SameText( m_typ, 'TFields') or SameText(m_typ, 'TStrings');
 end;
 
 function TaskCtrlPropImpl.isList: boolean;
@@ -306,9 +332,19 @@ begin
   if SameText(m_name, 'Caption') then       (m_ctrl as TLabel).Caption := value;
 end;
 
+procedure TaskCtrlPropImpl.setMemoProps(value: string);
+begin
+  if SameText(m_name, 'Text') then       (m_ctrl as TMemo).Lines.Text := value;
+end;
+
 procedure TaskCtrlPropImpl.setName(value: string);
 begin
   m_name := value;
+end;
+
+procedure TaskCtrlPropImpl.setRichEditProps(value: string);
+begin
+    if SameText(m_name, 'Text') then       (m_ctrl as TRichEdit).Lines.Text := value;
 end;
 
 procedure TaskCtrlPropImpl.setTyp(value: string);
@@ -339,6 +375,19 @@ begin
     end;
     m_value := m_ctrl.Name;
   end;
+
+  if SameText(m_name, 'Top') and (m_ctrl.Align in [alNone, alCustom, alLeft, alRight, alBottom])  then
+    try m_ctrl.top := StrToInt( value ); except end;
+
+  if SameText(m_name, 'Left') and (m_ctrl.Align in [alNone, alCustom, alRight, alBottom, alTop]) then
+    try m_ctrl.left := StrToint( value ); except end;
+
+  if SameText(m_name, 'Width') and ( m_ctrl.Align in [alNone, alCustom, alLeft, alRight, alBottom, alTop]) then
+    try m_ctrl.Width := StrToInt( value ); except end;
+
+  if SameText(m_name, 'height') and ( m_ctrl.Align in [alNone, alCustom, alLeft, alRight, alBottom, alTop]) then
+    try m_ctrl.Height  := StrToInt( value ); except end;
+{
   if m_ctrl.Align = alNone then
   begin
     if      SameText(m_name, 'Top') then      try m_ctrl.top := StrToInt( value ); except end
@@ -346,10 +395,10 @@ begin
     else if SameText(m_name, 'Width') then    try m_ctrl.Width := StrToInt( value ); except end
     else if SameText(m_name, 'height') then   try m_ctrl.Height  := StrToInt( value ); except end;
   end;
+}
   if      SameText(m_name, 'Enabled') then  m_ctrl.Enabled := Str2Bool(value)
   else if SameText(m_name, 'Visible') then  m_ctrl.visible := Str2Bool(value)
-  else if SameText(m_name, 'Align') then
-    m_ctrl.Align := Text2TAlign(value)
+  else if SameText(m_name, 'Align') then    m_ctrl.Align := Text2TAlign(value)
   else if SameText(m_name, 'Required') then m_owner.Required := Str2Bool(value);
 
   if m_ctrl is TLabel then      setLabelProps(value);
@@ -362,8 +411,9 @@ end;
 
 procedure TaskCtrlPropImpl.ShowEditor;
 var
-  ItemsEditorForm  : TItemsEditorForm;
-  TableColumnsForm : TTableColumnsForm;
+  ItemsEditorForm   : TItemsEditorForm;
+  TableColumnsForm  : TTableColumnsForm;
+  StringEditorForm  : TStringEditorForm;
 begin
   if m_ctrl is TComboBox then
   begin
@@ -386,8 +436,18 @@ begin
     TableColumnsForm.Table := m_owner;
     TableColumnsForm.ShowModal;
     TableColumnsForm.Free;
-  end;
+  end
+  else if m_ctrl is TRichEdit then
+  begin
+    Application.CreateForm(TStringEditorForm, StringEditorForm);
 
+    StringEditorForm.Memo1.Lines.Text := (m_ctrl as TRichEdit).Lines.Text;
+    if StringEditorForm.ShowModal = mrok then
+    begin
+      (m_ctrl as TRichEdit).Lines.Text := StringEditorForm.Memo1.Lines.Text;
+    end;
+    StringEditorForm.Free;
+  end;
 end;
 
 end.

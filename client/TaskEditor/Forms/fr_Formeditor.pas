@@ -42,6 +42,8 @@ type
     SpeedButton8: TSpeedButton;
     SpeedButton9: TSpeedButton;
     SpeedButton10: TSpeedButton;
+    SpeedButton11: TSpeedButton;
+    SpeedButton12: TSpeedButton;
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure FrameMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -63,6 +65,10 @@ type
     procedure TVChange(Sender: TObject; Node: TTreeNode);
     procedure SpeedButton10Click(Sender: TObject);
     procedure SpeedButton1Click(Sender: TObject);
+    procedure TVStartDrag(Sender: TObject; var DragObject: TDragObject);
+    procedure SpeedButton11Click(Sender: TObject);
+    procedure SpeedButton12Click(Sender: TObject);
+    procedure TVCancelEdit(Sender: TObject; Node: TTreeNode);
   private
 
     FNodes              : TObjectList;
@@ -106,6 +112,8 @@ type
 
     procedure doPropertyChanged;
     procedure updateForms;
+
+    procedure prepareDrop;
   public
     procedure init;
 
@@ -515,6 +523,8 @@ begin
     Screen.Cursor := crDefault;
     ReleaseCapture;
     FNodePositioning := false;
+
+    PropertyFrame1.updateProps;
   end;
 end;
 
@@ -549,6 +559,7 @@ begin
     end;
     TopLeft := AroundControl.Parent.ClientToScreen(Point(L, T));
 
+
     pan := FNodes.Items[Node] as TPanel;
     pan.Parent := AroundControl.Parent;
     TopLeft := pan.Parent.ScreenToClient(TopLeft);
@@ -557,6 +568,17 @@ begin
   end;
   FCurrentNodeControl := AroundControl;
   setNodesVisible(true);
+end;
+
+procedure TEditorFrame.prepareDrop;
+var
+  i : integer;
+begin
+  setNodesVisible(false);
+  for i := 0 to 7 do
+  begin
+    (FNodes.Items[i] as TPanel).Parent := self;
+  end;
 end;
 
 procedure TEditorFrame.release;
@@ -570,12 +592,15 @@ end;
 
 procedure TEditorFrame.SelectControl(c: TControl);
 begin
-  setNodesVisible(false);
-  FCurrentNodeControl := c;
+  try
+    setNodesVisible(false);
+    FCurrentNodeControl := c;
 
-  GetCursorPos(FOldPos);
-  SetCapture(getHandle(c));
-  PositionNodes(c);
+    GetCursorPos(FOldPos);
+    SetCapture(getHandle(c));
+    PositionNodes(c);
+  except
+  end;
 end;
 
 procedure TEditorFrame.setMouseHooks;
@@ -620,6 +645,7 @@ procedure TEditorFrame.setTaskForm(value: ITaskForm);
 begin
   if Assigned(m_form) then
   begin
+    prepareDrop;
     m_form.Base.dropControls;
   end;
 
@@ -652,6 +678,7 @@ begin
     FCurrentNodeControl := NIL;
   end;
   m_testMode := true;
+  prepareDrop;
   m_form.Base.dropControls;
   m_form.Base.Control := NIL;
 
@@ -663,6 +690,39 @@ begin
   m_testMode := false;
   setTaskForm( m_form );
 
+end;
+
+procedure TEditorFrame.SpeedButton11Click(Sender: TObject);
+var
+  ctrl : ITaskCtrl;
+begin
+  if not Assigned(tv.Selected) then
+    exit;
+
+  ctrl := ITaskCtrl(TV.Selected.Data);
+
+  prepareDrop;
+  m_form.Base.dropControls;
+
+  ctrl.up;
+
+  Self.setTaskForm(m_form);
+end;
+
+procedure TEditorFrame.SpeedButton12Click(Sender: TObject);
+var
+  ctrl : ITaskCtrl;
+begin
+  if not Assigned(tv.Selected) then
+    exit;
+
+  ctrl := ITaskCtrl(TV.Selected.Data);
+
+  prepareDrop;
+  m_form.Base.dropControls;
+  ctrl.down;
+
+  Self.setTaskForm(m_form);
 end;
 
 procedure TEditorFrame.SpeedButton1Click(Sender: TObject);
@@ -680,28 +740,21 @@ end;
 
 procedure TEditorFrame.SpeedButton5Click(Sender: TObject);
 var
-  ctrl : TControl;
+  ctrl : ITaskCtrl;
   tctrl : ITaskCtrl;
 begin
   if not Assigned(TV.Selected) or ( TV.Selected.Data = NIL) then
     exit;
-  ctrl := TControl(TV.Selected.Data);
+  ctrl := ITaskCtrl(TV.Selected.Data);
 
-  if ctrl = FCurrentNodeControl then
+  if ctrl.Control = FCurrentNodeControl then
   begin
     setNodesVisible(false);
     ReleaseCapture;
     FCurrentNodeControl := NIL;
   end;
-
-  tctrl := m_form.Base.findCtrl(ctrl.Name);
-  if Assigned(tctrl) then
-  begin
-    tctrl.drop;
-    tctrl.release;
-    ctrl.Free;
-  end;
-
+  ctrl.drop;
+  ctrl.release;
   updateTree;
 end;
 
@@ -709,6 +762,7 @@ procedure TEditorFrame.SpeedButton6Click(Sender: TObject);
 begin
   if not Assigned(Tv.Selected) then
     exit;
+  TV.ReadOnly := false;
   TV.Selected.EditText;
 end;
 
@@ -752,6 +806,11 @@ begin
   writer.Free;
 end;
 
+procedure TEditorFrame.TVCancelEdit(Sender: TObject; Node: TTreeNode);
+begin
+  TV.ReadOnly := true;
+end;
+
 procedure TEditorFrame.TVChange(Sender: TObject; Node: TTreeNode);
 var
   ctrl : TControl;
@@ -759,7 +818,7 @@ begin
   if not Assigned(Node) then
     exit;
 
-  ctrl := TControl(Node.Data);
+  ctrl := ITaskCtrl(Node.Data).Control;
   if ctrl <> FCurrentNodeControl then
   begin
     if Assigned(FCurrentNodeControl) then
@@ -778,23 +837,23 @@ begin
   if not Assigned(TV.Selected) or (TV.Selected.Data = NIL) then
     exit;
 
-  ctrl := TControl(TV.Selected.Data);
+  ctrl := ITaskCtrl(TV.Selected.Data).Control;
+
   if ( ctrl <> FCurrentNodeControl) then
   begin
     if Assigned(FCurrentNodeControl) then
       ReleaseCapture;
 
-    SelectControl( ctrl );
+    SelectControl( ctrl);
   end;
 end;
 
 procedure TEditorFrame.TVDragDrop(Sender, Source: TObject; X, Y: Integer);
 var
   src, dest : TTreeNode;
-
+  ctrl : ITaskCtrl;
+  destCtrl : ITaskCtrl;
 begin
-  FCurrentNodeControl := NIL;
-  setNodesVisible(false);
 
   src := TV.Selected;
   dest := TV.GetNodeAt(X, Y);
@@ -802,17 +861,27 @@ begin
   if not Assigned(TV.Selected) or ( src = dest )then
    exit;
 
-   if Assigned(dest) and Assigned(src) then
-      TWinControl(src.data).parent := TWinControl(dest.Data)
-   else
-     TWinControl(src.data).parent :=EditPanel;
-  updateTree;
+
+  if not Assigned(dest) then
+    destCtrl := m_form.Base
+  else
+    destCtrl := ITaskCtrl(dest.Data);
+
+  prepareDrop;
+  m_form.Base.dropControls;
+
+  ctrl := ITaskCtrl(src.Data);
+  ctrl.Parent.Childs.Remove(ctrl);
+  destCtrl.Childs.Add(ctrl);
+  ctrl.Parent := destCtrl;
+
+  Self.setTaskForm(m_form);
 end;
 
 procedure TEditorFrame.TVDragOver(Sender, Source: TObject; X, Y: Integer;
   State: TDragState; var Accept: Boolean);
 var
-  cmp : TControl;
+  cmp : ITaskCtrl;
   dest : TTreeNode;
 begin
   Accept := false;
@@ -825,9 +894,9 @@ begin
     Accept := true
   else
   begin
-    cmp := TControl(dest.Data);
+    cmp := ITaskCtrl(dest.Data);
 
-    Accept := (cmp is TGroupBox) or ( cmp is TPanel);
+    Accept := cmp.isContainer;
   end;
 end;
 
@@ -837,7 +906,8 @@ procedure TEditorFrame.TVEdited(Sender: TObject; Node: TTreeNode;
 var
   ctrl : TControl;
 begin
-  ctrl := TControl(Node.Data);
+
+  ctrl := ITaskCtrl(Node.Data).Control;
 
   try
     ctrl.Name := s;
@@ -845,6 +915,18 @@ begin
     s := ctrl.Name;
   end;
   PropertyFrame1.updateProps;
+  TV.ReadOnly := true;
+end;
+
+procedure TEditorFrame.TVStartDrag(Sender: TObject;
+  var DragObject: TDragObject);
+begin
+  if Assigned(FCurrentNodeControl) then
+  begin
+    ReleaseCapture;
+    m_inReposition := false;
+    FCurrentNodeControl := NIL;
+  end;
 end;
 
 procedure TEditorFrame.updateForms;
@@ -882,49 +964,41 @@ end;
 procedure TEditorFrame.updateTree;
 var
   old : Pointer;
-  cl, ocl : String;
-  procedure add( root :  TTreeNode; cmp :  TWinControl );
+  procedure add( root :  TTreeNode; ctrl :  ITaskCtrl );
   var
     node : TTreeNode;
     i : integer;
   begin
-    for I := 0 to pred( cmp.ControlCount) do
-    begin
-      if FNodes.IndexOf(cmp.Controls[i]) = -1 then
-      begin
-        ocl := cmp.Controls[i].Owner.ClassName;
-        cl  := cmp.Controls[i].ClassName;
+    node := TV.Items.AddChildObject( root, ctrl.propertyValue('name'), ctrl);
+    for i := 0 to pred(ctrl.Childs.Count) do
+      add(node, ctrl.Childs[i]);
 
-        if not SameText( cl, 'TBoundLabel') then
-          node := TV.items.AddChildObject( root, cmp.Controls[i].Name, cmp.Controls[i] );
+    if old = Pointer(ctrl) then
+      TV.Selected := node;
+    if not Assigned(root) then
+      node.Expand(true);
 
-        if not SameText(cl, 'TStringGrid') and not SameText(ocl, 'TBoundLabel') then
-        begin
-          if cmp.Controls[i] is TWinControl then
-            add( node, cmp.Controls[i] as TWinControl );
-        end;
-
-        if not Assigned(root) then
-          node.expand(true);
-
-        if cmp.Controls[i] = old then
-          TV.Selected := node;
-      end;
-    end;
   end;
+
+var
+  j : integer;
 begin
   old := NIL;
+  if not Assigned(m_form) then
+    exit;
 
+  TV.OnChange := NIL;
   TV.Items.beginUpdate;
 
   if Assigned(TV.Selected) then
     old := TV.Selected.Data;
 
   TV.Items.Clear;
-
-  add( Nil, EditPanel );
+  for j := 0 to pred(m_form.Base.Childs.Count) do
+    add( Nil, m_form.Base.Childs[j] );
 
   TV.Items.EndUpdate;
+  TV.OnChange := Self.TVChange;
 end;
 
 end.
