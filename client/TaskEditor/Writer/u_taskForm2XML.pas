@@ -25,6 +25,9 @@ type
 
 implementation
 
+uses
+  System.Generics.Collections, System.SysUtils;
+
 { TTaskForm2XML }
 
 constructor TTaskForm2XML.create;
@@ -67,13 +70,38 @@ var
   ctrl : ITaskCtrl;
   row, col : integer;
   xr : IXMLRow;
+  dataFieldMap : TDictionary<integer, integer>;
+
+  procedure buildMap;
+  var
+    i, j : integer;
+    np : integeR;
+  begin
+    for i := 0 to pred(xTab.Header.Count) do
+    begin
+      np := -1;
+      for j := 0 to pred(ctrl.Childs.Count) do
+      begin
+        if SameText( xTab.Header[i].Ctrlclid, ctrl.Childs[j].CLID) then
+        begin
+          np := j;
+          break;
+        end;
+      end;
+      dataFieldMap.Add(i, np);
+    end;
+  end;
 begin
   ctrl := form.Base.findCtrlByCLID(xTab.Ctrlclid);
   if not Assigned(ctrl) then
     exit;
 
-  if xtab.Header.Count <> ctrl.TableCtrlIF.ColCount then
-    exit;
+//  if xtab.Header.Count <> ctrl.TableCtrlIF.ColCount then
+//    exit;
+
+  dataFieldMap := TDictionary<integer, integer>.create;
+
+  buildMap;
 
   ctrl.TableCtrlIF.RowCount := xTab.Rows.Count;
   for row :=0 to pred(xTab.Rows.Count) do
@@ -81,9 +109,10 @@ begin
     xr := xTab.Rows.Row[row];
     for col := 0 to pred(xr.Count) do
     begin
-      ctrl.TableCtrlIF.Cell[row+1, col+1] := xr.Value[col];
+      ctrl.TableCtrlIF.Cell[row+1, dataFieldMap[col]+1] := xr.Value[col];
     end;
   end;
+  dataFieldMap.Free;
 end;
 
 function TTaskForm2XML.save(name: string; form: ITaskForm): Boolean;
@@ -152,6 +181,7 @@ var
       xf := xTab.Header.Add;
       f  := ctrl.Childs[i];
 
+      xf.Header     := f.propertyValue('Header');
       xf.Field      := '';
       xf.Fieldclid  := '';
       if Assigned(f.DataField) then

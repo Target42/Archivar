@@ -14,6 +14,7 @@ type
 
       function CtrlValue : string; override;
       procedure setCtrlValue( value : string ); override;
+      procedure colorRequired; override;
     private
 
     public
@@ -24,9 +25,24 @@ type
 implementation
 
 uses
-  Vcl.StdCtrls, Winapi.Windows, System.SysUtils, u_TaskCtrlPropImpl;
+  Vcl.StdCtrls, Winapi.Windows, System.SysUtils, u_TaskCtrlPropImpl,
+  System.UITypes, Vcl.Graphics;
 
 { TaskCtrlEdit }
+
+procedure TaskCtrlEdit.colorRequired;
+var
+  ed : TEdit;
+begin
+  if not Assigned(m_ctrl) then
+    exit;
+
+  ed := m_ctrl as TEdit;
+  if m_required then
+    ed.Color := TColor( RGB(255, 200, 200))
+  else
+    ed.Color := clWindow;
+end;
 
 constructor TaskCtrlEdit.Create(owner: ITaskForm);
 begin
@@ -78,7 +94,7 @@ begin
   m_props.Add(TaskCtrlPropImpl.create(self, 'Text',       'string'));
   m_props.Add(TaskCtrlPropImpl.create(self, 'Datafield',  'TaskDataField'));
   m_props.Add(TaskCtrlPropImpl.create(self, 'CharCase',   'TEditCharCase'));
-
+  m_props.Add(TaskCtrlPropImpl.create(self, 'NumbersOnly','boolean'));
 end;
 
 procedure TaskCtrlEdit.setCtrlValue(value: string);

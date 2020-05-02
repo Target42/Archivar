@@ -29,8 +29,6 @@ type
     function  getRem : string;
     procedure setIsGlobal( value : boolean );
     function  getIsGlobal : boolean;
-    procedure setRequired( value : boolean );
-    function  getRequired : boolean;
 
     function  GetItems : TList<IProperty>;
     function  getChilds : IDataFieldList;
@@ -45,7 +43,6 @@ type
     property CLID  : string           read GetCLID      write SetCLID;
     property Typ   : string           read GetTyp       write SetTyp;
     property Rem   : string           read getRem       write setRem;
-    property Required : boolean       read getRequired  write setRequired;
     property isGlobal : boolean       read getIsGlobal  write setIsGlobal;
 
     property Properties : TList<IProperty> read GetItems;

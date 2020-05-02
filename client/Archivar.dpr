@@ -84,7 +84,15 @@ uses
   f_table_Column in 'TaskEditor\Forms\f_table_Column.pas' {TableCloumnForm},
   u_TaskCtrlTableField in 'TaskEditor\controls\u_TaskCtrlTableField.pas',
   u_taskForm2XML in 'TaskEditor\Writer\u_taskForm2XML.pas',
-  xsd_TaskData in '..\misc\xsd_TaskData.pas';
+  f_testform in 'TaskEditor\Forms\f_testform.pas' {TestForm},
+  u_helper in '..\misc\u_helper.pas',
+  xsd_TaskData in '..\misc\xsd_TaskData.pas',
+  fr_report in 'TaskEditor\Forms\fr_report.pas' {ReportFrame: TFrame},
+  f_form_props in 'TaskEditor\Forms\f_form_props.pas' {FormProperties},
+  u_TaskCtrlPanel in 'TaskEditor\controls\u_TaskCtrlPanel.pas',
+  u_TaskCtrlMemo in 'TaskEditor\controls\u_TaskCtrlMemo.pas',
+  u_TaskCtrlRichEdit in 'TaskEditor\controls\u_TaskCtrlRichEdit.pas',
+  u_TaskCtrlSpliter in 'TaskEditor\controls\u_TaskCtrlSpliter.pas';
 
 {$R *.res}
 

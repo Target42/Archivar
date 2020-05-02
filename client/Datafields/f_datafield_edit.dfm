@@ -1,6 +1,7 @@
 object DatafieldEditform: TDatafieldEditform
   Left = 0
   Top = 0
+  ActiveControl = LabeledEdit1
   Caption = 'Datenfelddetails'
   ClientHeight = 331
   ClientWidth = 263
@@ -32,7 +33,6 @@ object DatafieldEditform: TDatafieldEditform
     end
     inherited Panel1: TPanel
       Width = 263
-      ExplicitTop = -6
       ExplicitWidth = 263
       inherited OKBtn: TBitBtn
         Left = 175
@@ -90,21 +90,13 @@ object DatafieldEditform: TDatafieldEditform
       EditLabel.Caption = 'Beschreibung'
       TabOrder = 2
     end
-    object CheckBox1: TCheckBox
-      Left = 16
-      Top = 108
-      Width = 97
-      Height = 17
-      Caption = 'Erforderlich'
-      TabOrder = 3
-    end
     object Button1: TButton
       Left = 152
       Top = 100
       Width = 89
       Height = 25
       Caption = 'Tabellenfelder'
-      TabOrder = 4
+      TabOrder = 3
       OnClick = Button1Click
     end
   end

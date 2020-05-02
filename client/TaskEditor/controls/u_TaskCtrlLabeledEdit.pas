@@ -13,7 +13,7 @@ type
 
       function CtrlValue : string; override;
       procedure setCtrlValue( value : string ); override;
-
+      procedure colorRequired; override;
     private
 
     public
@@ -25,9 +25,23 @@ implementation
 
 uses
   u_TaskCtrlPropImpl, Vcl.StdCtrls, System.SysUtils, Winapi.Windows,
-  Vcl.ExtCtrls;
+  Vcl.ExtCtrls, Vcl.Graphics;
 
 { TaskCtrlLabeledEdit }
+
+procedure TaskCtrlLabeledEdit.colorRequired;
+var
+  ed : TLabeledEdit;
+begin
+  if not Assigned(m_ctrl) then
+    exit;
+
+  ed := m_ctrl as TLabeledEdit;
+  if m_required then
+    ed.Color := TColor( RGB(255, 200, 200))
+  else
+    ed.Color := clWindow;
+end;
 
 constructor TaskCtrlLabeledEdit.Create(owner: ITaskForm);
 begin
@@ -68,6 +82,7 @@ begin
   ed := TLabeledEdit.Create(parent as TComponent);
   ed.Parent := parent as TWinControl;
   ed.Name := 'LabeledEdit'+intToStr(GetTickCount);
+  ed.EditLabel.Caption := ed.Name;
   ed.Top  := y;
   ed.Left := X;
   Result := ed;
@@ -79,6 +94,8 @@ begin
   m_props.Add(TaskCtrlPropImpl.create(self, 'Caption',    'string'));
   m_props.Add(TaskCtrlPropImpl.create(self, 'Datafield',  'TaskDataField'));
   m_props.Add(TaskCtrlPropImpl.create(self, 'CharCase',   'TEditCharCase'));
+  m_props.Add(TaskCtrlPropImpl.create(self, 'NumbersOnly','boolean'));
+  m_props.Add(TaskCtrlPropImpl.create(self, 'Text',       'string'));
 end;
 
 procedure TaskCtrlLabeledEdit.setCtrlValue(value: string);

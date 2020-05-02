@@ -192,6 +192,9 @@ var
   data : TJSONObject;
   client : TAdminModClient;
 begin
+  if not Assigned(GM.SQLConnection1.DBXConnection) then
+    exit;
+
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
   TV.Images := GM.ImageList1;
   client := NIL;

@@ -23,6 +23,7 @@
 			<xs:attribute name="field" type="xs:string"/>
 			<xs:attribute name="fieldclid" type="xs:string"/>
 			<xs:attribute name="ctrlclid" type="xs:string"/>
+			<xs:attribute name="header" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="Row">

@@ -43,7 +43,6 @@ begin
   ( m_ctrl as TGroupBox).OnMouseDown  := md;
   ( m_ctrl as TGroupBox).OnMouseUp    := mu;
   ( m_ctrl as TGroupBox).OnMouseMove  := mv;
-
 end;
 
 function TaskCtrlGroupBox.newControl(parent: TWinControl; x, y: Integer): TControl;

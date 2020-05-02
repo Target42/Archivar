@@ -14,15 +14,16 @@ uses
   u_berTypes;
 
 const
-  msgConnected      = WM_USER ;
-  msgDisconnected   = WM_USER + 1;
-  msgStatus         = WM_USER + 2;
-  msgUpdateGr       = WM_USER + 3;
-  msgFilterTasks    = WM_USER + 4;
-  msgNewTask        = WM_USER + 5;
-  msgNewBookMark    = WM_USER + 6;
-  msgRemoveBookmark = WM_USER + 7;
-  msgLoadLogo       = WM_USER + 8;
+  WMUSER            = WM_USER + 25;
+  msgConnected      = WMUSER ;
+  msgDisconnected   = WMUSER + 1;
+  msgStatus         = WMUSER + 2;
+  msgUpdateGr       = WMUSER + 3;
+  msgFilterTasks    = WMUSER + 4;
+  msgNewTask        = WMUSER + 5;
+  msgNewBookMark    = WMUSER + 6;
+  msgRemoveBookmark = WMUSER + 7;
+  msgLoadLogo       = WMUSER + 8;
 
 
 type

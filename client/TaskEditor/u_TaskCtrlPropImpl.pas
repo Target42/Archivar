@@ -62,7 +62,7 @@ implementation
 
 uses
   System.SysUtils, Vcl.StdCtrls, Vcl.ExtCtrls, u_typeHelper, Vcl.Dialogs,
-  f_itemsEditor, Vcl.Forms, Vcl.Grids, f_tableColumns;
+  f_itemsEditor, Vcl.Forms, Vcl.Grids, f_tableColumns, u_helper;
 
 
 { TaskCtrlPropImpl }
@@ -121,6 +121,7 @@ begin
     begin
       m_list.Add(task.Fields.Items[i].Name);
     end;
+    m_list.Sort;
   end
   else if SameText(m_typ, 'TAlign') then         fillAlignList(m_list)
   else if SameText(m_typ, 'TEditCharCase') then  fillTEditcharList(m_list);
@@ -155,8 +156,10 @@ end;
 function TaskCtrlPropImpl.getEditProps( var value : string ) : boolean;
 begin
   Result := true;
-  if      SameText(m_name, 'CharCase') then   value := TEditCharCase2Text((m_ctrl as TEdit).CharCase)
-  else if SameText(m_name, 'Align') then      value := TAlign2Text((m_ctrl as TEdit).Align)
+  if      SameText(m_name, 'CharCase') then     value := TEditCharCase2Text((m_ctrl as TEdit).CharCase)
+  else if SameText(m_name, 'NumbersOnly') then  Value := bool2Str((m_ctrl as TEdit).NumbersOnly)
+  else if SameText(m_name, 'NumbersOnly') then  Value := bool2Str((m_ctrl as TEdit).NumbersOnly)
+  else if SameText(m_name, 'TExt') then         Value := (m_ctrl as TEdit).text
   else
     Result := false;
 end;
@@ -172,9 +175,10 @@ end;
 function TaskCtrlPropImpl.getLabeledEditProps( var value : string ) : boolean;
 begin
   Result := true;
-  if      SameText(m_name, 'Caption') then    value := (m_ctrl as TLabeledEdit).EditLabel.Caption
-  else if SameText(m_name, 'CharCase') then   value := TEditCharCase2Text((m_ctrl as TLabeledEdit).CharCase)
-  else if SameText(m_name, 'Align') then      value := TAlign2Text((m_ctrl as TLabeledEdit).Align)
+  if      SameText(m_name, 'Caption') then      value := (m_ctrl as TLabeledEdit).EditLabel.Caption
+  else if SameText(m_name, 'CharCase') then     value := TEditCharCase2Text((m_ctrl as TLabeledEdit).CharCase)
+  else if SameText(m_name, 'NumbersOnly') then  Value := bool2Str((m_ctrl as TLabeledEdit).NumbersOnly)
+  else if SameText(m_name, 'Text') then         Value := (m_ctrl as TLabeledEdit).Text
   else
     Result := false;
 end;
@@ -221,15 +225,16 @@ begin
   else if SameText(m_name, 'Left') then     Result := IntToStr(m_ctrl.left)
   else if SameText(m_name, 'Width') then    Result := IntToStr(m_ctrl.Width)
   else if SameText(m_name, 'height') then   Result := IntToStr(m_ctrl.Height)
-  else if SameText(m_name, 'Enabled') then  Result := BoolToStr(m_ctrl.Enabled, true)
-  else if SameText(m_name, 'Visible') then  Result := BoolToStr(m_ctrl.visible, true)
+  else if SameText(m_name, 'Enabled') then  Result := Bool2Str(m_ctrl.Enabled)
+  else if SameText(m_name, 'Visible') then  Result := Bool2Str(m_ctrl.visible)
   else if SameText(m_name, 'Align') then    Result := TAlign2Text(m_ctrl.Align)
+  else if SameText(m_name, 'Required') then Result := Bool2Str(m_owner.Required)
   else
     ValueSet := false;
 
   if not ValueSet then
   begin
-    if      (not ValueSet) and (m_ctrl is TLabel) then             ValueSet := getLabelProps(Result);
+    if      (not ValueSet) and (m_ctrl is TLabel) then        ValueSet := getLabelProps(Result);
     if (not ValueSet) and (m_ctrl is TGroupbox) then          ValueSet := getGroupboxProps(Result);
     if (not ValueSet) and (m_ctrl is TCustomEdit) then        ValueSet := getCustomEditProps(Result);
     if (not ValueSet) and (m_ctrl is TEdit) then              ValueSet := getEditProps(Result);
@@ -277,8 +282,10 @@ end;
 
 procedure TaskCtrlPropImpl.setdEditProps(value: string);
 begin
-  if      SameText(m_name, 'CharCase') then  (m_ctrl as TEdit).CharCase := Text2TEditCharCase(value)
-  else if SameText(m_name, 'Align') then     (m_ctrl as TEdit).Align := Text2TAlign(value);
+  if      SameText(m_name, 'CharCase') then     (m_ctrl as TEdit).CharCase    := Text2TEditCharCase(value)
+  else if SameText(m_name, 'NumerbsOnly') then  (m_ctrl as TEdit).NumbersOnly := str2bool(value)
+  else if SameText(m_name, 'Text') then         (m_ctrl as TEdit).Text := value
+
 end;
 
 procedure TaskCtrlPropImpl.setGroupboxProps(value: string);
@@ -288,10 +295,10 @@ end;
 
 procedure TaskCtrlPropImpl.setLabeledEditProps(value: string);
 begin
-  if      SameText(m_name, 'Caption') then   (m_ctrl as TLabeledEdit).EditLabel.Caption := value
-  else if SameText(m_name, 'CharCase') then  (m_ctrl as TLabeledEdit).CharCase := Text2TEditCharCase(value)
-  else if SameText(m_name, 'Align') then     (m_ctrl as TLabeledEdit).Align := Text2TAlign(value);
-
+  if      SameText(m_name, 'Caption') then      (m_ctrl as TLabeledEdit).EditLabel.Caption := value
+  else if SameText(m_name, 'CharCase') then     (m_ctrl as TLabeledEdit).CharCase := Text2TEditCharCase(value)
+  else if SameText(m_name, 'NumerbsOnly') then  (m_ctrl as TLabeledEdit).NumbersOnly := str2bool(value)
+  else if SameText(m_name, 'Text') then  (       m_ctrl as TLabeledEdit).text := value;
 end;
 
 procedure TaskCtrlPropImpl.setLabelProps(value: string);
@@ -332,14 +339,18 @@ begin
     end;
     m_value := m_ctrl.Name;
   end;
-  if      SameText(m_name, 'Top') then      m_ctrl.top := StrToInt( value )
-  else if SameText(m_name, 'Left') then     m_ctrl.left := StrToint( value )
-  else if SameText(m_name, 'Width') then    m_ctrl.Width := StrToInt( value )
-  else if SameText(m_name, 'height') then   m_ctrl.Height  := StrToInt( value )
-  else if SameText(m_name, 'Enabled') then  m_ctrl.Enabled := StrToBool(value)
-  else if SameText(m_name, 'Visible') then  m_ctrl.visible := StrToBool(value)
-  else if SameText(m_name, 'Align') then    m_ctrl.Align := Text2TAlign(value);
-
+  if m_ctrl.Align = alNone then
+  begin
+    if      SameText(m_name, 'Top') then      try m_ctrl.top := StrToInt( value ); except end
+    else if SameText(m_name, 'Left') then     try m_ctrl.left := StrToint( value ); except end
+    else if SameText(m_name, 'Width') then    try m_ctrl.Width := StrToInt( value ); except end
+    else if SameText(m_name, 'height') then   try m_ctrl.Height  := StrToInt( value ); except end;
+  end;
+  if      SameText(m_name, 'Enabled') then  m_ctrl.Enabled := Str2Bool(value)
+  else if SameText(m_name, 'Visible') then  m_ctrl.visible := Str2Bool(value)
+  else if SameText(m_name, 'Align') then
+    m_ctrl.Align := Text2TAlign(value)
+  else if SameText(m_name, 'Required') then m_owner.Required := Str2Bool(value);
 
   if m_ctrl is TLabel then      setLabelProps(value);
   if m_ctrl is TGroupbox then   setGroupboxProps(value);

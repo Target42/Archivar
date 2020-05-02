@@ -41,8 +41,7 @@ type
     SpeedButton7: TSpeedButton;
     SpeedButton8: TSpeedButton;
     SpeedButton9: TSpeedButton;
-    TV2: TTreeView;
-    Splitter5: TSplitter;
+    SpeedButton10: TSpeedButton;
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure FrameMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -62,6 +61,8 @@ type
     procedure SpeedButton9Click(Sender: TObject);
     procedure TVClick(Sender: TObject);
     procedure TVChange(Sender: TObject; Node: TTreeNode);
+    procedure SpeedButton10Click(Sender: TObject);
+    procedure SpeedButton1Click(Sender: TObject);
   private
 
     FNodes              : TObjectList;
@@ -69,6 +70,7 @@ type
     FNodePositioning    : Boolean;
     FOldPos             : TPoint;
     m_inReposition      : boolean;
+    m_testMode          : boolean;
 
     m_newType           : TControlType;
     m_task              : ITask;
@@ -89,7 +91,6 @@ type
     procedure ControlMouseUp(   Sender : TObject; Button : TMouseButton ; Shift : TShiftState; X, Y : integer );
 
     procedure updateTree;
-    procedure updateTree2;
 
     procedure SelectControl( c : TControl);
 
@@ -104,6 +105,7 @@ type
     procedure setMouseHooks;
 
     procedure doPropertyChanged;
+    procedure updateForms;
   public
     procedure init;
 
@@ -115,7 +117,7 @@ type
 implementation
 
 uses
-  System.Types, u_TaskFormImpl, u_taskForm2XML;
+  System.Types, u_TaskFormImpl, u_taskForm2XML, f_testform, f_form_props;
 
 {$R *.dfm}
 
@@ -126,10 +128,11 @@ const
     (name:'TLabledEdit';  typ:ctLabeledEdit),
     (name:'TComboBox';    typ:ctComboBox)
   );
-  ContainerList : array[1..2] of TCtrlEntry =
+  ContainerList : array[1..3] of TCtrlEntry =
   (
     (name:'TPanel';         typ:ctPanel),
-    (name:'TGroupbox';      typ:ctGroupBox)
+    (name:'TGroupbox';      typ:ctGroupBox),
+    (name:'TSplitter';      typ:ctSpliter)
   );
   TextList : array[1..1] of TCtrlEntry =
   (
@@ -163,7 +166,7 @@ var
   shift : TShiftState;
 begin
   Handled := false;
-  if FNodePositioning then
+  if FNodePositioning or m_testMode then
   begin
     exit;
   end;
@@ -395,11 +398,14 @@ end;
 procedure TEditorFrame.init;
 begin
   FNodes := TObjectList.create(false);
+
   FCurrentNodeControl := NIL;
   FNodePositioning    := false;
   m_inReposition      := falsE;
+  m_testMode          := false;
   m_task              := NIL;
-  m_newType   := ctNone;
+  m_form              := NIL;
+  m_newType           := ctNone;
 
   createNodes;
   updateLV;
@@ -604,15 +610,10 @@ begin
 end;
 
 procedure TEditorFrame.setTask(value: ITask);
-var
-  i : integer;
 begin
   m_task := value;
   PropertyFrame1.DataFields := m_task.Fields;
-  for i := 0 to pred( m_task.Forms.Count) do
-    begin
-      LB.Items.AddObject( m_task.Forms.Items[i].Name, TObject(i));
-    end;
+  updateForms;
 end;
 
 procedure TEditorFrame.setTaskForm(value: ITaskForm);
@@ -637,6 +638,44 @@ begin
   Panel1.Enabled    := Assigned(m_form);
 
   updateTree;
+end;
+
+procedure TEditorFrame.SpeedButton10Click(Sender: TObject);
+var
+  TestForm : TTestForm;
+begin
+
+  if Assigned(FCurrentNodeControl) then
+  begin
+    setNodesVisible(false);
+    ReleaseCapture;
+    FCurrentNodeControl := NIL;
+  end;
+  m_testMode := true;
+  m_form.Base.dropControls;
+  m_form.Base.Control := NIL;
+
+  Application.CreateForm(TTestForm, TestForm);
+  TestForm.TaskForm := m_form;
+  TestForm.ShowModal;
+  TestForm.free;
+
+  m_testMode := false;
+  setTaskForm( m_form );
+
+end;
+
+procedure TEditorFrame.SpeedButton1Click(Sender: TObject);
+var
+  FormProperties : TFormProperties;
+begin
+  Application.CreateForm(TFormProperties, FormProperties);
+  FormProperties.Task := m_task;
+  if FormProperties.ShowModal = mrOk then
+  begin
+    updateForms;
+  end;
+  FormProperties.Free;
 end;
 
 procedure TEditorFrame.SpeedButton5Click(Sender: TObject);
@@ -808,6 +847,23 @@ begin
   PropertyFrame1.updateProps;
 end;
 
+procedure TEditorFrame.updateForms;
+var
+  i, inx : integer;
+begin
+  LB.Items.BeginUpdate;
+  LB.Items.Clear;
+  for i := 0 to pred( m_task.Forms.Count) do
+    begin
+      inx := LB.Items.AddObject( m_task.Forms.Items[i].Name, TObject(i));
+      if m_task.Forms.Items[i] = m_form then
+      begin
+        LB.ItemIndex := inx;
+      end;
+    end;
+  LB.Items.EndUpdate;
+end;
+
 procedure TEditorFrame.updateLV;
 begin
   LV.Items.BeginUpdate;
@@ -826,6 +882,7 @@ end;
 procedure TEditorFrame.updateTree;
 var
   old : Pointer;
+  cl, ocl : String;
   procedure add( root :  TTreeNode; cmp :  TWinControl );
   var
     node : TTreeNode;
@@ -835,9 +892,17 @@ var
     begin
       if FNodes.IndexOf(cmp.Controls[i]) = -1 then
       begin
-        node := TV.items.AddChildObject( root, cmp.Controls[i].Name, cmp.Controls[i] );
-        if cmp.Controls[i] is TWinControl then
-          add( node, cmp.Controls[i] as TWinControl );
+        ocl := cmp.Controls[i].Owner.ClassName;
+        cl  := cmp.Controls[i].ClassName;
+
+        if not SameText( cl, 'TBoundLabel') then
+          node := TV.items.AddChildObject( root, cmp.Controls[i].Name, cmp.Controls[i] );
+
+        if not SameText(cl, 'TStringGrid') and not SameText(ocl, 'TBoundLabel') then
+        begin
+          if cmp.Controls[i] is TWinControl then
+            add( node, cmp.Controls[i] as TWinControl );
+        end;
 
         if not Assigned(root) then
           node.expand(true);
@@ -849,40 +914,17 @@ var
   end;
 begin
   old := NIL;
+
   TV.Items.beginUpdate;
+
   if Assigned(TV.Selected) then
     old := TV.Selected.Data;
+
   TV.Items.Clear;
+
   add( Nil, EditPanel );
+
   TV.Items.EndUpdate;
-
-  updateTree2;
-end;
-
-procedure TEditorFrame.updateTree2;
-  procedure addNode( root : TTreeNode; ctrl : ITaskCtrl );
-  var
-    node :  TTreeNode;
-    i    : integer;
-    s : string;
-  begin
-    s := ctrl.ControlClass;
-    if Assigned(ctrl.Control) then
-      s := s + '(ctrl)';
-    node := TV2.Items.AddChild( root, s);
-
-    for i := 0 to pred(ctrl.Childs.Count) do
-      addNode(node, ctrl.Childs.Items[i]);
-  end;
-begin
-  if not Assigned(m_form) then
-    exit;
-  TV2.Items.BeginUpdate;
-  TV2.Items.Clear;
-
-  addNode( NIL, m_form.Base );
-
-  TV2.Items.EndUpdate;
 end;
 
 end.

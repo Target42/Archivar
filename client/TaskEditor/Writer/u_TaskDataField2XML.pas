@@ -41,7 +41,6 @@ begin
   xdf.Datatype  := df.Typ;
   xdf.Clid      := df.CLID;
   xdf.IsGlobal  := df.isGlobal;
-  xdf.Required  := df.Required;
   xdf.Text      := df.Rem;
 
   for i := 0 to pred(df.Properties.Count) do
@@ -80,7 +79,6 @@ begin
   Result.Typ      := xdf.Datatype;
   Result.CLID     := xdf.Clid;
   Result.isGlobal := xdf.IsGlobal;
-  Result.Required := xdf.Required;
   Result.Rem      := xdf.Text;
 
   for i := 0 to pred(xdf.Properties.Count) do

@@ -3,7 +3,7 @@ unit u_TaskControlFactory;
 interface
 
 uses
-  i_taskEdit, System.Generics.Collections;
+  i_taskEdit, System.Generics.Collections, u_TaskCtrlEdit;
 
 type
   TTaskControlFactory = class sealed
@@ -27,9 +27,10 @@ type
 implementation
 
 uses
-  Winapi.Windows, System.SysUtils, u_TaskCtrlImpl, u_TaskCtrlLabel, u_TaskCtrlEdit,
+  Winapi.Windows, System.SysUtils, u_TaskCtrlImpl, u_TaskCtrlLabel,
   u_TaskCtrlGroupBox, u_TaskCtrlTable, u_TaskCtrlComboBox,
-  u_TaskCtrlLabeledEdit, u_TaskCtrlTableField;
+  u_TaskCtrlLabeledEdit, u_TaskCtrlTableField, u_TaskCtrlPanel, u_TaskCtrlMemo,
+  u_TaskCtrlRichEdit, u_TaskCtrlSpliter;
 
 constructor TTaskControlFactory.Create;
 begin
@@ -43,6 +44,9 @@ begin
   m_map.Add(LowerCase('TGroupBox'),    ctGroupBox );
   m_map.Add(LowerCase('TStringGrid'),  ctTable );
   m_map.Add(LowerCase('TTableField'),  ctTableField );
+  m_map.Add(LowerCase('TMemo'),        ctMemo );
+  m_map.Add(LowerCase('TRichEdit'),    ctRichEdit );
+  m_map.Add(LowerCase('TSplitter'),    ctSpliter );
 end;
 
 function TTaskControlFactory.createControl(frm : ITaskForm; p: ITaskCtrl;
@@ -53,8 +57,8 @@ begin
   ct := ctNone;
 
   newClass := lowerCase( newClass );
-  if m_map.ContainsKey(newClass) then
-    ct := m_map[newClass];
+  Assert(m_map.ContainsKey(newClass), 'No Class mapping');
+  ct := m_map[newClass];
 
   Result := createControl( frm, p, ct, 0, 0);
 end;
@@ -70,17 +74,19 @@ begin
     ctComboBox:     Result := TaskCtrlComboBox.create(frm);
     ctLabel:        Result := TaskCtrlLabel.create(frm);
     ctGroupBox:     Result := TaskCtrlGroupBox.create(frm);
-    ctPanel: ;
-    ctMemo: ;
-    ctRichEdit: ;
+    ctPanel:        Result := TaskCtrlPanel.create(frm);
+    ctMemo:         Result := TaskCtrlMemo.create( frm );
+    ctRichEdit:     Result := TaskCtrlRichEdit.create(frm);
     ctRadio: ;
     ctRadioGrp: ;
     ctCheckBox: ;
     ctTable:       Result := TaskCtrlTable.create( frm );
     ctTableField:  Result := TaskCtrlTableField.create( frm );
+    ctSpliter:     Result := TaskCtrlSplitter.Create(frm);
   else
-    Result := TaskCtrlImpl.create(frm);
+    Result := NIL;
   end;
+  Assert(Result <> NIL, 'Control not found!');
 end;
 
 destructor TTaskControlFactory.Destroy;

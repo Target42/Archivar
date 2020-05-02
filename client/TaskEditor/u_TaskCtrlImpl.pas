@@ -18,7 +18,9 @@ type
     m_props     : TList<ITaskCtrlProp>;
     m_parent    : ITaskCtrl;
     m_isBase    : boolean;
+
     m_canContainData : boolean;
+    m_required  : boolean;
 
     procedure setControlTypeProps; virtual;
     function  newControl(parent : TWinControl; x, y : Integer) :  TControl; virtual;
@@ -30,6 +32,8 @@ type
     function getTableCtrlIF : ITaskCtrlTable; virtual;
     function CtrlValue : string; virtual;
     procedure setCtrlValue( value : string ); virtual;
+
+    procedure colorRequired; virtual;
 
   private
     procedure setDataField( value : IDataField );
@@ -51,12 +55,15 @@ type
 
     procedure sortProps;
 
+    procedure setRequired( value : boolean );
+    function  getRequired : boolean;
 
    public
     constructor Create(owner : ITaskForm);
     destructor Destroy; override;
 
     property isBase : boolean read m_isBase write m_isBase;
+    property Required : boolean read getRequired write setRequired;
 
     procedure release;
 
@@ -103,7 +110,7 @@ var
 begin
   if not Assigned(m_ctrl) and (m_ctrlClass <> '') then
   begin
-    m_ctrl := newControl( m_parent.Control as TWinControl, 0, 0 );
+    m_ctrl := newControl( m_parent.Control as TWinControl, 0, 1000 );
     updateControl;
 
     if Assigned( m_ctrl) then
@@ -134,6 +141,12 @@ begin
     m_list[i].check(list);
   end;
 end;
+
+procedure TaskCtrlImpl.colorRequired;
+begin
+
+end;
+
 function TaskCtrlImpl.containData: boolean;
 begin
   Result := m_canContainData;
@@ -150,6 +163,7 @@ begin
   m_props     := TList<ITaskCtrlProp>.create;
   m_isBase    := false;
   m_canContainData := false;
+  m_required  := false;
 
 end;
 
@@ -349,6 +363,11 @@ begin
   Result := m_props;
 end;
 
+function TaskCtrlImpl.getRequired: boolean;
+begin
+  Result := m_required;
+end;
+
 function TaskCtrlImpl.getTableCtrlIF: ITaskCtrlTable;
 begin
   Result := NIL;
@@ -358,6 +377,7 @@ function TaskCtrlImpl.NewChild( clName : string ): ITaskCtrl;
 begin
   Result := TTaskControlFactory.GetInstance.createControl( m_owner, m_parent, clName);
   Result.Parent := self;
+
   m_list.Add(Result);
 end;
 
@@ -455,7 +475,13 @@ begin
   m_props.Add(TaskCtrlPropImpl.create(self, 'Height',     'integer'));
   m_props.Add(TaskCtrlPropImpl.create(self, 'Enabled',    'boolean'));
   m_props.Add(TaskCtrlPropImpl.create(self, 'Visible',    'boolean'));
+  m_props.Add(TaskCtrlPropImpl.create(self, 'Width',      'integer'));
   m_props.Add(TaskCtrlPropImpl.create(self, 'Align',      'TAlign'));
+
+  if m_canContainData then
+  begin
+    m_props.Add(TaskCtrlPropImpl.create(self, 'Required',    'boolean'));
+  end;
 
 end;
 
@@ -486,6 +512,13 @@ end;
 procedure TaskCtrlImpl.setParent(value: ITaskCtrl);
 begin
   m_parent := value;
+end;
+
+procedure TaskCtrlImpl.setRequired(value: boolean);
+begin
+  m_required := value;
+
+  colorRequired;
 end;
 
 procedure TaskCtrlImpl.sortProps;

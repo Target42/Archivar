@@ -70,7 +70,6 @@ begin
   df.Name      := xdf.Name;
   df.CLID      := xdf.Clid;
   df.Rem       := xdf.Text;
-  df.Required  := xdf.Required;
   df.isGlobal  := xdf.IsGlobal;
 
   df.Typ := xdf.Datatype;
@@ -111,7 +110,6 @@ begin
   xdf.Datatype  := df.Typ;
   xdf.Text      := df.Rem;
   xdf.IsGlobal  := df.isGlobal;
-  xdf.Required  := df.Required;
   for i := 0 to pred(df.Properties.Count) do
   begin
     xp := xdf.Properties.Add;

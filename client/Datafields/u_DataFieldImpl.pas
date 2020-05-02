@@ -15,7 +15,6 @@ type
       m_typ  : string;
       m_rem  : string;
       m_glob : boolean;
-      m_required : boolean;
       m_childs: IDataFieldList;
 
       procedure SetName( value : string );
@@ -28,8 +27,6 @@ type
       function  getRem : string;
       procedure setIsGlobal( value : boolean );
       function  getIsGlobal : boolean;
-      procedure setRequired( value : boolean );
-      function  getRequired : boolean;
 
       function  GetItems : TList<IProperty>;
       function  getChilds : IDataFieldList;
@@ -134,7 +131,6 @@ begin
   Result := TDataField.Create;
   Result.Name     := m_name;
   Result.CLID     := m_clid;
-  Result.Required := m_required;
   Result.isGlobal := m_glob;
   Result.Typ      := m_typ;
 
@@ -163,7 +159,6 @@ constructor TDataField.Create;
 begin
   m_owner     := NIL;
   m_glob      := false;
-  m_required  := false;
   m_list      := TList<IProperty>.create;
   m_childs    := TDataFieldList.create(self);
   m_clid      := CreateClassID;
@@ -173,7 +168,6 @@ constructor TDataField.Create(name, typ: string);
 begin
   m_owner     := NIL;
   m_glob      := false;
-  m_required  := false;
   m_list := TList<IProperty>.create;
   m_childs := TDataFieldList.create(self);
   m_name := name;
@@ -238,11 +232,6 @@ begin
   Result := m_rem;
 end;
 
-function TDataField.getRequired: boolean;
-begin
-  Result := m_required;
-end;
-
 function TDataField.GetTyp: string;
 begin
   Result := m_typ;
@@ -298,11 +287,6 @@ end;
 procedure TDataField.setRem(value: string);
 begin
   m_rem := value;
-end;
-
-procedure TDataField.setRequired(value: boolean);
-begin
-  m_required := value;
 end;
 
 procedure TDataField.SetTyp(value: string);

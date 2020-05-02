@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_editForm, Vcl.ExtCtrls,
-  Vcl.StdCtrls, Vcl.ComCtrls, Vcl.Buttons, i_taskEdit, fr_Formeditor;
+  Vcl.StdCtrls, Vcl.ComCtrls, Vcl.Buttons, i_taskEdit, fr_Formeditor, fr_report;
 
 type
   TTaksEditorForm = class(TForm)
@@ -26,6 +26,8 @@ type
     TabSheet2: TTabSheet;
     EditFrame1: TEditFrame;
     EditorFrame1: TEditorFrame;
+    TabSheet3: TTabSheet;
+    ReportFrame1: TReportFrame;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
@@ -140,6 +142,7 @@ begin
     setTask(TTask.create);
 
   EditorFrame1.Task := m_task;
+  ReportFrame1.init;
 end;
 
 procedure TTaksEditorForm.FormDestroy(Sender: TObject);
@@ -155,6 +158,7 @@ begin
   xw.Free;
   EditorFrame1.release;
   m_task.release;
+  ReportFrame1.release;
 end;
 
 procedure TTaksEditorForm.setTask(value: ITask);
@@ -169,9 +173,12 @@ var
   item  : TListItem;
   df    : IDataField;
   old   : IDataField;
+  wd    : integer;
+  len   : integer;
 begin
   old := NIL;
 
+  wd := LV.Columns[0].Width;
   LV.Items.BeginUpdate;
   if Assigned(LV.Selected) then
     old := IDataField(LV.Selected.Data);
@@ -181,13 +188,14 @@ begin
   begin
     item := LV.Items.Add;
     df   := m_task.Fields.Items[i];
+
     item.Data     := df;
+    len := Lv.Canvas.TextWidth(df.Name) + 16;
+    if len > wd then
+      wd := len;
+
     item.Caption  := df.Name;
     item.SubItems.Add(df.Typ);
-    if df.Required then
-      item.SubItems.Add('Ja')
-    else
-      item.SubItems.Add('');
     if df.Typ = 'table' then
       item.SubItems.Add('Ja')
     else
@@ -197,6 +205,7 @@ begin
       LV.Selected := item;
 
   end;
+  LV.Columns[0].Width := wd;
 
   LV.Items.EndUpdate;
 end;

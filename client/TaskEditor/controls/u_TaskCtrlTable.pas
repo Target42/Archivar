@@ -145,6 +145,9 @@ begin
 
   m_sg.Top  := y;
   m_sg.Left := X;
+  m_sg.Options := [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine,
+    goRangeSelect, goDrawFocusSelected, goRowSizing, goColSizing, goEditing, goTabs, goAlwaysShowEditor,
+    goThumbTracking, goFixedColClick, goFixedRowClick, goFixedHotTrack];
   Result := m_sg;
 
 end;

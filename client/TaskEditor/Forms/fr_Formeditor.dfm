@@ -1,8 +1,8 @@
 object EditorFrame: TEditorFrame
   Left = 0
   Top = 0
-  Width = 637
-  Height = 496
+  Width = 975
+  Height = 609
   Align = alClient
   TabOrder = 0
   OnMouseDown = FrameMouseDown
@@ -11,25 +11,25 @@ object EditorFrame: TEditorFrame
   object Splitter2: TSplitter
     Left = 185
     Top = 0
-    Height = 496
+    Height = 609
     ExplicitLeft = 296
     ExplicitTop = 48
     ExplicitHeight = 100
   end
   object Splitter3: TSplitter
-    Left = 411
+    Left = 749
     Top = 0
-    Height = 496
+    Height = 609
     Align = alRight
     ExplicitLeft = 312
     ExplicitTop = 88
     ExplicitHeight = 100
   end
   object Panel1: TPanel
-    Left = 414
+    Left = 752
     Top = 0
     Width = 223
-    Height = 496
+    Height = 609
     Align = alRight
     Caption = 'Panel1'
     Enabled = False
@@ -41,7 +41,7 @@ object EditorFrame: TEditorFrame
       Left = 1
       Top = 246
       Width = 221
-      Height = 249
+      Height = 362
       Align = alClient
       ExplicitLeft = 88
       ExplicitTop = 264
@@ -81,7 +81,7 @@ object EditorFrame: TEditorFrame
       Left = 1
       Top = 246
       Width = 221
-      Height = 249
+      Height = 362
       Align = alClient
       TabOrder = 1
       ExplicitLeft = 1
@@ -90,7 +90,7 @@ object EditorFrame: TEditorFrame
       ExplicitHeight = 58
       inherited VE: TValueListEditor
         Width = 221
-        Height = 249
+        Height = 362
         DefaultColWidth = 75
         ExplicitWidth = 221
         ExplicitHeight = 58
@@ -103,8 +103,8 @@ object EditorFrame: TEditorFrame
   object EditPanel: TPanel
     Left = 188
     Top = 0
-    Width = 223
-    Height = 496
+    Width = 561
+    Height = 609
     Align = alClient
     Caption = 'EditPanel'
     Color = 16776176
@@ -119,7 +119,7 @@ object EditorFrame: TEditorFrame
     Left = 0
     Top = 0
     Width = 185
-    Height = 496
+    Height = 609
     Align = alLeft
     BevelOuter = bvNone
     Caption = 'Panel2'
@@ -139,29 +139,18 @@ object EditorFrame: TEditorFrame
       Left = 0
       Top = 196
       Width = 185
-      Height = 300
+      Height = 413
       Align = alClient
       Caption = 'Struktur'
       Enabled = False
       TabOrder = 0
       ExplicitHeight = 109
-      object Splitter5: TSplitter
-        Left = 2
-        Top = 157
-        Width = 181
-        Height = 3
-        Cursor = crVSplit
-        Align = alBottom
-        ExplicitTop = 15
-        ExplicitWidth = 153
-      end
       object TV: TTreeView
         Left = 2
         Top = 15
         Width = 181
-        Height = 142
+        Height = 355
         Align = alClient
-        DragMode = dmAutomatic
         HideSelection = False
         Indent = 19
         ReadOnly = True
@@ -172,11 +161,11 @@ object EditorFrame: TEditorFrame
         OnDragDrop = TVDragDrop
         OnDragOver = TVDragOver
         OnEdited = TVEdited
-        ExplicitHeight = 150
+        ExplicitHeight = 51
       end
       object Panel4: TPanel
         Left = 2
-        Top = 257
+        Top = 370
         Width = 181
         Height = 41
         Align = alBottom
@@ -270,16 +259,6 @@ object EditorFrame: TEditorFrame
           OnClick = SpeedButton6Click
         end
       end
-      object TV2: TTreeView
-        Left = 2
-        Top = 160
-        Width = 181
-        Height = 97
-        Align = alBottom
-        Indent = 19
-        TabOrder = 2
-        ExplicitTop = -31
-      end
     end
     object GroupBox3: TGroupBox
       Left = 0
@@ -352,6 +331,7 @@ object EditorFrame: TEditorFrame
             FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
           ParentShowHint = False
           ShowHint = True
+          OnClick = SpeedButton1Click
         end
         object SpeedButton2: TSpeedButton
           Left = 59
@@ -487,7 +467,7 @@ object EditorFrame: TEditorFrame
         end
         object SpeedButton7: TSpeedButton
           Left = 16
-          Top = 40
+          Top = 34
           Width = 23
           Height = 22
           Hint = 'Check'
@@ -495,17 +475,24 @@ object EditorFrame: TEditorFrame
         end
         object SpeedButton8: TSpeedButton
           Left = 59
-          Top = 40
+          Top = 34
           Width = 23
           Height = 22
           OnClick = SpeedButton8Click
         end
         object SpeedButton9: TSpeedButton
-          Left = 104
-          Top = 40
+          Left = 88
+          Top = 34
           Width = 23
           Height = 22
           OnClick = SpeedButton9Click
+        end
+        object SpeedButton10: TSpeedButton
+          Left = 136
+          Top = 34
+          Width = 23
+          Height = 22
+          OnClick = SpeedButton10Click
         end
       end
     end

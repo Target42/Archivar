@@ -13,7 +13,8 @@ type
     ctGroupBox, ctPanel,
     ctMemo, ctRichEdit,
     ctRadio, ctRadioGrp, ctCheckBox,
-    ctTable, ctTableField
+    ctTable, ctTableField,
+    ctSpliter
     );
 type
   TControlMouseDown = procedure ( Sender : TObject; Button : TMouseButton; Shift : TShiftState; X, Y : integer) of object;
@@ -91,6 +92,8 @@ type
     function  getParent : ITaskCtrl;
     procedure setCLID( value : string );
     function  getCLID : string;
+    procedure setRequired( value : boolean );
+    function  getRequired : boolean;
 
     procedure setControlClass( value : string );
     function  getControlClass : string;
@@ -108,6 +111,8 @@ type
     property Parent         : ITaskCtrl             read getParent        write setParent;
     property Owner          : ITaskForm             read getOwner;
     property TableCtrlIF    : ITaskCtrlTable        read getTableCtrlIF;
+
+    property Required       : boolean               read getRequired      write setRequired;
 
     procedure release;
 

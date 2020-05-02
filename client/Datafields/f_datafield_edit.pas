@@ -17,7 +17,6 @@ type
     Label1: TLabel;
     ComboBox1: TComboBox;
     LabeledEdit2: TLabeledEdit;
-    CheckBox1: TCheckBox;
     Button1: TButton;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -59,7 +58,6 @@ var
 begin
   m_data.Name := trim(LabeledEdit1.Text);
   m_data.Rem  := LabeledEdit2.Text;
-  m_data.Required := CheckBox1.Checked;
 
   if Assigned(m_tab) then
   begin
@@ -141,13 +139,11 @@ begin
   LabeledEdit1.Text   := m_data.Name;
   ComboBox1.ItemIndex := ComboBox1.Items.IndexOf(m_data.Typ);
   LabeledEdit2.Text   := m_data.Rem;
-  CheckBox1.Checked   := m_data.Required;
 
   setProps;
   if (m_data.isGlobal and not Assigned(m_tab)) or ( ComboBox1.ItemIndex = -1 ) then
   begin
     ComboBox1.Enabled := false;
-    CheckBox1.Enabled := false;
   end;
 
   m_noChange := false;
