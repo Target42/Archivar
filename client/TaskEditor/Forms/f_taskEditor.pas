@@ -143,6 +143,8 @@ begin
 
   EditorFrame1.Task := m_task;
   ReportFrame1.init;
+  ReportFrame1.Task := m_task;
+
 end;
 
 procedure TTaksEditorForm.FormDestroy(Sender: TObject);

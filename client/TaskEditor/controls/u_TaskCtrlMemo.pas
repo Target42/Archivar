@@ -1,6 +1,7 @@
 unit u_TaskCtrlMemo;
 
 interface
+
 uses
   u_TaskCtrlImpl, i_taskEdit, Vcl.Controls, System.Classes;
 
@@ -10,6 +11,8 @@ type
       procedure setControlTypeProps; override;
       function  newControl(parent : TWinControl; x, y : Integer) :  TControl; override;
       procedure doSetMouse( md : TControlMouseDown; mv : TControlMouseMove; mu : TControlMouseUp ); override;
+
+      function CtrlValue : string; override;
     private
 
     public
@@ -27,6 +30,17 @@ uses
 constructor TaskCtrlMemo.Create(owner: ITaskForm);
 begin
   inherited;
+  m_canContainData := true;
+end;
+
+function TaskCtrlMemo.CtrlValue: string;
+begin
+  Result := '';
+
+  if Assigned( m_ctrl) then
+    Result := trim( ( m_ctrl as TMemo).Text)
+  else
+    Result := self.propertyValue('Text');
 end;
 
 destructor TaskCtrlMemo.Destroy;
@@ -64,6 +78,7 @@ procedure TaskCtrlMemo.setControlTypeProps;
 begin
   inherited;
   m_props.Add(TaskCtrlPropImpl.create(self, 'Text',       'string'));
+  m_props.Add(TaskCtrlPropImpl.create(self, 'Datafield',  'TaskDataField'));
 end;
 
 end.

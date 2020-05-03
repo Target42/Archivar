@@ -260,12 +260,14 @@ begin
 
   if not ValueSet then
   begin
-    if      (not ValueSet) and (m_ctrl is TLabel) then        ValueSet := getLabelProps(Result);
+    if (not ValueSet) and (m_ctrl is TLabel) then             ValueSet := getLabelProps(Result);
     if (not ValueSet) and (m_ctrl is TGroupbox) then          ValueSet := getGroupboxProps(Result);
     if (not ValueSet) and (m_ctrl is TCustomEdit) then        ValueSet := getCustomEditProps(Result);
     if (not ValueSet) and (m_ctrl is TEdit) then              ValueSet := getEditProps(Result);
     if (not ValueSet) and (m_ctrl is TLabeledEdit) then       ValueSet := getLabeledEditProps(Result);
     if (not ValueSet) and (m_ctrl is TComboBox) then          ValueSet := getComboBoxProps(Result);
+    if (not ValueSet) and (m_ctrl is TMemo) then              ValueSet := getMemoProps(Result);
+    if (not ValueSet) and (m_ctrl is TRichEdit) then          getRichEditProps(Result);
   end;
 
   m_value := Result;
@@ -406,14 +408,29 @@ begin
   if m_ctrl is TCustomEdit then setCustomEditProps(value);
   if m_ctrl is TEdit then       setdEditProps( value );
   if m_ctrl is TLabeledEdit then setLabeledEditProps(value);
-  if m_ctrl is TComboBox then    setComboBoxProps(value);
+  if m_ctrl is TComboBox then   setComboBoxProps(value);
+  if m_ctrl is TMemo then       setMemoProps(value);
+  if m_ctrl is TRichEdit then   setRichEditProps(value);
 end;
 
 procedure TaskCtrlPropImpl.ShowEditor;
 var
   ItemsEditorForm   : TItemsEditorForm;
   TableColumnsForm  : TTableColumnsForm;
-  StringEditorForm  : TStringEditorForm;
+
+  procedure setRichTExtText;
+  var
+    StringEditorForm  : TStringEditorForm;
+  begin
+    Application.CreateForm(TStringEditorForm, StringEditorForm);
+
+    StringEditorForm.Memo1.Lines.Text := (m_ctrl as TRichEdit).Lines.Text;
+    if StringEditorForm.ShowModal = mrok then
+    begin
+      (m_ctrl as TRichEdit).Lines.Text := StringEditorForm.Memo1.Lines.Text;
+    end;
+    StringEditorForm.Free;
+  end;
 begin
   if m_ctrl is TComboBox then
   begin
@@ -439,14 +456,10 @@ begin
   end
   else if m_ctrl is TRichEdit then
   begin
-    Application.CreateForm(TStringEditorForm, StringEditorForm);
-
-    StringEditorForm.Memo1.Lines.Text := (m_ctrl as TRichEdit).Lines.Text;
-    if StringEditorForm.ShowModal = mrok then
-    begin
-      (m_ctrl as TRichEdit).Lines.Text := StringEditorForm.Memo1.Lines.Text;
-    end;
-    StringEditorForm.Free;
+   if SameText(m_name, 'Text' ) then
+   begin
+     setRichTExtText;
+   end;
   end;
 end;
 

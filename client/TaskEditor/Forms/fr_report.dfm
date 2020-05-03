@@ -1,8 +1,8 @@
 object ReportFrame: TReportFrame
   Left = 0
   Top = 0
-  Width = 683
-  Height = 551
+  Width = 999
+  Height = 645
   Align = alClient
   TabOrder = 0
   ExplicitWidth = 451
@@ -11,7 +11,7 @@ object ReportFrame: TReportFrame
     Left = 0
     Top = 0
     Width = 185
-    Height = 551
+    Height = 645
     Align = alLeft
     Caption = 'GroupBox1'
     TabOrder = 0
@@ -20,9 +20,9 @@ object ReportFrame: TReportFrame
   object PageControl1: TPageControl
     Left = 185
     Top = 0
-    Width = 498
-    Height = 551
-    ActivePage = TabSheet1
+    Width = 814
+    Height = 645
+    ActivePage = TabSheet3
     Align = alClient
     TabOrder = 1
     ExplicitWidth = 266
@@ -33,8 +33,8 @@ object ReportFrame: TReportFrame
       ExplicitHeight = 277
       object SynEdit1: TSynEdit
         Left = 0
-        Top = 373
-        Width = 490
+        Top = 467
+        Width = 806
         Height = 150
         Align = alBottom
         Font.Charset = DEFAULT_CHARSET
@@ -65,21 +65,18 @@ object ReportFrame: TReportFrame
     object TabSheet2: TTabSheet
       Caption = 'HTML'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object SynEdit2: TSynEdit
         Left = 0
         Top = 0
-        Width = 782
-        Height = 658
+        Width = 806
+        Height = 617
         Align = alClient
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
         Font.Height = -13
         Font.Name = 'Courier New'
         Font.Style = []
+        PopupMenu = PopupMenu1
         TabOrder = 0
         CodeFolding.CollapsedLineColor = clGrayText
         CodeFolding.FolderBarLinesColor = clGrayText
@@ -101,25 +98,44 @@ object ReportFrame: TReportFrame
     object TabSheet3: TTabSheet
       Caption = 'Preview'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object WebBrowser1: TWebBrowser
         Left = 0
-        Top = 0
-        Width = 782
-        Height = 658
+        Top = 41
+        Width = 806
+        Height = 576
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 742
-        ExplicitHeight = 454
+        ExplicitLeft = 2
+        ExplicitTop = 88
+        ExplicitWidth = 782
+        ExplicitHeight = 658
         ControlData = {
-          4C000000D2500000024400000000000000000000000000000000000000000000
+          4C0000004D530000883B00000000000000000000000000000000000000000000
           000000004C000000000000000000000001000000E0D057007335CF11AE690800
           2B2E126208000000000000004C0000000114020000000000C000000000000046
           8000000000000000000000000000000000000000000000000000000000000000
           00000000000000000100000000000000000000000000000000000000}
+      end
+      object Panel1: TPanel
+        Left = 0
+        Top = 0
+        Width = 806
+        Height = 41
+        Align = alTop
+        Caption = 'Panel1'
+        TabOrder = 1
+        ExplicitLeft = 64
+        ExplicitTop = 16
+        ExplicitWidth = 185
+        object Button1: TButton
+          Left = 24
+          Top = 8
+          Width = 75
+          Height = 25
+          Caption = 'Button1'
+          TabOrder = 0
+          OnClick = Button1Click
+        end
       end
     end
   end
@@ -137,5 +153,14 @@ object ReportFrame: TReportFrame
     Options.Visible = False
     Left = 613
     Top = 176
+  end
+  object PopupMenu1: TPopupMenu
+    OnPopup = PopupMenu1Popup
+    Left = 445
+    Top = 152
+    object Feldhinzufgen1: TMenuItem
+      AutoHotkeys = maManual
+      Caption = 'Feld hinzuf'#252'gen'
+    end
   end
 end

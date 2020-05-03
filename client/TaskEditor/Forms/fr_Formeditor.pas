@@ -343,6 +343,7 @@ begin
   updateTree;
 
   m_newType := ctNone;
+  PropertyFrame1.Ctrl := ctrl;
 end;
 
 procedure TEditorFrame.fillGroup(name: string; data: array of TCtrlEntry);

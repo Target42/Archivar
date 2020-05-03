@@ -50,6 +50,7 @@ type
 
     m_home    : string;
     m_images  : string;
+    m_httpHome: string;
     m_misc    : TdsMiscClient;
     m_gremien : TList<TGremium>;
     m_imageNames : TDictionary<string,integer>;
@@ -77,6 +78,7 @@ type
     property Home : string read m_home;
     property Images : string read m_images;
     property Gremien : TList<TGremium> read m_gremien;
+    property wwwHome : string read m_httpHome;
 
     procedure FillGremien( arr :TJSONArray );
 
@@ -217,10 +219,14 @@ begin
   m_imageNames := TDictionary<string,integer>.create;
   m_misc := NIL;
   m_gremien := TList<TGremium>.create;
-  m_home  := TPath.Combine(TPath.GetDocumentsPath, 'Archivar' );
-  m_images:= TPath.Combine(m_home, 'Images' );
+
+  m_home      := TPath.Combine(TPath.GetDocumentsPath, 'Archivar' );
+  m_images    := TPath.Combine(m_home, 'Images' );
+  m_httpHome  := TPath.Combine(m_home, 'wwwroot');
+
   ForceDirectories(m_home);
   ForceDirectories(m_images);
+  ForceDirectories(m_httpHome);
 end;
 
 procedure TGM.DataModuleDestroy(Sender: TObject);

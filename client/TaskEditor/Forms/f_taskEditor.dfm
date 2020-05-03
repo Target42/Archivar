@@ -219,7 +219,7 @@ object TaksEditorForm: TTaksEditorForm
         end
         inherited Panel2: TPanel
           Height = 452
-          ExplicitHeight = 452
+          ExplicitHeight = 154
           inherited GroupBox2: TGroupBox
             Height = 256
             ExplicitHeight = 256
@@ -257,8 +257,6 @@ object TaksEditorForm: TTaksEditorForm
           ExplicitWidth = 609
           ExplicitHeight = 452
           inherited TabSheet1: TTabSheet
-            ExplicitLeft = 4
-            ExplicitTop = 24
             ExplicitWidth = 601
             ExplicitHeight = 424
             inherited SynEdit1: TSynEdit
@@ -269,12 +267,22 @@ object TaksEditorForm: TTaksEditorForm
             end
           end
           inherited TabSheet2: TTabSheet
+            ExplicitLeft = 0
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
             inherited SynEdit2: TSynEdit
               Width = 258
               Height = 277
+              ExplicitWidth = 258
+              ExplicitHeight = 277
             end
           end
           inherited TabSheet3: TTabSheet
+            ExplicitLeft = 0
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
             inherited WebBrowser1: TWebBrowser
               ControlData = {
                 4C000000D2500000024400000000000000000000000000000000000000000000

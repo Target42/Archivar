@@ -11,6 +11,7 @@ type
       procedure setControlTypeProps; override;
       function  newControl(parent : TWinControl; x, y : Integer) :  TControl; override;
       procedure doSetMouse( md : TControlMouseDown; mv : TControlMouseMove; mu : TControlMouseUp ); override;
+      function CtrlValue : string; override;
     private
 
     public
@@ -30,6 +31,17 @@ uses
 constructor TaskCtrlRichEdit.Create(owner: ITaskForm);
 begin
   inherited;
+  m_canContainData := true;
+end;
+
+function TaskCtrlRichEdit.CtrlValue: string;
+begin
+  Result := '';
+
+  if Assigned( m_ctrl) then
+    Result := trim( ( m_ctrl as TRichEdit).Text)
+  else
+    Result := self.propertyValue('Text');
 end;
 
 destructor TaskCtrlRichEdit.Destroy;
@@ -67,6 +79,7 @@ procedure TaskCtrlRichEdit.setControlTypeProps;
 begin
   inherited;
   m_props.Add(TaskCtrlPropImpl.create(self, 'Text',       'TStrings'));
+  m_props.Add(TaskCtrlPropImpl.create(self, 'Datafield',  'TaskDataField'));
 end;
 
 end.

@@ -93,7 +93,9 @@ uses
   u_TaskCtrlMemo in 'TaskEditor\controls\u_TaskCtrlMemo.pas',
   u_TaskCtrlRichEdit in 'TaskEditor\controls\u_TaskCtrlRichEdit.pas',
   u_TaskCtrlSpliter in 'TaskEditor\controls\u_TaskCtrlSpliter.pas',
-  f_itemsTStringsEditor in 'TaskEditor\PropEdits\f_itemsTStringsEditor.pas' {StringEditorForm};
+  f_itemsTStringsEditor in 'TaskEditor\PropEdits\f_itemsTStringsEditor.pas' {StringEditorForm},
+  m_http in 'http\m_http.pas' {HttpMod: TDataModule},
+  m_html in 'http\m_html.pas' {HtmlMod: TDataModule};
 
 {$R *.res}
 
@@ -107,9 +109,12 @@ begin
   Application.MainFormOnTaskbar := True;
 
   Application.CreateForm(TGM, GM);
+  Application.CreateForm(THttpMod, HttpMod);
   Application.CreateForm(TWindowHandler, WindowHandler);
   Application.CreateForm(TBookMarkHandler, BookMarkHandler);
+
   Application.CreateForm(TMainForm, MainForm);
   Application.CreateForm(TTaksEditorForm, TaksEditorForm);
+
   Application.Run;
 end.
