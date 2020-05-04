@@ -145,6 +145,8 @@ begin
   ReportFrame1.init;
   ReportFrame1.Task := m_task;
 
+  EditorFrame1.OnNewForm := ReportFrame1.doNewForm;
+
 end;
 
 procedure TTaksEditorForm.FormDestroy(Sender: TObject);

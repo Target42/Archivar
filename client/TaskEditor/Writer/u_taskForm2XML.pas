@@ -21,6 +21,7 @@ type
 
       procedure load( name : string; form : ITaskForm );
       function  save( name : string; form : ITaskForm ) : Boolean;
+      function  getXML(form : ITaskForm ) : IXMLList;
   end;
 
 implementation
@@ -39,6 +40,20 @@ destructor TTaskForm2XML.Destroy;
 begin
 
   inherited;
+end;
+
+function TTaskForm2XML.getXML(form : ITaskForm ): IXMLList;
+begin
+  m_xList := NewList;
+
+  m_xList.Clid := form.CLID;
+  m_xList.Taskclid := form.Owner.CLID;
+
+  if Assigned(form) then
+  begin
+    SaveControl( form.Base );
+  end;
+  Result := m_xList;
 end;
 
 procedure TTaskForm2XML.load(name: string; form: ITaskForm);

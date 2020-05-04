@@ -6,13 +6,16 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
   System.Contnrs, Vcl.AppEvnts, Vcl.StdCtrls, Vcl.ComCtrls, Vcl.ExtCtrls,
-  i_taskEdit, fr_propertyEditor, Vcl.Buttons;
+  i_taskEdit, fr_propertyEditor, Vcl.Buttons, System.ImageList, Vcl.ImgList;
 
 type
   TCtrlEntry = record
     name : String;
     typ  : TControlType;
+    inx  : integer;
   end;
+
+  TOnNewForm = procedure( frm : ITaskForm) of Object;
 
   TEditorFrame = class(TFrame)
     ApplicationEvents1: TApplicationEvents;
@@ -44,6 +47,7 @@ type
     SpeedButton10: TSpeedButton;
     SpeedButton11: TSpeedButton;
     SpeedButton12: TSpeedButton;
+    ImageList1: TImageList;
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure FrameMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
@@ -82,6 +86,8 @@ type
     m_task              : ITask;
     m_form              : ITaskForm;
 
+    m_onNewForm         : TOnNewForm;
+
     procedure createNodes;
     procedure setNodesVisible( value : Boolean);
     procedure PositionNodes( AroundControl : TControl );
@@ -117,6 +123,7 @@ type
   public
     procedure init;
 
+    property OnNewForm : TOnNewForm read m_onNewForm write m_onNewForm;
     property Task : ITask read m_task write setTask;
 
     procedure release;
@@ -132,34 +139,34 @@ uses
 const
   EditList : array[1..3] of TCtrlEntry =
   (
-    (name:'TEdit';        typ:ctEdit),
-    (name:'TLabledEdit';  typ:ctLabeledEdit),
-    (name:'TComboBox';    typ:ctComboBox)
+    (name:'TEdit';        typ:ctEdit;       inx:2 ),
+    (name:'TLabledEdit';  typ:ctLabeledEdit;inx:5 ),
+    (name:'TComboBox';    typ:ctComboBox;   inx:1)
   );
   ContainerList : array[1..3] of TCtrlEntry =
   (
-    (name:'TPanel';         typ:ctPanel),
-    (name:'TGroupbox';      typ:ctGroupBox),
-    (name:'TSplitter';      typ:ctSpliter)
+    (name:'TPanel';         typ:ctPanel;    inx:7),
+    (name:'TGroupbox';      typ:ctGroupBox; inx:3),
+    (name:'TSplitter';      typ:ctSpliter;  inx:10)
   );
   TextList : array[1..1] of TCtrlEntry =
   (
-    (name:'TLabel';         typ:ctLabel)
+    (name:'TLabel';         typ:ctLabel;    inx:4)
   );
 
   TextFieldList : array[1..2] of TCtrlEntry =
   (
-    (name:'TMemo';            typ:ctMemo),
-    (name:'TRichEdit';        typ:ctRichEdit)
+    (name:'TMemo';            typ:ctMemo;     inx:6),
+    (name:'TRichEdit';        typ:ctRichEdit; inx:9)
   );
   RadioList : array[1..2] of TCtrlEntry =
   (
-    (name:'TRadioBtn';          typ:ctRadio),
-    (name:'TRadioGroup';        typ:ctRadioGrp)
+    (name:'TRadioBtn';          typ:ctRadio;    inx:8),
+    (name:'TRadioGroup';        typ:ctRadioGrp; inx:-1)
   );
   TableList : array[1..1] of TCtrlEntry =
   (
-    (name:'TTable';         typ:ctTable)
+    (name:'TTable';         typ:ctTable;        inx:11)
   );
 
 
@@ -362,6 +369,7 @@ begin
       item := Lv.Items.Add;
       item.GroupID := grp.GroupID;
       item.Caption := data[i].name;
+      item.ImageIndex := data[i].inx;
       item.Data    := Pointer( data[i].typ);
     end;
 end;
@@ -406,6 +414,7 @@ end;
 
 procedure TEditorFrame.init;
 begin
+  OnNewForm := NIL;
   FNodes := TObjectList.create(false);
 
   FCurrentNodeControl := NIL;
@@ -436,6 +445,8 @@ begin
   inx := integer(LB.Items.Objects[ inx]);
   frm := m_task.Forms.Items[inx];
   setTaskForm( frm);
+  if Assigned(m_onNewForm) then
+    m_onNewForm(frm);
 end;
 
 procedure TEditorFrame.LVClick(Sender: TObject);
@@ -742,7 +753,6 @@ end;
 procedure TEditorFrame.SpeedButton5Click(Sender: TObject);
 var
   ctrl : ITaskCtrl;
-  tctrl : ITaskCtrl;
 begin
   if not Assigned(TV.Selected) or ( TV.Selected.Data = NIL) then
     exit;
@@ -957,7 +967,6 @@ begin
   fillGroup('Label',      TextList);
   fillGroup('Table',      TableList);
   fillGroup('Text',       TextFieldList);
-  fillGroup('TextFields', TextFieldList);
 
   LV.Items.EndUpdate;
 end;

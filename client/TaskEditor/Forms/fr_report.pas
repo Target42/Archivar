@@ -13,8 +13,6 @@ type
   TReportFrame = class(TFrame)
     GroupBox1: TGroupBox;
     PageControl1: TPageControl;
-    TabSheet1: TTabSheet;
-    SynEdit1: TSynEdit;
     SynXMLSyn1: TSynXMLSyn;
     TabSheet2: TTabSheet;
     SynEdit2: TSynEdit;
@@ -31,6 +29,7 @@ type
     m_xList: IXMLList;
     m_task : ITask;
     m_Path : string;
+    m_form : ITaskForm;
     procedure setTask( value : ITask );
     procedure addFieldName1Click(Sender: TObject);
 
@@ -40,12 +39,16 @@ type
     procedure release;
 
     property Task : ITask read m_task write setTask;
+    property Form : ITaskForm read m_form write m_form;
+
+    procedure doNewForm( frm : ITaskForm );
   end;
 
 implementation
 
 uses
-  Xml.XMLDoc, i_datafields, m_glob_client, System.IOUtils, m_html;
+  Xml.XMLDoc, i_datafields, m_glob_client, System.IOUtils, m_html,
+  u_taskForm2XML;
 
 {$R *.dfm}
 
@@ -59,7 +62,18 @@ end;
 procedure TReportFrame.Button1Click(Sender: TObject);
 var
   HtmlMod : THtmlMod;
+  writer : TTaskForm2XML;
 begin
+  if not Assigned(m_form) then
+  begin
+    ShowMessage('Es ist kein Formular aktiv!');
+    exit;
+  end;
+
+  writer := TTaskForm2XML.create;
+  m_xList := writer.getXML(m_form);
+  writer.Free;
+
   Application.CreateForm(THtmlMod, HtmlMod);
   try
     HtmlMod.HTMLDoc.Assign(SynEdit2.Lines);
@@ -69,6 +83,11 @@ begin
     HtmlMod.Free;
   end;
   WebBrowser1.Navigate('http://localhost:42424/B967F35E-FFAE-481A-9664-2C7621FDEB18/index.html');
+end;
+
+procedure TReportFrame.doNewForm(frm: ITaskForm);
+begin
+  m_form := frm;
 end;
 
 procedure TReportFrame.init;
@@ -91,18 +110,13 @@ var
     list.Free;
   end;
 begin
+  m_form := NIL;
   m_Path := TPath.combine(GM.wwwHome, 'B967F35E-FFAE-481A-9664-2C7621FDEB18\');
   ForceDirectories(m_Path);
   writeIndex;
 
   fname := 'formdata.xml';
 
-  if FileExists(fname) then
-    m_xList := LoadList(fname);
-  if Assigned(m_xList) then
-  begin
-    SynEdit1.Lines.Text := FormatXMLData(m_xList.OwnerDocument.XML.Text);
-  end;
   fname := 'template.html';
   if FileExists(fname) then
   begin
@@ -144,6 +158,8 @@ end;
 procedure TReportFrame.release;
 begin
   m_xList := NIL;
+  m_form  := NIL;
+  m_task  := NIL;
   SynEdit2.Lines.SaveToFile('template.html');
 end;
 
