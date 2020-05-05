@@ -30,7 +30,8 @@ uses
 constructor TaskCtrlComboBox.Create(owner: ITaskForm);
 begin
   inherited;
-  m_canContainData := true;
+  m_canContainData  := true;
+  m_typ             := ctComboBox;
 end;
 
 function TaskCtrlComboBox.CtrlValue: string;

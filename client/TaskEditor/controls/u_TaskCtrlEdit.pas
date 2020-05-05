@@ -47,7 +47,8 @@ end;
 constructor TaskCtrlEdit.Create(owner: ITaskForm);
 begin
   inherited;
-  m_canContainData := true;
+  m_canContainData  := true;
+  m_typ             := ctEdit;
 end;
 
 function TaskCtrlEdit.CtrlValue: string;

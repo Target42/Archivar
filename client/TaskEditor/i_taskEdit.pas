@@ -100,8 +100,10 @@ type
     function  getOwner : ITaskForm;
 
     function getTableCtrlIF : ITaskCtrlTable;
+    function getTyp : TControlType;
   // public
 
+    property Typ            : TControlType          read getTyp;
     property Control        : TControl              read getControl       write setControl;
     property ControlClass   : string                read getControlClass  write setControlClass;
     property CLID           : string                read getCLID          write setCLID;

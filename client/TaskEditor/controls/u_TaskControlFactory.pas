@@ -54,8 +54,6 @@ function TTaskControlFactory.createControl(frm : ITaskForm; p: ITaskCtrl;
 var
   ct : TControlType;
 begin
-  ct := ctNone;
-
   newClass := lowerCase( newClass );
   Assert(m_map.ContainsKey(newClass), 'No Class mapping');
   ct := m_map[newClass];

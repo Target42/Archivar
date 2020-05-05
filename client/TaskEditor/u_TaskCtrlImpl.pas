@@ -9,6 +9,7 @@ uses
 type
   TaskCtrlImpl = class(TInterfacedObject, ITaskCtrl)
   protected
+    m_typ       : TControlType;
     m_owner     : ITaskForm;
     m_clid      :  string;
     m_dataField : IDataField;
@@ -58,6 +59,8 @@ type
 
     procedure setRequired( value : boolean );
     function  getRequired : boolean;
+
+    function getTyp : TControlType;
 
    public
     constructor Create(owner : ITaskForm);
@@ -156,6 +159,7 @@ end;
 
 constructor TaskCtrlImpl.Create(owner : ITaskForm);
 begin
+  m_typ       := ctNone;
   m_owner     := owner;
   m_clid      := CreateClassID;
   m_dataField := NIL;
@@ -201,6 +205,8 @@ end;
 procedure TaskCtrlImpl.drop;
 begin
   m_parent.Childs.Remove(self);
+  if Assigned(m_ctrl) then
+    m_ctrl.Free;
   release;
 end;
 
@@ -374,6 +380,11 @@ end;
 function TaskCtrlImpl.getTableCtrlIF: ITaskCtrlTable;
 begin
   Result := NIL;
+end;
+
+function TaskCtrlImpl.getTyp: TControlType;
+begin
+  Result := m_typ;
 end;
 
 function TaskCtrlImpl.isContainer: boolean;

@@ -46,7 +46,8 @@ end;
 constructor TaskCtrlLabeledEdit.Create(owner: ITaskForm);
 begin
   inherited;
-  m_canContainData := true;
+  m_canContainData  := true;
+  m_typ             := ctLabeledEdit;
 end;
 
 function TaskCtrlLabeledEdit.CtrlValue: string;

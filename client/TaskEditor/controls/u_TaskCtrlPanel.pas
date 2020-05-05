@@ -28,6 +28,7 @@ constructor TaskCtrlPanel.Create(owner: ITaskForm);
 begin
   inherited;
   m_isContainer := true;
+  m_typ         := ctPanel;
 end;
 
 destructor TaskCtrlPanel.Destroy;

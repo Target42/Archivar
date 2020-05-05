@@ -197,6 +197,7 @@ var
       f  := ctrl.Childs[i];
 
       xf.Header     := f.propertyValue('Header');
+      xf.Width      := StrToInt(f.propertyValue('Width'));
       xf.Field      := '';
       xf.Fieldclid  := '';
       if Assigned(f.DataField) then

@@ -145,12 +145,19 @@ begin
     if df.Childs.Count = 0 then
       item.OnClick := self.addFieldName1Click;
     Feldhinzufgen1.Add(item);
-    for j := 0 to pred(df.Childs.Count)  do
+    if df.Childs.Count > 0 then
     begin
       sub := TMenuItem.Create(item);
-      sub.Caption := df.Name+'.'+df.Childs.Items[j].Name;
+      sub.Caption := df.Name;
       sub.OnClick := self.addFieldName1Click;
       item.Add(sub);
+      for j := 0 to pred(df.Childs.Count)  do
+      begin
+        sub := TMenuItem.Create(item);
+        sub.Caption := df.Name+'.'+df.Childs.Items[j].Name;
+        sub.OnClick := self.addFieldName1Click;
+        item.Add(sub);
+      end;
     end;
   end;
 end;

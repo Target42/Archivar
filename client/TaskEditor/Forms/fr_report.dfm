@@ -1,8 +1,8 @@
 object ReportFrame: TReportFrame
   Left = 0
   Top = 0
-  Width = 745
-  Height = 563
+  Width = 841
+  Height = 652
   Align = alClient
   TabOrder = 0
   ExplicitWidth = 451
@@ -11,7 +11,7 @@ object ReportFrame: TReportFrame
     Left = 0
     Top = 0
     Width = 185
-    Height = 563
+    Height = 652
     Align = alLeft
     Caption = 'GroupBox1'
     TabOrder = 0
@@ -20,19 +20,21 @@ object ReportFrame: TReportFrame
   object PageControl1: TPageControl
     Left = 185
     Top = 0
-    Width = 560
-    Height = 563
-    ActivePage = TabSheet3
+    Width = 656
+    Height = 652
+    ActivePage = TabSheet2
     Align = alClient
     TabOrder = 1
+    ExplicitWidth = 266
+    ExplicitHeight = 305
     object TabSheet2: TTabSheet
       Caption = 'HTML'
       ImageIndex = 1
       object SynEdit2: TSynEdit
         Left = 0
         Top = 0
-        Width = 552
-        Height = 535
+        Width = 648
+        Height = 624
         Align = alClient
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clWindowText
@@ -66,14 +68,14 @@ object ReportFrame: TReportFrame
       object WebBrowser1: TWebBrowser
         Left = 0
         Top = 41
-        Width = 552
-        Height = 494
+        Width = 648
+        Height = 583
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 806
-        ExplicitHeight = 576
+        ExplicitWidth = 514
+        ExplicitHeight = 417
         ControlData = {
-          4C0000000D3900000E3300000000000000000000000000000000000000000000
+          4C000000F9420000413C00000000000000000000000000000000000000000000
           000000004C000000000000000000000001000000E0D057007335CF11AE690800
           2B2E126208000000000000004C0000000114020000000000C000000000000046
           8000000000000000000000000000000000000000000000000000000000000000
@@ -82,7 +84,7 @@ object ReportFrame: TReportFrame
       object Panel1: TPanel
         Left = 0
         Top = 0
-        Width = 552
+        Width = 648
         Height = 41
         Align = alTop
         Caption = 'Panel1'

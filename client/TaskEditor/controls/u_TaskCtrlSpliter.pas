@@ -31,7 +31,8 @@ uses
 
 constructor TaskCtrlSplitter.Create(owner: ITaskForm);
 begin
-  inherited
+  inherited  ;
+  m_typ := ctSpliter;
 end;
 
 destructor TaskCtrlSplitter.Destroy;

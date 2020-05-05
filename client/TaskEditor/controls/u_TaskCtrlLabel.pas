@@ -28,6 +28,7 @@ uses
 constructor TaskCtrlLabel.Create(owner: ITaskForm);
 begin
   inherited;
+  m_typ := ctLabel;
 end;
 
 destructor TaskCtrlLabel.Destroy;

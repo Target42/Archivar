@@ -21,6 +21,9 @@ type
     m_task : IXMLList;
     function getHTMLDocs : TStrings;
     function getField( name : string ) : string;
+
+    function createTable( name : string ) : String;
+    function addHeader( xHeader : IXMLHeader ) : string;
   public
     property HTMLDoc : TStrings read getHTMLDocs;
     property TaskData: IXMLList read m_task write m_task;
@@ -43,9 +46,70 @@ uses
 
 { THtmlMod }
 
+function THtmlMod.addHeader(xHeader: IXMLHeader): string;
+
+  function calcLen : integer;
+  var
+    j : integer;
+  begin
+    Result := 0;
+    for j := 0 to pred(xHeader.Count) do
+    begin
+      Result := Result + xHeader.Field[j].Width;
+    end;
+  end;
+var
+  i : integer;
+  len : double;
+begin
+  Result := '  <tr>'+sLineBreak;
+  len := calcLen;
+  for i := 0 to pred(xHeader.Count) do
+    Result := Result + Format('    <th style="width:%d%%">%s</th>',
+      [trunc(( xHeader.Field[i].Width / len)*100.0),
+       xHeader.Field[i].Header]) + sLineBreak;
+  Result := Result + '  </tr>'+sLineBreak;
+end;
+
 function THtmlMod.Content: string;
 begin
   Result := PageProducer1.Content;
+end;
+
+function THtmlMod.createTable(name: string): String;
+var
+  xTab : IXMLTable;
+  xRow : IXMLRow;
+  i, j : integer;
+begin
+  xTab := NIL;
+  for i := 0 to pred(m_task.Tables.Count) do
+  begin
+    if SameTExt( name, m_task.Tables.Table[i].Field) then
+    begin
+      xTab := m_task.Tables.Table[i];
+      break;
+    end;
+  end;
+  if not Assigned(xTab) then
+  begin
+    Result := '<p>Table : '+name+' not found!</p>';
+    exit;
+  end;
+
+  Result := '<table>' +sLineBreak+' <tbody>' +sLineBreak;
+  Result := result + addHeader( xTab.Header );
+  for i := 0 to pred(xTab.Rows.Count) do
+  begin
+    Result := Result+'  <tr>'+sLineBreak;
+    xRow := xTab.Rows.Row[i];
+    for j := 0 to pred(xRow.Count) do
+    begin
+      Result := Result + Format('    <td>%s</td>', [xRow.Value[j]])+sLineBreak;
+    end;
+    Result := Result+'  </tr>'+sLineBreak;
+  end;
+  Result := Result + ' </tbody>'+sLineBreak+'</table>'+sLineBreak;
 end;
 
 procedure THtmlMod.DataModuleCreate(Sender: TObject);
@@ -101,7 +165,12 @@ begin
   begin
     if TagParams.Count>0 then
     ReplaceText := getField(  TagParams.Strings[0]);
+  end
+  else if cmd = 'table' then
+  begin
+    ReplaceText := createTable( TagParams.Strings[0]);
   end;
+
 end;
 
 procedure THtmlMod.SaveToFile(fname: string);

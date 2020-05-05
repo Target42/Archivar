@@ -77,7 +77,8 @@ constructor TaskCtrlTable.Create(owner: ITaskForm);
 begin
   inherited;
   m_sg := NIL;
-  m_canContainData := true;
+  m_canContainData  := true;
+  m_typ             := ctTable;
 end;
 
 procedure TaskCtrlTable.deleteRow(row: integer);

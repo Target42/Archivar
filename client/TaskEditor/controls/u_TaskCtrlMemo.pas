@@ -30,7 +30,8 @@ uses
 constructor TaskCtrlMemo.Create(owner: ITaskForm);
 begin
   inherited;
-  m_canContainData := true;
+  m_canContainData  := true;
+  m_typ             := ctMemo;
 end;
 
 function TaskCtrlMemo.CtrlValue: string;

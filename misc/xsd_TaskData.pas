@@ -3,7 +3,7 @@
 {                                                         }
 {                    XML-Datenbindung                     }
 {                                                         }
-{         Generiert am: 30.04.2020 20:08:53               }
+{         Generiert am: 05.05.2020 20:01:05               }
 {       Generiert von: D:\git\ber.git\misc\TaskData.xsd   }
 {                                                         }
 {*********************************************************}
@@ -31,7 +31,7 @@ type
 { IXMLList }
 
   IXMLList = interface(IXMLNode)
-    ['{D5D48D2F-7189-420E-9682-0E47FBABF8C6}']
+    ['{83580059-C7EA-4FC4-BE28-B215EE9C891C}']
     { Eigenschaftszugriff }
     function Get_Clid: UnicodeString;
     function Get_Taskclid: UnicodeString;
@@ -49,7 +49,7 @@ type
 { IXMLValues }
 
   IXMLValues = interface(IXMLNodeCollection)
-    ['{9E212422-DCD2-4BE5-ADD6-F0BB1BB96B3C}']
+    ['{BC9B82B2-88B9-4E74-ABA8-7B1AD3635DA8}']
     { Eigenschaftszugriff }
     function Get_Field(Index: Integer): IXMLField;
     { Methoden & Eigenschaften }
@@ -61,30 +61,33 @@ type
 { IXMLField }
 
   IXMLField = interface(IXMLNode)
-    ['{AFEFF36E-7A8A-4825-A6EA-F7A058F9DB90}']
+    ['{10487875-FD60-41AF-8706-5753565E7007}']
     { Eigenschaftszugriff }
     function Get_Field: UnicodeString;
     function Get_Fieldclid: UnicodeString;
     function Get_Ctrlclid: UnicodeString;
     function Get_Header: UnicodeString;
+    function Get_Width: Integer;
     function Get_Value: UnicodeString;
     procedure Set_Field(Value: UnicodeString);
     procedure Set_Fieldclid(Value: UnicodeString);
     procedure Set_Ctrlclid(Value: UnicodeString);
     procedure Set_Header(Value: UnicodeString);
+    procedure Set_Width(Value: Integer);
     procedure Set_Value(Value: UnicodeString);
     { Methoden & Eigenschaften }
     property Field: UnicodeString read Get_Field write Set_Field;
     property Fieldclid: UnicodeString read Get_Fieldclid write Set_Fieldclid;
     property Ctrlclid: UnicodeString read Get_Ctrlclid write Set_Ctrlclid;
     property Header: UnicodeString read Get_Header write Set_Header;
+    property Width: Integer read Get_Width write Set_Width;
     property Value: UnicodeString read Get_Value write Set_Value;
   end;
 
 { IXMLTables }
 
   IXMLTables = interface(IXMLNodeCollection)
-    ['{CCCFFED2-CCF3-4E95-B4FF-849E0CF41FA7}']
+    ['{8622ED21-AA8D-498D-820B-6AC1F72F8156}']
     { Eigenschaftszugriff }
     function Get_Table(Index: Integer): IXMLTable;
     { Methoden & Eigenschaften }
@@ -96,7 +99,7 @@ type
 { IXMLTable }
 
   IXMLTable = interface(IXMLNode)
-    ['{3BA085B4-EC8C-4800-9E26-7D0A67E97530}']
+    ['{D35E8736-E3BC-43B5-9B2E-AEA06EC7294D}']
     { Eigenschaftszugriff }
     function Get_Ctrlclid: UnicodeString;
     function Get_Field: UnicodeString;
@@ -117,7 +120,7 @@ type
 { IXMLHeader }
 
   IXMLHeader = interface(IXMLNodeCollection)
-    ['{EC703F29-4863-4273-8B3C-E1C6121C94F4}']
+    ['{6DC9D234-5AC9-4CF9-8638-DD425FCBD572}']
     { Eigenschaftszugriff }
     function Get_Field(Index: Integer): IXMLField;
     { Methoden & Eigenschaften }
@@ -129,7 +132,7 @@ type
 { IXMLRows }
 
   IXMLRows = interface(IXMLNodeCollection)
-    ['{C52C0F00-453D-471D-B8F6-ADD6FA73EDD5}']
+    ['{89DED659-9647-4BEC-9C90-259DC52627AE}']
     { Eigenschaftszugriff }
     function Get_Row(Index: Integer): IXMLRow;
     { Methoden & Eigenschaften }
@@ -141,7 +144,7 @@ type
 { IXMLRow }
 
   IXMLRow = interface(IXMLNodeCollection)
-    ['{EFBFD359-7E56-4257-95EA-45AF74DD5466}']
+    ['{CFF03DB6-092C-49B6-9E0E-933595024E8F}']
     { Eigenschaftszugriff }
     function Get_Value(Index: Integer): UnicodeString;
     { Methoden & Eigenschaften }
@@ -153,7 +156,7 @@ type
 { IXMLData }
 
   IXMLData = interface(IXMLNode)
-    ['{FEEDA16E-7D9E-45D1-9673-18B2748759BF}']
+    ['{1A52E474-0AD2-4598-9663-DE9ACC37BAC6}']
     { Eigenschaftszugriff }
     function Get_Field: UnicodeString;
     function Get_Fieldclid: UnicodeString;
@@ -215,11 +218,13 @@ type
     function Get_Fieldclid: UnicodeString;
     function Get_Ctrlclid: UnicodeString;
     function Get_Header: UnicodeString;
+    function Get_Width: Integer;
     function Get_Value: UnicodeString;
     procedure Set_Field(Value: UnicodeString);
     procedure Set_Fieldclid(Value: UnicodeString);
     procedure Set_Ctrlclid(Value: UnicodeString);
     procedure Set_Header(Value: UnicodeString);
+    procedure Set_Width(Value: Integer);
     procedure Set_Value(Value: UnicodeString);
   end;
 
@@ -435,6 +440,16 @@ end;
 procedure TXMLField.Set_Header(Value: UnicodeString);
 begin
   SetAttribute('header', Value);
+end;
+
+function TXMLField.Get_Width: Integer;
+begin
+  Result := AttributeNodes['width'].NodeValue;
+end;
+
+procedure TXMLField.Set_Width(Value: Integer);
+begin
+  SetAttribute('width', Value);
 end;
 
 function TXMLField.Get_Value: UnicodeString;

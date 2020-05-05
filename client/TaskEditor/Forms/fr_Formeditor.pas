@@ -980,8 +980,11 @@ var
     i : integer;
   begin
     node := TV.Items.AddChildObject( root, ctrl.propertyValue('name'), ctrl);
-    for i := 0 to pred(ctrl.Childs.Count) do
-      add(node, ctrl.Childs[i]);
+    if ctrl.Typ <> ctTable then
+    begin
+      for i := 0 to pred(ctrl.Childs.Count) do
+        add(node, ctrl.Childs[i]);
+    end;
 
     if old = Pointer(ctrl) then
       TV.Selected := node;

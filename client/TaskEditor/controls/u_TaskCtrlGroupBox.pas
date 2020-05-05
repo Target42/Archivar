@@ -29,6 +29,7 @@ constructor TaskCtrlGroupBox.Create(owner: ITaskForm);
 begin
   inherited;
   m_isContainer := true;
+  m_typ         := ctGroupBox;
 end;
 
 destructor TaskCtrlGroupBox.Destroy;

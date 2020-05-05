@@ -31,7 +31,8 @@ uses
 constructor TaskCtrlRichEdit.Create(owner: ITaskForm);
 begin
   inherited;
-  m_canContainData := true;
+  m_canContainData  := true;
+  m_typ             := ctRichEdit;
 end;
 
 function TaskCtrlRichEdit.CtrlValue: string;

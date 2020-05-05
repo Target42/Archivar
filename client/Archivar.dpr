@@ -86,7 +86,6 @@ uses
   u_taskForm2XML in 'TaskEditor\Writer\u_taskForm2XML.pas',
   f_testform in 'TaskEditor\Forms\f_testform.pas' {TestForm},
   u_helper in '..\misc\u_helper.pas',
-  xsd_TaskData in '..\misc\xsd_TaskData.pas',
   fr_report in 'TaskEditor\Forms\fr_report.pas' {ReportFrame: TFrame},
   f_form_props in 'TaskEditor\Forms\f_form_props.pas' {FormProperties},
   u_TaskCtrlPanel in 'TaskEditor\controls\u_TaskCtrlPanel.pas',
@@ -95,7 +94,8 @@ uses
   u_TaskCtrlSpliter in 'TaskEditor\controls\u_TaskCtrlSpliter.pas',
   f_itemsTStringsEditor in 'TaskEditor\PropEdits\f_itemsTStringsEditor.pas' {StringEditorForm},
   m_http in 'http\m_http.pas' {HttpMod: TDataModule},
-  m_html in 'http\m_html.pas' {HtmlMod: TDataModule};
+  m_html in 'http\m_html.pas' {HtmlMod: TDataModule},
+  xsd_TaskData in '..\misc\xsd_TaskData.pas';
 
 {$R *.res}
 
@@ -112,9 +112,7 @@ begin
   Application.CreateForm(THttpMod, HttpMod);
   Application.CreateForm(TWindowHandler, WindowHandler);
   Application.CreateForm(TBookMarkHandler, BookMarkHandler);
-
   Application.CreateForm(TMainForm, MainForm);
   Application.CreateForm(TTaksEditorForm, TaksEditorForm);
-
   Application.Run;
 end.
