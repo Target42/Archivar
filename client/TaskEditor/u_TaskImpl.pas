@@ -13,12 +13,17 @@ type
     m_fields  : IDataFieldList;
     m_forms   : TList<ITaskForm>;
 
+    m_workDir : string;
+
     procedure setName( value : string );
     function  getName : string;
     procedure setCLID( value : string );
     function  getCLID : string;
     function  getFields :IDataFieldList;
     function  getForms : TList<ITaskForm>;
+    procedure setWorkDir( value : string );
+    function  getWorkDir : string;
+
   public
     constructor create;
     Destructor Destroy; override;
@@ -89,6 +94,11 @@ begin
   Result := m_name;
 end;
 
+function TTask.getWorkDir: string;
+begin
+  Result := m_workDir;
+end;
+
 function TTask.NewForm: ITaskForm;
 begin
   Result := TaskFormImpl.create(self);
@@ -114,6 +124,12 @@ end;
 procedure TTask.setName(value: string);
 begin
   m_name := value;
+end;
+
+procedure TTask.setWorkDir(value: string);
+begin
+  m_workDir := value;
+  ForceDirectories(m_workDir);
 end;
 
 end.

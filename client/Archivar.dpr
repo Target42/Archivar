@@ -95,7 +95,12 @@ uses
   f_itemsTStringsEditor in 'TaskEditor\PropEdits\f_itemsTStringsEditor.pas' {StringEditorForm},
   m_http in 'http\m_http.pas' {HttpMod: TDataModule},
   m_html in 'http\m_html.pas' {HtmlMod: TDataModule},
-  xsd_TaskData in '..\misc\xsd_TaskData.pas';
+  xsd_TaskData in '..\misc\xsd_TaskData.pas',
+  u_TTaskFileImpl in 'TaskEditor\u_TTaskFileImpl.pas',
+  u_TTaskContainerImpl in 'TaskEditor\u_TTaskContainerImpl.pas',
+  u_TTaskStylesImpl in 'TaskEditor\u_TTaskStylesImpl.pas',
+  u_tTaskStyleImpl in 'TaskEditor\u_tTaskStyleImpl.pas',
+  u_TTaskFilesImpl in 'TaskEditor\u_TTaskFilesImpl.pas';
 
 {$R *.res}
 

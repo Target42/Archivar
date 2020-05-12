@@ -3,7 +3,7 @@ unit u_TTaskStylesImpl;
 interface
 
 uses
-  i_taskEdit, System.Generics.Collections, System.Types;
+  i_taskEdit, System.Generics.Collections, System.Types, System.Classes;
 
 type
   TTaskStylesImpl = class(TInterfacedObject, ITaskStyles)
@@ -24,6 +24,8 @@ type
       function loadFromPath( path : string ) : boolean;
       function saveToPath( path : string ) : boolean;
 
+      procedure FillList( list : TStrings );
+
       procedure release;
   end;
 
@@ -43,6 +45,17 @@ destructor TTaskStylesImpl.Destroy;
 begin
   m_list.Free;
   inherited;
+end;
+
+procedure TTaskStylesImpl.FillList(list: TStrings);
+var
+  i : integer;
+begin
+  for i := 0 to pred(m_list.Count) do
+  begin
+    list.AddObject(m_list[i].Name, Pointer(m_list[i]));
+  end;
+
 end;
 
 function TTaskStylesImpl.getCount: integer;

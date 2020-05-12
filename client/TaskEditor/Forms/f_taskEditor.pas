@@ -35,11 +35,11 @@ type
     procedure BitBtn2Click(Sender: TObject);
     procedure BitBtn4Click(Sender: TObject);
   private
-    m_task : ITask;
-    procedure setTask( value : ITask );
+    m_tc   : ITaskContainer;
+    procedure setTaskContainer( value : ITaskContainer);
     procedure updateVarList;
   public
-    property Task : ITask read m_task write setTask;
+    property TaskContainer : ITaskContainer read m_tc write setTaskContainer;
   end;
 
 var
@@ -48,7 +48,8 @@ var
 implementation
 
 uses
-  u_TaskImpl, i_datafields, f_datafield_edit, u_Task2XML;
+  u_TaskImpl, i_datafields, f_datafield_edit, System.IOUtils,
+  u_TTaskContainerImpl;
 
 {$R *.dfm}
 
@@ -57,14 +58,15 @@ var
   df : IDataField;
   DatafieldEditform : TDatafieldEditform;
 begin
-  df := m_task.Fields.newField('Neues_Feld', 'string');
+
+  df := m_tc.Task.Fields.newField('Neues_Feld', 'string');
   try
     Application.CreateForm(TDatafieldEditform, DatafieldEditform);
     DatafieldEditform.DataField := df;
     if DatafieldEditform.ShowModal = mrOk then
       updateVarList
     else
-      m_task.Fields.delete(df);
+      m_tc.Task.Fields.delete(df);
   finally
     DatafieldEditform.Free;
   end;
@@ -76,14 +78,14 @@ var
   df : IDataField;
   DatafieldEditform : TDatafieldEditform;
 begin
-  df := m_task.Fields.newField('Neue_Tabelle', 'table');
+  df := m_tc.Task.Fields.newField('Neue_Tabelle', 'table');
   try
     Application.CreateForm(TDatafieldEditform, DatafieldEditform);
     DatafieldEditform.DataField := df;
     if DatafieldEditform.ShowModal = mrOk then
       updateVarList
     else
-      m_task.Fields.delete(df);
+      m_tc.Task.Fields.delete(df);
   finally
     DatafieldEditform.Free;
   end;
@@ -117,57 +119,40 @@ begin
   if not Assigned(LV.Selected) then
     exit;
   df := IDataField(LV.Selected.Data);
-  m_task.Fields.delete(df);
+  m_tc.Task.Fields.delete(df);
   updateVarList;
 end;
 
 procedure TTaksEditorForm.FormCreate(Sender: TObject);
-var
-  xw : Task2XML;
 begin
-  m_task := NIL;
   EditorFrame1.init;
 
-  if FileExists('task.xml') then
-  begin
-    xw := Task2XML.create;
-    try
-      setTask( xw.load('task.xml'));
-    except
-      setTask(TTask.create);
-    end;
-    xw.Free;
-  end
-  else
-    setTask(TTask.create);
+  m_tc := TTaskContainerImpl.create;
+  m_tc.loadFromPath(TPath.Combine( ExtractFilePath( Application.ExeName), 'lib\task\{D45BD078-C776-4DD2-B47F-68E6CE886C42}' ));
+  setTaskContainer(m_tc);
 
-  EditorFrame1.Task := m_task;
+
+  EditorFrame1.Task := m_tc.Task;
+
   ReportFrame1.init;
-  ReportFrame1.Task := m_task;
+  ReportFrame1.TaskContainer := m_tc;
 
   EditorFrame1.OnNewForm := ReportFrame1.doNewForm;
 
 end;
 
 procedure TTaksEditorForm.FormDestroy(Sender: TObject);
-var
-  xw : Task2XML;
 begin
-  xw := Task2XML.Create;
-  try
-    xw.save(m_task, 'task.xml');
-  except
-
-  end;
-  xw.Free;
+  m_tc.saveToPath(TPath.Combine( ExtractFilePath( Application.ExeName), 'lib\task\{D45BD078-C776-4DD2-B47F-68E6CE886C42}' ));
   EditorFrame1.release;
-  m_task.release;
   ReportFrame1.release;
+  m_tc.release;
+
 end;
 
-procedure TTaksEditorForm.setTask(value: ITask);
+procedure TTaksEditorForm.setTaskContainer(value: ITaskContainer);
 begin
-  m_task := value;
+  m_tc := value;
   updateVarList;
 end;
 
@@ -188,10 +173,10 @@ begin
     old := IDataField(LV.Selected.Data);
 
   LV.Items.Clear;
-  for i := 0 to pred( m_task.Fields.Count) do
+  for i := 0 to pred( m_tc.Task.Fields.Count) do
   begin
     item := LV.Items.Add;
-    df   := m_task.Fields.Items[i];
+    df   := m_tc.Task.Fields.Items[i];
 
     item.Data     := df;
     len := Lv.Canvas.TextWidth(df.Name) + 16;

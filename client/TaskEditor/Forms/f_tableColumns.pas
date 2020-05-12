@@ -105,8 +105,10 @@ var
   i    : integer;
   ctrl : ITaskCtrl;
   item : TListItem;
+  len, w : integer;
 begin
   old := NIL;
+  len := LV.Columns[0].Width;
   LV.Items.BeginUpdate;
   if Assigned(LV.Selected) then
     old := ITaskCtrl(LV.Selected.Data);
@@ -121,10 +123,14 @@ begin
     item.SubItems.Add( getPropertyValue(ctrl, 'Width'));
     item.SubItems.Add( getPropertyValue(ctrl, 'DataField'));
 
+    w := LV.Canvas.TextWidth(item.Caption) +8;
+    if w > len then
+      len := w;
     if old = ctrl then
       LV.Selected := item;
 
   end;
+  LV.Columns[0].Width := w;
   LV.Items.EndUpdate;
 end;
 

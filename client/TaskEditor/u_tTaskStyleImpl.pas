@@ -42,6 +42,7 @@ constructor TTaskStyleImpl.create;
 begin
   m_files := TTaskFilesImpl.create;
   m_clid  :=  CreateClassID;
+  m_name  := 'Style';
 end;
 
 destructor TTaskStyleImpl.Destroy;

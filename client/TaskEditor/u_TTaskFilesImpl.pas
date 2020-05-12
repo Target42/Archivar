@@ -3,7 +3,7 @@ unit u_TTaskFilesImpl;
 interface
 
 uses
-  i_taskEdit, System.Generics.Collections;
+  i_taskEdit, System.Generics.Collections, System.Classes;
 
 type
   TTaskFilesImpl = class(TInterfacedObject, ITaskFiles)
@@ -16,11 +16,14 @@ type
     public
       constructor Create;
       Destructor Destroy; override;
+
       property Items[ inx : integer ]: ITaskFile read getItems write setItems;
       property Count : integer read getCount;
 
       function loadFromPath( path, mask : string ) : boolean;
       function saveToPath( path : string ) : boolean;
+
+      procedure fillList( list : TStrings; ext : boolean = true );
 
       procedure release;
 
@@ -42,6 +45,20 @@ destructor TTaskFilesImpl.Destroy;
 begin
   m_files.Free;
   inherited;
+end;
+
+procedure TTaskFilesImpl.fillList(list: TStrings; ext: boolean);
+var
+  i : integer;
+  s : string;
+begin
+  for i := 0 to pred( m_files.Count) do
+  begin
+    s := m_files[i].Name;
+    if not ext then
+      SetLength( s, Length(s)-Length(ExtractFileExt(s)));
+    list.AddObject(s, Pointer(m_files[i]));
+  end;
 end;
 
 function TTaskFilesImpl.getCount: integer;
@@ -86,7 +103,7 @@ end;
 
 function TTaskFilesImpl.saveToPath(path: string): boolean;
 begin
-
+  Result := false;
 end;
 
 procedure TTaskFilesImpl.setItems(inx: integer; const value: ITaskFile);

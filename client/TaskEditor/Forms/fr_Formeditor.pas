@@ -132,7 +132,7 @@ type
 implementation
 
 uses
-  System.Types, u_TaskFormImpl, u_taskForm2XML, f_testform, f_form_props;
+  System.Types, u_TaskFormImpl, u_taskForm2XML, f_testform, f_form_props, System.IOUtils;
 
 {$R *.dfm}
 
@@ -795,12 +795,15 @@ end;
 procedure TEditorFrame.SpeedButton8Click(Sender: TObject);
 var
   writer : TTaskForm2XML;
+  fname  : string;
 begin
   // save data ..
   if not Assigned(m_form) then
     exit;
+
+  fname := TPath.Combine( m_form.Owner.WorkDir, 'TestData\formdata.xml');
   writer := TTaskForm2XML.create;
-  writer.save('formdata.xml', m_form);
+  writer.save(fname, m_form);
   writer.Free;
 
 end;
@@ -808,12 +811,15 @@ end;
 procedure TEditorFrame.SpeedButton9Click(Sender: TObject);
 var
   writer : TTaskForm2XML;
+  fname  : string;
 begin
   // save data ..
   if not Assigned(m_form) then
     exit;
+  fname := TPath.Combine( m_form.Owner.WorkDir, 'TestData\formdata.xml');
+
   writer := TTaskForm2XML.create;
-  writer.load('formdata.xml', m_form);
+  writer.load(fname, m_form);
   writer.Free;
 end;
 

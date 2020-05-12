@@ -27,6 +27,11 @@ type
   ITaskCtrl       = interface;
   ITaskCtrlProp   = interface;
   ITaskCtrlTable  = interface;
+  ITaskContainer  = interface;
+  ITaskFiles      = interface;
+  ITaskFile       = interface;
+  ITaskStyle      = interface;
+  ITaskStyles     = interface;
 
   ITask = interface
     ['{5056AAD9-1DCC-4A50-B316-A9DDBE1CFD1D}']
@@ -37,11 +42,14 @@ type
     function  getCLID : string;
     function  getFields :IDataFieldList;
     function  getForms : TList<ITaskForm>;
+    procedure setWorkDir( value : string );
+    function  getWorkDir : string;
   //public
     property Name   : string read getName write setName;
     property CLID   : string read getCLID write setCLID;
     property Fields : IDataFieldList read getFields;
     property Forms  : TList<ITaskForm> read getForms;
+    property WorkDir: string read getWorkDir write setWorkDir;
 
     function NewForm : ITaskForm;
     function getFormByCLID( clid : string ) : ITaskForm;
@@ -174,8 +182,6 @@ type
     function  hasEditor : boolean;
     procedure fillPickList( list : TStrings );
     procedure ShowEditor;
-
-
   end;
 
   ITaskCtrlTable = interface
@@ -198,7 +204,105 @@ type
     property Cell[ row, col : integer] : string read getCell write setCell;
   end;
 
+  ITaskContainer  = interface
+    ['{3C349E82-3969-4A61-8776-0B1F20D11D51}']
+    //private
+      procedure setTask( value : ITask );
+      function  getTask : ITask;
+      function  getTestdata : ITaskFiles;
+      function  getInfoFiles: ITaskFiles;
+      function  getStyles : ITaskStyles;
+    //public
+      property Task : ITask read getTask write setTask;
+      property TestData : ITaskFiles read getTestdata;
+      property Styles   : ITaskStyles read getStyles;
+      property Info     : ITaskFiles read getInfoFiles;
+
+      function loadFromPath( path : string ) : boolean;
+      function saveToPath( path : string ) : boolean;
+
+      procedure release;
+  end;
+
+  ITaskFiles      = interface
+    ['{960DEEAB-D40C-4EAD-BA4F-70A55A141A1A}']
+    //private
+      procedure setItems( inx : integer; const value : ITaskFile );
+      function  getItems( inx : integer ) : ITaskFile;
+      function  getCount : integer;
+    //public
+      property Items[ inx : integer ]: ITaskFile read getItems write setItems;
+      property Count : integer read getCount;
+
+      function loadFromPath( path, mask : string ) : boolean;
+      function saveToPath( path : string ) : boolean;
+
+      procedure fillList( list : TStrings; ext : boolean = true );
+
+      procedure release;
+  end;
+
+  ITaskFile       = interface
+    ['{BD70B176-D1F4-4FBF-BA63-C68B820B1854}']
+    //private
+      procedure setName( value : string );
+      function  getName : string;
+      function  getStream : TStream;
+      function  getStrings: TStrings;
+    //public
+      property Name : string read getName write setName;
+      property Lines : TStrings read getStrings;
+      property Data : TStream read getStream;
+
+      function isName( name : string ) : Boolean;
+
+      function load( fname : string ) : boolean;
+      function save( path : string ) : boolean;
+
+      procedure release;
+  end;
+
+  ITaskStyle      = interface
+    ['{F4511A5F-3698-4CFF-A546-315E7145E8D5}']
+    //private
+      procedure setName( value : string );
+      function  getName : string;
+      function  getFiles : ITaskFiles;
+      procedure setCLID( value : string );
+      function  getCLID : string;
+    //public
+      property CLID   : string read getCLID write setCLID;
+      property Name : string read getName write setName;
+      property Files: ITaskFiles read getFiles;
+
+      function loadFromPath( path : string ) : boolean;
+      function saveToPath( path : string ) : boolean;
+
+      procedure release;
+  end;
+
+  ITaskStyles     = interface
+    ['{C059AA77-5A6F-476F-96EC-50DF3E3BFD2F}']
+    // private
+      procedure setTaskStyle( inx : integer; const value : ITaskStyle );
+      function  getTaskStyle(inx : integer ) : ITaskStyle;
+      function getCount : integer;
+    // public
+      property Items[ inx : integer ]: ITaskStyle read getTaskStyle write setTaskStyle;
+      property Count : integer read getCount;
+
+      function newStyle : ITaskStyle;
+      function loadFromPath( path : string ) : boolean;
+      function saveToPath( path : string ) : boolean;
+
+      procedure FillList( list : TStrings );
+
+      procedure release;
+  end;
+
 
 implementation
 
 end.
+
+

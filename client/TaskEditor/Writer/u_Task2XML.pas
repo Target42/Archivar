@@ -27,7 +27,7 @@ type
 implementation
 
 uses
-  u_TaskImpl, u_TaskDataField2XML;
+  u_TaskImpl, u_TaskDataField2XML, System.SysUtils;
 
 { Task2XML }
 
@@ -60,6 +60,7 @@ begin
     end;
   end;
   Result := TTask.create;
+  Result.WorkDir := ExtractFilePath( fname );
   m_task := Result;
 
   xw := TaskDataField2XML.create;

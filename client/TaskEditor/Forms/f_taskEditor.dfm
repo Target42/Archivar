@@ -235,7 +235,7 @@ object TaksEditorForm: TTaksEditorForm
         end
         inherited ImageList1: TImageList
           Bitmap = {
-            494C01010C001800200010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+            494C01010C0018003C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
             0000000000003600000028000000400000004000000001002000000000000040
             0000000000000000000000000000000000000000000000000000000000000000
             0000000000000000000000000000000000000000000000000000000000000000
@@ -784,29 +784,58 @@ object TaksEditorForm: TTaksEditorForm
         TabOrder = 0
         ExplicitWidth = 794
         ExplicitHeight = 452
-        inherited GroupBox1: TGroupBox
+        inherited Splitter1: TSplitter
           Height = 452
           ExplicitHeight = 452
         end
         inherited PageControl1: TPageControl
-          Width = 609
+          Width = 638
           Height = 452
-          ExplicitWidth = 609
+          ExplicitWidth = 638
           ExplicitHeight = 452
-          inherited TabSheet3: TTabSheet
+          inherited TabSheet2: TTabSheet
             ExplicitWidth = 601
             ExplicitHeight = 424
+          end
+          inherited TabSheet3: TTabSheet
+            ExplicitWidth = 0
+            ExplicitHeight = 0
             inherited WebBrowser1: TWebBrowser
+              Width = 258
+              Height = 236
+              ExplicitWidth = 552
+              ExplicitHeight = 494
               ControlData = {
-                4C0000000D3900000E3300000000000000000000000000000000000000000000
+                4C000000AA1A0000641800000000000000000000000000000000000000000000
                 000000004C000000000000000000000001000000E0D057007335CF11AE690800
                 2B2E126208000000000000004C0000000114020000000000C000000000000046
                 8000000000000000000000000000000000000000000000000000000000000000
                 00000000000000000100000000000000000000000000000000000000}
             end
             inherited Panel1: TPanel
-              Width = 601
+              Width = 258
+              ExplicitWidth = 258
             end
+          end
+        end
+        inherited Panel2: TPanel
+          Height = 452
+          ExplicitHeight = 452
+          inherited GroupBox1: TGroupBox
+            Height = 452
+            ExplicitHeight = 452
+            inherited ListBox2: TListBox
+              Height = 435
+              ExplicitHeight = 435
+            end
+          end
+          inherited GroupBox2: TGroupBox
+            Top = 301
+            ExplicitTop = 301
+          end
+          inherited GroupBox3: TGroupBox
+            Top = 452
+            ExplicitTop = 452
           end
         end
       end

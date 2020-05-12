@@ -40,7 +40,7 @@ uses
 
 constructor TTaskFileImpl.create;
 begin
-  m_lines:= TStrings.Create;
+  m_lines:= TStringList.Create;
 end;
 
 destructor TTaskFileImpl.Destroy;
@@ -76,7 +76,7 @@ begin
   Result := FileExists(fname);
   if not Result then
     exit;
-  m_lines.LoadFromFile(m_name);
+  m_lines.LoadFromFile(fname);
   m_name := ExtractFileName(fname);
 end;
 
@@ -92,6 +92,7 @@ begin
   fname := TPath.Combine( path, m_name);
   try
     m_lines.SaveToFile(fname);
+    Result := true;
   except
     Result := false;
   end;
