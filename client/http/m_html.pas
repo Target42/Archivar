@@ -180,7 +180,11 @@ begin
 
   list := TStringList.Create;
   try
-    list.Text := Frame.Content;
+    if Assigned(m_task) then
+      list.Text := Frame.Content
+    else
+      list.Text := 'Keine Testdaten ausgewählt!';
+
     list.SaveToFile(fname);
   finally
     list.Free;

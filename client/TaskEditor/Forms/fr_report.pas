@@ -122,7 +122,8 @@ var
   end;
   procedure useTestData;
   var
-    xml    : IXMLDocument;
+    xml : IXMLDocument;
+    st  : TStream;
   begin
     if ListBox1.ItemIndex = -1 then
     begin
@@ -131,7 +132,9 @@ var
     end;
     tf := ITaskFile( Pointer(ListBox1.Items.Objects[ListBox1.ItemIndex] ));
     xml := NewXMLDocument;
-    xml.LoadFromStream(tf.Data );
+    st := tf.Data;
+    xml.LoadFromStream(st);
+    st.Free;
     m_xList := xml.GetDocBinding('List', TXMLList, TargetNamespace) as IXMLList;
   end;
   function findIndexHtml : ITaskFile;
@@ -148,12 +151,15 @@ var
     Result := st.Files.getFile('index.html');
   end;
 begin
+  saveAllEdits;
+
   if CheckBox1.Checked then
     currentFormData
   else
     useTestData;
 
-  saveAllEdits;
+  if not Assigned(m_xList) then
+    exit;
 
   tf := findIndexHtml;
   if not Assigned(tf) then
@@ -186,6 +192,7 @@ end;
 
 procedure TReportFrame.init;
 begin
+  PageControl1.ActivePage := TabSheet3;
   m_files:= TList<TFilecontainer>.create;
   m_form := NIL;
 end;
@@ -210,6 +217,7 @@ begin
 
   tf := ITaskFile(Pointer(ListBox3.Items.Objects[ListBox3.ItemIndex]));
 
+  PageControl1.ActivePage := TabSheet2;
   OpenCode( tf);
 end;
 
@@ -226,9 +234,9 @@ begin
         exit
       end;
     end;
-    fc := TFilecontainer.Create(tf, PageControl2);
-    fc.Edit.PopupMenu := PopupMenu1;
-    m_files.Add(fc);
+  fc := TFilecontainer.Create(tf, PageControl2);
+  fc.Edit.PopupMenu := PopupMenu1;
+  m_files.Add(fc);
 end;
 
 procedure TReportFrame.PopupMenu1Popup(Sender: TObject);
@@ -337,7 +345,7 @@ begin
   else if ext = '.pas' then
     m_edit.Highlighter := TSynDWSSyn.Create(m_edit);
 
-
+  owner.ActivePage := m_tab;
 end;
 
 destructor TFilecontainer.Destroy;
