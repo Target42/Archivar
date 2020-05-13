@@ -89,6 +89,7 @@ begin
   xw := Task2XML.Create;
   m_task := xw.load(TPath.combine( path, 'task.xml'));
   xw.Free;
+  m_task.CLID := ExtractFileName(path);
 
   Result := m_files.loadFromPath(TPath.Combine(path, 'TestData'), '*.xml') and Result;
   Result := m_info.loadFromPath(TPath.Combine(path, 'info'), '*.*') and Result;
@@ -97,12 +98,16 @@ end;
 
 procedure TTaskContainerImpl.release;
 begin
+  m_task.release;
   m_task := NIL;
+
   m_files.release;
   m_files := NIL;
 
   m_styles.release;
   m_styles := NIL;
+  m_info.release;
+  m_info := NIL;
 end;
 
 function TTaskContainerImpl.saveToPath(path: string): boolean;

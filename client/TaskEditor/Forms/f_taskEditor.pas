@@ -131,7 +131,6 @@ begin
   m_tc.loadFromPath(TPath.Combine( ExtractFilePath( Application.ExeName), 'lib\task\{D45BD078-C776-4DD2-B47F-68E6CE886C42}' ));
   setTaskContainer(m_tc);
 
-
   EditorFrame1.Task := m_tc.Task;
 
   ReportFrame1.init;

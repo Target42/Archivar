@@ -23,6 +23,8 @@ type
       function loadFromPath( path, mask : string ) : boolean;
       function saveToPath( path : string ) : boolean;
 
+      function getFile( name : string ): ITaskFile;
+
       procedure fillList( list : TStrings; ext : boolean = true );
 
       procedure release;
@@ -64,6 +66,21 @@ end;
 function TTaskFilesImpl.getCount: integer;
 begin
   Result := m_files.Count;
+end;
+
+function TTaskFilesImpl.getFile(name: string): ITaskFile;
+var
+  i : integer;
+begin
+  Result := NIL;
+  for i := 0 to pred(m_files.Count) do
+    begin
+      if m_files[i].isName(name) then
+      begin
+        Result := m_files[i];
+        break;
+      end;
+    end;
 end;
 
 function TTaskFilesImpl.getItems(inx: integer): ITaskFile;

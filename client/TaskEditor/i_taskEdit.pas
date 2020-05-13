@@ -234,6 +234,8 @@ type
       property Items[ inx : integer ]: ITaskFile read getItems write setItems;
       property Count : integer read getCount;
 
+      function getFile( name : string ): ITaskFile;
+
       function loadFromPath( path, mask : string ) : boolean;
       function saveToPath( path : string ) : boolean;
 

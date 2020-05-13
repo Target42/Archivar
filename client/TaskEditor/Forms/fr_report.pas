@@ -42,15 +42,15 @@ type
     Button1: TButton;
     Panel2: TPanel;
     Splitter1: TSplitter;
-    GroupBox1: TGroupBox;
     GroupBox2: TGroupBox;
     Panel3: TPanel;
     CheckBox1: TCheckBox;
     ListBox1: TListBox;
+    PageControl2: TPageControl;
+    GroupBox1: TGroupBox;
     ListBox2: TListBox;
     GroupBox3: TGroupBox;
     ListBox3: TListBox;
-    PageControl2: TPageControl;
     Panel4: TPanel;
     SpeedButton1: TSpeedButton;
     SpeedButton2: TSpeedButton;
@@ -59,8 +59,6 @@ type
     SpeedButton4: TSpeedButton;
     SpeedButton5: TSpeedButton;
     SpeedButton6: TSpeedButton;
-    Splitter2: TSplitter;
-    Splitter3: TSplitter;
     procedure PopupMenu1Popup(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure CheckBox1Click(Sender: TObject);
@@ -78,6 +76,7 @@ type
     procedure setTaskContainer( value : ITaskContainer);
     procedure addFieldName1Click(Sender: TObject);
 
+    procedure saveAllEdits;
   public
 
     procedure init;
@@ -107,11 +106,10 @@ end;
 procedure TReportFrame.Button1Click(Sender: TObject);
 var
   HtmlMod : THtmlMod;
-  writer : TTaskForm2XML;
-  xml    : IXMLDocument;
   tf     : ITaskFile;
-begin
-  if CheckBox1.Checked then
+  procedure currentFormData;
+  var
+    writer : TTaskForm2XML;
   begin
     if not Assigned(m_form) then
     begin
@@ -121,8 +119,10 @@ begin
     writer := TTaskForm2XML.create;
     m_xList := writer.getXML(m_form);
     writer.Free;
-  end
-  else
+  end;
+  procedure useTestData;
+  var
+    xml    : IXMLDocument;
   begin
     if ListBox1.ItemIndex = -1 then
     begin
@@ -134,17 +134,44 @@ begin
     xml.LoadFromStream(tf.Data );
     m_xList := xml.GetDocBinding('List', TXMLList, TargetNamespace) as IXMLList;
   end;
+  function findIndexHtml : ITaskFile;
+  var
+    st : ITaskStyle;
+  begin
+    Result := NIL;
+    if ListBox2.ItemIndex = -1 then
+    begin
+      ShowMessage('Es wurde kein Style ausgewählt');
+      exit;
+    end;
+    st := ITaskStyle(Pointer(ListBox2.Items.Objects[ ListBox2.ItemIndex]));
+    Result := st.Files.getFile('index.html');
+  end;
+begin
+  if CheckBox1.Checked then
+    currentFormData
+  else
+    useTestData;
 
+  saveAllEdits;
+
+  tf := findIndexHtml;
+  if not Assigned(tf) then
+    exit;
+
+  m_Path := TPath.combine(GM.wwwHome, m_tc.Task.CLID);
+  ForceDirectories(m_Path);
 
   Application.CreateForm(THtmlMod, HtmlMod);
   try
-//    HtmlMod.HTMLDoc.Assign(SynEdit2.Lines);
+    HtmlMod.HTMLDoc.Assign(tf.Lines);
     HtmlMod.TaskData := m_xList;
-    HtmlMod.SaveToFile(m_path+'index.html');
+    HtmlMod.SaveToFile(TPath.combine(m_path, 'index.html'));
   finally
     HtmlMod.Free;
   end;
-  WebBrowser1.Navigate('http://localhost:42424/{B967F35E-FFAE-481A-9664-2C7621FDEB18}/index.html');
+  WebBrowser1.Navigate('http://localhost:42424/'+m_tc.Task.CLID+'/index.html');
+
 end;
 
 procedure TReportFrame.CheckBox1Click(Sender: TObject);
@@ -161,9 +188,6 @@ procedure TReportFrame.init;
 begin
   m_files:= TList<TFilecontainer>.create;
   m_form := NIL;
-  m_Path := TPath.combine(GM.wwwHome, '{967F35E-FFAE-481A-9664-2C7621FDEB18}');
-
-  ForceDirectories(m_Path);
 end;
 
 procedure TReportFrame.ListBox2Click(Sender: TObject);
@@ -248,6 +272,7 @@ end;
 procedure TReportFrame.release;
 var
   i : integer;
+  arr : TStringDynArray;
 begin
   for i := 0 to pred(m_files.Count) do
   begin
@@ -259,6 +284,26 @@ begin
   m_xList := NIL;
   m_form  := NIL;
   m_tc    := NIL;
+
+  if m_Path <> '' then
+  begin
+    arr := TDirectory.GetFiles(m_Path);
+    for i := 0 to pred(Length(arr)) do
+      DeleteFile(arr[i]);
+
+    TDirectory.Delete(m_Path);
+  end;
+end;
+
+procedure TReportFrame.saveAllEdits;
+var
+  i : integer;
+begin
+  for i := 0 to pred(m_files.Count) do
+  begin
+    m_files[i].save;
+  end;
+
 end;
 
 procedure TReportFrame.setTaskContainer(value: ITaskContainer);
