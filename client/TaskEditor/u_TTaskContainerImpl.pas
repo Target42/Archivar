@@ -89,7 +89,8 @@ begin
   xw := Task2XML.Create;
   m_task := xw.load(TPath.combine( path, 'task.xml'));
   xw.Free;
-  m_task.CLID := ExtractFileName(path);
+  m_task.Owner := self;
+
 
   Result := m_files.loadFromPath(TPath.Combine(path, 'TestData'), '*.xml') and Result;
   Result := m_info.loadFromPath(TPath.Combine(path, 'info'), '*.*') and Result;

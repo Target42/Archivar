@@ -113,6 +113,7 @@ begin
   if Assigned(LV.Selected) then
     old := ITaskCtrl(LV.Selected.Data);
   LV.Items.Clear;
+  w := 0;
   for i := 0 to pred(m_table.Childs.Count) do
   begin
     item := LV.Items.Add;

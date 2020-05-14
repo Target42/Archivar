@@ -8,6 +8,7 @@ uses
 type
   TTask = class( TInterfacedObject, ITask )
   private
+    m_tc      : ITaskContainer;
     m_name    : string;
     m_clid    : string;
     m_fields  : IDataFieldList;
@@ -23,11 +24,13 @@ type
     function  getForms : TList<ITaskForm>;
     procedure setWorkDir( value : string );
     function  getWorkDir : string;
-
+    procedure setOwner( value : ITaskContainer);
+    function  getOwner : ITaskContainer;
   public
     constructor create;
     Destructor Destroy; override;
 
+    property Owner  : ITaskContainer read getOwner write setOwner;
     property Name   : string read getName write setName;
     property CLID   : string read getCLID write setCLID;
     property Fields : IDataFieldList read getFields;
@@ -47,6 +50,7 @@ uses
 
 constructor TTask.create;
 begin
+  m_tc      := NIL;
   m_fields  := TDataFieldList.create(NIL);
   m_forms   := TList<ITaskForm>.create;
   m_clid    := CreateClassID;
@@ -94,6 +98,11 @@ begin
   Result := m_name;
 end;
 
+function TTask.getOwner: ITaskContainer;
+begin
+  Result := m_tc;
+end;
+
 function TTask.getWorkDir: string;
 begin
   Result := m_workDir;
@@ -109,6 +118,7 @@ procedure TTask.release;
 var
   i : integer;
 begin
+  m_tc := NIL;
   m_fields.release;
 
   for i := 0 to pred(m_forms.Count) do
@@ -124,6 +134,11 @@ end;
 procedure TTask.setName(value: string);
 begin
   m_name := value;
+end;
+
+procedure TTask.setOwner(value: ITaskContainer);
+begin
+  m_tc := value;
 end;
 
 procedure TTask.setWorkDir(value: string);

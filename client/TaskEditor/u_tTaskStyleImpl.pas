@@ -27,6 +27,8 @@ type
       function loadFromPath( path : string ) : boolean;
       function saveToPath( path : string ) : boolean;
 
+      function isName( name : string ) : Boolean;
+
       procedure release;
 
   end;
@@ -64,6 +66,11 @@ end;
 function TTaskStyleImpl.getName: string;
 begin
   Result := m_name;
+end;
+
+function TTaskStyleImpl.isName(name: string): Boolean;
+begin
+  Result := SameText(m_name, name);
 end;
 
 function TTaskStyleImpl.loadFromPath(path: string): boolean;

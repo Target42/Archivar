@@ -64,6 +64,7 @@ type
     procedure CheckBox1Click(Sender: TObject);
     procedure ListBox3DblClick(Sender: TObject);
     procedure ListBox2Click(Sender: TObject);
+    procedure SpeedButton1Click(Sender: TObject);
   private
     m_xList: IXMLList;
     m_Path : string;
@@ -92,7 +93,7 @@ implementation
 
 uses
   Xml.XMLDoc, i_datafields, m_glob_client, System.IOUtils, m_html,
-  u_taskForm2XML, Xml.XMLIntf;
+  u_taskForm2XML, Xml.XMLIntf, f_InputBox;
 
 {$R *.dfm}
 
@@ -163,7 +164,10 @@ begin
 
   tf := findIndexHtml;
   if not Assigned(tf) then
+  begin
+    ShowMessage('Die Datei "index.html" wurde nicht gefunden');
     exit;
+  end;
 
   m_Path := TPath.combine(GM.wwwHome, m_tc.Task.CLID);
   ForceDirectories(m_Path);
@@ -321,6 +325,26 @@ begin
 
   m_tc.Styles.FillList( ListBox2.Items );
 
+end;
+
+procedure TReportFrame.SpeedButton1Click(Sender: TObject);
+var
+  InputBoxForm : TInputBoxForm;
+  st : ITaskStyle;
+begin
+  Application.CreateForm(TInputBoxForm, InputBoxForm);
+  InputBoxForm.Caption := 'Neuer Style';
+  if InputBoxForm.ShowModal = mrOk then
+  begin
+    if Assigned( m_tc.Styles.getStyle(InputBoxForm.Text)) then
+      ShowMessage('Dieser Name existiert schon!')
+    else
+    begin
+      st := m_tc.Styles.newStyle(InputBoxForm.Text);
+      ListBox2.Items.AddObject(st.Name, Pointer(st));
+    end;
+  end;
+  InputBoxForm.free;
 end;
 
 { TFilecontainer }

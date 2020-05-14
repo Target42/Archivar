@@ -13,21 +13,24 @@ type
       procedure SaveControl( ctrl : ITaskCtrl );
       procedure SaveTable( ctrl : ITaskCtrl );
 
+      procedure doLoad( form : ITaskForm);
       procedure loadTable( xTab : IXMLTable; form : ITaskForm);
 
     public
       constructor create;
       Destructor Destroy; override;
 
+      procedure fromText( text : string; form : ITaskForm );
       procedure load( name : string; form : ITaskForm );
       function  save( name : string; form : ITaskForm ) : Boolean;
+
       function  getXML(form : ITaskForm ) : IXMLList;
   end;
 
 implementation
 
 uses
-  System.Generics.Collections, System.SysUtils;
+  System.Generics.Collections, System.SysUtils, Xml.XMLIntf, Xml.XMLDoc;
 
 { TTaskForm2XML }
 
@@ -40,6 +43,39 @@ destructor TTaskForm2XML.Destroy;
 begin
 
   inherited;
+end;
+
+procedure TTaskForm2XML.doLoad(form: ITaskForm);
+var
+  i   : integer;
+  xf  : IXMLField;
+  ctrl: ITaskCtrl;
+begin
+  for i := 0 to pred( m_xList.Values.Count) do
+  begin
+    xf := m_xList.Values.Field[i];
+    ctrl := form.Base.findCtrlByCLID(xf.Ctrlclid);
+    if Assigned(ctrl) then
+      ctrl.setData(xf.Value);
+  end;
+  for i := 0 to pred(m_xList.Tables.Count) do
+  begin
+    loadTable(m_xList.Tables[i], form );
+  end;
+end;
+
+procedure TTaskForm2XML.fromText(text: string; form: ITaskForm);
+var
+  xml : IXMLDocument;
+begin
+  try
+    xml := NewXMLDocument;
+    xml.XML.Text := text;
+    m_xList := xml.GetDocBinding('List', TXMLList, TargetNamespace) as IXMLList;
+  except
+    m_xList := NewList;
+  end;
+  doLoad( form);
 end;
 
 function TTaskForm2XML.getXML(form : ITaskForm ): IXMLList;
@@ -57,27 +93,13 @@ begin
 end;
 
 procedure TTaskForm2XML.load(name: string; form: ITaskForm);
-var
-  i   : integer;
-  xf  : IXMLField;
-  ctrl: ITaskCtrl;
 begin
   try
     m_xList := LoadList(name);
   except
     m_xList := NewList;
   end;
-  for i := 0 to pred( m_xList.Values.Count) do
-  begin
-    xf := m_xList.Values.Field[i];
-    ctrl := form.Base.findCtrlByCLID(xf.Ctrlclid);
-    if Assigned(ctrl) then
-      ctrl.setData(xf.Value);
-  end;
-  for i := 0 to pred(m_xList.Tables.Count) do
-  begin
-    loadTable(m_xList.Tables[i], form );
-  end;
+  doLoad( form);
 end;
 
 procedure TTaskForm2XML.loadTable(xTab: IXMLTable; form : ITaskForm);

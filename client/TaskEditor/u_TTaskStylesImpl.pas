@@ -19,12 +19,15 @@ type
       property Items[ inx : integer ]: ITaskStyle read getTaskStyle write setTaskStyle;
       property Count : integer read getCount;
 
-      function newStyle : ITaskStyle;
+      function newStyle(name : String ) : ITaskStyle;
 
       function loadFromPath( path : string ) : boolean;
       function saveToPath( path : string ) : boolean;
 
       procedure FillList( list : TStrings );
+
+      function getStyle( name : string ) : ITaskStyle;
+      function rename( style : ITaskStyle; name :string ) : boolean;
 
       procedure release;
   end;
@@ -32,7 +35,7 @@ type
 implementation
 
 uses
-  System.IOUtils, u_tTaskStyleImpl;
+  System.IOUtils, u_tTaskStyleImpl, System.SysUtils;
 
 { TTaskStylesImpl }
 
@@ -63,6 +66,21 @@ begin
   Result := m_list.Count;
 end;
 
+function TTaskStylesImpl.getStyle(name: string): ITaskStyle;
+var
+  i : integer;
+begin
+  Result := NIL;
+  for i := 0 to pred(m_list.Count) do
+  begin
+    if m_list[i].isName(name) then
+    begin
+      Result := m_list[i];
+      break;
+    end;
+  end;
+end;
+
 function TTaskStylesImpl.getTaskStyle(inx: integer): ITaskStyle;
 begin
   Result := m_list[inx];
@@ -70,24 +88,42 @@ end;
 
 function TTaskStylesImpl.loadFromPath(path: string): boolean;
 var
-  arr : TStringDynArray;
+  arr : TStringList;
+  fname : string;
   i   : integer;
   st  : ITaskStyle;
 begin
-  arr := TDirectory.GetDirectories(path, '{*}');
-  for i := 0 to pred(Length(arr)) do
+  fname := TPath.Combine( path, 'index.txt');
+
+  arr := TStringList.Create;
+  if FileExists(fname) then
+    arr.LoadFromFile(fname);
+
+  for i := 0 to pred(arr.Count) do
   begin
     st := TTaskStyleimpl.create;
-    st.loadFromPath(arr[i]);
+    st.loadFromPath( TPath.Combine(path, arr.Strings[i]));
     m_list.Add(st)
   end;
-  SetLength(arr, 0);;
+  arr.Free;
   Result := true;
 end;
 
-function TTaskStylesImpl.newStyle: ITaskStyle;
+function TTaskStylesImpl.newStyle(name : String ) : ITaskStyle;
+var
+  f : ITaskFile;
 begin
   Result := TTaskStyleimpl.create;
+  Result.Name := name;
+
+  f := Result.Files.newFile('index.html');
+  if Assigned(f) then
+  begin
+    f.Lines.Text :=
+            '<!--'+sLineBreak+
+            'Erzeugt am ' + DateTimeToStr(now)+sLineBreak+
+            '-->';
+  end;
   m_list.Add(Result);
 end;
 
@@ -100,12 +136,38 @@ begin
   m_list.Clear;
 end;
 
-function TTaskStylesImpl.saveToPath(path: string): boolean;
+function TTaskStylesImpl.rename(style: ITaskStyle; name: string): boolean;
 var
   i : integer;
 begin
+  Result := true;
   for i := 0 to pred(m_list.Count) do
+  begin
+    if (m_list[i] <> style ) then
+      if m_list[i].isName(name) then
+      begin
+        Result := false;
+        break;
+      end;
+  end;
+
+  if Result then
+    style.Name := name;
+end;
+
+function TTaskStylesImpl.saveToPath(path: string): boolean;
+var
+  i : integer;
+  list : TStringList;
+begin
+  list := TStringList.Create;
+  for i := 0 to pred(m_list.Count) do
+  begin
+    list.Add(m_list[i].CLID);
     m_list[i].saveToPath(path);
+  end;
+  list.SaveToFile(TPath.Combine(path, 'index.txt'));
+  list.Free;
 
   Result := true;
 end;

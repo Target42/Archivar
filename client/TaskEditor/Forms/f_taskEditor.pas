@@ -141,12 +141,15 @@ begin
 end;
 
 procedure TTaksEditorForm.FormDestroy(Sender: TObject);
+var
+  fname : string;
 begin
-  m_tc.saveToPath(TPath.Combine( ExtractFilePath( Application.ExeName), 'lib\task\{D45BD078-C776-4DD2-B47F-68E6CE886C42}' ));
   EditorFrame1.release;
   ReportFrame1.release;
-  m_tc.release;
 
+  fname := TPath.Combine( ExtractFilePath( Application.ExeName), 'lib\task\{D45BD078-C776-4DD2-B47F-68E6CE886C42}' );
+  m_tc.saveToPath(fname);
+  m_tc.release;
 end;
 
 procedure TTaksEditorForm.setTaskContainer(value: ITaskContainer);

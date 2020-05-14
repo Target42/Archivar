@@ -61,6 +61,9 @@ begin
   end;
   Result := TTask.create;
   Result.WorkDir := ExtractFilePath( fname );
+  Result.Name := m_xTask.Name;
+  Result.CLID := m_xTask.Clid;
+
   m_task := Result;
 
   xw := TaskDataField2XML.create;
@@ -123,8 +126,9 @@ begin
     exit;
 
   m_xTask := NewTask;
-  task.Name := m_xTask.Name;
-  task.CLID := m_xTask.Clid;
+
+  m_xTask.Name := task.Name;
+  m_xTask.Clid := task.CLID;
 
   xw := TaskDataField2XML.create;
   try

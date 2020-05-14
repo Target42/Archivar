@@ -24,6 +24,7 @@ type
       function saveToPath( path : string ) : boolean;
 
       function getFile( name : string ): ITaskFile;
+      function newFile( name : string ) : ITaskFile;
 
       procedure fillList( list : TStrings; ext : boolean = true );
 
@@ -106,6 +107,17 @@ begin
     m_files.Add(f);
   end;
   SetLength(arr, 0);
+end;
+
+function TTaskFilesImpl.newFile(name: string): ITaskFile;
+begin
+  Result := getFile(name);
+  if not Assigned(Result) then
+  begin
+    Result := TTaskFileImpl.create;
+    Result.Name := name;
+    m_files.Add(Result);
+  end;
 end;
 
 procedure TTaskFilesImpl.release;

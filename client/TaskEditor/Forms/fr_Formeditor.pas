@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
-  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms,
   System.Contnrs, Vcl.AppEvnts, Vcl.StdCtrls, Vcl.ComCtrls, Vcl.ExtCtrls,
   i_taskEdit, fr_propertyEditor, Vcl.Buttons, System.ImageList, Vcl.ImgList;
 
@@ -132,7 +132,8 @@ type
 implementation
 
 uses
-  System.Types, u_TaskFormImpl, u_taskForm2XML, f_testform, f_form_props, System.IOUtils;
+  System.Types, u_TaskFormImpl, u_taskForm2XML, f_testform, f_form_props, System.IOUtils,
+  f_selectList, Vcl.Dialogs;
 
 {$R *.dfm}
 
@@ -793,34 +794,68 @@ begin
 end;
 
 procedure TEditorFrame.SpeedButton8Click(Sender: TObject);
+  procedure fillFile( tf : ITaskFile);
+  var
+    writer : TTaskForm2XML;
+  begin
+    writer := TTaskForm2XML.create;
+    tf.Lines.Text := writer.getXML(m_form).XML;
+    writer.Free;
+  end;
 var
-  writer : TTaskForm2XML;
-  fname  : string;
+  SelectListform: TSelectListform;
+  fname : string;
+  tf  : ITaskFile;
 begin
   // save data ..
   if not Assigned(m_form) then
     exit;
 
-  fname := TPath.Combine( m_form.Owner.WorkDir, 'TestData\formdata.xml');
-  writer := TTaskForm2XML.create;
-  writer.save(fname, m_form);
-  writer.Free;
-
+  Application.CreateForm(TSelectListform, SelectListform);
+  m_task.Owner.TestData.fillList(SelectListform.ListBox1.Items, false);
+  if (SelectListform.ShowModal = mrOk) and ( SelectListform.Selected <> '')  then
+  begin
+    fname := SelectListform.Selected+'.xml';
+    tf := m_task.Owner.TestData.getFile(fname);
+    if Assigned(tf) then
+    begin
+      if (MessageDlg('Die Datei existiert schon.'+#13+#10+'Soll sie überschrieben werden?', mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
+        fillFile(tf);
+    end
+    else
+    begin
+      tf := m_task.Owner.TestData.newFile(fname);
+      fillFile(tf);
+    end;
+  end;
+  SelectListform.Free;
 end;
 
 procedure TEditorFrame.SpeedButton9Click(Sender: TObject);
 var
   writer : TTaskForm2XML;
   fname  : string;
+  tf     : ITaskFile;
 begin
   // save data ..
   if not Assigned(m_form) then
     exit;
-  fname := TPath.Combine( m_form.Owner.WorkDir, 'TestData\formdata.xml');
 
-  writer := TTaskForm2XML.create;
-  writer.load(fname, m_form);
-  writer.Free;
+  Application.CreateForm(TSelectListform, SelectListform);
+  m_task.Owner.TestData.fillList(SelectListform.ListBox1.Items, false);
+  SelectListform.Panel1.Visible := false;
+  if (SelectListform.ShowModal = mrOk)then
+  begin
+    fname := SelectListform.Selected+'.xml';
+    tf := m_task.Owner.TestData.getFile(fname);
+    if Assigned(tf) then
+    begin
+      writer := TTaskForm2XML.create;
+      writer.fromText(tf.Lines.Text, m_form);
+      writer.Free;
+    end
+  end;
+  SelectListform.Free;
 end;
 
 procedure TEditorFrame.TVCancelEdit(Sender: TObject; Node: TTreeNode);

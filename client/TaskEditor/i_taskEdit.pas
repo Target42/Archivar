@@ -44,7 +44,11 @@ type
     function  getForms : TList<ITaskForm>;
     procedure setWorkDir( value : string );
     function  getWorkDir : string;
+    procedure setOwner( value : ITaskContainer);
+    function  getOwner : ITaskContainer;
+
   //public
+    property Owner  : ITaskContainer read getOwner write setOwner;
     property Name   : string read getName write setName;
     property CLID   : string read getCLID write setCLID;
     property Fields : IDataFieldList read getFields;
@@ -238,6 +242,7 @@ type
 
       function loadFromPath( path, mask : string ) : boolean;
       function saveToPath( path : string ) : boolean;
+      function newFile( name : string ) : ITaskFile;
 
       procedure fillList( list : TStrings; ext : boolean = true );
 
@@ -280,6 +285,8 @@ type
       function loadFromPath( path : string ) : boolean;
       function saveToPath( path : string ) : boolean;
 
+      function isName( name : string ) : Boolean;
+
       procedure release;
   end;
 
@@ -293,9 +300,12 @@ type
       property Items[ inx : integer ]: ITaskStyle read getTaskStyle write setTaskStyle;
       property Count : integer read getCount;
 
-      function newStyle : ITaskStyle;
+      function newStyle(name : String ) : ITaskStyle;
       function loadFromPath( path : string ) : boolean;
       function saveToPath( path : string ) : boolean;
+
+      function getStyle( name : string ) : ITaskStyle;
+      function rename( style : ITaskStyle; name :string ) : boolean;
 
       procedure FillList( list : TStrings );
 
