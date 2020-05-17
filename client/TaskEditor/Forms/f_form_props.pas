@@ -40,8 +40,8 @@ begin
   begin
     if not Assigned(m_frm) then
       m_frm := m_task.NewForm;
-      m_frm.Name := s;
-      m_frm.MainForm := CheckBox1.Checked;
+    m_frm.Name := s;
+    m_frm.MainForm := CheckBox1.Checked;
   end;
 end;
 

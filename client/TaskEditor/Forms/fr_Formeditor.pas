@@ -73,6 +73,7 @@ type
     procedure SpeedButton11Click(Sender: TObject);
     procedure SpeedButton12Click(Sender: TObject);
     procedure TVCancelEdit(Sender: TObject; Node: TTreeNode);
+    procedure SpeedButton2Click(Sender: TObject);
   private
 
     FNodes              : TObjectList;
@@ -742,8 +743,32 @@ procedure TEditorFrame.SpeedButton1Click(Sender: TObject);
 var
   FormProperties : TFormProperties;
 begin
+  // neu
   Application.CreateForm(TFormProperties, FormProperties);
   FormProperties.Task := m_task;
+  if FormProperties.ShowModal = mrOk then
+  begin
+    updateForms;
+  end;
+  FormProperties.Free;
+end;
+
+procedure TEditorFrame.SpeedButton2Click(Sender: TObject);
+var
+  FormProperties : TFormProperties;
+  frm : ITaskForm;
+  inx : integer;
+begin
+  inx := LB.ItemIndex;
+  if inx = -1 then
+    exit;
+
+  inx := integer(LB.Items.Objects[ inx]);
+  frm := m_task.Forms.Items[inx];
+
+  Application.CreateForm(TFormProperties, FormProperties);
+  FormProperties.Task := m_task;
+  FormProperties.Form := frm;
   if FormProperties.ShowModal = mrOk then
   begin
     updateForms;
@@ -799,7 +824,7 @@ procedure TEditorFrame.SpeedButton8Click(Sender: TObject);
     writer : TTaskForm2XML;
   begin
     writer := TTaskForm2XML.create;
-    tf.Lines.Text := writer.getXML(m_form).XML;
+    tf.Lines.Text :=  writer.getXML(m_form).XML;
     writer.Free;
   end;
 var

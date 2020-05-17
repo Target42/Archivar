@@ -26,6 +26,7 @@ type
       property Edit : TSynEdit read m_edit write m_edit;
       property Tab  : TTabSheet read m_tab write m_tab;
       property FileName : string read getFileName write setFileName;
+      property DataFile : ITaskFile read m_tf;
 
       procedure save;
       function isFile( fname : string) : boolean;
@@ -59,12 +60,24 @@ type
     SpeedButton4: TSpeedButton;
     SpeedButton5: TSpeedButton;
     SpeedButton6: TSpeedButton;
+    Panel6: TPanel;
+    SpeedButton7: TSpeedButton;
+    SpeedButton8: TSpeedButton;
+    SpeedButton9: TSpeedButton;
     procedure PopupMenu1Popup(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure CheckBox1Click(Sender: TObject);
     procedure ListBox3DblClick(Sender: TObject);
     procedure ListBox2Click(Sender: TObject);
     procedure SpeedButton1Click(Sender: TObject);
+    procedure SpeedButton2Click(Sender: TObject);
+    procedure SpeedButton7Click(Sender: TObject);
+    procedure SpeedButton8Click(Sender: TObject);
+    procedure SpeedButton5Click(Sender: TObject);
+    procedure SpeedButton3Click(Sender: TObject);
+    procedure SpeedButton6Click(Sender: TObject);
+    procedure SpeedButton9Click(Sender: TObject);
+    procedure SpeedButton4Click(Sender: TObject);
   private
     m_xList: IXMLList;
     m_Path : string;
@@ -78,6 +91,7 @@ type
     procedure addFieldName1Click(Sender: TObject);
 
     procedure saveAllEdits;
+    procedure initFile( tf : ITaskFile);
   public
 
     procedure init;
@@ -87,13 +101,17 @@ type
     property Form : ITaskForm read m_form write m_form;
 
     procedure doNewForm( frm : ITaskForm );
+
+    procedure updateFiles( sender : ITaskFiles);
+
+    procedure closeEditor( tf : ITaskFile );
   end;
 
 implementation
 
 uses
   Xml.XMLDoc, i_datafields, m_glob_client, System.IOUtils, m_html,
-  u_taskForm2XML, Xml.XMLIntf, f_InputBox;
+  u_taskForm2XML, Xml.XMLIntf, f_InputBox, u_helper, System.UITypes;
 
 {$R *.dfm}
 
@@ -189,6 +207,21 @@ begin
   ListBox1.Enabled := not CheckBox1.Checked;
 end;
 
+procedure TReportFrame.closeEditor(tf: ITaskFile);
+var
+  i : integer;
+begin
+  for i := 0 to pred(m_files.Count) do
+  begin
+    if m_files[i].DataFile = tf  then
+    begin
+      m_files[i].Free;
+      m_files.Delete(i);
+      break;
+    end;
+  end;
+end;
+
 procedure TReportFrame.doNewForm(frm: ITaskForm);
 begin
   m_form := frm;
@@ -201,15 +234,42 @@ begin
   m_form := NIL;
 end;
 
+procedure TReportFrame.initFile(tf: ITaskFile);
+var
+ ext : string;
+begin
+  ext := LowerCase(ExtractFileExt(tf.Name));
+  if ext = '.pas' then
+  begin
+    tf.Lines.Text :=
+    '{ ' +sLineBreak+
+    '  Erzeugt am '+FormatDateTime('hh:mm dd.MM.yyyy', now)+sLineBreak+
+    '}'+ sLineBreak+
+    'program script;'+sLineBreak+sLineBreak+
+    'begin'+sLineBreak+
+    '  printLN(''neuen Text heir eingeben'');'+sLineBreak+
+    'end.';
+  end
+  else if ext = '.html' then
+  begin
+    tf.Lines.Text :=
+    '<!--'+sLineBreak+
+    '  Erzeugt am '+FormatDateTime('hh:mm dd.MM.yyyy', now)+sLineBreak+
+    '-->';
+  end;
+end;
+
 procedure TReportFrame.ListBox2Click(Sender: TObject);
 var
   st : ITaskStyle;
 begin
   ListBox3.Items.Clear;
+
   if ListBox2.ItemIndex = -1 then
     exit;
+
   st := ITaskStyle( Pointer( ListBox2.Items.Objects[ ListBox2.ItemIndex]));
-  st.Files.fillList(ListBox3.Items);
+  st.Files.fillList(ListBox3.Items, true);
 end;
 
 procedure TReportFrame.ListBox3DblClick(Sender: TObject);
@@ -286,6 +346,8 @@ var
   i : integer;
   arr : TStringDynArray;
 begin
+  m_tc.TestData.uregisterChange(updateFiles);
+
   for i := 0 to pred(m_files.Count) do
   begin
     m_files[i].save;
@@ -320,10 +382,25 @@ end;
 
 procedure TReportFrame.setTaskContainer(value: ITaskContainer);
 begin
+  if Assigned(m_tc) then
+    m_tc.TestData.uregisterChange(updateFiles);
+
   m_tc := value;
+
   m_tc.TestData.fillList(ListBox1.Items, false);
+  m_tc.TestData.registerChange(updateFiles);
 
   m_tc.Styles.FillList( ListBox2.Items );
+
+  if ListBox2.Items.Count > 0 then
+  begin
+    ListBox2.ItemIndex := 0;
+    ListBox2Click(Self);
+  end;
+
+  if ListBox1.Items.Count > 0 then
+    ListBox1.ItemIndex := 0;
+
 
 end;
 
@@ -345,6 +422,205 @@ begin
     end;
   end;
   InputBoxForm.free;
+end;
+
+procedure TReportFrame.SpeedButton2Click(Sender: TObject);
+var
+  InputBoxForm : TInputBoxForm;
+  st  : ITaskStyle;
+begin
+  // renmae
+  if ListBox2.ItemIndex = -1 then
+    exit;
+  st := ITaskStyle( Pointer( ListBox2.Items.Objects[ ListBox2.ItemIndex]));
+  Application.CreateForm(TInputBoxForm, InputBoxForm);
+  InputBoxForm.Caption := 'Style umbenennen';
+
+  InputBoxForm.Text := st.Name;
+  if InputBoxForm.ShowModal = mrOk then
+  begin
+    m_tc.Styles.rename( st, InputBoxForm.Text);
+    ListBox2.Items.Strings[ListBox2.ItemIndex] := st.Name;
+  end;
+  InputBoxForm.Free;
+end;
+
+procedure TReportFrame.SpeedButton3Click(Sender: TObject);
+var
+  st  : ITaskStyle;
+  i   : integer;
+begin
+  // renmae
+  if ListBox2.Items.Count =1  then
+  begin
+    ShowMessage('Es muss immer mindestens 1 Style geben');
+    exit;
+  end;
+
+  if ListBox2.ItemIndex = -1 then
+    exit;
+
+  st := ITaskStyle( Pointer( ListBox2.Items.Objects[ ListBox2.ItemIndex]));
+  if not (MessageDlg('Soll der Style "'+st.Name+'" wirklich gelöscht werden?', mtWarning, [mbYes, mbNo], 0) = mrYes) then
+    exit;
+
+  // close the editors ...
+  for i := 0 to pred(st.Files.Count) do
+    closeEditor(st.Files.Items[i]);
+
+  m_tc.Styles.delete( st );
+  // delete ...
+end;
+
+procedure TReportFrame.SpeedButton4Click(Sender: TObject);
+var
+  InputBoxForm : TInputBoxForm;
+  tf  : ITaskFile;
+  st : ITaskStyle;
+begin
+  if ListBox2.ItemIndex = -1 then
+    exit;
+  st := ITaskStyle( Pointer( ListBox2.Items.Objects[ ListBox2.ItemIndex]));
+  // neue Datei ...
+  Application.CreateForm(TInputBoxForm, InputBoxForm);
+  InputBoxForm.Caption := 'Neue Datei';
+  if InputBoxForm.ShowModal = mrOk then
+  begin
+    tf := st.Files.getFile(InputBoxForm.Text);
+    if Assigned(tf) then
+      ShowMessage('Eine Datei mit diesem Namen gibt es schon!')
+    else
+    begin
+      tf := st.Files.newFile(InputBoxForm.Text);
+      ListBox3.Items.AddObject(tf.name, Pointer(tf));
+      initFile( tf );
+    end;
+
+  end;
+  InputBoxForm.Free;
+end;
+
+procedure TReportFrame.SpeedButton5Click(Sender: TObject);
+var
+  inx : integer;
+  InputBoxForm : TInputBoxForm;
+  tf : ITaskFile;
+  st : ITaskStyle;
+begin
+  if ListBox2.ItemIndex = -1 then
+    exit;
+  st := ITaskStyle( Pointer( ListBox2.Items.Objects[ ListBox2.ItemIndex]));
+
+  inx := ListBox3.ItemIndex;
+  if inx = -1 then
+    exit;
+
+  tf := ITaskFile( Pointer(ListBox3.Items.Objects[inx] ));
+
+  if tf.isName('index.html') then
+  begin
+    ShowMessage('Die Datei "index.html" kann nicht umbenannt werden!');
+    exit;
+  end;
+
+  Application.CreateForm(TInputBoxForm, InputBoxForm);
+  InputBoxForm.Caption := 'Datei umbenennen';
+  InputBoxForm.Text := tf.Name;
+  if InputBoxForm.ShowModal = mrOk then
+  begin
+    st.Files.rename(tf, InputBoxForm.Text );
+    ListBox3.Items.Strings[ inx ] := tf.Name;
+  end;
+  InputBoxForm.Free;
+end;
+
+procedure TReportFrame.SpeedButton6Click(Sender: TObject);
+var
+  inx : integer;
+  tf  : ITaskFile;
+  st  : ITaskStyle;
+begin
+  if ListBox2.ItemIndex = -1 then
+    exit;
+  st := ITaskStyle( Pointer( ListBox2.Items.Objects[ ListBox2.ItemIndex]));
+
+  // style file löschen .
+  inx := ListBox3.ItemIndex;
+  if inx = -1 then
+      exit;
+  tf := ITaskFile( Pointer(ListBox3.Items.Objects[inx] ));
+  if tf.isName('index.html') then
+  begin
+    ShowMessage('die Datei "index.html" kann nicht gelöscht werden!');
+    exit;
+  end;
+  if not (MessageDlg('Soll die Datei "'+tf.Name+'" wirklich gelöscht werden?', mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
+    exit;
+  closeEditor(tf);
+  st.Files.delete(tf);
+  ListBox3.Items.Delete(inx);
+end;
+
+procedure TReportFrame.SpeedButton7Click(Sender: TObject);
+var
+  inx : integer;
+  InputBoxForm : TInputBoxForm;
+  tf : ITaskFile;
+begin
+  inx := ListBox1.ItemIndex;
+  if inx = -1 then
+    exit;
+  tf := ITaskFile( Pointer(ListBox1.Items.Objects[inx] ));
+
+  Application.CreateForm(TInputBoxForm, InputBoxForm);
+  InputBoxForm.Caption := 'Testdaten umbenennen';
+  InputBoxForm.Text := ListBox1.Items.Strings[inx];
+  if InputBoxForm.ShowModal = mrOk then
+  begin
+    m_tc.TestData.rename(tf, InputBoxForm.Text );
+  end;
+  InputBoxForm.Free;
+end;
+
+procedure TReportFrame.SpeedButton8Click(Sender: TObject);
+var
+  inx : integer;
+  tf : ITaskFile;
+begin
+  inx := ListBox1.ItemIndex;
+  if inx = -1 then
+    exit;
+
+  tf := ITaskFile( Pointer(ListBox1.Items.Objects[inx] ));
+
+  if not (MessageDlg('Soll die Datei wirklich geklöscht werden?', mtWarning, [mbYes, mbNo], 0) = mrYes) then
+    exit;
+  m_tc.TestData.delete( tf );
+end;
+
+procedure TReportFrame.SpeedButton9Click(Sender: TObject);
+var
+  inx : integer;
+  tf  : ITaskFile;
+begin
+  // style file löschen .
+  inx := ListBox3.ItemIndex;
+  if inx = -1 then
+      exit;
+  tf := ITaskFile( Pointer(ListBox3.Items.Objects[inx] ));
+  closeEditor(tf);
+end;
+
+procedure TReportFrame.updateFiles(sender: ITaskFiles);
+var
+  old : pointer;
+begin
+  old := getOldObject( ListBox1 );
+
+  ListBox1.Items.Clear;
+  m_tc.TestData.fillList(ListBox1.Items, false);
+  selectItem( ListBox1, old );
+
 end;
 
 { TFilecontainer }
@@ -374,6 +650,7 @@ end;
 
 destructor TFilecontainer.Destroy;
 begin
+  m_tab.PageControl := NIL;
   m_tab.Free;
   inherited;
 end;

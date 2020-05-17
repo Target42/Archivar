@@ -9,10 +9,13 @@ type
   TTaskFilesImpl = class(TInterfacedObject, ITaskFiles)
     private
       m_files : TList<ITaskFile>;
+      m_listner : TList<TaskFilesChange>;
 
       procedure setItems( inx : integer; const value : ITaskFile );
       function  getItems( inx : integer ) : ITaskFile;
       function  getCount : integer;
+
+      procedure doChange;
     public
       constructor Create;
       Destructor Destroy; override;
@@ -25,8 +28,15 @@ type
 
       function getFile( name : string ): ITaskFile;
       function newFile( name : string ) : ITaskFile;
+      function ownfile( tf : ITaskFile ) : boolean;
 
-      procedure fillList( list : TStrings; ext : boolean = true );
+      function rename( tf : ITaskFile ; name : string) : boolean;
+      function delete( tf : ITaskFile ) :  boolean;
+
+      procedure fillList( list : TStrings; ext : boolean);
+
+      procedure registerChange(  proc : TaskFilesChange );
+      procedure uregisterChange( proc : TaskFilesChange );
 
       procedure release;
 
@@ -41,13 +51,35 @@ uses
 
 constructor TTaskFilesImpl.Create;
 begin
-  m_files := TList<ITaskFile>.create;
+  m_files   := TList<ITaskFile>.create;
+  m_listner := TList<TaskFilesChange>.create;
+end;
+
+function TTaskFilesImpl.delete(tf: ITaskFile): boolean;
+begin
+  Result := m_files.Contains(tf);
+  if Result then
+  begin
+    m_files.Remove(tf);
+    tf.release;
+
+    doChange;
+  end;
 end;
 
 destructor TTaskFilesImpl.Destroy;
 begin
   m_files.Free;
+  m_listner.Free;
   inherited;
+end;
+
+procedure TTaskFilesImpl.doChange;
+var
+  i : integer;
+begin
+  for i := 0 to pred(m_listner.Count) do
+      m_listner[i](self);
 end;
 
 procedure TTaskFilesImpl.fillList(list: TStrings; ext: boolean);
@@ -117,27 +149,74 @@ begin
     Result := TTaskFileImpl.create;
     Result.Name := name;
     m_files.Add(Result);
+    doChange;
   end;
+end;
+
+function TTaskFilesImpl.ownfile(tf: ITaskFile): boolean;
+begin
+  Result := m_files.Contains(tf);
+end;
+
+procedure TTaskFilesImpl.registerChange(proc: TaskFilesChange);
+begin
+  if not m_listner.Contains(proc) then
+    m_listner.Add(proc);
+  proc(self);
 end;
 
 procedure TTaskFilesImpl.release;
 var
   i : integer;
 begin
+  m_listner.Clear;
   for i := 0 to pred(m_files.Count) do
     m_files[i].release;
   m_files.Clear;
 
 end;
 
-function TTaskFilesImpl.saveToPath(path: string): boolean;
+function TTaskFilesImpl.rename(tf: ITaskFile; name: string): boolean;
+var
+  i : integer;
 begin
-  Result := false;
+  Result := true;
+  for i := 0 to pred(m_files.Count) do
+  begin
+    if m_files[i] <> tf then
+    begin
+      if m_files[i].isName(name) then
+      begin
+        Result := false;
+        exit;
+      end;
+    end;
+  end;
+
+  if Result then
+  begin
+    tf.Name := name;
+    doChange;
+  end;
+end;
+
+function TTaskFilesImpl.saveToPath(path: string): boolean;
+var
+  i : integer;
+begin
+  for i := 0 to pred(m_files.Count) do
+    m_files[i].save(path);
+  Result := true;
 end;
 
 procedure TTaskFilesImpl.setItems(inx: integer; const value: ITaskFile);
 begin
   m_files[inx] := value;
+end;
+
+procedure TTaskFilesImpl.uregisterChange(proc: TaskFilesChange);
+begin
+  m_listner.Remove(proc);
 end;
 
 end.

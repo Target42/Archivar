@@ -354,7 +354,6 @@
             <Form>SelectListform</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="misc\u_NotifierList.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

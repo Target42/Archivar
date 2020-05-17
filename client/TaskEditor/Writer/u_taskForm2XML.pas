@@ -70,7 +70,7 @@ var
 begin
   try
     xml := NewXMLDocument;
-    xml.XML.Text := text;
+    xml.XML.Text := UTF8Encode(text);
     m_xList := xml.GetDocBinding('List', TXMLList, TargetNamespace) as IXMLList;
   except
     m_xList := NewList;

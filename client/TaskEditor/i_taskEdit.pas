@@ -228,6 +228,7 @@ type
       procedure release;
   end;
 
+  TaskFilesChange = procedure( sender : ITaskFiles) of object;
   ITaskFiles      = interface
     ['{960DEEAB-D40C-4EAD-BA4F-70A55A141A1A}']
     //private
@@ -243,12 +244,19 @@ type
       function loadFromPath( path, mask : string ) : boolean;
       function saveToPath( path : string ) : boolean;
       function newFile( name : string ) : ITaskFile;
+      function rename( tf : ITaskFile ; name : string) : boolean;
+      function delete( tf : ITaskFile ) :  boolean;
+      function ownfile( tf : ITaskFile ) : boolean;
 
-      procedure fillList( list : TStrings; ext : boolean = true );
+      procedure fillList( list : TStrings; ext : boolean = true);
+
+      procedure registerChange(  proc : TaskFilesChange );
+      procedure uregisterChange( proc : TaskFilesChange );
 
       procedure release;
   end;
 
+  TaskFileChange = procedure( sender : ITaskFile) of object;
   ITaskFile       = interface
     ['{BD70B176-D1F4-4FBF-BA63-C68B820B1854}']
     //private
@@ -265,6 +273,9 @@ type
 
       function load( fname : string ) : boolean;
       function save( path : string ) : boolean;
+
+      procedure registerChange(  proc : TaskFileChange );
+      procedure uregisterChange( proc : TaskFileChange );
 
       procedure release;
   end;
@@ -290,6 +301,7 @@ type
       procedure release;
   end;
 
+  TaskStylesChange = procedure( sender : ITaskStyles) of object;
   ITaskStyles     = interface
     ['{C059AA77-5A6F-476F-96EC-50DF3E3BFD2F}']
     // private
@@ -306,8 +318,13 @@ type
 
       function getStyle( name : string ) : ITaskStyle;
       function rename( style : ITaskStyle; name :string ) : boolean;
+      function delete(style : ITaskStyle ) : boolean;
 
       procedure FillList( list : TStrings );
+
+      procedure registerChange(  proc : TaskStylesChange );
+      procedure uregisterChange( proc : TaskStylesChange );
+
 
       procedure release;
   end;

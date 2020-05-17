@@ -42,16 +42,19 @@ object FormProperties: TFormProperties
     Align = alBottom
     AutoSize = True
     TabOrder = 2
-    ExplicitLeft = -115
-    ExplicitTop = 80
+    ExplicitTop = 99
+    ExplicitWidth = 336
     inherited StatusBar1: TStatusBar
       Width = 336
+      ExplicitWidth = 336
     end
     inherited Panel1: TPanel
       Width = 336
+      ExplicitWidth = 336
       inherited OKBtn: TBitBtn
         Left = 237
         OnClick = BaseFrame1OKBtnClick
+        ExplicitLeft = 237
       end
     end
   end

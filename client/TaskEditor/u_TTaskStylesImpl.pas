@@ -9,9 +9,12 @@ type
   TTaskStylesImpl = class(TInterfacedObject, ITaskStyles)
     private
       m_list : TList<ITaskStyle>;
+      m_listener : TList<TaskStylesChange>;
       procedure setTaskStyle( inx : integer; const value : ITaskStyle );
       function  getTaskStyle(inx : integer ) : ITaskStyle;
       function getCount : integer;
+
+      procedure doChange;
     public
       constructor create;
       Destructor Destroy; override;
@@ -29,6 +32,11 @@ type
       function getStyle( name : string ) : ITaskStyle;
       function rename( style : ITaskStyle; name :string ) : boolean;
 
+      function delete(style : ITaskStyle ) : boolean;
+
+      procedure registerChange(  proc : TaskStylesChange );
+      procedure uregisterChange( proc : TaskStylesChange );
+
       procedure release;
   end;
 
@@ -42,12 +50,33 @@ uses
 constructor TTaskStylesImpl.create;
 begin
   m_list := TList<ITaskStyle>.create;
+  m_listener := TList<TaskStylesChange>.create;
+end;
+
+function TTaskStylesImpl.delete(style: ITaskStyle): boolean;
+begin
+  Result := m_list.Contains(style);
+  if Result then
+  begin
+    m_list.Remove(style);
+    style.release;
+    doChange;
+  end;
 end;
 
 destructor TTaskStylesImpl.Destroy;
 begin
   m_list.Free;
+  m_listener.Free;
   inherited;
+end;
+
+procedure TTaskStylesImpl.doChange;
+var
+  i : integer;
+begin
+  for i := 0 to pred(m_listener.Count) do
+    m_listener[i](self);
 end;
 
 procedure TTaskStylesImpl.FillList(list: TStrings);
@@ -125,6 +154,16 @@ begin
             '-->';
   end;
   m_list.Add(Result);
+  doChange;
+end;
+
+procedure TTaskStylesImpl.registerChange(proc: TaskStylesChange);
+begin
+  if not m_listener.Contains(proc) then
+  begin
+    m_listener.Add(proc);
+    proc(self);
+  end;
 end;
 
 procedure TTaskStylesImpl.release;
@@ -152,7 +191,10 @@ begin
   end;
 
   if Result then
+  begin
     style.Name := name;
+    doChange;
+  end;
 end;
 
 function TTaskStylesImpl.saveToPath(path: string): boolean;
@@ -175,6 +217,11 @@ end;
 procedure TTaskStylesImpl.setTaskStyle(inx: integer; const value: ITaskStyle);
 begin
   m_list[inx] := value;
+end;
+
+procedure TTaskStylesImpl.uregisterChange(proc: TaskStylesChange);
+begin
+  m_listener.Remove(proc);
 end;
 
 end.

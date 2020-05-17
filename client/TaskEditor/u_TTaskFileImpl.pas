@@ -3,11 +3,12 @@ unit u_TTaskFileImpl;
 interface
 
 uses
-  i_taskEdit, System.Classes, System.SysUtils;
+  i_taskEdit, System.Classes, System.SysUtils, System.Generics.Collections;
 
 type
   TTaskFileImpl = class( TInterfacedObject, ITaskFile)
     private
+      m_listener : Tlist<TaskFileChange>;
       m_lines: TStrings;
       m_name : String;
 
@@ -15,6 +16,8 @@ type
       function  getName : string;
       function  getStream : TStream;
       function  getStrings: TStrings;
+
+      procedure doChange;
     public
       constructor create;
       Destructor Destroy; override;
@@ -26,6 +29,9 @@ type
 
       function load( fname : string ) : boolean;
       function save( path : string ) : boolean;
+
+      procedure registerChange(  proc : TaskFileChange );
+      procedure uregisterChange( proc : TaskFileChange );
 
       procedure release;
 
@@ -41,12 +47,23 @@ uses
 constructor TTaskFileImpl.create;
 begin
   m_lines:= TStringList.Create;
+  m_listener := Tlist<TaskFileChange>.create;
 end;
 
 destructor TTaskFileImpl.Destroy;
 begin
   m_lines.Free;
+  m_listener.free;
   inherited;
+end;
+
+procedure TTaskFileImpl.doChange;
+var
+  i : integer;
+begin
+  for i := 0 to pred(m_listener.Count) do
+    m_listener[i](self);
+
 end;
 
 function TTaskFileImpl.getName: string;
@@ -57,7 +74,7 @@ end;
 function TTaskFileImpl.getStream: TStream;
 begin
   Result := TMemoryStream.Create;
-  m_lines.SaveToStream(Result);
+  m_lines.SaveToStream(Result, TEncoding.UTF8);
   Result.Position := 0;
 end;
 
@@ -80,9 +97,16 @@ begin
   m_name := ExtractFileName(fname);
 end;
 
+procedure TTaskFileImpl.registerChange(proc: TaskFileChange);
+begin
+  if not m_listener.Contains(proc) then
+    m_listener.Add(proc);
+  proc(self);
+end;
+
 procedure TTaskFileImpl.release;
 begin
-
+  m_listener.Clear;
 end;
 
 function TTaskFileImpl.save(path: string): boolean;
@@ -101,6 +125,12 @@ end;
 procedure TTaskFileImpl.setName(value: string);
 begin
   m_name := value;
+  doChange;
+end;
+
+procedure TTaskFileImpl.uregisterChange(proc: TaskFileChange);
+begin
+  m_listener.Remove(proc);
 end;
 
 end.
