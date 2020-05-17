@@ -90,6 +90,7 @@ end;
 function TTaskStyleImpl.saveToPath(path: string): boolean;
 begin
   ForceDirectories(path);
+  m_files.saveToPath(path);
   Result := true;
 end;
 

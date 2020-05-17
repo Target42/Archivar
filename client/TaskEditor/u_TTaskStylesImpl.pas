@@ -206,7 +206,7 @@ begin
   for i := 0 to pred(m_list.Count) do
   begin
     list.Add(m_list[i].CLID);
-    m_list[i].saveToPath(path);
+    m_list[i].saveToPath(TPath.Combine(path,m_list[i].CLID ));
   end;
   list.SaveToFile(TPath.Combine(path, 'index.txt'));
   list.Free;

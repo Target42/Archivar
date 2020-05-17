@@ -1,8 +1,8 @@
 object ReportFrame: TReportFrame
   Left = 0
   Top = 0
-  Width = 932
-  Height = 568
+  Width = 724
+  Height = 540
   Align = alClient
   AutoSize = True
   TabOrder = 0
@@ -11,7 +11,7 @@ object ReportFrame: TReportFrame
   object Splitter1: TSplitter
     Left = 153
     Top = 0
-    Height = 568
+    Height = 540
     ExplicitLeft = 200
     ExplicitTop = 48
     ExplicitHeight = 100
@@ -19,9 +19,9 @@ object ReportFrame: TReportFrame
   object PageControl1: TPageControl
     Left = 156
     Top = 0
-    Width = 776
-    Height = 568
-    ActivePage = TabSheet2
+    Width = 568
+    Height = 540
+    ActivePage = TabSheet3
     Align = alClient
     TabOrder = 0
     ExplicitWidth = 295
@@ -32,14 +32,14 @@ object ReportFrame: TReportFrame
       object WebBrowser1: TWebBrowser
         Left = 0
         Top = 41
-        Width = 768
-        Height = 499
+        Width = 560
+        Height = 471
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 674
-        ExplicitHeight = 581
+        ExplicitWidth = 768
+        ExplicitHeight = 499
         ControlData = {
-          4C000000604F0000933300000000000000000000000000000000000000000000
+          4C000000E1390000AE3000000000000000000000000000000000000000000000
           000000004C000000000000000000000001000000E0D057007335CF11AE690800
           2B2E126208000000000000004C0000000114020000000000C000000000000046
           8000000000000000000000000000000000000000000000000000000000000000
@@ -48,7 +48,7 @@ object ReportFrame: TReportFrame
       object Panel1: TPanel
         Left = 0
         Top = 0
-        Width = 768
+        Width = 560
         Height = 41
         Align = alTop
         BevelOuter = bvNone
@@ -74,8 +74,8 @@ object ReportFrame: TReportFrame
       object PageControl2: TPageControl
         Left = 0
         Top = 0
-        Width = 768
-        Height = 540
+        Width = 560
+        Height = 512
         Align = alClient
         TabOrder = 0
         ExplicitWidth = 287
@@ -87,7 +87,7 @@ object ReportFrame: TReportFrame
     Left = 0
     Top = 0
     Width = 153
-    Height = 568
+    Height = 540
     Align = alLeft
     BevelOuter = bvNone
     Caption = 'Panel2'
@@ -96,7 +96,7 @@ object ReportFrame: TReportFrame
     ExplicitHeight = 305
     object GroupBox2: TGroupBox
       Left = 0
-      Top = 417
+      Top = 389
       Width = 153
       Height = 151
       Align = alBottom
@@ -403,7 +403,7 @@ object ReportFrame: TReportFrame
       Left = 0
       Top = 145
       Width = 153
-      Height = 272
+      Height = 244
       Align = alClient
       Caption = 'Dateien'
       TabOrder = 2
@@ -412,16 +412,16 @@ object ReportFrame: TReportFrame
         Left = 2
         Top = 15
         Width = 149
-        Height = 216
+        Height = 188
         Align = alClient
         ItemHeight = 13
         TabOrder = 0
         OnClick = ListBox3DblClick
-        ExplicitHeight = 298
+        ExplicitHeight = 216
       end
       object Panel5: TPanel
         Left = 2
-        Top = 231
+        Top = 203
         Width = 149
         Height = 39
         Align = alBottom

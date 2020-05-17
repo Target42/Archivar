@@ -102,7 +102,8 @@ uses
   u_tTaskStyleImpl in 'TaskEditor\u_tTaskStyleImpl.pas',
   u_TTaskFilesImpl in 'TaskEditor\u_TTaskFilesImpl.pas',
   f_InputBox in 'misc\f_InputBox.pas' {InputBoxForm},
-  f_selectList in 'misc\f_selectList.pas' {SelectListform};
+  f_selectList in 'misc\f_selectList.pas' {SelectListform},
+  m_dws in 'dws\m_dws.pas' {DwsMod: TDataModule};
 
 {$R *.res}
 

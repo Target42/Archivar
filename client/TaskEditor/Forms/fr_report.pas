@@ -8,7 +8,8 @@ uses
   xsd_TaskData, Vcl.ComCtrls, SynEditHighlighter, SynHighlighterXML, SynEdit,
   JvExStdCtrls, JvRichEdit, SynHighlighterHtml, JvExControls, JvXMLBrowser,
   Vcl.OleCtrls, SHDocVw, JvSimpleXml, i_taskEdit, Vcl.Menus, Vcl.ExtCtrls,
-  System.Types, System.Generics.Collections, SynHighlighterDWS, Vcl.Buttons;
+  System.Types, System.Generics.Collections, SynHighlighterDWS, Vcl.Buttons,
+  m_dws;
 
 type
   TFilecontainer = class
@@ -83,6 +84,7 @@ type
     m_Path : string;
     m_tc   : ITaskContainer;
     m_form : ITaskForm;
+    DwsMod : TDwsMod;
 
     m_files: TList<TFilecontainer>;
     procedure OpenCode(tf : ITaskFile );
@@ -125,7 +127,8 @@ end;
 procedure TReportFrame.Button1Click(Sender: TObject);
 var
   HtmlMod : THtmlMod;
-  tf     : ITaskFile;
+  tf      : ITaskFile;
+  st      : ITaskStyle;
   procedure currentFormData;
   var
     writer : TTaskForm2XML;
@@ -157,8 +160,6 @@ var
     m_xList := xml.GetDocBinding('List', TXMLList, TargetNamespace) as IXMLList;
   end;
   function findIndexHtml : ITaskFile;
-  var
-    st : ITaskStyle;
   begin
     Result := NIL;
     if ListBox2.ItemIndex = -1 then
@@ -177,11 +178,11 @@ begin
   else
     useTestData;
 
-  if not Assigned(m_xList) then
+  if not Assigned(m_xList)  then
     exit;
 
   tf := findIndexHtml;
-  if not Assigned(tf) then
+  if not Assigned(tf) or not Assigned(st) then
   begin
     ShowMessage('Die Datei "index.html" wurde nicht gefunden');
     exit;
@@ -193,6 +194,7 @@ begin
   Application.CreateForm(THtmlMod, HtmlMod);
   try
     HtmlMod.HTMLDoc.Assign(tf.Lines);
+    HtmlMod.TaskStyle:= st;
     HtmlMod.TaskData := m_xList;
     HtmlMod.SaveToFile(TPath.combine(m_path, 'index.html'));
   finally
@@ -229,6 +231,7 @@ end;
 
 procedure TReportFrame.init;
 begin
+  Application.CreateForm(TDwsMod, DwsMod);
   PageControl1.ActivePage := TabSheet3;
   m_files:= TList<TFilecontainer>.create;
   m_form := NIL;

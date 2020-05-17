@@ -4,7 +4,7 @@ interface
 
 uses
   System.SysUtils, System.Classes, Web.HTTPApp, Web.HTTPProd, xsd_TaskData,
-  JvComponentBase, JvRichEditToHtml;
+  JvComponentBase, JvRichEditToHtml, i_taskEdit;
 
 type
   THtmlMod = class(TDataModule)
@@ -19,14 +19,17 @@ type
       TagParams: TStrings; var ReplaceText: string);
   private
     m_task : IXMLList;
+    m_style: ITaskStyle;
     function getHTMLDocs : TStrings;
     function getField( name : string ) : string;
 
     function createTable( name : string ) : String;
     function addHeader( xHeader : IXMLHeader ) : string;
+    function execScript( TagParams: TStrings ) : string;
   public
     property HTMLDoc : TStrings read getHTMLDocs;
     property TaskData: IXMLList read m_task write m_task;
+    property TaskStyle : ITaskStyle read m_style write m_style;
 
     function Content : string;
     procedure SaveToFile( fname : string );
@@ -38,7 +41,7 @@ var
 implementation
 
 uses
-  System.StrUtils;
+  System.StrUtils, m_dws, Vcl.Forms;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -114,12 +117,40 @@ end;
 
 procedure THtmlMod.DataModuleCreate(Sender: TObject);
 begin
-  m_task := NIL;
+  m_task  := NIL;
+  m_style := NIL;
 end;
 
 procedure THtmlMod.DataModuleDestroy(Sender: TObject);
 begin
-  m_task := NIL;
+  m_task  := NIL;
+  m_style := NIL;
+end;
+
+function THtmlMod.execScript(TagParams: TStrings): string;
+var
+  DwsMod : TDwsMod;
+  tf     : ITaskFile;
+begin
+  tf := m_style.Files.getFile(TagParams[0]);
+  if not Assigned(tf) then
+  begin
+    Result := '!!Das Script "'+TagParams[0]+'" wurde nicht gefunden!!';
+    exit;
+  end;
+
+  Application.CreateForm(TDwsMod, DwsMod);
+
+  DwsMod.Script     := tf.Lines.Text;
+  DwsMod.Data       := m_task;
+  DwsMod.TaskStyle  := m_style;
+  DwsMod.Params.Assign(TagParams);
+  try
+    Result := DwsMod.run;
+  except
+
+  end;
+  DwsMod.Free;
 end;
 
 procedure THtmlMod.FrameHTMLTag(Sender: TObject; Tag: TTag;
@@ -169,8 +200,14 @@ begin
   else if cmd = 'table' then
   begin
     ReplaceText := createTable( TagParams.Strings[0]);
+  end
+  else if cmd = 'script' then
+  begin
+    if TagParams.Count > 0 then
+      ReplaceText := execScript( TagParams)
+    else
+      ReplaceText := '!!Es wurde kein Script-Name angegeben!!';
   end;
-
 end;
 
 procedure THtmlMod.SaveToFile(fname: string);
