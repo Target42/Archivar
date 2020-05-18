@@ -3,6 +3,11 @@
 }
 program script;
 
+var
+  i : integer;
+  j : integer;
 begin
-  printLN('<h1>neuen Text heir eingeben</h1>');
-end.
+  print('<h1>Einstellunge: ');
+  print(getFieldStr('MA_NACHNAME')+', '+getFieldStr('MA_VORNAME'));
+  printLN('</h1>');             
+end.                 

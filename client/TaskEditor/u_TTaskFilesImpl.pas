@@ -62,7 +62,7 @@ begin
   begin
     m_files.Remove(tf);
     tf.release;
-
+    Result := tf.delete;
     doChange;
   end;
 end;

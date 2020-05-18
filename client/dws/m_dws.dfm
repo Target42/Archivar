@@ -12,7 +12,7 @@ object DwsMod: TDwsMod
     Script = DelphiWebScript1
     Functions = <
       item
-        Name = 'ScriptParamCVount'
+        Name = 'ScriptParamCount'
         ResultType = 'Integer'
         OnEval = dwsUnit1FunctionsScriptParamCVountEval
       end
@@ -25,6 +25,36 @@ object DwsMod: TDwsMod
           end>
         ResultType = 'String'
         OnEval = dwsUnit1FunctionsScriptParamEval
+      end
+      item
+        Name = 'hasField'
+        Parameters = <
+          item
+            Name = 'name'
+            DataType = 'String'
+          end>
+        ResultType = 'Boolean'
+        OnEval = dwsUnit1FunctionshasFieldEval
+      end
+      item
+        Name = 'getFieldStr'
+        Parameters = <
+          item
+            Name = 'name'
+            DataType = 'String'
+          end>
+        ResultType = 'String'
+        OnEval = dwsUnit1FunctionsgetFieldStrEval
+      end
+      item
+        Name = 'getFieldInt'
+        Parameters = <
+          item
+            Name = 'name'
+            DataType = 'String'
+          end>
+        ResultType = 'Integer'
+        OnEval = dwsUnit1FunctionsgetFieldIntEval
       end>
     UnitName = 'Helper'
     StaticSymbols = False

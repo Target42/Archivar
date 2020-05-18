@@ -15,6 +15,9 @@ type
     procedure DataModuleDestroy(Sender: TObject);
     procedure dwsUnit1FunctionsScriptParamCVountEval(info: TProgramInfo);
     procedure dwsUnit1FunctionsScriptParamEval(info: TProgramInfo);
+    procedure dwsUnit1FunctionshasFieldEval(info: TProgramInfo);
+    procedure dwsUnit1FunctionsgetFieldStrEval(info: TProgramInfo);
+    procedure dwsUnit1FunctionsgetFieldIntEval(info: TProgramInfo);
   private
     m_script : TStringList;
     m_params : TStringList;
@@ -24,6 +27,7 @@ type
     function getScript: String;
     procedure setScript(const Value: String);
     function hasError( msgs:TdwsMessageList): boolean;
+    function getField( name : string ) : IXMLField;
   public
     property Data      : IXMLList read m_xList write m_xList;
     property TaskStyle : ITaskStyle read m_style write m_style;
@@ -41,7 +45,7 @@ var
 implementation
 
 uses
-  Vcl.Dialogs;
+  Vcl.Dialogs, System.StrUtils;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -78,6 +82,34 @@ begin
   m_params.Free;
 end;
 
+procedure TDwsMod.dwsUnit1FunctionsgetFieldIntEval(info: TProgramInfo);
+var
+  fi : IXMLField;
+  val : Integer;
+begin
+  fi :=  getField(info.ParamAsString[0]);
+  val := 0;
+  if Assigned(fi) then
+  begin
+    TryStrToInt(fi.Value, val);
+  end;
+  info.ResultAsInteger := val;
+end;
+
+procedure TDwsMod.dwsUnit1FunctionsgetFieldStrEval(info: TProgramInfo);
+var
+  fi : IXMLField;
+begin
+  fi :=  getField(info.ParamAsString[0]);
+  if Assigned(fi) then
+    info.ResultAsString := ReplaceText( fi.Value, #$A, '<br>' );
+end;
+
+procedure TDwsMod.dwsUnit1FunctionshasFieldEval(info: TProgramInfo);
+begin
+  info.ResultAsBoolean := Assigned(getField( info.ParamAsString[0] ));
+end;
+
 procedure TDwsMod.dwsUnit1FunctionsScriptParamCVountEval(info: TProgramInfo);
 begin
   info.ResultAsInteger := m_params.Count;
@@ -92,6 +124,21 @@ begin
     info.ResultAsString := m_params[inx]
   else
     info.ResultAsString := 'ScriptParam out of range : '+IntToStr(inx);
+end;
+
+function TDwsMod.getField(name: string): IXMLField;
+var
+  i : integer;
+begin
+  Result := NIL;
+  for i := 0 to pred(m_xList.Values.Count) do
+  begin
+    if SameText(name, m_xList.Values.Field[i].Field) then
+    begin
+      Result := m_xList.Values.Field[i];
+      break;
+    end;
+  end;
 end;
 
 function TDwsMod.getScript: String;

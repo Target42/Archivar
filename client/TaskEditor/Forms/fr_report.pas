@@ -12,11 +12,14 @@ uses
   m_dws;
 
 type
+  TCloseEditorFunc = procedure ( tf : ITaskFile ) of object;
   TFilecontainer = class
     private
+      m_dws       : TDwsMod;
       m_tab       : TTabSheet;
       m_edit      : TSynEdit;
       m_tf        : ITaskFile;
+      m_func      : TCloseEditorFunc;
 
       procedure setFileName( value : string );
       function  getfileName : string;
@@ -28,9 +31,13 @@ type
       property Tab  : TTabSheet read m_tab write m_tab;
       property FileName : string read getFileName write setFileName;
       property DataFile : ITaskFile read m_tf;
+      property doClose : TCloseEditorFunc read m_func write m_func;
 
       procedure save;
       function isFile( fname : string) : boolean;
+
+      procedure onCloseClick( sender : TObject );
+      procedure onCompileClick( sender : TObject );
   end;
 
   TReportFrame = class(TFrame)
@@ -120,8 +127,19 @@ uses
 { TReportFrame }
 
 procedure TReportFrame.addFieldName1Click(Sender: TObject);
+var
+  tab : TTabSheet;
+  i   : integer;
 begin
-  (Sender as TSynEdit).SelText := ( Sender as TMenuItem).Caption;
+  tab := PageControl2.ActivePage;
+  for i := 0 to pred(m_files.Count) do
+  begin
+    if m_files[i].m_tab = tab then
+    begin
+      m_files[i].Edit.SelText :=  ( Sender as TMenuItem).Caption;
+    end;
+  end;
+
 end;
 
 procedure TReportFrame.Button1Click(Sender: TObject);
@@ -217,6 +235,7 @@ begin
   begin
     if m_files[i].DataFile = tf  then
     begin
+      tf.Lines.Assign(m_files[i].Edit.Lines);
       m_files[i].Free;
       m_files.Delete(i);
       break;
@@ -301,8 +320,10 @@ begin
         exit
       end;
     end;
+
   fc := TFilecontainer.Create(tf, PageControl2);
   fc.Edit.PopupMenu := PopupMenu1;
+  fc.doClose := self.closeEditor;
   m_files.Add(fc);
 end;
 
@@ -631,22 +652,62 @@ end;
 constructor TFilecontainer.Create(tf : ITaskFile ; owner : TPageControl);
 var
   ext : string;
+  pan : TPanel;
+  btn : TButton;
+  x   : integer;
 begin
+  m_dws         := NIL;
   m_tf          := tf;
   m_tab         := TTabSheet.Create(owner);
   m_tab.Parent  := owner;
   m_tab.PageControl := owner;
+  m_func        := NIL;
+
+  pan := TPanel.Create(m_tab);
+  pan.Parent := m_tab;
+  pan.Align := alBottom;
+
+
+  btn         := TButton.Create(pan);
+  btn.Parent  := pan;
+  btn.OnClick := self.onCloseClick;
+  btn.Caption := 'Schlieﬂen';
+  btn.Left    := 16;
+  btn.Top     := 8;
+
+  x := btn.Left + btn.Width + 16;
+
+
+  ext := LowerCase(ExtractFileExt(m_tf.Name));
+  if ext = '.pas' then
+  begin
+    m_dws       := TDwsMod.Create(NIL);
+    btn         := TButton.Create(pan);
+    btn.Parent  := pan;
+    btn.OnClick := self.onCompileClick;
+    btn.Caption := 'Compilieren';
+    btn.Left    := x;
+    btn.Top     := 8;
+
+  end;
+
   m_edit        := TSynEdit.Create(m_tab);
   m_edit.Parent := m_tab;
   m_edit.Align  := alClient;
   m_edit.Lines.Assign(tf.Lines);
+  m_edit.Gutter.ShowLineNumbers := true;
+
   m_tab.Caption := m_tf.name;
-  ext := LowerCase(ExtractFileExt(m_tf.Name));
+
 
   if ext = '.html' then
+  begin
     m_edit.Highlighter := TSynHTMLSyn.Create(m_edit)
+  end
   else if ext = '.pas' then
+  begin
     m_edit.Highlighter := TSynDWSSyn.Create(m_edit);
+  end;
 
   owner.ActivePage := m_tab;
 end;
@@ -655,6 +716,9 @@ destructor TFilecontainer.Destroy;
 begin
   m_tab.PageControl := NIL;
   m_tab.Free;
+
+  if Assigned(m_dws) then
+    m_dws.Free;
   inherited;
 end;
 
@@ -666,6 +730,21 @@ end;
 function TFilecontainer.isFile(fname : string): boolean;
 begin
   Result := SameText( fname, ExtractFileName(m_tf.Name));
+end;
+
+procedure TFilecontainer.onCloseClick(sender: TObject);
+begin
+  if Assigned(m_func) then
+    m_func( m_tf );
+
+end;
+
+procedure TFilecontainer.onCompileClick(sender: TObject);
+begin
+  if not Assigned(m_dws) then
+    exit;
+  m_dws.Script := m_edit.Lines.Text;
+  m_dws.compile;
 end;
 
 procedure TFilecontainer.save;

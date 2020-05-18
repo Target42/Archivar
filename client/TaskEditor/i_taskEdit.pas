@@ -274,6 +274,8 @@ type
       function load( fname : string ) : boolean;
       function save( path : string ) : boolean;
 
+      function delete : boolean;
+
       procedure registerChange(  proc : TaskFileChange );
       procedure uregisterChange( proc : TaskFileChange );
 

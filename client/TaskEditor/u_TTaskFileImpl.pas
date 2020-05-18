@@ -11,6 +11,7 @@ type
       m_listener : Tlist<TaskFileChange>;
       m_lines: TStrings;
       m_name : String;
+      m_path : string;
 
       procedure setName( value : string );
       function  getName : string;
@@ -30,6 +31,8 @@ type
       function load( fname : string ) : boolean;
       function save( path : string ) : boolean;
 
+      function delete : boolean;
+
       procedure registerChange(  proc : TaskFileChange );
       procedure uregisterChange( proc : TaskFileChange );
 
@@ -48,6 +51,19 @@ constructor TTaskFileImpl.create;
 begin
   m_lines:= TStringList.Create;
   m_listener := Tlist<TaskFileChange>.create;
+end;
+
+function TTaskFileImpl.delete: boolean;
+begin
+  Result := false;
+  if m_path <> '' then
+  begin
+    try
+      Result:= DeleteFile( TPath.Combine(m_path, m_name));
+    except
+      Result := false;
+    end;
+  end;
 end;
 
 destructor TTaskFileImpl.Destroy;
@@ -95,6 +111,7 @@ begin
     exit;
   m_lines.LoadFromFile(fname);
   m_name := ExtractFileName(fname);
+  m_path := ExtractFilePath(fname);
 end;
 
 procedure TTaskFileImpl.registerChange(proc: TaskFileChange);
