@@ -139,7 +139,6 @@ begin
       m_files[i].Edit.SelText :=  ( Sender as TMenuItem).Caption;
     end;
   end;
-
 end;
 
 procedure TReportFrame.Button1Click(Sender: TObject);

@@ -4,9 +4,17 @@ interface
 
 uses
   System.SysUtils, System.Classes, dwsComp, xsd_TaskData, dwsErrors,
-  i_taskEdit, dwsExprs;
+  i_taskEdit, dwsExprs, Xml.XMLIntf;
 
 type
+  TXmlContainer = class
+  private
+    m_xml : IXMLNode;
+  public
+    constructor create( xml : IXMLNode );
+    property XML : IXMLNode read m_xml write m_xml;
+    Destructor Destroy; override;
+  end;
 
   TDwsMod = class(TDataModule)
     DelphiWebScript1: TDelphiWebScript;
@@ -18,6 +26,21 @@ type
     procedure dwsUnit1FunctionshasFieldEval(info: TProgramInfo);
     procedure dwsUnit1FunctionsgetFieldStrEval(info: TProgramInfo);
     procedure dwsUnit1FunctionsgetFieldIntEval(info: TProgramInfo);
+    procedure dwsUnit1FunctionsgetTableEval(info: TProgramInfo);
+    procedure dwsUnit1ClassesTTableMethodsgetTableHeaderEval(Info: TProgramInfo;
+      ExtObject: TObject);
+    procedure dwsUnit1ClassesTTableMethodsRowsEval(Info: TProgramInfo;
+      ExtObject: TObject);
+    procedure dwsUnit1ClassesTTableMethodsColsEval(Info: TProgramInfo;
+      ExtObject: TObject);
+    procedure dwsUnit1ClassesTTableMethodsCellEval(Info: TProgramInfo;
+      ExtObject: TObject);
+    procedure dwsUnit1ClassesTTableHeaderMethodsCountEval(Info: TProgramInfo;
+      ExtObject: TObject);
+    procedure dwsUnit1ClassesTTableHeaderMethodsCaptionEval(Info: TProgramInfo;
+      ExtObject: TObject);
+    procedure dwsUnit1ClassesTTableHeaderMethodsWidthEval(Info: TProgramInfo;
+      ExtObject: TObject);
   private
     m_script : TStringList;
     m_params : TStringList;
@@ -28,6 +51,7 @@ type
     procedure setScript(const Value: String);
     function hasError( msgs:TdwsMessageList): boolean;
     function getField( name : string ) : IXMLField;
+    function getHeaderField( name : string; header : IXMLHeader ) : IXMLField;
   public
     property Data      : IXMLList read m_xList write m_xList;
     property TaskStyle : ITaskStyle read m_style write m_style;
@@ -82,6 +106,92 @@ begin
   m_params.Free;
 end;
 
+procedure TDwsMod.dwsUnit1ClassesTTableHeaderMethodsCaptionEval(
+  Info: TProgramInfo; ExtObject: TObject);
+var
+  f : IXMLField;
+begin
+  if not ( ExtObject is TXmlContainer) then
+    exit;
+
+  f := getHeaderField( info.ParamAsString[0], ((ExtObject as TXmlContainer).XML as IXMLHeader));
+  if Assigned(f) then
+    info.ResultAsString := f.Header;
+end;
+
+procedure TDwsMod.dwsUnit1ClassesTTableHeaderMethodsCountEval(
+  Info: TProgramInfo; ExtObject: TObject);
+begin
+  if not ( ExtObject is TXmlContainer) then
+    exit;
+  info.ResultAsInteger := ((ExtObject as TXmlContainer).XML as IXMLHeader).Count;
+end;
+
+procedure TDwsMod.dwsUnit1ClassesTTableHeaderMethodsWidthEval(
+  Info: TProgramInfo; ExtObject: TObject);
+var
+  f : IXMLField;
+begin
+  if not ( ExtObject is TXmlContainer) then
+    exit;
+
+  f := getHeaderField( info.ParamAsString[0], ((ExtObject as TXmlContainer).XML as IXMLHeader));
+  if Assigned(f) then
+    info.ResultAsInteger := f.Width;
+end;
+
+procedure TDwsMod.dwsUnit1ClassesTTableMethodsCellEval(Info: TProgramInfo;
+  ExtObject: TObject);
+var
+  row, col : integer;
+  xRows : IXMLRows;
+  xRow  : IXMLRow;
+begin
+
+  row := Info.ParamAsInteger[0];
+  col := Info.ParamAsInteger[1];
+  if not ( ExtObject is TXmlContainer) then
+    exit;
+
+  try
+    xRows := ((ExtObject as TXmlContainer).XML as IXMLTable).Rows;
+    xRow  := xRows.Row[ row ];
+    info.ResultAsString := xRow.Value[col];
+  except
+    info.ResultAsString := 'Exception Cells!';
+  end;
+end;
+
+procedure TDwsMod.dwsUnit1ClassesTTableMethodsColsEval(Info: TProgramInfo;
+  ExtObject: TObject);
+begin
+  if not ( ExtObject is TXmlContainer) then
+    exit;
+
+  info.ResultAsInteger := ((ExtObject as TXmlContainer).XML as IXMLTable).Header.Count;
+end;
+
+procedure TDwsMod.dwsUnit1ClassesTTableMethodsgetTableHeaderEval(
+  Info: TProgramInfo; ExtObject: TObject);
+var
+  xml : TXmlContainer;
+begin
+  if not ( ExtObject is TXmlContainer) then
+    exit;
+
+  xml := TXmlContainer.create( ((ExtObject as TXmlContainer).XML as IXMLTable).Header);
+  info.ResultAsVariant := Info.Vars['TTableHeader'].GetConstructor('create', xml).Call;
+end;
+
+procedure TDwsMod.dwsUnit1ClassesTTableMethodsRowsEval(Info: TProgramInfo;
+  ExtObject: TObject);
+begin
+  if not ( ExtObject is TXmlContainer) then
+    exit;
+
+  info.ResultAsInteger := ((ExtObject as TXmlContainer).XML as IXMLTable).Rows.Count;
+end;
+
 procedure TDwsMod.dwsUnit1FunctionsgetFieldIntEval(info: TProgramInfo);
 var
   fi : IXMLField;
@@ -103,6 +213,23 @@ begin
   fi :=  getField(info.ParamAsString[0]);
   if Assigned(fi) then
     info.ResultAsString := ReplaceText( fi.Value, #$A, '<br>' );
+end;
+
+procedure TDwsMod.dwsUnit1FunctionsgetTableEval(info: TProgramInfo);
+var
+  i : integer;
+  xml : TXmlContainer;
+begin
+  xml := NIL;
+  for i := 0 to pred(m_xList.Tables.Count) do
+  begin
+    if SameText(info.ParamAsString[0], m_xList.Tables.Table[i].Field) then
+    begin
+      xml := TXmlContainer.create(m_xList.Tables.Table[i]);
+      break;
+    end;
+  end;
+  info.ResultAsVariant := Info.Vars['TTable'].GetConstructor('create', xml).Call;
 end;
 
 procedure TDwsMod.dwsUnit1FunctionshasFieldEval(info: TProgramInfo);
@@ -141,6 +268,21 @@ begin
   end;
 end;
 
+function TDwsMod.getHeaderField(name: string; header: IXMLHeader): IXMLField;
+var
+  i : integer;
+begin
+  Result := NIL;
+  for i := 0 to pred( header.Count) do
+    begin
+      if SameText(name, header.Field[i].Field) then
+      begin
+        Result := header.Field[i];
+        break;
+      end;
+    end;
+end;
+
 function TDwsMod.getScript: String;
 begin
   Result := m_script.Text;
@@ -177,6 +319,19 @@ end;
 procedure TDwsMod.setScript(const Value: String);
 begin
   m_script.Text := value;
+end;
+
+{ TXmlContainer }
+
+constructor TXmlContainer.create(xml: IXMLNode);
+begin
+  m_xml := xml;
+end;
+
+destructor TXmlContainer.Destroy;
+begin
+  m_xml := NIL;
+  inherited;
 end;
 
 end.

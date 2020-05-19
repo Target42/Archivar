@@ -10,6 +10,83 @@ object DwsMod: TDwsMod
   end
   object dwsUnit1: TdwsUnit
     Script = DelphiWebScript1
+    Classes = <
+      item
+        Name = 'TTable'
+        Methods = <
+          item
+            Name = 'getTableHeader'
+            ResultType = 'TTableHeader'
+            OnEval = dwsUnit1ClassesTTableMethodsgetTableHeaderEval
+            Visibility = cvPrivate
+            Kind = mkFunction
+          end
+          item
+            Name = 'Rows'
+            ResultType = 'integer'
+            OnEval = dwsUnit1ClassesTTableMethodsRowsEval
+            Kind = mkFunction
+          end
+          item
+            Name = 'Cols'
+            ResultType = 'integer'
+            OnEval = dwsUnit1ClassesTTableMethodsColsEval
+            Kind = mkFunction
+          end
+          item
+            Name = 'Cell'
+            Parameters = <
+              item
+                Name = 'row'
+                DataType = 'Integer'
+              end
+              item
+                Name = 'col'
+                DataType = 'Integer'
+              end>
+            ResultType = 'String'
+            OnEval = dwsUnit1ClassesTTableMethodsCellEval
+            Kind = mkFunction
+          end>
+        Properties = <
+          item
+            Name = 'Header'
+            DataType = 'TTableHeader'
+            ReadAccess = 'getTableHeader'
+          end>
+      end
+      item
+        Name = 'TTableHeader'
+        Methods = <
+          item
+            Name = 'Count'
+            ResultType = 'integer'
+            OnEval = dwsUnit1ClassesTTableHeaderMethodsCountEval
+            Kind = mkFunction
+          end
+          item
+            Name = 'Caption'
+            Parameters = <
+              item
+                Name = 'Name'
+                DataType = 'String'
+              end>
+            ResultType = 'String'
+            OnEval = dwsUnit1ClassesTTableHeaderMethodsCaptionEval
+            Kind = mkFunction
+          end
+          item
+            Name = 'Width'
+            Parameters = <
+              item
+                Name = 'name'
+                DataType = 'String'
+              end>
+            ResultType = 'integer'
+            OnEval = dwsUnit1ClassesTTableHeaderMethodsWidthEval
+            Kind = mkFunction
+          end>
+      end>
     Functions = <
       item
         Name = 'ScriptParamCount'
@@ -55,6 +132,16 @@ object DwsMod: TDwsMod
           end>
         ResultType = 'Integer'
         OnEval = dwsUnit1FunctionsgetFieldIntEval
+      end
+      item
+        Name = 'getTable'
+        Parameters = <
+          item
+            Name = 'name'
+            DataType = 'String'
+          end>
+        ResultType = 'TTable'
+        OnEval = dwsUnit1FunctionsgetTableEval
       end>
     UnitName = 'Helper'
     StaticSymbols = False

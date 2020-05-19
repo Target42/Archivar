@@ -1,17 +1,15 @@
 object ReportFrame: TReportFrame
   Left = 0
   Top = 0
-  Width = 824
-  Height = 544
+  Width = 451
+  Height = 305
   Align = alClient
   AutoSize = True
   TabOrder = 0
-  ExplicitWidth = 451
-  ExplicitHeight = 305
   object Splitter1: TSplitter
     Left = 153
     Top = 0
-    Height = 544
+    Height = 305
     ExplicitLeft = 200
     ExplicitTop = 48
     ExplicitHeight = 100
@@ -19,18 +17,16 @@ object ReportFrame: TReportFrame
   object PageControl1: TPageControl
     Left = 156
     Top = 0
-    Width = 668
-    Height = 544
+    Width = 295
+    Height = 305
     ActivePage = TabSheet3
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 295
-    ExplicitHeight = 305
     object TabSheet3: TTabSheet
       Caption = 'Preview'
       ImageIndex = 2
-      ExplicitWidth = 287
-      ExplicitHeight = 277
+      ExplicitLeft = 0
+      ExplicitTop = 0
       object WebBrowser1: TWebBrowser
         Left = 0
         Top = 41
@@ -72,6 +68,10 @@ object ReportFrame: TReportFrame
     object TabSheet2: TTabSheet
       Caption = 'HTML'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object PageControl2: TPageControl
         Left = 0
         Top = 0
@@ -86,13 +86,12 @@ object ReportFrame: TReportFrame
     Left = 0
     Top = 0
     Width = 153
-    Height = 544
+    Height = 305
     Align = alLeft
     BevelOuter = bvNone
     Caption = 'Panel2'
     ShowCaption = False
     TabOrder = 1
-    ExplicitHeight = 305
     object GroupBox2: TGroupBox
       Left = 0
       Top = 393
@@ -402,11 +401,10 @@ object ReportFrame: TReportFrame
       Left = 0
       Top = 145
       Width = 153
-      Height = 248
+      Height = 9
       Align = alClient
       Caption = 'Dateien'
       TabOrder = 2
-      ExplicitHeight = 9
       object ListBox3: TListBox
         Left = 2
         Top = 15
@@ -416,11 +414,10 @@ object ReportFrame: TReportFrame
         ItemHeight = 13
         TabOrder = 0
         OnClick = ListBox3DblClick
-        ExplicitHeight = 329
       end
       object Panel5: TPanel
         Left = 2
-        Top = 207
+        Top = -32
         Width = 149
         Height = 39
         Align = alBottom
@@ -428,7 +425,6 @@ object ReportFrame: TReportFrame
         Caption = 'Panel4'
         ShowCaption = False
         TabOrder = 1
-        ExplicitTop = -32
         object SpeedButton4: TSpeedButton
           Left = 8
           Top = 6
