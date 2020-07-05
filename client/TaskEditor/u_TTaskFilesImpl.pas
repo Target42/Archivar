@@ -3,7 +3,7 @@ unit u_TTaskFilesImpl;
 interface
 
 uses
-  i_taskEdit, System.Generics.Collections, System.Classes;
+  i_taskEdit, System.Generics.Collections, System.Classes, system.zip;
 
 type
   TTaskFilesImpl = class(TInterfacedObject, ITaskFiles)
@@ -24,7 +24,10 @@ type
       property Count : integer read getCount;
 
       function loadFromPath( path, mask : string ) : boolean;
+      function loadFromZip( zip: TZipFile ; path, mask : string ) : boolean;
+
       function saveToPath( path : string ) : boolean;
+      function saveToZip( zip : TZipFile; path : string ) : Boolean;
 
       function getFile( name : string ): ITaskFile;
       function newFile( name : string ) : ITaskFile;
@@ -45,7 +48,7 @@ type
 implementation
 
 uses
-  System.SysUtils, System.IOUtils, System.Types, u_TTaskFileImpl;
+  System.SysUtils, System.IOUtils, System.Types, u_TTaskFileImpl, u_zipHelper;
 
 { TTaskFilesImpl }
 
@@ -141,6 +144,24 @@ begin
   SetLength(arr, 0);
 end;
 
+function TTaskFilesImpl.loadFromZip( zip: TZipFile ; path, mask : string ) : boolean;
+var
+  list : TStringList;
+  i    : integer;
+  f    : ITaskFile;
+begin
+  list := getZipFiles( zip, path, mask );
+
+  for i := 0 to pred(list.Count) do begin
+    f := TTaskFileImpl.create;
+    f.loadFromZip(zip, list[i]);
+    m_files.Add(f);
+  end;
+  list.Free;
+
+  Result := true;
+end;
+
 function TTaskFilesImpl.newFile(name: string): ITaskFile;
 begin
   Result := getFile(name);
@@ -206,6 +227,15 @@ var
 begin
   for i := 0 to pred(m_files.Count) do
     m_files[i].save(path);
+  Result := true;
+end;
+
+function TTaskFilesImpl.saveToZip(zip: TZipFile; path: string): Boolean;
+var
+  i : integer;
+begin
+  for i := 0 to pred(m_files.Count) do
+    m_files[i].saveToZip(zip, path);
   Result := true;
 end;
 

@@ -169,7 +169,7 @@ object TaksEditorForm: TTaksEditorForm
           inherited RE: TRichEdit
             Width = 790
             Height = 133
-            ExplicitWidth = 292
+            ExplicitWidth = 790
             ExplicitHeight = 133
           end
         end
@@ -178,8 +178,6 @@ object TaksEditorForm: TTaksEditorForm
     object TabSheet2: TTabSheet
       Caption = 'Formulare'
       ImageIndex = 1
-      ExplicitWidth = 296
-      ExplicitHeight = 154
       inline EditorFrame1: TEditorFrame
         Left = 0
         Top = 0
@@ -187,8 +185,8 @@ object TaksEditorForm: TTaksEditorForm
         Height = 452
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 296
-        ExplicitHeight = 154
+        ExplicitWidth = 794
+        ExplicitHeight = 452
         inherited Splitter2: TSplitter
           Height = 452
           ExplicitHeight = 452
@@ -241,7 +239,7 @@ object TaksEditorForm: TTaksEditorForm
         end
         inherited ImageList1: TImageList
           Bitmap = {
-            494C01010C0018004C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+            494C01010C001800540010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
             0000000000003600000028000000400000004000000001002000000000000040
             0000000000000000000000000000000000000000000000000000000000000000
             0000000000000000000000000000000000000000000000000000000000000000
@@ -781,8 +779,6 @@ object TaksEditorForm: TTaksEditorForm
     object TabSheet3: TTabSheet
       Caption = 'Report'
       ImageIndex = 2
-      ExplicitWidth = 296
-      ExplicitHeight = 154
       inline ReportFrame1: TReportFrame
         Left = 0
         Top = 0
@@ -791,8 +787,8 @@ object TaksEditorForm: TTaksEditorForm
         Align = alClient
         AutoSize = True
         TabOrder = 0
-        ExplicitWidth = 296
-        ExplicitHeight = 154
+        ExplicitWidth = 794
+        ExplicitHeight = 452
         inherited Splitter1: TSplitter
           Height = 452
           ExplicitHeight = 452
@@ -803,6 +799,8 @@ object TaksEditorForm: TTaksEditorForm
           ExplicitWidth = 638
           ExplicitHeight = 452
           inherited TabSheet3: TTabSheet
+            ExplicitLeft = 4
+            ExplicitTop = 24
             ExplicitWidth = 630
             ExplicitHeight = 424
             inherited WebBrowser1: TWebBrowser
@@ -835,10 +833,10 @@ object TaksEditorForm: TTaksEditorForm
         end
         inherited Panel2: TPanel
           Height = 452
-          ExplicitHeight = 154
+          ExplicitHeight = 452
           inherited GroupBox2: TGroupBox
             Top = 301
-            ExplicitTop = 3
+            ExplicitTop = 301
           end
           inherited GroupBox3: TGroupBox
             Height = 156

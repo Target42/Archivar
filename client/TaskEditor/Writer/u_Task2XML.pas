@@ -3,7 +3,7 @@ unit u_Task2XML;
 interface
 
 uses
-  i_taskEdit, xsd_Task;
+  i_taskEdit, xsd_Task, System.Classes, system.zip;
 
 type
   Task2XML = class
@@ -16,18 +16,27 @@ type
 
       procedure loadForm( frm : ITaskForm; xFrm : IXMLForm );
       procedure loadCtrl( ctrl : ITaskCtrl; xCtrl : IXMLControl );
+
+      procedure doSave( st : TStream; task: ITask );
+      function  doLoad : ITask;
     public
       constructor Create;
       Destructor Destroy; override;
 
       function load( fname : string ) : ITask;
+      function loadFromZip( zip : TZipFile; fname : string ) : ITask;
+
       function save( task : ITask ; fname : string ) : boolean;
+      function saveToStream(task: ITask) : TStream;
+      function saveToZip( zip : TZipFile; task: ITask; name : string ) : boolean;
+
+
   end;
 
 implementation
 
 uses
-  u_TaskImpl, u_TaskDataField2XML, System.SysUtils;
+  u_TaskImpl, u_TaskDataField2XML, System.SysUtils, Xml.XMLDoc, Xml.XMLIntf;
 
 { Task2XML }
 
@@ -46,21 +55,13 @@ begin
   inherited;
 end;
 
-function Task2XML.load(fname: string): ITask;
+function Task2XML.doLoad: ITask;
 var
   xw  : TaskDataField2XML;
   i   : integer;
 begin
-  try
-    m_xTask := LoadTask(fname);
-  except
-    begin
-      m_xTask := NewTask;
-      m_xTask.Name := 'Exception';
-    end;
-  end;
   Result := TTask.create;
-  Result.WorkDir := ExtractFilePath( fname );
+//  Result.WorkDir := ExtractFilePath( fname );
   Result.Name := m_xTask.Name;
   Result.CLID := m_xTask.Clid;
 
@@ -78,6 +79,50 @@ begin
   begin
     loadForm(Result.NewForm, m_xTask.Forms[i]);
   end;
+end;
+
+procedure Task2XML.doSave(st: TStream; task: ITask);
+var
+  xw  : TaskDataField2XML;
+  i   : integer;
+begin
+  m_xTask := NewTask;
+
+  m_xTask.Name := task.Name;
+  m_xTask.Clid := task.CLID;
+
+  xw := TaskDataField2XML.create;
+  try
+    for i := 0 to pred(task.Fields.Count) do
+      xw.DataField2XML( task.Fields.Items[i], m_xTask.Datafields.Add );
+  finally
+    xw.Free;
+  end;
+
+  for i := 0  to pred(task.Forms.Count) do
+  begin
+    saveForm( task.Forms.Items[i], m_xTask.Forms.Add );
+  end;
+
+  try
+    m_xTask.OwnerDocument.SaveToStream(st);
+  except
+
+  end;
+end;
+
+function Task2XML.load(fname: string): ITask;
+begin
+  try
+    m_xTask := LoadTask(fname);
+  except
+    begin
+      m_xTask := NewTask;
+      m_xTask.Name := 'Exception';
+    end;
+  end;
+
+  Result := doLoad;
 end;
 
 procedure Task2XML.loadCtrl(ctrl: ITaskCtrl; xCtrl: IXMLControl);
@@ -116,38 +161,47 @@ begin
 
 end;
 
+function Task2XML.loadFromZip(zip: TZipFile; fname: string): ITask;
+var
+  st : TStream;
+  lh : TZipHeader;
+  xml: IXMLDocument;
+begin
+  st := NIL;
+  zip.Read(fname, st, lh);
+  st.Position := 0;
+
+  try
+    xml := NewXMLDocument;
+    xml.LoadFromStream(st);
+    m_xTask := xml.GetDocBinding('Task', TXMLTask, TargetNamespace) as IXMLTask;
+  except
+    begin
+      m_xTask := NewTask;
+      m_xTask.Name := 'Exception';
+    end;
+  end;
+  st.Free;
+
+  Result := doLoad;
+end;
+
 function Task2XML.save(task: ITask; fname: string): boolean;
 var
-  xw  : TaskDataField2XML;
-  i   : integer;
+  st  : TFileStream;
 begin
   Result := false;
   if not Assigned(task) then
     exit;
 
-  m_xTask := NewTask;
-
-  m_xTask.Name := task.Name;
-  m_xTask.Clid := task.CLID;
-
-  xw := TaskDataField2XML.create;
+  st := NIL;
   try
-    for i := 0 to pred(task.Fields.Count) do
-      xw.DataField2XML( task.Fields.Items[i], m_xTask.Datafields.Add );
+    st := TFileStream.Create(fname, fmCreate + fmShareDenyNone);
+    doSave(st, task);
+    Result := (st.Size<>0);
   finally
-    xw.Free;
-  end;
-
-  for i := 0  to pred(task.Forms.Count) do
-  begin
-    saveForm( task.Forms.Items[i], m_xTask.Forms.Add );
-  end;
-
-
-  try
-    m_xTask.OwnerDocument.SaveToFile(fname);
-  except
-
+    if Assigned(st) then
+      st.Free;
   end;
 end;
 
@@ -191,6 +245,25 @@ begin
   xFrm.Mainform := frm.MainForm;
 
   saveCtrl( frm.Base, xFrm.Add );
+end;
+
+function Task2XML.saveToStream(task: ITask) : TStream;
+begin
+  Result := TMemoryStream.Create;
+  doSave(Result, task);
+  Result.Position := 0;
+end;
+
+function Task2XML.saveToZip(zip: TZipFile; task: ITask; name: string): boolean;
+var
+  st : TStream;
+begin
+  st := saveToStream(task);
+  st.Position := 0;
+  zip.Add(st, name);
+  Result := true;
+  if Assigned(st) then
+    st.Free;
 end;
 
 end.

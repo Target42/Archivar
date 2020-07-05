@@ -3,7 +3,8 @@ unit u_TTaskStylesImpl;
 interface
 
 uses
-  i_taskEdit, System.Generics.Collections, System.Types, System.Classes;
+  i_taskEdit, System.Generics.Collections, System.Types, System.Classes,
+  system.zip;
 
 type
   TTaskStylesImpl = class(TInterfacedObject, ITaskStyles)
@@ -25,7 +26,10 @@ type
       function newStyle(name : String ) : ITaskStyle;
 
       function loadFromPath( path : string ) : boolean;
+      function loadFromZip( zip : TZipFile; path : string ) : boolean;
+
       function saveToPath( path : string ) : boolean;
+      function saveToZip( zip : TZipFile; path : string ) : Boolean;
 
       procedure FillList( list : TStrings );
 
@@ -43,7 +47,7 @@ type
 implementation
 
 uses
-  System.IOUtils, u_tTaskStyleImpl, System.SysUtils;
+  System.IOUtils, u_tTaskStyleImpl, System.SysUtils, u_zipHelper;
 
 { TTaskStylesImpl }
 
@@ -138,6 +142,24 @@ begin
   Result := true;
 end;
 
+function TTaskStylesImpl.loadFromZip(zip: TZipFile; path: string): boolean;
+var
+  list : TStringList;
+  i    : integer;
+  st  : ITaskStyle;
+begin
+  list := loadStringListFromZip( zip, TPath.combine(path, 'index.txt'));
+
+  for i := 0 to pred(list.Count) do
+  begin
+    st := TTaskStyleimpl.create;
+    st.loadFromZip( zip, TPath.Combine(path, list[i]));
+    m_list.Add(st)
+  end;
+  list.Free;
+  Result := true;
+end;
+
 function TTaskStylesImpl.newStyle(name : String ) : ITaskStyle;
 var
   f : ITaskFile;
@@ -210,6 +232,30 @@ begin
   end;
   list.SaveToFile(TPath.Combine(path, 'index.txt'));
   list.Free;
+
+  Result := true;
+end;
+
+function TTaskStylesImpl.saveToZip(zip: TZipFile; path: string): Boolean;
+var
+  i : integer;
+  list : TStringList;
+  st   : TMemoryStream;
+begin
+  st   := TMemoryStream.create;
+  list := TStringList.Create;
+
+  for i := 0 to pred(m_list.Count) do
+  begin
+    list.Add(m_list[i].CLID);
+    m_list[i].saveToZip(zip, TPath.Combine(path,m_list[i].CLID ));
+  end;
+  list.saveToStream( st );
+  st.position := 0;
+  zip.Add( st, TPath.Combine(path, 'index.txt'));
+
+  list.Free;
+  st.free;
 
   Result := true;
 end;

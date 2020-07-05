@@ -18,6 +18,8 @@ type
       m_dws       : TDwsMod;
       m_tab       : TTabSheet;
       m_edit      : TSynEdit;
+      m_memo      : TMemo;
+      m_split     : TSplitter;
       m_tf        : ITaskFile;
       m_func      : TCloseEditorFunc;
 
@@ -656,6 +658,8 @@ var
   x   : integer;
 begin
   m_dws         := NIL;
+  m_memo        := NIL;
+  m_split       := NIL;
   m_tf          := tf;
   m_tab         := TTabSheet.Create(owner);
   m_tab.Parent  := owner;
@@ -692,12 +696,10 @@ begin
 
   m_edit        := TSynEdit.Create(m_tab);
   m_edit.Parent := m_tab;
-  m_edit.Align  := alClient;
   m_edit.Lines.Assign(tf.Lines);
   m_edit.Gutter.ShowLineNumbers := true;
 
   m_tab.Caption := m_tf.name;
-
 
   if ext = '.html' then
   begin
@@ -706,8 +708,16 @@ begin
   else if ext = '.pas' then
   begin
     m_edit.Highlighter := TSynDWSSyn.Create(m_edit);
-  end;
+    m_memo            := TMemo.Create(m_tab);;
+    m_memo.Parent     := m_tab;
+    m_memo.ScrollBars := ssBoth;
+    m_memo.Align      := alBottom;
 
+    m_split           := TSplitter.Create(m_tab);
+    m_split.Parent    := m_tab;
+    m_split.Align     := alBottom;
+  end;
+  m_edit.Align  := alClient;
   owner.ActivePage := m_tab;
 end;
 
@@ -744,6 +754,10 @@ begin
     exit;
   m_dws.Script := m_edit.Lines.Text;
   m_dws.compile;
+  if Assigned(m_memo) then
+  begin
+    m_memo.Lines.Text := m_dws.MsgText;
+  end;
 end;
 
 procedure TFilecontainer.save;

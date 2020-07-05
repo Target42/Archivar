@@ -85,6 +85,12 @@ object DwsMod: TDwsMod
             ResultType = 'integer'
             OnEval = dwsUnit1ClassesTTableHeaderMethodsWidthEval
             Kind = mkFunction
+          end
+          item
+            Name = 'Names'
+            ResultType = 'array of string'
+            OnEval = dwsUnit1ClassesTTableHeaderMethodsNamesEval
+            Kind = mkFunction
           end>
       end>
     Functions = <
@@ -142,10 +148,50 @@ object DwsMod: TDwsMod
           end>
         ResultType = 'TTable'
         OnEval = dwsUnit1FunctionsgetTableEval
+      end
+      item
+        Name = 'printXML'
+        ResultType = 'String'
+        OnEval = dwsUnit1FunctionsprintXMLEval
       end>
     UnitName = 'Helper'
     StaticSymbols = False
     Left = 184
     Top = 40
+  end
+  object XMLDump: TPageProducer
+    HTMLDoc.Strings = (
+      '<table style="text-align: left; width: 100%;" border="1"'
+      ' cellpadding="2" cellspacing="0">'
+      '  <tbody>'
+      '    <tr>'
+      '      <td style="font-weight: bold;">Name</td>'
+      '      <td style="font-weight: bold;">Value</td>'
+      '    </tr>'
+      '    <#datarows>'
+      '  </tbody>'
+      '</table>'
+      ' <#tables>')
+    OnHTMLTag = XMLDumpHTMLTag
+    Left = 104
+    Top = 128
+  end
+  object DumpTable: TPageProducer
+    HTMLDoc.Strings = (
+      '<h4><#tablename></h4>'
+      ''
+      '<table style="text-align: left; width: 100%;" border="1"'
+      ' cellpadding="2" cellspacing="0">'
+      '  <tbody>'
+      '    <tr>'
+      '      <#header>'
+      '    </tr>'
+      '    <#rows>'
+      '  </tbody>'
+      '</table>'
+      '')
+    OnHTMLTag = DumpTableHTMLTag
+    Left = 192
+    Top = 128
   end
 end

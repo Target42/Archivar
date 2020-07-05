@@ -3,7 +3,7 @@ unit u_tTaskStyleImpl;
 interface
 
 uses
-  i_taskEdit;
+  i_taskEdit, system.Zip;
 
 type
   TTaskStyleImpl = class(TInterfacedObject, ITaskStyle)
@@ -25,7 +25,10 @@ type
       property Files: ITaskFiles read getFiles;
 
       function loadFromPath( path : string ) : boolean;
+      function loadFromZip( zip : TZipFile; path : string ) : boolean;
+
       function saveToPath( path : string ) : boolean;
+      function saveToZip( zip : TZipFile; path : string ) : boolean;
 
       function isName( name : string ) : Boolean;
 
@@ -82,6 +85,11 @@ begin
   m_files.loadFromPath(path, '*.*');
 end;
 
+function TTaskStyleImpl.loadFromZip(zip: TZipFile; path: string): boolean;
+begin
+  Result := m_files.loadFromZip(zip, path, '[\w]*\.[\w]*');
+end;
+
 procedure TTaskStyleImpl.release;
 begin
   m_files.release;
@@ -92,6 +100,11 @@ begin
   ForceDirectories(path);
   m_files.saveToPath(path);
   Result := true;
+end;
+
+function TTaskStyleImpl.saveToZip(zip: TZipFile; path: string): boolean;
+begin
+  Result := m_files.saveToZip(zip, path);
 end;
 
 procedure TTaskStyleImpl.setCLID(value: string);

@@ -3,7 +3,7 @@ unit u_TTaskContainerImpl;
 interface
 
 uses
-  i_taskEdit, System.Generics.Collections;
+  i_taskEdit, System.Generics.Collections, system.zip;
 
 type
   TTaskContainerImpl = class(TInterfacedObject, ITaskContainer)
@@ -28,7 +28,10 @@ type
       property Styles   : ITaskStyles read getStyles;
 
       function loadFromPath( path : string ) : boolean;
+      function loadFromZip( zip : TZipFile ) : boolean;
+
       function saveToPath( path : string ) : boolean;
+      function saveToZip( path : string ) : boolean;
 
       procedure release;
 
@@ -37,7 +40,8 @@ type
 implementation
 
 uses
-  u_TTaskFilesImpl, u_TTaskStylesImpl, System.SysUtils, u_Task2XML, System.IOUtils;
+  u_TTaskFilesImpl, u_TTaskStylesImpl, System.SysUtils, u_Task2XML,
+  System.IOUtils, System.Classes;
 
 { TTaskContainerImpl }
 
@@ -86,6 +90,7 @@ begin
   Result := false;
   if not DirectoryExists( path ) then
     exit;
+
   xw := Task2XML.Create;
   m_task := xw.load(TPath.combine( path, 'task.xml'));
   xw.Free;
@@ -95,6 +100,22 @@ begin
   Result := m_files.loadFromPath(TPath.Combine(path, 'TestData'), '*.xml') and Result;
   Result := m_info.loadFromPath(TPath.Combine(path, 'info'), '*.*') and Result;
   Result := m_styles.loadFromPath(TPath.Combine(path, 'Styles'))  and Result;
+end;
+
+function TTaskContainerImpl.loadFromZip(zip: TZipFile): boolean;
+var
+  xw : Task2XML;
+begin
+  Result := false;
+
+  xw := Task2XML.Create;
+  m_task := xw.loadFromZip(zip, 'task.xml');
+  xw.Free;
+  m_task.Owner := self;
+
+  Result := m_files.loadFromZip(zip, 'TestData', '[\w]*\.xml') and Result;
+  Result := m_info.loadFromZip(zip, 'info', '[\w]*\.[\w]*') and Result;
+  Result := m_styles.loadFromZip(zip, 'Styles')  and Result;
 end;
 
 procedure TTaskContainerImpl.release;
@@ -116,6 +137,7 @@ var
   xw : Task2XML;
 begin
   ForceDirectories(path);
+
   xw := Task2XML.Create;
   Result := xw.save(m_task, TPath.combine( path, 'task.xml'));
   xw.Free;
@@ -123,6 +145,32 @@ begin
   Result := m_files.saveToPath(TPath.Combine(path, 'TestData')) and Result;
   Result := m_info.saveToPath(TPath.Combine(path, 'Info')) and Result;
   Result := m_styles.saveToPath(TPath.Combine(path, 'Styles'))  and Result;
+end;
+
+function TTaskContainerImpl.saveToZip(path: string): boolean;
+var
+  zip: TZipFile;
+
+  function saveTask : boolean;
+  var
+    xw : Task2XML;
+  begin
+    xw := Task2XML.Create;
+    Result := xw.saveToZip(zip, m_task, 'task.xml');
+    xw.Free;
+  end;
+begin
+  ForceDirectories(path);
+
+  zip := TZipFile.Create;
+  zip.Open(TPath.Combine( path, 'data.zip'), zmWrite );
+
+  Result := saveTask;
+  Result := m_files.saveToZip( zip, 'TestData') and Result;
+  Result := m_info.saveToZip(zip, 'Info') and Result;
+  Result := m_styles.saveToZip(zip, 'Styles')  and Result;
+
+  zip.Free;
 end;
 
 procedure TTaskContainerImpl.setTask(value: ITask);

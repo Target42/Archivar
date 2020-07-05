@@ -4,7 +4,7 @@ interface
 
 uses
   System.SysUtils, System.Classes, dwsComp, xsd_TaskData, dwsErrors,
-  i_taskEdit, dwsExprs, Xml.XMLIntf;
+  i_taskEdit, dwsExprs, Xml.XMLIntf, Web.HTTPApp, Web.HTTPProd;
 
 type
   TXmlContainer = class
@@ -19,6 +19,8 @@ type
   TDwsMod = class(TDataModule)
     DelphiWebScript1: TDelphiWebScript;
     dwsUnit1: TdwsUnit;
+    XMLDump: TPageProducer;
+    DumpTable: TPageProducer;
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
     procedure dwsUnit1FunctionsScriptParamCVountEval(info: TProgramInfo);
@@ -41,11 +43,24 @@ type
       ExtObject: TObject);
     procedure dwsUnit1ClassesTTableHeaderMethodsWidthEval(Info: TProgramInfo;
       ExtObject: TObject);
+    procedure dwsUnit1ClassesTTableHeaderMethodsNamesEval(Info: TProgramInfo;
+      ExtObject: TObject);
+    procedure dwsUnit1FunctionsprintXMLEval(info: TProgramInfo);
+    procedure XMLDumpHTMLTag(Sender: TObject; Tag: TTag;
+      const TagString: string; TagParams: TStrings; var ReplaceText: string);
+    procedure DumpTableHTMLTag(Sender: TObject; Tag: TTag;
+      const TagString: string; TagParams: TStrings; var ReplaceText: string);
   private
     m_script : TStringList;
     m_params : TStringList;
     m_xList  : IXMLList;
+    m_xTable : IXMLTable;
     m_style  : ITaskStyle;
+    m_msgText: string;
+
+    function addDataRows : string;
+    function headerText : string;
+    function rowsText : string;
 
     function getScript: String;
     procedure setScript(const Value: String);
@@ -59,6 +74,8 @@ type
     property Params : TStringList read m_params;
     property Script : String read getScript write setScript;
 
+    property MsgText : string read m_msgText;
+
     function compile : boolean;
     function run : string;
   end;
@@ -69,22 +86,36 @@ var
 implementation
 
 uses
-  Vcl.Dialogs, System.StrUtils;
+  Vcl.Dialogs, System.StrUtils, dwsUtils, Xml.XMLDoc;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
 {$R *.dfm}
 
+function TDwsMod.addDataRows: string;
+var
+  i : integer;
+  fmt : string;
+begin
+  fmt := '<tr><td>%s</td><td>%s</td></tr>'+sLineBreak;
+
+  Result := '';
+  for i := 0 to pred(m_xList.Values.Count) do
+  begin
+
+    Result := Result + Format(fmt, [m_xList.Values.Field[i].Field,
+      ReplaceStr( m_xList.Values.Field[i].Value, #$A, '<br>')]);
+  end;
+end;
+
 function TDwsMod.compile: boolean;
 var
   prog : IdwsProgram;
 begin
+  m_msgText := '';
   prog   := DelphiWebScript1.Compile(m_script.Text);
 
-  if (prog.Msgs.Count>0) then
-  begin
-    ShowMessage(prog.Msgs.AsInfo);
-  end;
+  m_msgText := prog.Msgs.AsInfo;
   Result := hasError(prog.Msgs);
 end;
 
@@ -106,6 +137,22 @@ begin
   m_params.Free;
 end;
 
+procedure TDwsMod.DumpTableHTMLTag(Sender: TObject; Tag: TTag;
+  const TagString: string; TagParams: TStrings; var ReplaceText: string);
+var
+  cmd : string;
+begin
+  cmd := LowerCase(TagString);
+
+  if cmd = 'tablename' then
+    ReplaceText := m_xTable.Field
+  else if cmd = 'header' then
+    ReplaceText := headerText
+  else if cmd = 'rows' then
+    ReplaceText := rowsText;
+
+end;
+
 procedure TDwsMod.dwsUnit1ClassesTTableHeaderMethodsCaptionEval(
   Info: TProgramInfo; ExtObject: TObject);
 var
@@ -125,6 +172,25 @@ begin
   if not ( ExtObject is TXmlContainer) then
     exit;
   info.ResultAsInteger := ((ExtObject as TXmlContainer).XML as IXMLHeader).Count;
+end;
+
+procedure TDwsMod.dwsUnit1ClassesTTableHeaderMethodsNamesEval(
+  Info: TProgramInfo; ExtObject: TObject);
+var
+  i : integer;
+  arr : TStringDynArray;
+  xHeader : IXMLHeader;
+begin
+  if not ( ExtObject is TXmlContainer) then
+    exit;
+  xHeader := (ExtObject as TXmlContainer).XML as IXMLHeader;
+  Info.ResultAsStringArray := arr;
+
+  SetLength(arr, xHeader.Count);
+  for i := 0 to pred(xHeader.Count) do
+    arr[i] := xHeader.Field[i].Field;
+
+  info.ResultAsStringArray := arr;
 end;
 
 procedure TDwsMod.dwsUnit1ClassesTTableHeaderMethodsWidthEval(
@@ -237,6 +303,11 @@ begin
   info.ResultAsBoolean := Assigned(getField( info.ParamAsString[0] ));
 end;
 
+procedure TDwsMod.dwsUnit1FunctionsprintXMLEval(info: TProgramInfo);
+begin
+  info.ResultAsString := XMLDump.Content;
+end;
+
 procedure TDwsMod.dwsUnit1FunctionsScriptParamCVountEval(info: TProgramInfo);
 begin
   info.ResultAsInteger := m_params.Count;
@@ -300,6 +371,32 @@ begin
 
 end;
 
+function TDwsMod.headerText: string;
+var
+  i : integer;
+  fmt : string;
+begin
+  Result := '';
+  fmt := '<th>%s<br>%s</th>';
+  for i := 0 to pred(m_xTable.Header.Count) do
+    Result := Result + Format( fmt, [ m_xTable.Header.Field[i].Header,
+     m_xTable.Header.Field[i].Field]);
+end;
+
+function TDwsMod.rowsText: string;
+var
+  i, j : integer;
+begin
+  Result := '';
+  for i := 0 to pred(m_xTable.Rows.Count) do begin
+    Result := Result + '<tr>';
+    for j := 0 to pred(m_xTable.Rows.Row[i].Count) do begin
+      Result := Result + '<td>'+m_xTable.Rows.Row[i].Value[j]+'</td>';
+    end;
+    Result := Result + '</tr>'+sLineBreak;
+  end;
+end;
+
 function TDwsMod.run: string;
 var prog : IdwsProgram;
     exec : IdwsProgramExecution;
@@ -319,6 +416,25 @@ end;
 procedure TDwsMod.setScript(const Value: String);
 begin
   m_script.Text := value;
+end;
+
+procedure TDwsMod.XMLDumpHTMLTag(Sender: TObject; Tag: TTag;
+  const TagString: string; TagParams: TStrings; var ReplaceText: string);
+var
+  cmd : string;
+  i   : integer;
+begin
+  cmd := LowerCase(TagString);
+
+  if cmd = 'datarows' then
+    ReplaceText := addDataRows
+  else if cmd = 'tables' then begin
+    for i := 0 to pred(m_xList.Tables.Count) do begin
+      m_xTable := m_xList.Tables.Table[i];
+      ReplaceText := ReplaceText + DumpTable.Content;
+    end;
+    m_xTable := NIL;
+  end;
 end;
 
 { TXmlContainer }

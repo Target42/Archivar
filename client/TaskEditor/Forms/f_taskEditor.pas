@@ -49,7 +49,7 @@ implementation
 
 uses
   u_TaskImpl, i_datafields, f_datafield_edit, System.IOUtils,
-  u_TTaskContainerImpl;
+  u_TTaskContainerImpl, system.zip;
 
 {$R *.dfm}
 
@@ -124,11 +124,32 @@ begin
 end;
 
 procedure TTaksEditorForm.FormCreate(Sender: TObject);
+var
+  st    : TStream;
+  fname : string;
+  zip   : TZipFile;
 begin
   EditorFrame1.init;
 
   m_tc := TTaskContainerImpl.create;
-  m_tc.loadFromPath(TPath.Combine( ExtractFilePath( Application.ExeName), 'lib\task\{D45BD078-C776-4DD2-B47F-68E6CE886C42}' ));
+
+  fname := TPath.Combine( ExtractFilePath( Application.ExeName), 'lib\task\{D45BD078-C776-4DD2-B47F-68E6CE886C42}.zip' );
+
+  if FileExists( fname )  then
+  begin
+    st := TFileStream.create( fname, fmOpenRead + fmShareDenyNone );
+    zip := TZipFile.Create;
+    try
+      zip.Open( st, zmRead );
+      m_tc.loadFromZip(zip);
+    finally
+      zip.Free;
+      st.Free;
+    end;
+  end;
+
+  //m_tc.loadFromPath(TPath.Combine( ExtractFilePath( Application.ExeName), 'lib\task\{D45BD078-C776-4DD2-B47F-68E6CE886C42}' ));
+
   setTaskContainer(m_tc);
 
   EditorFrame1.Task := m_tc.Task;
@@ -141,14 +162,15 @@ begin
 end;
 
 procedure TTaksEditorForm.FormDestroy(Sender: TObject);
-var
-  fname : string;
+//var
+//  fname : string;
 begin
   EditorFrame1.release;
   ReportFrame1.release;
 
-  fname := TPath.Combine( ExtractFilePath( Application.ExeName), 'lib\task\{D45BD078-C776-4DD2-B47F-68E6CE886C42}' );
-  m_tc.saveToPath(fname);
+//  fname := TPath.Combine( ExtractFilePath( Application.ExeName), 'lib\task\{D45BD078-C776-4DD2-B47F-68E6CE886C42}' );
+//  m_tc.saveToPath(fname);
+//  m_tc.saveToZip(fname);
   m_tc.release;
 end;
 

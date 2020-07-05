@@ -4,7 +4,7 @@ interface
 
 uses
   i_datafields, System.Generics.Collections, Vcl.Controls, System.Classes,
-  Winapi.Windows;
+  Winapi.Windows, system.zip;
 
 type
   TControlType = (ctNone,
@@ -53,7 +53,7 @@ type
     property CLID   : string read getCLID write setCLID;
     property Fields : IDataFieldList read getFields;
     property Forms  : TList<ITaskForm> read getForms;
-    property WorkDir: string read getWorkDir write setWorkDir;
+//    property WorkDir: string read getWorkDir write setWorkDir;
 
     function NewForm : ITaskForm;
     function getFormByCLID( clid : string ) : ITaskForm;
@@ -223,7 +223,10 @@ type
       property Info     : ITaskFiles read getInfoFiles;
 
       function loadFromPath( path : string ) : boolean;
+      function loadFromZip( zip : TZipFile ) : boolean;
+
       function saveToPath( path : string ) : boolean;
+      function saveToZip( path : string ) : boolean;
 
       procedure release;
   end;
@@ -242,7 +245,11 @@ type
       function getFile( name : string ): ITaskFile;
 
       function loadFromPath( path, mask : string ) : boolean;
+      function loadFromZip( zip: TZipFile; path, mask : string ) : boolean;
+
       function saveToPath( path : string ) : boolean;
+      function saveToZip( zip : TZipFile; path : string ) : Boolean;
+
       function newFile( name : string ) : ITaskFile;
       function rename( tf : ITaskFile ; name : string) : boolean;
       function delete( tf : ITaskFile ) :  boolean;
@@ -272,7 +279,10 @@ type
       function isName( name : string ) : Boolean;
 
       function load( fname : string ) : boolean;
+      function loadFromZip( zip : TZipFile; fname : string ) : boolean;
+
       function save( path : string ) : boolean;
+      function saveToZip( zip : TZipFile; path : string ) : boolean;
 
       function delete : boolean;
 
@@ -296,7 +306,10 @@ type
       property Files: ITaskFiles read getFiles;
 
       function loadFromPath( path : string ) : boolean;
+      function loadFromZip( zip : TZipFile; path : string ) : boolean;
+
       function saveToPath( path : string ) : boolean;
+      function saveToZip( zip : TZipFile; path : string ) : boolean;
 
       function isName( name : string ) : Boolean;
 
@@ -316,7 +329,10 @@ type
 
       function newStyle(name : String ) : ITaskStyle;
       function loadFromPath( path : string ) : boolean;
+      function loadFromZip( zip : TZipFile; path : string ) : boolean;
+
       function saveToPath( path : string ) : boolean;
+      function saveToZip( zip : TZipFile; path : string ) : Boolean;
 
       function getStyle( name : string ) : ITaskStyle;
       function rename( style : ITaskStyle; name :string ) : boolean;
