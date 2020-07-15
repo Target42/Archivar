@@ -211,6 +211,18 @@ object MainForm: TMainForm
       object Datenfelder1: TMenuItem
         Action = ac_ad_datafields
       end
+      object N4: TMenuItem
+        Caption = '-'
+      end
+      object Vorlagen1: TMenuItem
+        Caption = 'Vorlagen'
+        object NeueVorlage1: TMenuItem
+          Action = ac_ad_template_new
+        end
+        object Vorlagenbearbeiten1: TMenuItem
+          Action = ac_ad_templates
+        end
+      end
     end
     object Fenster1: TMenuItem
       Caption = 'Fenster'
@@ -229,6 +241,14 @@ object MainForm: TMainForm
       end
       object ileVertically1: TMenuItem
         Action = WindowTileVertical1
+      end
+      object est1: TMenuItem
+        Caption = 'Test'
+        OnClick = est1Click
+      end
+      object test21: TMenuItem
+        Caption = 'test2'
+        OnClick = test21Click
       end
     end
   end
@@ -331,6 +351,16 @@ object MainForm: TMainForm
       Category = 'Admin'
       Caption = 'Datenfelder'
       OnExecute = ac_ad_datafieldsExecute
+    end
+    object ac_ad_templates: TAction
+      Category = 'Admin'
+      Caption = 'Vorlagen bearbeiten'
+      OnExecute = ac_ad_templatesExecute
+    end
+    object ac_ad_template_new: TAction
+      Category = 'Admin'
+      Caption = 'Neue Vorlage'
+      OnExecute = ac_ad_template_newExecute
     end
   end
   object ApplicationEvents1: TApplicationEvents

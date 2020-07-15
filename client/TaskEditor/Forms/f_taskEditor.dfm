@@ -11,9 +11,12 @@ object TaksEditorForm: TTaksEditorForm
   Font.Name = 'Tahoma'
   Font.Style = []
   FormStyle = fsMDIChild
+  Menu = MainMenu1
   OldCreateOrder = False
   Visible = True
   WindowState = wsMaximized
+  OnClose = FormClose
+  OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   PixelsPerInch = 96
@@ -30,16 +33,14 @@ object TaksEditorForm: TTaksEditorForm
     Top = 0
     Width = 802
     Height = 480
-    ActivePage = TabSheet3
+    ActivePage = TabSheet1
     Align = alClient
     TabOrder = 1
     object TabSheet1: TTabSheet
       Caption = 'Allgemeines'
-      ExplicitWidth = 296
-      ExplicitHeight = 154
       object Splitter1: TSplitter
         Left = 0
-        Top = 299
+        Top = 341
         Width = 794
         Height = 3
         Cursor = crVSplit
@@ -49,9 +50,9 @@ object TaksEditorForm: TTaksEditorForm
       end
       object GroupBox1: TGroupBox
         Left = 0
-        Top = 0
+        Top = 89
         Width = 794
-        Height = 299
+        Height = 252
         Align = alClient
         Caption = 'Datenfelder'
         TabOrder = 0
@@ -59,7 +60,7 @@ object TaksEditorForm: TTaksEditorForm
           Left = 2
           Top = 15
           Width = 790
-          Height = 241
+          Height = 194
           Align = alClient
           Columns = <
             item
@@ -85,7 +86,7 @@ object TaksEditorForm: TTaksEditorForm
         end
         object Panel1: TPanel
           Left = 2
-          Top = 256
+          Top = 209
           Width = 790
           Height = 41
           Align = alBottom
@@ -142,36 +143,93 @@ object TaksEditorForm: TTaksEditorForm
             Height = 25
             Caption = 'Globales Datenfeld'
             TabOrder = 4
+            OnClick = BitBtn5Click
           end
         end
       end
       object GroupBox2: TGroupBox
         Left = 0
-        Top = 302
+        Top = 344
         Width = 794
-        Height = 150
+        Height = 108
         Align = alBottom
         Caption = 'Beschreibung'
         TabOrder = 1
-        ExplicitTop = 4
-        ExplicitWidth = 296
         inline EditFrame1: TEditFrame
           Left = 2
           Top = 15
           Width = 790
-          Height = 133
+          Height = 91
           Align = alClient
           TabOrder = 0
           ExplicitLeft = 2
           ExplicitTop = 15
-          ExplicitWidth = 292
-          ExplicitHeight = 133
+          ExplicitWidth = 790
+          ExplicitHeight = 91
           inherited RE: TRichEdit
             Width = 790
-            Height = 133
+            Height = 91
             ExplicitWidth = 790
-            ExplicitHeight = 133
+            ExplicitHeight = 91
           end
+        end
+      end
+      object GroupBox3: TGroupBox
+        Left = 0
+        Top = 0
+        Width = 794
+        Height = 89
+        Align = alTop
+        Caption = 'Allgemeines'
+        TabOrder = 2
+        object Label1: TLabel
+          Left = 16
+          Top = 24
+          Width = 27
+          Height = 13
+          Caption = 'Name'
+        end
+        object Label2: TLabel
+          Left = 16
+          Top = 48
+          Width = 64
+          Height = 13
+          Caption = 'Beschreibung'
+        end
+        object Label3: TLabel
+          Left = 255
+          Top = 24
+          Width = 23
+          Height = 13
+          Caption = 'Tags'
+        end
+        object DBEdit1: TDBEdit
+          Left = 86
+          Top = 21
+          Width = 164
+          Height = 21
+          DataField = 'TE_NAME'
+          DataSource = TESrc
+          TabOrder = 0
+        end
+        object DBEdit2: TDBEdit
+          Left = 86
+          Top = 48
+          Width = 461
+          Height = 21
+          DataField = 'TE_SHORT'
+          DataSource = TESrc
+          TabOrder = 1
+        end
+        object DBEdit3: TDBEdit
+          Left = 297
+          Top = 21
+          Width = 250
+          Height = 21
+          CharCase = ecLowerCase
+          DataField = 'TE_TAGS'
+          DataSource = TESrc
+          TabOrder = 2
         end
       end
     end
@@ -223,7 +281,7 @@ object TaksEditorForm: TTaksEditorForm
         end
         inherited Panel2: TPanel
           Height = 452
-          ExplicitHeight = 154
+          ExplicitHeight = 452
           inherited GroupBox2: TGroupBox
             Height = 256
             ExplicitHeight = 256
@@ -239,7 +297,7 @@ object TaksEditorForm: TTaksEditorForm
         end
         inherited ImageList1: TImageList
           Bitmap = {
-            494C01010C001800540010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+            494C01010C001800680010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
             0000000000003600000028000000400000004000000001002000000000000040
             0000000000000000000000000000000000000000000000000000000000000000
             0000000000000000000000000000000000000000000000000000000000000000
@@ -821,13 +879,15 @@ object TaksEditorForm: TTaksEditorForm
             end
           end
           inherited TabSheet2: TTabSheet
-            ExplicitWidth = 630
-            ExplicitHeight = 424
+            ExplicitLeft = 4
+            ExplicitTop = 24
+            ExplicitWidth = 287
+            ExplicitHeight = 277
             inherited PageControl2: TPageControl
-              Width = 630
-              Height = 424
-              ExplicitWidth = 630
-              ExplicitHeight = 424
+              Width = 287
+              Height = 277
+              ExplicitWidth = 287
+              ExplicitHeight = 277
             end
           end
         end
@@ -853,5 +913,42 @@ object TaksEditorForm: TTaksEditorForm
         end
       end
     end
+  end
+  object MainMenu1: TMainMenu
+    Left = 180
+    Top = 104
+    object Vorlageneditor1: TMenuItem
+      Caption = 'Vorlageneditor'
+      GroupIndex = 50
+      object Laden1: TMenuItem
+        Action = ac_lload
+      end
+    end
+  end
+  object ActionList1: TActionList
+    Left = 548
+    Top = 80
+    object ac_lload: TAction
+      Caption = 'Laden'
+      OnExecute = ac_lloadExecute
+    end
+  end
+  object DSProviderConnection1: TDSProviderConnection
+    ServerClassName = 'TdsTemplate'
+    Left = 48
+    Top = 200
+  end
+  object TETab: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    ProviderName = 'TemplateTab'
+    RemoteServer = DSProviderConnection1
+    Left = 156
+    Top = 201
+  end
+  object TESrc: TDataSource
+    DataSet = TETab
+    Left = 220
+    Top = 201
   end
 end

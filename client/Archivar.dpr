@@ -104,7 +104,10 @@ uses
   f_InputBox in 'misc\f_InputBox.pas' {InputBoxForm},
   f_selectList in 'misc\f_selectList.pas' {SelectListform},
   m_dws in 'dws\m_dws.pas' {DwsMod: TDataModule},
-  u_zipHelper in 'misc\u_zipHelper.pas';
+  u_zipHelper in 'misc\u_zipHelper.pas',
+  f_template_new in 'Templates\f_template_new.pas' {TemplateNewForm},
+  f_select_templateForm in 'f_select_templateForm.pas' {SelectTemplateForm},
+  f_task_datafields in 'TaskEditor\f_task_datafields.pas' {TaskDatafieldsForm};
 
 {$R *.res}
 
@@ -122,6 +125,6 @@ begin
   Application.CreateForm(TWindowHandler, WindowHandler);
   Application.CreateForm(TBookMarkHandler, BookMarkHandler);
   Application.CreateForm(TMainForm, MainForm);
-  Application.CreateForm(TTaksEditorForm, TaksEditorForm);
+
   Application.Run;
 end.

@@ -1,6 +1,6 @@
 //
 // Erzeugt vom DataSnap-Proxy-Generator.
-// 31.03.2020 19:45:08
+// 08.07.2020 21:08:35
 //
 
 unit u_stub;
@@ -141,6 +141,7 @@ type
     FAutoIncCommand: TDBXCommand;
     FnewProtocolCommand: TDBXCommand;
     FdeleteProtocolCommand: TDBXCommand;
+    FdeleteCPCommand: TDBXCommand;
   public
     constructor Create(ADBXConnection: TDBXConnection); overload;
     constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
@@ -148,6 +149,7 @@ type
     function AutoInc(gen: string): Integer;
     function newProtocol(data: TJSONObject): TJSONObject;
     function deleteProtocol(data: TJSONObject): TJSONObject;
+    function deleteCP(id: Integer): TJSONObject;
   end;
 
   TdsImageClient = class(TDSAdminClient)
@@ -162,6 +164,34 @@ type
     function getimageList: TJSONObject;
     function getImage(data: TJSONObject): TStream;
     function AutoInc(gen: string): Integer;
+  end;
+
+  TdsChapterClient = class(TDSAdminClient)
+  private
+  public
+    constructor Create(ADBXConnection: TDBXConnection); overload;
+    constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
+    destructor Destroy; override;
+  end;
+
+  TdsTaskEditClient = class(TDSAdminClient)
+  private
+  public
+    constructor Create(ADBXConnection: TDBXConnection); overload;
+    constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
+    destructor Destroy; override;
+  end;
+
+  TdsTemplateClient = class(TDSAdminClient)
+  private
+    FAutoIncCommand: TDBXCommand;
+    FhasNameCommand: TDBXCommand;
+  public
+    constructor Create(ADBXConnection: TDBXConnection); overload;
+    constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
+    destructor Destroy; override;
+    function AutoInc(gen: string): Integer;
+    function hasName(name: string): Boolean;
   end;
 
 implementation
@@ -887,6 +917,20 @@ begin
   Result := TJSONObject(FdeleteProtocolCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
 end;
 
+function TdsProtocolClient.deleteCP(id: Integer): TJSONObject;
+begin
+  if FdeleteCPCommand = nil then
+  begin
+    FdeleteCPCommand := FDBXConnection.CreateCommand;
+    FdeleteCPCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FdeleteCPCommand.Text := 'TdsProtocol.deleteCP';
+    FdeleteCPCommand.Prepare;
+  end;
+  FdeleteCPCommand.Parameters[0].Value.SetInt32(id);
+  FdeleteCPCommand.ExecuteUpdate;
+  Result := TJSONObject(FdeleteCPCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
+end;
+
 constructor TdsProtocolClient.Create(ADBXConnection: TDBXConnection);
 begin
   inherited Create(ADBXConnection);
@@ -902,6 +946,7 @@ begin
   FAutoIncCommand.DisposeOf;
   FnewProtocolCommand.DisposeOf;
   FdeleteProtocolCommand.DisposeOf;
+  FdeleteCPCommand.DisposeOf;
   inherited;
 end;
 
@@ -961,6 +1006,81 @@ begin
   FgetimageListCommand.DisposeOf;
   FgetImageCommand.DisposeOf;
   FAutoIncCommand.DisposeOf;
+  inherited;
+end;
+
+constructor TdsChapterClient.Create(ADBXConnection: TDBXConnection);
+begin
+  inherited Create(ADBXConnection);
+end;
+
+constructor TdsChapterClient.Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean);
+begin
+  inherited Create(ADBXConnection, AInstanceOwner);
+end;
+
+destructor TdsChapterClient.Destroy;
+begin
+  inherited;
+end;
+
+constructor TdsTaskEditClient.Create(ADBXConnection: TDBXConnection);
+begin
+  inherited Create(ADBXConnection);
+end;
+
+constructor TdsTaskEditClient.Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean);
+begin
+  inherited Create(ADBXConnection, AInstanceOwner);
+end;
+
+destructor TdsTaskEditClient.Destroy;
+begin
+  inherited;
+end;
+
+function TdsTemplateClient.AutoInc(gen: string): Integer;
+begin
+  if FAutoIncCommand = nil then
+  begin
+    FAutoIncCommand := FDBXConnection.CreateCommand;
+    FAutoIncCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FAutoIncCommand.Text := 'TdsTemplate.AutoInc';
+    FAutoIncCommand.Prepare;
+  end;
+  FAutoIncCommand.Parameters[0].Value.SetWideString(gen);
+  FAutoIncCommand.ExecuteUpdate;
+  Result := FAutoIncCommand.Parameters[1].Value.GetInt32;
+end;
+
+function TdsTemplateClient.hasName(name: string): Boolean;
+begin
+  if FhasNameCommand = nil then
+  begin
+    FhasNameCommand := FDBXConnection.CreateCommand;
+    FhasNameCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FhasNameCommand.Text := 'TdsTemplate.hasName';
+    FhasNameCommand.Prepare;
+  end;
+  FhasNameCommand.Parameters[0].Value.SetWideString(name);
+  FhasNameCommand.ExecuteUpdate;
+  Result := FhasNameCommand.Parameters[1].Value.GetBoolean;
+end;
+
+constructor TdsTemplateClient.Create(ADBXConnection: TDBXConnection);
+begin
+  inherited Create(ADBXConnection);
+end;
+
+constructor TdsTemplateClient.Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean);
+begin
+  inherited Create(ADBXConnection, AInstanceOwner);
+end;
+
+destructor TdsTemplateClient.Destroy;
+begin
+  FAutoIncCommand.DisposeOf;
+  FhasNameCommand.DisposeOf;
   inherited;
 end;
 

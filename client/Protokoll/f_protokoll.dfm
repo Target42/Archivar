@@ -37,6 +37,10 @@ object ProtokollForm: TProtokollForm
     TabOrder = 1
     object TabSheet1: TTabSheet
       Caption = 'Allgemines'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Splitter1: TSplitter
         Left = 209
         Top = 0
@@ -313,6 +317,10 @@ object ProtokollForm: TProtokollForm
     object TabSheet2: TTabSheet
       Caption = 'Teilnehmer'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object DBGrid1: TDBGrid
         Left = 0
         Top = 0
@@ -420,6 +428,10 @@ object ProtokollForm: TProtokollForm
     object TabSheet3: TTabSheet
       Caption = 'G'#228'ste'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object DBGrid2: TDBGrid
         Left = 0
         Top = 0
@@ -553,7 +565,6 @@ object ProtokollForm: TProtokollForm
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsProtocol'
-    SQLConnection = GM.SQLConnection1
     Left = 304
     Top = 96
   end

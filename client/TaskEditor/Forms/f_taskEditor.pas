@@ -5,7 +5,9 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_editForm, Vcl.ExtCtrls,
-  Vcl.StdCtrls, Vcl.ComCtrls, Vcl.Buttons, i_taskEdit, fr_Formeditor, fr_report;
+  Vcl.StdCtrls, Vcl.ComCtrls, Vcl.Buttons, i_taskEdit, fr_Formeditor, fr_report,
+  System.Actions, Vcl.ActnList, Vcl.Menus, Vcl.Mask, Vcl.DBCtrls, Data.DB,
+  Datasnap.DBClient, Datasnap.DSConnect;
 
 type
   TTaksEditorForm = class(TForm)
@@ -28,18 +30,48 @@ type
     EditorFrame1: TEditorFrame;
     TabSheet3: TTabSheet;
     ReportFrame1: TReportFrame;
+    MainMenu1: TMainMenu;
+    Vorlageneditor1: TMenuItem;
+    ActionList1: TActionList;
+    ac_lload: TAction;
+    Laden1: TMenuItem;
+    GroupBox3: TGroupBox;
+    Label1: TLabel;
+    DBEdit1: TDBEdit;
+    Label2: TLabel;
+    DBEdit2: TDBEdit;
+    Label3: TLabel;
+    DBEdit3: TDBEdit;
+    DSProviderConnection1: TDSProviderConnection;
+    TETab: TClientDataSet;
+    TESrc: TDataSource;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
     procedure BitBtn3Click(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
     procedure BitBtn4Click(Sender: TObject);
+    procedure ac_lloadExecute(Sender: TObject);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure BitBtn5Click(Sender: TObject);
   private
+    m_teid : integer;
     m_tc   : ITaskContainer;
+
+    procedure setTEID( value : integer );
     procedure setTaskContainer( value : ITaskContainer);
     procedure updateVarList;
+
+    procedure loadFromStream( st : TStream );
+    procedure saveToStream;
   public
-    property TaskContainer : ITaskContainer read m_tc write setTaskContainer;
+    property TaskContainer : ITaskContainer read m_tc   write setTaskContainer;
+    property TEID          : integer        read m_teid write setTEID;
+
+    procedure load;
+    procedure new;
+    procedure save;
   end;
 
 var
@@ -49,9 +81,17 @@ implementation
 
 uses
   u_TaskImpl, i_datafields, f_datafield_edit, System.IOUtils,
-  u_TTaskContainerImpl, system.zip;
+  u_TTaskContainerImpl, system.zip, m_glob_client, f_task_datafields;
 
 {$R *.dfm}
+
+procedure TTaksEditorForm.ac_lloadExecute(Sender: TObject);
+var
+  st    : TStream;
+begin
+  st := TETab.CreateBlobStream(TETab.FieldByName('TE_DATA'), bmRead);
+  loadFromStream( st );
+end;
 
 procedure TTaksEditorForm.BitBtn1Click(Sender: TObject);
 var
@@ -109,7 +149,6 @@ begin
   finally
     DatafieldEditform.Free;
   end;
-
 end;
 
 procedure TTaksEditorForm.BitBtn4Click(Sender: TObject);
@@ -123,61 +162,129 @@ begin
   updateVarList;
 end;
 
-procedure TTaksEditorForm.FormCreate(Sender: TObject);
-var
-  st    : TStream;
-  fname : string;
-  zip   : TZipFile;
+procedure TTaksEditorForm.BitBtn5Click(Sender: TObject);
 begin
+  try
+    Application.CreateForm(TTaskDatafieldsForm, TaskDatafieldsForm);
+    TaskDatafieldsForm.Fields := m_tc.Task.Fields;
+    TaskDatafieldsForm.setServer(DSProviderConnection1);
+    TaskDatafieldsForm.open;
+    TaskDatafieldsForm.ShowModal;
+  finally
+    TaskDatafieldsForm.free;
+  end;
+end;
+
+procedure TTaksEditorForm.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  Action := caFree;
+end;
+
+procedure TTaksEditorForm.FormCloseQuery(Sender: TObject;
+  var CanClose: Boolean);
+begin
+
+  if (MessageDlg('Sollen die Änderungen übernommen werden?', mtConfirmation, [mbYes, mbNo], 0) = mrYes) then begin
+    saveToStream;
+    TETab.Post;
+    if TETab.UpdatesPending then
+      TETab.ApplyUpdates(0);
+  end  else begin
+    TETab.Cancel;
+    if TETab.UpdatesPending then
+      TETab.CancelUpdates;
+  end;
+end;
+
+procedure TTaksEditorForm.FormCreate(Sender: TObject);
+begin
+  DSProviderConnection1.SQLConnection := GM.SQLConnection1;
+  m_tc := NIL;
   EditorFrame1.init;
 
+  ReportFrame1.init;
+  EditorFrame1.OnNewForm := ReportFrame1.doNewForm;
+end;
+
+procedure TTaksEditorForm.FormDestroy(Sender: TObject);
+begin
+  EditorFrame1.release;
+  ReportFrame1.release;
+
+  m_tc.release;
+end;
+
+procedure TTaksEditorForm.load;
+begin
+  ac_lload.Execute;
+end;
+
+procedure TTaksEditorForm.loadFromStream(st: TStream);
+var
+  zip   : TZipFile;
+begin
   m_tc := TTaskContainerImpl.create;
-
-  fname := TPath.Combine( ExtractFilePath( Application.ExeName), 'lib\task\{D45BD078-C776-4DD2-B47F-68E6CE886C42}.zip' );
-
-  if FileExists( fname )  then
-  begin
-    st := TFileStream.create( fname, fmOpenRead + fmShareDenyNone );
+  if st.Size <> 0 then begin
     zip := TZipFile.Create;
     try
       zip.Open( st, zmRead );
       m_tc.loadFromZip(zip);
     finally
       zip.Free;
-      st.Free;
     end;
-  end;
+  end
+  else begin
 
-  //m_tc.loadFromPath(TPath.Combine( ExtractFilePath( Application.ExeName), 'lib\task\{D45BD078-C776-4DD2-B47F-68E6CE886C42}' ));
+  end;
+  st.Free;
 
   setTaskContainer(m_tc);
-
-  EditorFrame1.Task := m_tc.Task;
-
-  ReportFrame1.init;
-  ReportFrame1.TaskContainer := m_tc;
-
-  EditorFrame1.OnNewForm := ReportFrame1.doNewForm;
-
 end;
 
-procedure TTaksEditorForm.FormDestroy(Sender: TObject);
-//var
-//  fname : string;
+procedure TTaksEditorForm.new;
 begin
-  EditorFrame1.release;
-  ReportFrame1.release;
+  m_tc := TTaskContainerImpl.create;
+  setTaskContainer( m_tc );
+end;
 
-//  fname := TPath.Combine( ExtractFilePath( Application.ExeName), 'lib\task\{D45BD078-C776-4DD2-B47F-68E6CE886C42}' );
+procedure TTaksEditorForm.save;
+begin
+//  fname := TPath.Combine( ExtractFilePath( Application.ExeName), 'lib\task\'+m_tc.CLID );
 //  m_tc.saveToPath(fname);
 //  m_tc.saveToZip(fname);
-  m_tc.release;
+  saveToStream;
+end;
+
+procedure TTaksEditorForm.saveToStream;
+var
+  st : TStream;
+begin
+  st := TETab.CreateBlobStream(  TETab.FieldByName('TE_DATA'), bmWrite);
+  m_tc.saveToStream(st);
+  st.Free;
 end;
 
 procedure TTaksEditorForm.setTaskContainer(value: ITaskContainer);
 begin
   m_tc := value;
+  EditorFrame1.Task := m_tc.Task;
+  ReportFrame1.TaskContainer := m_tc;
   updateVarList;
+end;
+
+procedure TTaksEditorForm.setTEID(value: integer);
+begin
+  m_teid := value;
+
+  TETab.Filter    := 'TE_ID = '+IntToStr( m_teid);
+  TETab.Filtered  := true;
+  TETab.Open;
+
+  if TETab.IsEmpty then
+    exit;
+  TETab.Edit;
+
+  loadFromStream( TETab.CreateBlobStream(TETab.FieldByName('TE_DATA'), bmRead));
 end;
 
 procedure TTaksEditorForm.updateVarList;

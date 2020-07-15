@@ -60,12 +60,10 @@ var
   xw  : TaskDataField2XML;
   i   : integer;
 begin
-  Result := TTask.create;
-//  Result.WorkDir := ExtractFilePath( fname );
+  Result      := TTask.create;
   Result.Name := m_xTask.Name;
   Result.CLID := m_xTask.Clid;
-
-  m_task := Result;
+  m_task      := Result;
 
   xw := TaskDataField2XML.create;
   try

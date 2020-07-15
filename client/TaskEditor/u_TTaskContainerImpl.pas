@@ -3,11 +3,12 @@ unit u_TTaskContainerImpl;
 interface
 
 uses
-  i_taskEdit, System.Generics.Collections, system.zip;
+  i_taskEdit, System.Generics.Collections, system.zip, System.Classes;
 
 type
   TTaskContainerImpl = class(TInterfacedObject, ITaskContainer)
     private
+      m_clid    : string;
       m_task    : ITask;
       m_files   : ITaskFiles;
       m_info    : ITaskFiles;
@@ -18,20 +19,18 @@ type
       function  getTestdata : ITaskFiles;
       function  getInfoFiles: ITaskFiles;
       function  getStyles : ITaskStyles;
+      procedure setCLID( value : string );
+      function  getCLID : string;
     public
       constructor create;
       Destructor Destroy; override;
-
-      property Task : ITask read getTask write setTask;
-
-      property TestData : ITaskFiles read getTestdata;
-      property Styles   : ITaskStyles read getStyles;
 
       function loadFromPath( path : string ) : boolean;
       function loadFromZip( zip : TZipFile ) : boolean;
 
       function saveToPath( path : string ) : boolean;
       function saveToZip( path : string ) : boolean;
+      function saveToStream( st : TStream ) : boolean;
 
       procedure release;
 
@@ -41,16 +40,19 @@ implementation
 
 uses
   u_TTaskFilesImpl, u_TTaskStylesImpl, System.SysUtils, u_Task2XML,
-  System.IOUtils, System.Classes;
+  System.IOUtils, system.Win.ComObj, u_TaskImpl;
 
 { TTaskContainerImpl }
 
 constructor TTaskContainerImpl.create;
 begin
-  m_task    := NIL;
-  m_files   := TTaskFilesImpl.create;
-  m_info    := TTaskFilesimpl.create;
-  m_styles  := TTaskStylesImpl.create;
+  m_clid      := createCLassID;
+  m_files     := TTaskFilesImpl.create;
+  m_info      := TTaskFilesimpl.create;
+  m_styles    := TTaskStylesImpl.create;
+
+  m_task      := TTask.create;
+  m_task.CLID := m_clid;
 end;
 
 destructor TTaskContainerImpl.Destroy;
@@ -61,6 +63,14 @@ begin
   m_info    := NIL;
 
   inherited;
+end;
+
+function TTaskContainerImpl.getCLID: string;
+begin
+  Result := m_clid;
+  if Assigned(m_task) then
+    Result := m_task.CLID;
+
 end;
 
 function TTaskContainerImpl.getInfoFiles: ITaskFiles;
@@ -147,6 +157,33 @@ begin
   Result := m_styles.saveToPath(TPath.Combine(path, 'Styles'))  and Result;
 end;
 
+function TTaskContainerImpl.saveToStream( st : TStream ) : boolean;
+var
+  zip: TZipFile;
+
+  function saveTask : boolean;
+  var
+    xw : Task2XML;
+  begin
+    xw := Task2XML.Create;
+    Result := xw.saveToZip(zip, m_task, 'task.xml');
+    xw.Free;
+  end;
+
+begin
+
+  zip := TZipFile.Create;
+  zip.Open(st, zmWrite );
+
+  Result := saveTask;
+  Result := m_files.saveToZip( zip, 'TestData') and Result;
+  Result := m_info.saveToZip(zip, 'Info') and Result;
+  Result := m_styles.saveToZip(zip, 'Styles')  and Result;
+
+  zip.Free;
+  st.Position := 0;
+end;
+
 function TTaskContainerImpl.saveToZip(path: string): boolean;
 var
   zip: TZipFile;
@@ -159,6 +196,7 @@ var
     Result := xw.saveToZip(zip, m_task, 'task.xml');
     xw.Free;
   end;
+
 begin
   ForceDirectories(path);
 
@@ -173,9 +211,22 @@ begin
   zip.Free;
 end;
 
+procedure TTaskContainerImpl.setCLID(value: string);
+begin
+  m_clid := value;
+  if Assigned(m_task) then
+    m_task.CLID := value;
+
+end;
+
 procedure TTaskContainerImpl.setTask(value: ITask);
 begin
+  if Assigned(m_task) then begin
+    m_task.release;
+    m_task := NIL;
+  end;
   m_task := value;
+  m_clid := m_task.CLID;
 end;
 
 end.

@@ -216,17 +216,21 @@ type
       function  getTestdata : ITaskFiles;
       function  getInfoFiles: ITaskFiles;
       function  getStyles : ITaskStyles;
+      procedure setCLID( value : string );
+      function  getCLID : string;
     //public
-      property Task : ITask read getTask write setTask;
-      property TestData : ITaskFiles read getTestdata;
+      property CLID     : string      read getCLID      write setCLID;
+      property Task     : ITask       read getTask      write setTask;
+      property TestData : ITaskFiles  read getTestdata;
       property Styles   : ITaskStyles read getStyles;
-      property Info     : ITaskFiles read getInfoFiles;
+      property Info     : ITaskFiles  read getInfoFiles;
 
       function loadFromPath( path : string ) : boolean;
       function loadFromZip( zip : TZipFile ) : boolean;
 
       function saveToPath( path : string ) : boolean;
       function saveToZip( path : string ) : boolean;
+      function saveToStream( st : TStream ) : boolean;
 
       procedure release;
   end;

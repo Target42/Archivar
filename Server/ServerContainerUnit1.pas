@@ -27,6 +27,7 @@ type
     dsImage: TDSServerClass;
     dsChapter: TDSServerClass;
     dsTaskEdit: TDSServerClass;
+    dsTemplate: TDSServerClass;
     procedure dsAdminGetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
     procedure ServiceStart(Sender: TService; var Started: Boolean);
@@ -61,6 +62,8 @@ type
       var PersistentClass: TPersistentClass);
     procedure dsTaskEditGetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
+    procedure dsTemplateGetClass(DSServerClass: TDSServerClass;
+      var PersistentClass: TPersistentClass);
   private
     { Private declarations }
   protected
@@ -87,7 +90,7 @@ implementation
 uses
   Winapi.Windows, m_db, ds_gremium, ds_admin, Datasnap.DSSession, ds_person, IOUtils,
   ds_taks, ds_file, ds_einstellung, ds_misc, ds_protocol, ds_image, ds_chapter,
-  ds_taskEdit;
+  ds_taskEdit, ds_template;
 
 procedure TServerContainer1.dsAdminGetClass(
   DSServerClass: TDSServerClass; var PersistentClass: TPersistentClass);
@@ -143,6 +146,12 @@ begin
   DebugMsg('Disconnect');
 end;
 
+procedure TServerContainer1.dsTemplateGetClass(DSServerClass: TDSServerClass;
+  var PersistentClass: TPersistentClass);
+begin
+  PersistentClass := ds_template.TdsTemplate;
+end;
+
 procedure ServiceController(CtrlCode: DWord); stdcall;
 begin
   ServerContainer1.Controller(CtrlCode);
@@ -190,6 +199,8 @@ var
 begin
   userName:= LowerCase(User);
 
+
+  DebugMsg('Authenticate user :' +userName);
 
   if (user = '{E4DBFC6B-C573-47FF-AC01-9CE6C5F63DB9}') then
   begin

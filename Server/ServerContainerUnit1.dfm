@@ -148,4 +148,11 @@ object ServerContainer1: TServerContainer1
     Left = 256
     Top = 304
   end
+  object dsTemplate: TDSServerClass
+    OnGetClass = dsTemplateGetClass
+    Server = DSServer1
+    LifeCycle = 'Invocation'
+    Left = 336
+    Top = 312
+  end
 end
