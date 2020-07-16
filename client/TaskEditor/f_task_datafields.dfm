@@ -23,16 +23,19 @@ object TaskDatafieldsForm: TTaskDatafieldsForm
     Align = alBottom
     AutoSize = True
     TabOrder = 0
-    ExplicitLeft = 184
-    ExplicitTop = 80
+    ExplicitTop = 239
+    ExplicitWidth = 635
     inherited StatusBar1: TStatusBar
       Width = 635
+      ExplicitWidth = 635
     end
     inherited Panel1: TPanel
       Width = 635
+      ExplicitWidth = 635
       inherited OKBtn: TBitBtn
         Left = 536
         OnClick = BaseFrame1OKBtnClick
+        ExplicitLeft = 536
       end
     end
   end
@@ -43,7 +46,7 @@ object TaskDatafieldsForm: TTaskDatafieldsForm
     Height = 239
     Align = alClient
     DataSource = DataFieldsSrc
-    Options = [dgEditing, dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgConfirmDelete, dgCancelOnExit, dgMultiSelect, dgTitleClick, dgTitleHotTrack]
+    Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgMultiSelect, dgTitleClick, dgTitleHotTrack]
     ReadOnly = True
     TabOrder = 1
     TitleFont.Charset = DEFAULT_CHARSET
@@ -76,7 +79,6 @@ object TaskDatafieldsForm: TTaskDatafieldsForm
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsTemplate'
-    SQLConnection = GM.SQLConnection1
     Left = 48
     Top = 24
   end
