@@ -30,12 +30,14 @@ type
     m_tab      : TDataSet;
     m_data     : IDataField;
     m_noChange : Boolean;
+    FIsGlobal: boolean;
     procedure setDataSet( dataset :TDataSet );
 
     function  getDataField : IDataField;
     procedure setDataField(const Value: IDataField);
     procedure setProps;
   public
+    property IsGlobal: boolean read FIsGlobal write FIsGlobal;
     property DataSet : TDataSet write setDataSet;
     property DataField : IDataField read getDataField write setDataField;
   end;
@@ -56,8 +58,9 @@ var
   st : TStream;
   xw : TDataField2XML;
 begin
-  m_data.Name := trim(LabeledEdit1.Text);
-  m_data.Rem  := LabeledEdit2.Text;
+  m_data.Name     := trim(LabeledEdit1.Text);
+  m_data.Rem      := LabeledEdit2.Text;
+  m_data.isGlobal := FIsGlobal;
 
   if Assigned(m_tab) then
   begin
@@ -96,8 +99,9 @@ end;
 
 procedure TDatafieldEditform.FormCreate(Sender: TObject);
 begin
-  m_noChange := true;
-  m_data := NIL;
+  m_noChange  := true;
+  FIsGlobal   := false;
+  m_data      := NIL;
   DataTypeFillList( ComboBox1.Items );
 end;
 
@@ -171,7 +175,7 @@ begin
 
   ds.CLID := m_tab.FieldByName('DA_CLID').AsString;
   ds.Rem  := m_tab.FieldByName('DA_REM').AsString;
-  ds.isGlobal := true;
+  ds.isGlobal := FIsGlobal;;
 
   setDataField(ds);
 

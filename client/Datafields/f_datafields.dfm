@@ -217,6 +217,7 @@ object DataFieldForm: TDataFieldForm
         FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
         FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
       TabOrder = 2
+      OnClick = BitBtn3Click
     end
   end
   object DSProviderConnection1: TDSProviderConnection

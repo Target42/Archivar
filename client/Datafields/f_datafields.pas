@@ -24,6 +24,7 @@ type
     procedure BitBtn2Click(Sender: TObject);
     procedure BaseFrame1OKBtnClick(Sender: TObject);
     procedure DBGrid1DblClick(Sender: TObject);
+    procedure BitBtn3Click(Sender: TObject);
   private
   public
     { Public-Deklarationen }
@@ -52,6 +53,7 @@ begin
   try
     Application.CreateForm(TDatafieldEditform, DatafieldEditform);
     DATab.Append;
+    DatafieldEditform.IsGlobal := true;
     DatafieldEditform.DataSet := DATab;
     if DatafieldEditform.ShowModal = mrOk then
     begin
@@ -72,6 +74,7 @@ begin
   try
     Application.CreateForm(TDatafieldEditform, DatafieldEditform);
     DATab.Edit;
+    DatafieldEditform.IsGlobal := true;
     DatafieldEditform.DataSet := DATab;
     if DatafieldEditform.ShowModal = mrOk then
       DATab.Post
@@ -79,6 +82,17 @@ begin
       DATab.Cancel;
   finally
     DatafieldEditform.free;
+  end;
+end;
+
+procedure TDataFieldForm.BitBtn3Click(Sender: TObject);
+begin
+  if DATab.IsEmpty then
+    exit;
+  if (MessageDlg('Soll das Datenfeld "'+DATab.FieldByName('DA_NAME').AsString+
+      '" wirklich gelöscht werden?', mtConfirmation, [mbYes, mbNo], 0) in [mrYes, mrNo, mrNone]) then
+  begin
+    DATab.Delete;
   end;
 end;
 

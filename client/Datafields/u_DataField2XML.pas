@@ -54,6 +54,7 @@ begin
   begin
     xData := NewDataField;
     xData.Datatype := 'string';
+    xData.IsGlobal := false;
   end;
 
   Result := TDataField.create;
