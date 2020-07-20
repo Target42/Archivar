@@ -372,6 +372,15 @@
             <Form>TaskDatafieldsForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="Datafields\Editor\f_df_EnumList.pas">
+            <Form>DFEnumListForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Datafields\Editor\f_df_listbox.pas">
+            <Form>ListBoxForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <None Include="Datafields\ERA-NS.txt"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
@@ -403,6 +412,12 @@
                 <DeployFile LocalName="Win32\Debug\bin\Archivar.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>Archivar.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="Datafields\ERA-NS.txt" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

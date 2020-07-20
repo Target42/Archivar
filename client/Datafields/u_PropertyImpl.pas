@@ -3,20 +3,24 @@ unit u_PropertyImpl;
 interface
 
 uses
-  i_datafields, System.Generics.Collections, System.Classes;
+  i_datafields, System.Generics.Collections, System.Classes, Vcl.Forms,
+  f_df_listbox;
 
 type
   TPropertyImpl = class(TInterfacedObject, IProperty)
   private
     type
       TPropertyType = (ptUnknown, ptString, ptInteger, ptBool,
-        ptEditCharCase);
+        ptEditCharCase,
+        ptEnumList,
+        ptLinkTable);
   private
-    m_owner: IDataField;
-    m_name : string;
-    m_typ  : TPropertyType;
-    m_value: string;
-    m_values : TStringList;
+    m_owner   : IDataField;
+    m_name    : string;
+    m_typ     : TPropertyType;
+    m_value   : string;
+    m_values  : TStringList;
+    m_ptr     : Pointer;
 
     procedure SetName( value : string );
     function  GetName : string;
@@ -24,6 +28,10 @@ type
     function  GetTyp : string;
     procedure SetValue( value : string );
     function  GetValue : string;
+    procedure setPtr( value : pointer );
+    function  getPtr : Pointer;
+
+    function getOwner : IDataField;
 
   public
     constructor Create( owner : IDataField; entry : TPropertyEntry);
@@ -32,6 +40,9 @@ type
     property Name  : string read GetName write SetName;
     property Typ   : string read GetTyp  write SetTyp;
     property Value : string read GetValue write SetValue;
+
+    function hasEditor : boolean;
+    Function ShowEditor : boolean;
 
     procedure release;
 
@@ -45,7 +56,7 @@ implementation
 { TPropertyImpl }
 
 uses
-  Win.ComObj, System.SysUtils;
+  Win.ComObj, System.SysUtils, f_df_EnumList;
 
 constructor TPropertyImpl.Create( owner : IDataField; entry : TPropertyEntry);
 begin
@@ -75,6 +86,16 @@ begin
   Result := m_name;
 end;
 
+function TPropertyImpl.getOwner: IDataField;
+begin
+  Result := m_owner;
+end;
+
+function TPropertyImpl.getPtr: Pointer;
+begin
+  Result := m_ptr;
+end;
+
 function TPropertyImpl.GetTyp: string;
 begin
   case m_typ of
@@ -82,6 +103,8 @@ begin
     ptInteger:      Result := 'integer';
     ptBool:         Result := 'bool';
     ptEditCharCase: Result := 'TEditCharCase';
+    ptEnumList:     Result := 'EnumList';
+    ptLinkTable:    Result := 'TableLink';
   else
     Result := 'unknown';
   end;
@@ -90,6 +113,11 @@ end;
 function TPropertyImpl.GetValue: string;
 begin
   Result := m_value;
+end;
+
+function TPropertyImpl.hasEditor: boolean;
+begin
+  Result := m_typ in [ptEnumList, ptLinkTable];
 end;
 
 function TPropertyImpl.isList: Boolean;
@@ -107,6 +135,11 @@ begin
   m_name := value;
 end;
 
+procedure TPropertyImpl.setPtr(value: pointer);
+begin
+  m_ptr := value;
+end;
+
 procedure TPropertyImpl.SetTyp(value: string);
 begin
   m_typ := ptUnknown;
@@ -119,8 +152,11 @@ begin
   else if value = 'bool' then
     m_typ := ptBool
   else if value = 'teditcharcase' then
-    m_typ := ptEditCharCase;
-
+    m_typ := ptEditCharCase
+  else if value = 'enumlist' then
+    m_typ := ptEnumList
+  else if value = 'tablelink' then
+    m_typ := ptLinkTable;
 
   if m_typ = ptBool then
     m_values.DelimitedText := 'true;false';
@@ -131,6 +167,31 @@ end;
 procedure TPropertyImpl.SetValue(value: string);
 begin
   m_value := value;
+end;
+
+function TPropertyImpl.ShowEditor: boolean;
+begin
+  Result := false;
+
+  if m_typ = ptEnumList then begin
+    try
+      Application.CreateForm(TDFEnumListForm, DFEnumListForm);
+      DFEnumListForm.Prop := self;
+      DFEnumListForm.ShowModal;
+    finally
+      DFEnumListForm.Free;
+    end;
+  end else if m_typ = ptLinkTable then
+  begin
+    try
+      Application.CreateForm(TListBoxForm, ListBoxForm);
+      ListBoxForm.FieldList := IDataFieldList( m_ptr );
+      ListBoxForm.Prop := self;
+      ListBoxForm.ShowModal;
+    finally
+      ListBoxForm.Free;
+    end;
+  end;
 end;
 
 end.

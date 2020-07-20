@@ -2,11 +2,12 @@
 <Article>
   <Id>BJLefRqHwRLnCRBT</Id>
   <Title>Archivar</Title>
-  <ModifyDate>2020-07-16T21:07:18.3522621+02:00</ModifyDate>
+  <ModifyDate>2020-07-17T19:43:59.6252838+02:00</ModifyDate>
   <CreateDate>2020-07-16T19:45:48.3721761+02:00</CreateDate>
   <Format>WordprocessingML</Format>
   <ModifyUser>steph</ModifyUser>
   <CreateUser>steph</CreateUser>
-  <HasCheckedTargets>True</HasCheckedTargets>
-  <PublicVersion>1.0</PublicVersion>
+  <Children>
+    <Id>PfuLmMuKeTeMiqJj</Id>
+  </Children>
 </Article>

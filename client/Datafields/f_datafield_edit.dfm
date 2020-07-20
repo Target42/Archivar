@@ -115,6 +115,7 @@ object DatafieldEditform: TDatafieldEditform
       Height = 123
       Align = alClient
       TabOrder = 0
+      OnEditButtonClick = VEEditButtonClick
       OnExit = VEExit
       OnKeyPress = VEKeyPress
       ColWidths = (

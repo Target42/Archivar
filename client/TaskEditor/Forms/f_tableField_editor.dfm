@@ -189,6 +189,7 @@ object TableFieldEditorForm: TTableFieldEditorForm
       Height = 25
       Caption = 'Globales Datenfeld'
       TabOrder = 3
+      OnClick = BitBtn5Click
     end
   end
   object LV: TListView
@@ -200,6 +201,7 @@ object TableFieldEditorForm: TTableFieldEditorForm
     Columns = <
       item
         Caption = 'Name'
+        Width = 100
       end
       item
         Caption = 'Typ'
@@ -209,11 +211,12 @@ object TableFieldEditorForm: TTableFieldEditorForm
       end
       item
         Caption = 'Bechreibung'
-        Width = 150
+        Width = 200
       end>
     ReadOnly = True
     RowSelect = True
     TabOrder = 2
     ViewStyle = vsReport
+    OnDblClick = LVDblClick
   end
 end

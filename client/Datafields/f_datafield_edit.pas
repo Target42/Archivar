@@ -26,9 +26,11 @@ type
     procedure BaseFrame1OKBtnClick(Sender: TObject);
     procedure LabeledEdit1KeyPress(Sender: TObject; var Key: Char);
     procedure Button1Click(Sender: TObject);
+    procedure VEEditButtonClick(Sender: TObject);
   private
     m_tab      : TDataSet;
     m_data     : IDataField;
+    m_list     : IDataFieldList;
     m_noChange : Boolean;
     FIsGlobal: boolean;
     procedure setDataSet( dataset :TDataSet );
@@ -37,9 +39,10 @@ type
     procedure setDataField(const Value: IDataField);
     procedure setProps;
   public
-    property IsGlobal: boolean read FIsGlobal write FIsGlobal;
-    property DataSet : TDataSet write setDataSet;
-    property DataField : IDataField read getDataField write setDataField;
+    property IsGlobal   : boolean         read FIsGlobal    write FIsGlobal;
+    property DataSet    : TDataSet                          write setDataSet;
+    property DataField  : IDataField      read getDataField write setDataField;
+    property FieldList  : IDataFieldList  read m_list       write m_list;
   end;
 
 var
@@ -82,7 +85,8 @@ var
 begin
   try
     Application.CreateForm(TTableFieldEditorForm, TableFieldEditorForm);
-    TableFieldEditorForm.Root := m_data;
+    TableFieldEditorForm.FieldList  := m_list;
+    TableFieldEditorForm.Root       := m_data;
     TableFieldEditorForm.ShowModal;
   finally
     TableFieldEditorForm.free;
@@ -99,9 +103,10 @@ end;
 
 procedure TDatafieldEditform.FormCreate(Sender: TObject);
 begin
-  m_noChange  := true;
-  FIsGlobal   := false;
-  m_data      := NIL;
+  m_noChange                := true;
+  m_list                    := NIL;
+  FIsGlobal                 := false;
+  m_data                    := NIL;
   DataTypeFillList( ComboBox1.Items );
 end;
 
@@ -145,10 +150,12 @@ begin
   LabeledEdit2.Text   := m_data.Rem;
 
   setProps;
-  if (m_data.isGlobal and not Assigned(m_tab)) or ( ComboBox1.ItemIndex = -1 ) then
+  if Assigned(m_tab) or ( ComboBox1.ItemIndex = -1 ) then
   begin
-    ComboBox1.Enabled := false;
+    ComboBox1.Enabled     := false;
   end;
+  if m_data.isGlobal and not FIsGlobal then
+    LabeledEdit1.Enabled  := false;
 
   m_noChange := false;
 end;
@@ -188,6 +195,7 @@ var
   i   : Integer;
   p   : IProperty;
   ip  : TItemProp;
+  row : integer;
 begin
   VE.Strings.Clear;
   if not Assigned(m_data) then
@@ -203,13 +211,38 @@ begin
     ip := VE.ItemProps[p.Name];
     if Assigned(ip) then
     begin
-      if p.isList then
-      begin
+      if p.isList then begin
         ip.EditStyle := esPickList;
         p.fillList(ip.PickList);
         ip.ReadOnly := true;
+      end else if p.hasEditor then begin
+        ip.EditStyle := esEllipsis;
+        ip.ReadOnly := true;
+        if VE.FindRow(p.Name, row) then
+          VE.Cells[1,row] := '('+p.Typ+')';
       end;
+      if SameText(p.Typ, 'TableLink') then
+        p.Ptr := m_list;
     end;
+  end;
+end;
+
+procedure TDatafieldEditform.VEEditButtonClick(Sender: TObject);
+var
+  row       : Integer;
+  val, key  : string;
+  p         : IProperty;
+begin
+  if not Assigned(m_data) then
+    exit;
+  row := VE.Row;
+  val := VE.Cells[1, row];
+  key := VE.Keys[row];
+  p := m_data.getPropertyByName(key);
+  if  Assigned(p) and  p.hasEditor then
+  begin
+    p.ShowEditor;
+    VE.Cells[1,row] := '('+p.Typ+')';
   end;
 end;
 
@@ -225,7 +258,7 @@ begin
   val := VE.Cells[1, row];
   key := VE.Keys[row];
   p := m_data.getPropertyByName(key);
-  if  Assigned(p) then
+  if  Assigned(p) and not p.hasEditor then
   begin
     p.Value := val;
     VE.Cells[1,row] := p.Value;

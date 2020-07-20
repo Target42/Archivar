@@ -78,6 +78,8 @@ type
     Vorlagenbearbeiten1: TMenuItem;
     est1: TMenuItem;
     test21: TMenuItem;
+    ac_ad_sys_template: TAction;
+    Systemvorlage1: TMenuItem;
     procedure ac_prg_closeExecute(Sender: TObject);
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure ac_prg_disconExecute(Sender: TObject);
@@ -92,13 +94,15 @@ type
     procedure FormCreate(Sender: TObject);
     procedure ac_ta_loadExecute(Sender: TObject);
     procedure ac_ad_datafieldsExecute(Sender: TObject);
-    procedure est1Click(Sender: TObject);
-    procedure test21Click(Sender: TObject);
     procedure ac_ad_template_newExecute(Sender: TObject);
     procedure ac_ad_templatesExecute(Sender: TObject);
+    procedure est1Click(Sender: TObject);
+    procedure ac_ad_sys_templateExecute(Sender: TObject);
   private
     procedure setPanel( id : integer ; text : string );
     procedure loadLogo;
+
+    procedure templateEdit( sys : boolean );
   public
     { Public declarations }
   end;
@@ -112,7 +116,7 @@ uses
   m_glob_client, f_gremiumForm, f_personen, f_task_new, f_gremiumList,
   f_protokoll, u_stub, System.JSON, u_json, f_protokoll_list, u_gremium, m_BookMarkHandler, m_WindowHandler,
   f_images, System.IOUtils, f_taksListForm, u_berTypes, f_datafields,
-  f_template_new, f_taskEditor, f_select_templateForm;
+  f_template_new, f_taskEditor, f_select_templateForm, f_bechlus;
 
 {$R *.dfm}
 
@@ -156,28 +160,14 @@ begin
   end;
 end;
 
-procedure TMainForm.ac_ad_templatesExecute(Sender: TObject);
-var
-  te_id : integer;
-  frm  : TTaksEditorForm;
+procedure TMainForm.ac_ad_sys_templateExecute(Sender: TObject);
 begin
-  te_id := -1;
-  try
-    Application.CreateForm(TSelectTemplateForm, SelectTemplateForm);
-    SelectTemplateForm.Edit := true;
-    SelectTemplateForm.Sys  := false;
-    SelectTemplateForm.start;
-    if SelectTemplateForm.ShowModal = mrOk then
-      te_id := SelectTemplateForm.TE_ID;
-  finally
-    SelectTemplateForm.free;
-  end;
+  templateEdit( true );
+end;
 
-  if te_id <> -1  then begin
-    Application.CreateForm(TTaksEditorForm, frm);
-    frm.TEID := te_id;
-    frm.Show;
-  end;
+procedure TMainForm.ac_ad_templatesExecute(Sender: TObject);
+begin
+  templateEdit( false );
 end;
 
 procedure TMainForm.ac_ad_template_newExecute(Sender: TObject);
@@ -365,8 +355,9 @@ end;
 
 procedure TMainForm.est1Click(Sender: TObject);
 begin
-  if not Assigned(TaksEditorForm) then
-    Application.CreateForm(TTaksEditorForm, TaksEditorForm);
+  Application.CreateForm(TBeschlusform, Beschlusform);
+  Beschlusform.ShowModal;
+  Beschlusform.Free;
 end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
@@ -399,11 +390,28 @@ begin
 end;
 
 
-procedure TMainForm.test21Click(Sender: TObject);
+procedure TMainForm.templateEdit(sys: boolean);
+var
+  te_id : integer;
+  frm  : TTaksEditorForm;
 begin
-  if Assigned(TaksEditorForm) then
-    TaksEditorForm.load;
+  te_id := -1;
+  try
+    Application.CreateForm(TSelectTemplateForm, SelectTemplateForm);
+    SelectTemplateForm.Edit := true;
+    SelectTemplateForm.Sys  := sys;
+    SelectTemplateForm.start;
+    if SelectTemplateForm.ShowModal = mrOk then
+      te_id := SelectTemplateForm.TE_ID;
+  finally
+    SelectTemplateForm.free;
+  end;
 
+  if te_id <> -1  then begin
+    Application.CreateForm(TTaksEditorForm, frm);
+    frm.TEID := te_id;
+    frm.Show;
+  end;
 end;
 
 end.

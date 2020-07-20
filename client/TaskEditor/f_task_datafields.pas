@@ -38,14 +38,15 @@ uses
 
 procedure TTaskDatafieldsForm.BaseFrame1OKBtnClick(Sender: TObject);
 var
-  i : integer;
+  i    : integer;
   mark : TBookmark;
-  fd : IDataField;
+  fd   : IDataField;
 begin
   for i := 0 to  pred(DBGrid1.SelectedRows.Count) do
   begin
     mark := DBGrid1.SelectedRows.Items[i];
     Datafields.GotoBookmark(mark);
+
     fd := m_fields.getByName( Datafields.FieldByName('DA_NAME').AsString);
     if not Assigned(fd) then
     begin
@@ -85,15 +86,20 @@ begin
   xw := TDataField2XML.create;
   st := Datafields.CreateBlobStream(Datafields.FieldByName('DA_PROPS'), bmRead );
   ds := xw.loadFromStream(st);
+  st.Free;
+  xw.free;
+
+  field.Rem   := ds.Rem;
+  field.CLID  := ds.CLID;
 
   field.Properties.Clear;
   for i := 0 to pred(ds.Properties.Count) do
   begin
     field.Properties.Add(ds.Properties.Items[i]);
   end;
+
   ds.release;
   ds := NIL;
-  xw.free;
 
 end;
 

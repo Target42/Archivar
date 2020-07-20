@@ -73,10 +73,11 @@ const
     (name:'RegEx';        typ:'string';         value:''),
     (name:'CharCase';     typ:'TEditCharCase';  value:'ecNormal';)
   );
-  EnumProps : array[1..2] of TPropertyEntry =
+  EnumProps : array[1..3] of TPropertyEntry =
   (
-    (name:'Values';       typ:'StringList'; value:'1;2;3'),
-    (name:'Default';      typ:'string';     value:'1')
+    (name:'Values';       typ:'EnumList';   value:'1;2;3'),
+    (name:'Default';      typ:'string';     value:'1'),
+    (name:'Egene Werte';  typ:'bool';       value:'false')
   );
   IntegerProps : array[1..3] of TPropertyEntry =
   (
@@ -117,6 +118,10 @@ const
   (
     (name:'MinLines';      typ:'integer';       value:'0'),
     (name:'MaxLines';      typ:'integer';       value:'0')
+  );
+  LinkTableProps  : array[1..1] of TPropertyEntry =
+  (
+    (name:'TableName';     typ:'TableLink';     value:'')
   );
 
 
@@ -168,9 +173,9 @@ constructor TDataField.Create(name, typ: string);
 begin
   m_owner     := NIL;
   m_glob      := false;
-  m_list := TList<IProperty>.create;
-  m_childs := TDataFieldList.create(self);
-  m_name := name;
+  m_list      := TList<IProperty>.create;
+  m_childs    := TDataFieldList.create(self);
+  m_name      := name;
   m_clid      := CreateClassID;
 
   SetTyp(typ);
@@ -312,7 +317,9 @@ begin
   else if m_typ = 'text' then
     config(TextProps)
   else if m_typ = 'table' then
-    config(TableProps);
+    config(TableProps)
+  else if m_typ = 'linktable' then
+    config(LinkTableProps);
 end;
 
 end.

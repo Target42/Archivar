@@ -9,6 +9,10 @@
   <CreateUser>steph</CreateUser>
   <HasCheckedTargets>True</HasCheckedTargets>
   <PublicVersion>1.0</PublicVersion>
+  <Children>
+    <Id>NuCvpofCrbPBmyCw</Id>
+    <Id>CFSSQKFrmRcAKbKj</Id>
+  </Children>
   <Parents>
     <Id>PfuLmMuKeTeMiqJj</Id>
   </Parents>

@@ -22,14 +22,19 @@ type
     procedure BitBtn1Click(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
     procedure BitBtn3Click(Sender: TObject);
+    procedure BitBtn5Click(Sender: TObject);
+    procedure LVDblClick(Sender: TObject);
   private
     m_root : IDataField;
     m_list : IDataFieldList;
 
     procedure setRoot( value : IDataField );
+    function  getRoot : IDataField;
+    function  getList : IDataFieldList;
     procedure updateView;
   public
-    property Root : IDataField read m_root write setRoot;
+    property Root       : IDataField      read getRoot write setRoot;
+    property FieldList  : IDataFieldList  read getList write m_list;
   end;
 
 var
@@ -38,7 +43,7 @@ var
 implementation
 
 uses
-  f_datafield_edit;
+  f_datafield_edit, f_task_datafields;
 
 {$R *.dfm}
 
@@ -47,6 +52,7 @@ uses
 procedure TTableFieldEditorForm.BaseFrame1OKBtnClick(Sender: TObject);
 begin
   m_root.Childs := m_list;
+  m_list        := NIL;
 end;
 
 procedure TTableFieldEditorForm.BitBtn1Click(Sender: TObject);
@@ -57,6 +63,8 @@ begin
   try
     df := m_list.newField('Tabellenfeld', 'string');
     Application.CreateForm(TDatafieldEditform, DatafieldEditform);
+
+    DatafieldEditform.FieldList := m_root.Owner;
     DatafieldEditform.DataField := df;
     if DatafieldEditform.ShowModal = mrOk then
       updateView
@@ -77,6 +85,7 @@ begin
   df := IDataField(LV.Selected.Data);
   try
     Application.CreateForm(TDatafieldEditform, DatafieldEditform);
+    DatafieldEditform.FieldList := m_root.Owner;
     DatafieldEditform.DataField := df;
     if DatafieldEditform.ShowModal = mrOk then
       updateView
@@ -99,6 +108,19 @@ begin
   updateView;
 end;
 
+procedure TTableFieldEditorForm.BitBtn5Click(Sender: TObject);
+begin
+  try
+    Application.CreateForm(TTaskDatafieldsForm, TaskDatafieldsForm);
+    TaskDatafieldsForm.Fields := m_list;
+    TaskDatafieldsForm.open;
+    if TaskDatafieldsForm.ShowModal = mrOk then
+      updateView;
+  finally
+    TaskDatafieldsForm.free;
+  end;
+end;
+
 procedure TTableFieldEditorForm.FormCreate(Sender: TObject);
 begin
   m_root := nIL;
@@ -107,8 +129,25 @@ end;
 
 procedure TTableFieldEditorForm.FormDestroy(Sender: TObject);
 begin
+  if Assigned(m_list) then
+    m_list.release;
   m_root := NIL;
   m_list := NIL;
+end;
+
+function TTableFieldEditorForm.getList: IDataFieldList;
+begin
+  Result := m_list;
+end;
+
+function TTableFieldEditorForm.getRoot: IDataField;
+begin
+  Result := m_root;
+end;
+
+procedure TTableFieldEditorForm.LVDblClick(Sender: TObject);
+begin
+  BitBtn2.Click;
 end;
 
 procedure TTableFieldEditorForm.setRoot(value: IDataField);
@@ -126,9 +165,11 @@ var
   item : TListItem;
   df  : IDataField;
   old : IDataField;
+  len, max : integer;
 begin
   old := NIL;
 
+  max := 100;
   LV.Items.BeginUpdate;
   if Assigned(LV.Selected) then
     old := IDataField(LV.Selected.Data);
@@ -140,6 +181,10 @@ begin
 
     item.Data := df;
     item.Caption := df.Name;
+    len := LV.Canvas.TextWidth(df.Name+'W');
+    if len > max then
+      max := len;
+
     item.SubItems.Add(df.Typ);
 
     if df.isGlobal then
@@ -148,7 +193,7 @@ begin
       item.SubItems.Add('');
     item.SubItems.Add(df.Rem);
   end;
-
+  LV.Column[0].Width := max;
   LV.Items.EndUpdate;
 end;
 

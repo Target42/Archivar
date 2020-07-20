@@ -222,6 +222,9 @@ object MainForm: TMainForm
         object Vorlagenbearbeiten1: TMenuItem
           Action = ac_ad_templates
         end
+        object Systemvorlage1: TMenuItem
+          Action = ac_ad_sys_template
+        end
       end
     end
     object Fenster1: TMenuItem
@@ -248,7 +251,6 @@ object MainForm: TMainForm
       end
       object test21: TMenuItem
         Caption = 'test2'
-        OnClick = test21Click
       end
     end
   end
@@ -361,6 +363,11 @@ object MainForm: TMainForm
       Category = 'Admin'
       Caption = 'Neue Vorlage'
       OnExecute = ac_ad_template_newExecute
+    end
+    object ac_ad_sys_template: TAction
+      Category = 'Admin'
+      Caption = 'Systemvorlage'
+      OnExecute = ac_ad_sys_templateExecute
     end
   end
   object ApplicationEvents1: TApplicationEvents

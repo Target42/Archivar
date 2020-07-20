@@ -107,7 +107,9 @@ uses
   u_zipHelper in 'misc\u_zipHelper.pas',
   f_template_new in 'Templates\f_template_new.pas' {TemplateNewForm},
   f_select_templateForm in 'f_select_templateForm.pas' {SelectTemplateForm},
-  f_task_datafields in 'TaskEditor\f_task_datafields.pas' {TaskDatafieldsForm};
+  f_task_datafields in 'TaskEditor\f_task_datafields.pas' {TaskDatafieldsForm},
+  f_df_EnumList in 'Datafields\Editor\f_df_EnumList.pas' {DFEnumListForm},
+  f_df_listbox in 'Datafields\Editor\f_df_listbox.pas' {ListBoxForm};
 
 {$R *.res}
 
@@ -125,6 +127,5 @@ begin
   Application.CreateForm(TWindowHandler, WindowHandler);
   Application.CreateForm(TBookMarkHandler, BookMarkHandler);
   Application.CreateForm(TMainForm, MainForm);
-
   Application.Run;
 end.

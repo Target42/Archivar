@@ -94,11 +94,19 @@ type
     function  GetTyp : string;
     procedure SetValue( value : string );
     function  GetValue : string;
-  //public
-    property Name  : string read GetName write SetName;
-    property Typ   : string read GetTyp  write SetTyp;
-    property Value : string read GetValue write SetValue;
+    function getOwner : IDataField;
 
+    procedure setPtr( value : pointer );
+    function  getPtr : Pointer;
+  //public
+    property Owner : IDataField   read getOwner;
+    property Name  : string       read GetName    write SetName;
+    property Typ   : string       read GetTyp     write SetTyp;
+    property Value : string       read GetValue   write SetValue;
+    property Ptr   : Pointer      read getPtr     write setPtr;
+
+    function hasEditor : boolean;
+    Function ShowEditor : boolean;
 
     function isList : Boolean;
     procedure fillList( list : TStrings );
@@ -121,6 +129,7 @@ begin
   items.Add('string');
   items.Add('text');
   items.Add('time');
+  items.Add('linktable');
 //  items.Add('table');
 end;
 

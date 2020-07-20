@@ -24,7 +24,6 @@ type
     BitBtn3: TBitBtn;
     BitBtn4: TBitBtn;
     BitBtn5: TBitBtn;
-    SpeedButton1: TSpeedButton;
     TabSheet2: TTabSheet;
     EditFrame1: TEditFrame;
     EditorFrame1: TEditorFrame;
@@ -55,6 +54,7 @@ type
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure BitBtn5Click(Sender: TObject);
+    procedure LVDblClick(Sender: TObject);
   private
     m_teid : integer;
     m_tc   : ITaskContainer;
@@ -102,6 +102,7 @@ begin
   df := m_tc.Task.Fields.newField('Neues_Feld', 'string');
   try
     Application.CreateForm(TDatafieldEditform, DatafieldEditform);
+    DatafieldEditform.FieldList := m_tc.Task.Fields;
     DatafieldEditform.DataField := df;
     if DatafieldEditform.ShowModal = mrOk then
       updateVarList
@@ -121,6 +122,7 @@ begin
   df := m_tc.Task.Fields.newField('Neue_Tabelle', 'table');
   try
     Application.CreateForm(TDatafieldEditform, DatafieldEditform);
+    DatafieldEditform.FieldList := m_tc.Task.Fields;
     DatafieldEditform.DataField := df;
     if DatafieldEditform.ShowModal = mrOk then
       updateVarList
@@ -143,9 +145,10 @@ begin
 
   try
     Application.CreateForm(TDatafieldEditform, DatafieldEditform);
+    DatafieldEditform.FieldList := m_tc.Task.Fields;
     DatafieldEditform.DataField := df;
     if DatafieldEditform.ShowModal = mrOk then
-      updateVarList
+      updateVarList;
   finally
     DatafieldEditform.Free;
   end;
@@ -169,7 +172,8 @@ begin
     TaskDatafieldsForm.Fields := m_tc.Task.Fields;
     TaskDatafieldsForm.setServer(DSProviderConnection1);
     TaskDatafieldsForm.open;
-    TaskDatafieldsForm.ShowModal;
+    if TaskDatafieldsForm.ShowModal = mrOk then
+      updateVarList;
   finally
     TaskDatafieldsForm.free;
   end;
@@ -239,6 +243,14 @@ begin
   st.Free;
 
   setTaskContainer(m_tc);
+end;
+
+procedure TTaksEditorForm.LVDblClick(Sender: TObject);
+begin
+  if LV.ItemIndex > -1 then
+    BitBtn3.Click
+  else
+    BitBtn1.Click;
 end;
 
 procedure TTaksEditorForm.new;
@@ -321,6 +333,7 @@ begin
     else
       item.SubItems.Add('');
     item.SubItems.Add(df.Rem);
+
     if df = old then
       LV.Selected := item;
 
