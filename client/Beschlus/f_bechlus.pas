@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_base, fr_editForm, Vcl.StdCtrls,
   Vcl.ExtCtrls, Vcl.Buttons, Vcl.ComCtrls, Vcl.Menus, System.Actions,
-  Vcl.ActnList, System.ImageList, Vcl.ImgList;
+  Vcl.ActnList, System.ImageList, Vcl.ImgList, xsd_TaskData, i_personen;
 
 type
   TBeschlusform = class(TForm)
@@ -15,14 +15,14 @@ type
     PageControl1: TPageControl;
     TabSheet1: TTabSheet;
     GroupBox4: TGroupBox;
-    ListView1: TListView;
+    LVGremium: TListView;
     Panel4: TPanel;
     Splitter4: TSplitter;
     GroupBox5: TGroupBox;
     GroupBox6: TGroupBox;
     Splitter5: TSplitter;
-    ListView2: TListView;
-    ListView3: TListView;
+    LVAbwesend: TListView;
+    LVanthalten: TListView;
     TabSheet2: TTabSheet;
     GroupBox3: TGroupBox;
     GroupBox1: TGroupBox;
@@ -52,10 +52,29 @@ type
     ActionList1: TActionList;
     ac_p1_delete: TAction;
     Lschen1: TMenuItem;
-    procedure ListView1DragOver(Sender, Source: TObject; X, Y: Integer;
+    procedure LVGremiumDragOver(Sender, Source: TObject; X, Y: Integer;
       State: TDragState; var Accept: Boolean);
+    procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+    procedure SpeedButton2Click(Sender: TObject);
+    procedure SpeedButton1Click(Sender: TObject);
+    procedure LVAbwesendDblClick(Sender: TObject);
+    procedure LVGremiumDblClick(Sender: TObject);
+    procedure SpeedButton4Click(Sender: TObject);
+    procedure SpeedButton3Click(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure BitBtn1Click(Sender: TObject);
   private
-    { Private-Deklarationen }
+    m_data      : IXMLList;
+    m_gremium   : IPersonenListe;
+    m_abwesende : IPersonenListe;
+    m_enthalten : IPersonenListe;
+
+    procedure UpdateList( LV : TListView; list : IPersonenListe );
+
+    procedure updateInfo;
+
   public
     { Public-Deklarationen }
   end;
@@ -65,12 +84,170 @@ var
 
 implementation
 
+uses
+  u_PersonenListeImpl, m_glob_client;
+
 {$R *.dfm}
 
-procedure TBeschlusform.ListView1DragOver(Sender, Source: TObject; X,
+procedure TBeschlusform.BitBtn1Click(Sender: TObject);
+var
+  sum : integer;
+  val : integer;
+begin
+  sum := 0;
+  if TryStrToInt(LabeledEdit1.Text, val) then
+    sum := sum+ val;
+  if TryStrToInt(LabeledEdit2.Text, val) then
+    sum := sum+ val;
+  if TryStrToInt(LabeledEdit3.Text, val) then
+    sum := sum+ val;
+
+  if sum <> m_gremium.count then begin
+    ShowMessage('Es wurden ' + intToStr( sum ) + ' anstelle von '+IntToStr(m_gremium.count)+' gezählt');
+    exit;
+  end;
+
+end;
+
+procedure TBeschlusform.Button1Click(Sender: TObject);
+begin
+  LabeledEdit1.Text := IntToStr(m_gremium.count);
+  LabeledEdit2.Text := '0';
+  LabeledEdit3.Text := '0';
+end;
+
+procedure TBeschlusform.Button2Click(Sender: TObject);
+begin
+  LabeledEdit1.Text := '0';
+  LabeledEdit2.Text := '0';
+  LabeledEdit3.Text := IntToStr(m_gremium.count);
+end;
+
+procedure TBeschlusform.FormCreate(Sender: TObject);
+begin
+  m_data      := NewList;
+  m_gremium   := GM.getGremiumMA(1);
+  m_abwesende := TPersonenListeImpl.create;
+  m_enthalten := TPersonenListeImpl.create;
+
+  UpdateList( LVGremium,    m_gremium);
+  UpdateList( LVAbwesend,   m_abwesende );
+  UpdateList( LVanthalten,  m_enthalten );
+end;
+
+procedure TBeschlusform.FormDestroy(Sender: TObject);
+begin
+  m_gremium.release;
+  m_abwesende.release;
+  m_enthalten.release;
+end;
+
+procedure TBeschlusform.LVAbwesendDblClick(Sender: TObject);
+begin
+  SpeedButton1.Click;
+end;
+
+procedure TBeschlusform.LVGremiumDblClick(Sender: TObject);
+begin
+  SpeedButton2.Click;
+end;
+
+procedure TBeschlusform.LVGremiumDragOver(Sender, Source: TObject; X,
   Y: Integer; State: TDragState; var Accept: Boolean);
 begin
   Accept := true;
 end;
+
+procedure TBeschlusform.SpeedButton1Click(Sender: TObject);
+var
+  p : IPerson;
+begin
+  if not Assigned(LVAbwesend.Selected) then
+    exit;
+
+  p := IPerson(LVAbwesend.Selected.Data);
+  m_gremium.add(p);
+
+  UpdateList( LVGremium, m_gremium);
+  UpdateList( LVAbwesend, m_abwesende);
+end;
+
+procedure TBeschlusform.SpeedButton2Click(Sender: TObject);
+var
+  p : IPerson;
+begin
+  if not Assigned(LVGremium.Selected) then
+    exit;
+
+  p := IPerson(LVGremium.Selected.Data);
+  m_abwesende.add(p);
+
+  UpdateList( LVGremium, m_gremium);
+  UpdateList( LVAbwesend, m_abwesende);
+end;
+
+procedure TBeschlusform.SpeedButton3Click(Sender: TObject);
+var
+  p : IPerson;
+begin
+  if not Assigned(LVanthalten.Selected) then
+    exit;
+
+  p := IPerson(LVanthalten.Selected.Data);
+  m_gremium.add(p);
+
+  UpdateList( LVGremium, m_gremium);
+  UpdateList( LVanthalten, m_enthalten);
+end;
+
+procedure TBeschlusform.SpeedButton4Click(Sender: TObject);
+var
+  p : IPerson;
+begin
+  if not Assigned(LVGremium.Selected) then
+    exit;
+
+  p := IPerson(LVGremium.Selected.Data);
+  m_enthalten.add(p);
+
+  UpdateList( LVGremium, m_gremium);
+  UpdateList( LVanthalten, m_enthalten);
+end;
+
+procedure TBeschlusform.updateInfo;
+begin
+  LabeledEdit4.Text := IntToStr(m_gremium.count);
+  LabeledEdit5.Text := IntToStr(m_abwesende.count);
+  LabeledEdit6.Text := IntToStr(m_enthalten.count);
+
+  LabeledEdit1.Text := '0';
+  LabeledEdit2.Text := '0';
+  LabeledEdit3.Text := '0';
+end;
+
+procedure TBeschlusform.UpdateList(LV: TListView; list: IPersonenListe);
+var
+  i : integer;
+  p : IPerson;
+  item : TListItem;
+begin
+  LV.Items.BeginUpdate;
+  LV.Items.Clear;
+
+  for i := 0 to pred(list.count) do
+  begin
+    p     := list.Items[i];
+    item  := LV.Items.Add;
+    item.Data := p;
+    item.Caption := p.Name;
+    item.SubItems.Add(p.Vorname);
+    item.SubItems.Add(p.Abteilung);
+    item.SubItems.Add(p.Rolle);
+  end;
+  LV.Items.EndUpdate;
+
+  updateInfo;
+end;
+
 
 end.

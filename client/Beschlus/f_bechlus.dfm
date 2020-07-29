@@ -12,6 +12,8 @@ object Beschlusform: TBeschlusform
   Font.Style = []
   OldCreateOrder = False
   Position = poOwnerFormCenter
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter2: TSplitter
@@ -52,13 +54,13 @@ object Beschlusform: TBeschlusform
     Top = 0
     Width = 755
     Height = 583
-    ActivePage = TabSheet1
+    ActivePage = TabSheet2
     Align = alClient
     TabOrder = 1
     object TabSheet1: TTabSheet
       Caption = 'Teilnehmer'
       object Splitter4: TSplitter
-        Left = 313
+        Left = 337
         Top = 0
         Height = 555
         ExplicitLeft = 368
@@ -68,19 +70,18 @@ object Beschlusform: TBeschlusform
       object GroupBox4: TGroupBox
         Left = 0
         Top = 0
-        Width = 313
+        Width = 337
         Height = 555
         Align = alLeft
         Caption = 'Gremium'
         TabOrder = 0
-        object ListView1: TListView
+        object LVGremium: TListView
           AlignWithMargins = True
           Left = 5
           Top = 18
-          Width = 303
+          Width = 327
           Height = 532
           Align = alClient
-          Checkboxes = True
           Columns = <
             item
               Caption = 'Name'
@@ -93,18 +94,25 @@ object Beschlusform: TBeschlusform
             item
               Caption = 'Abteilung'
               Width = 75
+            end
+            item
+              Caption = 'Rolle'
+              Width = 75
             end>
           DragMode = dmAutomatic
+          ReadOnly = True
+          RowSelect = True
           SortType = stText
           TabOrder = 0
           ViewStyle = vsReport
-          OnDragOver = ListView1DragOver
+          OnDblClick = LVGremiumDblClick
+          OnDragOver = LVGremiumDragOver
         end
       end
       object Panel4: TPanel
-        Left = 316
+        Left = 340
         Top = 0
-        Width = 431
+        Width = 407
         Height = 555
         Align = alClient
         BevelOuter = bvNone
@@ -114,7 +122,7 @@ object Beschlusform: TBeschlusform
         object Splitter5: TSplitter
           Left = 0
           Top = 363
-          Width = 431
+          Width = 407
           Height = 3
           Cursor = crVSplit
           Align = alBottom
@@ -124,16 +132,16 @@ object Beschlusform: TBeschlusform
         object GroupBox5: TGroupBox
           Left = 0
           Top = 0
-          Width = 431
+          Width = 407
           Height = 363
           Align = alClient
           Caption = 'Abwesend'
           TabOrder = 0
-          object ListView2: TListView
+          object LVAbwesend: TListView
             AlignWithMargins = True
             Left = 44
             Top = 18
-            Width = 382
+            Width = 358
             Height = 340
             Align = alClient
             Columns = <
@@ -148,12 +156,19 @@ object Beschlusform: TBeschlusform
               item
                 Caption = 'Abteilung'
                 Width = 75
+              end
+              item
+                Caption = 'Rolle'
+                Width = 75
               end>
             DragMode = dmAutomatic
+            ReadOnly = True
+            RowSelect = True
             SortType = stText
             TabOrder = 0
             ViewStyle = vsReport
-            OnDragOver = ListView1DragOver
+            OnDblClick = LVAbwesendDblClick
+            OnDragOver = LVGremiumDragOver
           end
           object Panel1: TPanel
             Left = 2
@@ -205,6 +220,7 @@ object Beschlusform: TBeschlusform
                 FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
                 FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
                 FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
+              OnClick = SpeedButton1Click
             end
             object SpeedButton2: TSpeedButton
               Left = 4
@@ -246,22 +262,23 @@ object Beschlusform: TBeschlusform
                 FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
                 FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
                 FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
+              OnClick = SpeedButton2Click
             end
           end
         end
         object GroupBox6: TGroupBox
           Left = 0
           Top = 366
-          Width = 431
+          Width = 407
           Height = 189
           Align = alBottom
           Caption = 'Nicht mit Abgestimt'
           TabOrder = 1
-          object ListView3: TListView
+          object LVanthalten: TListView
             AlignWithMargins = True
             Left = 44
             Top = 18
-            Width = 382
+            Width = 358
             Height = 166
             Align = alClient
             Columns = <
@@ -276,12 +293,18 @@ object Beschlusform: TBeschlusform
               item
                 Caption = 'Abteilung'
                 Width = 75
+              end
+              item
+                Caption = 'Rolle'
+                Width = 75
               end>
             DragMode = dmAutomatic
+            ReadOnly = True
+            RowSelect = True
             SortType = stText
             TabOrder = 0
             ViewStyle = vsReport
-            OnDragOver = ListView1DragOver
+            OnDragOver = LVGremiumDragOver
           end
           object Panel2: TPanel
             Left = 2
@@ -333,6 +356,7 @@ object Beschlusform: TBeschlusform
                 FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
                 FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
                 FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
+              OnClick = SpeedButton3Click
             end
             object SpeedButton4: TSpeedButton
               Left = 4
@@ -374,6 +398,7 @@ object Beschlusform: TBeschlusform
                 FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
                 FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
                 FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
+              OnClick = SpeedButton4Click
             end
           end
         end
@@ -453,6 +478,7 @@ object Beschlusform: TBeschlusform
             ParentDoubleBuffered = True
             TabOrder = 0
             WordWrap = True
+            OnClick = Button1Click
           end
           object LabeledEdit1: TLabeledEdit
             Left = 111
@@ -466,7 +492,7 @@ object Beschlusform: TBeschlusform
             TabOrder = 1
           end
           object LabeledEdit2: TLabeledEdit
-            Left = 167
+            Left = 182
             Top = 32
             Width = 50
             Height = 21
@@ -477,7 +503,7 @@ object Beschlusform: TBeschlusform
             TabOrder = 2
           end
           object LabeledEdit3: TLabeledEdit
-            Left = 223
+            Left = 246
             Top = 32
             Width = 50
             Height = 21
@@ -488,7 +514,7 @@ object Beschlusform: TBeschlusform
             TabOrder = 3
           end
           object Button2: TBitBtn
-            Left = 294
+            Left = 318
             Top = 16
             Width = 90
             Height = 41
@@ -531,26 +557,29 @@ object Beschlusform: TBeschlusform
             ParentDoubleBuffered = True
             TabOrder = 4
             WordWrap = True
+            OnClick = Button2Click
           end
           object LabeledEdit4: TLabeledEdit
-            Left = 599
+            Left = 536
             Top = 32
             Width = 33
             Height = 21
             EditLabel.Width = 50
             EditLabel.Height = 13
             EditLabel.Caption = 'Anwesend'
+            NumbersOnly = True
             ReadOnly = True
             TabOrder = 5
           end
           object LabeledEdit5: TLabeledEdit
-            Left = 539
+            Left = 595
             Top = 32
             Width = 34
             Height = 21
             EditLabel.Width = 50
             EditLabel.Height = 13
             EditLabel.Caption = 'Abwesend'
+            NumbersOnly = True
             ReadOnly = True
             TabOrder = 6
           end
@@ -562,6 +591,7 @@ object Beschlusform: TBeschlusform
             EditLabel.Width = 75
             EditLabel.Height = 13
             EditLabel.Caption = 'Nicht Abgestimt'
+            NumbersOnly = True
             ReadOnly = True
             TabOrder = 7
           end
@@ -607,6 +637,7 @@ object Beschlusform: TBeschlusform
               FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
               FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
             TabOrder = 8
+            OnClick = BitBtn1Click
           end
         end
         object ListView4: TListView
@@ -650,7 +681,6 @@ object Beschlusform: TBeschlusform
           PopupMenu = PopupMenu1
           TabOrder = 1
           ViewStyle = vsReport
-          ExplicitHeight = 91
         end
       end
       object GroupBox1: TGroupBox
@@ -696,8 +726,8 @@ object Beschlusform: TBeschlusform
   end
   object PopupMenu1: TPopupMenu
     Images = ImageList1
-    Left = 495
-    Top = 408
+    Left = 543
+    Top = 424
     object Lschen1: TMenuItem
       Action = ac_p1_delete
     end
@@ -706,7 +736,7 @@ object Beschlusform: TBeschlusform
     Left = 399
     Top = 200
     Bitmap = {
-      494C010101000800100010001000FFFFFFFFFF00FFFFFFFFFFFFFFFF424D3600
+      494C010101000800280010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       000000000000000000000000000000000000000000FF000000FF000000FF0000
       00FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF0000
@@ -842,7 +872,8 @@ object Beschlusform: TBeschlusform
       E007000000000000E007000000000000E007000000000000E007000000000000
       E007000000000000E007000000000000E007000000000000E007000000000000
       E007000000000000E007000000000000E007000000000000E007000000000000
-      FC3F000000000000FFFF000000000000}
+      FC3F000000000000FFFF00000000000000000000000000000000000000000000
+      000000000000}
   end
   object ActionList1: TActionList
     Images = ImageList1

@@ -37,9 +37,10 @@ type
 
     procedure colorRequired; virtual;
 
-  private
-    procedure setDataField( value : IDataField );
+    procedure setDataField( value : IDataField ); virtual;
     function  getDataField : IDataField;
+
+  private
 
     function  getChilds : TList<ITaskCtrl>;
     function  getProps  : TList<ITaskCtrlProp>;
@@ -249,7 +250,8 @@ begin
   begin
     if Assigned(m_ctrl) then
     begin
-      re := Rect( m_ctrl.Left, m_ctrl.Top, m_ctrl.Left + m_ctrl.left, m_ctrl.Top + m_ctrl.Height );
+//      re := Rect( m_ctrl.Left, m_ctrl.Top, m_ctrl.Left + m_ctrl.left, m_ctrl.Top + m_ctrl.Height );
+      re := Rect(m_ctrl.ClientToScreen(Point(0, 0)), m_ctrl.ClientToScreen(Point(m_ctrl.Width, m_ctrl.Height)));
       if re.Contains(pkt) then
         Result := self;
     end;
@@ -525,7 +527,6 @@ begin
   if not Assigned(m_ctrl) then
     exit;
   doSetMouse( md, mv, mu );
-
 end;
 
 procedure TaskCtrlImpl.setParent(value: ITaskCtrl);

@@ -45,10 +45,8 @@ object GremiumListForm: TGremiumListForm
     Width = 329
     Height = 242
     Align = alClient
-    Images = GM.ImageList1
     Indent = 19
     TabOrder = 1
-    ExplicitLeft = 8
-    ExplicitTop = 2
+    OnDblClick = TVDblClick
   end
 end

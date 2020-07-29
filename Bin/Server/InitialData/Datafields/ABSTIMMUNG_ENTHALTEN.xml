@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<DataField name="ABSTIMMUNG_ENTHALTEN" clid="{DE86F225-D38C-4A0B-BD75-0AAEB51498E9}" datatype="integer" isGlobal="true"><Text>Enhaltungen</Text><Properties><Property name="Default" typ="integer"><value>0</value></Property><Property name="Min" typ="integer"><value>0</value></Property><Property name="Max" typ="integer"><value>0</value></Property></Properties></DataField>

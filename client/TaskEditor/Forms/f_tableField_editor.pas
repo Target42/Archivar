@@ -87,10 +87,8 @@ begin
     Application.CreateForm(TDatafieldEditform, DatafieldEditform);
     DatafieldEditform.FieldList := m_root.Owner;
     DatafieldEditform.DataField := df;
-    if DatafieldEditform.ShowModal = mrOk then
-      updateView
-    else
-      m_list.delete(df);
+    DatafieldEditform.ShowModal;
+    updateView;
   finally
     DatafieldEditform.Free;
   end;

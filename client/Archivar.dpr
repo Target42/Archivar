@@ -106,10 +106,17 @@ uses
   m_dws in 'dws\m_dws.pas' {DwsMod: TDataModule},
   u_zipHelper in 'misc\u_zipHelper.pas',
   f_template_new in 'Templates\f_template_new.pas' {TemplateNewForm},
-  f_select_templateForm in 'f_select_templateForm.pas' {SelectTemplateForm},
+  f_select_templateForm in 'Templates\f_select_templateForm.pas' {SelectTemplateForm},
   f_task_datafields in 'TaskEditor\f_task_datafields.pas' {TaskDatafieldsForm},
   f_df_EnumList in 'Datafields\Editor\f_df_EnumList.pas' {DFEnumListForm},
-  f_df_listbox in 'Datafields\Editor\f_df_listbox.pas' {ListBoxForm};
+  f_df_listbox in 'Datafields\Editor\f_df_listbox.pas' {ListBoxForm},
+  i_personen in 'Personen\i_personen.pas',
+  u_PersonImpl in 'Personen\u_PersonImpl.pas',
+  u_PersonenListeImpl in 'Personen\u_PersonenListeImpl.pas',
+  i_beschluss in 'Beschlus\i_beschluss.pas',
+  u_AbstimmungImpl in 'Beschlus\u_AbstimmungImpl.pas',
+  u_AbstimmungenImpl in 'Beschlus\u_AbstimmungenImpl.pas',
+  u_BeschlussImpl in 'Beschlus\u_BeschlussImpl.pas';
 
 {$R *.res}
 

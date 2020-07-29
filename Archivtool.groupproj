@@ -9,6 +9,9 @@
         <Projects Include="client\Archivar.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="Setup\Setup.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -35,14 +38,23 @@
     <Target Name="Archivar:Make">
         <MSBuild Projects="client\Archivar.dproj" Targets="Make"/>
     </Target>
+    <Target Name="Setup">
+        <MSBuild Projects="Setup\Setup.dproj"/>
+    </Target>
+    <Target Name="Setup:Clean">
+        <MSBuild Projects="Setup\Setup.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Setup:Make">
+        <MSBuild Projects="Setup\Setup.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="ArchivServer;Archivar"/>
+        <CallTarget Targets="ArchivServer;Archivar;Setup"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="ArchivServer:Clean;Archivar:Clean"/>
+        <CallTarget Targets="ArchivServer:Clean;Archivar:Clean;Setup:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="ArchivServer:Make;Archivar:Make"/>
+        <CallTarget Targets="ArchivServer:Make;Archivar:Make;Setup:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<DataField name="MA_VORNAME" clid="{11561191-4775-43DE-A97F-03E006F870CE}" datatype="string" isGlobal="true"><Text>Der Vorname eines Mitarbeites</Text><Properties><Property name="Length" typ="integer"><value>100</value></Property><Property name="Readonly" typ="bool"><value>false</value></Property><Property name="RegEx" typ="string"><value></value></Property><Property name="CharCase" typ="TEditCharCase"><value>ecNormal</value></Property></Properties></DataField>

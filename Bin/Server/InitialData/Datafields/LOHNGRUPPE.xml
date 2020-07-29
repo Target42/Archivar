@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<DataField name="LOHNGRUPPE" clid="{E529328D-1AC9-4798-A289-4E68D6AF2D75}" datatype="enum" isGlobal="true"><Text>Lohngruppe Nach Tarif</Text><Properties><Property name="Values" typ="EnumList"><value>1;2;3</value></Property><Property name="Default" typ="string"><value>1</value></Property><Property name="Egene Werte" typ="bool"><value>true</value></Property></Properties></DataField>

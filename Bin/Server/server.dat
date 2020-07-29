@@ -1,0 +1,7 @@
+[DB]
+host=localhost
+db=d:\db\archivar.gdb
+user=sysdba
+pwd=masterkey
+[DS]
+port=211

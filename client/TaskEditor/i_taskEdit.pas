@@ -171,11 +171,13 @@ type
     function  getTyp : string;
     procedure setControl( value : TControl );
     function  getControl : TControl;
+    function  getValueList : TStringList;
 
   //public
-    property Name     : string    read getName    write setName;
-    property Value    : string    read getValue   write setValue;
-    property Typ      : string    read getTyp     write setTyp;
+    property Name     : string      read getName    write setName;
+    property Value    : string      read getValue   write setValue;
+    property Typ      : string      read getTyp     write setTyp;
+    property ValueList: TStringList read getValueList;
 
     property Control  : TControl  read getControl write setControl;
 

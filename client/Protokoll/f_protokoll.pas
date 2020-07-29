@@ -9,7 +9,7 @@ uses
   Vcl.DBCtrls, Vcl.StdCtrls, Vcl.Mask, JvExComCtrls, JvDBTreeView, Vcl.Menus,
   System.Actions, Vcl.ActnList, f_gremiumList, JvDateTimePicker,
   JvDBDateTimePicker, Vcl.Buttons, f_titel_edit, u_titel, xsd_protocol,
-  fr_chapter, xsd_chapter;
+  fr_chapter, xsd_chapter, i_personen;
 
 type
   TProtokollForm = class(TForm)
@@ -29,9 +29,6 @@ type
     DBNavigator1: TDBNavigator;
     AutoIncValue: TClientDataSet;
     Panel1: TPanel;
-    Button1: TButton;
-    Button2: TButton;
-    Button3: TButton;
     TNTab: TClientDataSet;
     DBNavigator2: TDBNavigator;
     TNTabPR_ID: TIntegerField;
@@ -68,6 +65,10 @@ type
     UpdateCPQry: TClientDataSet;
     Button4: TButton;
     TV: TTreeView;
+    Button1: TBitBtn;
+    Button2: TBitBtn;
+    Button3: TBitBtn;
+    TNTabPE_ID: TIntegerField;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -90,15 +91,16 @@ type
     procedure Button4Click(Sender: TObject);
   private
     m_TitelEditform : TTitelEditform;
-    m_proto : IXMLProtocol;
-    m_id : integer;
-    m_treeChanged : boolean;
-    m_locked : boolean;
+    m_proto         : IXMLProtocol;
+    m_id            : integer;
+    m_treeChanged   : Boolean;
+    m_locked        : Boolean;
 
-    m_grList: TGremiumListForm;
-    m_ro    : boolean;
+    m_grList        : TGremiumListForm;
+    m_ro            : Boolean;
 
-    m_cpList: TChapterTitleList;
+    m_cpList        : TChapterTitleList;
+
     procedure setID( value : integer );
 
     procedure loadFromClientBlob( tab : TClientDataSet; FieldName : string );
@@ -111,6 +113,8 @@ type
     procedure updateCpList;
     procedure saveChangedChapter;
     procedure buildTree( root : TTreeNode; xCp : IXMLChapter );
+
+    procedure UpdateGremium;
   public
     property ID : integer read m_id write setID;
     property RO : boolean read m_ro write setRO;
@@ -124,7 +128,7 @@ implementation
 uses
   m_glob_client, Xml.XMLIntf, Xml.XMLDoc, u_bookmark, m_BookMarkHandler,
   u_berTypes, System.JSON, u_json, System.Generics.Collections,
-  m_WindowHandler, f_chapter_content, u_chapter;
+  m_WindowHandler, f_chapter_content, u_chapter, u_gremium;
 
 {$R *.dfm}
 
@@ -331,6 +335,7 @@ end;
 
 procedure TProtokollForm.FormCreate(Sender: TObject);
 begin
+  DSProviderConnection1.SQLConnection := GM.SQLConnection1;
   TV.Images := GM.ImageList2;
   Application.CreateForm(TTitelEditform, m_TitelEditform);
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
@@ -459,6 +464,7 @@ begin
       CPTab.Next;
     end;
     updateCpList;
+    UpdateGremium;
   end;
 end;
 
@@ -658,6 +664,36 @@ begin
 
   end;
   TV.Items.EndUpdate;
+end;
+
+procedure TProtokollForm.UpdateGremium;
+var
+  list  : IPersonenListe;
+  p     : IPerson;
+  i     : integer;
+
+begin
+  list := GM.getGremiumMa(PRTab.FieldByName('GR_ID').Asinteger );
+  if not Assigned(list) then
+    exit;
+
+  for i := 0 to pred(list.count) do begin
+    p := list.Items[i];
+
+    if not TNTab.Locate('PR_ID;PE_ID', VarArrayOf([m_id, p.ID]), []) then begin
+      TNTab.Append;
+      TNTab.FieldByName('PR_ID').AsInteger        := m_id;
+      TNTab.FieldByName('TN_ID').AsInteger        := GM.autoInc('gen_tn_id');
+      TNTab.FieldByName('TN_NAME').AsString       := p.Name;
+      TNTab.FieldByName('TN_VORNAME').AsString    := p.Vorname;
+      TNTab.FieldByName('TN_DEPARTMENT').AsString := p.Abteilung;
+      TNTab.FieldByName('TN_ROLLE').AsString      := p.Rolle;
+      TNTab.FieldByName('TN_STATUS').AsInteger    := 0;
+      TNTab.FieldByName('PE_ID').AsInteger        := p.ID;
+      TNTab.Post;
+    end;
+  end;
+  list.release;
 end;
 
 end.

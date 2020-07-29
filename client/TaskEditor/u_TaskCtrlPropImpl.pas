@@ -50,6 +50,8 @@ type
 
     function  getRichEditProps( var value : string ) : boolean;
     procedure setRichEditProps( value : string );
+
+    function  getValueList : TStringList;
   public
 
     constructor create( owner : ITaskCtrl; name, typ : string; ctrl : Tcontrol ); overload;
@@ -273,6 +275,11 @@ begin
   m_value := Result;
 end;
 
+function TaskCtrlPropImpl.getValueList: TStringList;
+begin
+  Result := m_list;
+end;
+
 function TaskCtrlPropImpl.hasEditor: boolean;
 begin
   Result := SameText( m_typ, 'TStringList') or SameText( m_typ, 'TFields') or SameText(m_typ, 'TStrings');
@@ -281,7 +288,8 @@ end;
 function TaskCtrlPropImpl.isList: boolean;
 begin
   Result := (m_list.count > 0 ) or  SameText( m_typ, 'TaskDataField') or
-    SameText( m_typ, 'TAlign') or SameText(m_typ, 'TEditCharCase');
+    SameText( m_typ, 'TAlign') or SameText(m_typ, 'TEditCharCase')
+    or SameText(m_typ, 'TStringList');
 end;
 
 procedure TaskCtrlPropImpl.release;

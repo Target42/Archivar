@@ -4,3 +4,4 @@
 *.identcache
 *.stat
 *.res
+/Win32/

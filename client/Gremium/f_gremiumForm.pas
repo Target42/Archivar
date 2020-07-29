@@ -20,7 +20,7 @@ type
     OpenDialog1: TOpenDialog;
     BitBtn2: TBitBtn;
     BitBtn3: TBitBtn;
-    Button1: TButton;
+    Button1: TBitBtn;
     procedure FormCreate(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);

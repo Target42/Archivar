@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<DataField name="DATUM" clid="{37253DCC-1933-44C1-9AA7-9D5D13F22873}" datatype="date" isGlobal="true"><Text>Ein Datum</Text><Properties><Property name="Format" typ="string"><value>dd.MM.yyyy</value></Property><Property name="Default" typ="string"><value>$Date</value></Property></Properties></DataField>

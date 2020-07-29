@@ -5,7 +5,6 @@ object DBMod: TDBMod
   Height = 150
   Width = 215
   object IBDatabase1: TIBDatabase
-    Connected = True
     DatabaseName = 'localhost:d:\db\archiv.gdb'
     Params.Strings = (
       'user_name=sysdba'

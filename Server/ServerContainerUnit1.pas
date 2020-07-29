@@ -64,6 +64,7 @@ type
       var PersistentClass: TPersistentClass);
     procedure dsTemplateGetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
+    procedure ServiceStop(Sender: TService; var Stopped: Boolean);
   private
     { Private declarations }
   protected
@@ -307,6 +308,8 @@ begin
   LockMod := TLockMod.create(self);
   GM      := TGM.Create(self);
   DBMod   := TDBMod.Create(self);
+
+  DSTCPServerTransport1.Port := GM.DSPort;
 end;
 
 procedure TServerContainer1.ServiceStart(Sender: TService; var Started: Boolean);
@@ -318,6 +321,13 @@ begin
   except
     Started := false;
   end;
+end;
+
+procedure TServerContainer1.ServiceStop(Sender: TService; var Stopped: Boolean);
+begin
+  DSServer1.Start;
+  DBMod.startDB;
+  Stopped := true;
 end;
 
 end.

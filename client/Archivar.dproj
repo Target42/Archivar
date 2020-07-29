@@ -364,7 +364,7 @@
             <Form>TemplateNewForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="f_select_templateForm.pas">
+        <DCCReference Include="Templates\f_select_templateForm.pas">
             <Form>SelectTemplateForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
@@ -380,6 +380,13 @@
             <Form>ListBoxForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="Personen\i_personen.pas"/>
+        <DCCReference Include="Personen\u_PersonImpl.pas"/>
+        <DCCReference Include="Personen\u_PersonenListeImpl.pas"/>
+        <DCCReference Include="Beschlus\i_beschluss.pas"/>
+        <DCCReference Include="Beschlus\u_AbstimmungImpl.pas"/>
+        <DCCReference Include="Beschlus\u_AbstimmungenImpl.pas"/>
+        <DCCReference Include="Beschlus\u_BeschlussImpl.pas"/>
         <None Include="Datafields\ERA-NS.txt"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

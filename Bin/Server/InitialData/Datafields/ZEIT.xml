@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<DataField name="ZEIT" clid="{F931C47D-D61F-46E7-9AEB-0B92AE17DC41}" datatype="time" isGlobal="true"><Text>Eine uhrzeit</Text><Properties><Property name="Format" typ="string"><value>hh:mm</value></Property><Property name="Default" typ="string"><value>$time</value></Property></Properties></DataField>

@@ -77,40 +77,6 @@ set term ;/\
 \
 commit;\
 \
-insert into TY_TaskType( TY_ID, TY_NAME, TY_TAGE)\
-values(  gen_ID( gen_TY_ID, 1), 'Einstellung', 7);\
-\
-insert into TY_TaskType( TY_ID, TY_NAME, TY_TAGE)\
-values  ( gen_ID( gen_TY_ID, 1), 'Mehrarbeit', 7   );\
-\
-insert into TY_TaskType( TY_ID, TY_NAME, TY_TAGE)\
-values  ( gen_ID( gen_TY_ID, 1), 'Samstagsarbeit', 7   );\
-\
-insert into TY_TaskType( TY_ID, TY_NAME, TY_TAGE)\
-values  ( gen_ID( gen_TY_ID, 1), 'Freitext', 0   );\
-\
-commit;\
-\
-insert into FD_DELETE( FD_ID, FD_NAME, FD_MONATE, FD_TEXT)\
-values( gen_id(GEN_FD_ID, 1), 'Personaldokument (6 Monate)', 6, '6 Monate');\
-\
-insert into FD_DELETE( FD_ID, FD_NAME, FD_MONATE, FD_TEXT)\
-values( gen_id(GEN_FD_ID, 1), '6 Monate', 6, '6 Monate');\
-\
-insert into FD_DELETE( FD_ID, FD_NAME, FD_MONATE, FD_TEXT)\
-values( gen_id(GEN_FD_ID, 1), '1 Jahr', 12, '1 Jahr');\
-\
-insert into FD_DELETE( FD_ID, FD_NAME, FD_MONATE, FD_TEXT)\
-values( gen_id(GEN_FD_ID, 1), '5 Jahre', 60, '5 Jahre');\
-\
-insert into FD_DELETE( FD_ID, FD_NAME, FD_MONATE, FD_TEXT)\
-values( gen_id(GEN_FD_ID, 1), '10 Jahre', 120, '10 Jahre');\
-\
-insert into FD_DELETE( FD_ID, FD_NAME, FD_MONATE, FD_TEXT)\
-values( gen_id(GEN_FD_ID, 1), '50 Jahre', 600, '50 Jahre');\
-\
-commit;\
-\
 INSERT INTO PE_PERSON (PE_ID, PE_NAME, PE_VORNAME, PE_DEPARTMENT, PE_NET,\
     PE_MAIL, PE_PWD)\
 VALUES (\
@@ -132,7 +98,7 @@ commit;
 
 
 1582717246
-1594316633
+1595959420
 0
 0
 2
@@ -649,6 +615,26 @@ TE_TEMPLATE
 
 
 23
+3
+3131
+3131
+2
+IN_INTERNAL
+IN_INTERNAL
+
+
+
+0
+0
+0
+IN_INTERNAL
+
+
+
+
+
+
+24
 /END_TABLE AMCTABL
 
 /BEGIN_TABLE AMCCOLN
@@ -3782,6 +3768,40 @@ TN_STATUS
 
 7
 3
+3024
+3024
+PE_ID
+PE_ID
+
+
+
+1059
+0
+INTEGER
+0
+0
+0
+
+
+
+
+
+0
+0
+0
+
+
+
+0
+0
+0
+1
+0
+0
+PE_ID
+
+8
+3
 1072
 1072
 PR_ID
@@ -5104,7 +5124,7 @@ CHAR(1)
 1
 0
 0
-
+TE_STATE
 
 7
 3
@@ -5138,7 +5158,7 @@ INTEGER
 1
 0
 0
-
+TE_VERSION
 
 8
 3
@@ -5172,9 +5192,77 @@ VARCHAR(38)
 1
 0
 0
-
+TE_CLID
 
 9
+3
+3132
+3132
+IN_NAME
+IN_NAME
+
+
+
+3131
+0
+VARCHAR(100)
+100
+0
+0
+
+
+
+
+
+0
+0
+0
+
+
+
+1
+0
+1
+1
+0
+0
+IN_NAME
+
+1
+3
+3133
+3133
+IN_VALUE
+IN_VALUE
+
+
+
+3131
+0
+VARCHAR(255)
+255
+0
+0
+
+
+
+
+
+0
+0
+0
+
+
+
+0
+0
+0
+1
+0
+0
+IN_VALUE
+
+2
 /END_TABLE AMCCOLN
 
 /BEGIN_TABLE AMCREFR
@@ -7034,10 +7122,10 @@ OID     N8
 0
 0
 0
--61883
--17073
--47784
--7699
+-61433
+-16248
+-47334
+-6874
 2
 1
 0
@@ -7258,9 +7346,9 @@ OID     N8
 0
 0
 0
--63906
+-62631
 7306
--51457
+-50182
 12780
 2
 1
@@ -7322,10 +7410,10 @@ OID     N8
 0
 0
 0
-34110
-26754
-48884
-35153
+34107
+26265
+48881
+35639
 2
 1
 0
@@ -7514,10 +7602,10 @@ OID     N8
 0
 0
 0
--63304
-20360
--52355
-25834
+-63004
+15410
+-52055
+20884
 2
 1
 0
@@ -7610,10 +7698,10 @@ OID     N8
 0
 0
 0
-32238
--25914
-44837
--15565
+35313
+-25014
+47912
+-14665
 2
 1
 0
@@ -7633,10 +7721,42 @@ OID     N8
 2
 2761
 3
+3224
+289
+0
+24
+0
+0
+0
+0
+0
+-59065
+-22714
+-47741
+-19190
+2
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+
+0
+
+
+
+2
+3131
+3
 6
 290
 0
-24
+25
 0
 4
 5
@@ -7668,7 +7788,7 @@ OID     N8
 29
 290
 0
-25
+26
 0
 3
 5
@@ -7700,7 +7820,7 @@ OID     N8
 71
 290
 0
-26
+27
 0
 70
 68
@@ -7732,7 +7852,7 @@ OID     N8
 110
 290
 0
-27
+28
 0
 4
 36
@@ -7764,7 +7884,7 @@ OID     N8
 114
 290
 0
-28
+29
 0
 68
 113
@@ -7796,7 +7916,7 @@ OID     N8
 117
 290
 0
-29
+30
 0
 67
 113
@@ -7817,7 +7937,7 @@ OID     N8
 0
 0
 2
-a02dffff85d3fffff670ffff85d3ffff
+622fffff21d5fffff670ffff21d5ffff
 2
 
 
@@ -7828,7 +7948,7 @@ a02dffff85d3fffff670ffff85d3ffff
 2401
 290
 0
-30
+31
 0
 36
 2400
@@ -7849,7 +7969,7 @@ a02dffff85d3fffff670ffff85d3ffff
 0
 0
 2
-93a200004a32000093a2000060740000
+90a200004a32000090a20000d7730000
 2
 
 
@@ -7860,7 +7980,7 @@ a02dffff85d3fffff670ffff85d3ffff
 2415
 290
 0
-31
+32
 0
 36
 2414
@@ -7892,7 +8012,7 @@ a1a600001d420000850601001d420000850601005d7a0000
 2553
 290
 0
-32
+33
 0
 4
 2552
@@ -7924,7 +8044,7 @@ a1a600001d420000850601001d420000850601005d7a0000
 2556
 290
 0
-33
+34
 0
 68
 2552
@@ -7956,7 +8076,7 @@ e1d9ffff40fdffff380a000040fdffff380a0000cc200000
 2665
 290
 0
-34
+35
 0
 36
 2664
@@ -7988,7 +8108,7 @@ e1d9ffff40fdffff380a000040fdffff380a0000cc200000
 2687
 290
 0
-35
+36
 0
 2664
 2686
@@ -8020,7 +8140,7 @@ e1d9ffff40fdffff380a000040fdffff380a0000cc200000
 2690
 290
 0
-36
+37
 0
 68
 2686
@@ -8052,7 +8172,7 @@ e1d9ffff40fdffff380a000040fdffff380a0000cc200000
 2922
 290
 0
-37
+38
 0
 4
 2921
@@ -8084,7 +8204,7 @@ e1d9ffff40fdffff380a000040fdffff380a0000cc200000
 2925
 290
 0
-38
+39
 0
 168
 2921
@@ -8116,7 +8236,7 @@ e1d9ffff40fdffff380a000040fdffff380a0000cc200000
 2932
 290
 0
-39
+40
 0
 68
 2921

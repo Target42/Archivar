@@ -47,6 +47,7 @@ begin
   m_map.Add(LowerCase('TMemo'),        ctMemo );
   m_map.Add(LowerCase('TRichEdit'),    ctRichEdit );
   m_map.Add(LowerCase('TSplitter'),    ctSpliter );
+
 end;
 
 function TTaskControlFactory.createControl(frm : ITaskForm; p: ITaskCtrl;

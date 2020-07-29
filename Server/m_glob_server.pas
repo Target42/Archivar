@@ -10,10 +10,22 @@ type
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
   private
+    FDBHost: string;
+    FDBName: string;
+    FDBUser: string;
+    FDBKey: string;
+    FDSPort: integer;
     { Private declarations }
   public
     procedure LoadIni;
     procedure SaveIni;
+
+    property DBHost: string read FDBHost write FDBHost;
+    property DBName: string read FDBName write FDBName;
+    property DBUser: string read FDBUser write FDBUser;
+    property DBKey: string read FDBKey write FDBKey;
+
+    property DSPort: integer read FDSPort write FDSPort;
 
     function download( fname : string ; st : TStream ) : boolean;
     function downloadMem( st : TStream ) : TMemoryStream;
@@ -33,7 +45,7 @@ implementation
 {$R *.dfm}
 
 uses
-  IOUtils, m_db;
+  IOUtils, m_db, IniFiles;
 
 procedure DebugMsg( text : string );
 begin
@@ -63,7 +75,13 @@ end;
 
 procedure TGM.DataModuleCreate(Sender: TObject);
 begin
-//
+  FDBHost := 'localhost';
+  FDBName := 'd:\db\archivar.gdb';
+  FDBUser := 'sysdba';
+  FDBKey  := 'masterkey';
+  FDSPort := 211;
+
+  LoadIni;
 end;
 
 procedure TGM.DataModuleDestroy(Sender: TObject);
@@ -119,13 +137,41 @@ begin
 end;
 
 procedure TGM.LoadIni;
+var
+  FName : string;
+  ini   : TIniFile;
 begin
+  fname := TPath.Combine(ExtractFilePath(ParamStr(0)), 'server.dat');
 
+  ini := TIniFile.Create(fname);
+
+  FDBHost := ini.ReadString('DB', 'host', FDBHost);
+  FDBName := ini.ReadString('DB', 'db', FDBName);
+  FDBUser := ini.ReadString('DB', 'user', FDBUser);
+  FDBKey  := ini.ReadString('DB', 'pwd', FDBKey);
+
+  FDSPort := ini.ReadInteger('DS', 'port', FDSPort);
+
+  ini.Free;
 end;
 
 procedure TGM.SaveIni;
+var
+  FName : string;
+  ini   : TIniFile;
 begin
+  fname := TPath.Combine(ExtractFilePath(ParamStr(0)), 'server.dat');
 
+  ini := TIniFile.Create(fname);
+
+  ini.WriteString('DB', 'host', FDBHost);
+  ini.WriteString('DB', 'db', FDBName);
+  ini.WriteString('DB', 'user', FDBUser);
+  ini.WriteString('DB', 'pwd', FDBKey);
+
+  ini.WriteInteger('DS', 'port', FDSPort);
+
+  ini.Free;
 end;
 
 function TGM.saveToTempFile(st: TStream): string;

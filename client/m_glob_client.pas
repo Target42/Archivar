@@ -11,7 +11,7 @@ uses
   System.Generics.Collections, u_gremium, u_stub, System.JSON, JvComponentBase,
   JvComputerInfoEx, IdBaseComponent, IdComponent, IdIPWatch, Datasnap.DSCommon,
   Data.DBXJSON, pngimage, System.ImageList, Vcl.ImgList, Vcl.Controls,
-  u_berTypes;
+  u_berTypes, Datasnap.DSConnect, i_personen;
 
 const
   WMUSER            = WM_USER + 25;
@@ -37,6 +37,8 @@ type
     DSClientCallbackChannelManager1: TDSClientCallbackChannelManager;
     ImageList1: TImageList;
     ImageList2: TImageList;
+    DSProviderConnection1: TDSProviderConnection;
+    GremiumMA: TClientDataSet;
     procedure SQLConnection1AfterConnect(Sender: TObject);
     procedure SQLConnection1AfterDisconnect(Sender: TObject);
     procedure DataModuleCreate(Sender: TObject);
@@ -49,6 +51,7 @@ type
     FName: string;
 
     m_home    : string;
+    m_export  : string;
     m_images  : string;
     m_httpHome: string;
     m_misc    : TdsMiscClient;
@@ -70,15 +73,16 @@ type
 
     function login( user : string ; pwd : string ) : boolean;
 
-    property IsAdmin: boolean read FIsAdmin write setIsAdmin;
-    property UserName: string read FUserName write FUserName;
-    property Vorname: string read FVorname write FVorname;
-    property Name: string read FName write FName;
+    property IsAdmin    : boolean         read FIsAdmin     write setIsAdmin;
+    property UserName   : string          read FUserName    write FUserName;
+    property Vorname    : string          read FVorname     write FVorname;
+    property Name       : string          read FName        write FName;
 
-    property Home : string read m_home;
-    property Images : string read m_images;
-    property Gremien : TList<TGremium> read m_gremien;
-    property wwwHome : string read m_httpHome;
+    property Home       : string          read m_home;
+    property ExportDir  : string          read m_export;
+    property Images     : string          read m_images;
+    property Gremien    : TList<TGremium> read m_gremien;
+    property wwwHome    : string          read m_httpHome;
 
     procedure FillGremien( arr :TJSONArray );
 
@@ -98,6 +102,9 @@ type
     function GetShortImage( name : string ) : integer;
 
     function autoInc( name : string ) : integer;
+
+    function getGremiumMA( id : integer ) : IPersonenListe;
+    function getGremium( id : integer ) : TGremium;
   end;
 
   TMyCallback = class(TDBXCallback)
@@ -117,7 +124,7 @@ uses
   Vcl.Dialogs, Vcl.Forms, Winapi.Windows, u_json,
   System.UITypes, system.IOUtils, FireDAC.Stan.Storagebin,
   System.Win.ComObj, m_WindowHandler, m_BookMarkHandler, IdHashMessageDigest,
-  Vcl.Graphics;
+  Vcl.Graphics, u_PersonenListeImpl, u_PersonImpl;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -223,10 +230,12 @@ begin
   m_home      := TPath.Combine(TPath.GetDocumentsPath, 'Archivar' );
   m_images    := TPath.Combine(m_home, 'Images' );
   m_httpHome  := TPath.Combine(m_home, 'wwwroot');
+  m_export    := TPath.Combine(m_home, 'export');
 
   ForceDirectories(m_home);
   ForceDirectories(m_images);
   ForceDirectories(m_httpHome);
+  ForceDirectories(m_export);
 end;
 
 procedure TGM.DataModuleDestroy(Sender: TObject);
@@ -341,6 +350,39 @@ begin
   end;
   DeleteTimesTab.SaveToFile( TPath.Combine(m_home, 'deltimes.adb'), sfBinary );
   DeleteTimesTab.Close;
+end;
+
+function TGM.getGremium(id: integer): TGremium;
+var
+  gr : TGremium;
+begin
+  Result := NIL;
+  for gr in m_gremien do
+  begin
+    if gr.ID = id then begin
+      Result := gr;
+      break;
+    end;
+  end;
+end;
+
+function TGM.getGremiumMA(id: integer): IPersonenListe;
+var
+  p : IPerson;
+begin
+  Result := TPersonenListeImpl.Create;
+  GremiumMA.ParamByName('GR_ID').AsInteger := id;
+  GremiumMA.Open;
+  while not GremiumMA.eof do begin
+    p := Result.newPerson;
+    p.ID        := GremiumMA.FieldByName('PE_ID').AsInteger;
+    p.Name      := GremiumMA.FieldByName('PE_NAME').AsString;
+    p.Vorname   := GremiumMA.FieldByName('PE_VORNAME').AsString;
+    p.Abteilung := GremiumMA.FieldByName('PE_DEPARTMENT').AsString;
+    p.Rolle     := GremiumMA.FieldByName('GP_ROLLE').AsString;
+    GremiumMA.Next;
+  end;
+  GremiumMA.Close;
 end;
 
 function TGM.getImageID(name: string): Integer;

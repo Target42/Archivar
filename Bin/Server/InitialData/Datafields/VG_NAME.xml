@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<DataField name="VG_NAME" clid="{43944413-8FFC-460A-A108-EC7A5B62A262}" datatype="string" isGlobal="true"><Text>Der Name des Vorgesetzen</Text><Properties><Property name="Length" typ="integer"><value>100</value></Property><Property name="Readonly" typ="bool"><value>false</value></Property><Property name="RegEx" typ="string"><value></value></Property><Property name="CharCase" typ="TEditCharCase"><value>ecNormal</value></Property></Properties></DataField>

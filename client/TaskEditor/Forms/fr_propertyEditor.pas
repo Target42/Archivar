@@ -112,8 +112,9 @@ begin
         ip.EditStyle := esPickList;
         p.fillPickList(ip.PickList);
         ip.ReadOnly := true;
-      end
-      else if p.hasEditor then
+      end;
+
+      if p.hasEditor then
       begin
         ip.EditStyle := esEllipsis;
         ip.ReadOnly := true;

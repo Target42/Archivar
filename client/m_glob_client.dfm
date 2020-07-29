@@ -60,20 +60,20 @@ object GM: TGM
     ManagerId = '246585.16461.649512'
     UserName = '{E4DBFC6B-C573-47FF-AC01-9CE6C5F63DB9}'
     Password = 'dev'
-    Left = 184
-    Top = 158
+    Left = 48
+    Top = 174
   end
   object ImageList1: TImageList
     ColorDepth = cd32Bit
     DrawingStyle = dsTransparent
-    Left = 216
+    Left = 232
     Top = 32
   end
   object ImageList2: TImageList
-    Left = 376
-    Top = 120
+    Left = 392
+    Top = 24
     Bitmap = {
-      494C010103000800300010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010103000800440010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -211,5 +211,24 @@ object GM: TGM
       800381819FF900008007C7E390190000C00FFFFF9FF90000FFFFFFFF80010000
       FFFFFFFFC0030000FFFFFFFFFFFF000000000000000000000000000000000000
       000000000000}
+  end
+  object DSProviderConnection1: TDSProviderConnection
+    ServerClassName = 'TdsGremium'
+    SQLConnection = SQLConnection1
+    Left = 208
+    Top = 144
+  end
+  object GremiumMA: TClientDataSet
+    Aggregates = <>
+    Params = <
+      item
+        DataType = ftInteger
+        Name = 'gr_id'
+        ParamType = ptInput
+      end>
+    ProviderName = 'GrUserQry'
+    RemoteServer = DSProviderConnection1
+    Left = 313
+    Top = 152
   end
 end

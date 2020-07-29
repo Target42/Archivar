@@ -74,7 +74,7 @@ object PersonEditForm: TPersonEditForm
       inherited OKBtn: TBitBtn
         Left = 279
         OnClick = BaseFrame1OKBtnClick
-        ExplicitLeft = 363
+        ExplicitLeft = 279
       end
     end
   end
@@ -125,7 +125,6 @@ object PersonEditForm: TPersonEditForm
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsPerson'
-    Connected = True
     SQLConnection = GM.SQLConnection1
     Left = 152
   end

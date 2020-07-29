@@ -2,7 +2,7 @@ unit u_TaskCtrlComboBox;
 
 interface
 uses
-  u_TaskCtrlImpl, i_taskEdit, Vcl.Controls, System.Classes;
+  u_TaskCtrlImpl, i_taskEdit, Vcl.Controls, System.Classes, i_datafields;
 
 type
   TaskCtrlComboBox = class(TaskCtrlImpl)
@@ -13,6 +13,7 @@ type
       function CtrlValue : string; override;
       procedure setCtrlValue( value : string ); override;
 
+      procedure setDataField( value : IDataField ); override;
     private
 
     public
@@ -98,6 +99,33 @@ begin
     cb := m_ctrl as TComboBox;
     cb.ItemIndex := cb.Items.IndexOf(value);
   end
+end;
+
+procedure TaskCtrlComboBox.setDataField(value: IDataField);
+var
+  cb    : TComboBox;
+  prop  :IProperty;
+  tprop :ITaskCtrlProp;
+begin
+  inherited;
+
+  if not Assigned(value) then
+    exit;
+
+  if (value.Typ = 'enum') and  Assigned(m_ctrl) then
+  begin
+    cb := m_ctrl as TComboBox;
+
+    tprop := self.getPropertyByName('items');
+    prop := value.getPropertyByName('Values');
+
+    if Assigned(prop) and Assigned(tProp) then
+    begin
+      //tprop.ValueList.DelimitedText := prop.Value;
+      cb.Items.Delimiter := ';';
+      cb.Items.DelimitedText := prop.Value;
+    end;
+  end;
 end;
 
 end.

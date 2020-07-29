@@ -23,6 +23,9 @@ var
 
 implementation
 
+uses
+  m_glob_server;
+
 {%CLASSGROUP 'System.Classes.TPersistent'}
 
 {$R *.dfm}
@@ -38,12 +41,26 @@ begin
 end;
 
 function TDBMod.startDB: boolean;
+var
+  db : string;
 begin
+  db := GM.DBHost+':'+GM.DBName;
+  DebugMsg('Database : '+db);
   try
+    IBDatabase1.DatabaseName := db;
+    IBDatabase1.Params.Clear;
+    IBDatabase1.Params.Values['user_name'] := GM.DBUser;
+    IBDatabase1.Params.Values['password']  := GM.DBKey;
+
     IBDatabase1.Open;
     Result := IBDatabase1.Connected;
+    DebugMsg('database connected');
   except
-    Result := false;
+    on e : Exception do
+    begin
+      DebugMsg(e.ToString);
+      Result := false;
+    end;
   end;
 end;
 

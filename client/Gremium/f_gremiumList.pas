@@ -13,6 +13,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure LVDblClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure TVDblClick(Sender: TObject);
   private
     m_list : array of TGremium;
 
@@ -75,6 +76,8 @@ var
   i : integer;
   p  : TGremium;
 begin
+  TV.Images := GM.ImageList1;
+
   TV.Items.BeginUpdate;
   SetLength(m_list, GM.Gremien.Count);
   for i := 0 to pred(GM.Gremien.Count) do
@@ -143,6 +146,11 @@ begin
         break;
       end;
     end;
+end;
+
+procedure TGremiumListForm.TVDblClick(Sender: TObject);
+begin
+  BaseFrame1.OKBtn.Click;
 end;
 
 end.

@@ -13,7 +13,6 @@ object dsProtocol: TdsProtocol
     Top = 16
   end
   object IBTransaction1: TIBTransaction
-    Active = True
     DefaultDatabase = DBMod.IBDatabase1
     Params.Strings = (
       'read_committed'
@@ -41,10 +40,90 @@ object dsProtocol: TdsProtocol
     Transaction = IBTransaction1
     BufferChunks = 1000
     CachedUpdates = False
+    FieldDefs = <
+      item
+        Name = 'PR_ID'
+        Attributes = [faRequired]
+        DataType = ftInteger
+      end
+      item
+        Name = 'TN_ID'
+        Attributes = [faRequired]
+        DataType = ftInteger
+      end
+      item
+        Name = 'TN_NAME'
+        DataType = ftWideString
+        Size = 100
+      end
+      item
+        Name = 'TN_VORNAME'
+        DataType = ftWideString
+        Size = 100
+      end
+      item
+        Name = 'TN_DEPARTMENT'
+        DataType = ftWideString
+        Size = 25
+      end
+      item
+        Name = 'TN_ROLLE'
+        DataType = ftWideString
+        Size = 50
+      end
+      item
+        Name = 'TN_STATUS'
+        DataType = ftInteger
+      end
+      item
+        Name = 'PE_ID'
+        DataType = ftInteger
+      end>
+    IndexDefs = <
+      item
+        Name = 'PK_TN_TEILNEHMER'
+        Fields = 'PR_ID;TN_ID'
+        Options = [ixUnique]
+      end
+      item
+        Name = 'FK_REF_1060'
+        Fields = 'PR_ID'
+      end>
+    StoreDefs = True
     TableName = 'TN_TEILNEHMER'
     UniDirectional = False
     Left = 192
     Top = 128
+    object TNTabPR_ID: TIntegerField
+      FieldName = 'PR_ID'
+      Required = True
+    end
+    object TNTabTN_ID: TIntegerField
+      FieldName = 'TN_ID'
+      Required = True
+    end
+    object TNTabTN_NAME: TIBStringField
+      FieldName = 'TN_NAME'
+      Size = 100
+    end
+    object TNTabTN_VORNAME: TIBStringField
+      FieldName = 'TN_VORNAME'
+      Size = 100
+    end
+    object TNTabTN_DEPARTMENT: TIBStringField
+      FieldName = 'TN_DEPARTMENT'
+      Size = 25
+    end
+    object TNTabTN_ROLLE: TIBStringField
+      FieldName = 'TN_ROLLE'
+      Size = 50
+    end
+    object TNTabTN_STATUS: TIntegerField
+      FieldName = 'TN_STATUS'
+    end
+    object TNTabPE_ID: TIntegerField
+      FieldName = 'PE_ID'
+    end
   end
   object TGTab: TIBTable
     Database = DBMod.IBDatabase1

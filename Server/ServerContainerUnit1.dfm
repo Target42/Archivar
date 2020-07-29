@@ -3,6 +3,7 @@ object ServerContainer1: TServerContainer1
   OnCreate = ServiceCreate
   DisplayName = 'ServerContainer1'
   OnStart = ServiceStart
+  OnStop = ServiceStop
   Height = 462
   Width = 415
   object DSServer1: TDSServer

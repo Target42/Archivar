@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<DataField name="BESCHLUSSTEXT" clid="{B931D04B-576C-4577-80EF-4859B4B7551A}" datatype="text" isGlobal="true"><Text>Der Wortlaut des Belschusses</Text><Properties><Property name="Default" typ="bool"><value>false</value></Property></Properties></DataField>

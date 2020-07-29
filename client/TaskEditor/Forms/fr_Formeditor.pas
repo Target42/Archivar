@@ -3,10 +3,11 @@ unit fr_Formeditor;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms,
   System.Contnrs, Vcl.AppEvnts, Vcl.StdCtrls, Vcl.ComCtrls, Vcl.ExtCtrls,
-  i_taskEdit, fr_propertyEditor, Vcl.Buttons, System.ImageList, Vcl.ImgList;
+  i_taskEdit, fr_propertyEditor, Vcl.Buttons, System.ImageList, Vcl.ImgList,
+  System.Classes;
 
 type
   TCtrlEntry = record
@@ -174,6 +175,58 @@ const
 
 { TFrame1 }
 
+function FindSubcontrolAtPos(AControl: TControl; AScreenPos, AClientPos: TPoint): TControl;
+var
+  i: Integer;
+  C: TControl;
+begin
+  Result := nil;
+  C := AControl;
+  if (C=nil) or not C.Visible or not TRect.Create(C.Left, C.Top, C.Left+C.Width, C.Top+C.Height).Contains(AClientPos) then
+    Exit;
+  Result := AControl;
+  if AControl is TWinControl then
+    for i := 0 to TWinControl(AControl).ControlCount-1 do
+    begin
+      C := FindSubcontrolAtPos(TWinControl(AControl).Controls[i], AScreenPos, AControl.ScreenToClient(AScreenPos));
+      if C<>nil then
+        Result := C;
+    end;
+end;
+
+function FindControlAtPos(AScreenPos: TPoint): TControl;
+var
+  i: Integer;
+  f,m: TForm;
+  p: TPoint;
+  r: TRect;
+begin
+  Result := nil;
+  for i := Screen.FormCount-1 downto 0 do
+    begin
+      f := Screen.Forms[i];
+      if f.Visible and (f.Parent=nil) and (f.FormStyle<>fsMDIChild) and
+        TRect.Create(f.Left, f.Top, f.Left+f.Width, f.Top+f.Height).Contains(AScreenPos)
+      then
+        Result := f;
+    end;
+  Result := FindSubcontrolAtPos(Result, AScreenPos, AScreenPos);
+  if (Result is TForm) and (TForm(Result).ClientHandle<>0) then
+  begin
+    WinAPI.Windows.GetWindowRect(TForm(Result).ClientHandle, r);
+    p := TPoint.Create(AScreenPos.X-r.Left, AScreenPos.Y-r.Top);
+    m := nil;
+    for i := TForm(Result).MDIChildCount-1 downto 0 do
+    begin
+      f := TForm(Result).MDIChildren[i];
+      if TRect.Create(f.Left, f.Top, f.Left+f.Width, f.Top+f.Height).Contains(p) then
+        m := f;
+    end;
+    if m<>nil then
+      Result := FindSubcontrolAtPos(m, AScreenPos, p);
+  end;
+end;
+
 procedure TEditorFrame.ApplicationEvents1Message(var Msg: tagMSG;
   var Handled: Boolean);
 var
@@ -192,7 +245,8 @@ begin
   case msg.message of
     WM_LBUTTONDOWN :
     begin
-      p   := ScreenToClient(Mouse.CursorPos);
+//      p   := ScreenToClient(Mouse.CursorPos);
+      p   := Mouse.CursorPos;
       com := findCtrl( p );
       if Assigned(com) then
       begin
@@ -212,7 +266,8 @@ begin
     end;
     WM_LBUTTONUP :
     begin
-      p := ScreenToClient(Mouse.CursorPos);
+//      p := ScreenToClient(Mouse.CursorPos);
+      p   := Mouse.CursorPos;
       com := findCtrl(p);
       if com is TControl then
       begin

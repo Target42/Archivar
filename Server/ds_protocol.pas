@@ -33,6 +33,14 @@ type
     UpdateCP: TIBQuery;
     UpdateCPQry: TDataSetProvider;
     DeleteCPQry: TIBQuery;
+    TNTabPR_ID: TIntegerField;
+    TNTabTN_ID: TIntegerField;
+    TNTabTN_NAME: TIBStringField;
+    TNTabTN_VORNAME: TIBStringField;
+    TNTabTN_DEPARTMENT: TIBStringField;
+    TNTabTN_ROLLE: TIBStringField;
+    TNTabTN_STATUS: TIntegerField;
+    TNTabPE_ID: TIntegerField;
   private
     { Private-Deklarationen }
   public
