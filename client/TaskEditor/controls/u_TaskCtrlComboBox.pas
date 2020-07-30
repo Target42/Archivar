@@ -121,9 +121,9 @@ begin
 
     if Assigned(prop) and Assigned(tProp) then
     begin
-      //tprop.ValueList.DelimitedText := prop.Value;
-      cb.Items.Delimiter := ';';
-      cb.Items.DelimitedText := prop.Value;
+      tprop.ValueList.DelimitedText := prop.Value;
+//      cb.Items.Delimiter := ';';
+//      cb.Items.DelimitedText := prop.Value;
     end;
   end;
 end;

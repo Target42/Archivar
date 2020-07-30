@@ -144,6 +144,9 @@ end;
 function TaskCtrlPropImpl.getComboBoxProps( var value : string ) : boolean;
 begin
   Result := true;
+  if SameText(m_name, 'Items') and Assigned(m_ctrl) then
+    (m_ctrl as TComboBox).Items.Assign(m_list);
+
 
   if      SameText(m_name, 'Items') then      value := (m_ctrl as TComboBox).Items.Text
   else if SameText(m_name, 'ItemIndex') then  value := IntToStr((m_ctrl as TComboBox).ItemIndex)
@@ -299,6 +302,9 @@ end;
 
 procedure TaskCtrlPropImpl.setComboBoxProps(value: string);
 begin
+  if SameText(m_name, 'Items') and Assigned(m_ctrl) then
+    m_list.Text := value;
+
   if      SameText(m_name, 'Items') then      (m_ctrl as TComboBox).Items.Text := value
   else if SameText(m_name, 'ItemIndex') then  try (m_ctrl as TComboBox).ItemIndex := StrToint( value); except end
   else if SameText(m_name, 'Text') then       (m_ctrl as TComboBox).Text := value;
@@ -397,16 +403,8 @@ begin
 
   if SameText(m_name, 'height') and ( m_ctrl.Align in [alNone, alCustom, alLeft, alRight, alBottom, alTop]) then
     try m_ctrl.Height  := StrToInt( value ); except end;
-{
-  if m_ctrl.Align = alNone then
-  begin
-    if      SameText(m_name, 'Top') then      try m_ctrl.top := StrToInt( value ); except end
-    else if SameText(m_name, 'Left') then     try m_ctrl.left := StrToint( value ); except end
-    else if SameText(m_name, 'Width') then    try m_ctrl.Width := StrToInt( value ); except end
-    else if SameText(m_name, 'height') then   try m_ctrl.Height  := StrToInt( value ); except end;
-  end;
-}
   if      SameText(m_name, 'Enabled') then  m_ctrl.Enabled := Str2Bool(value)
+
   else if SameText(m_name, 'Visible') then  m_ctrl.visible := Str2Bool(value)
   else if SameText(m_name, 'Align') then    m_ctrl.Align := Text2TAlign(value)
   else if SameText(m_name, 'Required') then m_owner.Required := Str2Bool(value);
@@ -442,11 +440,18 @@ var
 begin
   if m_ctrl is TComboBox then
   begin
+    if Assigned(m_owner.DataField) and SameText( m_owner.DataField.Typ, 'enum') then begin
+      ShowMessage('Diese Werte werden über das Datenfeld bestimmt, da es vom Typ "enum" ist.');
+      exit;
+    end;
+
     Application.CreateForm(TItemsEditorForm, ItemsEditorForm);
-    ItemsEditorForm.Memo1.Lines.Assign( (m_ctrl as TComboBox).Items );
+    //ItemsEditorForm.Memo1.Lines.Assign( (m_ctrl as TComboBox).Items );
+    ItemsEditorForm.Memo1.Lines.Assign( m_list );
     if ItemsEditorForm.ShowModal = mrOk then
     begin
-      (m_ctrl as TComboBox).Items.Assign(ItemsEditorForm.Memo1.Lines);
+      //(m_ctrl as TComboBox).Items.Assign(ItemsEditorForm.Memo1.Lines);
+      m_list.Assign( ItemsEditorForm.Memo1.Lines );
     end;
     ItemsEditorForm.Free;
   end
