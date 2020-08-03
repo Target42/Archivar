@@ -467,7 +467,7 @@ object TaksEditorForm: TTaksEditorForm
         end
         inherited ImageList1: TImageList
           Bitmap = {
-            494C01010C001800740010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+            494C01010C0018007C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
             0000000000003600000028000000400000004000000001002000000000000040
             0000000000000000000000000000000000000000000000000000000000000000
             0000000000000000000000000000000000000000000000000000000000000000
@@ -1027,8 +1027,6 @@ object TaksEditorForm: TTaksEditorForm
           ExplicitWidth = 638
           ExplicitHeight = 452
           inherited TabSheet3: TTabSheet
-            ExplicitLeft = 4
-            ExplicitTop = 24
             ExplicitWidth = 630
             ExplicitHeight = 424
             inherited WebBrowser1: TWebBrowser
@@ -1046,18 +1044,6 @@ object TaksEditorForm: TTaksEditorForm
             inherited Panel1: TPanel
               Width = 630
               ExplicitWidth = 630
-            end
-          end
-          inherited TabSheet2: TTabSheet
-            ExplicitLeft = 4
-            ExplicitTop = 24
-            ExplicitWidth = 287
-            ExplicitHeight = 277
-            inherited PageControl2: TPageControl
-              Width = 287
-              Height = 277
-              ExplicitWidth = 287
-              ExplicitHeight = 277
             end
           end
         end
@@ -1093,14 +1079,24 @@ object TaksEditorForm: TTaksEditorForm
       object Laden1: TMenuItem
         Action = ac_lload
       end
+      object N1: TMenuItem
+        Caption = '-'
+      end
+      object Export1: TMenuItem
+        Action = ac_export
+      end
     end
   end
   object ActionList1: TActionList
     Left = 548
     Top = 80
     object ac_lload: TAction
-      Caption = 'Laden'
+      Caption = 'Import'
       OnExecute = ac_lloadExecute
+    end
+    object ac_export: TAction
+      Caption = 'Export'
+      OnExecute = ac_exportExecute
     end
   end
   object DSProviderConnection1: TDSProviderConnection
@@ -1120,5 +1116,17 @@ object TaksEditorForm: TTaksEditorForm
     DataSet = TETab
     Left = 220
     Top = 201
+  end
+  object SaveDialog1: TSaveDialog
+    DefaultExt = 'task'
+    Filter = 'Aufgaben(*.task)|*.task|Alle Dateien (*.*)|*.*'
+    Options = [ofHideReadOnly, ofPathMustExist, ofEnableSizing]
+    Title = 'Vorlage exportieren'
+    Left = 524
+    Top = 193
+  end
+  object OpenDialog1: TOpenDialog
+    Left = 412
+    Top = 153
   end
 end

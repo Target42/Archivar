@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<DataField name="AUFGABENBESCHREIBUNG" clid="{75FE9F89-F2CE-44B6-B8B0-8B90EC80B84C}" datatype="text" isGlobal="true" globalname="AUFGABENBESCHREIBUNG"><Text>Die Beschreibung der Aufgabe</Text><Properties><Property name="Default" typ="bool"><value>false</value></Property></Properties></DataField>

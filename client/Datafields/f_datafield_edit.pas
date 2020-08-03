@@ -61,9 +61,11 @@ var
   st : TStream;
   xw : TDataField2XML;
 begin
-  m_data.Name     := trim(LabeledEdit1.Text);
-  m_data.Rem      := LabeledEdit2.Text;
-  m_data.isGlobal := FIsGlobal;
+  m_data.Name       := trim(LabeledEdit1.Text);
+  if FIsGlobal then
+    m_data.GlobalName := m_data.Name;
+  m_data.Rem        := LabeledEdit2.Text;
+  m_data.isGlobal   := FIsGlobal;
 
   if Assigned(m_tab) then
   begin
@@ -150,12 +152,17 @@ begin
   LabeledEdit2.Text   := m_data.Rem;
 
   setProps;
-  if Assigned(m_tab) or ( ComboBox1.ItemIndex = -1 ) then
+  {
+  if not Assigned(m_tab) and ( ComboBox1.ItemIndex <> -1 ) then
   begin
     ComboBox1.Enabled     := false;
   end;
+  }
   if m_data.isGlobal and not FIsGlobal then
-    LabeledEdit1.Enabled  := false;
+  begin
+    LabeledEdit1.Hint     := m_data.GlobalName;
+    LabeledEdit1.ShowHint := true;
+  end;
 
   m_noChange := false;
 end;

@@ -44,6 +44,11 @@ type
     DSProviderConnection1: TDSProviderConnection;
     TETab: TClientDataSet;
     TESrc: TDataSource;
+    N1: TMenuItem;
+    ac_export: TAction;
+    SaveDialog1: TSaveDialog;
+    Export1: TMenuItem;
+    OpenDialog1: TOpenDialog;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
@@ -55,6 +60,7 @@ type
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure BitBtn5Click(Sender: TObject);
     procedure LVDblClick(Sender: TObject);
+    procedure ac_exportExecute(Sender: TObject);
   private
     m_teid : integer;
     m_tc   : ITaskContainer;
@@ -63,8 +69,9 @@ type
     procedure setTaskContainer( value : ITaskContainer);
     procedure updateVarList;
 
-    procedure loadFromStream( st : TStream );
+    procedure loadFromStream( st : TStream; tname : string );
     procedure saveToStream;
+    procedure CheckDefaultStype;
   public
     property TaskContainer : ITaskContainer read m_tc   write setTaskContainer;
     property TEID          : integer        read m_teid write setTEID;
@@ -81,16 +88,23 @@ implementation
 
 uses
   u_TaskImpl, i_datafields, f_datafield_edit, System.IOUtils,
-  u_TTaskContainerImpl, system.zip, m_glob_client, f_task_datafields;
+  u_TTaskContainerImpl, system.zip, m_glob_client, f_task_datafields,
+  System.UITypes;
 
 {$R *.dfm}
 
-procedure TTaksEditorForm.ac_lloadExecute(Sender: TObject);
-var
-  st    : TStream;
+procedure TTaksEditorForm.ac_exportExecute(Sender: TObject);
 begin
-  st := TETab.CreateBlobStream(TETab.FieldByName('TE_DATA'), bmRead);
-  loadFromStream( st );
+  SaveDialog1.FileName := m_tc.Task.Name+'.task';
+  if SaveDialog1.Execute then
+    m_tc.exportTask(SaveDialog1.FileName);
+end;
+
+procedure TTaksEditorForm.ac_lloadExecute(Sender: TObject);
+begin
+  if OpenDialog1.Execute then begin
+    m_tc.import( OpenDialog1.FileName );
+  end;
 end;
 
 procedure TTaksEditorForm.BitBtn1Click(Sender: TObject);
@@ -179,6 +193,14 @@ begin
   end;
 end;
 
+procedure TTaksEditorForm.CheckDefaultStype;
+begin
+  if not Assigned(m_tc) then
+    exit;
+  if m_tc.Styles.Count = 0 then
+    m_tc.Styles.newStyle('default');
+end;
+
 procedure TTaksEditorForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   Action := caFree;
@@ -223,7 +245,7 @@ begin
   ac_lload.Execute;
 end;
 
-procedure TTaksEditorForm.loadFromStream(st: TStream);
+procedure TTaksEditorForm.loadFromStream(st: TStream ; tname : string);
 var
   zip   : TZipFile;
 begin
@@ -241,6 +263,10 @@ begin
 
   end;
   st.Free;
+  if Assigned(m_tc.Task) then
+    m_tc.Task.Name := tname;
+
+  CheckDefaultStype;
 
   setTaskContainer(m_tc);
 end;
@@ -261,9 +287,6 @@ end;
 
 procedure TTaksEditorForm.save;
 begin
-//  fname := TPath.Combine( ExtractFilePath( Application.ExeName), 'lib\task\'+m_tc.CLID );
-//  m_tc.saveToPath(fname);
-//  m_tc.saveToZip(fname);
   saveToStream;
 end;
 
@@ -281,6 +304,9 @@ begin
   m_tc := value;
   EditorFrame1.Task := m_tc.Task;
   ReportFrame1.TaskContainer := m_tc;
+
+  CheckDefaultStype;
+
   updateVarList;
 end;
 
@@ -296,7 +322,8 @@ begin
     exit;
   TETab.Edit;
 
-  loadFromStream( TETab.CreateBlobStream(TETab.FieldByName('TE_DATA'), bmRead));
+  loadFromStream( TETab.CreateBlobStream(TETab.FieldByName('TE_DATA'), bmRead),
+    TETab.FieldByName('TE_NAME').AsString);
 end;
 
 procedure TTaksEditorForm.updateVarList;

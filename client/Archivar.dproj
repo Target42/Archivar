@@ -268,7 +268,6 @@
             <Form>TableFieldEditorForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="..\misc\xsd_DataField.pas"/>
         <DCCReference Include="Datafields\u_DataField2XML.pas"/>
         <DCCReference Include="TaskEditor\Writer\u_TaskDataField2XML.pas"/>
         <DCCReference Include="TaskEditor\Writer\u_Task2XML.pas"/>
@@ -387,6 +386,7 @@
         <DCCReference Include="Beschlus\u_AbstimmungImpl.pas"/>
         <DCCReference Include="Beschlus\u_AbstimmungenImpl.pas"/>
         <DCCReference Include="Beschlus\u_BeschlussImpl.pas"/>
+        <DCCReference Include="..\misc\xsd_DataField.pas"/>
         <None Include="Datafields\ERA-NS.txt"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

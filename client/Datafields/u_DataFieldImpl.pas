@@ -11,6 +11,7 @@ type
       m_owner:IDataFieldList;
       m_list : TList<IProperty>;
       m_name : string;
+      m_gname: string;
       m_clid : string;
       m_typ  : string;
       m_rem  : string;
@@ -36,6 +37,8 @@ type
 
       procedure setOwner( value : IDataFieldList );
       function  getOwner : IDataFieldList;
+      procedure setGlobalName( value : string );
+      function  getGlobalName : string;
 
     public
       constructor Create; overload;
@@ -133,11 +136,12 @@ var
   i : integer;
   p : IProperty;
 begin
-  Result := TDataField.Create;
-  Result.Name     := m_name;
-  Result.CLID     := m_clid;
-  Result.isGlobal := m_glob;
-  Result.Typ      := m_typ;
+  Result            := TDataField.Create;
+  Result.Name       := m_name;
+  Result.CLID       := m_clid;
+  Result.isGlobal   := m_glob;
+  Result.Typ        := m_typ;
+  Result.GlobalName := m_gname;
 
   for i := 0 to pred(m_list.Count) do
   begin
@@ -195,6 +199,11 @@ end;
 function TDataField.GetCLID: string;
 begin
   Result := m_clid;
+end;
+
+function TDataField.getGlobalName: string;
+begin
+  Result := m_gname;
 end;
 
 function TDataField.getIsGlobal: boolean;
@@ -270,6 +279,11 @@ begin
   if m_clid = '' then
    m_clid  := CreateClassID;
 
+end;
+
+procedure TDataField.setGlobalName(value: string);
+begin
+  m_gname := value;
 end;
 
 procedure TDataField.setIsGlobal(value: boolean);

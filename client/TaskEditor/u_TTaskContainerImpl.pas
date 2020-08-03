@@ -27,10 +27,12 @@ type
 
       function loadFromPath( path : string ) : boolean;
       function loadFromZip( zip : TZipFile ) : boolean;
+      function import( fname : string )       : Boolean;
 
       function saveToPath( path : string ) : boolean;
       function saveToZip( path : string ) : boolean;
       function saveToStream( st : TStream ) : boolean;
+      function exportTask( fname : string ) : boolean;
 
       procedure release;
 
@@ -65,6 +67,32 @@ begin
   inherited;
 end;
 
+function TTaskContainerImpl.exportTask(fname: string): boolean;
+var
+  zip: TZipFile;
+
+  function saveTask : boolean;
+  var
+    xw : Task2XML;
+  begin
+    xw := Task2XML.Create;
+    Result := xw.saveToZip(zip, m_task, 'task.xml');
+    xw.Free;
+  end;
+
+begin
+
+  zip := TZipFile.Create;
+  zip.Open(fname, zmWrite );
+
+  Result := saveTask;
+  Result := m_files.saveToZip( zip, 'TestData') and Result;
+  Result := m_info.saveToZip(zip, 'Info') and Result;
+  Result := m_styles.saveToZip(zip, 'Styles')  and Result;
+
+  zip.Free;
+end;
+
 function TTaskContainerImpl.getCLID: string;
 begin
   Result := m_clid;
@@ -91,6 +119,16 @@ end;
 function TTaskContainerImpl.getTestdata: ITaskFiles;
 begin
   Result := m_files;
+end;
+
+function TTaskContainerImpl.import(fname: string): Boolean;
+var
+  zip :TZipFile;
+begin
+  zip.Create;
+  zip.Open(fname, zmRead);
+  Result := loadFromZip(zip);
+  zip.Free;
 end;
 
 function TTaskContainerImpl.loadFromPath(path: string): boolean;
@@ -185,30 +223,10 @@ begin
 end;
 
 function TTaskContainerImpl.saveToZip(path: string): boolean;
-var
-  zip: TZipFile;
-
-  function saveTask : boolean;
-  var
-    xw : Task2XML;
-  begin
-    xw := Task2XML.Create;
-    Result := xw.saveToZip(zip, m_task, 'task.xml');
-    xw.Free;
-  end;
 
 begin
   ForceDirectories(path);
-
-  zip := TZipFile.Create;
-  zip.Open(TPath.Combine( path, 'data.zip'), zmWrite );
-
-  Result := saveTask;
-  Result := m_files.saveToZip( zip, 'TestData') and Result;
-  Result := m_info.saveToZip(zip, 'Info') and Result;
-  Result := m_styles.saveToZip(zip, 'Styles')  and Result;
-
-  zip.Free;
+  Result := exportTask(TPath.Combine( path, 'data.zip'));
 end;
 
 procedure TTaskContainerImpl.setCLID(value: string);

@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<DataField name="RICHTBEIPIEL" clid="{234967FF-0E71-4291-A695-3251CAF9997A}" datatype="string" isGlobal="true" globalname="RICHTBEIPIEL"><Text>Name eines ERA-richtbspiels</Text><Properties><Property name="Length" typ="integer"><value>100</value></Property><Property name="Readonly" typ="bool"><value>false</value></Property><Property name="RegEx" typ="string"><value></value></Property><Property name="CharCase" typ="TEditCharCase"><value>ecNormal</value></Property></Properties></DataField>

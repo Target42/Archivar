@@ -98,6 +98,7 @@ type
     procedure ac_ad_templatesExecute(Sender: TObject);
     procedure est1Click(Sender: TObject);
     procedure ac_ad_sys_templateExecute(Sender: TObject);
+    procedure test21Click(Sender: TObject);
   private
     procedure setPanel( id : integer ; text : string );
     procedure loadLogo;
@@ -412,6 +413,21 @@ begin
     frm.TEID := te_id;
     frm.Show;
   end;
+end;
+
+procedure TMainForm.test21Click(Sender: TObject);
+var
+  i : integer;
+  list : TStringList;
+begin
+  list := TStringList.Create;
+  for i := 1 to 13 do begin
+    List.Add(format('%dA', [i]));
+    List.Add(format('%dB', [i]));
+    List.Add(format('%dC', [i]));
+  end;
+  list.SaveToFile('era.txt');
+  list.Free;
 end;
 
 end.

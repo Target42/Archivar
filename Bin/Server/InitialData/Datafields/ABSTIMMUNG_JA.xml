@@ -1,2 +1,2 @@
 <?xml version="1.0"?>
-<DataField name="ABSTIMMUNG_JA" clid="{80B8D079-58EE-49B3-97BF-AB993804BFB2}" datatype="integer" isGlobal="true"><Text>Zustimmungen</Text><Properties><Property name="Default" typ="integer"><value>0</value></Property><Property name="Min" typ="integer"><value>0</value></Property><Property name="Max" typ="integer"><value>0</value></Property></Properties></DataField>
+<DataField name="ABSTIMMUNG_JA" clid="{80B8D079-58EE-49B3-97BF-AB993804BFB2}" datatype="integer" isGlobal="true" globalname="ABSTIMMUNG_JA"><Text>Zustimmungen</Text><Properties><Property name="Default" typ="integer"><value>0</value></Property><Property name="Min" typ="integer"><value>0</value></Property><Property name="Max" typ="integer"><value>0</value></Property></Properties></DataField>

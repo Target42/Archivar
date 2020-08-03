@@ -173,7 +173,17 @@ begin
     f.Lines.Text :=
             '<!--'+sLineBreak+
             'Erzeugt am ' + DateTimeToStr(now)+sLineBreak+
-            '-->';
+            '-->'+sLineBreak+
+            '<body>'+sLineBreak+
+            '  <#script dumpdata.pas>'+sLineBreak+
+            '</body>';
+    f := Result.Files.newFile('dumpdata.pas');
+    if Assigned(f) then
+      f.Lines.Text :=
+        'program dumpdata;'+sLineBreak+
+        'begin'+sLineBreak+
+        '  println( printXML );'+sLineBreak+
+        'end.';
   end;
   m_list.Add(Result);
   doChange;

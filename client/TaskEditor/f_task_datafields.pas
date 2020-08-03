@@ -91,6 +91,7 @@ begin
 
   field.Rem   := ds.Rem;
   field.CLID  := ds.CLID;
+  field.GlobalName := ds.GlobalName;
 
   field.Properties.Clear;
   for i := 0 to pred(ds.Properties.Count) do

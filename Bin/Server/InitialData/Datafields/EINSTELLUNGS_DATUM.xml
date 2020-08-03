@@ -1,2 +1,2 @@
 <?xml version="1.0"?>
-<DataField name="EINSTELLUNGS_DATUM" clid="{FFAB078D-CFE9-4D86-83E6-63B32E1F30C1}" datatype="date" isGlobal="true"><Text>Datum der Einstellung</Text><Properties><Property name="Format" typ="string"><value>dd.MM.yyyy</value></Property><Property name="Default" typ="string"><value>$Date</value></Property></Properties></DataField>
+<DataField name="EINSTELLUNGS_DATUM" clid="{FFAB078D-CFE9-4D86-83E6-63B32E1F30C1}" datatype="date" isGlobal="true" globalname="EINSTELLUNGS_DATUM"><Text>Datum der Einstellung</Text><Properties><Property name="Format" typ="string"><value>dd.MM.yyyy</value></Property><Property name="Default" typ="string"><value>$Date</value></Property></Properties></DataField>

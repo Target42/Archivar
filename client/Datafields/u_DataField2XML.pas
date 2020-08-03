@@ -72,6 +72,9 @@ begin
   df.CLID      := xdf.Clid;
   df.Rem       := xdf.Text;
   df.isGlobal  := xdf.IsGlobal;
+  if xdf.HasAttribute('globalname') then
+    df.GlobalName := xdf.Globalname;
+
 
   df.Typ := xdf.Datatype;
 
@@ -111,6 +114,7 @@ begin
   xdf.Datatype  := df.Typ;
   xdf.Text      := df.Rem;
   xdf.IsGlobal  := df.isGlobal;
+  xdf.Globalname:= df.GlobalName;
   for i := 0 to pred(df.Properties.Count) do
   begin
     xp := xdf.Properties.Add;

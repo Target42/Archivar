@@ -61,7 +61,6 @@ uses
   i_taskEdit in 'TaskEditor\i_taskEdit.pas',
   u_TaskImpl in 'TaskEditor\u_TaskImpl.pas',
   f_tableField_editor in 'TaskEditor\Forms\f_tableField_editor.pas' {TableFieldEditorForm},
-  xsd_DataField in '..\misc\xsd_DataField.pas',
   u_DataField2XML in 'Datafields\u_DataField2XML.pas',
   u_TaskDataField2XML in 'TaskEditor\Writer\u_TaskDataField2XML.pas',
   u_Task2XML in 'TaskEditor\Writer\u_Task2XML.pas',
@@ -116,7 +115,8 @@ uses
   i_beschluss in 'Beschlus\i_beschluss.pas',
   u_AbstimmungImpl in 'Beschlus\u_AbstimmungImpl.pas',
   u_AbstimmungenImpl in 'Beschlus\u_AbstimmungenImpl.pas',
-  u_BeschlussImpl in 'Beschlus\u_BeschlussImpl.pas';
+  u_BeschlussImpl in 'Beschlus\u_BeschlussImpl.pas',
+  xsd_DataField in '..\misc\xsd_DataField.pas';
 
 {$R *.res}
 

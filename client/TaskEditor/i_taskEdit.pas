@@ -227,12 +227,14 @@ type
       property Styles   : ITaskStyles read getStyles;
       property Info     : ITaskFiles  read getInfoFiles;
 
-      function loadFromPath( path : string ) : boolean;
-      function loadFromZip( zip : TZipFile ) : boolean;
+      function loadFromPath( path : string )  : boolean;
+      function loadFromZip( zip : TZipFile )  : boolean;
+      function import( fname : string )       : Boolean;
 
       function saveToPath( path : string ) : boolean;
       function saveToZip( path : string ) : boolean;
       function saveToStream( st : TStream ) : boolean;
+      function exportTask( fname : string ) : boolean;
 
       procedure release;
   end;

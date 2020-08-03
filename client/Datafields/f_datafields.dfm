@@ -339,4 +339,9 @@ object DataFieldForm: TDataFieldForm
     Left = 544
     Top = 112
   end
+  object JvBrowseForFolderDialog1: TJvBrowseForFolderDialog
+    Title = 'Exportverzeichnis ausw'#228'hlen'
+    Left = 416
+    Top = 48
+  end
 end

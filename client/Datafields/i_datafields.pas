@@ -36,6 +36,8 @@ type
     procedure config( const arr : array of TPropertyEntry);
     procedure setOwner( value : IDataFieldList );
     function  getOwner : IDataFieldList;
+    procedure setGlobalName( value : string );
+    function  getGlobalName : string;
   //public
 
     property Owner : IDataFieldList   read getOwner     write setOwner;
@@ -44,6 +46,7 @@ type
     property Typ   : string           read GetTyp       write SetTyp;
     property Rem   : string           read getRem       write setRem;
     property isGlobal : boolean       read getIsGlobal  write setIsGlobal;
+    property GlobalName : string      read getGlobalName write setGlobalName;
 
     property Properties : TList<IProperty> read GetItems;
     property Childs     : IDataFieldList read getChilds write setChilds;

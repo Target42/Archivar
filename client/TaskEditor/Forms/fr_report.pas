@@ -270,7 +270,7 @@ begin
     '}'+ sLineBreak+
     'program script;'+sLineBreak+sLineBreak+
     'begin'+sLineBreak+
-    '  printLN(''neuen Text heir eingeben'');'+sLineBreak+
+    '  printLN(''neuen Text hier eingeben'');'+sLineBreak+
     'end.';
   end
   else if ext = '.html' then
@@ -443,7 +443,8 @@ begin
     else
     begin
       st := m_tc.Styles.newStyle(InputBoxForm.Text);
-      ListBox2.Items.AddObject(st.Name, Pointer(st));
+      ListBox2.ItemIndex := ListBox2.Items.AddObject(st.Name, Pointer(st));
+      ListBox2Click(Sender);
     end;
   end;
   InputBoxForm.free;

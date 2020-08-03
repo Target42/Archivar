@@ -59,7 +59,7 @@ object TaskDatafieldsForm: TTaskDatafieldsForm
         Expanded = False
         FieldName = 'DA_NAME'
         Title.Caption = 'Name'
-        Width = 100
+        Width = 150
         Visible = True
       end
       item

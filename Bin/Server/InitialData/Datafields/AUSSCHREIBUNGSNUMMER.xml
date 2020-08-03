@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<DataField name="AUSSCHREIBUNGSNUMMER" clid="{1E949FC5-F666-403F-B116-FFF658D162D6}" datatype="string" isGlobal="true" globalname="AUSSCHREIBUNGSNUMMER"><Text>Die Nummer der Ausschreibung</Text><Properties><Property name="Length" typ="integer"><value>100</value></Property><Property name="Readonly" typ="bool"><value>false</value></Property><Property name="RegEx" typ="string"><value></value></Property><Property name="CharCase" typ="TEditCharCase"><value>ecNormal</value></Property></Properties></DataField>

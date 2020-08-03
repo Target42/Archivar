@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<DataField name="ANMERKUNGEN" clid="{7DC9BE0D-2490-4C56-9B7E-F919C7FEED52}" datatype="text" isGlobal="true" globalname="ANMERKUNGEN"><Text>Anmerkungen zu der Aufgabe</Text><Properties><Property name="Default" typ="bool"><value>false</value></Property></Properties></DataField>

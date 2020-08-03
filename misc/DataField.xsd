@@ -16,6 +16,7 @@
 			<xs:attribute name="clid" type="xs:string"/>
 			<xs:attribute name="isGlobal" type="xs:boolean"/>
 			<xs:attribute name="required" type="xs:boolean"/>
+			<xs:attribute name="globalname" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="value"/>

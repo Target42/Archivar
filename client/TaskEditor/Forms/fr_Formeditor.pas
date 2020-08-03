@@ -704,10 +704,23 @@ begin
 end;
 
 procedure TEditorFrame.setTask(value: ITask);
+var
+  i   : integer;
+  inx : integer;
 begin
   m_task := value;
   PropertyFrame1.DataFields := m_task.Fields;
   updateForms;
+
+  for i := 0 to pred(LB.Items.Count) do
+  begin
+    inx := integer(LB.Items.Objects[ i]);
+    if m_task.Forms.Items[inx].MainForm then begin
+      LB.ItemIndex := i;
+      LBClick(Self);
+      break;
+    end;
+  end;
 end;
 
 procedure TEditorFrame.setTaskForm(value: ITaskForm);

@@ -5,7 +5,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Datasnap.DBClient,
-  Datasnap.DSConnect, fr_base, Vcl.StdCtrls, Vcl.Grids, Vcl.DBGrids, Vcl.Buttons;
+  Datasnap.DSConnect, fr_base, Vcl.StdCtrls, Vcl.Grids, Vcl.DBGrids, Vcl.Buttons,
+  JvBaseDlg, JvBrowseFolder;
 
 type
   TDataFieldForm = class(TForm)
@@ -21,6 +22,7 @@ type
     BitBtn4: TBitBtn;
     BitBtn5: TBitBtn;
     OpenDialog1: TOpenDialog;
+    JvBrowseForFolderDialog1: TJvBrowseForFolderDialog;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
@@ -110,6 +112,10 @@ var
 begin
   DBGrid1.Enabled := false;
   path := TPath.Combine(GM.ExportDir, 'datafields');
+  JvBrowseForFolderDialog1.Directory := path;
+  if not JvBrowseForFolderDialog1.Execute then
+    exit;
+  path := JvBrowseForFolderDialog1.Directory;
   ForceDirectories( path );
   DATab.First;
   while not DATab.Eof do

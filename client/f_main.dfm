@@ -251,6 +251,7 @@ object MainForm: TMainForm
       end
       object test21: TMenuItem
         Caption = 'test2'
+        OnClick = test21Click
       end
     end
   end
