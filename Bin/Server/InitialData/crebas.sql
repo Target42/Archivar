@@ -1,13 +1,12 @@
 /* ============================================================ */
 /*   Database name:  MODEL_2                                    */
 /*   DBMS name:      InterBase                                  */
-/*   Created on:     28.07.2020  21:13                          */
+/*   Created on:     05.08.2020  20:31                          */
 /* ============================================================ */
 
 create generator gen_be_id;
 create generator gen_cp_id;
 create generator gen_da_id;
-create generator gen_es_id;
 create generator gen_fi_id;
 create generator gen_fd_id;
 create generator gen_gr_id;
@@ -15,13 +14,11 @@ create generator gen_ma_id;
 create generator gen_pi_id;
 create generator gen_pe_id;
 create generator gen_pr_id;
-create generator geb_vs_id;
 create generator gen_ta_id;
 create generator gen_te_id;
 create generator gen_tg_id;
 create generator gen_tn_id;
 create generator gen_ty_id;
-create generator gen_tx_id;
 /* ============================================================ */
 /*   Table: MA_MITAREITER                                       */
 /* ============================================================ */
@@ -35,27 +32,6 @@ create table MA_MITAREITER
 );
 
 /* ============================================================ */
-/*   Table: ES_EINSTELLUNG                                      */
-/* ============================================================ */
-create table ES_EINSTELLUNG
-(
-    ES_ID                           INTEGER                not null,
-    ES_NAME                         VARCHAR(100)                   ,
-    ES_VORNAME                      VARCHAR(100)                   ,
-    ES_DEPARTMENT                   VARCHAR(25)                    ,
-    ES_TERMIN                       DATE                           ,
-    ES_TH                           VARCHAR(25)                    ,
-    ES_AUSSCHREIBUNG                VARCHAR(10)                    ,
-    ES_EINSTELLUNG                  VARCHAR(10)                    ,
-    ES_BEWERBER                     INTEGER                        ,
-    ES_INTERN                       INTEGER                        ,
-    ES_KONZERN                      INTEGER                        ,
-    ES_EXTERN                       INTEGER                        ,
-    ES_DATA                         BLOB                           ,
-    constraint PK_ES_EINSTELLUNG primary key (ES_ID)
-);
-
-/* ============================================================ */
 /*   Table: FD_DELETE                                           */
 /* ============================================================ */
 create table FD_DELETE
@@ -65,31 +41,6 @@ create table FD_DELETE
     FD_MONATE                       INTEGER                        ,
     FD_TEXT                         VARCHAR(25)                    ,
     constraint PK_FD_DELETE primary key (FD_ID)
-);
-
-/* ============================================================ */
-/*   Table: VS_VERSETZUNG                                       */
-/* ============================================================ */
-create table VS_VERSETZUNG
-(
-    VS_ID                           INTEGER                not null,
-    VS_NAME                         VARCHAR(100)                   ,
-    VS_VORNAME                      VARCHAR(100)                   ,
-    VS_DEPARTMENT                   VARCHAR(25)                    ,
-    VS_TERMIN                       DATE                           ,
-    VS_DATA                         BLOB                           ,
-    VS_DEPT_NEW                     VARCHAR(25)                    ,
-    constraint PK_VS_VERSETZUNG primary key (VS_ID)
-);
-
-/* ============================================================ */
-/*   Table: TX_TEXT                                             */
-/* ============================================================ */
-create table TX_TEXT
-(
-    TX_ID                           INTEGER                not null,
-    TX_TEXT                         BLOB                           ,
-    constraint PK_TX_TEXT primary key (TX_ID)
 );
 
 /* ============================================================ */
@@ -127,28 +78,6 @@ create table DA_DATAFIELD
 /*   Index: DA_DATAFIELD_SEC                                    */
 /* ============================================================ */
 create unique ASC index DA_DATAFIELD_SEC on DA_DATAFIELD (DA_NAME);
-
-/* ============================================================ */
-/*   Table: TE_TEMPLATE                                         */
-/* ============================================================ */
-create table TE_TEMPLATE
-(
-    TE_ID                           INTEGER                not null,
-    TE_NAME                         VARCHAR(100)                   ,
-    TE_SYSTEM                       CHAR(1)                        ,
-    TE_TAGS                         VARCHAR(100)                   ,
-    TE_SHORT                        VARCHAR(200)                   ,
-    TE_DATA                         BLOB                           ,
-    TE_STATE                        CHAR(1)                        ,
-    TE_VERSION                      INTEGER                        ,
-    TE_CLID                         VARCHAR(38)                    ,
-    constraint PK_TE_TEMPLATE primary key (TE_ID)
-);
-
-/* ============================================================ */
-/*   Index: TE_TEMPLATE_NAME                                    */
-/* ============================================================ */
-create ASC index TE_TEMPLATE_NAME on TE_TEMPLATE (TE_NAME, TE_SYSTEM);
 
 /* ============================================================ */
 /*   Table: IN_INTERNAL                                         */
@@ -232,6 +161,11 @@ create table TY_TASKTYPE
 );
 
 /* ============================================================ */
+/*   Index: TY_TASKTYPE_SEC                                     */
+/* ============================================================ */
+create ASC index TY_TASKTYPE_SEC on TY_TASKTYPE (TY_NAME);
+
+/* ============================================================ */
 /*   Table: BE_BESCHLUS                                         */
 /* ============================================================ */
 create table BE_BESCHLUS
@@ -281,10 +215,34 @@ create table CP_CHAPTER
 create ASC index CP_CHAPTER_SEC on CP_CHAPTER (PR_ID, CP_ID);
 
 /* ============================================================ */
+/*   Table: TE_TEMPLATE                                         */
+/* ============================================================ */
+create table TE_TEMPLATE
+(
+    TE_ID                           INTEGER                not null,
+    TY_ID                           INTEGER                        ,
+    TE_NAME                         VARCHAR(100)                   ,
+    TE_SYSTEM                       CHAR(1)                        ,
+    TE_TAGS                         VARCHAR(100)                   ,
+    TE_SHORT                        VARCHAR(200)                   ,
+    TE_DATA                         BLOB                           ,
+    TE_STATE                        CHAR(1)                        ,
+    TE_VERSION                      INTEGER                        ,
+    TE_CLID                         VARCHAR(38)                    ,
+    constraint PK_TE_TEMPLATE primary key (TE_ID)
+);
+
+/* ============================================================ */
+/*   Index: TE_TEMPLATE_NAME                                    */
+/* ============================================================ */
+create ASC index TE_TEMPLATE_NAME on TE_TEMPLATE (TE_NAME, TE_SYSTEM);
+
+/* ============================================================ */
 /*   Table: TA_TASK                                             */
 /* ============================================================ */
 create table TA_TASK
 (
+    TE_ID                           INTEGER                        ,
     TA_ID                           INTEGER                not null,
     TY_ID                           INTEGER                        ,
     TA_STARTED                      DATE                           ,
@@ -294,7 +252,6 @@ create table TA_TASK
     TA_CREATED_BY                   VARCHAR(200)                   ,
     TA_TERMIN                       DATE                           ,
     TA_CLID                         VARCHAR(38)                    ,
-    TA_SUB_ID                       INTEGER                        ,
     TA_FLAGS                        INTEGER                        ,
     TA_STATUS                       VARCHAR(50)                    ,
     constraint PK_TA_TASK primary key (TA_ID)
@@ -392,9 +349,17 @@ alter table CP_CHAPTER
     add constraint FK_REF_1627 foreign key  (PR_ID)
        references PR_PROTOKOL;
 
+alter table TE_TEMPLATE
+    add constraint FK_REF_3353 foreign key  (TY_ID)
+       references TY_TASKTYPE;
+
 alter table TA_TASK
     add constraint FK_REF_67 foreign key  (TY_ID)
        references TY_TASKTYPE;
+
+alter table TA_TASK
+    add constraint FK_REF_3336 foreign key  (TE_ID)
+       references TE_TEMPLATE;
 
 alter table GR_PA
     add constraint FK_REF_16 foreign key  (GR_ID)

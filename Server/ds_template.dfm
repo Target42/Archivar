@@ -99,4 +99,20 @@ object dsTemplate: TdsTemplate
     Left = 296
     Top = 152
   end
+  object TaskType: TIBTable
+    Database = DBMod.IBDatabase1
+    Transaction = IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    IndexName = 'TY_TASKTYPE_SEC'
+    TableName = 'TY_TASKTYPE'
+    UniDirectional = False
+    Left = 312
+    Top = 8
+  end
+  object TYTab: TDataSetProvider
+    DataSet = TaskType
+    Left = 384
+    Top = 16
+  end
 end

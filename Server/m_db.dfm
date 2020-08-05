@@ -5,7 +5,7 @@ object DBMod: TDBMod
   Height = 150
   Width = 215
   object IBDatabase1: TIBDatabase
-    DatabaseName = 'localhost:d:\db\archiv.gdb'
+    DatabaseName = 'localhost:d:\db\archivar.gdb'
     Params.Strings = (
       'user_name=sysdba'
       'password=masterkey')

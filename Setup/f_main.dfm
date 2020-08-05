@@ -1,7 +1,7 @@
 object MainSetupForm: TMainSetupForm
   Left = 0
   Top = 0
-  ActiveControl = WelcomePage
+  ActiveControl = BitBtn1
   Caption = 'Setup'
   ClientHeight = 299
   ClientWidth = 558
@@ -29,7 +29,7 @@ object MainSetupForm: TMainSetupForm
     Top = 0
     Width = 558
     Height = 280
-    ActivePage = WelcomePage
+    ActivePage = InitData
     ButtonBarHeight = 42
     ButtonStart.Caption = 'To &Start Page'
     ButtonStart.NumGlyphs = 1
@@ -96,8 +96,6 @@ object MainSetupForm: TMainSetupForm
       Header.Subtitle.Font.Style = []
       Caption = 'SearchGDS'
       OnEnterPage = SearchGDSEnterPage
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Memo1: TMemo
         Left = 0
         Top = 70
@@ -129,8 +127,6 @@ object MainSetupForm: TMainSetupForm
       Header.Subtitle.Font.Style = []
       Caption = 'ServerInfo'
       OnEnterPage = ServerInfoEnterPage
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object edHostname: TLabeledEdit
         Left = 16
         Top = 96
@@ -245,10 +241,11 @@ object MainSetupForm: TMainSetupForm
         Columns = <
           item
             Caption = 'Name'
-            Width = 100
+            Width = 150
           end
           item
             Caption = 'Status'
+            Width = 100
           end>
         ReadOnly = True
         RowSelect = True
@@ -342,5 +339,15 @@ object MainSetupForm: TMainSetupForm
     UniDirectional = False
     Left = 416
     Top = 184
+  end
+  object TETab: TIBTable
+    Database = IBDatabase1
+    Transaction = IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    TableName = 'TE_TEMPLATE'
+    UniDirectional = False
+    Left = 288
+    Top = 128
   end
 end

@@ -125,7 +125,7 @@ function TTaskContainerImpl.import(fname: string): Boolean;
 var
   zip :TZipFile;
 begin
-  zip.Create;
+  zip:= TZipFile.Create;
   zip.Open(fname, zmRead);
   Result := loadFromZip(zip);
   zip.Free;

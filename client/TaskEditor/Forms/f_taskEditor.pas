@@ -104,6 +104,7 @@ procedure TTaksEditorForm.ac_lloadExecute(Sender: TObject);
 begin
   if OpenDialog1.Execute then begin
     m_tc.import( OpenDialog1.FileName );
+    setTaskContainer( m_tc);
   end;
 end;
 

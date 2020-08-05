@@ -1,17 +1,16 @@
 object TaskListFrame: TTaskListFrame
   Left = 0
   Top = 0
-  Width = 922
-  Height = 292
+  Width = 748
+  Height = 305
   Align = alClient
   TabOrder = 0
   ExplicitWidth = 451
-  ExplicitHeight = 305
   object DBGrid1: TDBGrid
     Left = 0
     Top = 0
-    Width = 922
-    Height = 292
+    Width = 748
+    Height = 305
     Align = alClient
     DataSource = TaskSrc
     Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgMultiSelect, dgTitleClick, dgTitleHotTrack]
@@ -80,6 +79,8 @@ object TaskListFrame: TTaskListFrame
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsMisc'
+    Connected = True
+    SQLConnection = GM.SQLConnection1
     Left = 72
     Top = 16
   end
@@ -152,9 +153,6 @@ object TaskListFrame: TTaskListFrame
     object TasksTA_CLID: TWideStringField
       FieldName = 'TA_CLID'
       Size = 38
-    end
-    object TasksTA_SUB_ID: TIntegerField
-      FieldName = 'TA_SUB_ID'
     end
     object TasksTA_FLAGS: TIntegerField
       FieldName = 'TA_FLAGS'

@@ -357,4 +357,27 @@ object dsTask: TdsTask
         ParamType = ptInput
       end>
   end
+  object Templates: TIBQuery
+    Database = DBMod.IBDatabase1
+    Transaction = IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    ParamCheck = True
+    SQL.Strings = (
+      'select * from TE_TEMPLATE'
+      'where TY_ID = :id')
+    Left = 304
+    Top = 360
+    ParamData = <
+      item
+        DataType = ftInteger
+        Name = 'id'
+        ParamType = ptInput
+      end>
+  end
+  object TemplatesQry: TDataSetProvider
+    DataSet = Templates
+    Left = 304
+    Top = 408
+  end
 end

@@ -20,11 +20,16 @@ type
     DBEdit2: TDBEdit;
     Label3: TLabel;
     DBEdit3: TDBEdit;
+    Label4: TLabel;
+    DBLookupListBox1: TDBLookupListBox;
+    TYTab: TClientDataSet;
+    TYSrc: TDataSource;
     procedure FormCreate(Sender: TObject);
     procedure BaseFrame1OKBtnClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure TETabBeforePost(DataSet: TDataSet);
     procedure TETabNewRecord(DataSet: TDataSet);
+    procedure DBCheckBox1Click(Sender: TObject);
   private
     m_id : integer;
     m_cl : TdsTemplateClient;
@@ -55,11 +60,23 @@ begin
   m_id := TETab.FieldByName('TE_ID').AsInteger;
 end;
 
+procedure TTemplateNewForm.DBCheckBox1Click(Sender: TObject);
+begin
+  if DBCheckBox1.Checked then begin
+    TETab.FieldByName('TY_ID').Clear;
+    DBLookupListBox1.Enabled := false;
+  end
+  else begin
+    DBLookupListBox1.Enabled := true;
+  end;
+end;
+
 procedure TTemplateNewForm.FormCreate(Sender: TObject);
 begin
    DSProviderConnection1.SQLConnection := GM.SQLConnection1;
    m_id := -1;
    m_cl := TdsTemplateClient.Create(GM.SQLConnection1.DBXConnection);
+   TYTab.Open;
 end;
 
 procedure TTemplateNewForm.FormDestroy(Sender: TObject);

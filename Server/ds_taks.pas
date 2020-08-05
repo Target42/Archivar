@@ -35,6 +35,8 @@ type
     SetStatusQry: TIBQuery;
     TaskClidQry: TIBQuery;
     DelEinstellung: TIBQuery;
+    Templates: TIBQuery;
+    TemplatesQry: TDataSetProvider;
   private
     { Private declarations }
 

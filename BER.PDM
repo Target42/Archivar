@@ -47,7 +47,6 @@ INTERBAS.DEF
 create generator gen_be_id;\
 create generator gen_cp_id;\
 create generator gen_da_id;\
-create generator gen_es_id;\
 create generator gen_fi_id;\
 create generator gen_fd_id;\
 create generator gen_gr_id;\
@@ -55,13 +54,11 @@ create generator gen_ma_id;\
 create generator gen_pi_id;\
 create generator gen_pe_id;\
 create generator gen_pr_id;\
-create generator geb_vs_id;\
 create generator gen_ta_id;\
 create generator gen_te_id;\
 create generator gen_tg_id;\
 create generator gen_tn_id;\
-create generator gen_ty_id;\
-create generator gen_tx_id;
+create generator gen_ty_id;
 commit;\
 \
 set term /;\
@@ -98,7 +95,7 @@ commit;
 
 
 1582717246
-1595959420
+1596652289
 0
 0
 2
@@ -356,18 +353,18 @@ BE_BESCHLUS
 
 10
 3
-327
-327
+635
+635
 2
-ES_EINSTELLUNG
-ES_EINSTELLUNG
+FD_DELETE
+FD_DELETE
 
 
 
 0
 0
 0
-ES_EINSTELLUNG
+FD_DELETE
 
 
 
@@ -376,18 +373,18 @@ ES_EINSTELLUNG
 
 11
 3
-635
-635
+1059
+1059
 2
-FD_DELETE
-FD_DELETE
+TN_TEILNEHMER
+TN_TEILNEHMER
 
 
 
 0
 0
 0
-FD_DELETE
+TN_TEILNEHMER
 
 
 
@@ -396,18 +393,18 @@ FD_DELETE
 
 12
 3
-934
-934
+1070
+1070
 2
-VS_VERSETZUNG
-VS_VERSETZUNG
+TG_GAESTE
+TG_GAESTE
 
 
 
 0
 0
 0
-VS_VERSETZUNG
+TG_GAESTE
 
 
 
@@ -416,18 +413,18 @@ VS_VERSETZUNG
 
 13
 3
-1059
-1059
+1250
+1250
 2
-TN_TEILNEHMER
-TN_TEILNEHMER
+TO_OPEN
+TO_OPEN
 
 
 
 0
 0
 0
-TN_TEILNEHMER
+TO_OPEN
 
 
 
@@ -436,18 +433,18 @@ TN_TEILNEHMER
 
 14
 3
-1070
-1070
+1626
+1626
 2
-TG_GAESTE
-TG_GAESTE
+CP_CHAPTER
+CP_CHAPTER
 
 
 
 0
 0
 0
-TG_GAESTE
+CP_CHAPTER
 
 
 
@@ -456,18 +453,18 @@ TG_GAESTE
 
 15
 3
-1088
-1088
+1640
+1640
 2
-TX_TEXT
-TX_TEXT
+TA_CP
+TA_CP
 
 
 
 0
 0
 0
-TX_TEXT
+TA_CP
 
 
 
@@ -476,18 +473,18 @@ TX_TEXT
 
 16
 3
-1250
-1250
+2050
+2050
 2
-TO_OPEN
-TO_OPEN
+PI_PIC
+PI_PIC
 
 
 
 0
 0
 0
-TO_OPEN
+PI_PIC
 
 
 
@@ -496,18 +493,18 @@ TO_OPEN
 
 17
 3
-1626
-1626
+2397
+2397
 2
-CP_CHAPTER
-CP_CHAPTER
+GR_BE
+GR_BE
 
 
 
 0
 0
 0
-CP_CHAPTER
+GR_BE
 
 
 
@@ -516,18 +513,18 @@ CP_CHAPTER
 
 18
 3
-1640
-1640
+2575
+2575
 2
-TA_CP
-TA_CP
+DA_DATAFIELD
+DA_DATAFIELD
 
 
 
 0
 0
 0
-TA_CP
+DA_DATAFIELD
 
 
 
@@ -536,18 +533,18 @@ TA_CP
 
 19
 3
-2050
-2050
+2761
+2761
 2
-PI_PIC
-PI_PIC
+TE_TEMPLATE
+TE_TEMPLATE
 
 
 
 0
 0
 0
-PI_PIC
+TE_TEMPLATE
 
 
 
@@ -556,18 +553,18 @@ PI_PIC
 
 20
 3
-2397
-2397
+3131
+3131
 2
-GR_BE
-GR_BE
+IN_INTERNAL
+IN_INTERNAL
 
 
 
 0
 0
 0
-GR_BE
+IN_INTERNAL
 
 
 
@@ -575,66 +572,6 @@ GR_BE
 
 
 21
-3
-2575
-2575
-2
-DA_DATAFIELD
-DA_DATAFIELD
-
-
-
-0
-0
-0
-DA_DATAFIELD
-
-
-
-
-
-
-22
-3
-2761
-2761
-2
-TE_TEMPLATE
-TE_TEMPLATE
-
-
-
-0
-0
-0
-TE_TEMPLATE
-
-
-
-
-
-
-23
-3
-3131
-3131
-2
-IN_INTERNAL
-IN_INTERNAL
-
-
-
-0
-0
-0
-IN_INTERNAL
-
-
-
-
-
-
-24
 /END_TABLE AMCTABL
 
 /BEGIN_TABLE AMCCOLN
@@ -1762,6 +1699,40 @@ FI_CREATED_BY
 
 8
 3
+3337
+3337
+TE_ID
+TE_ID
+
+
+
+53
+0
+INTEGER
+0
+0
+0
+
+
+
+
+
+0
+0
+0
+
+
+
+0
+1
+0
+1
+0
+0
+TE_ID
+
+1
+3
 54
 54
 TA_ID
@@ -2067,40 +2038,6 @@ VARCHAR(38)
 TA_CLID
 
 11
-3
-526
-526
-TA_SUB_ID
-TA_SUB_ID
-
-
-
-53
-0
-INTEGER
-0
-0
-0
-
-
-
-
-
-0
-0
-0
-
-
-
-0
-0
-0
-1
-0
-0
-TA_SUB_ID
-
-12
 3
 1241
 1241
@@ -2714,448 +2651,6 @@ BE_UN
 
 7
 3
-328
-328
-ES_ID
-ES_ID
-
-
-
-327
-0
-INTEGER
-0
-0
-0
-
-
-
-
-
-0
-0
-0
-
-
-
-1
-0
-1
-1
-0
-0
-ES_ID
-
-1
-3
-329
-329
-ES_NAME
-ES_NAME
-
-
-
-327
-0
-VARCHAR(100)
-100
-0
-0
-
-
-
-
-
-0
-0
-0
-
-
-
-0
-0
-0
-1
-0
-0
-ES_NAME
-
-2
-3
-330
-330
-ES_VORNAME
-ES_VORNAME
-
-
-
-327
-0
-VARCHAR(100)
-100
-0
-0
-
-
-
-
-
-0
-0
-0
-
-
-
-0
-0
-0
-1
-0
-0
-ES_VORNAME
-
-3
-3
-331
-331
-ES_DEPARTMENT
-ES_DEPARTMENT
-
-
-
-327
-0
-VARCHAR(25)
-25
-0
-0
-
-
-
-
-
-0
-0
-0
-
-
-
-0
-0
-0
-1
-0
-0
-ES_DEPARTMENT
-
-4
-3
-332
-332
-ES_TERMIN
-ES_TERMIN
-
-
-
-327
-0
-DATE
-0
-0
-0
-
-
-
-
-
-0
-0
-0
-
-
-
-0
-0
-0
-1
-0
-0
-ES_TERMIN
-
-5
-3
-333
-333
-ES_TH
-ES_TH
-
-
-
-327
-0
-VARCHAR(25)
-25
-0
-0
-
-
-
-
-
-0
-0
-0
-
-
-
-0
-0
-0
-1
-0
-0
-ES_TH
-
-6
-3
-334
-334
-ES_AUSSCHREIBUNG
-ES_AUSSCHREIBUNG
-
-
-
-327
-0
-VARCHAR(10)
-10
-0
-0
-
-
-
-
-
-0
-0
-0
-
-
-
-0
-0
-0
-1
-0
-0
-ES_AUSSCHREIBUNG
-
-7
-3
-335
-335
-ES_EINSTELLUNG
-ES_EINSTELLUNG
-
-
-
-327
-0
-VARCHAR(10)
-10
-0
-0
-
-
-
-
-
-0
-0
-0
-
-
-
-0
-0
-0
-1
-0
-0
-ES_EINSTELLUNG
-
-8
-3
-336
-336
-ES_BEWERBER
-ES_BEWERBER
-
-
-
-327
-0
-INTEGER
-0
-0
-0
-
-
-
-
-
-0
-0
-0
-
-
-
-0
-0
-0
-1
-0
-0
-ES_BEWERBER
-
-9
-3
-337
-337
-ES_INTERN
-ES_INTERN
-
-
-
-327
-0
-INTEGER
-0
-0
-0
-
-
-
-
-
-0
-0
-0
-
-
-
-0
-0
-0
-1
-0
-0
-ES_INTERN
-
-10
-3
-338
-338
-ES_KONZERN
-ES_KONZERN
-
-
-
-327
-0
-INTEGER
-0
-0
-0
-
-
-
-
-
-0
-0
-0
-
-
-
-0
-0
-0
-1
-0
-0
-ES_KONZERN
-
-11
-3
-339
-339
-ES_EXTERN
-ES_EXTERN
-
-
-
-327
-0
-INTEGER
-0
-0
-0
-
-
-
-
-
-0
-0
-0
-
-
-
-0
-0
-0
-1
-0
-0
-ES_EXTERN
-
-12
-3
-340
-340
-ES_DATA
-ES_DATA
-
-
-
-327
-0
-BLOB
-0
-0
-0
-
-
-
-
-
-0
-0
-0
-
-
-
-0
-0
-0
-1
-0
-0
-ES_DATA
-
-13
-3
 636
 636
 FD_ID
@@ -3291,244 +2786,6 @@ VARCHAR(25)
 FD_TEXT
 
 4
-3
-935
-935
-VS_ID
-VS_ID
-
-
-
-934
-0
-INTEGER
-0
-0
-0
-
-
-
-
-
-0
-0
-0
-
-
-
-1
-0
-1
-1
-0
-0
-VS_ID
-
-1
-3
-936
-936
-VS_NAME
-VS_NAME
-
-
-
-934
-0
-VARCHAR(100)
-100
-0
-0
-
-
-
-
-
-0
-0
-0
-
-
-
-0
-0
-0
-1
-0
-0
-VS_NAME
-
-2
-3
-937
-937
-VS_VORNAME
-VS_VORNAME
-
-
-
-934
-0
-VARCHAR(100)
-100
-0
-0
-
-
-
-
-
-0
-0
-0
-
-
-
-0
-0
-0
-1
-0
-0
-VS_VORNAME
-
-3
-3
-938
-938
-VS_DEPARTMENT
-VS_DEPARTMENT
-
-
-
-934
-0
-VARCHAR(25)
-25
-0
-0
-
-
-
-
-
-0
-0
-0
-
-
-
-0
-0
-0
-1
-0
-0
-VS_DEPARTMENT
-
-4
-3
-939
-939
-VS_TERMIN
-VS_TERMIN
-
-
-
-934
-0
-DATE
-0
-0
-0
-
-
-
-
-
-0
-0
-0
-
-
-
-0
-0
-0
-1
-0
-0
-VS_TERMIN
-
-5
-3
-947
-947
-VS_DATA
-VS_DATA
-
-
-
-934
-0
-BLOB
-0
-0
-0
-
-
-
-
-
-0
-0
-0
-
-
-
-0
-0
-0
-1
-0
-0
-VS_DATA
-
-6
-3
-948
-948
-VS_DEPT_NEW
-VS_DEPT_NEW
-
-
-
-934
-0
-VARCHAR(25)
-25
-0
-0
-
-
-
-
-
-0
-0
-0
-
-
-
-0
-0
-0
-1
-0
-0
-VS_DEPT_NEW
-
-7
 3
 1061
 1061
@@ -4073,74 +3330,6 @@ VARCHAR(255)
 TG_GRUND
 
 8
-3
-1089
-1089
-TX_ID
-TX_ID
-
-
-
-1088
-0
-INTEGER
-0
-0
-0
-
-
-
-
-
-0
-0
-0
-
-
-
-1
-0
-1
-1
-0
-0
-TX_ID
-
-1
-3
-1090
-1090
-TX_TEXT
-TX_TEXT
-
-
-
-1088
-0
-BLOB
-0
-0
-0
-
-
-
-
-
-0
-0
-0
-
-
-
-0
-0
-0
-1
-0
-0
-TX_TEXT
-
-2
 3
 1252
 1252
@@ -4924,6 +4113,40 @@ TE_ID
 
 1
 3
+3354
+3354
+TY_ID
+TY_ID
+
+
+
+2761
+0
+INTEGER
+0
+0
+0
+
+
+
+
+
+0
+0
+0
+
+
+
+0
+1
+0
+1
+0
+0
+TY_ID
+
+2
+3
 2763
 2763
 TE_NAME
@@ -4956,7 +4179,7 @@ VARCHAR(100)
 0
 TE_NAME
 
-2
+3
 3
 2767
 2767
@@ -4990,7 +4213,7 @@ CHAR(1)
 0
 TE_SYSTEM
 
-3
+4
 3
 2764
 2764
@@ -5024,7 +4247,7 @@ VARCHAR(100)
 0
 TE_TAGS
 
-4
+5
 3
 2765
 2765
@@ -5058,7 +4281,7 @@ VARCHAR(200)
 0
 TE_SHORT
 
-5
+6
 3
 2766
 2766
@@ -5092,7 +4315,7 @@ BLOB
 0
 TE_DATA
 
-6
+7
 3
 2956
 2956
@@ -5126,7 +4349,7 @@ CHAR(1)
 0
 TE_STATE
 
-7
+8
 3
 2957
 2957
@@ -5160,7 +4383,7 @@ INTEGER
 0
 TE_VERSION
 
-8
+9
 3
 2958
 2958
@@ -5194,7 +4417,7 @@ VARCHAR(38)
 0
 TE_CLID
 
-9
+10
 3
 3132
 3132
@@ -5573,6 +4796,42 @@ REF_2406
 REF_2406
 
 16
+3
+3336
+3336
+Ref_3336
+REF_3336
+
+
+2761
+53
+1
+1
+0
+1
+0
+0
+REF_3336
+
+17
+3
+3353
+3353
+Ref_3353
+REF_3353
+
+
+60
+2761
+1
+1
+0
+1
+0
+0
+REF_3353
+
+18
 /END_TABLE AMCREFR
 
 /BEGIN_TABLE AMCCCOL
@@ -5662,6 +4921,16 @@ COLN2   N8
 2408
 54
 2407
+1
+3338
+3338
+2762
+3337
+1
+3355
+3355
+65
+3354
 /END_TABLE AMCCCOL
 
 /BEGIN_TABLE AMCCREF
@@ -5768,6 +5037,18 @@ NUMR    N8
 2406
 2408
 1
+3
+3339
+3339
+3336
+3338
+1
+3
+3356
+3356
+3353
+3355
+1
 /END_TABLE AMCCREF
 
 /BEGIN_TABLE AMCINDX
@@ -5868,6 +5149,18 @@ TE_TEMPLATE_NAME
 
 
 7
+3
+3490
+3490
+TY_TASKTYPE_SEC
+60
+0
+0
+0
+0
+
+
+8
 /END_TABLE AMCINDX
 
 /BEGIN_TABLE AMCCIDX
@@ -5949,6 +5242,13 @@ NUMR    N8
 2767
 1
 2
+3
+3491
+3491
+3490
+66
+1
+1
 /END_TABLE AMCCIDX
 
 /BEGIN_TABLE AMCAKEY
@@ -7122,10 +6422,10 @@ OID     N8
 0
 0
 0
--61433
--16248
--47334
--6874
+-74333
+-15648
+-60234
+-6274
 2
 1
 0
@@ -7154,10 +6454,10 @@ OID     N8
 0
 0
 0
--20281
--12714
--5807
-560
+-20285
+-12721
+-5811
+553
 2
 1
 0
@@ -7186,10 +6486,10 @@ OID     N8
 0
 0
 0
--62970
--200
--49696
-5274
+-75870
+400
+-62596
+5874
 2
 5
 0
@@ -7218,10 +6518,10 @@ OID     N8
 0
 0
 0
--18495
-6734
--7171
-11234
+-18496
+6733
+-7172
+11232
 2
 1
 0
@@ -7250,9 +6550,9 @@ OID     N8
 0
 0
 0
--38682
+-38683
 -12642
--31258
+-31259
 -9118
 2
 1
@@ -7305,7 +6605,7 @@ OID     N8
 2
 232
 3
-238
+2220
 289
 0
 11
@@ -7314,42 +6614,10 @@ OID     N8
 0
 0
 0
-79574
-17547
-95623
-31796
-2
-1
-0
-0
-0
-0
-0
-0
-0
-0
-0
-
-0
-
-
-
-2
-327
-3
-2220
-289
-0
-12
-0
-0
-0
-0
-0
--62631
-7306
--50182
-12780
+-75531
+7906
+-63082
+13380
 2
 1
 0
@@ -7369,42 +6637,10 @@ OID     N8
 2
 635
 3
-2324
-289
-0
-13
-0
-0
-0
-0
-0
-79485
-8595
-94259
-16994
-2
-1
-0
-0
-0
-0
-0
-0
-0
-0
-0
-
-0
-
-
-
-2
-934
-3
 2400
 289
 0
-14
+12
 0
 0
 0
@@ -7436,7 +6672,7 @@ OID     N8
 2414
 289
 0
-15
+13
 0
 0
 0
@@ -7465,50 +6701,18 @@ OID     N8
 2
 1070
 3
-2428
-289
-0
-16
-0
-0
-0
-0
-0
-79472
-4011
-88321
-7536
-2
-1
-0
-0
-0
-0
-0
-0
-0
-0
-0
-
-0
-
-
-
-2
-1088
-3
 2552
 289
 0
-17
+14
 0
 0
 0
 0
 0
--1662
+-1663
 7758
-5838
+5837
 11283
 2
 1
@@ -7532,7 +6736,7 @@ OID     N8
 2664
 289
 0
-18
+15
 0
 0
 0
@@ -7564,16 +6768,16 @@ OID     N8
 2686
 289
 0
-19
+16
 0
 0
 0
 0
 0
-16674
--9539
-24098
--6015
+14573
+-9164
+21997
+-5640
 2
 1
 0
@@ -7596,16 +6800,16 @@ OID     N8
 2802
 289
 0
-20
+17
 0
 0
 0
 0
 0
--63004
-15410
--52055
-20884
+-75904
+16010
+-64955
+21484
 2
 1
 0
@@ -7628,16 +6832,16 @@ OID     N8
 2921
 289
 0
-21
+18
 0
 0
 0
 0
 0
--14112
--21909
--6613
--17410
+-14113
+-21910
+-6614
+-17411
 2
 1
 0
@@ -7660,7 +6864,7 @@ OID     N8
 3022
 289
 0
-22
+19
 0
 0
 0
@@ -7692,16 +6896,16 @@ OID     N8
 3123
 289
 0
-23
+20
 0
 0
 0
 0
 0
-35313
--25014
-47912
--14665
+-57315
+373
+-44716
+11697
 2
 1
 0
@@ -7724,16 +6928,16 @@ OID     N8
 3224
 289
 0
-24
+21
 0
 0
 0
 0
 0
--59065
--22714
--47741
--19190
+-71965
+-22114
+-60641
+-18590
 2
 1
 0
@@ -7756,7 +6960,7 @@ OID     N8
 6
 290
 0
-25
+22
 0
 4
 5
@@ -7788,7 +6992,7 @@ OID     N8
 29
 290
 0
-26
+23
 0
 3
 5
@@ -7820,7 +7024,7 @@ OID     N8
 71
 290
 0
-27
+24
 0
 70
 68
@@ -7841,7 +7045,7 @@ OID     N8
 0
 0
 2
-69cbffffba1f000069cbffff84fdffff
+64cbffffb81f000064cbffff7cfdffff
 2
 
 
@@ -7852,7 +7056,7 @@ OID     N8
 110
 290
 0
-28
+25
 0
 4
 36
@@ -7884,7 +7088,7 @@ OID     N8
 114
 290
 0
-29
+26
 0
 68
 113
@@ -7905,7 +7109,7 @@ OID     N8
 0
 0
 2
-70cdffff7ad4ffffc976ffff7ad4ffff
+6ccdffff6fd4ffffc876ffff6fd4ffff
 2
 
 
@@ -7916,7 +7120,7 @@ OID     N8
 117
 290
 0
-30
+27
 0
 67
 113
@@ -7937,7 +7141,7 @@ OID     N8
 0
 0
 2
-622fffff21d5fffff670ffff21d5ffff
+fefcfeff4dd6fffff570ffff4dd6ffff
 2
 
 
@@ -7948,7 +7152,7 @@ OID     N8
 2401
 290
 0
-31
+28
 0
 36
 2400
@@ -7980,7 +7184,7 @@ OID     N8
 2415
 290
 0
-32
+29
 0
 36
 2414
@@ -8012,7 +7216,7 @@ a1a600001d420000850601001d420000850601005d7a0000
 2553
 290
 0
-33
+30
 0
 4
 2552
@@ -8033,7 +7237,7 @@ a1a600001d420000850601001d420000850601005d7a0000
 0
 0
 2
-180c000013550000180c0000f3260000
+170c000013550000170c0000f3260000
 2
 
 
@@ -8044,7 +7248,7 @@ a1a600001d420000850601001d420000850601005d7a0000
 2556
 290
 0
-34
+31
 0
 68
 2552
@@ -8065,7 +7269,7 @@ a1a600001d420000850601001d420000850601005d7a0000
 0
 0
 3
-e1d9ffff40fdffff380a000040fdffff380a0000cc200000
+ddd9ffff38fdffff370a000038fdffff370a0000cc200000
 1
 
 
@@ -8076,7 +7280,7 @@ e1d9ffff40fdffff380a000040fdffff380a0000cc200000
 2665
 290
 0
-35
+32
 0
 36
 2664
@@ -8108,7 +7312,7 @@ e1d9ffff40fdffff380a000040fdffff380a0000cc200000
 2687
 290
 0
-36
+33
 0
 2664
 2686
@@ -8129,7 +7333,7 @@ e1d9ffff40fdffff380a000040fdffff380a0000cc200000
 0
 0
 2
-2896000056e4ffff0b53000056e4ffff
+289600008de1ffffd64a00008de1ffff
 2
 
 
@@ -8140,7 +7344,7 @@ e1d9ffff40fdffff380a000040fdffff380a0000cc200000
 2690
 290
 0
-37
+34
 0
 68
 2686
@@ -8161,7 +7365,7 @@ e1d9ffff40fdffff380a000040fdffff380a0000cc200000
 0
 0
 2
-7cd5ffff5be0ffff824400005be0ffff
+78d5ffff0fe1ffff4d3c00000fe1ffff
 2
 
 
@@ -8172,7 +7376,7 @@ e1d9ffff40fdffff380a000040fdffff380a0000cc200000
 2922
 290
 0
-38
+35
 0
 4
 2921
@@ -8193,7 +7397,7 @@ e1d9ffff40fdffff380a000040fdffff380a0000cc200000
 0
 0
 3
-34260000f059000034260000ebb0ffff99dfffffebb0ffff
+34260000f059000034260000eab0ffff98dfffffeab0ffff
 2
 
 
@@ -8204,7 +7408,7 @@ e1d9ffff40fdffff380a000040fdffff380a0000cc200000
 2925
 290
 0
-39
+36
 0
 168
 2921
@@ -8225,7 +7429,7 @@ e1d9ffff40fdffff380a000040fdffff380a0000cc200000
 0
 0
 2
-21d8ffff6281ffff21d8ffffbeacffff
+20d8ffff6281ffff20d8ffffbdacffff
 2
 
 
@@ -8236,7 +7440,7 @@ e1d9ffff40fdffff380a000040fdffff380a0000cc200000
 2932
 290
 0
-40
+37
 0
 68
 2921
@@ -8257,13 +7461,77 @@ e1d9ffff40fdffff380a000040fdffff380a0000cc200000
 0
 0
 2
-d9d7ffff1ad6ffffd9d7ffff2cb4ffff
+d4d7ffff13d6ffffd4d7ffff2bb4ffff
 2
 
 
 
 2
 2406
+3
+3338
+290
+0
+38
+0
+3123
+68
+0
+0
+0
+0
+0
+0
+2
+2
+0
+0
+0
+0
+0
+1
+0
+0
+3
+a735ffffdc0a0000a735ffff4debffff74e0ffff4debffff
+2
+
+
+
+2
+3336
+3
+3355
+290
+0
+39
+0
+70
+3123
+0
+0
+0
+0
+0
+0
+2
+2
+0
+0
+0
+0
+0
+1
+0
+0
+2
+23c0ffff7d1f00003149ffff7d1f0000
+2
+
+
+
+2
+3353
 /END_TABLE AMCSYMB
 
 

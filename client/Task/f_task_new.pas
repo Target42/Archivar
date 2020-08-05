@@ -6,35 +6,46 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Data.DB,
   Datasnap.DBClient, Datasnap.DSConnect, fr_base, Vcl.DBCtrls, Vcl.StdCtrls,
-  Vcl.Mask, JvExComCtrls, JvDateTimePicker, JvDBDateTimePicker;
+  Vcl.Mask, JvExComCtrls, JvDateTimePicker, JvDBDateTimePicker, JvWizard,
+  JvExControls;
 
 type
   TTaskform = class(TForm)
-    BaseFrame1: TBaseFrame;
     DSProviderConnection1: TDSProviderConnection;
     TaskTypes: TClientDataSet;
-    TaskTypeSrc: TDataSource;
     Task: TClientDataSet;
     TaskSrc: TDataSource;
-    Label1: TLabel;
-    DBLookupComboBox1: TDBLookupComboBox;
     Label2: TLabel;
     DBEdit1: TDBEdit;
     JvDBDateTimePicker1: TJvDBDateTimePicker;
     Label3: TLabel;
     Label4: TLabel;
     DBEdit2: TDBEdit;
-    Label5: TLabel;
     Label6: TLabel;
     JvDBDateTimePicker2: TJvDBDateTimePicker;
     Label7: TLabel;
     DBEdit3: TDBEdit;
     LV: TListView;
+    JvWizard1: TJvWizard;
+    AufgabenTypen: TJvWizardInteriorPage;
+    Gremium: TJvWizardInteriorPage;
+    LVType: TListView;
+    Template: TJvWizardInteriorPage;
+    Details1: TJvWizardInteriorPage;
+    TEQry: TClientDataSet;
+    TEView: TListView;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure BaseFrame1AbortBtnClick(Sender: TObject);
     procedure BaseFrame1OKBtnClick(Sender: TObject);
     procedure JvDBDateTimePicker1Change(Sender: TObject);
+    procedure LVTypeClick(Sender: TObject);
+    procedure GremiumEnterPage(Sender: TObject;
+      const FromPage: TJvWizardCustomPage);
+    procedure LVClick(Sender: TObject);
+    procedure TemplateEnterPage(Sender: TObject;
+      const FromPage: TJvWizardCustomPage);
+    procedure TEViewClick(Sender: TObject);
   private
     m_id   : integer;
     m_grid : integer;
@@ -86,6 +97,7 @@ begin
     end;
   end;
 
+  Task.FieldByName('TY_ID').AsInteger := tyid;
   Task.Post;
   Task.ApplyUpdates(0);
 
@@ -123,6 +135,21 @@ begin
       LV.Selected := item;
   end;
   LV.Items.EndUpdate;
+
+  TaskTypes.Open;
+  LVType.Items.BeginUpdate;
+  while not TaskTypes.Eof do
+  begin
+    item := LVType.items.add;
+    item.Caption := TaskTypes.FieldByName('TY_NAME').AsString;
+    item.SubItems.Add(TaskTypes.FieldByName('TY_TAGE').AsString);
+    item.Data := pointer( TaskTypes.FieldByName('TY_ID').AsInteger );
+    TaskTypes.Next;
+  end;
+  LVType.Items.EndUpdate;
+  TaskTypes.Close;
+
+  AufgabenTypen.VisibleButtons := [TJvWizardButtonKind.bkBack, TJvWizardButtonKind.bkCancel];
 end;
 
 procedure TTaskform.FormDestroy(Sender: TObject);
@@ -134,7 +161,6 @@ begin
 
   end;
   Task.Close;
-  TaskTypes.Close;
 end;
 
 function TTaskform.getGRID: integer;
@@ -145,11 +171,35 @@ begin
   Result := TGremium(LV.Selected.Data).ID;
 end;
 
-procedure TTaskform.JvDBDateTimePicker1Change(Sender: TObject);
+procedure TTaskform.GremiumEnterPage(Sender: TObject;
+  const FromPage: TJvWizardCustomPage);
 begin
+  Gremium.VisibleButtons := [TJvWizardButtonKind.bkBack, TJvWizardButtonKind.bkCancel];
+end;
+
+procedure TTaskform.JvDBDateTimePicker1Change(Sender: TObject);
+var
+  val : integer;
+begin
+  val := 0;
+
+  if Assigned(LVType.Selected) then
+    val := integer( LVType.Selected.Data);
+
   Task.FieldByName('TA_TERMIN').AsDateTime :=
-    Task.FieldByName('TA_STARTED').AsDateTime +
-    TaskTypes.FieldByName('TY_TAGE').AsInteger;
+    Task.FieldByName('TA_STARTED').AsDateTime + val;
+end;
+
+procedure TTaskform.LVClick(Sender: TObject);
+begin
+  Gremium.VisibleButtons := [TJvWizardButtonKind.bkBack, TJvWizardButtonKind.bkNext, TJvWizardButtonKind.bkCancel];
+end;
+
+procedure TTaskform.LVTypeClick(Sender: TObject);
+begin
+  if Assigned(LVType.Selected) then
+   AufgabenTypen.VisibleButtons := [TJvWizardButtonKind.bkBack, TJvWizardButtonKind.bkNext, TJvWizardButtonKind.bkCancel];
+
 end;
 
 procedure TTaskform.setGRID(value: integer);
@@ -192,13 +242,37 @@ begin
     Task.FieldByName('TA_CLID').AsString := CreateClassID;
   end;
 
-  TaskTypes.Open;
-
   Task.FieldByName('TA_CREATED_BY').AsString := GM.Name+', '+GM.Vorname;
-  Task.FieldByName('TY_ID').AsInteger := TaskTypes.FieldByName('TY_ID').AsInteger;
   Task.FieldByName('TA_STARTED').AsDateTime := NOW;
 
   JvDBDateTimePicker1Change(NIL);
+end;
+
+procedure TTaskform.TemplateEnterPage(Sender: TObject;
+  const FromPage: TJvWizardCustomPage);
+var
+  item : TListItem;
+begin
+  Template.VisibleButtons := [TJvWizardButtonKind.bkBack, TJvWizardButtonKind.bkCancel];
+  TEView.Items.BeginUpdate;
+
+  TEQry.ParamByName('id').AsInteger := Integer( LVType.Selected.Data );
+  TEQry.Open;
+  while not TEQry.Eof do
+  begin
+    item := TEView.Items.Add;
+    item.Caption := TEQry.FieldByName('TE_NAME').AsString;
+    item.Data := Pointer(integer( TEQry.FieldByName('TE_ID').AsInteger ));
+    TEQry.Next;
+  end;
+  TEQry.Close;
+  TEView.Items.EndUpdate;
+end;
+
+procedure TTaskform.TEViewClick(Sender: TObject);
+begin
+  if Assigned(TEView.Selected) then
+    Template.VisibleButtons := [TJvWizardButtonKind.bkBack, TJvWizardButtonKind.bkNext, TJvWizardButtonKind.bkCancel];
 end;
 
 end.

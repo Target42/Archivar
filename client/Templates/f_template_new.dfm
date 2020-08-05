@@ -3,7 +3,7 @@ object TemplateNewForm: TTemplateNewForm
   Top = 0
   ActiveControl = DBEdit1
   Caption = 'Neue Vorlage erstellen'
-  ClientHeight = 228
+  ClientHeight = 315
   ClientWidth = 351
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -38,9 +38,16 @@ object TemplateNewForm: TTemplateNewForm
     Height = 13
     Caption = 'Tags'
   end
+  object Label4: TLabel
+    Left = 16
+    Top = 146
+    Width = 63
+    Height = 13
+    Caption = 'Aufgabentyp'
+  end
   inline BaseFrame1: TBaseFrame
     Left = 0
-    Top = 168
+    Top = 255
     Width = 351
     Height = 60
     Align = alBottom
@@ -83,6 +90,7 @@ object TemplateNewForm: TTemplateNewForm
     ValueChecked = 'T'
     ValueUnchecked = 'F'
     Visible = False
+    OnClick = DBCheckBox1Click
   end
   object DBEdit2: TDBEdit
     Left = 16
@@ -102,6 +110,18 @@ object TemplateNewForm: TTemplateNewForm
     DataField = 'TE_TAGS'
     DataSource = TESrc
     TabOrder = 4
+  end
+  object DBLookupListBox1: TDBLookupListBox
+    Left = 16
+    Top = 165
+    Width = 322
+    Height = 82
+    DataField = 'TY_ID'
+    DataSource = TESrc
+    KeyField = 'TY_ID'
+    ListField = 'TY_NAME'
+    ListSource = TYSrc
+    TabOrder = 5
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsTemplate'
@@ -123,5 +143,18 @@ object TemplateNewForm: TTemplateNewForm
     DataSet = TETab
     Left = 152
     Top = 72
+  end
+  object TYTab: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    ProviderName = 'TYTab'
+    RemoteServer = DSProviderConnection1
+    Left = 96
+    Top = 120
+  end
+  object TYSrc: TDataSource
+    DataSet = TYTab
+    Left = 224
+    Top = 96
   end
 end

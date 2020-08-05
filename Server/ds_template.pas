@@ -19,6 +19,8 @@ type
     DaTab: TIBTable;
     IBTransaction2: TIBTransaction;
     DataFields: TDataSetProvider;
+    TaskType: TIBTable;
+    TYTab: TDataSetProvider;
   private
     { Private-Deklarationen }
   public

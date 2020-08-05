@@ -36,6 +36,7 @@ type
     GRTab: TIBTable;
     DATab: TIBTable;
     esDSServer: TLabeledEdit;
+    TETab: TIBTable;
     procedure SearchGDSEnterPage(Sender: TObject;
       const FromPage: TJvWizardCustomPage);
     procedure ServerInfoEnterPage(Sender: TObject;
@@ -56,6 +57,7 @@ type
     procedure importDelTimes;
     procedure importDataTypes;
     procedure importGremium;
+    procedure importTasks;
 
     function AutoInc( name : string ) : integer;
     function md5( fname : string ) : string;
@@ -89,6 +91,7 @@ begin
   importDelTimes;
   importDataTypes;
   importGremium;
+  importTasks;
 
   InitData.VisibleButtons := [TJvWizardButtonKind.bkFinish];
 end;
@@ -309,6 +312,48 @@ begin
   item.SubItems.Strings[0] := 'Abgeschlossen';
 end;
 
+procedure TMainSetupForm.importTasks;
+var
+  item : TListItem;
+  path : string;
+  fi : TStringDynArray;
+  i  : integer;
+  bs : TStream;
+  st : TStream;
+begin
+  exit;
+  item := LV.Items.Add;
+  item.Caption := 'Tasks';
+  item.SubItems.Add('einfügen');
+
+  TETab.Open;
+  path := TPath.Combine(m_home, 'Templates');
+  fi := TDirectory.GetFiles(path, '*.task');
+  for i := 0 to Length(fi)-1 do
+  begin
+
+    TETab.Append;
+    TETab.FieldByName('TE_ID').AsInteger := AutoInc('gen_TE_id');
+    TETab.FieldByName('TE_NAME').AsString:= ExtractFileName(fi[i]);
+    TETab.FieldByName('TE_SYSTEM').AsString := '';
+    TETab.FieldByName('TE_TAGS').AsString := '';
+    TETab.FieldByName('TE_SHORT').AsString := '';
+    TETab.FieldByName('TE_STATE').AsString := '';
+    TETab.FieldByName('TE_VERISON').AsString := '';
+    TETab.FieldByName('TE_CLID').AsString := '';
+    st := TFileStream.Create(fi[i], fmOpenRead + fmShareDenyNone);
+    bs := TETab.CreateBlobStream(TETab.FieldByName('TE_DATA'), bmWrite );
+    bs.CopyFrom(st, st.Size);
+    bs.Free;
+    st.Free;
+
+    TETab.Post;
+  end;
+  TETab.Close;
+  SetLength(fi, 0);
+  item.SubItems.Strings[0] := 'Abgeschlossen';
+end;
+
 procedure TMainSetupForm.importTaskTypes;
 var
   item : TListItem;
@@ -316,7 +361,6 @@ var
   fname: string;
   i    : integer;
 begin
-
   item := LV.Items.Add;
   item.Caption := 'Aufgabentypen';
   item.SubItems.Add('einfügen');

@@ -1,10 +1,10 @@
 object Taskform: TTaskform
   Left = 0
   Top = 0
-  ActiveControl = DBEdit2
+  ActiveControl = Template
   Caption = 'Aufgabe'
-  ClientHeight = 389
-  ClientWidth = 538
+  ClientHeight = 285
+  ClientWidth = 362
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,176 +17,279 @@ object Taskform: TTaskform
   OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
-  object Label1: TLabel
-    Left = 16
-    Top = 8
-    Width = 24
-    Height = 13
-    Caption = 'Type'
-  end
-  object Label2: TLabel
-    Left = 16
-    Top = 56
-    Width = 50
-    Height = 13
-    Caption = 'Bearbeiter'
-  end
-  object Label3: TLabel
-    Left = 16
-    Top = 102
-    Width = 38
-    Height = 13
-    Caption = 'Eingang'
-  end
-  object Label4: TLabel
-    Left = 19
-    Top = 252
-    Width = 20
-    Height = 13
-    Caption = 'Titel'
-  end
-  object Label5: TLabel
-    Left = 217
-    Top = 3
-    Width = 41
-    Height = 13
-    Caption = 'Gremium'
-  end
-  object Label6: TLabel
-    Left = 16
-    Top = 152
-    Width = 45
-    Height = 13
-    Caption = 'Fristende'
-  end
-  object Label7: TLabel
-    Left = 19
-    Top = 200
-    Width = 82
-    Height = 13
-    Caption = 'Bearbeitungsfrist'
-  end
-  inline BaseFrame1: TBaseFrame
+  object JvWizard1: TJvWizard
     Left = 0
-    Top = 329
-    Width = 538
-    Height = 60
-    Align = alBottom
-    AutoSize = True
-    TabOrder = 0
-    ExplicitTop = 329
-    ExplicitWidth = 538
-    inherited StatusBar1: TStatusBar
-      Width = 538
-      ExplicitWidth = 538
+    Top = 0
+    Width = 362
+    Height = 285
+    ActivePage = Template
+    ButtonBarHeight = 42
+    ButtonStart.Caption = 'To &Start Page'
+    ButtonStart.NumGlyphs = 1
+    ButtonStart.Width = 85
+    ButtonLast.Caption = 'To &Last Page'
+    ButtonLast.NumGlyphs = 1
+    ButtonLast.Width = 85
+    ButtonBack.Caption = '< &Back'
+    ButtonBack.NumGlyphs = 1
+    ButtonBack.Width = 75
+    ButtonNext.Caption = '&Next >'
+    ButtonNext.NumGlyphs = 1
+    ButtonNext.Width = 75
+    ButtonFinish.Caption = '&Finish'
+    ButtonFinish.NumGlyphs = 1
+    ButtonFinish.Width = 75
+    ButtonCancel.Caption = 'Abbrechen'
+    ButtonCancel.NumGlyphs = 1
+    ButtonCancel.ModalResult = 2
+    ButtonCancel.Width = 75
+    ButtonHelp.Caption = '&Hilfe'
+    ButtonHelp.NumGlyphs = 1
+    ButtonHelp.Width = 75
+    ShowRouteMap = False
+    OnFinishButtonClick = BaseFrame1OKBtnClick
+    OnCancelButtonClick = BaseFrame1AbortBtnClick
+    DesignSize = (
+      362
+      285)
+    object AufgabenTypen: TJvWizardInteriorPage
+      Header.Title.Color = clNone
+      Header.Title.Text = 'Aufgabentypen'
+      Header.Title.Anchors = [akLeft, akTop, akRight]
+      Header.Title.Font.Charset = DEFAULT_CHARSET
+      Header.Title.Font.Color = clWindowText
+      Header.Title.Font.Height = -16
+      Header.Title.Font.Name = 'Tahoma'
+      Header.Title.Font.Style = [fsBold]
+      Header.Subtitle.Color = clNone
+      Header.Subtitle.Text = 'Was ist es f'#252'r eine Aufgabe?'
+      Header.Subtitle.Anchors = [akLeft, akTop, akRight, akBottom]
+      Header.Subtitle.Font.Charset = DEFAULT_CHARSET
+      Header.Subtitle.Font.Color = clWindowText
+      Header.Subtitle.Font.Height = -11
+      Header.Subtitle.Font.Name = 'Tahoma'
+      Header.Subtitle.Font.Style = []
+      Caption = 'AufgabenTypen'
+      object LVType: TListView
+        Left = 0
+        Top = 70
+        Width = 362
+        Height = 173
+        Align = alClient
+        Columns = <
+          item
+            Caption = 'Name'
+            Width = 100
+          end
+          item
+            Caption = 'Frist'
+          end>
+        ReadOnly = True
+        RowSelect = True
+        SortType = stText
+        TabOrder = 0
+        ViewStyle = vsReport
+        OnClick = LVTypeClick
+      end
     end
-    inherited Panel1: TPanel
-      Width = 538
-      ExplicitWidth = 538
-      inherited AbortBtn: TBitBtn
-        OnClick = BaseFrame1AbortBtnClick
-      end
-      inherited OKBtn: TBitBtn
-        Left = 450
-        Top = 10
-        Kind = bkCustom
-        ModalResult = 0
-        OnClick = BaseFrame1OKBtnClick
-        ExplicitLeft = 450
-        ExplicitTop = 10
+    object Gremium: TJvWizardInteriorPage
+      Header.Title.Color = clNone
+      Header.Title.Text = 'Gremium'
+      Header.Title.Anchors = [akLeft, akTop, akRight]
+      Header.Title.Font.Charset = DEFAULT_CHARSET
+      Header.Title.Font.Color = clWindowText
+      Header.Title.Font.Height = -16
+      Header.Title.Font.Name = 'Tahoma'
+      Header.Title.Font.Style = [fsBold]
+      Header.Subtitle.Color = clNone
+      Header.Subtitle.Text = 'Welches Gremium soll die aufgabe bearbeiten?'
+      Header.Subtitle.Anchors = [akLeft, akTop, akRight, akBottom]
+      Header.Subtitle.Font.Charset = DEFAULT_CHARSET
+      Header.Subtitle.Font.Color = clWindowText
+      Header.Subtitle.Font.Height = -11
+      Header.Subtitle.Font.Name = 'Tahoma'
+      Header.Subtitle.Font.Style = []
+      Caption = 'Gremium'
+      OnEnterPage = GremiumEnterPage
+      object LV: TListView
+        Left = 0
+        Top = 70
+        Width = 362
+        Height = 173
+        Align = alClient
+        Columns = <
+          item
+            Caption = 'Kurz'
+            Width = 75
+          end
+          item
+            Caption = 'Name'
+            Width = 200
+          end>
+        HideSelection = False
+        ReadOnly = True
+        RowSelect = True
+        SortType = stText
+        TabOrder = 0
+        ViewStyle = vsReport
+        OnClick = LVClick
       end
     end
-  end
-  object DBLookupComboBox1: TDBLookupComboBox
-    Left = 16
-    Top = 29
-    Width = 184
-    Height = 21
-    DataField = 'TY_ID'
-    DataSource = TaskSrc
-    KeyField = 'TY_ID'
-    ListField = 'TY_NAME'
-    ListSource = TaskTypeSrc
-    TabOrder = 1
-  end
-  object DBEdit1: TDBEdit
-    Left = 16
-    Top = 75
-    Width = 184
-    Height = 21
-    DataField = 'TA_CREATED_BY'
-    DataSource = TaskSrc
-    Enabled = False
-    TabOrder = 2
-  end
-  object JvDBDateTimePicker1: TJvDBDateTimePicker
-    Left = 16
-    Top = 121
-    Width = 184
-    Height = 21
-    Date = 43893.633508275460000000
-    Time = 43893.633508275460000000
-    TabOrder = 3
-    OnChange = JvDBDateTimePicker1Change
-    DropDownDate = 43893.000000000000000000
-    DataField = 'TA_STARTED'
-    DataSource = TaskSrc
-  end
-  object DBEdit2: TDBEdit
-    Left = 19
-    Top = 271
-    Width = 506
-    Height = 21
-    DataField = 'TA_NAME'
-    DataSource = TaskSrc
-    TabOrder = 4
-  end
-  object JvDBDateTimePicker2: TJvDBDateTimePicker
-    Left = 16
-    Top = 171
-    Width = 186
-    Height = 21
-    Date = 43895.375511296300000000
-    Time = 43895.375511296300000000
-    TabOrder = 5
-    DropDownDate = 43895.000000000000000000
-    DataField = 'TA_TERMIN'
-    DataSource = TaskSrc
-  end
-  object DBEdit3: TDBEdit
-    Left = 19
-    Top = 219
-    Width = 47
-    Height = 21
-    DataField = 'TY_TAGE'
-    DataSource = TaskTypeSrc
-    Enabled = False
-    ReadOnly = True
-    TabOrder = 6
-  end
-  object LV: TListView
-    Left = 217
-    Top = 30
-    Width = 308
-    Height = 210
-    Columns = <
-      item
-        Caption = 'Kurz'
-        Width = 75
+    object Template: TJvWizardInteriorPage
+      Header.Title.Color = clNone
+      Header.Title.Text = 'Aufgabenvorlage'
+      Header.Title.Anchors = [akLeft, akTop, akRight]
+      Header.Title.Font.Charset = DEFAULT_CHARSET
+      Header.Title.Font.Color = clWindowText
+      Header.Title.Font.Height = -16
+      Header.Title.Font.Name = 'Tahoma'
+      Header.Title.Font.Style = [fsBold]
+      Header.Subtitle.Color = clNone
+      Header.Subtitle.Text = 'Mit welcher Vorlage soll die Aufgabe bearbeitet werden?'
+      Header.Subtitle.Anchors = [akLeft, akTop, akRight, akBottom]
+      Header.Subtitle.Font.Charset = DEFAULT_CHARSET
+      Header.Subtitle.Font.Color = clWindowText
+      Header.Subtitle.Font.Height = -11
+      Header.Subtitle.Font.Name = 'Tahoma'
+      Header.Subtitle.Font.Style = []
+      Caption = 'Template'
+      OnEnterPage = TemplateEnterPage
+      object TEView: TListView
+        Left = 0
+        Top = 70
+        Width = 362
+        Height = 173
+        Align = alClient
+        Columns = <
+          item
+            Caption = 'Name'
+            Width = 200
+          end>
+        ReadOnly = True
+        RowSelect = True
+        SortType = stText
+        TabOrder = 0
+        ViewStyle = vsReport
+        OnClick = TEViewClick
+        ExplicitLeft = 40
+        ExplicitTop = 96
+        ExplicitWidth = 250
+        ExplicitHeight = 150
       end
-      item
-        Caption = 'Name'
-        Width = 200
-      end>
-    HideSelection = False
-    ReadOnly = True
-    RowSelect = True
-    SortType = stText
-    TabOrder = 7
-    ViewStyle = vsReport
+    end
+    object Details1: TJvWizardInteriorPage
+      Header.Title.Color = clNone
+      Header.Title.Text = 'Details'
+      Header.Title.Anchors = [akLeft, akTop, akRight]
+      Header.Title.Font.Charset = DEFAULT_CHARSET
+      Header.Title.Font.Color = clWindowText
+      Header.Title.Font.Height = -16
+      Header.Title.Font.Name = 'Tahoma'
+      Header.Title.Font.Style = [fsBold]
+      Header.Subtitle.Color = clNone
+      Header.Subtitle.Text = 'Detailinformationen'
+      Header.Subtitle.Anchors = [akLeft, akTop, akRight, akBottom]
+      Header.Subtitle.Font.Charset = DEFAULT_CHARSET
+      Header.Subtitle.Font.Color = clWindowText
+      Header.Subtitle.Font.Height = -11
+      Header.Subtitle.Font.Name = 'Tahoma'
+      Header.Subtitle.Font.Style = []
+      Caption = 'Details1'
+      object Label2: TLabel
+        Left = 19
+        Top = 85
+        Width = 50
+        Height = 13
+        Caption = 'Bearbeiter'
+      end
+      object Label3: TLabel
+        Left = 19
+        Top = 117
+        Width = 38
+        Height = 13
+        Caption = 'Eingang'
+      end
+      object Label4: TLabel
+        Left = 19
+        Top = 193
+        Width = 20
+        Height = 13
+        Caption = 'Titel'
+      end
+      object Label6: TLabel
+        Left = 19
+        Top = 144
+        Width = 45
+        Height = 13
+        Caption = 'Fristende'
+      end
+      object Label7: TLabel
+        Left = 19
+        Top = 171
+        Width = 21
+        Height = 13
+        Caption = 'Frist'
+      end
+      object DBEdit1: TDBEdit
+        Left = 88
+        Top = 82
+        Width = 184
+        Height = 21
+        DataField = 'TA_CREATED_BY'
+        DataSource = TaskSrc
+        Enabled = False
+        TabOrder = 0
+      end
+      object DBEdit2: TDBEdit
+        Left = 88
+        Top = 193
+        Width = 184
+        Height = 21
+        DataField = 'TA_NAME'
+        DataSource = TaskSrc
+        TabOrder = 1
+      end
+      object DBEdit3: TDBEdit
+        Left = 88
+        Top = 163
+        Width = 47
+        Height = 21
+        DataField = 'TY_TAGE'
+        Enabled = False
+        ReadOnly = True
+        TabOrder = 2
+      end
+      object JvDBDateTimePicker1: TJvDBDateTimePicker
+        Left = 88
+        Top = 109
+        Width = 184
+        Height = 21
+        Date = 43893.633508275460000000
+        Time = 43893.633508275460000000
+        TabOrder = 3
+        OnChange = JvDBDateTimePicker1Change
+        DropDownDate = 43893.000000000000000000
+        DataField = 'TA_STARTED'
+        DataSource = TaskSrc
+      end
+      object JvDBDateTimePicker2: TJvDBDateTimePicker
+        Left = 88
+        Top = 136
+        Width = 186
+        Height = 21
+        Date = 43895.375511296300000000
+        Time = 43895.375511296300000000
+        TabOrder = 4
+        DropDownDate = 43895.000000000000000000
+        DataField = 'TA_TERMIN'
+        DataSource = TaskSrc
+      end
+    end
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsTask'
+    Connected = True
+    SQLConnection = GM.SQLConnection1
     Left = 48
     Top = 8
   end
@@ -197,11 +300,6 @@ object Taskform: TTaskform
     RemoteServer = DSProviderConnection1
     Left = 136
     Top = 8
-  end
-  object TaskTypeSrc: TDataSource
-    DataSet = TaskTypes
-    Left = 136
-    Top = 56
   end
   object Task: TClientDataSet
     Aggregates = <>
@@ -215,5 +313,18 @@ object Taskform: TTaskform
     DataSet = Task
     Left = 216
     Top = 64
+  end
+  object TEQry: TClientDataSet
+    Aggregates = <>
+    Params = <
+      item
+        DataType = ftInteger
+        Name = 'id'
+        ParamType = ptInput
+      end>
+    ProviderName = 'TemplatesQry'
+    RemoteServer = DSProviderConnection1
+    Left = 56
+    Top = 112
   end
 end

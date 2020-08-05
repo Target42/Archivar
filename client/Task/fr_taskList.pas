@@ -35,7 +35,6 @@ type
     TasksTA_CREATED_BY: TWideStringField;
     TasksTA_TERMIN: TDateField;
     TasksTA_CLID: TWideStringField;
-    TasksTA_SUB_ID: TIntegerField;
     TasksTA_FLAGS: TIntegerField;
     TasksTA_STATUS: TWideStringField;
     TasksTY_ID1: TIntegerField;
