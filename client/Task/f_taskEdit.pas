@@ -172,23 +172,12 @@ begin
 end;
 
 procedure TTaskEditForm.setID(ta_id, ty_id: integer);
-  procedure createEinstellung;
-  var
-    fr : TEinstellungsframe;
-  begin
-    fr := TEinstellungsframe.Create(ScrollBox1);
-    fr.Parent := ScrollBox1;
-    m_edit := fr;
-    Caption := 'Einstellung';
-  end;
 
 begin
   m_ta_id := ta_id;
   m_ty_id := ty_id;
 
-  case m_ty_id of
-    1 :  createEinstellung;
-  end;
+  m_edit wird jetzt ein erzeugtes form
 
   if Assigned(m_edit) then
   begin

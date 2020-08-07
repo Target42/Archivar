@@ -1,7 +1,7 @@
 object Taskform: TTaskform
   Left = 0
   Top = 0
-  ActiveControl = Template
+  ActiveControl = LV
   Caption = 'Aufgabe'
   ClientHeight = 285
   ClientWidth = 362
@@ -22,7 +22,7 @@ object Taskform: TTaskform
     Top = 0
     Width = 362
     Height = 285
-    ActivePage = Template
+    ActivePage = Gremium
     ButtonBarHeight = 42
     ButtonStart.Caption = 'To &Start Page'
     ButtonStart.NumGlyphs = 1
@@ -47,8 +47,6 @@ object Taskform: TTaskform
     ButtonHelp.NumGlyphs = 1
     ButtonHelp.Width = 75
     ShowRouteMap = False
-    OnFinishButtonClick = BaseFrame1OKBtnClick
-    OnCancelButtonClick = BaseFrame1AbortBtnClick
     DesignSize = (
       362
       285)
@@ -171,10 +169,6 @@ object Taskform: TTaskform
         TabOrder = 0
         ViewStyle = vsReport
         OnClick = TEViewClick
-        ExplicitLeft = 40
-        ExplicitTop = 96
-        ExplicitWidth = 250
-        ExplicitHeight = 150
       end
     end
     object Details1: TJvWizardInteriorPage
@@ -195,6 +189,8 @@ object Taskform: TTaskform
       Header.Subtitle.Font.Name = 'Tahoma'
       Header.Subtitle.Font.Style = []
       Caption = 'Details1'
+      OnEnterPage = Details1EnterPage
+      OnFinishButtonClick = Details1FinishButtonClick
       object Label2: TLabel
         Left = 19
         Top = 85
@@ -249,16 +245,6 @@ object Taskform: TTaskform
         DataSource = TaskSrc
         TabOrder = 1
       end
-      object DBEdit3: TDBEdit
-        Left = 88
-        Top = 163
-        Width = 47
-        Height = 21
-        DataField = 'TY_TAGE'
-        Enabled = False
-        ReadOnly = True
-        TabOrder = 2
-      end
       object JvDBDateTimePicker1: TJvDBDateTimePicker
         Left = 88
         Top = 109
@@ -266,7 +252,7 @@ object Taskform: TTaskform
         Height = 21
         Date = 43893.633508275460000000
         Time = 43893.633508275460000000
-        TabOrder = 3
+        TabOrder = 2
         OnChange = JvDBDateTimePicker1Change
         DropDownDate = 43893.000000000000000000
         DataField = 'TA_STARTED'
@@ -279,17 +265,23 @@ object Taskform: TTaskform
         Height = 21
         Date = 43895.375511296300000000
         Time = 43895.375511296300000000
-        TabOrder = 4
+        TabOrder = 3
         DropDownDate = 43895.000000000000000000
         DataField = 'TA_TERMIN'
         DataSource = TaskSrc
+      end
+      object Edit1: TEdit
+        Left = 88
+        Top = 166
+        Width = 41
+        Height = 21
+        TabOrder = 4
+        Text = 'Edit1'
       end
     end
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsTask'
-    Connected = True
-    SQLConnection = GM.SQLConnection1
     Left = 48
     Top = 8
   end

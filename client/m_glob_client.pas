@@ -25,7 +25,6 @@ const
   msgRemoveBookmark = WMUSER + 7;
   msgLoadLogo       = WMUSER + 8;
 
-
 type
   TGM = class(TDataModule)
     SQLConnection1: TSQLConnection;

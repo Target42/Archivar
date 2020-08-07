@@ -24,7 +24,6 @@ type
     Label6: TLabel;
     JvDBDateTimePicker2: TJvDBDateTimePicker;
     Label7: TLabel;
-    DBEdit3: TDBEdit;
     LV: TListView;
     JvWizard1: TJvWizard;
     AufgabenTypen: TJvWizardInteriorPage;
@@ -34,10 +33,9 @@ type
     Details1: TJvWizardInteriorPage;
     TEQry: TClientDataSet;
     TEView: TListView;
+    Edit1: TEdit;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    procedure BaseFrame1AbortBtnClick(Sender: TObject);
-    procedure BaseFrame1OKBtnClick(Sender: TObject);
     procedure JvDBDateTimePicker1Change(Sender: TObject);
     procedure LVTypeClick(Sender: TObject);
     procedure GremiumEnterPage(Sender: TObject;
@@ -46,6 +44,9 @@ type
     procedure TemplateEnterPage(Sender: TObject;
       const FromPage: TJvWizardCustomPage);
     procedure TEViewClick(Sender: TObject);
+    procedure Details1FinishButtonClick(Sender: TObject; var Stop: Boolean);
+    procedure Details1EnterPage(Sender: TObject;
+      const FromPage: TJvWizardCustomPage);
   private
     m_id   : integer;
     m_grid : integer;
@@ -64,17 +65,28 @@ var
 implementation
 
 uses
-  m_glob_client, u_stub, f_taskEdit, m_WindowHandler, Win.ComObj, u_gremium;
+  m_glob_client, u_stub, f_taskEdit, m_WindowHandler, Win.ComObj, u_gremium,
+  System.DateUtils, u_berTypes;
 
 {$R *.dfm}
 
-procedure TTaskform.BaseFrame1AbortBtnClick(Sender: TObject);
+procedure TTaskform.Details1EnterPage(Sender: TObject;
+  const FromPage: TJvWizardCustomPage);
+var
+  val : integer;
 begin
-  if Task.State <> dsBrowse then
-    Task.Cancel;
+  Edit1.Text := LVType.Selected.SubItems.Strings[0];
+
+  val := 7;
+  TryStrToInt(Edit1.Text, val);
+  Task.FieldByName('TA_TERMIN').AsDateTime  := IncDay( JvDBDateTimePicker1.DateTime, val );
+  Edit1.Text := IntToStr( val );
+
+  Details1.VisibleButtons := [TJvWizardButtonKind.bkBack, TJvWizardButtonKind.bkCancel, TJvWizardButtonKind.bkFinish];
 end;
 
-procedure TTaskform.BaseFrame1OKBtnClick(Sender: TObject);
+procedure TTaskform.Details1FinishButtonClick(Sender: TObject;
+  var Stop: Boolean);
 var
    client       : TdsTaskClient;
    tyid         : integer;
@@ -88,12 +100,11 @@ begin
   if m_id = 0 then
   begin
     try
-      client := TdsTaskClient.Create(GM.SQLConnection1.DBXConnection);
-      m_id   := client.AutoInc('gen_ta_id');
+      m_id   := GM.autoInc('gen_ta_id');
       Task.FieldByName('TA_ID').AsInteger := m_id;
       Task.FieldByName('TA_STARTED').AsDateTime := JvDBDateTimePicker1.DateTime;
+      Task.FieldByName('TA_TERMIN').AsDateTime  := JvDBDateTimePicker2.DateTime;
     finally
-      client.Free;
     end;
   end;
 
@@ -110,8 +121,9 @@ begin
     client.Free;
   end;
 
-  GM.LockDocument( m_id, tyid);
-  WindowHandler.openTaskWindow(m_id, tyid, false);
+  GM.LockDocument( m_id, integer(ltTask));
+  WindowHandler.openTaskWindow(m_id, integer(ltTask), false);
+  close;
   ModalResult := mrOk;
 end;
 
@@ -131,8 +143,6 @@ begin
     item.caption := gr.ShortName;
     Item.SubItems.Add(gr.Name);
     item.data :=  gr;
-    if gr.ParentShort = '' then
-      LV.Selected := item;
   end;
   LV.Items.EndUpdate;
 
@@ -255,6 +265,7 @@ var
 begin
   Template.VisibleButtons := [TJvWizardButtonKind.bkBack, TJvWizardButtonKind.bkCancel];
   TEView.Items.BeginUpdate;
+  TEView.Items.Clear;
 
   TEQry.ParamByName('id').AsInteger := Integer( LVType.Selected.Data );
   TEQry.Open;
