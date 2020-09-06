@@ -23,12 +23,18 @@ type
     function  getMainForm : Boolean;
     function  getBase : ITaskCtrl;
     function getOwner : ITask;
+    procedure setReadOnly( value : boolean );
+    function  getReadOnly : boolean;
+
+    procedure setChanged( value : boolean );
+    function  getChanged : boolean;
   public
 
     constructor Create(Owner : ITask );
     Destructor Destroy; override;
 
     procedure release;
+    procedure clearContent;
     function newControl : ITaskCtrl;
 
     function createControl( parent : TControl; newType : TControlType; x, y : integer ) : ITaskCtrl;
@@ -40,6 +46,11 @@ uses
   System.Win.ComObj, u_TaskCtrlImpl;
 
 { TaskFormImpl }
+
+procedure TaskFormImpl.clearContent;
+begin
+  m_base.clearContent( true );
+end;
 
 constructor TaskFormImpl.Create(owner : ITask);
 begin
@@ -78,6 +89,29 @@ begin
   Result := m_base;
 end;
 
+function TaskFormImpl.getChanged: boolean;
+  function get( base : ITaskCtrl) : boolean;
+  var
+    i : integer;
+  begin
+    Result := false;
+    if not Assigned(base) then
+      exit;
+
+    Result := base.Changed;
+    if not Result then begin
+      for i := 0 to pred(base.Childs.Count) do
+      begin
+        Result := base.Childs.Items[i].Changed;
+        if Result then
+          break;
+      end;
+    end;
+  end;
+begin
+  Result := get(m_base);
+end;
+
 function TaskFormImpl.getCLID: string;
 begin
   Result := m_clid;
@@ -98,6 +132,29 @@ begin
   Result := m_owner;
 end;
 
+function TaskFormImpl.getReadOnly: boolean;
+  function getRO( ctrl : ITaskCtrl) : boolean;
+  var
+    i : integer;
+  begin
+    Result := ctrl.ReadOnly;
+    if not Result then
+    begin
+      for i := 0 to pred(ctrl.Childs.Count) do
+      begin
+        Result := getRO(ctrl.Childs.Items[i]);
+        if Result then
+          break;
+      end;
+    end;
+  end;
+
+begin
+  Result := false;
+  if Assigned(m_base) then
+    Result := getRO( m_base );
+end;
+
 function TaskFormImpl.newControl: ITaskCtrl;
 begin
   Result := TaskCtrlImpl.Create(self);
@@ -116,6 +173,20 @@ begin
   m_base.release;
 end;
 
+procedure TaskFormImpl.setChanged(value: boolean);
+  procedure clear( base : ITaskCtrl);
+  var
+    i : integer;
+  begin
+    base.Changed := false;
+    for i := 0 to pred(base.Childs.Count) do
+      base.Childs.Items[i].Changed := false;
+  end;
+begin
+  if Assigned(m_base) then
+    m_base.Changed := false;
+end;
+
 procedure TaskFormImpl.setCLID(value: string);
 begin
  m_clid := value;
@@ -131,5 +202,19 @@ begin
   m_name := value;
 end;
 
+
+procedure TaskFormImpl.setReadOnly(value: boolean);
+  procedure setRO( ctrl : ITaskCtrl);
+  var
+    i : integer;
+  begin
+    ctrl.ReadOnly := value;
+    for i := 0 to pred(ctrl.Childs.Count) do
+      setRO(ctrl.Childs[i]);
+  end;
+begin
+  if Assigned(m_base) then
+    setRO(m_base);
+end;
 
 end.

@@ -21,7 +21,6 @@ type
     QueryUser: TIBQuery;
     IBTransaction1: TIBTransaction;
     dsFile: TDSServerClass;
-    dsEinstellung: TDSServerClass;
     dsMisc: TDSServerClass;
     dsProtocol: TDSServerClass;
     dsImage: TDSServerClass;
@@ -49,8 +48,6 @@ type
     procedure dsTaskGetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
     procedure dsFileGetClass(DSServerClass: TDSServerClass;
-      var PersistentClass: TPersistentClass);
-    procedure dsEinstellungGetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
     procedure dsMiscGetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
@@ -90,7 +87,7 @@ implementation
 }
 uses
   Winapi.Windows, m_db, ds_gremium, ds_admin, Datasnap.DSSession, ds_person, IOUtils,
-  ds_taks, ds_file, ds_einstellung, ds_misc, ds_protocol, ds_image, ds_chapter,
+  ds_taks, ds_file, ds_misc, ds_protocol, ds_image, ds_chapter,
   ds_taskEdit, ds_template;
 
 procedure TServerContainer1.dsAdminGetClass(
@@ -251,7 +248,7 @@ procedure TServerContainer1.DSAuthenticationManager1UserAuthorize(
   Sender: TObject; AuthorizeEventObject: TDSAuthorizeEventObject;
   var valid: Boolean);
 begin
-  DebugMsg(AuthorizeEventObject.MethodAlias);
+//  DebugMsg(AuthorizeEventObject.MethodAlias);
   valid := true;
 end;
 
@@ -259,12 +256,6 @@ procedure TServerContainer1.dsChapterGetClass(DSServerClass: TDSServerClass;
   var PersistentClass: TPersistentClass);
 begin
   PersistentClass := ds_chapter.TdsChapter;
-end;
-
-procedure TServerContainer1.dsEinstellungGetClass(DSServerClass: TDSServerClass;
-  var PersistentClass: TPersistentClass);
-begin
-  PersistentClass := ds_einstellung.TdsEinstellung;
 end;
 
 procedure TServerContainer1.dsFileGetClass(DSServerClass: TDSServerClass;

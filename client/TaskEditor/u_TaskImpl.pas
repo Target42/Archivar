@@ -36,6 +36,7 @@ type
     property Fields : IDataFieldList read getFields;
     property Forms  : TList<ITaskForm> read getForms;
 
+    function getMainForm : ITaskForm;
     function NewForm : ITaskForm;
     function getFormByCLID( clid : string ) : ITaskForm;
 
@@ -91,6 +92,24 @@ end;
 function TTask.getForms: TList<ITaskForm>;
 begin
   Result := m_forms;
+end;
+
+function TTask.getMainForm: ITaskForm;
+var
+  i : integer;
+begin
+  Result := NIL;
+  if m_forms.Count > 0 then
+  begin
+    Result := m_forms[0];
+    for i := 0 to pred(m_forms.Count) do
+    begin
+      if m_forms[i].MainForm then begin
+        Result := m_forms[i];
+        break;
+      end;
+    end;
+  end;
 end;
 
 function TTask.getName: string;

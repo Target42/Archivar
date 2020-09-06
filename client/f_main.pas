@@ -363,12 +363,14 @@ end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
+  TaskListFrame1.prepare;
   PageControl1.ActivePage := TabSheet1;
 end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
   GremiumTreeFrame1.clear;
+  TaskListFrame1.shutdown;
 end;
 
 procedure TMainForm.loadLogo;

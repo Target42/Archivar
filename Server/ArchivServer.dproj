@@ -120,11 +120,6 @@
             <FormType>dfm</FormType>
             <DesignClass>TDSServerModule</DesignClass>
         </DCCReference>
-        <DCCReference Include="ds_einstellung.pas">
-            <Form>dsEinstellung</Form>
-            <FormType>dfm</FormType>
-            <DesignClass>TDSServerModule</DesignClass>
-        </DCCReference>
         <DCCReference Include="ds_file.pas">
             <Form>dsFile</Form>
             <FormType>dfm</FormType>
@@ -201,7 +196,7 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="Win32\Debug\bin\ArchivServer.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="..\Bin\Server\ArchivServer.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>ArchivServer.exe</RemoteName>
                         <Overwrite>true</Overwrite>

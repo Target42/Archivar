@@ -97,6 +97,10 @@ begin
 
   client := NIL;
   tyid := Task.FieldByName('TY_ID').AsInteger;
+  if tyid = 0 then begin
+    tyid := integer(LVType.Selected.Data);
+  end;
+
   if m_id = 0 then
   begin
     try
@@ -104,6 +108,7 @@ begin
       Task.FieldByName('TA_ID').AsInteger := m_id;
       Task.FieldByName('TA_STARTED').AsDateTime := JvDBDateTimePicker1.DateTime;
       Task.FieldByName('TA_TERMIN').AsDateTime  := JvDBDateTimePicker2.DateTime;
+      Task.FieldByName('TE_ID').AsInteger       := integer(TEView.Selected.Data);
     finally
     end;
   end;
@@ -123,8 +128,6 @@ begin
 
   GM.LockDocument( m_id, integer(ltTask));
   WindowHandler.openTaskWindow(m_id, integer(ltTask), false);
-  close;
-  ModalResult := mrOk;
 end;
 
 procedure TTaskform.FormCreate(Sender: TObject);
@@ -184,7 +187,10 @@ end;
 procedure TTaskform.GremiumEnterPage(Sender: TObject;
   const FromPage: TJvWizardCustomPage);
 begin
-  Gremium.VisibleButtons := [TJvWizardButtonKind.bkBack, TJvWizardButtonKind.bkCancel];
+  if not Assigned(LV.Selected) then
+    Gremium.VisibleButtons := [TJvWizardButtonKind.bkBack, TJvWizardButtonKind.bkCancel]
+  else
+    Gremium.VisibleButtons := [TJvWizardButtonKind.bkBack, TJvWizardButtonKind.bkNext, TJvWizardButtonKind.bkCancel]
 end;
 
 procedure TTaskform.JvDBDateTimePicker1Change(Sender: TObject);

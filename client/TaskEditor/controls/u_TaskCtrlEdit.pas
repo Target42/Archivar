@@ -15,11 +15,15 @@ type
       function CtrlValue : string; override;
       procedure setCtrlValue( value : string ); override;
       procedure colorRequired; override;
+      procedure setReadOnly( value : boolean ); override;
+      function  getReadOnly : boolean; override;
     private
 
     public
       constructor Create(owner : ITaskForm);
       destructor Destroy; override;
+
+      procedure clearContent( recursive : boolean ); override;
   end;
 
 implementation
@@ -30,6 +34,15 @@ uses
 
 { TaskCtrlEdit }
 
+procedure TaskCtrlEdit.clearContent(recursive: boolean);
+begin
+  inherited;
+  if not Assigned(m_ctrl) then
+    exit;
+
+  (m_ctrl as TEdit).Text := '';
+end;
+
 procedure TaskCtrlEdit.colorRequired;
 var
   ed : TEdit;
@@ -39,7 +52,7 @@ begin
 
   ed := m_ctrl as TEdit;
   if m_required then
-    ed.Color := TColor( RGB(255, 200, 200))
+    ed.Color := req
   else
     ed.Color := clWindow;
 end;
@@ -75,6 +88,14 @@ begin
   ( m_ctrl as TEdit).OnMouseMove  := mv;
 end;
 
+function TaskCtrlEdit.getReadOnly: boolean;
+begin
+  Result := false;
+  if Assigned(m_ctrl) then
+    Result := ( m_ctrl as TEdit).ReadOnly;
+
+end;
+
 function TaskCtrlEdit.newControl(parent: TWinControl; x, y: Integer): TControl;
 var
   ed : TEdit;
@@ -84,6 +105,7 @@ begin
   ed.Name := 'Edit'+intToStr(GetTickCount);
   ed.Top  := y;
   ed.Left := X;
+  ed.OnKeyPress := Self.KeyPress;
 
   Result := ed;
   m_ctrl := ed;
@@ -103,6 +125,12 @@ begin
   inherited;
   if Assigned( m_ctrl) then
     ( m_ctrl as TEdit).Text := value;
+end;
+
+procedure TaskCtrlEdit.setReadOnly(value: boolean);
+begin
+  if Assigned(m_ctrl) then
+    ( m_ctrl as TEdit).ReadOnly := value;
 end;
 
 end.

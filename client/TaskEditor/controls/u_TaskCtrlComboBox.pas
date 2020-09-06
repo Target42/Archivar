@@ -14,6 +14,11 @@ type
       procedure setCtrlValue( value : string ); override;
 
       procedure setDataField( value : IDataField ); override;
+
+      procedure change( sender : TObject );
+      procedure setReadOnly( value : boolean ); override;
+      function  getReadOnly : boolean; override;
+
     private
 
     public
@@ -27,6 +32,12 @@ uses
   u_TaskCtrlPropImpl, Vcl.StdCtrls, System.SysUtils, Winapi.Windows, Vcl.Grids;
 
 { TaskCtrlComboBox }
+
+
+procedure TaskCtrlComboBox.change(sender: TObject);
+begin
+  m_changed := true;
+end;
 
 constructor TaskCtrlComboBox.Create(owner: ITaskForm);
 begin
@@ -66,6 +77,13 @@ begin
 
 end;
 
+function TaskCtrlComboBox.getReadOnly: boolean;
+begin
+  Result := false;
+  if Assigned(m_ctrl) then
+    Result := (m_ctrl as TComboBox).Enabled;
+end;
+
 function TaskCtrlComboBox.newControl(parent: TWinControl; x,
   y: Integer): TControl;
 var
@@ -76,6 +94,7 @@ begin
   cb.Name := 'comboBox'+intToStr(GetTickCount);
   cb.Top  := y;
   cb.Left := X;
+  cb.OnChange := change;
 
   Result := cb;
 end;
@@ -103,7 +122,7 @@ end;
 
 procedure TaskCtrlComboBox.setDataField(value: IDataField);
 var
-  cb    : TComboBox;
+//  cb    : TComboBox;
   prop  :IProperty;
   tprop :ITaskCtrlProp;
 begin
@@ -114,7 +133,7 @@ begin
 
   if (value.Typ = 'enum') and  Assigned(m_ctrl) then
   begin
-    cb := m_ctrl as TComboBox;
+    //cb := m_ctrl as TComboBox;
 
     tprop := self.getPropertyByName('items');
     prop := value.getPropertyByName('Values');
@@ -126,6 +145,12 @@ begin
 //      cb.Items.DelimitedText := prop.Value;
     end;
   end;
+end;
+
+procedure TaskCtrlComboBox.setReadOnly(value: boolean);
+begin
+  if Assigned(m_ctrl) then
+    (m_ctrl as TComboBox).Enabled := not value;
 end;
 
 end.

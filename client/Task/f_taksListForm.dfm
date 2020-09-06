@@ -25,12 +25,13 @@ object TaskListForm: TTaskListForm
     TabOrder = 0
     ExplicitLeft = 184
     ExplicitTop = 24
+    ExplicitWidth = 635
     inherited StatusBar1: TStatusBar
       Width = 635
-      ExplicitWidth = 451
     end
     inherited Panel1: TPanel
       Width = 635
+      ExplicitWidth = 635
       inherited OKBtn: TBitBtn
         Left = 547
         OnClick = BaseFrame1OKBtnClick
@@ -45,9 +46,9 @@ object TaskListForm: TTaskListForm
     Height = 239
     Align = alClient
     TabOrder = 1
-    ExplicitLeft = 184
-    ExplicitTop = -6
-    inherited DBGrid1: TDBGrid
+    ExplicitWidth = 635
+    ExplicitHeight = 239
+    inherited LV: TListView
       Width = 635
       Height = 239
     end

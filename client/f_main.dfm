@@ -86,9 +86,12 @@ object MainForm: TMainForm
       ExplicitTop = 15
       ExplicitWidth = 1122
       ExplicitHeight = 173
-      inherited DBGrid1: TDBGrid
+      inherited LV: TListView
         Width = 1122
         Height = 173
+        ExplicitTop = 173
+        ExplicitWidth = 1122
+        ExplicitHeight = 0
       end
       inherited ActionList1: TActionList
         Left = 176
@@ -127,6 +130,10 @@ object MainForm: TMainForm
     object TabSheet2: TTabSheet
       Caption = 'Lesezeichen'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       inline BookmarkFrame1: TBookmarkFrame
         Left = 0
         Top = 0

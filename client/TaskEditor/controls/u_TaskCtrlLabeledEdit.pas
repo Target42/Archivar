@@ -14,11 +14,15 @@ type
       function CtrlValue : string; override;
       procedure setCtrlValue( value : string ); override;
       procedure colorRequired; override;
+      procedure setReadOnly( value : boolean ); override;
+      function  getReadOnly : boolean; override;
     private
 
     public
       constructor Create(owner : ITaskForm);
       destructor Destroy; override;
+
+      procedure clearContent( recursive : boolean ); override;
   end;
 
 implementation
@@ -29,6 +33,15 @@ uses
 
 { TaskCtrlLabeledEdit }
 
+procedure TaskCtrlLabeledEdit.clearContent(recursive: boolean);
+begin
+  inherited;
+  if not Assigned(m_ctrl) then
+    exit;
+
+    (m_ctrl as TLabeledEdit).Text := '';
+end;
+
 procedure TaskCtrlLabeledEdit.colorRequired;
 var
   ed : TLabeledEdit;
@@ -38,7 +51,7 @@ begin
 
   ed := m_ctrl as TLabeledEdit;
   if m_required then
-    ed.Color := TColor( RGB(255, 200, 200))
+    ed.Color := req
   else
     ed.Color := clWindow;
 end;
@@ -75,6 +88,14 @@ begin
 
 end;
 
+function TaskCtrlLabeledEdit.getReadOnly: boolean;
+begin
+  Result := false;
+  if Assigned(m_ctrl) then
+    Result := (m_ctrl as TLabeledEdit).ReadOnly;
+
+end;
+
 function TaskCtrlLabeledEdit.newControl(parent: TWinControl; x,
   y: Integer): TControl;
 var
@@ -86,6 +107,7 @@ begin
   ed.EditLabel.Caption := ed.Name;
   ed.Top  := y;
   ed.Left := X;
+  ed.OnKeyPress := KeyPress;
   Result := ed;
 end;
 
@@ -104,6 +126,12 @@ begin
   if Assigned(m_ctrl) then
     (m_ctrl as TLabeledEdit).Text := value;
 
+end;
+
+procedure TaskCtrlLabeledEdit.setReadOnly(value: boolean);
+begin
+  if Assigned(m_ctrl) then
+    (m_ctrl as TLabeledEdit).ReadOnly := value;
 end;
 
 end.

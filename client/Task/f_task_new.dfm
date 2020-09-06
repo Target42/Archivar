@@ -1,7 +1,7 @@
 object Taskform: TTaskform
   Left = 0
   Top = 0
-  ActiveControl = LV
+  ActiveControl = LVType
   Caption = 'Aufgabe'
   ClientHeight = 285
   ClientWidth = 362
@@ -22,7 +22,7 @@ object Taskform: TTaskform
     Top = 0
     Width = 362
     Height = 285
-    ActivePage = Gremium
+    ActivePage = AufgabenTypen
     ButtonBarHeight = 42
     ButtonStart.Caption = 'To &Start Page'
     ButtonStart.NumGlyphs = 1
@@ -38,6 +38,7 @@ object Taskform: TTaskform
     ButtonNext.Width = 75
     ButtonFinish.Caption = '&Finish'
     ButtonFinish.NumGlyphs = 1
+    ButtonFinish.ModalResult = 1
     ButtonFinish.Width = 75
     ButtonCancel.Caption = 'Abbrechen'
     ButtonCancel.NumGlyphs = 1

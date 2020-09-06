@@ -247,28 +247,10 @@ begin
 end;
 
 procedure TTaksEditorForm.loadFromStream(st: TStream ; tname : string);
-var
-  zip   : TZipFile;
 begin
-  m_tc := TTaskContainerImpl.create;
-  if st.Size <> 0 then begin
-    zip := TZipFile.Create;
-    try
-      zip.Open( st, zmRead );
-      m_tc.loadFromZip(zip);
-    finally
-      zip.Free;
-    end;
-  end
-  else begin
-
-  end;
-  st.Free;
-  if Assigned(m_tc.Task) then
-    m_tc.Task.Name := tname;
+  m_tc := loadTaskContainer( st, name );
 
   CheckDefaultStype;
-
   setTaskContainer(m_tc);
 end;
 

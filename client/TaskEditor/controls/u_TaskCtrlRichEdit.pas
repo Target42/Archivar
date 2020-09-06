@@ -12,11 +12,16 @@ type
       function  newControl(parent : TWinControl; x, y : Integer) :  TControl; override;
       procedure doSetMouse( md : TControlMouseDown; mv : TControlMouseMove; mu : TControlMouseUp ); override;
       function CtrlValue : string; override;
+      procedure setReadOnly( value : boolean ); override;
+      function  getReadOnly : boolean; override;
+
     private
 
     public
       constructor Create(owner : ITaskForm);
       destructor Destroy; override;
+
+      procedure clearContent( recursive : boolean ); override;
   end;
 
 implementation
@@ -27,6 +32,15 @@ uses
 
 
 { TaskCtrlRichEdit }
+
+procedure TaskCtrlRichEdit.clearContent(recursive: boolean);
+begin
+  inherited;
+  if not Assigned(m_ctrl) then
+    exit;
+
+  (m_ctrl as TRichEdit).Lines.Clear;
+end;
 
 constructor TaskCtrlRichEdit.Create(owner: ITaskForm);
 begin
@@ -60,6 +74,14 @@ begin
   ( m_ctrl as TRichEdit).OnMouseMove  := mv;
 end;
 
+function TaskCtrlRichEdit.getReadOnly: boolean;
+begin
+  Result := false;
+  if Assigned(m_ctrl) then
+    Result := (m_ctrl as TRichEdit).ReadOnly;
+
+end;
+
 function TaskCtrlRichEdit.newControl(parent: TWinControl; x,
   y: Integer): TControl;
 var
@@ -72,6 +94,7 @@ begin
   ed.Left := X;
   ed.WordWrap := true;
   ed.ScrollBars := ssVertical;
+  ed.OnKeyPress := KeyPress;
 
   Result := ed;
 end;
@@ -81,6 +104,13 @@ begin
   inherited;
   m_props.Add(TaskCtrlPropImpl.create(self, 'Text',       'TStrings'));
   m_props.Add(TaskCtrlPropImpl.create(self, 'Datafield',  'TaskDataField'));
+end;
+
+procedure TaskCtrlRichEdit.setReadOnly(value: boolean);
+begin
+  if Assigned(m_ctrl) then
+    (m_ctrl as TRichEdit).ReadOnly := value;
+
 end;
 
 end.

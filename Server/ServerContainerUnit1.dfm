@@ -108,13 +108,6 @@ object ServerContainer1: TServerContainer1
     Left = 328
     Top = 248
   end
-  object dsEinstellung: TDSServerClass
-    OnGetClass = dsEinstellungGetClass
-    Server = DSServer1
-    LifeCycle = 'Invocation'
-    Left = 256
-    Top = 64
-  end
   object dsMisc: TDSServerClass
     OnGetClass = dsMiscGetClass
     Server = DSServer1

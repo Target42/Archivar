@@ -87,6 +87,7 @@ begin
   begin
     Session := TDSSessionManager.GetThreadSession;
     Result := info.getJSON;
+    DebugMsg(Format('%s %d %d', ['TLockMod.isLocked: is locked', id, typ]));
     JResponse( Result, true, 'Das Dokument ist von '+info.User+' gesperrt');
     JReplace( Result, 'self', session.Id = info.SessionID);
   end
@@ -94,6 +95,7 @@ begin
   begin
     Result := TJSONObject.Create;
     JResult( Result, false, 'Das Dokument ist nicht gesperrt');
+    DebugMsg(Format('%s %d %d', ['TLockMod.isLocked: is NOT locked', id, typ]));
   end;
 
   m_locks[typ].UnlockList;
@@ -110,6 +112,7 @@ begin
   if Assigned( info) then
   begin
     Result := info.getJSON;
+    DebugMsg(Format('%s %d %d', ['TLockMod.LockDocument: is locked', id, typ]));
     JResult( Result, false, 'Das Dokument ist bereits gesperrt');
   end
   else
@@ -126,6 +129,7 @@ begin
     info.User       := session.GetData('user');
 
     Result := info.getJSON;
+    DebugMsg(Format('%s %d %d', ['TLockMod.LockDocument: is NOW locked', id, typ]));
     JResult( Result, true, 'Das Dokument wurde gesperrt');
   end;
   m_locks[typ].UnlockList;
@@ -167,17 +171,20 @@ begin
     begin
       Result := info.getJSON;
       JResponse( Result, true, 'Das Dokument wurde freigegeben.');
+      DebugMsg(Format('%s %d %d', ['TLockMod.UnLockDocument: is unlocked', id, typ]));
       list.Remove(info);
     end
     else
     begin
       Result := info.getJSON;
       JResponse( Result, false, 'Das Dokument ist in einer anderen Sitzung gesperrt');
+      DebugMsg(Format('%s %d %d', ['TLockMod.UnLockDocument: locked in differend session', id, typ]));
     end;
   end
   else
   begin
     Result := TJSONObject.Create;
+    DebugMsg(Format('%s %d %d', ['TLockMod.UnLockDocument: is not locked', id, typ]));
     JResult( Result, false, 'Das Dokument ist nicht gesperrt');
   end;
 

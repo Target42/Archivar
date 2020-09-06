@@ -141,11 +141,6 @@
             <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
-        <DCCReference Include="Einstellung\fr_einstellung.pas">
-            <Form>Einstellungsframe</Form>
-            <FormType>dfm</FormType>
-            <DesignClass>TFrame</DesignClass>
-        </DCCReference>
         <DCCReference Include="Task\fr_task_head.pas">
             <Form>TaskHeaderFrame</Form>
             <FormType>dfm</FormType>
@@ -159,7 +154,6 @@
             <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
-        <DCCReference Include="misc\u_ITaskType.pas"/>
         <DCCReference Include="Gremium\u_gremium.pas"/>
         <DCCReference Include="Task\fr_taskList.pas">
             <Form>TaskListFrame</Form>
@@ -387,6 +381,10 @@
         <DCCReference Include="Beschlus\u_AbstimmungenImpl.pas"/>
         <DCCReference Include="Beschlus\u_BeschlussImpl.pas"/>
         <DCCReference Include="..\misc\xsd_DataField.pas"/>
+        <DCCReference Include="misc\f_set.pas">
+            <Form>Form1</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <None Include="Datafields\ERA-NS.txt"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

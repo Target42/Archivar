@@ -13,11 +13,15 @@ type
       procedure doSetMouse( md : TControlMouseDown; mv : TControlMouseMove; mu : TControlMouseUp ); override;
 
       function CtrlValue : string; override;
+      procedure setReadOnly( value : boolean ); override;
+      function  getReadOnly : boolean; override;
     private
 
     public
       constructor Create(owner : ITaskForm);
       destructor Destroy; override;
+
+      procedure clearContent( recursive : boolean ); override;
   end;
 
 implementation
@@ -26,6 +30,15 @@ uses
   Vcl.StdCtrls, Winapi.Windows, System.SysUtils, u_TaskCtrlPropImpl;
 
 { TaskCtrlMemo }
+
+procedure TaskCtrlMemo.clearContent(recursive: boolean);
+begin
+  inherited;
+  if not Assigned(m_ctrl) then
+    exit;
+
+  (m_ctrl as TMemo).Lines.Clear;
+end;
 
 constructor TaskCtrlMemo.Create(owner: ITaskForm);
 begin
@@ -59,6 +72,13 @@ begin
   ( m_ctrl as TMemo).OnMouseMove  := mv;
 end;
 
+function TaskCtrlMemo.getReadOnly: boolean;
+begin
+  Result := false;
+  if Assigned(m_ctrl) then
+    Result := (m_ctrl as TMemo).ReadOnly;
+end;
+
 function TaskCtrlMemo.newControl(parent: TWinControl; x, y: Integer): TControl;
 var
   ed : TMemo;
@@ -71,6 +91,7 @@ begin
   ed.WordWrap := true;
   ed.ScrollBars := ssVertical;
   ed.Lines.Text := '';
+  ed.OnKeyPress := KeyPress;
 
   Result := ed;
 end;
@@ -80,6 +101,12 @@ begin
   inherited;
   m_props.Add(TaskCtrlPropImpl.create(self, 'Text',       'string'));
   m_props.Add(TaskCtrlPropImpl.create(self, 'Datafield',  'TaskDataField'));
+end;
+
+procedure TaskCtrlMemo.setReadOnly(value: boolean);
+begin
+  if Assigned(m_ctrl) then
+    (m_ctrl as TMemo).ReadOnly := value;
 end;
 
 end.

@@ -4,8 +4,10 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.ComCtrls, u_ITaskType, fr_file, System.Actions,
-  Vcl.ActnList, Vcl.Menus;
+  Vcl.Controls, Vcl.Forms, Vcl.ComCtrls, fr_file, System.Actions,
+  Vcl.ActnList, Vcl.Menus, i_taskEdit, Data.DB, Datasnap.DBClient,
+  Datasnap.DSConnect, JvExMask, JvToolEdit, JvMaskEdit, JvCheckedMaskEdit,
+  JvDatePickerEdit, JvDBDatePickerEdit, Vcl.StdCtrls, Vcl.Mask, Vcl.DBCtrls;
 
 type
   TTaskEditForm = class(TForm)
@@ -20,11 +22,41 @@ type
     ac_bearbeiten: TAction;
     ac_save: TAction;
     Bearbeiten1: TMenuItem;
-    ScrollBox1: TScrollBox;
     N1: TMenuItem;
     Lesezeichenerstellen1: TMenuItem;
     ac_unlock: TAction;
     Bearbeitenbeenden1: TMenuItem;
+    TaskSrc: TDataSource;
+    TaskTab: TClientDataSet;
+    DSProviderConnection1: TDSProviderConnection;
+    GroupBox1: TGroupBox;
+    DBEdit1: TDBEdit;
+    Label1: TLabel;
+    DBEdit2: TDBEdit;
+    Label2: TLabel;
+    Label3: TLabel;
+    JvDBDatePickerEdit1: TJvDBDatePickerEdit;
+    Label4: TLabel;
+    DBEdit3: TDBEdit;
+    Label5: TLabel;
+    DBEdit4: TDBEdit;
+    TemplateTab: TClientDataSet;
+    TaskTabTE_ID: TIntegerField;
+    TaskTabTA_ID: TIntegerField;
+    TaskTabTY_ID: TIntegerField;
+    TaskTabTA_STARTED: TDateField;
+    TaskTabTA_CREATED: TDateTimeField;
+    TaskTabTA_NAME: TWideStringField;
+    TaskTabTA_DATA: TBlobField;
+    TaskTabTA_CREATED_BY: TWideStringField;
+    TaskTabTA_TERMIN: TDateField;
+    TaskTabTA_CLID: TWideStringField;
+    TaskTabTA_FLAGS: TIntegerField;
+    TaskTabTA_STATUS: TWideStringField;
+    TaskTabTA_REST: TStringField;
+    GroupBox2: TGroupBox;
+    ScrollBox1: TScrollBox;
+    Label6: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -32,16 +64,38 @@ type
     procedure ac_bearbeitenExecute(Sender: TObject);
     procedure Lesezeichenerstellen1Click(Sender: TObject);
     procedure ac_unlockExecute(Sender: TObject);
+    procedure TaskTabTA_RESTGetText(Sender: TField; var Text: string;
+      DisplayText: Boolean);
+    procedure TaskTabReconcileError(DataSet: TCustomClientDataSet;
+      E: EReconcileError; UpdateKind: TUpdateKind;
+      var Action: TReconcileAction);
+    procedure TaskTabPostError(DataSet: TDataSet; E: EDatabaseError;
+      var Action: TDataAction);
+    procedure DBEdit1KeyPress(Sender: TObject; var Key: Char);
+    procedure JvDBDatePickerEdit1Change(Sender: TObject);
   private
     m_ta_id : integer;
     m_ty_id : integeR;
-    m_edit  : ITaskType;
+
+    m_form  : ITaskForm;
+    m_tc    : ITaskContainer;
+
     m_ro    : boolean;
+    m_changed : boolean;
+
     procedure setRO( value : boolean );
     function  getRO : boolean;
+
+    function changed : boolean;
+    procedure save;
+    procedure cancel;
+
+    procedure LoadTemplate(teid : integer );
+    procedure LoadData;
   public
-    procedure setID( ta_id, ty_id : integer );
+    procedure setID( ta_id, ty_id: integer );
     property RO : Boolean read getRO write setRO;
+
     procedure LockCheck;
   end;
 
@@ -51,8 +105,9 @@ var
 implementation
 
 uses
-  fr_einstellung, m_WindowHandler, Vcl.Dialogs, m_glob_client, System.UITypes,
-  System.JSON, u_json, u_bookmark, u_berTypes;
+  m_WindowHandler, Vcl.Dialogs, m_glob_client, System.UITypes,
+  System.JSON, u_json, u_bookmark, u_berTypes, m_BookMarkHandler, DateUtils,
+  u_taskForm2XML;
 
 {$R *.dfm}
 
@@ -91,6 +146,26 @@ begin
 
 end;
 
+procedure TTaskEditForm.cancel;
+begin
+    TaskTab.Cancel;
+end;
+
+function TTaskEditForm.changed: boolean;
+begin
+  Result := m_changed;
+  if not Result then
+  begin
+    if Assigned(m_form) then
+      Result := m_form.Changed;
+  end;
+end;
+
+procedure TTaskEditForm.DBEdit1KeyPress(Sender: TObject; var Key: Char);
+begin
+  m_changed := true;
+end;
+
 procedure TTaskEditForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   Action := caFree;
@@ -98,40 +173,35 @@ end;
 
 procedure TTaskEditForm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
-  if Assigned(m_edit) then
+  if changed then
   begin
-    if m_edit.changed then
-    begin
-      case MessageDlg('Die Daten wurden geändert.'+#13+#10+
-                      ''+#13+#10+
-                      'Änderungen speichern (Ja)'+#13+#10+
-                      'Änderungen verwerfen (Nein)'+#13+#10+
-                      'Im Dialog bleiben (Abbrechen)'+#13+#10+'',
-                       mtConfirmation, [mbYes, mbNo, mbCancel], 0) of
-        mrYes :
-        begin
-          m_edit.Post;
-          CanClose := true;
-        end;
-        mrNo :
-        begin
-          m_edit.cancel;
-          CanClose := true;
-        end;
-        else
-          CanClose := false;
+    case MessageDlg('Die Daten wurden geändert.'+#13+#10+
+                    ''+#13+#10+
+                    'Änderungen speichern (Ja)'+#13+#10+
+                    'Änderungen verwerfen (Nein)'+#13+#10+
+                    'Im Dialog bleiben (Abbrechen)'+#13+#10+'',
+                     mtConfirmation, [mbYes, mbNo, mbCancel], 0) of
+      mrYes :
+      begin
+        save;
+        CanClose := true;
       end;
+      mrNo :
+      begin
+        cancel;
+        CanClose := true;
+      end;
+      else
+        CanClose := false;
     end;
-  end
-  else
-    CanClose := true;
-
+  end;
 end;
 
 procedure TTaskEditForm.FormCreate(Sender: TObject);
 begin
   PageControl1.ActivePage := TabSheet1;
-  m_edit := NIL;
+  m_form  := NIL;
+  m_tc    := NIL;
 end;
 
 procedure TTaskEditForm.FormDestroy(Sender: TObject);
@@ -140,9 +210,9 @@ begin
     GM.UnLockDocument(m_ta_id, integer(ltTask));
 
   FileFrame1.release;
-  if Assigned(m_edit) then
-    m_edit.release;
-  m_edit := NIL;
+
+  if Assigned(m_tc) then
+    m_tc.release;
 
   WindowHandler.closeTaskWindow(m_ta_id);
   PostMessage(Application.MainFormHandle, msgFilterTasks, 1, 0);
@@ -153,10 +223,66 @@ begin
   Result := m_ro;
 end;
 
-procedure TTaskEditForm.Lesezeichenerstellen1Click(Sender: TObject);
+procedure TTaskEditForm.JvDBDatePickerEdit1Change(Sender: TObject);
 begin
-  if Assigned(m_edit) then
-    m_edit.fillBookMark;
+  m_changed := true;
+end;
+
+procedure TTaskEditForm.Lesezeichenerstellen1Click(Sender: TObject);
+var
+  mark : TBookmark;
+begin
+  mark := BookMarkHandler.Bookmarks.newBookmark(TaskTab.FieldByName('TA_CLID').AsString);
+  mark.ID         := TaskTab.FieldByName('TA_ID').AsInteger;
+  mark.Titel      := TaskTab.FieldByName('TA_NAME').AsString;
+  mark.Group      := 'Einstellung';
+  mark.Internal   := false;
+  mark.TypeID     := integer(dstEinstellung);
+  mark.DocType    := dtTask;
+ PostMessage( Application.MainFormHandle, msgNewBookMark, 0, 0 );
+end;
+
+procedure TTaskEditForm.LoadData;
+var
+  st : TStream;
+  loader : TTaskForm2XML;
+begin
+  if not Assigned(m_form) then
+    exit;
+
+  st := TaskTab.CreateBlobStream(TaskTab.FieldByName('TA_DATA'), bmRead);
+  if st.Size > 0 then
+  begin
+    loader := TTaskForm2XML.create;
+    loader.load( st, m_form);
+    loader.Free;
+  end;
+  st.Free;
+
+  m_form.Changed := false;
+end;
+
+procedure TTaskEditForm.LoadTemplate(teid: integer);
+var
+  st  : TStream;
+begin
+  TemplateTab.Filter    := 'TE_ID = '+IntToStr(teid);
+  TemplateTab.Filtered  := true;
+  TemplateTab.Open;
+  if not TemplateTab.IsEmpty then
+  begin
+   st   := TemplateTab.CreateBlobStream(TemplateTab.FieldByName('TE_DATA'), bmRead);
+   m_tc := loadTaskContainer(st, TemplateTab.FieldByName('TE_NAME').AsString);
+   if Assigned(m_tc) then begin
+     m_form  := m_tc.Task.getMainForm;
+     if Assigned(m_form) then begin
+        m_form.Base.Control := ScrollBox1;
+        m_form.Base.build;
+        m_form.Base.clearContent(true);
+     end;
+   end;
+  end;
+  TemplateTab.Close;
 end;
 
 procedure TTaskEditForm.LockCheck;
@@ -171,28 +297,97 @@ begin
   end;
 end;
 
+procedure TTaskEditForm.save;
+var
+  writer  : TTaskForm2XML;
+  st      : TStream;
+  mem     : TMemoryStream;
+begin
+
+  mem := TMemoryStream.Create;
+  if Assigned(m_form) then
+  begin
+    writer := TTaskForm2XML.create;
+    writer.save(mem, m_form);
+    writer.Free;
+    mem.Position := 0;
+  end;
+
+  st := TaskTab.CreateBlobStream(TaskTab.FieldByName('TA_DATA'), bmWrite);
+  st.CopyFrom(mem, 0);
+  st.free;
+
+  mem.Free;
+
+  if (TaskTab.State = dsInsert) or ( TaskTab.State = dsEdit) then
+    TaskTab.Post;
+  if TaskTab.UpdatesPending then
+    TaskTab.ApplyUpdates(-1);
+end;
+
 procedure TTaskEditForm.setID(ta_id, ty_id: integer);
 
 begin
   m_ta_id := ta_id;
   m_ty_id := ty_id;
 
-  m_edit wird jetzt ein erzeugtes form
+  DSProviderConnection1.SQLConnection := GM.SQLConnection1;
 
-  if Assigned(m_edit) then
-  begin
-    m_edit.ID := ta_id;
-  end;
+  TaskTab.Open;
+
+  if TaskTab.Locate('TA_ID', VarArrayOf([m_ta_id]), []) then
+    TaskTab.Edit
+  else
+    TaskTab.Close;
+
+  LoadTemplate( TaskTab.FieldByName('TE_ID').AsInteger );
+  LoadData;
+
   FileFrame1.ID := ta_id;
 
+  m_changed := false;
 end;
 
 procedure TTaskEditForm.setRO(value: boolean);
 begin
-  m_ro := value;
-  if Assigned(m_edit) then
-    m_edit.RO := m_ro;
+  m_ro                        := value;
+  Bearbeiten1.Enabled         := m_ro;
+  Bearbeitenbeenden1.Enabled  := not m_ro;
+  GroupBox1.Enabled           := not m_ro;
+  Label6.Visible              := m_ro;
+
+  TaskTab.ReadOnly  := m_ro;
+
+  if Assigned(m_form) then
+    m_form.ReadOnly := m_ro;
   FileFrame1.RO := m_ro;
+end;
+
+procedure TTaskEditForm.TaskTabPostError(DataSet: TDataSet; E: EDatabaseError;
+  var Action: TDataAction);
+begin
+  ShowMessage(e.Message);
+end;
+
+procedure TTaskEditForm.TaskTabReconcileError(DataSet: TCustomClientDataSet;
+  E: EReconcileError; UpdateKind: TUpdateKind; var Action: TReconcileAction);
+begin
+  ShowMessage(e.Message);
+end;
+
+procedure TTaskEditForm.TaskTabTA_RESTGetText(Sender: TField; var Text: string;
+  DisplayText: Boolean);
+var
+  dif : integer;
+begin
+  dif := DaysBetween( TaskTab.FieldByName('TA_TERMIN').AsDateTime, Date);
+  if dif <= 0 then
+    DBEdit4.Font.Color := clRed
+  else if dif < 3  then
+    DBEdit4.Font.Style := [fsBold]
+  else
+    DBEdit4.Font.Color := clGreen;
+  Text := IntToStr( dif );
 end;
 
 end.

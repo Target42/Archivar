@@ -135,7 +135,7 @@ implementation
 
 uses
   System.Types, u_TaskFormImpl, u_taskForm2XML, f_testform, f_form_props, System.IOUtils,
-  f_selectList, Vcl.Dialogs;
+  f_selectList, Vcl.Dialogs, System.UITypes;
 
 {$R *.dfm}
 

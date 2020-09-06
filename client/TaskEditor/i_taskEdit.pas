@@ -4,7 +4,8 @@ interface
 
 uses
   i_datafields, System.Generics.Collections, Vcl.Controls, System.Classes,
-  Winapi.Windows, system.zip;
+  Winapi.Windows, system.zip, Vcl.Graphics;
+
 
 type
   TControlType = (ctNone,
@@ -55,6 +56,7 @@ type
     property Forms  : TList<ITaskForm> read getForms;
 //    property WorkDir: string read getWorkDir write setWorkDir;
 
+    function getMainForm : ITaskForm;
     function NewForm : ITaskForm;
     function getFormByCLID( clid : string ) : ITaskForm;
 
@@ -69,6 +71,11 @@ type
     procedure setCLID( value : string );
     function  getCLID : string;
 
+    procedure setChanged( value : boolean );
+    function  getChanged : boolean;
+    procedure setReadOnly( value : boolean );
+    function  getReadOnly : boolean;
+
     procedure setMainForm( value : boolean );
     function  getMainForm : Boolean;
 
@@ -77,12 +84,17 @@ type
   //public
     property Name  : string read getName write setName;
 
-    property Owner  : ITask read getOwner;
-    property CLID   : string read getCLID write setCLID;
+    property Owner    : ITask read getOwner;
+    property CLID     : string read getCLID write setCLID;
     property MainForm : boolean read getMainForm write setMainForm;
     property Base     : ITaskCtrl read getBase;
 
+    property Changed  : boolean read getChanged write setChanged;
+    property ReadOnly : boolean read getReadOnly write setReadOnly;
+
     procedure release;
+    procedure clearContent;
+
     function newControl : ITaskCtrl;
 
     function createControl( parent : TControl; newType : TControlType; x, y : integer ) : ITaskCtrl;
@@ -111,6 +123,12 @@ type
     function  getControlClass : string;
     function  getOwner : ITaskForm;
 
+    procedure setChanged( value : boolean );
+    function  getChanged : boolean;
+
+    procedure setReadOnly( value : boolean );
+    function  getReadOnly : boolean;
+
     function getTableCtrlIF : ITaskCtrlTable;
     function getTyp : TControlType;
   // public
@@ -127,6 +145,9 @@ type
     property TableCtrlIF    : ITaskCtrlTable        read getTableCtrlIF;
 
     property Required       : boolean               read getRequired      write setRequired;
+
+    property Changed        : boolean               read getChanged       write setChanged;
+    property ReadOnly       : boolean               read getReadOnly      write setReadOnly;
 
     procedure release;
 
@@ -158,6 +179,8 @@ type
     procedure dropControls;
     procedure drop;
     procedure updateControl;
+
+    procedure clearContent( recursive : boolean );
   end;
 
   ITaskCtrlProp   = interface
@@ -356,8 +379,39 @@ type
   end;
 
 
+function loadTaskContainer( st : TStream;  name : string ) : ITaskContainer;
+
+var
+  req : TColor ;
+
+
 implementation
 
+uses
+  u_TTaskContainerImpl;
+
+
+function loadTaskContainer( st : TStream;  name : string ) : ITaskContainer;
+var
+  zip   : TZipFile;
+begin
+  REsult := TTaskContainerImpl.create;
+  if st.Size <> 0 then begin
+    zip := TZipFile.Create;
+    try
+      zip.Open( st, zmRead );
+      Result.loadFromZip(zip);
+    finally
+      zip.Free;
+    end;
+  end;
+  st.Free;
+  if Assigned(Result.Task) then
+    Result.Task.Name := name;
+end;
+
+initialization
+  req := TColor( RGB(255, 220, 220));
 end.
 
 

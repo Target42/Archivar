@@ -14,6 +14,8 @@ type
       procedure doSetMouse( md : TControlMouseDown; mv : TControlMouseMove; mu : TControlMouseUp ); override;
 
       function getTableCtrlIF : ITaskCtrlTable; override;
+      procedure setReadOnly( value : boolean ); override;
+      function  getReadOnly : boolean; override;
     private
       m_sg : TStringGrid;
       function getCell( row, col : integer) : string;
@@ -35,6 +37,8 @@ type
       function ColCount : integer;
       procedure deleteRow( row : integer );
       function ColDatafield( col : integer ) : string;
+
+      procedure clearContent( recursive : boolean ); override;
   end;
 
 implementation
@@ -56,6 +60,18 @@ begin
 
   renumber;
   Result := m_sg.RowCount;
+end;
+
+procedure TaskCtrlTable.clearContent(recursive: boolean);
+var
+  x, y : integer;
+begin
+  inherited;
+  if not Assigned(m_sg) then
+    exit;
+  for y := 1 to pred(m_sg.RowCount) do
+    for x := 1 to pred(m_sg.ColCount) do
+      m_sg.Cells[x, y] := '';
 end;
 
 function TaskCtrlTable.ColCount: integer;
@@ -125,6 +141,14 @@ begin
   Result := m_sg.Cells[ col, row ];
 end;
 
+function TaskCtrlTable.getReadOnly: boolean;
+begin
+  Result := false;
+  if Assigned(m_ctrl) then
+    Result := (m_ctrl as TStringGrid).Enabled;
+
+end;
+
 function TaskCtrlTable.getRowCount: integer;
 begin
   Result := 0;
@@ -144,6 +168,7 @@ begin
   m_sg.Parent := parent as TWinControl;
   m_sg.Name := 'Table'+intToStr(GetTickCount);
 
+  m_sg.OnKeyPress := KeyPress;
   m_sg.Top  := y;
   m_sg.Left := X;
   m_sg.Options := [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine,
@@ -174,6 +199,12 @@ begin
   inherited;
   m_props.Add(TaskCtrlPropImpl.create(self, 'Fields',   'TFields'));
   m_props.Add(TaskCtrlPropImpl.create(self, 'Datafield',  'TaskDataField'));
+end;
+
+procedure TaskCtrlTable.setReadOnly(value: boolean);
+begin
+  if Assigned(m_ctrl) then
+    (m_ctrl as TStringGrid).Enabled := not value;
 end;
 
 procedure TaskCtrlTable.setRowCount(value: integer);

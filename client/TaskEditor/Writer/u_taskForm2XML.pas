@@ -3,7 +3,7 @@ unit u_taskForm2XML;
 interface
 
 uses
-  i_taskEdit, xsd_TaskData;
+  i_taskEdit, xsd_TaskData, System.Classes;
 
 type
   TTaskForm2XML = class
@@ -21,8 +21,11 @@ type
       Destructor Destroy; override;
 
       procedure fromText( text : string; form : ITaskForm );
-      procedure load( name : string; form : ITaskForm );
-      function  save( name : string; form : ITaskForm ) : Boolean;
+      procedure load( name : string; form : ITaskForm ); overload;
+      procedure load( st : TStream ; form : ITaskForm ); overload;
+
+      function  save( name : string; form : ITaskForm ) : Boolean; overload;
+      function  save( st : TStream; form : ITaskForm ) : boolean; overload;
 
       function  getXML(form : ITaskForm ) : IXMLList;
   end;
@@ -102,6 +105,20 @@ begin
   doLoad( form);
 end;
 
+procedure TTaskForm2XML.load(st: TStream; form: ITaskForm);
+var
+  xml: IXMLDocument;
+begin
+  try
+    xml := NewXMLDocument;
+    xml.LoadFromStream(st);
+    m_xlist := xml.GetDocBinding('List', TXMLList, TargetNamespace) as IXMLList;
+  except
+    m_xList := NewList;
+  end;
+  doLoad( form);
+end;
+
 procedure TTaskForm2XML.loadTable(xTab: IXMLTable; form : ITaskForm);
 var
   ctrl : ITaskCtrl;
@@ -150,6 +167,26 @@ begin
     end;
   end;
   dataFieldMap.Free;
+end;
+
+function TTaskForm2XML.save(st: TStream; form: ITaskForm): boolean;
+begin
+  Result := false;
+  m_xList := NewList;
+
+  m_xList.Clid := form.CLID;
+  m_xList.Taskclid := form.Owner.CLID;
+
+  if Assigned(form) then
+  begin
+    SaveControl( form.Base );
+  end;
+  try
+    m_xList.OwnerDocument.SaveToStream(st);
+    Result := st.Size <> 0 ;
+  except
+
+  end;
 end;
 
 function TTaskForm2XML.save(name: string; form: ITaskForm): Boolean;

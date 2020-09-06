@@ -15,11 +15,9 @@ uses
   f_gremium_MA_form in 'Gremium\f_gremium_MA_form.pas' {GremiumMAForm},
   f_task_new in 'Task\f_task_new.pas' {Taskform},
   fr_file in 'File\fr_file.pas' {FileFrame: TFrame},
-  fr_einstellung in 'Einstellung\fr_einstellung.pas' {Einstellungsframe: TFrame},
   fr_task_head in 'Task\fr_task_head.pas' {TaskHeaderFrame: TFrame},
   f_taskEdit in 'Task\f_taskEdit.pas' {TaskEditForm},
   fr_gremiumTree in 'misc\fr_gremiumTree.pas' {GremiumTreeFrame: TFrame},
-  u_ITaskType in 'misc\u_ITaskType.pas',
   u_gremium in 'Gremium\u_gremium.pas',
   fr_taskList in 'Task\fr_taskList.pas' {TaskListFrame: TFrame},
   m_WindowHandler in 'misc\m_WindowHandler.pas' {WindowHandler: TDataModule},
@@ -116,7 +114,8 @@ uses
   u_AbstimmungImpl in 'Beschlus\u_AbstimmungImpl.pas',
   u_AbstimmungenImpl in 'Beschlus\u_AbstimmungenImpl.pas',
   u_BeschlussImpl in 'Beschlus\u_BeschlussImpl.pas',
-  xsd_DataField in '..\misc\xsd_DataField.pas';
+  xsd_DataField in '..\misc\xsd_DataField.pas',
+  f_set in 'misc\f_set.pas' {Form1};
 
 {$R *.res}
 
@@ -134,5 +133,6 @@ begin
   Application.CreateForm(TWindowHandler, WindowHandler);
   Application.CreateForm(TBookMarkHandler, BookMarkHandler);
   Application.CreateForm(TMainForm, MainForm);
+  Application.CreateForm(TForm1, Form1);
   Application.Run;
 end.

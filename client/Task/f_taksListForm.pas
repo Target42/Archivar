@@ -35,7 +35,7 @@ end;
 
 procedure TTaskListForm.FormCreate(Sender: TObject);
 begin
-  TaskListFrame1.DBGrid1.OnDblClick := NIL;
+  TaskListFrame1.LV.OnDblClick := NIL;
 end;
 
 procedure TTaskListForm.setGremium(value: TGremium);

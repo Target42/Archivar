@@ -25,7 +25,7 @@ object dsTask: TdsTask
   end
   object TaskTypes: TDataSetProvider
     DataSet = TaskTypesQry
-    Left = 48
+    Left = 56
     Top = 136
   end
   object TaskTab: TIBTable
@@ -34,6 +34,7 @@ object dsTask: TdsTask
     BufferChunks = 1000
     CachedUpdates = False
     TableName = 'TA_TASK'
+    UpdateObject = IBUpdateSQL1
     UniDirectional = False
     Left = 136
     Top = 88
@@ -379,5 +380,49 @@ object dsTask: TdsTask
     DataSet = Templates
     Left = 304
     Top = 408
+  end
+  object Template: TIBTable
+    Database = DBMod.IBDatabase1
+    Transaction = IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    TableName = 'TE_TEMPLATE'
+    UniDirectional = False
+    Left = 592
+    Top = 328
+  end
+  object TemplateTab: TDataSetProvider
+    DataSet = Template
+    Left = 592
+    Top = 400
+  end
+  object IBUpdateSQL1: TIBUpdateSQL
+    Left = 192
+    Top = 232
+  end
+  object TaskTable: TIBTable
+    Database = DBMod.IBDatabase1
+    Transaction = IBTransaction2
+    BufferChunks = 1000
+    CachedUpdates = False
+    TableName = 'TA_TASK'
+    UniDirectional = False
+    Left = 624
+    Top = 32
+  end
+  object IBTransaction2: TIBTransaction
+    DefaultDatabase = DBMod.IBDatabase1
+    Params.Strings = (
+      'read_committed'
+      'rec_version'
+      'nowait')
+    Left = 624
+    Top = 152
+  end
+  object TaskTableSrc: TDataSetProvider
+    DataSet = TaskTable
+    UpdateMode = upWhereKeyOnly
+    Left = 624
+    Top = 80
   end
 end

@@ -17,7 +17,6 @@ uses
   ds_Gremium in 'ds_Gremium.pas' {dsGremium: TDSServerModule},
   ds_person in 'ds_person.pas' {dsPerson: TDSServerModule},
   ds_taks in 'ds_taks.pas' {dsTask: TDSServerModule},
-  ds_einstellung in 'ds_einstellung.pas' {dsEinstellung: TDSServerModule},
   ds_file in 'ds_file.pas' {dsFile: TDSServerModule},
   ds_misc in 'ds_misc.pas' {dsMisc: TDSServerModule},
   u_json in '..\misc\u_json.pas',

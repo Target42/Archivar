@@ -6,7 +6,7 @@ uses
   System.SysUtils, System.Classes, Datasnap.DSServer, 
   Datasnap.DSAuth, Datasnap.DSProviderDataModuleAdapter, Datasnap.Provider,
   IBX.IBDatabase, Data.DB, IBX.IBCustomDataSet, IBX.IBQuery, System.JSON,
-  IBX.IBTable;
+  IBX.IBTable, IBX.IBUpdateSQL;
 
 type
   [TRoleAuth('user,admin')]
@@ -37,6 +37,12 @@ type
     DelEinstellung: TIBQuery;
     Templates: TIBQuery;
     TemplatesQry: TDataSetProvider;
+    Template: TIBTable;
+    TemplateTab: TDataSetProvider;
+    IBUpdateSQL1: TIBUpdateSQL;
+    TaskTable: TIBTable;
+    IBTransaction2: TIBTransaction;
+    TaskTableSrc: TDataSetProvider;
   private
     { Private declarations }
 
@@ -73,6 +79,7 @@ begin
   Result := LockMod.isLocked( taid, integer(ltTask));
   if Jbool( Result, 'result') then
   begin
+    DebugMsg('TdsTask.AssignGremium document is locked!');
     JReplace( Result, 'result', false);
     exit;
   end;
@@ -87,10 +94,12 @@ begin
     begin
       TATab.Append;
       TATab.FieldByName('TA_ID').AsInteger := taid;
+      DebugMsg('TdsTask.AssignGremium new task created!');
     end
     else
     begin
       TATab.Edit;
+      DebugMsg('TdsTask.AssignGremium edit');
     end;
     TATab.FieldByName('gr_id').AsInteger := grid;
     TATab.Post;
@@ -293,6 +302,7 @@ end;
 function TdsTask.newTask(data: TJSONObject): TJSONObject;
 begin
   Result := NIL;
+  DebugMsg('TdsTask.newTask not supported!');
 end;
 
 procedure TdsTask.setFlags(taid, flags: integer);
@@ -311,6 +321,7 @@ end;
 function TdsTask.TaskInfo(data: TJSONObject): TJSONObject;
 begin
   Result := NIL;
+  DebugMsg('TdsTask.TaskInfo not supported!');
 end;
 
 end.

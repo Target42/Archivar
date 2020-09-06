@@ -23,6 +23,7 @@ type
     m_canContainData : boolean;
     m_isContainer    : boolean;
     m_required  : boolean;
+    m_changed   : boolean;
 
     procedure setControlTypeProps; virtual;
     function  newControl(parent : TWinControl; x, y : Integer) :  TControl; virtual;
@@ -40,6 +41,13 @@ type
     procedure setDataField( value : IDataField ); virtual;
     function  getDataField : IDataField;
 
+    procedure setChanged( value : boolean ); virtual;
+    function  getChanged : boolean; virtual;
+
+    procedure setReadOnly( value : boolean ); virtual;
+    function  getReadOnly : boolean; virtual;
+
+    procedure KeyPress(Sender: TObject; var Key: Char);
   private
 
     function  getChilds : TList<ITaskCtrl>;
@@ -87,6 +95,8 @@ type
 
     procedure dropControls; virtual;
     procedure drop;
+
+    procedure clearContent( recursive : boolean ); virtual;
 
     procedure up;
     procedure down;
@@ -148,6 +158,22 @@ begin
   end;
 end;
 
+procedure TaskCtrlImpl.clearContent(recursive: boolean);
+var
+  i : integer;
+begin
+  if Assigned(m_ctrl)  then
+  begin
+
+  end;
+
+  if recursive then
+  begin
+    for i := 0 to pred(m_list.Count) do
+      m_list[i].clearContent(recursive);
+  end;
+end;
+
 procedure TaskCtrlImpl.colorRequired;
 begin
 
@@ -172,7 +198,7 @@ begin
   m_canContainData := false;
   m_isContainer := false;
   m_required  := false;
-
+  m_changed   := false;
 end;
 
 function TaskCtrlImpl.CtrlValue: string;
@@ -312,6 +338,11 @@ begin
   end;
 end;
 
+function TaskCtrlImpl.getChanged: boolean;
+begin
+  Result := m_changed;
+end;
+
 function TaskCtrlImpl.getChilds: TList<ITaskCtrl>;
 begin
   Result := m_list;
@@ -374,6 +405,11 @@ begin
   Result := m_props;
 end;
 
+function TaskCtrlImpl.getReadOnly: boolean;
+begin
+  Result := false;
+end;
+
 function TaskCtrlImpl.getRequired: boolean;
 begin
   Result := m_required;
@@ -392,6 +428,11 @@ end;
 function TaskCtrlImpl.isContainer: boolean;
 begin
   Result := m_isContainer;
+end;
+
+procedure TaskCtrlImpl.KeyPress(Sender: TObject; var Key: Char);
+begin
+  m_changed := true;
 end;
 
 function TaskCtrlImpl.NewChild( clName : string ): ITaskCtrl;
@@ -443,6 +484,11 @@ begin
     m_props[i].release;
   m_props.Clear;
 
+end;
+
+procedure TaskCtrlImpl.setChanged(value: boolean);
+begin
+  m_changed := false;
 end;
 
 procedure TaskCtrlImpl.setCLID(value: string);
@@ -532,6 +578,11 @@ end;
 procedure TaskCtrlImpl.setParent(value: ITaskCtrl);
 begin
   m_parent := value;
+end;
+
+procedure TaskCtrlImpl.setReadOnly(value: boolean);
+begin
+
 end;
 
 procedure TaskCtrlImpl.setRequired(value: boolean);
