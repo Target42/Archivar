@@ -4,7 +4,8 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_chapter, fr_base, u_titel;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_chapter, fr_base, u_titel,
+  Datasnap.DSConnect;
 
 type
   TChapterContentForm = class(TForm)
@@ -44,7 +45,7 @@ end;
 
 procedure TChapterContentForm.FormCreate(Sender: TObject);
 begin
-  ChapterFrame1.prepare;
+  ChapterFrame1.prepare( nil );
 end;
 
 procedure TChapterContentForm.FormDestroy(Sender: TObject);
@@ -64,5 +65,6 @@ begin
   ChapterFrame1.CP_ID := m_cp.ID;
   ChapterFrame1.Label2.Caption := m_cp.Text;
 end;
+
 
 end.

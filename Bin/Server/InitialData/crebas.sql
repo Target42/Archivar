@@ -1,7 +1,7 @@
 /* ============================================================ */
 /*   Database name:  MODEL_2                                    */
 /*   DBMS name:      InterBase                                  */
-/*   Created on:     05.08.2020  20:31                          */
+/*   Created on:     11.09.2020  17:47                          */
 /* ============================================================ */
 
 create generator gen_be_id;
@@ -15,6 +15,7 @@ create generator gen_pi_id;
 create generator gen_pe_id;
 create generator gen_pr_id;
 create generator gen_ta_id;
+create generator gen_tb_id;
 create generator gen_te_id;
 create generator gen_tg_id;
 create generator gen_tn_id;
@@ -88,6 +89,23 @@ create table IN_INTERNAL
     IN_VALUE                        VARCHAR(255)                   ,
     constraint PK_IN_INTERNAL primary key (IN_NAME)
 );
+
+/* ============================================================ */
+/*   Table: TB_TEXT                                             */
+/* ============================================================ */
+create table TB_TEXT
+(
+    TB_ID                           INTEGER                not null,
+    TB_NAME                         VARCHAR(200)                   ,
+    TB_TEXT                         BLOB                           ,
+    TB_TAGS                         VARCHAR(255)                   ,
+    constraint PK_TB_TEXT primary key (TB_ID)
+);
+
+/* ============================================================ */
+/*   Index: TB_TEXT_NAME_INX                                    */
+/* ============================================================ */
+create unique ASC index TB_TEXT_NAME_INX on TB_TEXT (TB_NAME);
 
 /* ============================================================ */
 /*   Table: PE_PERSON                                           */

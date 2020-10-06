@@ -34,6 +34,10 @@ type
     procedure av_deleteExecute(Sender: TObject);
     procedure LVColumnClick(Sender: TObject; Column: TListColumn);
     procedure LVDblClick(Sender: TObject);
+    procedure LVCustomDrawItem(Sender: TCustomListView; Item: TListItem;
+      State: TCustomDrawState; var DefaultDraw: Boolean);
+    procedure LVCustomDrawSubItem(Sender: TCustomListView; Item: TListItem;
+      SubItem: Integer; State: TCustomDrawState; var DefaultDraw: Boolean);
   private
     type
       DataRec = class
@@ -48,6 +52,7 @@ type
           Fid: integer;
           Fty: integer;
         FFlags: integer;
+        FIndex: integer;
         public
           constructor create;
           Destructor Destroy; override;
@@ -62,6 +67,7 @@ type
           property id: integer read Fid write Fid;
           property ty: integer read Fty write Fty;
           property Flags: integer read FFlags write FFlags;
+          property Index: integer read FIndex write FIndex;
       end;
   private
     m_id      : integer;
@@ -120,21 +126,24 @@ procedure TTaskListFrame.av_deleteExecute(Sender: TObject);
 var
   client : TdsTaskClient;
   data : TJSONObject;
+  d    : DataRec;
 begin
-  if Tasks.IsEmpty then
+  if Tasks.IsEmpty or not Assigned(LV.Selected) then
     exit;
-  if WindowHandler.isTaskOpen(Tasks.FieldByName('TA_ID').AsInteger) then
+
+  d := LV.Selected.Data;
+  if WindowHandler.isTaskOpen(d.id) then
   begin
     ShowMessage('Das Dokument ist gerade geöffnet');
     exit;
   end;
-  if not (MessageDlg('Soll die Aufgabe "'+Tasks.FieldByName('TA_NAME').AsString+'" gelöscht werden?',
+  if not (MessageDlg('Soll die Aufgabe "'+d.Title+'" gelöscht werden?',
       mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
     exit;
   client := NIL;
   try
     client := TdsTaskClient.Create(GM.SQLConnection1.DBXConnection);
-    data := client.deleteTask(Tasks.FieldByName('TA_ID').AsInteger);
+    data := client.deleteTask(d.id);
     if not JBool( data, 'result') then
       ShowMessage( JString(data, 'text'));
   finally
@@ -269,6 +278,7 @@ begin
     data := DataRec.create;
     m_list.Add(data);
 
+    data.Index    := m_list.Count-1;
     data.id       := Tasks.FieldByName('TA_ID').AsInteger;
     data.ty       := Tasks.FieldByName('TY_ID').AsInteger;
     data.Title    := Tasks.FieldByName('TA_NAME').AsString;
@@ -296,6 +306,29 @@ begin
   m_sortNr := Column.Index;
   SortData;
   UpdateView;
+end;
+
+procedure TTaskListFrame.LVCustomDrawItem(Sender: TCustomListView;
+  Item: TListItem; State: TCustomDrawState; var DefaultDraw: Boolean);
+begin
+{
+  if (item.Index mod 2 = 0 ) then
+    LV.Font.Color := clRed
+  else
+    LV.Font.Color := clBlue;}
+end;
+
+procedure TTaskListFrame.LVCustomDrawSubItem(Sender: TCustomListView;
+  Item: TListItem; SubItem: Integer; State: TCustomDrawState;
+  var DefaultDraw: Boolean);
+var
+  d : DataRec;
+begin
+  d := item.Data;
+  if  (SubItem = 2) and (d.Rest <= 0) then
+    LV.Canvas.Font.Color := clRed
+  else
+    LV.Canvas.Font.Color := clBlack;
 end;
 
 procedure TTaskListFrame.LVDblClick(Sender: TObject);
@@ -351,9 +384,12 @@ begin
       TComparer<DataRec>.Construct(
         function(const Left, Right: DataRec): Integer
         begin
-          Result := 0;
-          if left.Termin > Right.Termin then Result :=  -1 else
-          if left.Termin < Right.Termin then Result :=  1;
+          Result := CompareText(left.Title, right.Title);
+          if Result = 0 then
+          begin
+            if left.id > Right.id then Result :=  -1 else
+            if left.id < right.id then Result :=  1;
+          end;
           if not  m_up[m_sortNr] then
             Result := -Result;
         end)
@@ -449,18 +485,7 @@ var
   flags : Integer;
 begin
   flags := Tasks.FieldByName('TA_FLAGS').AsInteger;
-  Text := '';
-
-  if (flags and taskNew) = taskNew then
-    Text := 'Neu'
-  else if (flags and taskRead) = taskRead then
-    Text := 'Gelesen'
-  else if (flags and taskInWork) = taskInWork then
-    Text := 'In Bearbeitung'
-  else if (flags and taskWorkEnd) = taskWorkEnd then
-    Text := 'Bearbeitung abgeschlossen'
-  else if (flags and taskWaitForInfo) = taskWaitForInfo then
-    Text := 'Klärungsbedarf';
+  Text := flagsToStr( flags );
 end;
 
 procedure TTaskListFrame.UpdateTaskList(gr_id: integer);
@@ -482,7 +507,6 @@ procedure TTaskListFrame.UpdateView;
 var
   i : integer;
   item : TListItem;
-  text : string;
 begin
   LV.Items.BeginUpdate;
   LV.Items.Clear;
@@ -502,19 +526,7 @@ begin
       item.SubItems.Add(Typ);
       item.SubItems.Add(FormatDateTime('dd.MM.yyyy', Erzeugt));
       item.SubItems.Add(FormatDateTime('dd.MM.yyyy', Eingang));
-      Text := '';
-
-      if (flags and taskNew) = taskNew then
-        Text := 'Neu'
-      else if (flags and taskRead) = taskRead then
-        Text := 'Gelesen'
-      else if (flags and taskInWork) = taskInWork then
-        Text := 'In Bearbeitung'
-      else if (flags and taskWorkEnd) = taskWorkEnd then
-        Text := 'Bearbeitung abgeschlossen'
-      else if (flags and taskWaitForInfo) = taskWaitForInfo then
-        Text := 'Klärungsbedarf';
-      item.SubItems.Add(text);
+      item.SubItems.Add(flagsToStr(flags));
     end;
   end;
   LV.Items.EndUpdate;

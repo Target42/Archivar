@@ -1,4 +1,4 @@
-object Form1: TForm1
+object MySettingsForm: TMySettingsForm
   Left = 0
   Top = 0
   Caption = 'Einstellungen'
@@ -22,8 +22,6 @@ object Form1: TForm1
     Align = alBottom
     AutoSize = True
     TabOrder = 0
-    inherited StatusBar1: TStatusBar
-      ExplicitWidth = 450
-    end
+    ExplicitTop = 134
   end
 end

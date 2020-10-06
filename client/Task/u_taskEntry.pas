@@ -14,6 +14,7 @@ type
     FTermin: string;
     FTaskStart: string;
     m_status : string;
+    FGremium: string;
 
   protected
 
@@ -28,6 +29,7 @@ type
     property Termin: string read FTermin write FTermin;
     property TaskStart: string read FTaskStart write FTaskStart;
     property Status : string read m_status;
+    property Gremium: string read FGremium write FGremium;
 
     procedure setData( dataset : TDataSet );
 

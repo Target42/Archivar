@@ -2,8 +2,8 @@ object TaskEditForm: TTaskEditForm
   Left = 0
   Top = 0
   Caption = 'Aufgabe'
-  ClientHeight = 385
-  ClientWidth = 666
+  ClientHeight = 439
+  ClientWidth = 725
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -23,16 +23,16 @@ object TaskEditForm: TTaskEditForm
   TextHeight = 13
   object StatusBar1: TStatusBar
     Left = 0
-    Top = 366
-    Width = 666
+    Top = 420
+    Width = 725
     Height = 19
     Panels = <>
   end
   object PageControl1: TPageControl
     Left = 0
     Top = 0
-    Width = 666
-    Height = 366
+    Width = 725
+    Height = 420
     ActivePage = TabSheet1
     Align = alClient
     TabOrder = 1
@@ -41,11 +41,14 @@ object TaskEditForm: TTaskEditForm
       object GroupBox1: TGroupBox
         Left = 0
         Top = 0
-        Width = 658
+        Width = 717
         Height = 81
         Align = alTop
         Caption = 'Allgemeines'
         TabOrder = 0
+        DesignSize = (
+          717
+          81)
         object Label1: TLabel
           Left = 16
           Top = 27
@@ -82,10 +85,11 @@ object TaskEditForm: TTaskEditForm
           Caption = 'Rest'
         end
         object Label6: TLabel
-          Left = 530
-          Top = 62
+          Left = 589
+          Top = 56
           Width = 98
           Height = 13
+          Anchors = [akTop, akRight]
           Caption = 'Schreibgesch'#252'tzt'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clRed
@@ -93,6 +97,21 @@ object TaskEditForm: TTaskEditForm
           Font.Name = 'Tahoma'
           Font.Style = [fsBold]
           ParentFont = False
+          ExplicitLeft = 530
+        end
+        object Label7: TLabel
+          Left = 176
+          Top = 56
+          Width = 31
+          Height = 13
+          Caption = 'Status'
+        end
+        object Label8: TLabel
+          Left = 364
+          Top = 56
+          Width = 24
+          Height = 13
+          Caption = 'Style'
         end
         object DBEdit1: TDBEdit
           Left = 49
@@ -147,23 +166,67 @@ object TaskEditForm: TTaskEditForm
           ReadOnly = True
           TabOrder = 4
         end
+        object ComboBox1: TComboBox
+          Left = 213
+          Top = 51
+          Width = 145
+          Height = 21
+          TabOrder = 5
+          Text = 'ComboBox1'
+          OnChange = ComboBox1Change
+        end
+        object ComboBox2: TComboBox
+          Left = 394
+          Top = 51
+          Width = 130
+          Height = 21
+          TabOrder = 6
+          Text = 'ComboBox2'
+          OnChange = ComboBox2Change
+        end
       end
-      object GroupBox2: TGroupBox
+      object PageControl2: TPageControl
         Left = 0
         Top = 81
-        Width = 658
-        Height = 257
+        Width = 717
+        Height = 311
+        ActivePage = TabSheet4
         Align = alClient
-        Caption = 'Details'
         TabOrder = 1
-        object ScrollBox1: TScrollBox
-          Left = 2
-          Top = 15
-          Width = 654
-          Height = 240
-          HorzScrollBar.Visible = False
-          Align = alClient
-          TabOrder = 0
+        OnChange = PageControl2Change
+        object TabSheet3: TTabSheet
+          Caption = 'Details'
+          object ScrollBox1: TScrollBox
+            Left = 0
+            Top = 0
+            Width = 709
+            Height = 283
+            HorzScrollBar.Visible = False
+            Align = alClient
+            TabOrder = 0
+          end
+        end
+        object TabSheet4: TTabSheet
+          Caption = 'Vorschau'
+          ImageIndex = 1
+          object WebBrowser1: TWebBrowser
+            Left = 0
+            Top = 0
+            Width = 709
+            Height = 283
+            Align = alClient
+            TabOrder = 0
+            ExplicitLeft = 16
+            ExplicitTop = 16
+            ExplicitWidth = 300
+            ExplicitHeight = 150
+            ControlData = {
+              4C00000047490000401D00000000000000000000000000000000000000000000
+              000000004C000000000000000000000001000000E0D057007335CF11AE690800
+              2B2E126208000000000000004C0000000114020000000000C000000000000046
+              8000000000000000000000000000000000000000000000000000000000000000
+              00000000000000000100000000000000000000000000000000000000}
+          end
         end
       end
     end
@@ -173,25 +236,25 @@ object TaskEditForm: TTaskEditForm
       inline FileFrame1: TFileFrame
         Left = 0
         Top = 0
-        Width = 658
-        Height = 338
+        Width = 717
+        Height = 392
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 658
-        ExplicitHeight = 338
+        ExplicitWidth = 717
+        ExplicitHeight = 392
         inherited DBGrid1: TDBGrid
-          Width = 658
-          Height = 260
+          Width = 717
+          Height = 314
         end
         inherited GroupBox1: TGroupBox
-          Top = 260
-          Width = 658
-          ExplicitTop = 260
-          ExplicitWidth = 658
+          Top = 314
+          Width = 717
+          ExplicitTop = 314
+          ExplicitWidth = 717
           inherited Panel1: TPanel
-            Left = 537
+            Left = 596
             Color = clMoneyGreen
-            ExplicitLeft = 537
+            ExplicitLeft = 596
           end
         end
       end
@@ -239,8 +302,8 @@ object TaskEditForm: TTaskEditForm
   object TaskSrc: TDataSource
     AutoEdit = False
     DataSet = TaskTab
-    Left = 144
-    Top = 80
+    Left = 152
+    Top = 184
   end
   object TaskTab: TClientDataSet
     Aggregates = <>
@@ -249,8 +312,8 @@ object TaskEditForm: TTaskEditForm
     RemoteServer = DSProviderConnection1
     OnPostError = TaskTabPostError
     OnReconcileError = TaskTabReconcileError
-    Left = 80
-    Top = 96
+    Left = 40
+    Top = 160
     object TaskTabTE_ID: TIntegerField
       FieldName = 'TE_ID'
     end
@@ -299,6 +362,14 @@ object TaskEditForm: TTaskEditForm
       OnGetText = TaskTabTA_RESTGetText
       Size = 10
       Calculated = True
+    end
+    object TaskTabTA_STYLE: TWideStringField
+      FieldName = 'TA_STYLE'
+      Size = 200
+    end
+    object TaskTabTA_STYLE_CLID: TWideStringField
+      FieldName = 'TA_STYLE_CLID'
+      Size = 38
     end
   end
   object DSProviderConnection1: TDSProviderConnection

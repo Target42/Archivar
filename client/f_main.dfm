@@ -34,6 +34,7 @@ object MainForm: TMainForm
     Height = 3
     Cursor = crVSplit
     Align = alBottom
+    Visible = False
     ExplicitLeft = 284
     ExplicitTop = 0
     ExplicitWidth = 301
@@ -89,9 +90,8 @@ object MainForm: TMainForm
       inherited LV: TListView
         Width = 1122
         Height = 173
-        ExplicitTop = 173
         ExplicitWidth = 1122
-        ExplicitHeight = 0
+        ExplicitHeight = 173
       end
       inherited ActionList1: TActionList
         Left = 176
@@ -130,10 +130,6 @@ object MainForm: TMainForm
     object TabSheet2: TTabSheet
       Caption = 'Lesezeichen'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       inline BookmarkFrame1: TBookmarkFrame
         Left = 0
         Top = 0
@@ -285,6 +281,7 @@ object MainForm: TMainForm
     object ac_prg_set: TAction
       Category = 'Program'
       Caption = 'Einstellungen'
+      OnExecute = ac_prg_setExecute
     end
     object ac_ad_gremium: TAction
       Category = 'Admin'

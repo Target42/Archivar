@@ -22,6 +22,8 @@ type
     Panel2: TPanel;
     SpeedButton1: TSpeedButton;
     SpeedButton2: TSpeedButton;
+    Label1: TLabel;
+    CheckBox6: TCheckBox;
     procedure CheckBox1Click(Sender: TObject);
     procedure SpeedButton2Click(Sender: TObject);
     procedure SpeedButton1Click(Sender: TObject);
@@ -109,15 +111,16 @@ begin
 
   m_all  := TList<TTaskEntry>.create;
   m_list := TList<TTaskEntry>.create;
-  m_filter := taskProtocol;
+  m_filter := taskWaitForOK;
 
   m_noChange := true;
 
-  CheckBox1.Checked := (m_filter and taskNew) = taskNew;
-  CheckBox2.Checked := (m_filter and taskRead) = taskRead;
-  CheckBox3.Checked := (m_filter and taskInWork) = taskInWork;
-  CheckBox4.Checked := (m_filter and taskWorkEnd) = taskWorkEnd;
+  CheckBox1.Checked := (m_filter and taskNew)         = taskNew;
+  CheckBox2.Checked := (m_filter and taskRead)        = taskRead;
+  CheckBox3.Checked := (m_filter and taskInWork)      = taskInWork;
+  CheckBox4.Checked := (m_filter and taskWorkEnd)     = taskWorkEnd;
   CheckBox5.Checked := (m_filter and taskWaitForInfo) = taskWaitForInfo;
+  CheckBox6.Checked := (m_filter and taskWaitForOK)   = taskWaitForOK;
 
   m_noChange := false;
 end;
@@ -144,6 +147,7 @@ begin
         item.SubItems.Add(m_all[i].Termin);
         item.SubItems.Add(m_all[i].TaskStart);
         item.SubItems.Add(m_all[i].Status);
+        item.SubItems.Add(m_all[i].Gremium );
       end;
     end;
 
@@ -158,7 +162,14 @@ begin
 
   clear;
 
-  ListTasksQry.ParamByName('GR_ID').AsInteger := m_id;
+  if m_id = 0 then
+    ListTasksQry.Filtered := false
+  else
+  begin
+    ListTasksQry.Filter := 'GR_ID='+intToStr(m_id);
+    ListTasksQry.Filtered := true;
+  end;
+
   ListTasksQry.Open;
   ListTasksQry.Refresh;
   while not ListTasksQry.Eof do
@@ -166,6 +177,7 @@ begin
     entry := TTaskEntry.Create;
     m_all.Add(entry);
     entry.setData(ListTasksQry);
+    entry.Gremium := GM.GremiumName( ListTasksQry.FieldByName('GR_ID').AsInteger);
     ListTasksQry.Next;
   end;
   ListTasksQry.Close;
@@ -186,6 +198,7 @@ var
 begin
   if not Assigned(FOnTaskEntry) or not Assigned(LV.Selected) then
     exit;
+
   list := TEntryList.Create;
   for i := 0 to pred(LV.Items.Count) do
   begin

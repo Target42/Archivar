@@ -34,7 +34,6 @@ type
     FindTask: TIBQuery;
     SetStatusQry: TIBQuery;
     TaskClidQry: TIBQuery;
-    DelEinstellung: TIBQuery;
     Templates: TIBQuery;
     TemplatesQry: TDataSetProvider;
     Template: TIBTable;
@@ -169,7 +168,6 @@ function TdsTask.deleteTask(ta_id : integer): TJSONObject;
 var
   msg : TJSONObject;
   clid: string;
-  tyid, subid : integer;
 begin
   Result := LockMod.isLocked( ta_id, integer(ltTask ));
   if Jbool( Result, 'result') then
@@ -189,8 +187,6 @@ begin
     if not TaskClidQry.Eof then
     begin
       clid := TaskClidQry.FieldByName('TA_CLID').AsString;
-      tyid := TaskClidQry.FieldByName('TY_ID').AsInteger;
-      subid:= TaskClidQry.FieldByName('TA_SUB_ID').AsInteger;
     end;
     TaskClidQry.Close;
 
@@ -205,18 +201,6 @@ begin
 
     DeleteTaskQry.ParamByName('TA_ID').AsInteger := ta_id;
     DeleteTaskQry.ExecSQL;
-
-    case tyid of
-      1 :
-      begin
-        DelEinstellung.ParamByName('ES_ID').AsInteger := subid;
-        DelEinstellung.ExecSQL;
-      end;
-
-    else
-      DebugMsg('deleteTask :not supportet sub id:'+IntToStr(subid) );
-
-    end;
 
     JResult(Result, true, 'Die Aufgabe wurde gelöscht!');
     DeleteTrans.Commit;

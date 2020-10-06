@@ -1,12 +1,13 @@
 object ChapterFrame: TChapterFrame
   Left = 0
   Top = 0
-  Width = 451
+  Width = 1155
   Height = 305
   Align = alClient
   TabOrder = 0
+  ExplicitWidth = 451
   object Splitter1: TSplitter
-    Left = 225
+    Left = 251
     Top = 0
     Height = 305
     ExplicitLeft = 368
@@ -16,7 +17,7 @@ object ChapterFrame: TChapterFrame
   object GroupBox1: TGroupBox
     Left = 0
     Top = 0
-    Width = 225
+    Width = 251
     Height = 305
     Align = alLeft
     Caption = 'Struktur'
@@ -24,27 +25,34 @@ object ChapterFrame: TChapterFrame
     object Label2: TLabel
       Left = 2
       Top = 15
-      Width = 221
-      Height = 13
+      Width = 247
+      Height = 16
       Align = alTop
       Alignment = taCenter
-      ExplicitWidth = 3
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ParentFont = False
+      ExplicitWidth = 4
     end
     object Panel1: TPanel
       Left = 2
-      Top = 240
-      Width = 221
-      Height = 63
+      Top = 156
+      Width = 247
+      Height = 147
       Align = alBottom
       BevelOuter = bvNone
       Caption = 'Panel1'
       ShowCaption = False
       TabOrder = 0
-      object SpeedButton8: TSpeedButton
+      object SpeedButton8: TBitBtn
         Left = 16
-        Top = 34
-        Width = 23
-        Height = 22
+        Top = 39
+        Width = 95
+        Height = 27
+        Caption = '&Unterkapitel'
         Glyph.Data = {
           36040000424D3604000000000000360000002800000010000000100000000100
           20000000000000040000C40E0000C40E00000000000000000000FFFFFF00FFFF
@@ -80,13 +88,15 @@ object ChapterFrame: TChapterFrame
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
+        TabOrder = 0
         OnClick = SpeedButton8Click
       end
-      object SpeedButton1: TSpeedButton
+      object SpeedButton1: TBitBtn
         Left = 16
         Top = 6
-        Width = 23
-        Height = 22
+        Width = 95
+        Height = 27
+        Caption = '&Neues Kapitel'
         Glyph.Data = {
           36040000424D3604000000000000360000002800000010000000100000000100
           20000000000000040000C40E0000C40E00000000000000000000FFFFFF00FFFF
@@ -122,13 +132,15 @@ object ChapterFrame: TChapterFrame
           90FFF9CA90FFF9C991ABFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
+        TabOrder = 1
         OnClick = SpeedButton1Click
       end
-      object SpeedButton2: TSpeedButton
-        Left = 45
+      object SpeedButton2: TBitBtn
+        Left = 117
         Top = 6
-        Width = 23
-        Height = 22
+        Width = 116
+        Height = 27
+        Caption = 'Kapitel &bearbeiten'
         Glyph.Data = {
           36040000424D3604000000000000360000002800000010000000100000000100
           20000000000000040000C40E0000C40E00000000000000000000FFFFFF00FFFF
@@ -164,13 +176,15 @@ object ChapterFrame: TChapterFrame
           3F55B4513F55B4513F55B351412FFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
+        TabOrder = 2
         OnClick = SpeedButton2Click
       end
-      object SpeedButton3: TSpeedButton
-        Left = 88
-        Top = 6
-        Width = 23
-        Height = 22
+      object SpeedButton3: TBitBtn
+        Left = 117
+        Top = 39
+        Width = 116
+        Height = 27
+        Caption = 'Kapitel &l'#246'schen'
         Glyph.Data = {
           36040000424D3604000000000000360000002800000010000000100000000100
           20000000000000040000C40E0000C40E00000000000000000000FFFFFF00FFFF
@@ -206,13 +220,15 @@ object ChapterFrame: TChapterFrame
           3F55B4513F55B4513F55B351412FFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
+        TabOrder = 3
         OnClick = SpeedButton3Click
       end
-      object SpeedButton4: TSpeedButton
-        Left = 117
-        Top = 6
-        Width = 23
-        Height = 22
+      object SpeedButton4: TBitBtn
+        Left = 16
+        Top = 71
+        Width = 95
+        Height = 27
+        Caption = 'Kapitel hoch'
         Glyph.Data = {
           36040000424D3604000000000000360000002800000010000000100000000100
           20000000000000040000C40E0000C40E00000000000000000000FFFFFF00FFFF
@@ -248,13 +264,15 @@ object ChapterFrame: TChapterFrame
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
+        TabOrder = 4
         OnClick = SpeedButton4Click
       end
-      object SpeedButton5: TSpeedButton
-        Left = 117
-        Top = 34
-        Width = 23
-        Height = 22
+      object SpeedButton5: TBitBtn
+        Left = 16
+        Top = 104
+        Width = 95
+        Height = 27
+        Caption = 'Kapitel runter'
         Glyph.Data = {
           36040000424D3604000000000000360000002800000010000000100000000100
           20000000000000040000C40E0000C40E00000000000000000000FFFFFF00FFFF
@@ -290,13 +308,15 @@ object ChapterFrame: TChapterFrame
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
+        TabOrder = 5
         OnClick = SpeedButton5Click
       end
-      object SpeedButton6: TSpeedButton
-        Left = 146
-        Top = 6
-        Width = 23
-        Height = 22
+      object SpeedButton6: TBitBtn
+        Left = 117
+        Top = 71
+        Width = 116
+        Height = 27
+        Caption = 'Ausr'#252'cken'
         Glyph.Data = {
           36040000424D3604000000000000360000002800000010000000100000000100
           20000000000000040000C40E0000C40E00000000000000000000FFFFFF00FFFF
@@ -332,13 +352,15 @@ object ChapterFrame: TChapterFrame
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
+        TabOrder = 6
         OnClick = SpeedButton6Click
       end
-      object SpeedButton7: TSpeedButton
-        Left = 146
-        Top = 34
-        Width = 23
-        Height = 22
+      object SpeedButton7: TBitBtn
+        Left = 117
+        Top = 104
+        Width = 116
+        Height = 27
+        Caption = 'Einr'#252'cken'
         Glyph.Data = {
           36040000424D3604000000000000360000002800000010000000100000000100
           20000000000000040000C40E0000C40E00000000000000000000FFFFFF00FFFF
@@ -374,14 +396,15 @@ object ChapterFrame: TChapterFrame
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
+        TabOrder = 7
         OnClick = SpeedButton7Click
       end
     end
     object TV: TTreeView
       Left = 2
-      Top = 28
-      Width = 221
-      Height = 212
+      Top = 31
+      Width = 247
+      Height = 125
       Align = alClient
       DragMode = dmAutomatic
       Indent = 19
@@ -392,23 +415,25 @@ object ChapterFrame: TChapterFrame
     end
   end
   object GroupBox2: TGroupBox
-    Left = 228
+    Left = 254
     Top = 0
-    Width = 223
+    Width = 901
     Height = 305
     Align = alClient
     Caption = 'Aufgaben'
     TabOrder = 1
+    ExplicitWidth = 197
     object Panel2: TPanel
       Left = 2
       Top = 15
-      Width = 219
+      Width = 897
       Height = 41
       Align = alTop
       BevelOuter = bvNone
       Caption = 'Panel2'
       ShowCaption = False
       TabOrder = 0
+      ExplicitWidth = 193
       object Label1: TLabel
         Left = 16
         Top = 11
@@ -429,25 +454,28 @@ object ChapterFrame: TChapterFrame
     inline TaskList2Frame1: TTaskList2Frame
       Left = 2
       Top = 56
-      Width = 219
+      Width = 897
       Height = 247
       Align = alClient
       TabOrder = 1
       ExplicitLeft = 2
       ExplicitTop = 56
-      ExplicitWidth = 219
+      ExplicitWidth = 193
       ExplicitHeight = 247
       inherited LV: TListView
-        Width = 170
+        Width = 824
         Height = 206
-        ExplicitWidth = 170
+        ExplicitWidth = 120
         ExplicitHeight = 206
       end
       inherited Panel1: TPanel
         Top = 206
-        Width = 219
+        Width = 897
         ExplicitTop = 206
-        ExplicitWidth = 219
+        ExplicitWidth = 193
+        inherited CheckBox5: TCheckBox
+          OnClick = TaskList2Frame1CheckBox5Click
+        end
       end
       inherited Panel2: TPanel
         Height = 206

@@ -149,4 +149,11 @@ object ServerContainer1: TServerContainer1
     Left = 336
     Top = 312
   end
+  object dsTaskView: TDSServerClass
+    OnGetClass = dsTaskViewGetClass
+    Server = DSServer1
+    LifeCycle = 'Invocation'
+    Left = 264
+    Top = 376
+  end
 end

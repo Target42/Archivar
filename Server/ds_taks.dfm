@@ -340,24 +340,6 @@ object dsTask: TdsTask
         ParamType = ptInput
       end>
   end
-  object DelEinstellung: TIBQuery
-    Database = DBMod.IBDatabase1
-    Transaction = DeleteTrans
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
-    SQL.Strings = (
-      'delete from ES_EINSTELLUNG'
-      'where ES_ID = :ES_ID')
-    Left = 152
-    Top = 424
-    ParamData = <
-      item
-        DataType = ftInteger
-        Name = 'ES_ID'
-        ParamType = ptInput
-      end>
-  end
   object Templates: TIBQuery
     Database = DBMod.IBDatabase1
     Transaction = IBTransaction1

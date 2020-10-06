@@ -24,8 +24,7 @@ object TestForm: TTestForm
     Align = alBottom
     AutoSize = True
     TabOrder = 0
-    ExplicitLeft = 179
-    ExplicitTop = 80
+    ExplicitTop = 555
     ExplicitWidth = 802
     inherited StatusBar1: TStatusBar
       Width = 802
@@ -36,18 +35,22 @@ object TestForm: TTestForm
       ExplicitWidth = 802
       inherited OKBtn: TBitBtn
         Left = 714
-        ExplicitLeft = 363
+        ExplicitLeft = 714
       end
     end
   end
-  object ScrollBox1: TScrollBox
+  inline FormFrame1: TFormFrame
     Left = 0
     Top = 0
     Width = 802
     Height = 555
     Align = alClient
     TabOrder = 1
-    ExplicitWidth = 800
-    ExplicitHeight = 356
+    ExplicitLeft = 200
+    ExplicitTop = 96
+    inherited ScrollBox1: TScrollBox
+      Width = 802
+      Height = 555
+    end
   end
 end

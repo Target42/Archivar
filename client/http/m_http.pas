@@ -15,7 +15,7 @@ type
     procedure IdHTTPServer1CommandOther(AContext: TIdContext;
       ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
   private
-    m_home : string;
+    m_home  : string;
   public
     { Public-Deklarationen }
   end;
@@ -31,6 +31,7 @@ uses
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
 {$R *.dfm}
+
 
 procedure THttpMod.DataModuleCreate(Sender: TObject);
 begin

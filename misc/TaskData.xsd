@@ -12,6 +12,8 @@
 			</xs:sequence>
 			<xs:attribute name="clid" type="xs:string"/>
 			<xs:attribute name="taskclid" type="xs:string"/>
+			<xs:attribute name="stylename" type="xs:string"/>
+			<xs:attribute name="styleclid" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="Value"/>

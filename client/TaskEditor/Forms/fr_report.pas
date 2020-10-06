@@ -23,8 +23,13 @@ type
       m_tf        : ITaskFile;
       m_func      : TCloseEditorFunc;
 
+      m_grp       : TGroupBox;
+      FSTyle      : ITaskStyle;
+
       procedure setFileName( value : string );
       function  getfileName : string;
+
+      procedure setStyle( value : ITaskStyle);
     public
       constructor Create( tf : ITaskFile ; owner : TPageControl);
       Destructor Destroy ; override;
@@ -34,12 +39,14 @@ type
       property FileName : string read getFileName write setFileName;
       property DataFile : ITaskFile read m_tf;
       property doClose : TCloseEditorFunc read m_func write m_func;
+      property Style: ITaskStyle read FSTyle write setStyle;
 
       procedure save;
       function isFile( fname : string) : boolean;
 
       procedure onCloseClick( sender : TObject );
       procedure onCompileClick( sender : TObject );
+      procedure Update;
   end;
 
   TReportFrame = class(TFrame)
@@ -74,6 +81,7 @@ type
     SpeedButton7: TSpeedButton;
     SpeedButton8: TSpeedButton;
     SpeedButton9: TSpeedButton;
+    SpeedButton10: TSpeedButton;
     procedure PopupMenu1Popup(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure CheckBox1Click(Sender: TObject);
@@ -88,8 +96,8 @@ type
     procedure SpeedButton6Click(Sender: TObject);
     procedure SpeedButton9Click(Sender: TObject);
     procedure SpeedButton4Click(Sender: TObject);
+    procedure SpeedButton10Click(Sender: TObject);
   private
-    m_xList: IXMLList;
     m_Path : string;
     m_tc   : ITaskContainer;
     m_form : ITaskForm;
@@ -103,6 +111,8 @@ type
 
     procedure saveAllEdits;
     procedure initFile( tf : ITaskFile);
+    procedure fillStyles;
+    procedure updateFileContainer;
   public
 
     procedure init;
@@ -146,50 +156,42 @@ end;
 procedure TReportFrame.Button1Click(Sender: TObject);
 var
   HtmlMod : THtmlMod;
-  tf      : ITaskFile;
   st      : ITaskStyle;
+  xList   : IXMLList;
   procedure currentFormData;
   var
     writer : TTaskForm2XML;
   begin
     if not Assigned(m_form) then
-    begin
-      ShowMessage('Es ist kein Formular aktiv!');
       exit;
-    end;
     writer := TTaskForm2XML.create;
-    m_xList := writer.getXML(m_form);
+    xList := writer.getXML(m_form);
     writer.Free;
   end;
   procedure useTestData;
   var
     xml : IXMLDocument;
     st  : TStream;
+    tf  : ITaskFile;
   begin
     if ListBox1.ItemIndex = -1 then
-    begin
-      ShowMessage('Es wurde keine Testdaten ausgew‰hlt');
       exit;
-    end;
     tf := ITaskFile( Pointer(ListBox1.Items.Objects[ListBox1.ItemIndex] ));
     xml := NewXMLDocument;
     st := tf.Data;
     xml.LoadFromStream(st);
     st.Free;
-    m_xList := xml.GetDocBinding('List', TXMLList, TargetNamespace) as IXMLList;
+    xList := xml.GetDocBinding('List', TXMLList, TargetNamespace) as IXMLList;
   end;
-  function findIndexHtml : ITaskFile;
+  procedure getStyle;
   begin
-    Result := NIL;
-    if ListBox2.ItemIndex = -1 then
-    begin
-      ShowMessage('Es wurde kein Style ausgew‰hlt');
-      exit;
-    end;
-    st := ITaskStyle(Pointer(ListBox2.Items.Objects[ ListBox2.ItemIndex]));
-    Result := st.Files.getFile('index.html');
+    if ListBox2.ItemIndex <> -1 then
+      st := ITaskStyle(Pointer(ListBox2.Items.Objects[ListBox2.ItemIndex]));
   end;
 begin
+  xList := NIL;
+  st    := NIL;
+
   saveAllEdits;
 
   if CheckBox1.Checked then
@@ -197,30 +199,18 @@ begin
   else
     useTestData;
 
-  if not Assigned(m_xList)  then
-    exit;
-
-  tf := findIndexHtml;
-  if not Assigned(tf) or not Assigned(st) then
-  begin
-    ShowMessage('Die Datei "index.html" wurde nicht gefunden');
-    exit;
-  end;
-
-  m_Path := TPath.combine(GM.wwwHome, m_tc.Task.CLID);
-  ForceDirectories(m_Path);
+  getStyle;
+  m_path := TPath.Combine( GM.wwwHome, m_tc.Task.CLID);
 
   Application.CreateForm(THtmlMod, HtmlMod);
   try
-    HtmlMod.HTMLDoc.Assign(tf.Lines);
-    HtmlMod.TaskStyle:= st;
-    HtmlMod.TaskData := m_xList;
-    HtmlMod.SaveToFile(TPath.combine(m_path, 'index.html'));
+    HtmlMod.TaskContainer := m_tc;
+    HtmlMod.TaskStyle     := st;
+    HtmlMod.TaskData      := xList;
+    HtmlMod.show(WebBrowser1, m_tc.Task.CLID);
   finally
     HtmlMod.Free;
   end;
-  WebBrowser1.Navigate('http://localhost:42424/'+m_tc.Task.CLID+'/index.html');
-
 end;
 
 procedure TReportFrame.CheckBox1Click(Sender: TObject);
@@ -247,6 +237,17 @@ end;
 procedure TReportFrame.doNewForm(frm: ITaskForm);
 begin
   m_form := frm;
+end;
+
+procedure TReportFrame.fillStyles;
+begin
+  ListBox2.Items.Clear;
+  m_tc.Styles.FillList( ListBox2.Items );
+  if ListBox2.Items.Count > 0 then
+  begin
+    ListBox2.ItemIndex := 0;
+    ListBox2Click(Self);
+  end;
 end;
 
 procedure TReportFrame.init;
@@ -315,7 +316,7 @@ var
 begin
   for i := 0 to pred(m_files.Count) do
     begin
-      if m_files[i].isFile(tf.Name) then
+      if m_files[i].DataFile = tf then
       begin
         PageControl2.ActivePage := m_files[i].Tab;
         exit
@@ -325,6 +326,7 @@ begin
   fc := TFilecontainer.Create(tf, PageControl2);
   fc.Edit.PopupMenu := PopupMenu1;
   fc.doClose := self.closeEditor;
+  fc.Style   :=  ITaskStyle( Pointer( ListBox2.Items.Objects[ ListBox2.ItemIndex]));;
   m_files.Add(fc);
 end;
 
@@ -380,7 +382,6 @@ begin
   end;
   m_files.Free;
 
-  m_xList := NIL;
   m_form  := NIL;
   m_tc    := NIL;
 
@@ -415,18 +416,26 @@ begin
   m_tc.TestData.fillList(ListBox1.Items, false);
   m_tc.TestData.registerChange(updateFiles);
 
-  m_tc.Styles.FillList( ListBox2.Items );
 
-  if ListBox2.Items.Count > 0 then
-  begin
-    ListBox2.ItemIndex := 0;
-    ListBox2Click(Self);
-  end;
+  fillStyles;
 
   if ListBox1.Items.Count > 0 then
     ListBox1.ItemIndex := 0;
+end;
 
-
+procedure TReportFrame.SpeedButton10Click(Sender: TObject);
+var
+  st : ITaskStyle;
+  inx : Integer;
+begin
+  inx := ListBox2.ItemIndex;
+  if inx = -1 then
+    exit;
+  st := ITaskStyle( Pointer( ListBox2.Items.Objects[ ListBox2.ItemIndex]));
+  m_tc.Styles.DefaultStyle := st;
+  fillStyles;
+  ListBox2.ItemIndex := inx;
+  ListBox2Click(Sender);
 end;
 
 procedure TReportFrame.SpeedButton1Click(Sender: TObject);
@@ -469,6 +478,7 @@ begin
     ListBox2.Items.Strings[ListBox2.ItemIndex] := st.Name;
   end;
   InputBoxForm.Free;
+  updateFileContainer;
 end;
 
 procedure TReportFrame.SpeedButton3Click(Sender: TObject);
@@ -496,6 +506,8 @@ begin
 
   m_tc.Styles.delete( st );
   // delete ...
+
+  fillStyles;
 end;
 
 procedure TReportFrame.SpeedButton4Click(Sender: TObject);
@@ -637,6 +649,15 @@ begin
   closeEditor(tf);
 end;
 
+procedure TReportFrame.updateFileContainer;
+var
+  con : TFilecontainer;
+begin
+  for con in m_files do
+    con.Update;
+
+end;
+
 procedure TReportFrame.updateFiles(sender: ITaskFiles);
 var
   old : pointer;
@@ -654,9 +675,10 @@ end;
 constructor TFilecontainer.Create(tf : ITaskFile ; owner : TPageControl);
 var
   ext : string;
-  pan : TPanel;
+  pan : TGroupBox;
   btn : TButton;
   x   : integer;
+  y   : integer;
 begin
   m_dws         := NIL;
   m_memo        := NIL;
@@ -667,17 +689,20 @@ begin
   m_tab.PageControl := owner;
   m_func        := NIL;
 
-  pan := TPanel.Create(m_tab);
+  m_grp := TGroupBox.Create(m_tab);
+  pan := m_grp;
   pan.Parent := m_tab;
   pan.Align := alBottom;
+  pan.Height :=  48;
 
+  y := 16;
 
   btn         := TButton.Create(pan);
   btn.Parent  := pan;
   btn.OnClick := self.onCloseClick;
   btn.Caption := 'Schlieﬂen';
   btn.Left    := 16;
-  btn.Top     := 8;
+  btn.Top     := y;
 
   x := btn.Left + btn.Width + 16;
 
@@ -691,7 +716,7 @@ begin
     btn.OnClick := self.onCompileClick;
     btn.Caption := 'Compilieren';
     btn.Left    := x;
-    btn.Top     := 8;
+    btn.Top     := y;
 
   end;
 
@@ -769,6 +794,18 @@ end;
 procedure TFilecontainer.setFileName(value: string);
 begin
   m_tf.Name := value
+end;
+
+procedure TFilecontainer.setStyle(value: ITaskStyle);
+begin
+  FSTyle := value;
+  m_grp.caption := 'Style: '+FSTyle.Name;
+end;
+
+procedure TFilecontainer.Update;
+begin
+  if Assigned(FSTyle) then
+    m_grp.caption := 'Style: '+FSTyle.Name;
 end;
 
 end.

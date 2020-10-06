@@ -1,8 +1,8 @@
 object ReportFrame: TReportFrame
   Left = 0
   Top = 0
-  Width = 845
-  Height = 598
+  Width = 690
+  Height = 540
   Align = alClient
   AutoSize = True
   TabOrder = 0
@@ -11,7 +11,7 @@ object ReportFrame: TReportFrame
   object Splitter1: TSplitter
     Left = 153
     Top = 0
-    Height = 598
+    Height = 540
     ExplicitLeft = 200
     ExplicitTop = 48
     ExplicitHeight = 100
@@ -19,8 +19,8 @@ object ReportFrame: TReportFrame
   object PageControl1: TPageControl
     Left = 156
     Top = 0
-    Width = 689
-    Height = 598
+    Width = 534
+    Height = 540
     ActivePage = TabSheet3
     Align = alClient
     TabOrder = 0
@@ -34,14 +34,14 @@ object ReportFrame: TReportFrame
       object WebBrowser1: TWebBrowser
         Left = 0
         Top = 41
-        Width = 681
-        Height = 529
+        Width = 526
+        Height = 471
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 698
-        ExplicitHeight = 562
+        ExplicitWidth = 529
+        ExplicitHeight = 564
         ControlData = {
-          4C00000062460000AC3600000000000000000000000000000000000000000000
+          4C0000005D360000AE3000000000000000000000000000000000000000000000
           000000004C000000000000000000000001000000E0D057007335CF11AE690800
           2B2E126208000000000000004C0000000114020000000000C000000000000046
           8000000000000000000000000000000000000000000000000000000000000000
@@ -50,7 +50,7 @@ object ReportFrame: TReportFrame
       object Panel1: TPanel
         Left = 0
         Top = 0
-        Width = 681
+        Width = 526
         Height = 41
         Align = alTop
         BevelOuter = bvNone
@@ -75,8 +75,8 @@ object ReportFrame: TReportFrame
       object PageControl2: TPageControl
         Left = 0
         Top = 0
-        Width = 681
-        Height = 570
+        Width = 526
+        Height = 512
         Align = alClient
         TabOrder = 0
       end
@@ -86,7 +86,7 @@ object ReportFrame: TReportFrame
     Left = 0
     Top = 0
     Width = 153
-    Height = 598
+    Height = 540
     Align = alLeft
     BevelOuter = bvNone
     Caption = 'Panel2'
@@ -95,7 +95,7 @@ object ReportFrame: TReportFrame
     ExplicitHeight = 305
     object GroupBox2: TGroupBox
       Left = 0
-      Top = 447
+      Top = 389
       Width = 153
       Height = 151
       Align = alBottom
@@ -398,13 +398,58 @@ object ReportFrame: TReportFrame
           ShowHint = True
           OnClick = SpeedButton3Click
         end
+        object SpeedButton10: TSpeedButton
+          Left = 122
+          Top = 6
+          Width = 23
+          Height = 22
+          Hint = 'Default Style'
+          Glyph.Data = {
+            36040000424D3604000000000000360000002800000010000000100000000100
+            20000000000000040000C40E0000C40E00000000000000000000FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF004DCC800A4DCC800AFFFF
+            FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF0047C68E2455AAAA0340BF80044AC48BB44AC48BB440BF
+            800455AAAA0347C68E24FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF004AC38BDA49C28BEC4AC38BCB4AC38BFF4AC38BFF4AC3
+            8BCB49C28BEC4AC38BD9FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF004CC18A254AC38BFE4AC38BFF4AC38BFF4AC38BFF4AC38BFF4AC3
+            8BFF4AC38BFF4AC38BFE47C68E24FFFFFF00FFFFFF00FFFFFF00FFFFFF004BC5
+            8B2C4AC38BE04AC38BFF4AC38BFF4AC38BFF4CC58DFF4CC58DFF4AC38BFF4AC3
+            8BFF4AC38BFF4AC38BFF4AC38BFF4AC38BE047C4882BFFFFFF00FFFFFF0040BF
+            80084AC38BF44AC38BFF4AC38BFF4CC48CFF7AECB7FF7AECB7FF4CC48CFF4AC3
+            8BFF4AC38BFF4AC38BFF4AC38BFF4BC38BF340BF8008FFFFFF00FFFFFF0055D5
+            80064AC48AD24AC38BFF4CC58DFF7BEEB9FF8BFBC8FF8BFBC7FF7CEEB9FF4DC5
+            8DFF4AC38BFF4AC38BFF4AC38BFF4AC38BD155D58006FFFFFF0044BB880F4AC3
+            8CBE4AC38BFF4AC38BFF70E3AEFF8AFAC6FF57CE97FF57CF98FF8BFBC7FF7DEF
+            BBFF4CC58DFF4AC38BFF4AC38BFF4AC38BFF4AC48BBD44BB880F49C8920E49C3
+            8BBF4AC38BFF4AC38BFF4DC68EFF54CC95FF4AC38BFF4AC38BFF57CE97FF8BFA
+            C7FF7DEFBBFF4DC58EFF4AC38BFF4AC38BFF49C38BBF49C8920EFFFFFF0033CC
+            99054AC48AD24AC38BFF4AC38BFF4AC38BFF4AC38BFF4AC38BFF4AC38BFF58D0
+            99FF8CFBC8FF7BEDB8FF4CC58DFF4AC38BD133CC9905FFFFFF00FFFFFF0033CC
+            99054AC38BEF4AC38BFF4AC38BFF4AC38BFF4AC38BFF4AC38BFF4AC38BFF4AC3
+            8BFF56CD96FF85F6C2FF56CD96FF4AC38BEF33CC9905FFFFFF00FFFFFF004BC5
+            8B2C4AC38BE04AC38BFF4AC38BFF4AC38BFF4AC38BFF4AC38BFF4AC38BFF4AC3
+            8BFF4AC38BFF4AC38CFF4AC38BFF4AC38BE047C4882BFFFFFF00FFFFFF00FFFF
+            FF00FFFFFF004CC18A254AC38BFE4AC38BFF4AC38BFF4AC38BFF4AC38BFF4AC3
+            8BFF4AC38BFF4AC38BFE47C68E24FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF004AC38BDA49C28BEC4AC38BCB4AC38BFF4AC38BFF4AC3
+            8BCB49C28BEC4AC38BD9FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF0047C68E2455AAAA0340BF80044AC48BB44AC48BB440BF
+            800455AAAA0347C68E24FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF004DCC800A4DCC800AFFFF
+            FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
+          ParentShowHint = False
+          ShowHint = True
+          OnClick = SpeedButton10Click
+        end
       end
     end
     object GroupBox3: TGroupBox
       Left = 0
       Top = 145
       Width = 153
-      Height = 302
+      Height = 244
       Align = alClient
       Caption = 'Dateien'
       TabOrder = 2
@@ -413,16 +458,16 @@ object ReportFrame: TReportFrame
         Left = 2
         Top = 15
         Width = 149
-        Height = 246
+        Height = 188
         Align = alClient
         ItemHeight = 13
         TabOrder = 0
         OnClick = ListBox3DblClick
-        ExplicitHeight = 279
+        ExplicitHeight = 281
       end
       object Panel5: TPanel
         Left = 2
-        Top = 261
+        Top = 203
         Width = 149
         Height = 39
         Align = alBottom

@@ -1,15 +1,15 @@
 object TaskList2Frame: TTaskList2Frame
   Left = 0
   Top = 0
-  Width = 723
+  Width = 851
   Height = 305
   Align = alClient
   TabOrder = 0
   ExplicitWidth = 451
   object LV: TListView
-    Left = 49
+    Left = 73
     Top = 0
-    Width = 674
+    Width = 778
     Height = 264
     Align = alClient
     Columns = <
@@ -32,6 +32,10 @@ object TaskList2Frame: TTaskList2Frame
       item
         Caption = 'Status'
         Width = 150
+      end
+      item
+        Caption = 'Gremium'
+        Width = 100
       end>
     DragMode = dmAutomatic
     MultiSelect = True
@@ -39,12 +43,12 @@ object TaskList2Frame: TTaskList2Frame
     RowSelect = True
     TabOrder = 0
     ViewStyle = vsReport
-    ExplicitWidth = 402
+    ExplicitWidth = 378
   end
   object Panel1: TPanel
     Left = 0
     Top = 264
-    Width = 723
+    Width = 851
     Height = 41
     Align = alBottom
     BevelOuter = bvNone
@@ -52,9 +56,16 @@ object TaskList2Frame: TTaskList2Frame
     ShowCaption = False
     TabOrder = 1
     ExplicitWidth = 451
+    object Label1: TLabel
+      Left = 8
+      Top = 8
+      Width = 24
+      Height = 13
+      Caption = 'Filter'
+    end
     object CheckBox1: TCheckBox
       Tag = 1
-      Left = 16
+      Left = 49
       Top = 6
       Width = 49
       Height = 17
@@ -64,7 +75,7 @@ object TaskList2Frame: TTaskList2Frame
     end
     object CheckBox2: TCheckBox
       Tag = 2
-      Left = 71
+      Left = 104
       Top = 6
       Width = 58
       Height = 17
@@ -74,7 +85,7 @@ object TaskList2Frame: TTaskList2Frame
     end
     object CheckBox3: TCheckBox
       Tag = 4
-      Left = 135
+      Left = 168
       Top = 6
       Width = 90
       Height = 17
@@ -84,7 +95,7 @@ object TaskList2Frame: TTaskList2Frame
     end
     object CheckBox4: TCheckBox
       Tag = 8
-      Left = 231
+      Left = 264
       Top = 6
       Width = 154
       Height = 17
@@ -94,7 +105,7 @@ object TaskList2Frame: TTaskList2Frame
     end
     object CheckBox5: TCheckBox
       Tag = 16
-      Left = 384
+      Left = 417
       Top = 6
       Width = 97
       Height = 17
@@ -102,11 +113,21 @@ object TaskList2Frame: TTaskList2Frame
       TabOrder = 4
       OnClick = CheckBox1Click
     end
+    object CheckBox6: TCheckBox
+      Tag = 32
+      Left = 520
+      Top = 6
+      Width = 97
+      Height = 17
+      Caption = 'Beschlusfassung'
+      TabOrder = 5
+      OnClick = CheckBox1Click
+    end
   end
   object Panel2: TPanel
     Left = 0
     Top = 0
-    Width = 49
+    Width = 73
     Height = 264
     Align = alLeft
     BevelOuter = bvNone
@@ -200,20 +221,16 @@ object TaskList2Frame: TTaskList2Frame
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsChapter'
+    SQLConnection = GM.SQLConnection1
     Left = 128
     Top = 24
   end
   object ListTasksQry: TClientDataSet
     Aggregates = <>
-    Params = <
-      item
-        DataType = ftInteger
-        Name = 'GR_ID'
-        ParamType = ptInput
-      end>
+    Params = <>
     ProviderName = 'ListTasks'
     RemoteServer = DSProviderConnection1
-    Left = 112
+    Left = 136
     Top = 80
   end
 end

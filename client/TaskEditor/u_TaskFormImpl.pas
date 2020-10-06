@@ -102,7 +102,7 @@ function TaskFormImpl.getChanged: boolean;
     if not Result then begin
       for i := 0 to pred(base.Childs.Count) do
       begin
-        Result := base.Childs.Items[i].Changed;
+        Result := get(base.Childs.Items[i]);
         if Result then
           break;
       end;

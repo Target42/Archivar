@@ -1,15 +1,14 @@
 object TaskListFrame: TTaskListFrame
   Left = 0
   Top = 0
-  Width = 762
+  Width = 451
   Height = 305
   Align = alClient
   TabOrder = 0
-  ExplicitWidth = 451
   object LV: TListView
     Left = 0
     Top = 0
-    Width = 762
+    Width = 451
     Height = 305
     Align = alClient
     Columns = <
@@ -47,11 +46,10 @@ object TaskListFrame: TTaskListFrame
     TabOrder = 0
     ViewStyle = vsReport
     OnColumnClick = LVColumnClick
+    OnCustomDrawItem = LVCustomDrawItem
+    OnCustomDrawSubItem = LVCustomDrawSubItem
     OnDblClick = LVDblClick
     OnKeyUp = DBGrid1KeyUp
-    ExplicitTop = 73
-    ExplicitWidth = 451
-    ExplicitHeight = 232
   end
   object ApplicationEvents1: TApplicationEvents
     OnMessage = ApplicationEvents1Message

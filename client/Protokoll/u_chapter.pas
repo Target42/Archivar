@@ -47,8 +47,9 @@ type
       FPID: integer;
       FNr: integer;
       FNumbering: boolean;
-    FTAID: integer;
-    FData: Pointer;
+      FTAID: integer;
+      FData: Pointer;
+      FRem: String;
     public
       constructor create(owner : TChapter);
       Destructor Destroy; override;
@@ -62,6 +63,7 @@ type
       property Numbering: boolean read FNumbering write FNumbering;
       property TAID: integer read FTAID write FTAID;
       property Data: Pointer read FData write FData;
+      property Rem: String read FRem write FRem;
 
       procedure up;
       procedure down;
@@ -73,6 +75,8 @@ type
 
       function fullTitle: string;
       procedure reindex;
+
+      function hasID( id : integer ) : Boolean;
   end;
 
 implementation
@@ -249,6 +253,22 @@ begin
   if FTAID <> 0 then
     Result := Result + Format(' (%d)', [FTAID]);
 
+end;
+
+function TChapter.hasID(id: integer): Boolean;
+var
+  i : integer;
+begin
+  Result := (FTAID = id);
+  if not Result then
+  begin
+    for i := 0 to pred(m_childs.Count) do
+    begin
+      Result := m_childs.Items[i].hasID(id);
+      if Result then
+        break;
+    end;
+  end;
 end;
 
 function TChapter.newChapter: TChapter;

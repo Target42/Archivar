@@ -53,19 +53,11 @@ object dsChapter: TdsChapter
     SQL.Strings = (
       'select * from TO_OPEN a,  TA_TASK b,  TY_TASKTYPE c'
       'where '
-      'a.gr_ID = :GR_ID'
-      'and'
       'a.ta_id = b.ta_id'
       'and'
       'b.ty_id = c.ty_id')
     Left = 168
     Top = 120
-    ParamData = <
-      item
-        DataType = ftInteger
-        Name = 'GR_ID'
-        ParamType = ptInput
-      end>
   end
   object ListTasks: TDataSetProvider
     DataSet = ListTasksQry

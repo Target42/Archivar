@@ -333,7 +333,6 @@
             <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
-        <DCCReference Include="..\misc\xsd_TaskData.pas"/>
         <DCCReference Include="TaskEditor\u_TTaskFileImpl.pas"/>
         <DCCReference Include="TaskEditor\u_TTaskContainerImpl.pas"/>
         <DCCReference Include="TaskEditor\u_TTaskStylesImpl.pas"/>
@@ -382,9 +381,25 @@
         <DCCReference Include="Beschlus\u_BeschlussImpl.pas"/>
         <DCCReference Include="..\misc\xsd_DataField.pas"/>
         <DCCReference Include="misc\f_set.pas">
-            <Form>Form1</Form>
+            <Form>MySettingsForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="TextBlock\f_textblock_edit.pas">
+            <Form>TextBlockEditForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="..\misc\xsd_TextBlock.pas"/>
+        <DCCReference Include="TaskEditor\fr_form.pas">
+            <Form>FormFrame</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Protokoll\f_chapterTask.pas">
+            <Form>ChapterTaskForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="..\misc\xsd_Styles.pas"/>
+        <DCCReference Include="..\misc\xsd_TaskData.pas"/>
         <None Include="Datafields\ERA-NS.txt"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

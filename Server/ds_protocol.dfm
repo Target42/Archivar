@@ -296,7 +296,7 @@ object dsProtocol: TdsProtocol
     Left = 24
     Top = 152
   end
-  object Chapter: TDataSetProvider
+  object ChapterTab: TDataSetProvider
     DataSet = CPTab
     Left = 24
     Top = 208
@@ -370,5 +370,33 @@ object dsProtocol: TdsProtocol
         Name = 'CP_ID'
         ParamType = ptInput
       end>
+  end
+  object ListTasksQry: TIBQuery
+    Database = DBMod.IBDatabase1
+    Transaction = IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    ParamCheck = True
+    SQL.Strings = (
+      'select * from TO_OPEN a,  TA_TASK b,  TY_TASKTYPE c'
+      'where '
+      'a.gr_ID = :GR_ID'
+      'and'
+      'a.ta_id = b.ta_id'
+      'and'
+      'b.ty_id = c.ty_id')
+    Left = 232
+    Top = 16
+    ParamData = <
+      item
+        DataType = ftInteger
+        Name = 'GR_ID'
+        ParamType = ptInput
+      end>
+  end
+  object ListTasks: TDataSetProvider
+    DataSet = ListTasksQry
+    Left = 224
+    Top = 72
   end
 end

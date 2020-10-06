@@ -17,20 +17,20 @@ type
     Panel1: TPanel;
     TV: TTreeView;
     Splitter1: TSplitter;
-    SpeedButton8: TSpeedButton;
-    SpeedButton1: TSpeedButton;
-    SpeedButton2: TSpeedButton;
-    SpeedButton3: TSpeedButton;
-    SpeedButton4: TSpeedButton;
-    SpeedButton5: TSpeedButton;
-    SpeedButton6: TSpeedButton;
-    SpeedButton7: TSpeedButton;
     GroupBox2: TGroupBox;
     Panel2: TPanel;
     ComboBox1: TComboBox;
     Label1: TLabel;
     TaskList2Frame1: TTaskList2Frame;
     Label2: TLabel;
+    SpeedButton8: TBitBtn;
+    SpeedButton1: TBitBtn;
+    SpeedButton2: TBitBtn;
+    SpeedButton3: TBitBtn;
+    SpeedButton4: TBitBtn;
+    SpeedButton5: TBitBtn;
+    SpeedButton6: TBitBtn;
+    SpeedButton7: TBitBtn;
     procedure SpeedButton8Click(Sender: TObject);
     procedure SpeedButton1Click(Sender: TObject);
     procedure SpeedButton4Click(Sender: TObject);
@@ -45,6 +45,7 @@ type
     procedure TVDblClick(Sender: TObject);
     procedure TaskList2Frame1SpeedButton2Click(Sender: TObject);
     procedure SpeedButton3Click(Sender: TObject);
+    procedure TaskList2Frame1CheckBox5Click(Sender: TObject);
   private
     m_id   : integer;
     m_xCp  : IXMLChapter;
@@ -68,7 +69,7 @@ type
 
     property xChapter : IXMLChapter read m_xCp;
 
-    procedure prepare;
+    procedure prepare( con : TDSProviderConnection );
     procedure Shutdown;
 
     procedure save;
@@ -82,7 +83,7 @@ implementation
 
 uses
   m_glob_client, Xml.XMLIntf, Xml.XMLDoc,
-  f_chapterEdit, u_gremium;
+  f_chapterEdit, u_gremium, f_chapterTask;
 
 {$R *.dfm}
 
@@ -124,6 +125,7 @@ begin
       cp.Nr   := xTop.Nr;
       cp.Numbering  := xTop.Numbering;
       cp.TAID := xTop.Taid;
+      cp.Rem  := xTop.Rem;
       list.Add(cp);
     end;
   for i := 0 to pred(list.Count) do
@@ -149,10 +151,15 @@ var
   gr : TGremium;
 begin
   if ComboBox1.ItemIndex = -1 then
-    exit;
-
-  gr := TGremium(ComboBox1.Items.Objects[ ComboBox1.ItemIndex]);
-  TaskList2Frame1.GR_ID := gr.ID;
+     TaskList2Frame1.GR_ID :=  0
+  else
+  begin
+    gr := TGremium(ComboBox1.Items.Objects[ ComboBox1.ItemIndex]);
+    if not Assigned(gr) then
+      TaskList2Frame1.GR_ID :=  0
+    else
+      TaskList2Frame1.GR_ID := gr.ID;
+  end;
 end;
 
 procedure TChapterFrame.doNewTaskEntry(Sender: TObject; var dataList : TEntryList);
@@ -167,10 +174,13 @@ begin
 
   for i := 0 to pred(dataList.Count) do
   begin
-    cp            := p.newChapter;
-    cp.Name       := dataList.Items[i].TaskName;
-    cp.Numbering  := (p <> m_root);
-    cp.TAID       := dataList.Items[i].TaskID;
+    if not m_root.hasID(dataList.Items[i].TaskID) then
+    begin
+      cp            := p.newChapter;
+      cp.Name       := dataList.Items[i].TaskName;
+      cp.Numbering  := (p <> m_root);
+      cp.TAID       := dataList.Items[i].TaskID;
+    end;
   end;
   updateTree;
 end;
@@ -202,17 +212,21 @@ begin
   buildTree;
 end;
 
-procedure TChapterFrame.prepare;
+procedure TChapterFrame.prepare( con : TDSProviderConnection );
 var
   i : integer;
 begin
   m_root  := TChapter.create(NIL);
   m_cpList:= TList<TChapter>.create;
 
-  DSProviderConnection1.SQLConnection := GM.SQLConnection1;
+  if not Assigned(con) then
+    DSProviderConnection1.SQLConnection := GM.SQLConnection1
+  else
+    DSProviderConnection1.SQLConnection := con.SQLConnection;
 
   m_xCp := NewChapter;
 
+  ComboBox1.Items.Add('');
   for i := 0 to pred(GM.Gremien.Count) do
   begin
     ComboBox1.Items.AddObject(GM.Gremien.Items[i].Name, GM.Gremien.Items[i]);
@@ -252,6 +266,7 @@ var
         xt.Nr       := cp.Nr;
         xt.Taid     := cp.TAID;
         xt.Numbering:= cp.Numbering;
+        xt.Rem      := cp.Rem;
 
         saveElements( cp.Childs);
       end;
@@ -286,6 +301,7 @@ begin
     ChapterTab.ReadOnly := true;
     ShowMessage('Hauptkapitel nicht gefunden!');
   end;
+  TaskList2Frame1.GR_ID :=  0;
 end;
 
 procedure TChapterFrame.setTitle(value: string);
@@ -328,13 +344,24 @@ begin
   if not Assigned(TV.Selected) then
     exit;
   cp := TV.Selected.Data;
-  Application.CreateForm(TChapterEditForm, ChapterEditForm);
-  ChapterEditForm.CP := cp;
-  if ChapterEditForm.ShowModal = mrOk then
+
+  if cp.TAID = 0 then begin
+    Application.CreateForm(TChapterEditForm, ChapterEditForm);
+    ChapterEditForm.CP := cp;
+    if ChapterEditForm.ShowModal = mrOk then
+    begin
+      updateTree
+    end;
+    ChapterEditForm.Free;
+  end
+  else
   begin
-    updateTree
+    Application.CreateForm(TChapterTaskForm, ChapterTaskForm);
+    ChapterTaskForm.CP := cp;
+    if ChapterTaskForm.ShowModal = mrok then
+      updateTree;
+    ChapterTaskForm.Free;
   end;
-  ChapterEditForm.Free;
 end;
 
 procedure TChapterFrame.SpeedButton3Click(Sender: TObject);
@@ -434,6 +461,12 @@ begin
   TV.Items.AddChildObject(TV.Selected, cp.fullTitle, cp);
   if Assigned(TV.Selected) then
     TV.Selected.Expand(false);
+end;
+
+procedure TChapterFrame.TaskList2Frame1CheckBox5Click(Sender: TObject);
+begin
+  TaskList2Frame1.CheckBox1Click(Sender);
+
 end;
 
 procedure TChapterFrame.TaskList2Frame1SpeedButton2Click(Sender: TObject);

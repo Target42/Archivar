@@ -11,7 +11,8 @@ uses
   System.Generics.Collections, u_gremium, u_stub, System.JSON, JvComponentBase,
   JvComputerInfoEx, IdBaseComponent, IdComponent, IdIPWatch, Datasnap.DSCommon,
   Data.DBXJSON, pngimage, System.ImageList, Vcl.ImgList, Vcl.Controls,
-  u_berTypes, Datasnap.DSConnect, i_personen;
+  u_berTypes, Datasnap.DSConnect, i_personen, Vcl.Dialogs, JvBaseDlg,
+  JvSHFileOperation;
 
 const
   WMUSER            = WM_USER + 25;
@@ -38,6 +39,7 @@ type
     ImageList2: TImageList;
     DSProviderConnection1: TDSProviderConnection;
     GremiumMA: TClientDataSet;
+    JvSHFileOperation1: TJvSHFileOperation;
     procedure SQLConnection1AfterConnect(Sender: TObject);
     procedure SQLConnection1AfterDisconnect(Sender: TObject);
     procedure DataModuleCreate(Sender: TObject);
@@ -120,7 +122,7 @@ var
 implementation
 
 uses
-  Vcl.Dialogs, Vcl.Forms, Winapi.Windows, u_json,
+  Vcl.Forms, Winapi.Windows, u_json,
   System.UITypes, system.IOUtils, FireDAC.Stan.Storagebin,
   System.Win.ComObj, m_WindowHandler, m_BookMarkHandler, IdHashMessageDigest,
   Vcl.Graphics, u_PersonenListeImpl, u_PersonImpl;
@@ -239,6 +241,9 @@ end;
 
 procedure TGM.DataModuleDestroy(Sender: TObject);
 begin
+  JvSHFileOperation1.SourceFiles.add( TPath.Combine(m_httpHome, '{*}'));
+  JvSHFileOperation1.Execute;
+
   clearGrmien;
   m_gremien.free;
 

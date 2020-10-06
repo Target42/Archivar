@@ -57,18 +57,19 @@ type
     CPTab: TClientDataSet;
     CpSrc: TDataSource;
     Panel2: TPanel;
-    SpeedButton1: TSpeedButton;
-    SpeedButton2: TSpeedButton;
-    SpeedButton3: TSpeedButton;
-    SpeedButton4: TSpeedButton;
-    SpeedButton5: TSpeedButton;
     UpdateCPQry: TClientDataSet;
-    Button4: TButton;
     TV: TTreeView;
     Button1: TBitBtn;
     Button2: TBitBtn;
     Button3: TBitBtn;
     TNTabPE_ID: TIntegerField;
+    Label4: TLabel;
+    SpeedButton1: TBitBtn;
+    SpeedButton2: TBitBtn;
+    SpeedButton3: TBitBtn;
+    Button4: TBitBtn;
+    SpeedButton4: TBitBtn;
+    SpeedButton5: TBitBtn;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -115,6 +116,9 @@ type
     procedure buildTree( root : TTreeNode; xCp : IXMLChapter );
 
     procedure UpdateGremium;
+
+    procedure save;
+    procedure reopen;
   public
     property ID : integer read m_id write setID;
     property RO : boolean read m_ro write setRO;
@@ -128,7 +132,7 @@ implementation
 uses
   m_glob_client, Xml.XMLIntf, Xml.XMLDoc, u_bookmark, m_BookMarkHandler,
   u_berTypes, System.JSON, u_json, System.Generics.Collections,
-  m_WindowHandler, f_chapter_content, u_chapter, u_gremium;
+  m_WindowHandler, f_chapter_content, u_chapter, u_gremium, system.UITypes;
 
 {$R *.dfm}
 
@@ -283,6 +287,7 @@ var
   cp : TChapterTitle;
   node : TTreeNode;
 begin
+
   node := TV.Selected;
   if (node = NIL) then
     exit;
@@ -291,6 +296,8 @@ begin
 
   cp := node.Data;
 
+  if m_treeChanged then
+    save;
   Application.CreateForm(TChapterContentForm, ChapterContentForm);
   ChapterContentForm.ChapterTitle := cp;
   if ChapterContentForm.ShowModal = mrOk  then
@@ -298,6 +305,7 @@ begin
     updateCpList;
   end;
   ChapterContentForm.Free;
+  reopen;
 end;
 
 procedure TProtokollForm.DBNavigator3Click(Sender: TObject;
@@ -309,23 +317,8 @@ end;
 
 procedure TProtokollForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
-  if m_treeChanged then
-    saveToclientBlob(prTab, 'PR_DATA');
 
-  if (PRTab.State = dsEdit) or ( PRTab.State = dsInsert) then
-    PRTab.Post;
-
-  if PRTab.UpdatesPending then
-    PRTab.ApplyUpdates(-1);
-
-  if TNTab.UpdatesPending then
-    TNTab.ApplyUpdates(-1);
-
-  if TGTab.UpdatesPending then
-    TGTab.ApplyUpdates(-1);
-
-  if CPTab.UpdatesPending then
-    CPTab.ApplyUpdates(-1);
+  save;
 
   Action := caFree;
   if m_locked then
@@ -396,6 +389,34 @@ begin
   end;
   if Assigned(st) then
     st.Free;
+  m_treeChanged := false;
+end;
+
+procedure TProtokollForm.reopen;
+begin
+  PRTab.Edit;
+end;
+
+procedure TProtokollForm.save;
+begin
+  if m_treeChanged then
+    saveToclientBlob(prTab, 'PR_DATA');
+
+  if (PRTab.State = dsEdit) or ( PRTab.State = dsInsert) then
+    PRTab.Post;
+
+  if PRTab.UpdatesPending then
+    PRTab.ApplyUpdates(-1);
+
+  if TNTab.UpdatesPending then
+    TNTab.ApplyUpdates(-1);
+
+  if TGTab.UpdatesPending then
+    TGTab.ApplyUpdates(-1);
+
+  if CPTab.UpdatesPending then
+    CPTab.ApplyUpdates(-1);
+
   m_treeChanged := false;
 end;
 
@@ -472,6 +493,10 @@ procedure TProtokollForm.setRO(value: boolean);
 begin
   m_ro := value;
 
+  Label4.Visible    := m_ro;
+  Sperren1.Enabled  := m_ro;
+  Freigeben1.Enabled:= not m_ro;
+
   Panel2.Enabled      := not m_ro;
 
   DBNavigator1.Enabled := not m_ro;
@@ -498,7 +523,6 @@ begin
     cp.ID := GM.autoInc('gen_cp_id');
     cp.Modified := true;
 
-
     CPTab.Append;
     CPTab.FieldByName('PR_ID').AsInteger    := m_id;
     CPTab.FieldByName('CP_ID').AsInteger    := cp.ID;
@@ -506,6 +530,7 @@ begin
     CPTab.FieldByName('CP_NR').AsInteger    := cp.Nr;
     CPTab.Post;
 
+    m_treeChanged := true;
   end;
 end;
 
@@ -528,6 +553,7 @@ begin
     cp.Modified := true;
     saveChangedChapter;
     updateCpList;
+    m_treeChanged := true;
   end;
 end;
 
@@ -539,12 +565,17 @@ begin
   node := TV.Selected;
   if (node = NIL) then
     exit;
+  if not (MessageDlg('Soll das Kapitel gelöscht werden?', mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
+    exit;
+
   while Assigned(node.Parent)  do
     node := node.Parent;
 
   cp := node.Data;
   m_cpList.remove(cp);
   updateCpList;
+
+  m_treeChanged := true;
 end;
 
 procedure TProtokollForm.SpeedButton4Click(Sender: TObject);
@@ -562,7 +593,7 @@ begin
   cp.up;
   updateCpList;
   saveChangedChapter;
-
+  m_treeChanged := true;
 end;
 
 procedure TProtokollForm.SpeedButton5Click(Sender: TObject);
@@ -581,6 +612,7 @@ begin
   updateCpList;
 
   saveChangedChapter;
+  m_treeChanged := true;
 end;
 
 procedure TProtokollForm.TGTabAfterInsert(DataSet: TDataSet);
@@ -676,7 +708,7 @@ begin
   list := GM.getGremiumMa(PRTab.FieldByName('GR_ID').Asinteger );
   if not Assigned(list) then
     exit;
-
+  try
   for i := 0 to pred(list.count) do begin
     p := list.Items[i];
 
@@ -693,7 +725,10 @@ begin
       TNTab.Post;
     end;
   end;
-  list.release;
+  finally
+    list.release;
+  end;
+
 end;
 
 end.

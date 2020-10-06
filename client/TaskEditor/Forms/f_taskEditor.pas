@@ -61,6 +61,7 @@ type
     procedure BitBtn5Click(Sender: TObject);
     procedure LVDblClick(Sender: TObject);
     procedure ac_exportExecute(Sender: TObject);
+    procedure ReportFrame1Button1Click(Sender: TObject);
   private
     m_teid : integer;
     m_tc   : ITaskContainer;
@@ -266,6 +267,12 @@ procedure TTaksEditorForm.new;
 begin
   m_tc := TTaskContainerImpl.create;
   setTaskContainer( m_tc );
+end;
+
+procedure TTaksEditorForm.ReportFrame1Button1Click(Sender: TObject);
+begin
+  ReportFrame1.Button1Click(Sender);
+
 end;
 
 procedure TTaksEditorForm.save;

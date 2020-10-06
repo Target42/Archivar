@@ -43,7 +43,8 @@ var
 implementation
 
 uses
-  System.IOUtils, m_glob_client, f_datafield_edit, Xml.XMLIntf, xsd_DataField;
+  System.IOUtils, m_glob_client, f_datafield_edit, Xml.XMLIntf, xsd_DataField,
+  system.UITypes;
 
 var
   DatafieldEditform : TDatafieldEditform;
@@ -121,13 +122,17 @@ begin
   while not DATab.Eof do
   begin
     fname := TPath.combine( path, DATab.FieldByName('DA_NAME').AsString+'.xml');
+    bs := NIL;
+    fs := NIL;
     try
       fs    := TFileStream.Create(fname, fmCreate + fmShareExclusive);
       bs := DATab.CreateBlobStream(DATab.FieldByName('DA_PROPS'), bmRead );
       fs.CopyFrom(bs, bs.Size);
     finally
-      bs.Free;
-      fs.Free;
+      if Assigned(bs) then
+        bs.Free;
+      if Assigned(fs) then
+        fs.Free;
     end;
     DATab.Next;
   end;

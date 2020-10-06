@@ -99,6 +99,7 @@ type
     procedure est1Click(Sender: TObject);
     procedure ac_ad_sys_templateExecute(Sender: TObject);
     procedure test21Click(Sender: TObject);
+    procedure ac_prg_setExecute(Sender: TObject);
   private
     procedure setPanel( id : integer ; text : string );
     procedure loadLogo;
@@ -117,7 +118,8 @@ uses
   m_glob_client, f_gremiumForm, f_personen, f_task_new, f_gremiumList,
   f_protokoll, u_stub, System.JSON, u_json, f_protokoll_list, u_gremium, m_BookMarkHandler, m_WindowHandler,
   f_images, System.IOUtils, f_taksListForm, u_berTypes, f_datafields,
-  f_template_new, f_taskEditor, f_select_templateForm, f_bechlus;
+  f_template_new, f_taskEditor, f_select_templateForm, f_bechlus, f_set,
+  f_textblock_edit;
 
 {$R *.dfm}
 
@@ -207,6 +209,16 @@ end;
 procedure TMainForm.ac_prg_disconExecute(Sender: TObject);
 begin
   GM.Disconnect;
+end;
+
+procedure TMainForm.ac_prg_setExecute(Sender: TObject);
+begin
+  try
+    Application.CreateForm(TMySettingsForm, MySettingsForm);
+    MySettingsForm.ShowModal;
+  finally
+    MySettingsForm.free;
+  end;
 end;
 
 procedure TMainForm.ac_pr_newExecute(Sender: TObject);
@@ -321,6 +333,7 @@ begin
         GremiumTreeFrame1.updateTree;
         PageControl1.Visible := true;
         GroupBox2.Visible := true;
+        Splitter2.Visible := true;
         GremiumTreeFrame1.selectFirst;
 
         BookmarkFrame1.updatebookMarks;
@@ -339,6 +352,7 @@ begin
         setPanel(integer(stUser), '  ');
         PageControl1.Visible := false;
         GroupBox2.Visible := false;
+        Splitter2.Visible := false;
       end;
     msgStatus:
     begin
@@ -418,18 +432,10 @@ begin
 end;
 
 procedure TMainForm.test21Click(Sender: TObject);
-var
-  i : integer;
-  list : TStringList;
 begin
-  list := TStringList.Create;
-  for i := 1 to 13 do begin
-    List.Add(format('%dA', [i]));
-    List.Add(format('%dB', [i]));
-    List.Add(format('%dC', [i]));
-  end;
-  list.SaveToFile('era.txt');
-  list.Free;
+  Application.CreateForm(TTextBlockEditForm, TextBlockEditForm);
+  TextBlockEditForm.ShowModal;
+  TextBlockEditForm.free;
 end;
 
 end.

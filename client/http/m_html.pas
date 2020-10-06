@@ -4,7 +4,7 @@ interface
 
 uses
   System.SysUtils, System.Classes, Web.HTTPApp, Web.HTTPProd, xsd_TaskData,
-  JvComponentBase, JvRichEditToHtml, i_taskEdit;
+  JvComponentBase, JvRichEditToHtml, i_taskEdit, SHDocVw;
 
 type
   THtmlMod = class(TDataModule)
@@ -20,19 +20,25 @@ type
   private
     m_task : IXMLList;
     m_style: ITaskStyle;
+    m_tc   : ITaskContainer;
+
     function getHTMLDocs : TStrings;
     function getField( name : string ) : string;
 
     function createTable( name : string ) : String;
     function addHeader( xHeader : IXMLHeader ) : string;
     function execScript( TagParams: TStrings ) : string;
+    procedure SaveImages( path : string );
   public
-    property HTMLDoc : TStrings read getHTMLDocs;
-    property TaskData: IXMLList read m_task write m_task;
-    property TaskStyle : ITaskStyle read m_style write m_style;
+    //property HTMLDoc : TStrings read getHTMLDocs;
+    property TaskContainer  : ITaskContainer read m_tc write m_tc;
+    property TaskData       : IXMLList read m_task write m_task;
+    property TaskStyle      : ITaskStyle read m_style write m_style;
 
     function Content : string;
     procedure SaveToFile( fname : string );
+
+    procedure show(web : TWebBrowser; path : string );
   end;
 
 var
@@ -41,7 +47,7 @@ var
 implementation
 
 uses
-  System.StrUtils, m_dws, Vcl.Forms;
+  System.StrUtils, m_dws, Vcl.Forms, System.IOUtils, m_glob_client;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -128,8 +134,7 @@ begin
 end;
 
 function THtmlMod.execScript(TagParams: TStrings): string;
-var
-  DwsMod : TDwsMod;
+var                                             DwsMod : TDwsMod;
   tf     : ITaskFile;
 begin
   tf := m_style.Files.getFile(TagParams[0]);
@@ -210,6 +215,24 @@ begin
   end;
 end;
 
+procedure THtmlMod.SaveImages(path: string);
+var
+  i : integer;
+  ex : string;
+begin
+  if not Assigned(m_style) then
+    exit;
+
+  for i := 0 to pred(m_style.Files.Count) do
+  begin
+    ex := LowerCase( m_style.Files.Items[i].Name);
+    if (ex = '.png') or (ex = '.jpg') then
+    begin
+      m_style.Files.Items[i].save(path);
+    end;
+  end;
+end;
+
 procedure THtmlMod.SaveToFile(fname: string);
 var
   list : TStringList;
@@ -226,6 +249,55 @@ begin
   finally
     list.Free;
   end;
+end;
+
+procedure THtmlMod.show( web : TWebBrowser; path : string );
+var
+  list : TStringList;
+  err  : boolean;
+  fname : string;
+  tf    : ITaskFile;
+  dir   : string;
+begin
+  err := false;
+  list:= TStringList.Create;
+  SaveImages(path);
+  list.Add('<body>');
+  list.Add('<ul>Fehler:<br>');
+  if not Assigned(m_task) then
+  begin
+    err := true;
+    list.Add('<li>Kein Daten zur Darstellung</li>');
+  end;
+
+  if not Assigned(m_style) then
+  begin
+    err := true;
+    list.Add('<li>Kein Style zur Formatierung</li>');
+  end
+  else
+  begin
+    tf := m_style.Files.getFile('index.html');
+    if not Assigned(tf) then
+    begin
+      err := true;
+      list.Add('<li>Die Datei "index.html" wurde nicht gefunden</li>');
+    end
+    else
+      PageProducer1.HTMLDoc.Assign(tf.Lines);
+  end;
+  dir := TPath.Combine(GM.wwwHome, path);
+  ForceDirectories(dir);
+
+  list.Add('</ul>');
+  list.Add('</body>');
+  if err then
+    list.SaveToFile(TPath.combine(dir, 'index.html'))
+  else
+    SaveToFile(TPath.combine(dir, 'index.html'));
+
+  web.Navigate('http://localhost:42424/'+path+'/index.html');
+  list.Free;
 end;
 
 end.

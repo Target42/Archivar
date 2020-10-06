@@ -2,7 +2,7 @@ object ProtokollForm: TProtokollForm
   Left = 0
   Top = 0
   Caption = 'Protokoll'
-  ClientHeight = 372
+  ClientHeight = 468
   ClientWidth = 888
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -22,25 +22,31 @@ object ProtokollForm: TProtokollForm
   TextHeight = 13
   object StatusBar1: TStatusBar
     Left = 0
-    Top = 353
+    Top = 449
     Width = 888
     Height = 19
     Panels = <>
+    ExplicitTop = 353
   end
   object PageControl1: TPageControl
     Left = 0
     Top = 49
     Width = 888
-    Height = 304
-    ActivePage = TabSheet2
+    Height = 400
+    ActivePage = TabSheet1
     Align = alClient
     TabOrder = 1
+    ExplicitHeight = 304
     object TabSheet1: TTabSheet
       Caption = 'Allgemines'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 276
       object Splitter1: TSplitter
         Left = 209
         Top = 0
-        Height = 276
+        Height = 372
         ExplicitLeft = 272
         ExplicitTop = 16
         ExplicitHeight = 100
@@ -49,26 +55,28 @@ object ProtokollForm: TProtokollForm
         Left = 0
         Top = 0
         Width = 209
-        Height = 276
+        Height = 372
         Align = alLeft
         Caption = 'Hauptkapitel'
         TabOrder = 0
+        ExplicitHeight = 276
         object Panel2: TPanel
           Left = 2
-          Top = 211
+          Top = 264
           Width = 205
-          Height = 63
+          Height = 106
           Align = alBottom
           BevelOuter = bvNone
           Caption = 'Panel2'
           ShowCaption = False
           TabOrder = 0
-          object SpeedButton1: TSpeedButton
-            Left = 16
+          object SpeedButton1: TBitBtn
+            Left = 4
             Top = 6
-            Width = 23
-            Height = 22
+            Width = 89
+            Height = 27
             Hint = 'Titel hinzuf'#252'gen'
+            Caption = 'Hinzuf'#252'gen'
             Glyph.Data = {
               36040000424D3604000000000000360000002800000010000000100000000100
               20000000000000040000C40E0000C40E00000000000000000000FFFFFF00FFFF
@@ -106,14 +114,16 @@ object ProtokollForm: TProtokollForm
               FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
             ParentShowHint = False
             ShowHint = True
+            TabOrder = 1
             OnClick = SpeedButton1Click
           end
-          object SpeedButton2: TSpeedButton
-            Left = 45
+          object SpeedButton2: TBitBtn
+            Left = 112
             Top = 6
-            Width = 23
-            Height = 22
+            Width = 89
+            Height = 26
             Hint = 'Titel bearbeiten'
+            Caption = 'Bearbeiten'
             Glyph.Data = {
               36040000424D3604000000000000360000002800000010000000100000000100
               20000000000000040000C40E0000C40E00000000000000000000FFFFFF00FFFF
@@ -151,14 +161,16 @@ object ProtokollForm: TProtokollForm
               FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
             ParentShowHint = False
             ShowHint = True
+            TabOrder = 2
             OnClick = SpeedButton2Click
           end
-          object SpeedButton3: TSpeedButton
-            Left = 74
-            Top = 6
-            Width = 23
-            Height = 22
+          object SpeedButton3: TBitBtn
+            Left = 4
+            Top = 71
+            Width = 89
+            Height = 26
             Hint = 'Titel l'#246'schen'
+            Caption = 'L'#246'schen'
             Glyph.Data = {
               36040000424D3604000000000000360000002800000010000000100000000100
               20000000000000040000C40E0000C40E00000000000000000000FFFFFF00FFFF
@@ -196,14 +208,61 @@ object ProtokollForm: TProtokollForm
               FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
             ParentShowHint = False
             ShowHint = True
+            TabOrder = 3
             OnClick = SpeedButton3Click
           end
-          object SpeedButton4: TSpeedButton
-            Left = 128
-            Top = 6
-            Width = 23
-            Height = 22
+          object Button4: TBitBtn
+            Left = 112
+            Top = 71
+            Width = 89
+            Height = 26
+            Caption = 'Inhalt'
+            Glyph.Data = {
+              36040000424D3604000000000000360000002800000010000000100000000100
+              20000000000000040000C40E0000C40E00000000000000000000FFFFFF00FFFF
+              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+              FF00AE9E0081AD9C00C7AD9C00C7C4AB2CB9F9C991ABF9C991ABF9C991ABF9C9
+              91ABF9C991ABF9C991ABF9C991ABF8C98F72FFFFFF00FFFFFF00FFFFFF00FFFF
+              FF00AD9C00C7D4BC00FFD4BC00FFAD9C00C7FFFFFF00F9C99055F9C99055FFFF
+              FF00F9C991ABFFFFFF00FFFFFF00F9C991ABFFFFFF00FFFFFF00FFFFFF00FFFF
+              FF00AD9C00C7D4BC00FFD4BC00FFAD9C00C7FFFFFF00F9C99055F9C99055FFFF
+              FF00F9C991ABFFFFFF00FFFFFF00F9C991ABFFFFFF00FFFFFF00FFFFFF00FFFF
+              FF00AD9C00C7B6A300FFB6A300FFB6A210E0F9C991ABF9CA90C7F9CA90C7F9C9
+              91ABF9CA90E3F9C991ABF9C991ABF9C991ABFFFFFF00FFFFFF00FFFFFF00FFFF
+              FF00AD9C00C7D4BC00FFD4BC00FFAD9C00C7FFFFFF00F9C99055F9C99055FFFF
+              FF00F9C991ABFFFFFF00FFFFFF00F9C991ABFFFFFF00FFFFFF00FFFFFF00FFFF
+              FF00AD9C00C7C5AF00FFC5AF00FFB39E08D3F9C99055FACB918DFACB918DF9C9
+              9055F9CA90C7F9C99055F9C99055F9C991ABFFFFFF00FFFFFF00FFFFFF00FFFF
+              FF00AD9C00C7C5AF00FFC5AF00FFB39E08D3F9C99055FACB918DFACB918DF9C9
+              9055F9CA90C7F9C99055F9C99055F9C991ABFFFFFF00FFFFFF00FFFFFF00FFFF
+              FF00AD9C00C7D4BC00FFD4BC00FFAD9C00C7FFFFFF00F9C99055F9C99055FFFF
+              FF00F9C991ABFFFFFF00FFFFFF00F9C991ABFFFFFF00FFFFFF00FFFFFF00FFFF
+              FF00AD9C00C7B6A300FFB6A300FFAB9900F2AD9C00C7B39E08D3B39E08D3AD9C
+              00C7B6A210E0AD9C00C7AD9C00C7C4AB2CB9FFFFFF00FFFFFF00FFFFFF00FFFF
+              FF00AD9C00C7D4BC00FFD4BC00FFB6A300FFD4BC00FFC5AF00FFC5AF00FFD4BC
+              00FFB6A300FFD4BC00FFD4BC00FFAD9C00C7FFFFFF00FFFFFF00FFFFFF00FFFF
+              FF00AD9C00C7D4BC00FFD4BC00FFB6A300FFD4BC00FFC5AF00FFC5AF00FFD4BC
+              00FFB6A300FFD4BC00FFD4BC00FFAD9C00C7FFFFFF00FFFFFF00FFFFFF00FFFF
+              FF00AE9E0081AD9C00C7AD9C00C7AD9C00C7AD9C00C7AD9C00C7AD9C00C7AD9C
+              00C7AD9C00C7AD9C00C7AD9C00C7AE9E0081FFFFFF00FFFFFF00FFFFFF00FFFF
+              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
+            ParentDoubleBuffered = True
+            TabOrder = 0
+            OnClick = Button4Click
+          end
+          object SpeedButton4: TBitBtn
+            Left = 4
+            Top = 39
+            Width = 89
+            Height = 26
             Hint = 'Hoch'
+            Caption = 'Kapitel hoch'
             Glyph.Data = {
               36040000424D3604000000000000360000002800000010000000100000000100
               20000000000000040000C40E0000C40E00000000000000000000FFFFFF00FFFF
@@ -241,14 +300,16 @@ object ProtokollForm: TProtokollForm
               FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
             ParentShowHint = False
             ShowHint = True
+            TabOrder = 4
             OnClick = SpeedButton4Click
           end
-          object SpeedButton5: TSpeedButton
-            Left = 128
-            Top = 34
-            Width = 23
-            Height = 22
+          object SpeedButton5: TBitBtn
+            Left = 112
+            Top = 38
+            Width = 89
+            Height = 27
             Hint = 'Runter'
+            Caption = 'Kapitel runter'
             Glyph.Data = {
               36040000424D3604000000000000360000002800000010000000100000000100
               20000000000000040000C40E0000C40E00000000000000000000FFFFFF00FFFF
@@ -286,38 +347,35 @@ object ProtokollForm: TProtokollForm
               FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
             ParentShowHint = False
             ShowHint = True
+            TabOrder = 5
             OnClick = SpeedButton5Click
-          end
-          object Button4: TButton
-            Left = 16
-            Top = 34
-            Width = 75
-            Height = 25
-            Caption = 'Button4'
-            TabOrder = 0
-            OnClick = Button4Click
           end
         end
         object TV: TTreeView
           Left = 2
           Top = 15
           Width = 205
-          Height = 196
+          Height = 249
           Align = alClient
           Indent = 19
           ReadOnly = True
           TabOrder = 1
+          ExplicitHeight = 196
         end
       end
     end
     object TabSheet2: TTabSheet
       Caption = 'Teilnehmer'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 276
       object DBGrid1: TDBGrid
         Left = 0
         Top = 0
         Width = 880
-        Height = 210
+        Height = 306
         Align = alClient
         DataSource = TNSrc
         Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgMultiSelect, dgTitleClick, dgTitleHotTrack]
@@ -370,7 +428,7 @@ object ProtokollForm: TProtokollForm
       end
       object Panel1: TPanel
         Left = 0
-        Top = 235
+        Top = 331
         Width = 880
         Height = 41
         Align = alBottom
@@ -378,6 +436,7 @@ object ProtokollForm: TProtokollForm
         Caption = 'Panel1'
         ShowCaption = False
         TabOrder = 1
+        ExplicitTop = 235
         object Button1: TBitBtn
           Left = 8
           Top = 6
@@ -515,22 +574,27 @@ object ProtokollForm: TProtokollForm
       end
       object DBNavigator2: TDBNavigator
         Left = 0
-        Top = 210
+        Top = 306
         Width = 880
         Height = 25
         DataSource = TNSrc
         Align = alBottom
         TabOrder = 2
+        ExplicitTop = 210
       end
     end
     object TabSheet3: TTabSheet
       Caption = 'G'#228'ste'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 276
       object DBGrid2: TDBGrid
         Left = 0
         Top = 0
         Width = 880
-        Height = 251
+        Height = 347
         Align = alClient
         DataSource = TGSrc
         Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
@@ -586,12 +650,13 @@ object ProtokollForm: TProtokollForm
       end
       object DBNavigator1: TDBNavigator
         Left = 0
-        Top = 251
+        Top = 347
         Width = 880
         Height = 25
         DataSource = TGSrc
         Align = alBottom
         TabOrder = 1
+        ExplicitTop = 251
       end
     end
   end
@@ -625,6 +690,19 @@ object ProtokollForm: TProtokollForm
       Width = 31
       Height = 13
       Caption = 'Datum'
+    end
+    object Label4: TLabel
+      Left = 496
+      Top = 15
+      Width = 98
+      Height = 13
+      Caption = 'Schreibgesch'#252'tzt'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clRed
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ParentFont = False
     end
     object DBEdit1: TDBEdit
       Left = 42
@@ -779,7 +857,7 @@ object ProtokollForm: TProtokollForm
   object CPTab: TClientDataSet
     Aggregates = <>
     Params = <>
-    ProviderName = 'Chapter'
+    ProviderName = 'ChapterTab'
     RemoteServer = DSProviderConnection1
     Left = 44
     Top = 192

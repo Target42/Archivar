@@ -27,6 +27,7 @@ type
     dsChapter: TDSServerClass;
     dsTaskEdit: TDSServerClass;
     dsTemplate: TDSServerClass;
+    dsTaskView: TDSServerClass;
     procedure dsAdminGetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
     procedure ServiceStart(Sender: TService; var Started: Boolean);
@@ -62,6 +63,8 @@ type
     procedure dsTemplateGetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
     procedure ServiceStop(Sender: TService; var Stopped: Boolean);
+    procedure dsTaskViewGetClass(DSServerClass: TDSServerClass;
+      var PersistentClass: TPersistentClass);
   private
     { Private declarations }
   protected
@@ -88,7 +91,7 @@ implementation
 uses
   Winapi.Windows, m_db, ds_gremium, ds_admin, Datasnap.DSSession, ds_person, IOUtils,
   ds_taks, ds_file, ds_misc, ds_protocol, ds_image, ds_chapter,
-  ds_taskEdit, ds_template;
+  ds_taskEdit, ds_template, ds_taskView;
 
 procedure TServerContainer1.dsAdminGetClass(
   DSServerClass: TDSServerClass; var PersistentClass: TPersistentClass);
@@ -130,6 +133,12 @@ procedure TServerContainer1.dsTaskGetClass(DSServerClass: TDSServerClass;
   var PersistentClass: TPersistentClass);
 begin
   PersistentClass := ds_taks.TdsTask;
+end;
+
+procedure TServerContainer1.dsTaskViewGetClass(DSServerClass: TDSServerClass;
+  var PersistentClass: TPersistentClass);
+begin
+  PersistentClass := ds_taskView.TdsTaskView;
 end;
 
 procedure TServerContainer1.DSTCPServerTransport1Connect(

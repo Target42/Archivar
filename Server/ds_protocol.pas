@@ -28,7 +28,7 @@ type
     incQry: TIBQuery;
     AutoIncValue: TDataSetProvider;
     CPTab: TIBTable;
-    Chapter: TDataSetProvider;
+    ChapterTab: TDataSetProvider;
     DeleteChapter: TIBQuery;
     UpdateCP: TIBQuery;
     UpdateCPQry: TDataSetProvider;
@@ -41,6 +41,8 @@ type
     TNTabTN_ROLLE: TIBStringField;
     TNTabTN_STATUS: TIntegerField;
     TNTabPE_ID: TIntegerField;
+    ListTasksQry: TIBQuery;
+    ListTasks: TDataSetProvider;
   private
     { Private-Deklarationen }
   public
@@ -67,7 +69,8 @@ begin
   AutoIncQry.Open;
   Result := AutoIncQry.FieldByName('GEN_ID').AsInteger;
   AutoIncQry.Close;
-end;
+
+end;
 
 function TdsProtocol.deleteCP(id: integer): TJSONObject;
 begin
@@ -161,7 +164,8 @@ begin
     begin
       TNTab.Append;
       TNTab.FieldByName('PR_ID').AsInteger        := id;
-      TNTab.FieldByName('TN_ID').AsInteger        := PEQry.FieldByName('PE_ID').AsInteger;
+      TNTab.FieldByName('TN_ID').AsInteger        := AutoInc('gen_TN_ID');
+      TNTab.FieldByName('PE_ID').AsInteger        := PEQry.FieldByName('PE_ID').AsInteger;
       TNTab.FieldByName('TN_NAME').AsString       := PEQry.FieldByName('PE_NAME').AsString;
       TNTab.FieldByName('TN_VORNAME').AsString    := PEQry.FieldByName('PE_VORNAME').AsString;
       TNTab.FieldByName('TN_DEPARTMENT').AsString := PEQry.FieldByName('PE_DEPARTMENT').AsString;

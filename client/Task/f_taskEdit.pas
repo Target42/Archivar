@@ -7,7 +7,8 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.ComCtrls, fr_file, System.Actions,
   Vcl.ActnList, Vcl.Menus, i_taskEdit, Data.DB, Datasnap.DBClient,
   Datasnap.DSConnect, JvExMask, JvToolEdit, JvMaskEdit, JvCheckedMaskEdit,
-  JvDatePickerEdit, JvDBDatePickerEdit, Vcl.StdCtrls, Vcl.Mask, Vcl.DBCtrls;
+  JvDatePickerEdit, JvDBDatePickerEdit, Vcl.StdCtrls, Vcl.Mask, Vcl.DBCtrls,
+  Vcl.OleCtrls, SHDocVw;
 
 type
   TTaskEditForm = class(TForm)
@@ -54,9 +55,18 @@ type
     TaskTabTA_FLAGS: TIntegerField;
     TaskTabTA_STATUS: TWideStringField;
     TaskTabTA_REST: TStringField;
-    GroupBox2: TGroupBox;
-    ScrollBox1: TScrollBox;
     Label6: TLabel;
+    Label7: TLabel;
+    ComboBox1: TComboBox;
+    Label8: TLabel;
+    ComboBox2: TComboBox;
+    TaskTabTA_STYLE: TWideStringField;
+    TaskTabTA_STYLE_CLID: TWideStringField;
+    PageControl2: TPageControl;
+    TabSheet3: TTabSheet;
+    TabSheet4: TTabSheet;
+    ScrollBox1: TScrollBox;
+    WebBrowser1: TWebBrowser;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -73,9 +83,13 @@ type
       var Action: TDataAction);
     procedure DBEdit1KeyPress(Sender: TObject; var Key: Char);
     procedure JvDBDatePickerEdit1Change(Sender: TObject);
+    procedure ComboBox1Change(Sender: TObject);
+    procedure ComboBox2Change(Sender: TObject);
+    procedure PageControl2Change(Sender: TObject);
   private
     m_ta_id : integer;
     m_ty_id : integeR;
+    m_clid  : string;
 
     m_form  : ITaskForm;
     m_tc    : ITaskContainer;
@@ -92,6 +106,8 @@ type
 
     procedure LoadTemplate(teid : integer );
     procedure LoadData;
+
+    procedure renderPreview;
   public
     procedure setID( ta_id, ty_id: integer );
     property RO : Boolean read getRO write setRO;
@@ -107,7 +123,7 @@ implementation
 uses
   m_WindowHandler, Vcl.Dialogs, m_glob_client, System.UITypes,
   System.JSON, u_json, u_bookmark, u_berTypes, m_BookMarkHandler, DateUtils,
-  u_taskForm2XML;
+  u_taskForm2XML, u_konst, m_html, xsd_TaskData;
 
 {$R *.dfm}
 
@@ -161,6 +177,27 @@ begin
   end;
 end;
 
+procedure TTaskEditForm.ComboBox1Change(Sender: TObject);
+begin
+  m_changed := true;
+end;
+
+procedure TTaskEditForm.ComboBox2Change(Sender: TObject);
+var
+  st : ITaskStyle;
+  inx: integer;
+begin
+  inx := ComboBox2.ItemIndex;
+  if inx = -1 then
+    exit;
+  st := m_tc.Styles.Items[ integer(ComboBox2.Items.Objects[inx])];
+
+  m_tc.Styles.DefaultStyle := st;
+  m_changed := true;
+
+  renderPreview;
+end;
+
 procedure TTaskEditForm.DBEdit1KeyPress(Sender: TObject; var Key: Char);
 begin
   m_changed := true;
@@ -202,6 +239,7 @@ begin
   PageControl1.ActivePage := TabSheet1;
   m_form  := NIL;
   m_tc    := NIL;
+  FillFlagslist( ComboBox1.Items);
 end;
 
 procedure TTaskEditForm.FormDestroy(Sender: TObject);
@@ -265,6 +303,9 @@ end;
 procedure TTaskEditForm.LoadTemplate(teid: integer);
 var
   st  : TStream;
+  i   : integer;
+  inx : integer;
+  s   : string;
 begin
   TemplateTab.Filter    := 'TE_ID = '+IntToStr(teid);
   TemplateTab.Filtered  := true;
@@ -282,6 +323,24 @@ begin
      end;
    end;
   end;
+  s := TaskTab.FieldByName('TA_STYLE_CLID').AsString;
+
+  ComboBox2.Text := '';
+  for i := 0 to pred(m_tc.Styles.Count) do
+  begin
+    inx := ComboBox2.Items.AddObject(m_tc.Styles.Items[i].Name, TObject(i));
+    if s = '' then
+    begin
+      if ( m_tc.Styles.DefaultStyle = m_tc.Styles.Items[i] ) then
+        ComboBox2.ItemIndex := inx;
+    end
+    else
+    begin
+      if m_tc.Styles.Items[i].CLID = s then
+        ComboBox2.ItemIndex := inx;
+    end;
+  end;
+
   TemplateTab.Close;
 end;
 
@@ -297,12 +356,50 @@ begin
   end;
 end;
 
+procedure TTaskEditForm.PageControl2Change(Sender: TObject);
+begin
+  if PageControl2.ActivePage = TabSheet4  then
+    renderPreview;
+end;
+
+procedure TTaskEditForm.renderPreview;
+var
+  writer  : TTaskForm2XML;
+  xList   : IXMLList;
+begin
+  if not Assigned(m_form) then
+    exit;
+
+  writer := TTaskForm2XML.create;
+  xList := writer.getXML(m_form);
+  writer.Free;
+
+  Application.CreateForm(THtmlMod, HtmlMod);
+  try
+    HtmlMod.TaskContainer := m_tc;
+    HtmlMod.TaskStyle     := m_tc.Styles.DefaultStyle;
+    HtmlMod.TaskData      := xList;
+    HtmlMod.show(WebBrowser1, m_clid);
+  finally
+    HtmlMod.Free;
+  end;
+
+end;
+
 procedure TTaskEditForm.save;
 var
   writer  : TTaskForm2XML;
   st      : TStream;
   mem     : TMemoryStream;
+  style   : ITaskStyle;
 begin
+
+  if ComboBox2.ItemIndex <> - 1 then
+  begin
+    style := m_tc.Styles.Items[ integer(ComboBox2.ItemIndex)];
+    TaskTab.FieldByName('TA_STYLE').AsString      := style.Name;
+    TaskTab.FieldByName('TA_STYLE_CLID').AsString := style.CLID;
+  end;
 
   mem := TMemoryStream.Create;
   if Assigned(m_form) then
@@ -318,6 +415,8 @@ begin
   st.free;
 
   mem.Free;
+  if ComboBox1.ItemIndex > -1 then
+    TaskTab.FieldByName('TA_FLAGS').AsInteger := integer(ComboBox1.Items.Objects[ComboBox1.ItemIndex]);
 
   if (TaskTab.State = dsInsert) or ( TaskTab.State = dsEdit) then
     TaskTab.Post;
@@ -326,10 +425,12 @@ begin
 end;
 
 procedure TTaskEditForm.setID(ta_id, ty_id: integer);
-
+var
+  i : integer;
 begin
   m_ta_id := ta_id;
   m_ty_id := ty_id;
+
 
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
 
@@ -340,11 +441,19 @@ begin
   else
     TaskTab.Close;
 
+  m_clid  := TaskTab.FieldByName('TA_CLID').AsString;
   LoadTemplate( TaskTab.FieldByName('TE_ID').AsInteger );
   LoadData;
 
   FileFrame1.ID := ta_id;
-
+  for i := 0 to pred(ComboBox1.Items.Count) do
+  begin
+    if integer(ComboBox1.Items.Objects[i]) = TaskTab.FieldByName('TA_FLAGS').AsInteger then
+    begin
+      ComboBox1.ItemIndex := i;
+      break;
+    end;
+  end;
   m_changed := false;
 end;
 

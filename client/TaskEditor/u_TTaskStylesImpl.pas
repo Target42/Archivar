@@ -11,9 +11,12 @@ type
     private
       m_list : TList<ITaskStyle>;
       m_listener : TList<TaskStylesChange>;
+      m_default  : ITaskStyle;
       procedure setTaskStyle( inx : integer; const value : ITaskStyle );
       function  getTaskStyle(inx : integer ) : ITaskStyle;
       function getCount : integer;
+      function  getDefaultStyle : ITaskStyle;
+      procedure setDefaultStyle( value : ITaskStyle );
 
       procedure doChange;
     public
@@ -47,7 +50,8 @@ type
 implementation
 
 uses
-  System.IOUtils, u_tTaskStyleImpl, System.SysUtils, u_zipHelper;
+  System.IOUtils, u_tTaskStyleImpl, System.SysUtils, u_zipHelper, xsd_Styles,
+  Xml.XMLIntf, Xml.XMLDoc, System.StrUtils;
 
 { TTaskStylesImpl }
 
@@ -64,6 +68,14 @@ begin
   begin
     m_list.Remove(style);
     style.release;
+
+    if m_default = style then
+    begin
+      m_default := NIL;
+      if m_list.Count > 0 then
+        m_default := m_list[0];
+    end;
+
     doChange;
   end;
 end;
@@ -86,17 +98,25 @@ end;
 procedure TTaskStylesImpl.FillList(list: TStrings);
 var
   i : integer;
+  s : string;
 begin
   for i := 0 to pred(m_list.Count) do
   begin
-    list.AddObject(m_list[i].Name, Pointer(m_list[i]));
+    s := m_list[i].Name;
+    if m_list[i] = m_default then
+      s := s + '*';
+    list.AddObject(s, Pointer(m_list[i]));
   end;
-
 end;
 
 function TTaskStylesImpl.getCount: integer;
 begin
   Result := m_list.Count;
+end;
+
+function TTaskStylesImpl.getDefaultStyle: ITaskStyle;
+begin
+  Result := m_default;
 end;
 
 function TTaskStylesImpl.getStyle(name: string): ITaskStyle;
@@ -125,39 +145,95 @@ var
   fname : string;
   i   : integer;
   st  : ITaskStyle;
+  xStyles : IXMLStyles;
 begin
-  fname := TPath.Combine( path, 'index.txt');
-
-  arr := TStringList.Create;
+  fname := TPath.combine(path, 'styles.xml');
   if FileExists(fname) then
-    arr.LoadFromFile(fname);
-
-  for i := 0 to pred(arr.Count) do
   begin
-    st := TTaskStyleimpl.create;
-    st.loadFromPath( TPath.Combine(path, arr.Strings[i]));
-    m_list.Add(st)
+    xStyles := LoadStyles( fname );
+    for i := 0 to pred(xStyles.Count) do
+    begin
+      st := TTaskStyleimpl.create;
+      st.loadFromPath( TPath.Combine(path, xStyles.Style[i].Clid));
+      m_list.Add(st)
+    end;
+    Result := true;
+  end
+  else
+  begin
+    fname := TPath.Combine( path, 'index.txt');
+
+    arr := TStringList.Create;
+    if FileExists(fname) then
+      arr.LoadFromFile(fname);
+
+    for i := 0 to pred(arr.Count) do
+    begin
+      st := TTaskStyleimpl.create;
+      st.loadFromPath( TPath.Combine(path, arr.Strings[i]));
+      m_list.Add(st)
+    end;
+    arr.Free;
+    Result := true;
   end;
-  arr.Free;
-  Result := true;
 end;
 
 function TTaskStylesImpl.loadFromZip(zip: TZipFile; path: string): boolean;
 var
-  list : TStringList;
-  i    : integer;
-  st  : ITaskStyle;
+  list    : TStringList;
+  i       : integer;
+  st      : ITaskStyle;
+  fname   : string;
+  xStyles : IXMLStyles;
+  xml     : IXMLDocument;
+  zst     : TStream;
 begin
-  list := loadStringListFromZip( zip, TPath.combine(path, 'index.txt'));
+  Result := false;
 
-  for i := 0 to pred(list.Count) do
+  fname := TPath.combine(path, 'styles.xml');
+  if hasFile( zip, fname) then
   begin
-    st := TTaskStyleimpl.create;
-    st.loadFromZip( zip, TPath.Combine(path, list[i]));
-    m_list.Add(st)
+    zst := loadStreamFromZip(zip, fname);
+    xml := NewXMLDocument;
+    xml.LoadFromStream(zst);
+
+    xStyles := xml.GetDocBinding('Styles', TXMLStyles, TargetNamespace) as IXMLStyles;
+    zst.Free;
+    if Assigned(xStyles) then
+    begin
+      for i := 0 to pred(xStyles.Count) do
+      begin
+        st := TTaskStyleimpl.create;
+        st.loadFromZip( zip, TPath.Combine(path, xStyles.Style[i].Clid));
+        st.Name := xStyles.Style[i].Name;
+        st.CLID := xStyles.Style[i].Clid;
+        m_list.Add(st)
+      end;
+    end;
+    m_default := self.getStyle(xStyles.Def);
+  end
+  else
+  begin
+    fname := TPath.combine(path, 'index.txt');
+    if hasFile( zip, fname) then
+    begin
+      list := loadStringListFromZip( zip, fname);
+
+      for i := 0 to pred(list.Count) do
+      begin
+        st := TTaskStyleimpl.create;
+        st.loadFromZip( zip, TPath.Combine(path, list[i]));
+        m_list.Add(st)
+      end;
+      list.Free;
+      Result := true;
+    end;
   end;
-  list.Free;
-  Result := true;
+  if not Assigned(m_default) and ( m_list.Count > 0)then
+  begin
+    m_default := m_list[0];
+  end;
+
 end;
 
 function TTaskStylesImpl.newStyle(name : String ) : ITaskStyle;
@@ -212,6 +288,7 @@ var
   i : integer;
 begin
   Result := true;
+  name := ReplaceStr( name, '*', '');
   for i := 0 to pred(m_list.Count) do
   begin
     if (m_list[i] <> style ) then
@@ -232,42 +309,57 @@ end;
 function TTaskStylesImpl.saveToPath(path: string): boolean;
 var
   i : integer;
-  list : TStringList;
+  xStyle : IXMLStyles;
+  xs     : IXMLStyle;
 begin
-  list := TStringList.Create;
+  xStyle := NewStyles;
+  if Assigned(m_default) then
+    xStyle.Def := m_default.Name;
+
   for i := 0 to pred(m_list.Count) do
   begin
-    list.Add(m_list[i].CLID);
+    xs := xStyle.Add;
+    xs.Name := m_list[i].Name;
+    xs.Clid := m_list[i].CLID;
     m_list[i].saveToPath(TPath.Combine(path,m_list[i].CLID ));
   end;
-  list.SaveToFile(TPath.Combine(path, 'index.txt'));
-  list.Free;
 
+  xStyle.OwnerDocument.SaveToFile(TPath.Combine(path, 'styles.xml'));
   Result := true;
 end;
 
 function TTaskStylesImpl.saveToZip(zip: TZipFile; path: string): Boolean;
 var
-  i : integer;
-  list : TStringList;
-  st   : TMemoryStream;
+  i       : integer;
+  xStyles : IXMLStyles;
+  xs      : IXMLStyle;
+  st      : TMemoryStream;
 begin
-  st   := TMemoryStream.create;
-  list := TStringList.Create;
+  st       := TMemoryStream.create;
+  xStyles  := NewStyles;
+
+  if Assigned(m_default) then
+    xStyles.Def := m_default.Name;
 
   for i := 0 to pred(m_list.Count) do
   begin
-    list.Add(m_list[i].CLID);
+    xs := xStyles.Add;
+    xs.Name := m_list[i].Name;
+    xs.Clid := m_list[i].CLID;
     m_list[i].saveToZip(zip, TPath.Combine(path,m_list[i].CLID ));
   end;
-  list.saveToStream( st );
+  xStyles.OwnerDocument.SaveToStream(st);
   st.position := 0;
-  zip.Add( st, TPath.Combine(path, 'index.txt'));
+  zip.Add( st, TPath.Combine(path, 'styles.xml'));
 
-  list.Free;
   st.free;
 
   Result := true;
+end;
+
+procedure TTaskStylesImpl.setDefaultStyle(value: ITaskStyle);
+begin
+  m_default := value;
 end;
 
 procedure TTaskStylesImpl.setTaskStyle(inx: integer; const value: ITaskStyle);

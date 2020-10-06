@@ -92,7 +92,6 @@ uses
   f_itemsTStringsEditor in 'TaskEditor\PropEdits\f_itemsTStringsEditor.pas' {StringEditorForm},
   m_http in 'http\m_http.pas' {HttpMod: TDataModule},
   m_html in 'http\m_html.pas' {HtmlMod: TDataModule},
-  xsd_TaskData in '..\misc\xsd_TaskData.pas',
   u_TTaskFileImpl in 'TaskEditor\u_TTaskFileImpl.pas',
   u_TTaskContainerImpl in 'TaskEditor\u_TTaskContainerImpl.pas',
   u_TTaskStylesImpl in 'TaskEditor\u_TTaskStylesImpl.pas',
@@ -115,7 +114,13 @@ uses
   u_AbstimmungenImpl in 'Beschlus\u_AbstimmungenImpl.pas',
   u_BeschlussImpl in 'Beschlus\u_BeschlussImpl.pas',
   xsd_DataField in '..\misc\xsd_DataField.pas',
-  f_set in 'misc\f_set.pas' {Form1};
+  f_set in 'misc\f_set.pas' {MySettingsForm},
+  f_textblock_edit in 'TextBlock\f_textblock_edit.pas' {TextBlockEditForm},
+  xsd_TextBlock in '..\misc\xsd_TextBlock.pas',
+  fr_form in 'TaskEditor\fr_form.pas' {FormFrame: TFrame},
+  f_chapterTask in 'Protokoll\f_chapterTask.pas' {ChapterTaskForm},
+  xsd_Styles in '..\misc\xsd_Styles.pas',
+  xsd_TaskData in '..\misc\xsd_TaskData.pas';
 
 {$R *.res}
 
@@ -133,6 +138,5 @@ begin
   Application.CreateForm(TWindowHandler, WindowHandler);
   Application.CreateForm(TBookMarkHandler, BookMarkHandler);
   Application.CreateForm(TMainForm, MainForm);
-  Application.CreateForm(TForm1, Form1);
   Application.Run;
 end.

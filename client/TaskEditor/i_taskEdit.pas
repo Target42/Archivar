@@ -354,9 +354,12 @@ type
       procedure setTaskStyle( inx : integer; const value : ITaskStyle );
       function  getTaskStyle(inx : integer ) : ITaskStyle;
       function getCount : integer;
+      function  getDefaultStyle : ITaskStyle;
+      procedure setDefaultStyle( value : ITaskStyle );
     // public
       property Items[ inx : integer ]: ITaskStyle read getTaskStyle write setTaskStyle;
       property Count : integer read getCount;
+      property DefaultStyle : ITaskStyle read getDefaultStyle write setDefaultStyle;
 
       function newStyle(name : String ) : ITaskStyle;
       function loadFromPath( path : string ) : boolean;

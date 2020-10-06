@@ -9,6 +9,7 @@ uses
 function getZipFiles( zip : TZipfile ; path, mask : string ) : TStringList;
 function loadStreamFromZip( zip : TZipfile ; fname : string ) : TStream;
 function loadStringListFromZip(zip : TZipfile ; fname : string ) : TStringList;
+function hasFile( zip : TZipFile; fname : string ) : Boolean;
 
 implementation
 
@@ -54,6 +55,19 @@ begin
   st := loadStreamFromZip(zip, fname);
   Result.LoadFromStream(st);
   st.Free;
+end;
+
+function hasFile( zip : TZipFile; fname : string ) : Boolean;
+var
+  i : integer;
+begin
+  Result := false;
+  for i := 0 to pred(zip.FileCount) do
+  begin
+    Result := SameText(zip.FileNames[i], fname);
+    if Result then
+      break;
+  end;
 end;
 
 end.
