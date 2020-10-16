@@ -22,7 +22,6 @@ type
     m_style: ITaskStyle;
     m_tc   : ITaskContainer;
 
-    function getHTMLDocs : TStrings;
     function getField( name : string ) : string;
 
     function createTable( name : string ) : String;
@@ -30,7 +29,6 @@ type
     function execScript( TagParams: TStrings ) : string;
     procedure SaveImages( path : string );
   public
-    //property HTMLDoc : TStrings read getHTMLDocs;
     property TaskContainer  : ITaskContainer read m_tc write m_tc;
     property TaskData       : IXMLList read m_task write m_task;
     property TaskStyle      : ITaskStyle read m_style write m_style;
@@ -90,6 +88,7 @@ var
   xTab : IXMLTable;
   xRow : IXMLRow;
   i, j : integer;
+  s    : string;
 begin
   xTab := NIL;
   for i := 0 to pred(m_task.Tables.Count) do
@@ -114,7 +113,11 @@ begin
     xRow := xTab.Rows.Row[i];
     for j := 0 to pred(xRow.Count) do
     begin
-      Result := Result + Format('    <td>%s</td>', [xRow.Value[j]])+sLineBreak;
+      s := xRow.Value[j];
+      if trim(s) = '' then
+        s := '&nbsp;';
+
+      Result := Result + Format('    <td>%s</td>', [s])+sLineBreak;
     end;
     Result := Result+'  </tr>'+sLineBreak;
   end;
@@ -146,7 +149,7 @@ begin
 
   Application.CreateForm(TDwsMod, DwsMod);
 
-  DwsMod.Script     := tf.Lines.Text;
+  DwsMod.Script     := tf.Text;
   DwsMod.Data       := m_task;
   DwsMod.TaskStyle  := m_style;
   DwsMod.Params.Assign(TagParams);
@@ -183,11 +186,6 @@ begin
   end;
   if Trim(Result) = '' then
     Result := '&nbsp;';
-end;
-
-function THtmlMod.getHTMLDocs: TStrings;
-begin
-  Result := PageProducer1.HTMLDoc;
 end;
 
 procedure THtmlMod.PageProducer1HTMLTag(Sender: TObject; Tag: TTag;
@@ -241,10 +239,9 @@ begin
   list := TStringList.Create;
   try
     if Assigned(m_task) then
-      list.Text := Frame.Content
+      list.text := Frame.Content
     else
-      list.Text := 'Keine Testdaten ausgewählt!';
-
+      list.text := 'Keine Testdaten ausgewählt!';
     list.SaveToFile(fname);
   finally
     list.Free;
@@ -255,7 +252,6 @@ procedure THtmlMod.show( web : TWebBrowser; path : string );
 var
   list : TStringList;
   err  : boolean;
-  fname : string;
   tf    : ITaskFile;
   dir   : string;
 begin
@@ -284,7 +280,7 @@ begin
       list.Add('<li>Die Datei "index.html" wurde nicht gefunden</li>');
     end
     else
-      PageProducer1.HTMLDoc.Assign(tf.Lines);
+      PageProducer1.HTMLDoc.Text := tf.Text;
   end;
   dir := TPath.Combine(GM.wwwHome, path);
   ForceDirectories(dir);

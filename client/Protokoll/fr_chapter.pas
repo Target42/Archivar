@@ -6,8 +6,8 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, xsd_chapter,
   Datasnap.DBClient, Data.DB, Datasnap.DSConnect, Vcl.ComCtrls, Vcl.ExtCtrls,
-  Vcl.StdCtrls, u_chapter, Vcl.Buttons, System.Generics.Collections,
-  fr_taskList2, u_taskEntry;
+  Vcl.StdCtrls, Vcl.Buttons, System.Generics.Collections,
+  fr_taskList2, u_taskEntry, i_chapter;
 
 type
   TChapterFrame = class(TFrame)
@@ -49,8 +49,8 @@ type
   private
     m_id   : integer;
     m_xCp  : IXMLChapter;
-    m_root : TChapter;
-    m_cpList : TList<TChapter>;
+    m_root : IChapter;
+    m_cpList : TList<IChapter>;
 
     function GetCP_ID: integer;
     procedure SetCP_ID(const Value: integer);
@@ -83,7 +83,7 @@ implementation
 
 uses
   m_glob_client, Xml.XMLIntf, Xml.XMLDoc,
-  f_chapterEdit, u_gremium, f_chapterTask;
+  f_chapterEdit, u_gremium, f_chapterTask, u_ChapterImpl;
 
 {$R *.dfm}
 
@@ -92,11 +92,11 @@ uses
 procedure TChapterFrame.buildTree;
 var
   i     : integer;
-  cp    : TChapter;
-  list  : TList<TChapter>;
+  cp    : IChapter;
+  list  : TList<IChapter>;
   xTop  : IXMLTop;
 
-  procedure addToParent( cp : TChapter );
+  procedure addToParent( cp : IChapter );
   var
     j : integer;
   begin
@@ -113,10 +113,10 @@ var
   end;
 
 begin
-  list := TList<TChapter>.create;
+  list := TList<IChapter>.create;
   for i := 0 to pred(m_xCp.Top.Count) do
     begin
-      cp := TChapter.create(NIL);
+      cp := TChapterImpl.create(NIL);
       xTop := m_xCp.Top.Items[i];
 
       cp.Name := xTop.Titel;
@@ -165,12 +165,12 @@ end;
 procedure TChapterFrame.doNewTaskEntry(Sender: TObject; var dataList : TEntryList);
 var
   i : integer;
-  p, cp : TChapter;
+  p, cp : IChapter;
 
 begin
   p := m_root;
   if Assigned(TV.Selected) then
-    p := TV.Selected.Data;
+    p := IChapter(TV.Selected.Data);
 
   for i := 0 to pred(dataList.Count) do
   begin
@@ -216,8 +216,8 @@ procedure TChapterFrame.prepare( con : TDSProviderConnection );
 var
   i : integer;
 begin
-  m_root  := TChapter.create(NIL);
-  m_cpList:= TList<TChapter>.create;
+  m_root  := TChapterImpl.create(NIL);
+  m_cpList:= TList<IChapter>.create;
 
   if not Assigned(con) then
     DSProviderConnection1.SQLConnection := GM.SQLConnection1
@@ -249,10 +249,10 @@ end;
 procedure TChapterFrame.saveToclientBlob;
 var
   st : TStream;
-  procedure saveElements( root : TChapterList );
+  procedure saveElements( root : IChapterList );
   var
     i : integer;
-    cp: TChapter;
+    cp: IChapter;
     xt : IXMLTop;
   begin
     for i := 0 to pred(root.Count) do
@@ -314,15 +314,15 @@ begin
   TaskList2Frame1.shutdown;
   m_cpList.free;
   ChapterTab.Close;
-  m_root.Free;
+  m_root.release;
 end;
 
 procedure TChapterFrame.SpeedButton1Click(Sender: TObject);
 var
-  cp : TChapter;
+  cp : IChapter;
   ChapterEditForm : TChapterEditForm;
 begin
-  cp := TChapter.create(NIL);
+  cp := TChapterImpl.create(NIL);
 
   Application.CreateForm(TChapterEditForm, ChapterEditForm);
   ChapterEditForm.CP := cp;
@@ -332,18 +332,19 @@ begin
     TV.Items.AddChildObject(NIL, cp.fullTitle, cp);
   end
   else
-    cp.Free;
+    cp.release;
+
   ChapterEditForm.Free;
 end;
 
 procedure TChapterFrame.SpeedButton2Click(Sender: TObject);
 var
-  cp : TChapter;
+  cp : IChapter;
   ChapterEditForm : TChapterEditForm;
 begin
   if not Assigned(TV.Selected) then
     exit;
-  cp := TV.Selected.Data;
+  cp := IChapter(TV.Selected.Data);
 
   if cp.TAID = 0 then begin
     Application.CreateForm(TChapterEditForm, ChapterEditForm);
@@ -366,24 +367,24 @@ end;
 
 procedure TChapterFrame.SpeedButton3Click(Sender: TObject);
 var
-  cp : TChapter;
+  cp : IChapter;
 begin
   if not Assigned(TV.Selected) then
     exit;
-  cp := TV.Selected.Data;
+  cp := IChapter(TV.Selected.Data);
   cp.Owner.remove(cp);
-  cp.Free;
+  cp.release;
   updateTree;
 end;
 
 procedure TChapterFrame.SpeedButton4Click(Sender: TObject);
 var
-  cp : TChapter;
+  cp : IChapter;
 begin
   if not Assigned(TV.Selected) then
     exit;
 
-  cp := TV.Selected.Data;
+  cp := IChapter(TV.Selected.Data);
   cp.up;
   updateTree;
 end;
@@ -391,24 +392,24 @@ end;
 
 procedure TChapterFrame.SpeedButton5Click(Sender: TObject);
 var
-  cp : TChapter;
+  cp : IChapter;
 begin
   if not Assigned(TV.Selected) then
     exit;
 
-  cp := TV.Selected.Data;
+  cp := IChapter(TV.Selected.Data);
   cp.down;
   updateTree;
 end;
 
 procedure TChapterFrame.SpeedButton6Click(Sender: TObject);
 var
-  cp : TChapter;
-  p  : TChapter;
+  cp : IChapter;
+  p  : IChapter;
 begin
   if not Assigned(TV.Selected) then
     exit;
-  cp := TV.Selected.Data;
+  cp := IChapter(TV.Selected.Data);
   if cp.Owner = m_root then
     exit;
 
@@ -421,14 +422,14 @@ end;
 
 procedure TChapterFrame.SpeedButton7Click(Sender: TObject);
 var
-  prev  : TChapter;
-  cp    : TChapter;
+  prev  : IChapter;
+  cp    : IChapter;
   i     : integer;
 begin
   if not Assigned(TV.Selected) then
     exit;
 
-  cp := TV.Selected.Data;
+  cp := IChapter(TV.Selected.Data);
   prev := NIL;
 
   for i := 1 to pred(cp.Owner.Childs.Count) do
@@ -450,12 +451,12 @@ end;
 
 procedure TChapterFrame.SpeedButton8Click(Sender: TObject);
 var
- p : TChapter;
- cp : TChapter;
+ p : IChapter;
+ cp : IChapter;
 begin
   p := m_root;
   if Assigned(TV.Selected) then
-    p := TV.Selected.Data;
+    p := IChapter(TV.Selected.Data);
 
   cp := p.newChapter;
   TV.Items.AddChildObject(TV.Selected, cp.fullTitle, cp);
@@ -483,7 +484,7 @@ end;
 procedure TChapterFrame.TVDragDrop(Sender, Source: TObject; X, Y: Integer);
 var
   src   : TListView;
-  cp, p : TChapter;
+  cp, p : IChapter;
   node  : TTreeNode;
   entry : TTaskEntry;
   i     : integer;
@@ -503,7 +504,7 @@ begin
         cp := m_root.newChapter
       else
       begin
-        p := node.Data;
+        p := IChapter(node.Data);
         cp := p.newChapter;
         cp.Numbering := false;
       end;
@@ -519,14 +520,14 @@ begin
     if node = TV.Selected then
       exit;
 
-    cp := TV.Selected.Data;
+    cp := IChapter(TV.Selected.Data);
     cp.Owner.remove(cp);
 
     if not Assigned(node) then
       m_root.add(cp)
     else
     begin
-      p := node.Data;
+      p := IChapter(node.Data);
       p.add(cp);
     end;
     updateTree;
@@ -541,13 +542,13 @@ end;
 
 procedure TChapterFrame.updateTree;
 var
-  old : TChapter;
+  old : IChapter;
 
-  procedure add( root : TTreeNode; childs : TChapterList );
+  procedure add( root : TTreeNode; childs : IChapterList );
   var
     node : TTreeNode;
     i    : integer;
-    cp   : TChapter;
+    cp   : IChapter;
     inx   : integer;
   begin
     for i := 0 to pred(childs.Count) do
@@ -574,7 +575,7 @@ begin
   m_cpList.Clear;
   TV.Items.BeginUpdate;
   if Assigned(TV.Selected) then
-    old := TV.Selected.Data;
+    old := IChapter(TV.Selected.Data);
   TV.Items.Clear;
   add( NIL, m_root.Childs );
   TV.Items.EndUpdate;

@@ -43,7 +43,6 @@ uses
   f_titel_edit in 'Protokoll\f_titel_edit.pas' {TitelEditform},
   u_titel in 'Protokoll\u_titel.pas',
   fr_chapter in 'Protokoll\fr_chapter.pas' {ChapterFrame: TFrame},
-  u_chapter in 'Protokoll\u_chapter.pas',
   xsd_chapter in '..\misc\xsd_chapter.pas',
   f_chapterEdit in 'Protokoll\f_chapterEdit.pas' {ChapterEditForm},
   fr_taskList2 in 'Task\fr_taskList2.pas' {TaskList2Frame: TFrame},
@@ -120,7 +119,16 @@ uses
   fr_form in 'TaskEditor\fr_form.pas' {FormFrame: TFrame},
   f_chapterTask in 'Protokoll\f_chapterTask.pas' {ChapterTaskForm},
   xsd_Styles in '..\misc\xsd_Styles.pas',
-  xsd_TaskData in '..\misc\xsd_TaskData.pas';
+  xsd_TaskData in '..\misc\xsd_TaskData.pas',
+  fr_ReportEditor in 'TaskEditor\Forms\fr_ReportEditor.pas' {ReportFrameEditor: TFrame},
+  fr_ReportEditor_html in 'TaskEditor\Forms\fr_ReportEditor_html.pas' {ReportFrameEditorHtml: TFrame},
+  fr_ReportEditor_pas in 'TaskEditor\Forms\fr_ReportEditor_pas.pas' {ReportFrameEditorPas: TFrame},
+  fr_ReportEditor_img in 'TaskEditor\Forms\fr_ReportEditor_img.pas' {ReportFrameEditorImg: TFrame},
+  i_chapter in 'Protokoll\i_chapter.pas',
+  u_ChapterImpl in 'Protokoll\u_ChapterImpl.pas',
+  u_ChapterListImpl in 'Protokoll\u_ChapterListImpl.pas',
+  u_ChapterTitleListImpl in 'Protokoll\u_ChapterTitleListImpl.pas',
+  u_ChapterTitleImpl in 'Protokoll\u_ChapterTitleImpl.pas';
 
 {$R *.res}
 

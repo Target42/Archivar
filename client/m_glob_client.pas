@@ -228,7 +228,7 @@ begin
   m_misc := NIL;
   m_gremien := TList<TGremium>.create;
 
-  m_home      := TPath.Combine(TPath.GetDocumentsPath, 'Archivar' );
+  m_home      := TPath.Combine(TPath.GetHomePath, 'Archivar' );
   m_images    := TPath.Combine(m_home, 'Images' );
   m_httpHome  := TPath.Combine(m_home, 'wwwroot');
   m_export    := TPath.Combine(m_home, 'export');

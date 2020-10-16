@@ -1,7 +1,7 @@
 object TaskList2Frame: TTaskList2Frame
   Left = 0
   Top = 0
-  Width = 851
+  Width = 733
   Height = 305
   Align = alClient
   TabOrder = 0
@@ -9,7 +9,7 @@ object TaskList2Frame: TTaskList2Frame
   object LV: TListView
     Left = 73
     Top = 0
-    Width = 778
+    Width = 660
     Height = 264
     Align = alClient
     Columns = <
@@ -48,7 +48,7 @@ object TaskList2Frame: TTaskList2Frame
   object Panel1: TPanel
     Left = 0
     Top = 264
-    Width = 851
+    Width = 733
     Height = 41
     Align = alBottom
     BevelOuter = bvNone
@@ -121,6 +121,16 @@ object TaskList2Frame: TTaskList2Frame
       Height = 17
       Caption = 'Beschlusfassung'
       TabOrder = 5
+      OnClick = CheckBox1Click
+    end
+    object CheckBox7: TCheckBox
+      Tag = 64
+      Left = 623
+      Top = 6
+      Width = 97
+      Height = 17
+      Caption = 'Protokoll'
+      TabOrder = 6
       OnClick = CheckBox1Click
     end
   end
@@ -221,7 +231,6 @@ object TaskList2Frame: TTaskList2Frame
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsChapter'
-    SQLConnection = GM.SQLConnection1
     Left = 128
     Top = 24
   end

@@ -237,6 +237,8 @@ end;
 procedure TTaskEditForm.FormCreate(Sender: TObject);
 begin
   PageControl1.ActivePage := TabSheet1;
+  PageControl2.ActivePage := TabSheet3;
+
   m_form  := NIL;
   m_tc    := NIL;
   FillFlagslist( ComboBox1.Items);

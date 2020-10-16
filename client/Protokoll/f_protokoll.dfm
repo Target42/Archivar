@@ -26,7 +26,6 @@ object ProtokollForm: TProtokollForm
     Width = 888
     Height = 19
     Panels = <>
-    ExplicitTop = 353
   end
   object PageControl1: TPageControl
     Left = 0
@@ -36,15 +35,14 @@ object ProtokollForm: TProtokollForm
     ActivePage = TabSheet1
     Align = alClient
     TabOrder = 1
-    ExplicitHeight = 304
     object TabSheet1: TTabSheet
       Caption = 'Allgemines'
       ExplicitLeft = 0
       ExplicitTop = 0
       ExplicitWidth = 0
-      ExplicitHeight = 276
+      ExplicitHeight = 0
       object Splitter1: TSplitter
-        Left = 209
+        Left = 225
         Top = 0
         Height = 372
         ExplicitLeft = 272
@@ -54,16 +52,15 @@ object ProtokollForm: TProtokollForm
       object GroupBox1: TGroupBox
         Left = 0
         Top = 0
-        Width = 209
+        Width = 225
         Height = 372
         Align = alLeft
-        Caption = 'Hauptkapitel'
+        Caption = 'Abschnitte'
         TabOrder = 0
-        ExplicitHeight = 276
         object Panel2: TPanel
           Left = 2
           Top = 264
-          Width = 205
+          Width = 221
           Height = 106
           Align = alBottom
           BevelOuter = bvNone
@@ -73,7 +70,7 @@ object ProtokollForm: TProtokollForm
           object SpeedButton1: TBitBtn
             Left = 4
             Top = 6
-            Width = 89
+            Width = 102
             Height = 27
             Hint = 'Titel hinzuf'#252'gen'
             Caption = 'Hinzuf'#252'gen'
@@ -120,7 +117,7 @@ object ProtokollForm: TProtokollForm
           object SpeedButton2: TBitBtn
             Left = 112
             Top = 6
-            Width = 89
+            Width = 105
             Height = 26
             Hint = 'Titel bearbeiten'
             Caption = 'Bearbeiten'
@@ -167,7 +164,7 @@ object ProtokollForm: TProtokollForm
           object SpeedButton3: TBitBtn
             Left = 4
             Top = 71
-            Width = 89
+            Width = 102
             Height = 26
             Hint = 'Titel l'#246'schen'
             Caption = 'L'#246'schen'
@@ -214,7 +211,7 @@ object ProtokollForm: TProtokollForm
           object Button4: TBitBtn
             Left = 112
             Top = 71
-            Width = 89
+            Width = 105
             Height = 26
             Caption = 'Inhalt'
             Glyph.Data = {
@@ -259,10 +256,10 @@ object ProtokollForm: TProtokollForm
           object SpeedButton4: TBitBtn
             Left = 4
             Top = 39
-            Width = 89
+            Width = 102
             Height = 26
             Hint = 'Hoch'
-            Caption = 'Kapitel hoch'
+            Caption = 'Abschnitt hoch'
             Glyph.Data = {
               36040000424D3604000000000000360000002800000010000000100000000100
               20000000000000040000C40E0000C40E00000000000000000000FFFFFF00FFFF
@@ -306,10 +303,10 @@ object ProtokollForm: TProtokollForm
           object SpeedButton5: TBitBtn
             Left = 112
             Top = 38
-            Width = 89
+            Width = 105
             Height = 27
             Hint = 'Runter'
-            Caption = 'Kapitel runter'
+            Caption = 'Abschnitt runter'
             Glyph.Data = {
               36040000424D3604000000000000360000002800000010000000100000000100
               20000000000000040000C40E0000C40E00000000000000000000FFFFFF00FFFF
@@ -354,14 +351,23 @@ object ProtokollForm: TProtokollForm
         object TV: TTreeView
           Left = 2
           Top = 15
-          Width = 205
+          Width = 221
           Height = 249
           Align = alClient
           Indent = 19
           ReadOnly = True
           TabOrder = 1
-          ExplicitHeight = 196
+          OnClick = TVClick
         end
+      end
+      object Memo1: TMemo
+        Left = 231
+        Top = 3
+        Width = 578
+        Height = 294
+        Lines.Strings = (
+          'Memo1')
+        TabOrder = 1
       end
     end
     object TabSheet2: TTabSheet
@@ -370,7 +376,7 @@ object ProtokollForm: TProtokollForm
       ExplicitLeft = 0
       ExplicitTop = 0
       ExplicitWidth = 0
-      ExplicitHeight = 276
+      ExplicitHeight = 0
       object DBGrid1: TDBGrid
         Left = 0
         Top = 0
@@ -436,7 +442,6 @@ object ProtokollForm: TProtokollForm
         Caption = 'Panel1'
         ShowCaption = False
         TabOrder = 1
-        ExplicitTop = 235
         object Button1: TBitBtn
           Left = 8
           Top = 6
@@ -580,7 +585,6 @@ object ProtokollForm: TProtokollForm
         DataSource = TNSrc
         Align = alBottom
         TabOrder = 2
-        ExplicitTop = 210
       end
     end
     object TabSheet3: TTabSheet
@@ -589,7 +593,7 @@ object ProtokollForm: TProtokollForm
       ExplicitLeft = 0
       ExplicitTop = 0
       ExplicitWidth = 0
-      ExplicitHeight = 276
+      ExplicitHeight = 0
       object DBGrid2: TDBGrid
         Left = 0
         Top = 0
@@ -656,7 +660,6 @@ object ProtokollForm: TProtokollForm
         DataSource = TGSrc
         Align = alBottom
         TabOrder = 1
-        ExplicitTop = 251
       end
     end
   end

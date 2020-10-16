@@ -4,8 +4,9 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_base, u_chapter, Data.DB,
-  Datasnap.DBClient, Datasnap.DSConnect, Vcl.StdCtrls, Vcl.ExtCtrls, fr_form;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_base, Data.DB,
+  Datasnap.DBClient, Datasnap.DSConnect, Vcl.StdCtrls, Vcl.ExtCtrls, fr_form,
+  i_chapter;
 
 type
   TChapterTaskForm = class(TForm)
@@ -23,10 +24,10 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
   private
-    m_cp : TChapter;
-    procedure setCP( value : TChapter );
+    m_cp : IChapter;
+    procedure setCP( value : IChapter );
   public
-    property CP : TChapter read m_cp write setCP;
+    property CP : IChapter read m_cp write setCP;
 
   end;
 
@@ -59,7 +60,7 @@ begin
   FormFrame1.releaseData;
 end;
 
-procedure TChapterTaskForm.setCP(value: TChapter);
+procedure TChapterTaskForm.setCP(value: IChapter);
 begin
   m_cp := value;
 

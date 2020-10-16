@@ -24,6 +24,7 @@ type
     SpeedButton2: TSpeedButton;
     Label1: TLabel;
     CheckBox6: TCheckBox;
+    CheckBox7: TCheckBox;
     procedure CheckBox1Click(Sender: TObject);
     procedure SpeedButton2Click(Sender: TObject);
     procedure SpeedButton1Click(Sender: TObject);
@@ -111,7 +112,7 @@ begin
 
   m_all  := TList<TTaskEntry>.create;
   m_list := TList<TTaskEntry>.create;
-  m_filter := taskWaitForOK;
+  m_filter := taskReady;
 
   m_noChange := true;
 
@@ -121,6 +122,7 @@ begin
   CheckBox4.Checked := (m_filter and taskWorkEnd)     = taskWorkEnd;
   CheckBox5.Checked := (m_filter and taskWaitForInfo) = taskWaitForInfo;
   CheckBox6.Checked := (m_filter and taskWaitForOK)   = taskWaitForOK;
+  CheckBox7.Checked := (m_filter and taskProtocol)    = taskProtocol;
 
   m_noChange := false;
 end;

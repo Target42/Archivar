@@ -13,9 +13,12 @@ const
   taskWorkEnd     = $08;
   taskWaitForInfo = $10;
   taskWaitForOK   = $20;
+  taskProtocol    = $40;
 
-  taskAll      =  taskNew or taskRead or taskInWork or taskWorkEnd or taskWaitForInfo or taskWaitForOK;
-  taskProtocol =  taskWaitForOK or taskWaitForInfo;
+  taskAll       =  taskNew or taskRead or taskInWork or taskWorkEnd or
+                   taskWaitForInfo or taskWaitForOK or taskProtocol;
+
+  taskReady     =  taskWaitForOK or taskWaitForInfo or taskProtocol;
 
 
 function flagsToStr( flags : integer ) : string;

@@ -1,11 +1,10 @@
 object ChapterFrame: TChapterFrame
   Left = 0
   Top = 0
-  Width = 1155
+  Width = 451
   Height = 305
   Align = alClient
   TabOrder = 0
-  ExplicitWidth = 451
   object Splitter1: TSplitter
     Left = 251
     Top = 0
@@ -417,23 +416,21 @@ object ChapterFrame: TChapterFrame
   object GroupBox2: TGroupBox
     Left = 254
     Top = 0
-    Width = 901
+    Width = 197
     Height = 305
     Align = alClient
     Caption = 'Aufgaben'
     TabOrder = 1
-    ExplicitWidth = 197
     object Panel2: TPanel
       Left = 2
       Top = 15
-      Width = 897
+      Width = 193
       Height = 41
       Align = alTop
       BevelOuter = bvNone
       Caption = 'Panel2'
       ShowCaption = False
       TabOrder = 0
-      ExplicitWidth = 193
       object Label1: TLabel
         Left = 16
         Top = 11
@@ -454,7 +451,7 @@ object ChapterFrame: TChapterFrame
     inline TaskList2Frame1: TTaskList2Frame
       Left = 2
       Top = 56
-      Width = 897
+      Width = 193
       Height = 247
       Align = alClient
       TabOrder = 1
@@ -463,14 +460,14 @@ object ChapterFrame: TChapterFrame
       ExplicitWidth = 193
       ExplicitHeight = 247
       inherited LV: TListView
-        Width = 824
+        Width = 120
         Height = 206
         ExplicitWidth = 120
         ExplicitHeight = 206
       end
       inherited Panel1: TPanel
         Top = 206
-        Width = 897
+        Width = 193
         ExplicitTop = 206
         ExplicitWidth = 193
         inherited CheckBox5: TCheckBox

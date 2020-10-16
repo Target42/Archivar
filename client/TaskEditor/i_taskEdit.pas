@@ -301,11 +301,12 @@ type
       procedure setName( value : string );
       function  getName : string;
       function  getStream : TStream;
-      function  getStrings: TStrings;
+      procedure setText( value : string );
+      function  getText : string;
     //public
       property Name : string read getName write setName;
-      property Lines : TStrings read getStrings;
-      property Data : TStream read getStream;
+      property Text : String read getText write setText;
+      property DataStream : TStream read getStream;
 
       function isName( name : string ) : Boolean;
 

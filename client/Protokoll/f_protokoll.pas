@@ -70,6 +70,7 @@ type
     Button4: TBitBtn;
     SpeedButton4: TBitBtn;
     SpeedButton5: TBitBtn;
+    Memo1: TMemo;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -90,6 +91,7 @@ type
     procedure SpeedButton4Click(Sender: TObject);
     procedure SpeedButton5Click(Sender: TObject);
     procedure Button4Click(Sender: TObject);
+    procedure TVClick(Sender: TObject);
   private
     m_TitelEditform : TTitelEditform;
     m_proto         : IXMLProtocol;
@@ -132,7 +134,8 @@ implementation
 uses
   m_glob_client, Xml.XMLIntf, Xml.XMLDoc, u_bookmark, m_BookMarkHandler,
   u_berTypes, System.JSON, u_json, System.Generics.Collections,
-  m_WindowHandler, f_chapter_content, u_chapter, u_gremium, system.UITypes;
+  m_WindowHandler, f_chapter_content, u_gremium, system.UITypes, i_chapter,
+  u_ChapterImpl;
 
 {$R *.dfm}
 
@@ -185,9 +188,9 @@ end;
 
 procedure TProtokollForm.buildTree(root: TTreeNode; xCp: IXMLChapter);
 var
-  list  : TList<TChapter>;
+  list  : TList<IChapter>;
 
-  procedure addToParent( cp : TChapter );
+  procedure addToParent( cp : IChapter );
   var
     j : integer;
   begin
@@ -203,15 +206,17 @@ var
     end;
   end;
 
-  procedure add( root : TTreeNode; items : TChapterList );
+  procedure add( root : TTreeNode; items : IChapterList );
   var
-    j : integer;
-    node : TTreeNode;
-    inx : integer;
+    j :    integer;
+    node  : TTreeNode;
+    inx   : integer;
+    cp    : IChapter;
   begin
     for j := 0 to pred(items.Count) do
     begin
-      node := TV.Items.AddChild(root, items.Items[j].fullTitle);
+      cp := items.Items[j];
+      node := TV.Items.AddChildObject(root, cp.fullTitle, cp);
       inx := 2;
       if items.Items[j].TAID > 0 then
         inx := 1;
@@ -223,8 +228,8 @@ var
   end;
 
 var
-  cp    : TChapter;
-  base  : Tchapter;
+  cp    : IChapter;
+  base  : Ichapter;
   xTop  : IXMLTop;
   i     : integer;
 
@@ -232,19 +237,20 @@ begin
   if xCp.Top.Count = 0 then
     exit;
 
-  base := TChapter.create(NIL);
-  list := TList<TChapter>.create;
+  base := TChapterImpl.create(NIL);
+  list := TList<IChapter>.create;
   for i := 0 to pred(xCp.Top.Count) do
     begin
-      cp := TChapter.create(NIL);
+      cp := TChapterImpl.create(NIL);
       xTop := xCp.Top.Items[i];
 
-      cp.Name := xTop.Titel;
-      cp.ID   := xTop.Id;
-      cp.PID  := xTop.Pid;
-      cp.Nr   := xTop.Nr;
+      cp.Name       := xTop.Titel;
+      cp.ID         := xTop.Id;
+      cp.PID        := xTop.Pid;
+      cp.Nr         := xTop.Nr;
       cp.Numbering  := xTop.Numbering;
-      cp.TAID := xTop.Taid;
+      cp.TAID       := xTop.Taid;
+      cp.Rem        := xTop.Rem;
       list.Add(cp)
     end;
   for i := 0 to pred(list.Count) do
@@ -255,8 +261,10 @@ begin
     end;
   add( root, base.Childs );
   list.Clear;
+
   list.Free;
-  base.Free;
+  base.release;
+
   root.Expand(true);
 end;
 
@@ -298,6 +306,7 @@ begin
 
   if m_treeChanged then
     save;
+
   Application.CreateForm(TChapterContentForm, ChapterContentForm);
   ChapterContentForm.ChapterTitle := cp;
   if ChapterContentForm.ShowModal = mrOk  then
@@ -667,6 +676,34 @@ begin
     TNTab.FieldByName('TN_STATUS').Asinteger := 3
   else
     TNTab.FieldByName('TN_STATUS').Asinteger := 0;
+end;
+
+procedure TProtokollForm.TVClick(Sender: TObject);
+var
+  cp : IChapter;
+  ct : IChapterTitle;
+begin
+  if not Assigned(TV.Selected.Data) then
+    exit;
+
+  if TV.Selected.Level = 0 then
+  begin
+    ct := IChapterTitle(TV.Selected.Data);
+    Memo1.Lines.Text := ct.Text;
+  end
+  else
+  begin
+    cp := IChapter( TV.Selected.Data);
+
+    if cp.TAID > 0   then
+    begin
+      // nichtr nur text ...
+    end
+    else
+    begin
+      Memo1.Lines.Text := cp.Rem;
+    end;
+  end;
 end;
 
 procedure TProtokollForm.updateCpList;

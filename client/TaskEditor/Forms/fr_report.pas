@@ -9,49 +9,11 @@ uses
   JvExStdCtrls, JvRichEdit, SynHighlighterHtml, JvExControls, JvXMLBrowser,
   Vcl.OleCtrls, SHDocVw, JvSimpleXml, i_taskEdit, Vcl.Menus, Vcl.ExtCtrls,
   System.Types, System.Generics.Collections, SynHighlighterDWS, Vcl.Buttons,
-  m_dws;
+  fr_ReportEditor, m_dws;
 
 type
-  TCloseEditorFunc = procedure ( tf : ITaskFile ) of object;
-  TFilecontainer = class
-    private
-      m_dws       : TDwsMod;
-      m_tab       : TTabSheet;
-      m_edit      : TSynEdit;
-      m_memo      : TMemo;
-      m_split     : TSplitter;
-      m_tf        : ITaskFile;
-      m_func      : TCloseEditorFunc;
-
-      m_grp       : TGroupBox;
-      FSTyle      : ITaskStyle;
-
-      procedure setFileName( value : string );
-      function  getfileName : string;
-
-      procedure setStyle( value : ITaskStyle);
-    public
-      constructor Create( tf : ITaskFile ; owner : TPageControl);
-      Destructor Destroy ; override;
-
-      property Edit : TSynEdit read m_edit write m_edit;
-      property Tab  : TTabSheet read m_tab write m_tab;
-      property FileName : string read getFileName write setFileName;
-      property DataFile : ITaskFile read m_tf;
-      property doClose : TCloseEditorFunc read m_func write m_func;
-      property Style: ITaskStyle read FSTyle write setStyle;
-
-      procedure save;
-      function isFile( fname : string) : boolean;
-
-      procedure onCloseClick( sender : TObject );
-      procedure onCompileClick( sender : TObject );
-      procedure Update;
-  end;
-
   TReportFrame = class(TFrame)
     PageControl1: TPageControl;
-    TabSheet2: TTabSheet;
     TabSheet3: TTabSheet;
     WebBrowser1: TWebBrowser;
     PopupMenu1: TPopupMenu;
@@ -64,7 +26,6 @@ type
     Panel3: TPanel;
     CheckBox1: TCheckBox;
     ListBox1: TListBox;
-    PageControl2: TPageControl;
     GroupBox1: TGroupBox;
     ListBox2: TListBox;
     GroupBox3: TGroupBox;
@@ -103,7 +64,8 @@ type
     m_form : ITaskForm;
     DwsMod : TDwsMod;
 
-    m_files: TList<TFilecontainer>;
+    m_files: TList<TReportFrameEditor>;
+
     procedure OpenCode(tf : ITaskFile );
 
     procedure setTaskContainer( value : ITaskContainer);
@@ -113,6 +75,8 @@ type
     procedure initFile( tf : ITaskFile);
     procedure fillStyles;
     procedure updateFileContainer;
+    procedure closeEditor( tf : ITaskFile);
+    procedure doCloseFrame( value : TReportFrameEditor );
   public
 
     procedure init;
@@ -124,15 +88,14 @@ type
     procedure doNewForm( frm : ITaskForm );
 
     procedure updateFiles( sender : ITaskFiles);
-
-    procedure closeEditor( tf : ITaskFile );
   end;
 
 implementation
 
 uses
   Xml.XMLDoc, i_datafields, m_glob_client, System.IOUtils, m_html,
-  u_taskForm2XML, Xml.XMLIntf, f_InputBox, u_helper, System.UITypes;
+  u_taskForm2XML, Xml.XMLIntf, f_InputBox, u_helper, System.UITypes,
+  fr_ReportEditor_pas, fr_ReportEditor_html;
 
 {$R *.dfm}
 
@@ -143,12 +106,12 @@ var
   tab : TTabSheet;
   i   : integer;
 begin
-  tab := PageControl2.ActivePage;
+  tab := PageControl1.ActivePage;
   for i := 0 to pred(m_files.Count) do
   begin
-    if m_files[i].m_tab = tab then
+    if m_files[i].Tab = tab then
     begin
-      m_files[i].Edit.SelText :=  ( Sender as TMenuItem).Caption;
+      m_files[i].insertFieldName(( Sender as TMenuItem).Caption);
     end;
   end;
 end;
@@ -178,9 +141,8 @@ var
       exit;
     tf := ITaskFile( Pointer(ListBox1.Items.Objects[ListBox1.ItemIndex] ));
     xml := NewXMLDocument;
-    st := tf.Data;
+    st := tf.DataStream;
     xml.LoadFromStream(st);
-    st.Free;
     xList := xml.GetDocBinding('List', TXMLList, TargetNamespace) as IXMLList;
   end;
   procedure getStyle;
@@ -224,14 +186,17 @@ var
 begin
   for i := 0 to pred(m_files.Count) do
   begin
-    if m_files[i].DataFile = tf  then
+    if (m_files[i].DataFile = tf)  then
     begin
-      tf.Lines.Assign(m_files[i].Edit.Lines);
-      m_files[i].Free;
-      m_files.Delete(i);
+      m_files[i].closeEditor;
       break;
     end;
   end;
+end;
+
+procedure TReportFrame.doCloseFrame(value: TReportFrameEditor);
+begin
+  m_files.Extract(value);
 end;
 
 procedure TReportFrame.doNewForm(frm: ITaskForm);
@@ -254,7 +219,7 @@ procedure TReportFrame.init;
 begin
   Application.CreateForm(TDwsMod, DwsMod);
   PageControl1.ActivePage := TabSheet3;
-  m_files:= TList<TFilecontainer>.create;
+  m_files:= TList<TReportFrameEditor>.create;
   m_form := NIL;
 end;
 
@@ -265,7 +230,7 @@ begin
   ext := LowerCase(ExtractFileExt(tf.Name));
   if ext = '.pas' then
   begin
-    tf.Lines.Text :=
+    tf.Text :=
     '{ ' +sLineBreak+
     '  Erzeugt am '+FormatDateTime('hh:mm dd.MM.yyyy', now)+sLineBreak+
     '}'+ sLineBreak+
@@ -276,7 +241,7 @@ begin
   end
   else if ext = '.html' then
   begin
-    tf.Lines.Text :=
+    tf.Text :=
     '<!--'+sLineBreak+
     '  Erzeugt am '+FormatDateTime('hh:mm dd.MM.yyyy', now)+sLineBreak+
     '-->';
@@ -305,29 +270,45 @@ begin
 
   tf := ITaskFile(Pointer(ListBox3.Items.Objects[ListBox3.ItemIndex]));
 
-  PageControl1.ActivePage := TabSheet2;
   OpenCode( tf);
 end;
 
 procedure TReportFrame.OpenCode(tf : ITaskFile );
 var
-  i : integer;
-  fc : TFilecontainer;
+  i   : integer;
+  fc  : TReportFrameEditor;
+  ext : string;
 begin
   for i := 0 to pred(m_files.Count) do
     begin
       if m_files[i].DataFile = tf then
       begin
-        PageControl2.ActivePage := m_files[i].Tab;
+        PageControl1.ActivePage := m_files[i].Tab;
         exit
       end;
     end;
+  ext := LowerCase(ExtractFileExt(tf.Name));
+  fc  := NIL;
 
-  fc := TFilecontainer.Create(tf, PageControl2);
-  fc.Edit.PopupMenu := PopupMenu1;
-  fc.doClose := self.closeEditor;
-  fc.Style   :=  ITaskStyle( Pointer( ListBox2.Items.Objects[ ListBox2.ItemIndex]));;
-  m_files.Add(fc);
+  if ext = '.pas' then
+    fc := TReportFrameEditorPas.create(PageControl1)
+  else if ext = '.html' then
+    fc := TReportFrameEditorHtml.create(PageControl1);
+
+  if Assigned(fc) then
+  begin
+    fc.init;
+    fc.Name             := 'ED'+IntToStr(GetTickCount);
+    fc.Tab              := TTabSheet.Create(PageControl1);
+    fc.Style            := ITaskStyle( Pointer( ListBox2.Items.Objects[ ListBox2.ItemIndex]));;
+    fc.DataFile         := tf;
+    fc.onCloseFrame     := self.doCloseFrame;
+
+    m_files.Add(fc);
+    PageControl1.ActivePage := fc.Tab;
+  end
+  else
+    ShowMessage('Für diesen Dateityp gibt es keinen Editor!');
 end;
 
 procedure TReportFrame.PopupMenu1Popup(Sender: TObject);
@@ -373,14 +354,15 @@ var
   i : integer;
   arr : TStringDynArray;
 begin
-  m_tc.TestData.uregisterChange(updateFiles);
-
-  for i := 0 to pred(m_files.Count) do
+  for i := m_files.Count-1 downto 0 do
   begin
-    m_files[i].save;
-    m_files[i].Free;
+    m_files[i].release;
+    m_files[i].Tab.PageControl := NIL;
+    m_files[i].free;
   end;
   m_files.Free;
+
+  m_tc.TestData.uregisterChange(updateFiles);
 
   m_form  := NIL;
   m_tc    := NIL;
@@ -501,8 +483,11 @@ begin
     exit;
 
   // close the editors ...
-  for i := 0 to pred(st.Files.Count) do
-    closeEditor(st.Files.Items[i]);
+  for i := m_files.Count-1 downto 0 do
+  begin
+    if m_files[i].Style = st then
+      m_files[i].closeEditor;
+  end;
 
   m_tc.Styles.delete( st );
   // delete ...
@@ -596,7 +581,7 @@ begin
     exit;
   closeEditor(tf);
   st.Files.delete(tf);
-  ListBox3.Items.Delete(inx);
+  ListBox2Click(Sender);
 end;
 
 procedure TReportFrame.SpeedButton7Click(Sender: TObject);
@@ -651,10 +636,10 @@ end;
 
 procedure TReportFrame.updateFileContainer;
 var
-  con : TFilecontainer;
+  con :TReportFrameEditor;
 begin
   for con in m_files do
-    con.Update;
+    con.UpdateCaption;
 
 end;
 
@@ -670,142 +655,5 @@ begin
 
 end;
 
-{ TFilecontainer }
-
-constructor TFilecontainer.Create(tf : ITaskFile ; owner : TPageControl);
-var
-  ext : string;
-  pan : TGroupBox;
-  btn : TButton;
-  x   : integer;
-  y   : integer;
-begin
-  m_dws         := NIL;
-  m_memo        := NIL;
-  m_split       := NIL;
-  m_tf          := tf;
-  m_tab         := TTabSheet.Create(owner);
-  m_tab.Parent  := owner;
-  m_tab.PageControl := owner;
-  m_func        := NIL;
-
-  m_grp := TGroupBox.Create(m_tab);
-  pan := m_grp;
-  pan.Parent := m_tab;
-  pan.Align := alBottom;
-  pan.Height :=  48;
-
-  y := 16;
-
-  btn         := TButton.Create(pan);
-  btn.Parent  := pan;
-  btn.OnClick := self.onCloseClick;
-  btn.Caption := 'Schließen';
-  btn.Left    := 16;
-  btn.Top     := y;
-
-  x := btn.Left + btn.Width + 16;
-
-
-  ext := LowerCase(ExtractFileExt(m_tf.Name));
-  if ext = '.pas' then
-  begin
-    m_dws       := TDwsMod.Create(NIL);
-    btn         := TButton.Create(pan);
-    btn.Parent  := pan;
-    btn.OnClick := self.onCompileClick;
-    btn.Caption := 'Compilieren';
-    btn.Left    := x;
-    btn.Top     := y;
-
-  end;
-
-  m_edit        := TSynEdit.Create(m_tab);
-  m_edit.Parent := m_tab;
-  m_edit.Lines.Assign(tf.Lines);
-  m_edit.Gutter.ShowLineNumbers := true;
-
-  m_tab.Caption := m_tf.name;
-
-  if ext = '.html' then
-  begin
-    m_edit.Highlighter := TSynHTMLSyn.Create(m_edit)
-  end
-  else if ext = '.pas' then
-  begin
-    m_edit.Highlighter := TSynDWSSyn.Create(m_edit);
-    m_memo            := TMemo.Create(m_tab);;
-    m_memo.Parent     := m_tab;
-    m_memo.ScrollBars := ssBoth;
-    m_memo.Align      := alBottom;
-
-    m_split           := TSplitter.Create(m_tab);
-    m_split.Parent    := m_tab;
-    m_split.Align     := alBottom;
-  end;
-  m_edit.Align  := alClient;
-  owner.ActivePage := m_tab;
-end;
-
-destructor TFilecontainer.Destroy;
-begin
-  m_tab.PageControl := NIL;
-  m_tab.Free;
-
-  if Assigned(m_dws) then
-    m_dws.Free;
-  inherited;
-end;
-
-function TFilecontainer.getfileName: string;
-begin
-  Result := m_tf.Name;
-end;
-
-function TFilecontainer.isFile(fname : string): boolean;
-begin
-  Result := SameText( fname, ExtractFileName(m_tf.Name));
-end;
-
-procedure TFilecontainer.onCloseClick(sender: TObject);
-begin
-  if Assigned(m_func) then
-    m_func( m_tf );
-
-end;
-
-procedure TFilecontainer.onCompileClick(sender: TObject);
-begin
-  if not Assigned(m_dws) then
-    exit;
-  m_dws.Script := m_edit.Lines.Text;
-  m_dws.compile;
-  if Assigned(m_memo) then
-  begin
-    m_memo.Lines.Text := m_dws.MsgText;
-  end;
-end;
-
-procedure TFilecontainer.save;
-begin
-  m_tf.Lines.Assign(m_edit.Lines);
-end;
-
-procedure TFilecontainer.setFileName(value: string);
-begin
-  m_tf.Name := value
-end;
-
-procedure TFilecontainer.setStyle(value: ITaskStyle);
-begin
-  FSTyle := value;
-  m_grp.caption := 'Style: '+FSTyle.Name;
-end;
-
-procedure TFilecontainer.Update;
-begin
-  if Assigned(FSTyle) then
-    m_grp.caption := 'Style: '+FSTyle.Name;
-end;
 
 end.

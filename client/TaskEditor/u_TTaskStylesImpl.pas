@@ -246,16 +246,16 @@ begin
   f := Result.Files.newFile('index.html');
   if Assigned(f) then
   begin
-    f.Lines.Text :=
+    f.Text :=
             '<!--'+sLineBreak+
             'Erzeugt am ' + DateTimeToStr(now)+sLineBreak+
             '-->'+sLineBreak+
-            '<body>'+sLineBreak+
+            '<p>'+sLineBreak+
             '  <#script dumpdata.pas>'+sLineBreak+
-            '</body>';
+            '</p>';
     f := Result.Files.newFile('dumpdata.pas');
     if Assigned(f) then
-      f.Lines.Text :=
+      f.Text :=
         'program dumpdata;'+sLineBreak+
         'begin'+sLineBreak+
         '  println( printXML );'+sLineBreak+

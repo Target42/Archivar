@@ -224,7 +224,6 @@
             <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
-        <DCCReference Include="Protokoll\u_chapter.pas"/>
         <DCCReference Include="..\misc\xsd_chapter.pas"/>
         <DCCReference Include="Protokoll\f_chapterEdit.pas">
             <Form>ChapterEditForm</Form>
@@ -400,6 +399,31 @@
         </DCCReference>
         <DCCReference Include="..\misc\xsd_Styles.pas"/>
         <DCCReference Include="..\misc\xsd_TaskData.pas"/>
+        <DCCReference Include="TaskEditor\Forms\fr_ReportEditor.pas">
+            <Form>ReportFrameEditor</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="TaskEditor\Forms\fr_ReportEditor_html.pas">
+            <Form>ReportFrameEditorHtml</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="TaskEditor\Forms\fr_ReportEditor_pas.pas">
+            <Form>ReportFrameEditorPas</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="TaskEditor\Forms\fr_ReportEditor_img.pas">
+            <Form>ReportFrameEditorImg</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Protokoll\i_chapter.pas"/>
+        <DCCReference Include="Protokoll\u_ChapterImpl.pas"/>
+        <DCCReference Include="Protokoll\u_ChapterListImpl.pas"/>
+        <DCCReference Include="Protokoll\u_ChapterTitleListImpl.pas"/>
+        <DCCReference Include="Protokoll\u_ChapterTitleImpl.pas"/>
         <None Include="Datafields\ERA-NS.txt"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

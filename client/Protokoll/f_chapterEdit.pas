@@ -4,8 +4,8 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_base, u_chapter, Vcl.StdCtrls,
-  Vcl.ExtCtrls, fr_editForm;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_base, Vcl.StdCtrls,
+  Vcl.ExtCtrls, fr_editForm, i_chapter;
 
 type
   TChapterEditForm = class(TForm)
@@ -20,10 +20,10 @@ type
     procedure BaseFrame1OKBtnClick(Sender: TObject);
   private
     { Private-Deklarationen }
-    m_cp : TChapter;
-    procedure setCP( value : TChapter );
+    m_cp : IChapter;
+    procedure setCP( value : IChapter );
   public
-    property CP : TChapter read m_cp write setCP;
+    property CP : IChapter read m_cp write setCP;
   end;
 
 var
@@ -54,7 +54,7 @@ begin
     LabeledEdit2.Text := '';
 end;
 
-procedure TChapterEditForm.setCP(value: TChapter);
+procedure TChapterEditForm.setCP(value: IChapter);
 begin
   m_cp := value;
   CheckBox1.Checked := m_cp.Numbering;

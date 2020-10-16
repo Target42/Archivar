@@ -10,22 +10,22 @@ type
   TTaskFileImpl = class( TInterfacedObject, ITaskFile)
     private
       m_listener : Tlist<TaskFileChange>;
-      m_lines: TStrings;
+      m_mem  : TMemoryStream;
       m_name : String;
       m_path : string;
 
       procedure setName( value : string );
       function  getName : string;
       function  getStream : TStream;
-      function  getStrings: TStrings;
+
+      procedure setText( value : string );
+      function  getText : string;
 
       procedure doChange;
     public
       constructor create;
       Destructor Destroy; override;
 
-      property Name : string read getName write setName;
-      property Data : TStream read getStream;
 
       function isName( name : string ) : Boolean;
 
@@ -53,8 +53,8 @@ uses
 
 constructor TTaskFileImpl.create;
 begin
-  m_lines:= TStringList.Create;
-  m_listener := Tlist<TaskFileChange>.create;
+  m_mem       := TMemoryStream.Create;
+  m_listener  := Tlist<TaskFileChange>.create;
 end;
 
 function TTaskFileImpl.delete: boolean;
@@ -72,7 +72,7 @@ end;
 
 destructor TTaskFileImpl.Destroy;
 begin
-  m_lines.Free;
+  m_mem.Free;
   m_listener.free;
   inherited;
 end;
@@ -93,14 +93,19 @@ end;
 
 function TTaskFileImpl.getStream: TStream;
 begin
-  Result := TMemoryStream.Create;
-  m_lines.SaveToStream(Result, TEncoding.UTF8);
-  Result.Position := 0;
+  m_mem.Position := 0;
+  Result := m_mem;
 end;
 
-function TTaskFileImpl.getStrings: TStrings;
+function TTaskFileImpl.getText: string;
+var
+  list : TStringList;
 begin
-  Result := m_lines;
+  m_mem.Position := 0;
+  list := TStringList.Create;
+  list.LoadFromStream(m_mem);
+  Result := list.Text;
+  list.Free;
 end;
 
 function TTaskFileImpl.isName(name: string): Boolean;
@@ -113,7 +118,8 @@ begin
   Result := FileExists(fname);
   if not Result then
     exit;
-  m_lines.LoadFromFile(fname);
+
+  m_mem.LoadFromFile(fname);
   m_name := ExtractFileName(fname);
   m_path := ExtractFilePath(fname);
 end;
@@ -128,7 +134,7 @@ begin
 
   zip.Read(fname, st, lh);
   st.Position := 0;
-  m_lines.LoadFromStream(st);
+  m_mem.LoadFromStream(st);
   st.Free;
 
   Result := true;
@@ -152,7 +158,8 @@ var
 begin
   fname := TPath.Combine( path, m_name);
   try
-    m_lines.SaveToFile(fname);
+    m_mem.Position := 0;
+    m_mem.SaveToFile(fname);
     Result := true;
   except
     Result := false;
@@ -167,7 +174,8 @@ begin
   fname := TPath.Combine( path, m_name);
   st    := TMemoryStream.Create;
   try
-    m_lines.SaveToStream(st);
+    m_mem.Position := 0;
+    m_mem.SaveToStream(st);
     st.Position := 0;
     zip.Add(st, fname);
     Result := true;
@@ -181,6 +189,16 @@ procedure TTaskFileImpl.setName(value: string);
 begin
   m_name := value;
   doChange;
+end;
+
+procedure TTaskFileImpl.setText(value: string);
+var
+  ss : TStringStream;
+begin
+  ss := TStringStream.Create( value );
+  m_mem.Clear;
+  m_mem.CopyFrom(ss, ss.Size);
+  ss.Free;
 end;
 
 procedure TTaskFileImpl.uregisterChange(proc: TaskFileChange);

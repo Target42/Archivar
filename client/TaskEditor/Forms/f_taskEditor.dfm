@@ -38,6 +38,8 @@ object TaksEditorForm: TTaksEditorForm
     TabOrder = 1
     object TabSheet1: TTabSheet
       Caption = 'Allgemeines'
+      ExplicitWidth = 296
+      ExplicitHeight = 154
       object Splitter1: TSplitter
         Left = 0
         Top = 341
@@ -325,6 +327,8 @@ object TaksEditorForm: TTaksEditorForm
         Align = alBottom
         Caption = 'Beschreibung'
         TabOrder = 1
+        ExplicitTop = 46
+        ExplicitWidth = 296
         inline EditFrame1: TEditFrame
           Left = 2
           Top = 15
@@ -334,7 +338,7 @@ object TaksEditorForm: TTaksEditorForm
           TabOrder = 0
           ExplicitLeft = 2
           ExplicitTop = 15
-          ExplicitWidth = 790
+          ExplicitWidth = 292
           ExplicitHeight = 91
           inherited RE: TRichEdit
             Width = 790
@@ -451,7 +455,7 @@ object TaksEditorForm: TTaksEditorForm
         end
         inherited Panel2: TPanel
           Height = 452
-          ExplicitHeight = 452
+          ExplicitHeight = 154
           inherited GroupBox2: TGroupBox
             Height = 256
             ExplicitHeight = 256
@@ -467,7 +471,7 @@ object TaksEditorForm: TTaksEditorForm
         end
         inherited ImageList1: TImageList
           Bitmap = {
-            494C01010C001800940010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+            494C01010C0018009C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
             0000000000003600000028000000400000004000000001002000000000000040
             0000000000000000000000000000000000000000000000000000000000000000
             0000000000000000000000000000000000000000000000000000000000000000
@@ -1047,16 +1051,6 @@ object TaksEditorForm: TTaksEditorForm
               inherited Button1: TButton
                 OnClick = ReportFrame1Button1Click
               end
-            end
-          end
-          inherited TabSheet2: TTabSheet
-            ExplicitWidth = 287
-            ExplicitHeight = 277
-            inherited PageControl2: TPageControl
-              Width = 287
-              Height = 277
-              ExplicitWidth = 287
-              ExplicitHeight = 277
             end
           end
         end

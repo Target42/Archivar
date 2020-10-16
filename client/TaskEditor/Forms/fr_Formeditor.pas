@@ -892,7 +892,7 @@ procedure TEditorFrame.SpeedButton8Click(Sender: TObject);
     writer : TTaskForm2XML;
   begin
     writer := TTaskForm2XML.create;
-    tf.Lines.Text :=  writer.getXML(m_form).XML;
+    tf.Text :=  writer.getXML(m_form).XML;
     writer.Free;
   end;
 var
@@ -944,7 +944,7 @@ begin
     if Assigned(tf) then
     begin
       writer := TTaskForm2XML.create;
-      writer.fromText(tf.Lines.Text, m_form);
+      writer.fromText(tf.Text, m_form);
       writer.Free;
     end
   end;
