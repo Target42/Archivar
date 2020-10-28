@@ -29,7 +29,8 @@ uses
   ds_chapter in 'ds_chapter.pas' {dsChapter: TDSServerModule},
   ds_taskEdit in 'ds_taskEdit.pas' {dsTaskEdit: TDSServerModule},
   ds_template in 'ds_template.pas' {dsTemplate: TDSServerModule},
-  ds_taskView in 'ds_taskView.pas' {dsTaskView: TDSServerModule};
+  ds_taskView in 'ds_taskView.pas' {dsTaskView: TDSServerModule},
+  ds_textblock in 'ds_textblock.pas' {dsTextBlock: TDSServerModule};
 
 var
   MyDummyBoolean : Boolean;

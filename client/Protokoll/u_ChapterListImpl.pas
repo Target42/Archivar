@@ -34,11 +34,16 @@ type
 
       procedure renumber;
 
+      procedure sortPos;
+
       procedure release;
   end;
 
 
 implementation
+
+uses
+  System.Generics.Defaults;
 
 procedure TChapterListImpl.add(cp: IChapter);
 begin
@@ -123,7 +128,7 @@ end;
 
 procedure TChapterListImpl.release;
 begin
-
+  clear;
 end;
 
 procedure TChapterListImpl.remove(cp: IChapter);
@@ -154,6 +159,26 @@ end;
 procedure TChapterListImpl.setItem(inx: integer; const value: IChapter);
 begin
   m_list[inx] := value;
+end;
+
+procedure TChapterListImpl.sortPos;
+var
+  cp : IChapter;
+begin
+  m_list.Sort(
+    TComparer<IChapter>.Construct(
+      function(const Left, Right: IChapter): Integer
+      begin
+        Result := 0;
+        if left.Pos < right.Pos then
+          Result := -1
+        else if left.Pos > right.Pos then
+          Result := 1;
+      end
+    )
+  );
+  for cp in m_list do
+    cp.Childs.sortPos;
 end;
 
 procedure TChapterListImpl.up(cp: IChapter);

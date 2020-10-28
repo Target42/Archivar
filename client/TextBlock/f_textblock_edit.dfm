@@ -13,6 +13,7 @@ object TextBlockEditForm: TTextBlockEditForm
   OldCreateOrder = False
   Position = poOwnerFormCenter
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
   inline BaseFrame1: TBaseFrame
@@ -32,6 +33,9 @@ object TextBlockEditForm: TTextBlockEditForm
     inherited Panel1: TPanel
       Width = 635
       ExplicitWidth = 635
+      inherited AbortBtn: TBitBtn
+        OnClick = BaseFrame1AbortBtnClick
+      end
       inherited OKBtn: TBitBtn
         Left = 536
         OnClick = BaseFrame1OKBtnClick
@@ -59,25 +63,37 @@ object TextBlockEditForm: TTextBlockEditForm
       Height = 13
       Caption = 'Text'
     end
-    object LabeledEdit1: TLabeledEdit
+    object Label3: TLabel
+      Left = 16
+      Top = 4
+      Width = 27
+      Height = 13
+      Caption = 'Name'
+    end
+    object Label4: TLabel
+      Left = 16
+      Top = 50
+      Width = 23
+      Height = 13
+      Caption = 'Tags'
+    end
+    object LabeledEdit1: TDBEdit
       Left = 16
       Top = 23
       Width = 241
       Height = 21
-      EditLabel.Width = 27
-      EditLabel.Height = 13
-      EditLabel.Caption = 'Name'
+      DataField = 'TB_NAME'
+      DataSource = TBSrc
       TabOrder = 0
     end
-    object LabeledEdit2: TLabeledEdit
+    object LabeledEdit2: TDBEdit
       Left = 16
       Top = 68
       Width = 606
       Height = 21
       Anchors = [akLeft, akTop, akRight]
-      EditLabel.Width = 23
-      EditLabel.Height = 13
-      EditLabel.Caption = 'Tags'
+      DataField = 'TB_TAGS'
+      DataSource = TBSrc
       TabOrder = 1
     end
   end
@@ -94,6 +110,7 @@ object TextBlockEditForm: TTextBlockEditForm
     inherited RE: TRichEdit
       Width = 635
       Height = 143
+      OnKeyPress = EditFrame1REKeyPress
       ExplicitWidth = 635
       ExplicitHeight = 143
     end
@@ -374,5 +391,25 @@ object TextBlockEditForm: TTextBlockEditForm
       ViewStyle = vsReport
       OnDblClick = LVDblClick
     end
+  end
+  object DSProviderConnection1: TDSProviderConnection
+    ServerClassName = 'TdsTextBlock'
+    SQLConnection = GM.SQLConnection1
+    Left = 80
+    Top = 112
+  end
+  object TBtab: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    ProviderName = 'TBTab'
+    RemoteServer = DSProviderConnection1
+    BeforePost = TBtabBeforePost
+    Left = 88
+    Top = 168
+  end
+  object TBSrc: TDataSource
+    DataSet = TBtab
+    Left = 160
+    Top = 168
   end
 end

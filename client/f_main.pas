@@ -80,6 +80,14 @@ type
     test21: TMenuItem;
     ac_ad_sys_template: TAction;
     Systemvorlage1: TMenuItem;
+    extbausteine1: TMenuItem;
+    ac_tb_neu: TAction;
+    ac_tb_edit: TAction;
+    ac_tb_löschen: TAction;
+    Neu2: TMenuItem;
+    Bearbeiten1: TMenuItem;
+    N5: TMenuItem;
+    Lschen1: TMenuItem;
     procedure ac_prg_closeExecute(Sender: TObject);
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure ac_prg_disconExecute(Sender: TObject);
@@ -100,6 +108,9 @@ type
     procedure ac_ad_sys_templateExecute(Sender: TObject);
     procedure test21Click(Sender: TObject);
     procedure ac_prg_setExecute(Sender: TObject);
+    procedure ac_tb_editExecute(Sender: TObject);
+    procedure ac_tb_neuExecute(Sender: TObject);
+    procedure ac_tb_löschenExecute(Sender: TObject);
   private
     procedure setPanel( id : integer ; text : string );
     procedure loadLogo;
@@ -119,7 +130,7 @@ uses
   f_protokoll, u_stub, System.JSON, u_json, f_protokoll_list, u_gremium, m_BookMarkHandler, m_WindowHandler,
   f_images, System.IOUtils, f_taksListForm, u_berTypes, f_datafields,
   f_template_new, f_taskEditor, f_select_templateForm, f_bechlus, f_set,
-  f_textblock_edit;
+  f_textblock_edit, f_testblock_list;
 
 {$R *.dfm}
 
@@ -311,6 +322,45 @@ begin
   finally
       Taskform.free;
   end;
+end;
+
+procedure TMainForm.ac_tb_editExecute(Sender: TObject);
+var
+  id : integer;
+begin
+  id := -1;
+  Application.CreateForm(TTestBlockListForm, TestBlockListForm);
+
+  if TestBlockListForm.ShowModal = mrOk then
+    id := TestBlockListForm.id;
+
+  TestBlockListForm.Free;
+
+  if id <> -1  then
+  begin
+    Application.CreateForm(TTextBlockEditForm, TextBlockEditForm);
+    TextBlockEditForm.ID := id;
+    TextBlockEditForm.ShowModal;
+    TextBlockEditForm.free;
+  end;
+end;
+
+procedure TMainForm.ac_tb_löschenExecute(Sender: TObject);
+begin
+  Application.CreateForm(TTestBlockListForm, TestBlockListForm);
+
+  TestBlockListForm.doDelete := true;
+  TestBlockListForm.ShowModal;
+
+  TestBlockListForm.Free;
+end;
+
+procedure TMainForm.ac_tb_neuExecute(Sender: TObject);
+begin
+  Application.CreateForm(TTextBlockEditForm, TextBlockEditForm);
+  TextBlockEditForm.ID := -1;
+  TextBlockEditForm.ShowModal;
+  TextBlockEditForm.free;
 end;
 
 procedure TMainForm.ApplicationEvents1Message(var Msg: tagMSG;

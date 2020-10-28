@@ -28,6 +28,7 @@ type
     dsTaskEdit: TDSServerClass;
     dsTemplate: TDSServerClass;
     dsTaskView: TDSServerClass;
+    DSServerClass1: TDSServerClass;
     procedure dsAdminGetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
     procedure ServiceStart(Sender: TService; var Started: Boolean);
@@ -65,6 +66,8 @@ type
     procedure ServiceStop(Sender: TService; var Stopped: Boolean);
     procedure dsTaskViewGetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
+    procedure DSServerClass1GetClass(DSServerClass: TDSServerClass;
+      var PersistentClass: TPersistentClass);
   private
     { Private declarations }
   protected
@@ -91,7 +94,7 @@ implementation
 uses
   Winapi.Windows, m_db, ds_gremium, ds_admin, Datasnap.DSSession, ds_person, IOUtils,
   ds_taks, ds_file, ds_misc, ds_protocol, ds_image, ds_chapter,
-  ds_taskEdit, ds_template, ds_taskView;
+  ds_taskEdit, ds_template, ds_taskView, ds_textblock;
 
 procedure TServerContainer1.dsAdminGetClass(
   DSServerClass: TDSServerClass; var PersistentClass: TPersistentClass);
@@ -121,6 +124,12 @@ begin
   if Assigned(session) then
     LockMod.removeLocks(session.Id);
   DebugMsg('disconnect : ' + IntToStr(DSConnectEventObject.ChannelInfo.Id));
+end;
+
+procedure TServerContainer1.DSServerClass1GetClass(
+  DSServerClass: TDSServerClass; var PersistentClass: TPersistentClass);
+begin
+  PersistentClass := ds_textblock.TdsTextBlock;
 end;
 
 procedure TServerContainer1.dsTaskEditGetClass(DSServerClass: TDSServerClass;

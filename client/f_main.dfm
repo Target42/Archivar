@@ -1,4 +1,4 @@
-object MainForm: TMainForm
+﻿object MainForm: TMainForm
   Left = 0
   Top = 0
   Caption = 'Archivar'
@@ -229,6 +229,21 @@ object MainForm: TMainForm
           Action = ac_ad_sys_template
         end
       end
+      object extbausteine1: TMenuItem
+        Caption = 'Textbausteine'
+        object Neu2: TMenuItem
+          Action = ac_tb_neu
+        end
+        object Bearbeiten1: TMenuItem
+          Action = ac_tb_edit
+        end
+        object N5: TMenuItem
+          Caption = '-'
+        end
+        object Lschen1: TMenuItem
+          Action = ac_tb_löschen
+        end
+      end
     end
     object Fenster1: TMenuItem
       Caption = 'Fenster'
@@ -373,6 +388,21 @@ object MainForm: TMainForm
       Category = 'Admin'
       Caption = 'Systemvorlage'
       OnExecute = ac_ad_sys_templateExecute
+    end
+    object ac_tb_neu: TAction
+      Category = 'Textbausteine'
+      Caption = 'Neu'
+      OnExecute = ac_tb_neuExecute
+    end
+    object ac_tb_edit: TAction
+      Category = 'Textbausteine'
+      Caption = 'Bearbeiten'
+      OnExecute = ac_tb_editExecute
+    end
+    object ac_tb_löschen: TAction
+      Category = 'Textbausteine'
+      Caption = 'L'#246'schen'
+      OnExecute = ac_tb_löschenExecute
     end
   end
   object ApplicationEvents1: TApplicationEvents

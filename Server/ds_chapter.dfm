@@ -26,24 +26,6 @@ object dsChapter: TdsChapter
     Left = 48
     Top = 80
   end
-  object TACp: TIBQuery
-    Database = DBMod.IBDatabase1
-    Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
-    SQL.Strings = (
-      'select  * from TA_CP'
-      'where CP_ID = :CP_ID')
-    Left = 120
-    Top = 32
-    ParamData = <
-      item
-        DataType = ftInteger
-        Name = 'CP_ID'
-        ParamType = ptInput
-      end>
-  end
   object ListTasksQry: TIBQuery
     Database = DBMod.IBDatabase1
     Transaction = IBTransaction1
@@ -56,12 +38,27 @@ object dsChapter: TdsChapter
       'a.ta_id = b.ta_id'
       'and'
       'b.ty_id = c.ty_id')
-    Left = 168
-    Top = 120
+    Left = 224
+    Top = 24
   end
   object ListTasks: TDataSetProvider
     DataSet = ListTasksQry
-    Left = 160
-    Top = 176
+    Left = 224
+    Top = 80
+  end
+  object ChapterText: TIBTable
+    Database = DBMod.IBDatabase1
+    Transaction = IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    TableName = 'CT_CHAPTER_TEXT'
+    UniDirectional = False
+    Left = 120
+    Top = 24
+  end
+  object ChapterTextTab: TDataSetProvider
+    DataSet = ChapterText
+    Left = 120
+    Top = 88
   end
 end

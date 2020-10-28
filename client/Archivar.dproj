@@ -218,7 +218,6 @@
             <Form>TitelEditform</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="Protokoll\u_titel.pas"/>
         <DCCReference Include="Protokoll\fr_chapter.pas">
             <Form>ChapterFrame</Form>
             <FormType>dfm</FormType>
@@ -424,6 +423,21 @@
         <DCCReference Include="Protokoll\u_ChapterListImpl.pas"/>
         <DCCReference Include="Protokoll\u_ChapterTitleListImpl.pas"/>
         <DCCReference Include="Protokoll\u_ChapterTitleImpl.pas"/>
+        <DCCReference Include="Protokoll\u_ProtocolImpl.pas"/>
+        <DCCReference Include="misc\u_speedbutton.pas"/>
+        <DCCReference Include="TextBlock\fr_textblock.pas">
+            <Form>TextBlockFrame</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="TextBlock\f_testblock_list.pas">
+            <Form>TestBlockListForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="TextBlock\f_textblock_param.pas">
+            <Form>TextBlockParameterForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <None Include="Datafields\ERA-NS.txt"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

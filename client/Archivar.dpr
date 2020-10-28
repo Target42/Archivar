@@ -41,7 +41,6 @@ uses
   f_taksListForm in 'Task\f_taksListForm.pas' {TaskListForm},
   xsd_protocol in '..\misc\xsd_protocol.pas',
   f_titel_edit in 'Protokoll\f_titel_edit.pas' {TitelEditform},
-  u_titel in 'Protokoll\u_titel.pas',
   fr_chapter in 'Protokoll\fr_chapter.pas' {ChapterFrame: TFrame},
   xsd_chapter in '..\misc\xsd_chapter.pas',
   f_chapterEdit in 'Protokoll\f_chapterEdit.pas' {ChapterEditForm},
@@ -128,7 +127,12 @@ uses
   u_ChapterImpl in 'Protokoll\u_ChapterImpl.pas',
   u_ChapterListImpl in 'Protokoll\u_ChapterListImpl.pas',
   u_ChapterTitleListImpl in 'Protokoll\u_ChapterTitleListImpl.pas',
-  u_ChapterTitleImpl in 'Protokoll\u_ChapterTitleImpl.pas';
+  u_ChapterTitleImpl in 'Protokoll\u_ChapterTitleImpl.pas',
+  u_ProtocolImpl in 'Protokoll\u_ProtocolImpl.pas',
+  u_speedbutton in 'misc\u_speedbutton.pas',
+  fr_textblock in 'TextBlock\fr_textblock.pas' {TextBlockFrame: TFrame},
+  f_testblock_list in 'TextBlock\f_testblock_list.pas' {TestBlockListForm},
+  f_textblock_param in 'TextBlock\f_textblock_param.pas' {TextBlockParameterForm};
 
 {$R *.res}
 
@@ -146,5 +150,6 @@ begin
   Application.CreateForm(TWindowHandler, WindowHandler);
   Application.CreateForm(TBookMarkHandler, BookMarkHandler);
   Application.CreateForm(TMainForm, MainForm);
+
   Application.Run;
 end.

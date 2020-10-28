@@ -3,13 +3,35 @@ unit i_chapter;
 interface
 
 uses
-  xsd_chapter;
+  xsd_chapter, xsd_protocol, System.Classes, Data.DB;
 
 type
   IChapter          = interface;
   IChapterList      = interface;
   IChapterTitleList = interface;
   IChapterTitle     = interface;
+  IProtocol         = interface;
+
+  IProtocol = interface
+    ['{22F955F2-2B4F-44B4-9319-438413D20842}']
+
+    procedure setXProto( value : IXMLProtocol );
+    function  getXProto : IXMLProtocol;
+
+    procedure setID( value : integer );
+    function  getID : integer;
+
+    function  getList : IChapterTitleList;
+
+    property XProto : IXMLProtocol      read getXProto  write setXProto;
+    property ID     : integer           read getID      write setID;
+    property Chapter: IChapterTitleList read getList;
+
+    procedure loadFromStream( st : TStream );
+    procedure saveToStream( st : TStream );
+
+    procedure release;
+  end;
 
   IChapter = interface
     ['{573E438F-18D6-4AA4-93CB-B16C342C7EDE}']
@@ -24,6 +46,8 @@ type
       procedure setTAID(      value : integer );
       procedure setData(      value : pointer );
       procedure setRem(       value : string );
+      procedure setxData(     value : xsd_chapter.IXMLChapter );
+      procedure setPos(       value : integer );
 
       function getModified  : boolean;
       function getOwner     : IChapter;
@@ -36,6 +60,8 @@ type
       function getData      : pointer;
       function getRem       : string;
       function getChilds    : IChapterList;
+      function getxData     : xsd_chapter.IXMLChapter;
+      function getPos       : integer;
 
       property Owner      : IChapter      read getOwner     write setOwner;
       property Childs     : IChapterList  read getChilds;
@@ -48,6 +74,9 @@ type
       property Data       : Pointer       read getData      write setData;
       property Rem        : String        read getRem       write setRem;
       property Modified   : boolean       read getModified  write setModified;
+      property Pos        : integer       read getPos       write setPos;
+
+      property xData      : xsd_chapter.IXMLChapter   read getxData     write setxData;
 
       procedure clearModified;
       function isModified : boolean;
@@ -89,6 +118,7 @@ type
       function findMax : integer;
 
       procedure renumber;
+      procedure sortPos;
 
       procedure release;
   end;
@@ -122,20 +152,26 @@ type
       function  getText : string;
       procedure setModified( value : boolean );
       function  getModified : boolean;
-      procedure setChapter( value : IXMLChapter );
-      function  getChapter : IXMLChapter;
+      procedure setxChapter( value : xsd_chapter.IXMLChapter );
+      function  getxChapter : xsd_chapter.IXMLChapter;
+      function  getRoot : IChapter;
 
       // public
       property ID       : integer       read getID        write setID;
       property Nr       : integer       read getNr        write setNr;
       property Text     : string        read getText      write setText;
       property Modified : boolean       read getModified  write setModified;
-      property xChapter : IXMLChapter   read getChapter   write setChapter;
+      property xChapter : xsd_chapter.IXMLChapter   read getxChapter   write setxChapter;
+      property Root     : IChapter      read getRoot;
 
       procedure up;
       procedure down;
 
       function FullTitle : string;
+
+      procedure loadFromDataSet( data : TDataSet );
+
+      procedure buildTree;
 
       procedure release;
 

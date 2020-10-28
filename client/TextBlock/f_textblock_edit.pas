@@ -5,14 +5,13 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_editForm, Vcl.StdCtrls, Vcl.ExtCtrls,
-  fr_base, Vcl.ComCtrls, xsd_TextBlock, Vcl.Buttons;
+  fr_base, Vcl.ComCtrls, xsd_TextBlock, Vcl.Buttons, Data.DB, Datasnap.DBClient,
+  Datasnap.DSConnect, Vcl.Mask, Vcl.DBCtrls, Xml.XMLIntf;
 
 type
   TTextBlockEditForm = class(TForm)
     BaseFrame1: TBaseFrame;
     Panel1: TPanel;
-    LabeledEdit1: TLabeledEdit;
-    LabeledEdit2: TLabeledEdit;
     Label1: TLabel;
     EditFrame1: TEditFrame;
     GroupBox1: TGroupBox;
@@ -27,6 +26,13 @@ type
     btnEdit: TBitBtn;
     btnSave: TBitBtn;
     btnDelete: TBitBtn;
+    DSProviderConnection1: TDSProviderConnection;
+    TBtab: TClientDataSet;
+    LabeledEdit1: TDBEdit;
+    LabeledEdit2: TDBEdit;
+    Label3: TLabel;
+    Label4: TLabel;
+    TBSrc: TDataSource;
     procedure btnNeuClick(Sender: TObject);
     procedure btnEditClick(Sender: TObject);
     procedure btnSaveClick(Sender: TObject);
@@ -34,10 +40,21 @@ type
     procedure BaseFrame1OKBtnClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure LVDblClick(Sender: TObject);
+    procedure BaseFrame1AbortBtnClick(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+    procedure TBtabBeforePost(DataSet: TDataSet);
+    procedure EditFrame1REKeyPress(Sender: TObject; var Key: Char);
   private
-    x_block : IXMLBlock;
+    m_id        : integeR;
+    x_block     : IXMLBlock;
+    m_modified  : boolean;
+
+    procedure setID( value : integer );
+
+    procedure saveXML;
+    procedure loadXML;
   public
-    { Public-Deklarationen }
+    property ID : integer read m_id write setID;
   end;
 
 var
@@ -48,33 +65,34 @@ implementation
 {$R *.dfm}
 
 uses
-  ClipBrd;
+  ClipBrd, m_glob_client, Xml.XMLDoc, system.UITypes;
 
+
+procedure TTextBlockEditForm.BaseFrame1AbortBtnClick(Sender: TObject);
+begin
+  TBtab.Cancel;
+
+  if TBtab.UpdatesPending then
+    TBtab.CancelUpdates;
+end;
 
 procedure TTextBlockEditForm.BaseFrame1OKBtnClick(Sender: TObject);
 var
-  i     : integer;
-  item  : TListItem;
-  xi    : IXMLField;
+  st : TStream;
 begin
-  x_block         := NewBlock;
-  x_block.Name    := trim(LabeledEdit1.Text);
-  x_block.Tags    := Trim(LabeledEdit2.Text);
-  x_block.Content := EditFrame1.getText;
-
-  for i := 0 to pred(LV.Items.Count) do
+  if m_modified  then
   begin
-    item := LV.Items.Item[i];
-    xi   := x_block.Fields.Add;
+    saveXML;
 
-    xi.Name     := item.Caption;
-    xi.Caption  := item.SubItems.Strings[0];
-    xi.Fieldtype:= item.SubItems.Strings[1];
-    xi.Rem      := item.SubItems.Strings[2];
+    st := TBtab.CreateBlobStream(TBtab.FieldByName('TB_TEXT'), bmWrite);
+    x_block.OwnerDocument.SaveToStream(st);
+    st.Free;
   end;
 
-  x_block.OwnerDocument.SaveToFile('textblock.xml');
+  TBtab.Post;
 
+  if TBtab.UpdatesPending then
+    TBtab.ApplyUpdates(-1);
 end;
 
 procedure TTextBlockEditForm.btnDeleteClick(Sender: TObject);
@@ -82,6 +100,8 @@ begin
   if not Assigned(LV.Selected) then
     exit;
   LV.DeleteSelected;
+
+  m_modified := true;
 end;
 
 procedure TTextBlockEditForm.btnEditClick(Sender: TObject);
@@ -90,22 +110,25 @@ var
 begin
   if not Assigned(LV.Selected) then
     exit;
+
   item := LV.Selected;
 
   LabeledEdit3.Text := item.Caption;
   LabeledEdit4.Text := item.SubItems.Strings[0];
   ComboBox1.ItemIndex := ComboBox1.Items.IndexOf(item.SubItems.Strings[1]);
   LabeledEdit5.Text := item.SubItems.Strings[2];
-
 end;
 
 procedure TTextBlockEditForm.btnNeuClick(Sender: TObject);
 begin
+  Lv.Selected := NIL;
+
   LabeledEdit3.Text := '';
   LabeledEdit4.Text := '';
   LabeledEdit5.Text := '';
   ComboBox1.ItemIndex := 0;
   LabeledEdit3.SetFocus;
+  m_modified := true;
 end;
 
 procedure TTextBlockEditForm.btnSaveClick(Sender: TObject);
@@ -126,20 +149,46 @@ begin
   item.SubItems.Strings[0] := trim(LabeledEdit4.Text);
   item.SubItems.Strings[1] := ComboBox1.Items.Strings[ComboBox1.ItemIndex];
   item.SubItems.Strings[2] := trim(LabeledEdit5.Text);
+  m_modified := true;
+end;
 
+procedure TTextBlockEditForm.EditFrame1REKeyPress(Sender: TObject;
+  var Key: Char);
+begin
+  m_modified := true;
 end;
 
 procedure TTextBlockEditForm.FormCreate(Sender: TObject);
+begin
+  DSProviderConnection1.SQLConnection := GM.SQLConnection1;
+end;
+
+procedure TTextBlockEditForm.FormDestroy(Sender: TObject);
+begin
+  if (TBtab.State = dsInsert) or ( TBtab.State = dsEdit)  then
+  begin
+    TBtab.Cancel;
+
+    if TBtab.UpdatesPending then
+      TBtab.CancelUpdates;
+  end;
+end;
+
+procedure TTextBlockEditForm.loadXML;
 var
-  i     : integer;
+  st  : TStream;
+  xml : IXMLDocument;
+  i   : integer;
   item  : TListItem;
   xi    : IXMLField;
 begin
-  if FileExists('textblock.xml') then
+  st := TBtab.CreateBlobStream(TBtab.FieldByName('TB_TEXT'), bmRead);
+  xml := NewXMLDocument;
+  xml.LoadFromStream(st);
+  x_block := xml.GetDocBinding('Block', TXMLBlock, TargetNamespace) as IXMLBlock;
+
+  if Assigned(x_block) then
   begin
-    x_block := LoadBlock('textblock.xml');
-    LabeledEdit1.Text := x_block.Name;
-    LabeledEdit2.Text := x_block.Tags;
     EditFrame1.setText(x_block.Content);
 
     for i := 0 to pred(x_block.Fields.Count) do
@@ -153,6 +202,7 @@ begin
       item.SubItems.Add(xi.Rem);
     end;
   end;
+  st.Free;
 end;
 
 procedure TTextBlockEditForm.LVDblClick(Sender: TObject);
@@ -169,6 +219,61 @@ begin
   brd.Close;
 
   EditFrame1.RE.PasteFromClipboard;
+end;
+
+procedure TTextBlockEditForm.saveXML;
+var
+  i     : integer;
+  item  : TListItem;
+  xi    : IXMLField;
+begin
+  x_block         := NewBlock;
+  x_block.Name    := trim( TBtab.FieldByName('TB_NAME').AsString);
+  x_block.Tags    := Trim( TBtab.FieldByName('TB_TAGS').AsString);
+  x_block.Content := EditFrame1.getText;
+
+  for i := 0 to pred(LV.Items.Count) do
+  begin
+    item := LV.Items.Item[i];
+    xi   := x_block.Fields.Add;
+
+    xi.Name     := item.Caption;
+    xi.Caption  := item.SubItems.Strings[0];
+    xi.Fieldtype:= item.SubItems.Strings[1];
+    xi.Rem      := item.SubItems.Strings[2];
+  end;
+
+  x_block.OwnerDocument.SaveToFile('textblock.xml');
+end;
+
+procedure TTextBlockEditForm.setID(value: integer);
+begin
+  m_id := value;
+
+  TBtab.Open;
+  if m_id <> -1 then
+  begin
+    if TBtab.Locate('TB_ID', VarArrayOf([value]), []) then
+    begin
+      m_id := value;
+      TBtab.Edit;
+      loadXML;
+      m_modified := false;
+    end;
+  end;
+
+  if m_id = -1 then
+  begin
+    TBtab.Append;
+    m_modified := true;
+  end;
+
+end;
+
+procedure TTextBlockEditForm.TBtabBeforePost(DataSet: TDataSet);
+begin
+  if DataSet.FieldByName('TB_ID').AsInteger = 0 then
+    DataSet.FieldByName('TB_ID').AsInteger := GM.autoInc('gen_tb_id');
 end;
 
 end.

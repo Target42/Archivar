@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_base, Vcl.StdCtrls,
-  Vcl.ExtCtrls, fr_editForm, i_chapter;
+  Vcl.ExtCtrls, fr_editForm, i_chapter, fr_textblock;
 
 type
   TChapterEditForm = class(TForm)
@@ -16,8 +16,16 @@ type
     LabeledEdit2: TLabeledEdit;
     CheckBox1: TCheckBox;
     Label1: TLabel;
+    GroupBox1: TGroupBox;
+    Splitter1: TSplitter;
+    TextBlockFrame1: TTextBlockFrame;
     procedure CheckBox1Click(Sender: TObject);
     procedure BaseFrame1OKBtnClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+    procedure EditFrame1REDragOver(Sender, Source: TObject; X, Y: Integer;
+      State: TDragState; var Accept: Boolean);
+    procedure EditFrame1REDragDrop(Sender, Source: TObject; X, Y: Integer);
   private
     { Private-Deklarationen }
     m_cp : IChapter;
@@ -30,6 +38,9 @@ var
   ChapterEditForm: TChapterEditForm;
 
 implementation
+
+uses
+  xsd_TextBlock, f_textblock_param;
 
 {$R *.dfm}
 
@@ -52,6 +63,49 @@ begin
   end
   else
     LabeledEdit2.Text := '';
+end;
+
+procedure TChapterEditForm.EditFrame1REDragDrop(Sender, Source: TObject; X,
+  Y: Integer);
+var
+  blk : IXMLBlock;
+begin
+  if sender = Source then
+    exit;
+  if (source = TextBlockFrame1.LV)  and( Sender = EditFrame1.RE) then
+  begin
+    blk := TextBlockFrame1.getBlock;
+
+    if blk.Fields.Count = 0 then
+      EditFrame1.RE.Lines.Add(blk.Content)
+    else
+    begin
+      Application.CreateForm(TTextBlockParameterForm, TextBlockParameterForm);
+      TextBlockParameterForm.Xblock := blk;
+      if TextBlockParameterForm.ShowModal = mrOk then
+      begin
+        EditFrame1.RE.Lines.Add( TextBlockParameterForm.getContext );
+      end;
+      TextBlockParameterForm.free;
+
+    end;
+  end;
+end;
+
+procedure TChapterEditForm.EditFrame1REDragOver(Sender, Source: TObject; X,
+  Y: Integer; State: TDragState; var Accept: Boolean);
+begin
+  Accept := true;
+end;
+
+procedure TChapterEditForm.FormCreate(Sender: TObject);
+begin
+  TextBlockFrame1.init;
+end;
+
+procedure TChapterEditForm.FormDestroy(Sender: TObject);
+begin
+  TextBlockFrame1.release;
 end;
 
 procedure TChapterEditForm.setCP(value: IChapter);

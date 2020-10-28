@@ -20,14 +20,14 @@ type
       constructor create;
       Destructor Destroy; override;
 
-      property ID: integer read FID write FID;
-      property CLID: string read FCLID write FCLID;
-      property Locked: boolean read FLocked write FLocked;
-      property Host: string read FHost write FHost;
-      property TimeStamp: TDateTime read FTimeStamp write FTimeStamp;
-      property User: string read FUser write FUser;
-      property PEID: integer read FPEID write FPEID;
-      property SessionID: NativeInt  read FSessionID write FSessionID;
+      property ID         : integer   read FID        write FID;
+      property CLID       : string    read FCLID      write FCLID;
+      property Locked     : boolean   read FLocked    write FLocked;
+      property Host       : string    read FHost      write FHost;
+      property TimeStamp  : TDateTime read FTimeStamp write FTimeStamp;
+      property User       : string    read FUser      write FUser;
+      property PEID       : integer   read FPEID      write FPEID;
+      property SessionID  : NativeInt read FSessionID write FSessionID;
 
       procedure setJSON( obj : TJSONObject );
       function  getJSON : TJSONObject;

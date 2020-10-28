@@ -3,22 +3,24 @@ unit u_ChapterImpl;
 interface
 
 uses
-  i_chapter;
+  i_chapter, xsd_chapter, System.Classes;
 
 type
     TChapterImpl = class( TInterfacedObject, IChapter )
     private
-      m_childs : IChapterList;
-      m_owner  : IChapter;
-      FName: string;
-      FID: integer;
-      FPID: integer;
-      FNr: integer;
-      FNumbering: boolean;
-      FTAID: integer;
-      FData: Pointer;
-      FRem: String;
-      m_modified : boolean;
+      m_childs    : IChapterList;
+      m_owner     : IChapter;
+      FName       : string;
+      FID         : integer;
+      FPID        : integer;
+      FNr         : integer;
+      FNumbering  : boolean;
+      FTAID       : integer;
+      FData       : Pointer;
+      FRem        : String;
+      m_modified  : boolean;
+      m_xData     : IXMLChapter;
+      m_pos       : integer;
 
 
       procedure setModified(  value : boolean );
@@ -31,6 +33,8 @@ type
       procedure setTAID(      value : integer );
       procedure setData(      value : pointer );
       procedure setRem(       value : string );
+      procedure setxData(     value : IXMLChapter);
+      procedure setPos(       value : integer );
 
       function getModified  : boolean;
       function getOwner     : IChapter;
@@ -43,6 +47,9 @@ type
       function getData      : pointer;
       function getRem       : string;
       function getChilds    : IChapterList;
+      function getxData     : IXMLChapter;
+      function getPos       : integer;
+
     public
       constructor create(owner : IChapter);
       Destructor Destroy; override;
@@ -85,8 +92,13 @@ uses
 
 procedure TChapterImpl.add(cp: IChapter);
 begin
+  if cp = IChapter(self) then
+    exit;
+
   m_childs.add(cp);
-  cp.Owner := self;
+
+  cp.Owner  := self;
+  cp.PID    := self.PID;
 
  m_childs.renumber;
 end;
@@ -122,7 +134,8 @@ end;
 
 procedure TChapterImpl.down;
 begin
-  m_owner.Childs. down(self);
+  m_owner.Childs.down(self);
+  m_modified    := true;
 end;
 
 function TChapterImpl.fullTitle: string;
@@ -182,6 +195,11 @@ begin
   Result := FPID;
 end;
 
+function TChapterImpl.getPos: integer;
+begin
+  Result := m_pos;
+end;
+
 function TChapterImpl.getRem: string;
 begin
   Result := FRem;
@@ -190,6 +208,11 @@ end;
 function TChapterImpl.getTAID: integer;
 begin
   Result := FTAID;
+end;
+
+function TChapterImpl.getxData: IXMLChapter;
+begin
+  Result := m_xData;
 end;
 
 function TChapterImpl.hasID(id: integer): Boolean;
@@ -247,7 +270,7 @@ var
     i : integer;
   begin
     Inc(inx);
-    root.ID   := inx;
+    root.pos  := inx;
     root.PID  := pid;
     for i := 0 to pred(root.Childs.Count) do
     begin
@@ -266,6 +289,7 @@ var
 begin
   for i := 0 to pred(m_childs.Count) do
     m_childs.Items[i].release;
+  m_childs.clear;
 end;
 
 procedure TChapterImpl.remove(cp: IChapter);
@@ -276,14 +300,14 @@ end;
 
 procedure TChapterImpl.setData(value: pointer);
 begin
+  m_modified  := m_modified or (value <> FData);
   FData := value;
-  m_modified := true;
 end;
 
 procedure TChapterImpl.SetID(value: integer);
 begin
+  m_modified  := m_modified or (value <> FID);
   FID := value;
-  m_modified := true;
 end;
 
 procedure TChapterImpl.setModified(value: boolean);
@@ -293,32 +317,38 @@ end;
 
 procedure TChapterImpl.setName(value: string);
 begin
+  m_modified  := m_modified or (value <> FName);
   FName := value;
-  m_modified := true;
 end;
 
 procedure TChapterImpl.SetNr(value: integer);
 begin
+  m_modified  := m_modified or (value <> FNr);
   FNr := value;
-  m_modified := true;
 end;
 
 procedure TChapterImpl.SetNumbering(value: boolean);
 begin
+  m_modified  := m_modified or (value <> FNumbering);
   FNumbering := value;
-  m_modified := true;
 end;
 
 procedure TChapterImpl.setOwner(value: IChapter);
 begin
+  m_modified  := m_modified or (value <> m_owner);
   m_owner := value;
-  m_modified := true;
 end;
 
 procedure TChapterImpl.setPID(value: integer);
 begin
+  m_modified  := m_modified or (value <> FPID);
   FPID := value;
-  m_modified := true;
+end;
+
+procedure TChapterImpl.setPos(value: integer);
+begin
+  m_modified  := m_modified or (value <> m_pos);
+  m_pos       := value;
 end;
 
 procedure TChapterImpl.setRem(value: string);
@@ -333,9 +363,15 @@ begin
   m_modified := true;
 end;
 
+procedure TChapterImpl.setxData(value: IXMLChapter);
+begin
+  m_xData := value;
+end;
+
 procedure TChapterImpl.up;
 begin
   m_owner.Childs.up(self);
+  m_modified := true;
 end;
 
 end.

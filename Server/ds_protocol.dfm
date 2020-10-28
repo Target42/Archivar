@@ -399,4 +399,19 @@ object dsProtocol: TdsProtocol
     Left = 224
     Top = 72
   end
+  object CPText: TIBTable
+    Database = DBMod.IBDatabase1
+    Transaction = IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    TableName = 'CT_CHAPTER_TEXT'
+    UniDirectional = False
+    Left = 200
+    Top = 264
+  end
+  object CPTextTab: TDataSetProvider
+    DataSet = CPText
+    Left = 272
+    Top = 264
+  end
 end

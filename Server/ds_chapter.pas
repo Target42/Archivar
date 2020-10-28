@@ -12,9 +12,10 @@ type
     Chapter: TIBTable;
     IBTransaction1: TIBTransaction;
     ChapterTab: TDataSetProvider;
-    TACp: TIBQuery;
     ListTasksQry: TIBQuery;
     ListTasks: TDataSetProvider;
+    ChapterText: TIBTable;
+    ChapterTextTab: TDataSetProvider;
   private
     { Private-Deklarationen }
   public

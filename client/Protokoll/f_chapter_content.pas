@@ -4,8 +4,8 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_chapter, fr_base, u_titel,
-  Datasnap.DSConnect;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_chapter, fr_base,
+  Datasnap.DSConnect, i_chapter;
 
 type
   TChapterContentForm = class(TForm)
@@ -16,11 +16,11 @@ type
     procedure BaseFrame1AbortBtnClick(Sender: TObject);
     procedure BaseFrame1OKBtnClick(Sender: TObject);
   private
-    m_cp : TChapterTitle;
-    function GetChapterTitle: TChapterTitle;
-    procedure SetChapterTitle(const Value: TChapterTitle);
+    m_cp : IChapterTitle;
+    function GetChapterTitle: IChapterTitle;
+    procedure SetChapterTitle(const Value: IChapterTitle);
   public
-    property ChapterTitle: TChapterTitle read GetChapterTitle write SetChapterTitle;
+    property ChapterTitle: IChapterTitle read GetChapterTitle write SetChapterTitle;
   end;
 
 var
@@ -30,6 +30,8 @@ implementation
 
 {$R *.dfm}
 
+uses
+  u_speedbutton;
 { TChapterContentForm }
 
 procedure TChapterContentForm.BaseFrame1AbortBtnClick(Sender: TObject);
@@ -40,12 +42,12 @@ end;
 procedure TChapterContentForm.BaseFrame1OKBtnClick(Sender: TObject);
 begin
   ChapterFrame1.save;
-  m_cp.xChapter := ChapterFrame1.xChapter;
 end;
 
 procedure TChapterContentForm.FormCreate(Sender: TObject);
 begin
-  ChapterFrame1.prepare( nil );
+  updateSeedBtn( self, 1 );
+  ChapterFrame1.prepare(NIL);
 end;
 
 procedure TChapterContentForm.FormDestroy(Sender: TObject);
@@ -53,17 +55,15 @@ begin
   ChapterFrame1.Shutdown;
 end;
 
-function TChapterContentForm.GetChapterTitle: TChapterTitle;
+function TChapterContentForm.GetChapterTitle: IChapterTitle;
 begin
   Result := m_cp;
 end;
 
-procedure TChapterContentForm.SetChapterTitle(const Value: TChapterTitle);
+procedure TChapterContentForm.SetChapterTitle(const Value: IChapterTitle);
 begin
   m_cp := value;
-
-  ChapterFrame1.CP_ID := m_cp.ID;
-  ChapterFrame1.Label2.Caption := m_cp.Text;
+  ChapterFrame1.Chapter := m_cp;
 end;
 
 

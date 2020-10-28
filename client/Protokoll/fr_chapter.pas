@@ -7,7 +7,8 @@ uses
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, xsd_chapter,
   Datasnap.DBClient, Data.DB, Datasnap.DSConnect, Vcl.ComCtrls, Vcl.ExtCtrls,
   Vcl.StdCtrls, Vcl.Buttons, System.Generics.Collections,
-  fr_taskList2, u_taskEntry, i_chapter;
+  fr_taskList2, u_taskEntry, i_chapter, Data.SqlExpr, System.Actions,
+  Vcl.ActnList, System.ImageList, Vcl.ImgList, Vcl.Menus;
 
 type
   TChapterFrame = class(TFrame)
@@ -23,53 +24,65 @@ type
     Label1: TLabel;
     TaskList2Frame1: TTaskList2Frame;
     Label2: TLabel;
-    SpeedButton8: TBitBtn;
-    SpeedButton1: TBitBtn;
-    SpeedButton2: TBitBtn;
-    SpeedButton3: TBitBtn;
-    SpeedButton4: TBitBtn;
-    SpeedButton5: TBitBtn;
-    SpeedButton6: TBitBtn;
-    SpeedButton7: TBitBtn;
-    procedure SpeedButton8Click(Sender: TObject);
-    procedure SpeedButton1Click(Sender: TObject);
-    procedure SpeedButton4Click(Sender: TObject);
-    procedure SpeedButton5Click(Sender: TObject);
-    procedure SpeedButton6Click(Sender: TObject);
-    procedure SpeedButton7Click(Sender: TObject);
-    procedure SpeedButton2Click(Sender: TObject);
+    SpeedButton8: TSpeedButton;
+    SpeedButton1: TSpeedButton;
+    SpeedButton2: TSpeedButton;
+    SpeedButton3: TSpeedButton;
+    SpeedButton4: TSpeedButton;
+    SpeedButton5: TSpeedButton;
+    SpeedButton6: TSpeedButton;
+    SpeedButton7: TSpeedButton;
+    ActionList1: TActionList;
+    ac_new_chapter: TAction;
+    ac_edit_chapter: TAction;
+    ImageList1: TImageList;
+    ac_sub_chapter: TAction;
+    ac_del_chapter: TAction;
+    ac_chapter_up: TAction;
+    ac_chapter_down: TAction;
+    ac_chapter_left: TAction;
+    ac_chapter_right: TAction;
+    PopupMenu1: TPopupMenu;
+    NeuesKapitel1: TMenuItem;
+    Kapitelbearbeiten1: TMenuItem;
+    Unterkapitel1: TMenuItem;
+    N1: TMenuItem;
+    Kapitellschen1: TMenuItem;
+    N2: TMenuItem;
+    Kapitelhoch1: TMenuItem;
+    Kapitelrunter1: TMenuItem;
+    Kapitelausrcken1: TMenuItem;
+    Kapiteleinrcken1: TMenuItem;
+    ChapterTextTab: TClientDataSet;
     procedure ComboBox1Change(Sender: TObject);
     procedure TVDragOver(Sender, Source: TObject; X, Y: Integer;
       State: TDragState; var Accept: Boolean);
     procedure TVDragDrop(Sender, Source: TObject; X, Y: Integer);
     procedure TVDblClick(Sender: TObject);
     procedure TaskList2Frame1SpeedButton2Click(Sender: TObject);
-    procedure SpeedButton3Click(Sender: TObject);
     procedure TaskList2Frame1CheckBox5Click(Sender: TObject);
+    procedure ac_new_chapterExecute(Sender: TObject);
+    procedure ac_edit_chapterExecute(Sender: TObject);
+    procedure ac_sub_chapterExecute(Sender: TObject);
+    procedure ac_del_chapterExecute(Sender: TObject);
+    procedure ac_chapter_upExecute(Sender: TObject);
+    procedure ac_chapter_downExecute(Sender: TObject);
+    procedure ac_chapter_leftExecute(Sender: TObject);
+    procedure ac_chapter_rightExecute(Sender: TObject);
   private
-    m_id   : integer;
-    m_xCp  : IXMLChapter;
-    m_root : IChapter;
-    m_cpList : TList<IChapter>;
+    m_ct : IChapterTitle;
 
-    function GetCP_ID: integer;
-    procedure SetCP_ID(const Value: integer);
 
-    procedure loadFromClientBlob;
-    procedure saveToclientBlob;
-
-    procedure buildTree;
     procedure updateTree;
 
-    procedure setTitle( value : string );
+    procedure setChapter( value : IChapterTitle );
+
+    procedure saveCP( cp : IChapter; append : boolean = false );
   public
     { Public-Deklarationen }
-    property CP_ID: integer read GetCP_ID write SetCP_ID;
-    property Title : string write setTitle;
+    property Chapter : IChapterTitle read m_ct write setChapter;
 
-    property xChapter : IXMLChapter read m_xCp;
-
-    procedure prepare( con : TDSProviderConnection );
+    procedure prepare(con : TSQLConnection);
     procedure Shutdown;
 
     procedure save;
@@ -89,308 +102,7 @@ uses
 
 { TChapterFrame }
 
-procedure TChapterFrame.buildTree;
-var
-  i     : integer;
-  cp    : IChapter;
-  list  : TList<IChapter>;
-  xTop  : IXMLTop;
-
-  procedure addToParent( cp : IChapter );
-  var
-    j : integer;
-  begin
-    if cp.PID = 0 then
-      exit;
-    for j := 0 to pred(list.Count) do
-    begin
-      if list[j].ID = cp.PID then
-      begin
-        list[j].add(cp);
-        break;
-      end;
-    end;
-  end;
-
-begin
-  list := TList<IChapter>.create;
-  for i := 0 to pred(m_xCp.Top.Count) do
-    begin
-      cp := TChapterImpl.create(NIL);
-      xTop := m_xCp.Top.Items[i];
-
-      cp.Name := xTop.Titel;
-      cp.ID   := xTop.Id;
-      cp.PID  := xTop.Pid;
-      cp.Nr   := xTop.Nr;
-      cp.Numbering  := xTop.Numbering;
-      cp.TAID := xTop.Taid;
-      cp.Rem  := xTop.Rem;
-      list.Add(cp);
-    end;
-  for i := 0 to pred(list.Count) do
-    begin
-      addToParent(list[i]);
-      if list[i].PID = 0 then
-        m_root.add(list[i]);
-    end;
-  list.Clear;
-  list.Free;
-end;
-
-procedure TChapterFrame.cancel;
-begin
-  if ChapterTab.State = dsEdit then
-    ChapterTab.Cancel;
-  if ChapterTab.UpdatesPending then
-    ChapterTab.CancelUpdates;
-end;
-
-procedure TChapterFrame.ComboBox1Change(Sender: TObject);
-var
-  gr : TGremium;
-begin
-  if ComboBox1.ItemIndex = -1 then
-     TaskList2Frame1.GR_ID :=  0
-  else
-  begin
-    gr := TGremium(ComboBox1.Items.Objects[ ComboBox1.ItemIndex]);
-    if not Assigned(gr) then
-      TaskList2Frame1.GR_ID :=  0
-    else
-      TaskList2Frame1.GR_ID := gr.ID;
-  end;
-end;
-
-procedure TChapterFrame.doNewTaskEntry(Sender: TObject; var dataList : TEntryList);
-var
-  i : integer;
-  p, cp : IChapter;
-
-begin
-  p := m_root;
-  if Assigned(TV.Selected) then
-    p := IChapter(TV.Selected.Data);
-
-  for i := 0 to pred(dataList.Count) do
-  begin
-    if not m_root.hasID(dataList.Items[i].TaskID) then
-    begin
-      cp            := p.newChapter;
-      cp.Name       := dataList.Items[i].TaskName;
-      cp.Numbering  := (p <> m_root);
-      cp.TAID       := dataList.Items[i].TaskID;
-    end;
-  end;
-  updateTree;
-end;
-
-function TChapterFrame.GetCP_ID: integer;
-begin
-  Result := m_id;
-end;
-
-procedure TChapterFrame.loadFromClientBlob;
-var
-  st : TStream;
-  xml: IXMLDocument;
-begin
-  ChapterTab.FetchBlobs;
-  st := ChapterTab.CreateBlobStream( ChapterTab.FieldByName('CP_DATA'), bmRead );
-  if not Assigned(st) or ( st.Size = 0) then
-  begin
-    m_xCp := NewChapter;
-  end
-  else
-  begin
-    xml := NewXMLDocument;
-    xml.LoadFromStream(st);
-    m_xCp := xml.GetDocBinding('Chapter', TXMLChapter, TargetNamespace) as IXMLChapter;
-  end;
-  if Assigned(st) then
-    st.Free;
-  buildTree;
-end;
-
-procedure TChapterFrame.prepare( con : TDSProviderConnection );
-var
-  i : integer;
-begin
-  m_root  := TChapterImpl.create(NIL);
-  m_cpList:= TList<IChapter>.create;
-
-  if not Assigned(con) then
-    DSProviderConnection1.SQLConnection := GM.SQLConnection1
-  else
-    DSProviderConnection1.SQLConnection := con.SQLConnection;
-
-  m_xCp := NewChapter;
-
-  ComboBox1.Items.Add('');
-  for i := 0 to pred(GM.Gremien.Count) do
-  begin
-    ComboBox1.Items.AddObject(GM.Gremien.Items[i].Name, GM.Gremien.Items[i]);
-  end;
-  TV.Images := GM.ImageList2;
-  TaskList2Frame1.prepare;
-  TaskList2Frame1.OnTaskEntry := doNewTaskEntry;
-end;
-
-procedure TChapterFrame.save;
-begin
-  saveToclientBlob;
-
-  if ChapterTab.State = dsEdit then
-    ChapterTab.Post;
-  if ChapterTab.UpdatesPending then
-    ChapterTab.ApplyUpdates(-1);
-end;
-
-procedure TChapterFrame.saveToclientBlob;
-var
-  st : TStream;
-  procedure saveElements( root : IChapterList );
-  var
-    i : integer;
-    cp: IChapter;
-    xt : IXMLTop;
-  begin
-    for i := 0 to pred(root.Count) do
-      begin
-        xt := m_xCp.Top.Add;
-        cp := root.Items[i];
-
-        xt.Id       := cp.ID;
-        xt.Pid      := cp.PID;
-        xt.Titel    := cp.Name;
-        xt.Nr       := cp.Nr;
-        xt.Taid     := cp.TAID;
-        xt.Numbering:= cp.Numbering;
-        xt.Rem      := cp.Rem;
-
-        saveElements( cp.Childs);
-      end;
-  end;
-begin
-  m_xCp := NewChapter;
-  m_root.reindex;
-  saveElements( m_root.Childs);
-
-  st := ChapterTab.CreateBlobStream( ChapterTab.FieldByName('CP_DATA'), bmWrite );
-  m_xCp.OwnerDocument.SaveToStream(st);
-  st.Free;
-end;
-
-procedure TChapterFrame.SetCP_ID(const Value: integer);
-begin
-  m_id := Value;
-
-  if not ChapterTab.Active then
-    ChapterTab.Open;
-
-  m_root.Childs.clear;
-
-  if ChapterTab.Locate('CP_ID', VarArrayOf([m_id]), []) then
-  begin
-    ChapterTab.Edit;
-    loadFromClientBlob;
-    updateTree;
-  end
-  else
-  begin
-    ChapterTab.ReadOnly := true;
-    ShowMessage('Hauptkapitel nicht gefunden!');
-  end;
-  TaskList2Frame1.GR_ID :=  0;
-end;
-
-procedure TChapterFrame.setTitle(value: string);
-begin
-  Label2.Caption := value;
-end;
-
-procedure TChapterFrame.Shutdown;
-begin
-  TaskList2Frame1.shutdown;
-  m_cpList.free;
-  ChapterTab.Close;
-  m_root.release;
-end;
-
-procedure TChapterFrame.SpeedButton1Click(Sender: TObject);
-var
-  cp : IChapter;
-  ChapterEditForm : TChapterEditForm;
-begin
-  cp := TChapterImpl.create(NIL);
-
-  Application.CreateForm(TChapterEditForm, ChapterEditForm);
-  ChapterEditForm.CP := cp;
-  if ChapterEditForm.ShowModal = mrOk then
-  begin
-    m_root.add(cp);
-    TV.Items.AddChildObject(NIL, cp.fullTitle, cp);
-  end
-  else
-    cp.release;
-
-  ChapterEditForm.Free;
-end;
-
-procedure TChapterFrame.SpeedButton2Click(Sender: TObject);
-var
-  cp : IChapter;
-  ChapterEditForm : TChapterEditForm;
-begin
-  if not Assigned(TV.Selected) then
-    exit;
-  cp := IChapter(TV.Selected.Data);
-
-  if cp.TAID = 0 then begin
-    Application.CreateForm(TChapterEditForm, ChapterEditForm);
-    ChapterEditForm.CP := cp;
-    if ChapterEditForm.ShowModal = mrOk then
-    begin
-      updateTree
-    end;
-    ChapterEditForm.Free;
-  end
-  else
-  begin
-    Application.CreateForm(TChapterTaskForm, ChapterTaskForm);
-    ChapterTaskForm.CP := cp;
-    if ChapterTaskForm.ShowModal = mrok then
-      updateTree;
-    ChapterTaskForm.Free;
-  end;
-end;
-
-procedure TChapterFrame.SpeedButton3Click(Sender: TObject);
-var
-  cp : IChapter;
-begin
-  if not Assigned(TV.Selected) then
-    exit;
-  cp := IChapter(TV.Selected.Data);
-  cp.Owner.remove(cp);
-  cp.release;
-  updateTree;
-end;
-
-procedure TChapterFrame.SpeedButton4Click(Sender: TObject);
-var
-  cp : IChapter;
-begin
-  if not Assigned(TV.Selected) then
-    exit;
-
-  cp := IChapter(TV.Selected.Data);
-  cp.up;
-  updateTree;
-end;
-
-
-procedure TChapterFrame.SpeedButton5Click(Sender: TObject);
+procedure TChapterFrame.ac_chapter_downExecute(Sender: TObject);
 var
   cp : IChapter;
 begin
@@ -402,7 +114,7 @@ begin
   updateTree;
 end;
 
-procedure TChapterFrame.SpeedButton6Click(Sender: TObject);
+procedure TChapterFrame.ac_chapter_leftExecute(Sender: TObject);
 var
   cp : IChapter;
   p  : IChapter;
@@ -410,17 +122,18 @@ begin
   if not Assigned(TV.Selected) then
     exit;
   cp := IChapter(TV.Selected.Data);
-  if cp.Owner = m_root then
+  if cp.Owner = m_ct.Root then
     exit;
 
   p := cp.Owner.Owner;
   cp.Owner.remove(cp);
   p.add(cp);
+  cp.Modified := true;
 
   updateTree;
 end;
 
-procedure TChapterFrame.SpeedButton7Click(Sender: TObject);
+procedure TChapterFrame.ac_chapter_rightExecute(Sender: TObject);
 var
   prev  : IChapter;
   cp    : IChapter;
@@ -445,23 +158,273 @@ begin
   begin
     cp.Owner.Childs.remove(cp);
     prev.add(cp);
+    cp.Modified := true;
     updateTree
   end;
 end;
 
-procedure TChapterFrame.SpeedButton8Click(Sender: TObject);
+procedure TChapterFrame.ac_chapter_upExecute(Sender: TObject);
 var
- p : IChapter;
- cp : IChapter;
+  cp : IChapter;
 begin
-  p := m_root;
+  if not Assigned(TV.Selected) then
+    exit;
+
+  cp := IChapter(TV.Selected.Data);
+  cp.up;
+  updateTree;
+end;
+
+procedure TChapterFrame.ac_del_chapterExecute(Sender: TObject);
+var
+  cp : IChapter;
+begin
+  if not Assigned(TV.Selected) then
+    exit;
+  cp := IChapter(TV.Selected.Data);
+  cp.Owner.remove(cp);
+  cp.release;
+  updateTree;
+end;
+
+procedure TChapterFrame.ac_edit_chapterExecute(Sender: TObject);
+var
+  cp : IChapter;
+  ChapterEditForm : TChapterEditForm;
+begin
+  if not Assigned(TV.Selected) then
+    exit;
+  cp := IChapter(TV.Selected.Data);
+
+  if cp.TAID = 0 then begin
+    Application.CreateForm(TChapterEditForm, ChapterEditForm);
+    ChapterEditForm.CP := cp;
+    if ChapterEditForm.ShowModal = mrOk then
+    begin
+      saveCP(cp);
+      updateTree
+    end;
+    ChapterEditForm.Free;
+  end
+  else
+  begin
+    Application.CreateForm(TChapterTaskForm, ChapterTaskForm);
+    ChapterTaskForm.CP := cp;
+    if ChapterTaskForm.ShowModal = mrok then
+    begin
+      saveCP(cp);
+      updateTree;
+    end;
+    ChapterTaskForm.Free;
+  end;
+end;
+
+procedure TChapterFrame.ac_new_chapterExecute(Sender: TObject);
+var
+  cp, p : IChapter;
+  ChapterEditForm : TChapterEditForm;
+  node : TTreeNode;
+begin
+  p := m_ct.Root;
   if Assigned(TV.Selected) then
     p := IChapter(TV.Selected.Data);
 
   cp := p.newChapter;
-  TV.Items.AddChildObject(TV.Selected, cp.fullTitle, cp);
+
+  Application.CreateForm(TChapterEditForm, ChapterEditForm);
+  ChapterEditForm.CP := cp;
+  if ChapterEditForm.ShowModal = mrOk then
+  begin
+    node := TV.Items.AddChildObject(NIL, cp.fullTitle, cp);
+    node.SelectedIndex := 2;
+    node.ImageIndex    := 2;
+
+    saveCP(cp, true);
+  end
+  else
+    p.remove(cp);
+
+  ChapterEditForm.Free;
+end;
+
+procedure TChapterFrame.ac_sub_chapterExecute(Sender: TObject);
+var
+ p : IChapter;
+ cp : IChapter;
+ node : TTreeNode;
+begin
+  p := m_ct.Root;
+  if Assigned(TV.Selected) then
+    p := IChapter(TV.Selected.Data);
+
+  cp := p.newChapter;
+  saveCP(cp, true);
+
+  node := TV.Items.AddChildObject(TV.Selected, cp.fullTitle, cp);
+    node.SelectedIndex := 2;
+    node.ImageIndex    := 2;
+
   if Assigned(TV.Selected) then
     TV.Selected.Expand(false);
+end;
+
+procedure TChapterFrame.cancel;
+begin
+  if ChapterTab.State = dsEdit then
+    ChapterTab.Cancel;
+
+  if ChapterTab.UpdatesPending then
+    ChapterTab.CancelUpdates;
+
+  if ChapterTextTab.UpdatesPending then
+    ChapterTextTab.CancelUpdates;
+end;
+
+procedure TChapterFrame.ComboBox1Change(Sender: TObject);
+var
+  gr : TGremium;
+begin
+  if ComboBox1.ItemIndex = -1 then
+     TaskList2Frame1.GR_ID :=  0
+  else
+  begin
+    gr := TGremium(ComboBox1.Items.Objects[ ComboBox1.ItemIndex]);
+    if not Assigned(gr) then
+      TaskList2Frame1.GR_ID :=  0
+    else
+      TaskList2Frame1.GR_ID := gr.ID;
+  end;
+end;
+
+procedure TChapterFrame.doNewTaskEntry(Sender: TObject; var dataList : TEntryList);
+var
+  i : integer;
+  p, cp : IChapter;
+
+begin
+  p := m_ct.Root;
+  if Assigned(TV.Selected) then
+    p := IChapter(TV.Selected.Data);
+
+  for i := 0 to pred(dataList.Count) do
+  begin
+    if not m_ct.root.hasID(dataList.Items[i].TaskID) then
+    begin
+      cp            := p.newChapter;
+      cp.Name       := dataList.Items[i].TaskName;
+      cp.Numbering  := (p <> m_ct.Root);
+      cp.TAID       := dataList.Items[i].TaskID;
+
+      saveCP(cp, true);
+    end;
+  end;
+  updateTree;
+end;
+
+procedure TChapterFrame.prepare(con : TSQLConnection );
+var
+  i : integer;
+begin
+  m_ct  := NIL;
+  if Assigned(con) then
+    DSProviderConnection1.SQLConnection := con
+  else
+    DSProviderConnection1.SQLConnection := GM.SQLConnection1;
+
+  ComboBox1.Items.Add('');
+  for i := 0 to pred(GM.Gremien.Count) do
+  begin
+    ComboBox1.Items.AddObject(GM.Gremien.Items[i].Name, GM.Gremien.Items[i]);
+  end;
+  TV.Images := GM.ImageList2;
+  TaskList2Frame1.prepare;
+  TaskList2Frame1.OnTaskEntry := doNewTaskEntry;
+end;
+
+procedure TChapterFrame.save;
+  procedure saveChilds( list : IChapterList );
+  var
+    i : integer;
+  begin
+    for i := 0 to pred(list.Count) do
+    begin
+      if list.Items[i].Modified then
+        saveCP(list.Items[i]);
+
+      saveChilds(list.Items[i].Childs);
+    end;
+  end;
+
+begin
+  m_ct.Root.reindex;
+  saveChilds(m_ct.Root.Childs);
+
+  if ChapterTextTab.UpdatesPending then
+    ChapterTextTab.ApplyUpdates(-1);
+
+  if ChapterTab.State = dsEdit then
+    ChapterTab.Post;
+  if ChapterTab.UpdatesPending then
+    ChapterTab.ApplyUpdates(-1);
+
+end;
+
+procedure TChapterFrame.saveCP(cp: IChapter; append: boolean);
+begin
+  if append then
+  begin
+    if cp.ID = 0 then
+      cp.ID := GM.autoInc('GEN_CT_ID');
+
+    ChapterTextTab.Append;
+    ChapterTextTab.FieldByName('CP_ID').AsInteger     := m_ct.ID;
+    ChapterTextTab.FieldByName('CT_ID').AsInteger     := cp.ID;
+  end
+  else
+  begin
+    ChapterTextTab.Locate('CT_ID', VarArrayOf([cp.ID]), []);
+    ChapterTextTab.Edit;
+  end;
+
+  ChapterTextTab.FieldByName('ct_parent').AsInteger := cp.PID;
+  ChapterTextTab.FieldByName('CT_NUMBER').AsInteger := -1;
+  ChapterTextTab.FieldByName('CT_TITLE').AsString   := cp.Name;
+  ChapterTextTab.FieldByName('CT_POS').AsInteger    := cp.Pos;
+
+
+  if cp.TAID <> 0 then
+    ChapterTextTab.FieldByName('TA_ID').AsInteger     := cp.TAID
+  else
+    ChapterTextTab.FieldByName('TA_ID').Clear;
+
+  ChapterTextTab.Post;
+  cp.Modified := false;
+
+end;
+
+procedure TChapterFrame.setChapter(value: IChapterTitle);
+begin
+  m_ct := value;
+  Label2.Caption := m_ct.FullTitle;
+
+  updateTree;
+
+  TaskList2Frame1.GR_ID :=  0;
+
+  ChapterTab.Open;
+  if ChapterTab.Locate('CP_ID', VarArrayOf([m_ct.ID]), []) then
+    ChapterTab.Edit;
+
+  ChapterTextTab.Filter   := 'CP_ID='+IntToStr(m_ct.ID);
+  ChapterTextTab.Filtered := true;
+  ChapterTextTab.Open;
+
+end;
+
+procedure TChapterFrame.Shutdown;
+begin
+  TaskList2Frame1.shutdown;
+  ChapterTab.Close;
 end;
 
 procedure TChapterFrame.TaskList2Frame1CheckBox5Click(Sender: TObject);
@@ -478,7 +441,7 @@ end;
 
 procedure TChapterFrame.TVDblClick(Sender: TObject);
 begin
-  SpeedButton2.Click;
+  ac_edit_chapter.Execute;
 end;
 
 procedure TChapterFrame.TVDragDrop(Sender, Source: TObject; X, Y: Integer);
@@ -501,7 +464,7 @@ begin
         Continue;
 
       if not Assigned( node ) then
-        cp := m_root.newChapter
+        cp := m_ct.Root.newChapter
       else
       begin
         p := IChapter(node.Data);
@@ -524,7 +487,7 @@ begin
     cp.Owner.remove(cp);
 
     if not Assigned(node) then
-      m_root.add(cp)
+      m_ct.Root.add(cp)
     else
     begin
       p := IChapter(node.Data);
@@ -554,7 +517,6 @@ var
     for i := 0 to pred(childs.Count) do
       begin
         cp := childs.Items[i];
-        m_cpList.add(cp);
         node := TV.Items.AddChildObject(root, cp.fullTitle, cp);
         inx := 2;
         if cp.TAID > 0 then
@@ -572,12 +534,11 @@ var
 
 begin
   old := NIL;
-  m_cpList.Clear;
   TV.Items.BeginUpdate;
   if Assigned(TV.Selected) then
     old := IChapter(TV.Selected.Data);
   TV.Items.Clear;
-  add( NIL, m_root.Childs );
+  add( NIL, m_ct.Root.Childs );
   TV.Items.EndUpdate;
 end;
 

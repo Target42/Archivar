@@ -45,6 +45,7 @@ MODEL_2
 InterBase
 INTERBAS.DEF
 create generator gen_be_id;\
+create generator gen_ct_id;\
 create generator gen_cp_id;\
 create generator gen_da_id;\
 create generator gen_fi_id;\
@@ -96,7 +97,7 @@ commit;
 
 
 1582717246
-1601732881
+1603565155
 0
 0
 2
@@ -454,18 +455,18 @@ CP_CHAPTER
 
 15
 3
-1640
-1640
+2050
+2050
 2
-TA_CP
-TA_CP
+PI_PIC
+PI_PIC
 
 
 
 0
 0
 0
-TA_CP
+PI_PIC
 
 
 
@@ -474,18 +475,18 @@ TA_CP
 
 16
 3
-2050
-2050
+2397
+2397
 2
-PI_PIC
-PI_PIC
+GR_BE
+GR_BE
 
 
 
 0
 0
 0
-PI_PIC
+GR_BE
 
 
 
@@ -494,18 +495,18 @@ PI_PIC
 
 17
 3
-2397
-2397
+2575
+2575
 2
-GR_BE
-GR_BE
+DA_DATAFIELD
+DA_DATAFIELD
 
 
 
 0
 0
 0
-GR_BE
+DA_DATAFIELD
 
 
 
@@ -514,18 +515,18 @@ GR_BE
 
 18
 3
-2575
-2575
+2761
+2761
 2
-DA_DATAFIELD
-DA_DATAFIELD
+TE_TEMPLATE
+TE_TEMPLATE
 
 
 
 0
 0
 0
-DA_DATAFIELD
+TE_TEMPLATE
 
 
 
@@ -534,18 +535,18 @@ DA_DATAFIELD
 
 19
 3
-2761
-2761
+3131
+3131
 2
-TE_TEMPLATE
-TE_TEMPLATE
+IN_INTERNAL
+IN_INTERNAL
 
 
 
 0
 0
 0
-TE_TEMPLATE
+IN_INTERNAL
 
 
 
@@ -554,18 +555,18 @@ TE_TEMPLATE
 
 20
 3
-3131
-3131
+3502
+3502
 2
-IN_INTERNAL
-IN_INTERNAL
+TB_TEXT
+TB_TEXT
 
 
 
 0
 0
 0
-IN_INTERNAL
+TB_TEXT
 
 
 
@@ -574,18 +575,18 @@ IN_INTERNAL
 
 21
 3
-3502
-3502
+3847
+3847
 2
-TB_TEXT
-TB_TEXT
+CT_CHAPTER_TEXT
+CT_CHAPTER_TEXT
 
 
 
 0
 0
 0
-TB_TEXT
+CT_CHAPTER_TEXT
 
 
 
@@ -2158,7 +2159,7 @@ VARCHAR(200)
 1
 0
 0
-
+TA_STYLE
 
 15
 3
@@ -2192,7 +2193,7 @@ VARCHAR(38)
 1
 0
 0
-
+TA_STYLE_CLID
 
 16
 3
@@ -3658,74 +3659,6 @@ CP_NR
 
 6
 3
-1642
-1642
-CP_ID
-CP_ID
-
-
-
-1640
-0
-INTEGER
-0
-0
-0
-
-
-
-
-
-0
-0
-0
-
-
-
-1
-1
-1
-1
-0
-0
-CP_ID
-
-1
-3
-1646
-1646
-TA_ID
-TA_ID
-
-
-
-1640
-0
-INTEGER
-0
-0
-0
-
-
-
-
-
-0
-0
-0
-
-
-
-1
-1
-1
-1
-0
-0
-TA_ID
-
-2
-3
 2051
 2051
 PI_ID
@@ -4711,6 +4644,278 @@ VARCHAR(255)
 TB_TAGS
 
 4
+3
+3851
+3851
+CP_ID
+CP_ID
+
+
+
+3847
+0
+INTEGER
+0
+0
+0
+
+
+
+
+
+0
+0
+0
+
+
+
+0
+1
+0
+1
+0
+0
+CP_ID
+
+1
+3
+3848
+3848
+CT_ID
+CT_ID
+
+
+
+3847
+0
+INTEGER
+0
+0
+0
+
+
+
+
+
+0
+0
+0
+
+
+
+1
+0
+1
+1
+0
+0
+CT_ID
+
+2
+3
+4071
+4071
+TA_ID
+TA_ID
+
+
+
+3847
+0
+INTEGER
+0
+0
+0
+
+
+
+
+
+0
+0
+0
+
+
+
+0
+1
+0
+1
+0
+0
+TA_ID
+
+3
+3
+3849
+3849
+CT_PARENT
+CT_PARENT
+
+
+
+3847
+0
+INTEGER
+0
+0
+0
+
+
+
+
+
+0
+0
+0
+
+
+
+0
+0
+0
+1
+0
+0
+CT_PARENT
+
+4
+3
+3854
+3854
+CT_TITLE
+CT_TITLE
+
+
+
+3847
+0
+VARCHAR(200)
+200
+0
+0
+
+
+
+
+
+0
+0
+0
+
+
+
+0
+0
+0
+1
+0
+0
+CT_TITLE
+
+5
+3
+3855
+3855
+CT_NUMBER
+CT_NUMBER
+
+
+
+3847
+0
+INTEGER
+0
+0
+0
+
+
+
+
+
+0
+0
+0
+
+
+
+0
+0
+0
+1
+0
+0
+CT_NUMBER
+
+6
+3
+3856
+3856
+CT_DATA
+CT_DATA
+
+
+
+3847
+0
+BLOB
+0
+0
+0
+
+
+
+
+
+0
+0
+0
+
+
+
+0
+0
+0
+1
+0
+0
+CT_DATA
+
+7
+3
+4151
+4151
+CT_POS
+CT_POS
+
+
+
+3847
+0
+INTEGER
+0
+0
+0
+
+
+
+
+
+0
+0
+0
+
+
+
+0
+0
+0
+1
+0
+0
+
+
+8
 /END_TABLE AMCCOLN
 
 /BEGIN_TABLE AMCREFR
@@ -4932,42 +5137,6 @@ REF_1627
 
 11
 3
-1641
-1641
-Ref_1641
-REF_1641
-
-
-1626
-1640
-1
-1
-1
-1
-0
-0
-REF_1641
-
-12
-3
-1645
-1645
-Ref_1645
-REF_1645
-
-
-53
-1640
-1
-1
-1
-1
-0
-0
-REF_1645
-
-13
-3
 2398
 2398
 Ref_2398
@@ -4984,7 +5153,7 @@ REF_2398
 0
 REF_2398
 
-14
+12
 3
 2402
 2402
@@ -5002,7 +5171,7 @@ REF_2402
 0
 REF_2402
 
-15
+13
 3
 2406
 2406
@@ -5020,7 +5189,7 @@ REF_2406
 0
 REF_2406
 
-16
+14
 3
 3336
 3336
@@ -5038,7 +5207,7 @@ REF_3336
 0
 REF_3336
 
-17
+15
 3
 3353
 3353
@@ -5055,6 +5224,42 @@ REF_3353
 0
 0
 REF_3353
+
+16
+3
+3850
+3850
+Ref_3850
+REF_3850
+
+
+1626
+3847
+1
+1
+0
+1
+0
+0
+REF_3850
+
+17
+3
+4070
+4070
+Ref_4070
+REF_4070
+
+
+53
+3847
+1
+1
+0
+1
+0
+0
+REF_4070
 
 18
 /END_TABLE AMCREFR
@@ -5122,16 +5327,6 @@ COLN2   N8
 25
 1628
 1
-1643
-1643
-1631
-1642
-1
-1647
-1647
-54
-1646
-1
 2400
 2400
 9
@@ -5156,6 +5351,16 @@ COLN2   N8
 3355
 65
 3354
+1
+3852
+3852
+1631
+3851
+1
+4072
+4072
+54
+4071
 /END_TABLE AMCCCOL
 
 /BEGIN_TABLE AMCCREF
@@ -5233,18 +5438,6 @@ NUMR    N8
 1629
 1
 3
-1644
-1644
-1641
-1643
-1
-3
-1648
-1648
-1645
-1647
-1
-3
 2401
 2401
 2398
@@ -5273,6 +5466,18 @@ NUMR    N8
 3356
 3353
 3355
+1
+3
+3853
+3853
+3850
+3852
+1
+3
+4073
+4073
+4070
+4072
 1
 /END_TABLE AMCCREF
 
@@ -5791,235 +5996,235 @@ NPRO    A30
 VPRO    A80
 /BEGIN_DATA AMCPROP
 0
-5
+2
 0
 DataArchitect
 Shadow
 no
 1
-5
+2
 0
 DataArchitect
 AutoAdjust
 yes
 2
-5
+2
 0
 DataArchitect
 LineStyle
 0
 3
-5
+2
 0
 DataArchitect
 PrnScale
 100
 4
-5
+2
 0
 DataArchitect
 Orientation
 1
 5
-5
+2
 0
 DataArchitect
 DefCheckName
 no
 6
-5
+2
 0
 DataArchitect
 LengthName
 80
 7
-5
+2
 0
 DataArchitect
 UpprCaseName
 no
 8
-5
+2
 0
 DataArchitect
 LowrCaseName
 no
 9
-5
+2
 0
 DataArchitect
 CaseSensName
 no
 10
-5
+2
 0
 DataArchitect
 AllowAllName
 no
 11
-5
+2
 0
 DataArchitect
 AllowChrName
 
 12
-5
+2
 0
 DataArchitect
 InvldChrName
 "+-*/\.,!:;"
 13
-5
+2
 0
 DataArchitect
 NoAccentName
 no
 14
-5
+2
 0
 DataArchitect
 DefCheckCode
 no
 15
-5
+2
 0
 DataArchitect
 LengthCode
 80
 16
-5
+2
 0
 DataArchitect
 UpprCaseCode
 yes
 17
-5
+2
 0
 DataArchitect
 LowrCaseCode
 no
 18
-5
+2
 0
 DataArchitect
 CaseSensCode
 yes
 19
-5
+2
 0
 DataArchitect
 AllowAllCode
 no
 20
-5
+2
 0
 DataArchitect
 AllowChrCode
 'a'-'z', 'A'-'Z', '0'-'9', "_"
 21
-5
+2
 0
 DataArchitect
 InvldChrCode
 
 22
-5
+2
 0
 DataArchitect
 NoAccentCode
 yes
 23
-5
+2
 0
 DataArchitect
 PdmShowName
 no
 24
-5
+2
 0
 DataArchitect
 PdmShowPrim
 yes
 25
-5
+2
 0
 DataArchitect
 PdmShowColn
 yes
 26
-5
+2
 0
 DataArchitect
 PdmShowDttp
 yes
 27
-5
+2
 0
 DataArchitect
 PdmShowKeys
 no
 28
-5
+2
 0
 DataArchitect
 PdmShowNull
 no
 29
-5
+2
 0
 DataArchitect
 PdmShowIndx
 no
 30
-5
+2
 0
 DataArchitect
 PdmShowNameRefr
 no
 31
-5
+2
 0
 DataArchitect
 PdmShowJoinRefr
 yes
 32
-5
+2
 0
 DataArchitect
 PdmShowCnstRefr
 no
 33
-5
+2
 0
 DataArchitect
 PdmShowColnView
 yes
 34
-5
+2
 0
 DataArchitect
 PdmShowDttpView
 yes
 35
-5
+2
 0
 DataArchitect
 PdmShowExprView
 yes
 36
-5
+2
 0
 DataArchitect
 PdmShowTablView
 yes
 37
-5
+2
 0
 DataArchitect
 PdmRltnMode
 yes
 38
-5
+2
 0
 DataArchitect
 PdmAutoMigrFkey
@@ -6028,699 +6233,465 @@ yes
 2
 0
 DataArchitect
-Shadow
-no
-40
-2
-0
-DataArchitect
-AutoAdjust
-yes
-41
-2
-0
-DataArchitect
-LineStyle
-0
-42
-2
-0
-DataArchitect
-PrnScale
-100
-43
-2
-0
-DataArchitect
-Orientation
-1
-44
-2
-0
-DataArchitect
-DefCheckName
-no
-45
-2
-0
-DataArchitect
-LengthName
-80
-46
-2
-0
-DataArchitect
-UpprCaseName
-no
-47
-2
-0
-DataArchitect
-LowrCaseName
-no
-48
-2
-0
-DataArchitect
-CaseSensName
-no
-49
-2
-0
-DataArchitect
-AllowAllName
-no
-50
-2
-0
-DataArchitect
-AllowChrName
-
-51
-2
-0
-DataArchitect
-InvldChrName
-"+-*/\.,!:;"
-52
-2
-0
-DataArchitect
-NoAccentName
-no
-53
-2
-0
-DataArchitect
-DefCheckCode
-no
-54
-2
-0
-DataArchitect
-LengthCode
-80
-55
-2
-0
-DataArchitect
-UpprCaseCode
-yes
-56
-2
-0
-DataArchitect
-LowrCaseCode
-no
-57
-2
-0
-DataArchitect
-CaseSensCode
-yes
-58
-2
-0
-DataArchitect
-AllowAllCode
-no
-59
-2
-0
-DataArchitect
-AllowChrCode
-'a'-'z', 'A'-'Z', '0'-'9', "_"
-60
-2
-0
-DataArchitect
-InvldChrCode
-
-61
-2
-0
-DataArchitect
-NoAccentCode
-yes
-62
-2
-0
-DataArchitect
-PdmShowName
-no
-63
-2
-0
-DataArchitect
-PdmShowPrim
-yes
-64
-2
-0
-DataArchitect
-PdmShowColn
-yes
-65
-2
-0
-DataArchitect
-PdmShowDttp
-yes
-66
-2
-0
-DataArchitect
-PdmShowKeys
-no
-67
-2
-0
-DataArchitect
-PdmShowNull
-no
-68
-2
-0
-DataArchitect
-PdmShowIndx
-no
-69
-2
-0
-DataArchitect
-PdmShowNameRefr
-no
-70
-2
-0
-DataArchitect
-PdmShowJoinRefr
-yes
-71
-2
-0
-DataArchitect
-PdmShowCnstRefr
-no
-72
-2
-0
-DataArchitect
-PdmShowColnView
-yes
-73
-2
-0
-DataArchitect
-PdmShowDttpView
-yes
-74
-2
-0
-DataArchitect
-PdmShowExprView
-yes
-75
-2
-0
-DataArchitect
-PdmShowTablView
-yes
-76
-2
-0
-DataArchitect
-PdmRltnMode
-yes
-77
-2
-0
-DataArchitect
-PdmAutoMigrFkey
-yes
-78
-2
-0
-DataArchitect
 DBOAltIndex
 yes
-79
+40
 2
 0
 DataArchitect
 DBOAltrIndx
 no
-80
+41
 2
 0
 DataArchitect
 DBOFornIndx
 no
-81
+42
 2
 0
 DataArchitect
 DBOPrimIndx
 no
-82
+43
 2
 0
 DataArchitect
 DBOOthrIndx
 yes
-83
+44
 2
 0
 DataArchitect
 DBOTypeTrgr
 0
-84
+45
 2
 0
 DataArchitect
 DBOAltTrgr
 yes
-85
+46
 2
 0
 DataArchitect
 DBOCreaTrgr
 yes
-86
+47
 2
 0
 DataArchitect
 DBODeltTrgr
 yes
-87
+48
 2
 0
 DataArchitect
 DBODropTrgr
 no
-88
+49
 2
 0
 DataArchitect
 DBOInstTrgr
 yes
-89
+50
 2
 0
 DataArchitect
 DBOUpdtTrgr
 yes
-90
+51
 2
 0
 DataArchitect
 DBOChkC1
 yes
-91
+52
 2
 0
 DataArchitect
 DBOChkC2
 yes
-92
+53
 2
 0
 DataArchitect
 DBOChkC3
 yes
-93
+54
 2
 0
 DataArchitect
 DBOChkC4
 yes
-94
+55
 2
 0
 DataArchitect
 DBOChkC5
 yes
-95
+56
 2
 0
 DataArchitect
 DBOChkC6
 yes
-96
+57
 2
 0
 DataArchitect
 DBOChkC7
 yes
-97
+58
 2
 0
 DataArchitect
 DBOChkC8
 yes
-98
+59
 2
 0
 DataArchitect
 DBOChkC9
 yes
-99
+60
 2
 0
 DataArchitect
 DBOChkC10
 yes
-100
+61
 2
 0
 DataArchitect
 DBOChkC11
 yes
-101
+62
 2
 0
 DataArchitect
 DBOStdMsg
 yes
-102
+63
 2
 0
 DataArchitect
 DBOMsgTab
 
-103
+64
 2
 0
 DataArchitect
 DBOMsgNo
 
-104
+65
 2
 0
 DataArchitect
 DBOMsgTxt
 
-105
+66
 2
 0
 DataArchitect
 DBOAltView
 yes
-106
+67
 2
 0
 DataArchitect
 DBOCreaView
 no
-107
+68
 2
 0
 DataArchitect
 DBODropView
 no
-108
+69
 2
 0
 DataArchitect
 DBOClosDtbs
 no
-109
+70
 2
 0
 DataArchitect
 DBOOpenDtbs
 no
-110
+71
 2
 0
 DataArchitect
 DBOConsAkey
 yes
-111
+72
 2
 0
 DataArchitect
 DBOConsChck
 yes
-112
+73
 2
 0
 DataArchitect
 DBOConsDeft
 yes
-113
+74
 2
 0
 DataArchitect
 DBOConsFkey
 yes
-114
+75
 2
 0
 DataArchitect
 DBOConsIDcl
 yes
-115
+76
 2
 0
 DataArchitect
 DBOConsPkey
 yes
-116
+77
 2
 0
 DataArchitect
 DBOConsUddt
 yes
-117
+78
 2
 0
 DataArchitect
 DBOConsIDUR
 yes
-118
+79
 2
 0
 DataArchitect
 DBOConsIDUC
 no
-119
+80
 2
 0
 DataArchitect
 DBOConsIDUN
 no
-120
+81
 2
 0
 DataArchitect
 DBOConsIDUD
 no
-121
+82
 2
 0
 DataArchitect
 DBOConsIDDR
 yes
-122
+83
 2
 0
 DataArchitect
 DBOConsIDDC
 no
-123
+84
 2
 0
 DataArchitect
 DBOConsIDDN
 no
-124
+85
 2
 0
 DataArchitect
 DBOConsIDDD
 no
-125
+86
 2
 0
 DataArchitect
 DBOCreaDtbs
 no
-126
+87
 2
 0
 DataArchitect
 DBOCreaProc
 yes
-127
+88
 2
 0
 DataArchitect
 DBODropProc
 no
-128
+89
 2
 0
 DataArchitect
 DBODropIndx
 no
-129
+90
 2
 0
 DataArchitect
 DBODropTabl
 no
-130
+91
 2
 0
 DataArchitect
 DBOCreaTabl
 yes
-131
+92
 2
 0
 DataArchitect
 DBODrpTmpTbl
 yes
-132
+93
 2
 0
 DataArchitect
 DBOAltTable
 yes
-133
+94
 2
 0
 DataArchitect
 DBOUseTrgUR
 no
-134
+95
 2
 0
 DataArchitect
 DBOUseTrgDR
 no
-135
+96
 2
 0
 DataArchitect
 DBOLowrCase
 no
-136
+97
 2
 0
 DataArchitect
 DBOUpprCase
 no
-137
+98
 2
 0
 DataArchitect
 DBONoAccent
 no
-138
+99
 2
 0
 DataArchitect
 DBOAnsiChar
 no
-139
+100
 2
 0
 DataArchitect
 DBOAddTitle
 yes
-140
+101
 2
 0
 DataArchitect
 DBOUseNames
 no
-141
+102
 2
 0
 DataArchitect
 DBOSqlODBC
 no
-142
+103
 2
 0
 DataArchitect
 DBOCreaTspc
 no
-143
+104
 2
 0
 DataArchitect
 DBOCreaStor
 no
-144
+105
 2
 0
 DataArchitect
 DBOTablComm
 no
-145
+106
 2
 0
 DataArchitect
 DBOColnComm
 no
-146
+107
 2
 0
 DataArchitect
 DBOViewComm
 no
-147
+108
 2
 0
 DataArchitect
 DBODropTspc
 no
-148
+109
 2
 0
 DataArchitect
 DBODropStor
 no
-149
+110
 2
 0
 DataArchitect
 DBODropDtbs
 no
-150
+111
 2
 0
 DataArchitect
 DBOUseTrgUC
 yes
-151
+112
 2
 0
 DataArchitect
 DBOUseTrgUN
 yes
-152
+113
 2
 0
 DataArchitect
 DBOUseTrgUD
 yes
-153
+114
 2
 0
 DataArchitect
 DBOUseTrgDC
 yes
-154
+115
 2
 0
 DataArchitect
 DBOUseTrgDN
 yes
-155
+116
 2
 0
 DataArchitect
@@ -6792,7 +6763,7 @@ OID     N8
 
 
 
-5
+2
 1
 3
 4
@@ -6824,7 +6795,7 @@ OID     N8
 
 
 
-5
+2
 2
 3
 5
@@ -6856,7 +6827,7 @@ OID     N8
 
 
 
-5
+2
 15
 3
 36
@@ -6888,7 +6859,7 @@ OID     N8
 
 
 
-5
+2
 24
 3
 67
@@ -6920,12 +6891,12 @@ OID     N8
 
 
 
-5
+2
 46
 3
 68
 289
-2
+0
 6
 0
 0
@@ -6952,7 +6923,7 @@ OID     N8
 
 
 
-5
+2
 53
 3
 69
@@ -6984,7 +6955,7 @@ OID     N8
 
 
 
-5
+2
 56
 3
 70
@@ -7016,7 +6987,7 @@ OID     N8
 
 
 
-5
+2
 60
 3
 113
@@ -7048,7 +7019,7 @@ OID     N8
 
 
 
-5
+2
 112
 3
 168
@@ -7080,7 +7051,7 @@ OID     N8
 
 
 
-5
+2
 232
 3
 2220
@@ -7112,7 +7083,7 @@ OID     N8
 
 
 
-5
+2
 635
 3
 2400
@@ -7144,7 +7115,7 @@ OID     N8
 
 
 
-5
+2
 1059
 3
 2414
@@ -7176,7 +7147,7 @@ OID     N8
 
 
 
-5
+2
 1070
 3
 2552
@@ -7208,7 +7179,7 @@ OID     N8
 
 
 
-5
+2
 1250
 3
 2664
@@ -7220,10 +7191,10 @@ OID     N8
 0
 0
 0
-34579
--10316
-45903
--3867
+34654
+-3341
+45978
+3108
 2
 1
 0
@@ -7240,45 +7211,13 @@ OID     N8
 
 
 
-5
+2
 1626
-3
-2686
-289
-0
-16
-0
-0
-0
-0
-0
-14571
--9164
-21995
--5640
-2
-1
-0
-0
-0
-0
-0
-0
-0
-0
-0
-
-0
-
-
-
-5
-1640
 3
 2802
 289
 0
-17
+16
 0
 0
 0
@@ -7304,13 +7243,13 @@ OID     N8
 
 
 
-5
+2
 2050
 3
 2921
 289
 0
-18
+17
 0
 0
 0
@@ -7336,13 +7275,13 @@ OID     N8
 
 
 
-5
+2
 2397
 3
 3022
 289
 0
-19
+18
 0
 0
 0
@@ -7368,13 +7307,13 @@ OID     N8
 
 
 
-5
+2
 2575
 3
 3123
 289
 0
-20
+19
 0
 0
 0
@@ -7400,13 +7339,13 @@ OID     N8
 
 
 
-5
+2
 2761
 3
 3224
 289
 0
-21
+20
 0
 0
 0
@@ -7432,13 +7371,13 @@ OID     N8
 
 
 
-5
+2
 3131
 3
 3392
 289
 0
-22
+21
 0
 0
 0
@@ -7464,8 +7403,40 @@ OID     N8
 
 
 
-5
+2
 3502
+3
+3483
+289
+2
+22
+0
+0
+0
+0
+0
+33664
+-17277
+46113
+-7903
+2
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+
+0
+
+
+
+2
+3847
 3
 6
 290
@@ -7496,7 +7467,7 @@ OID     N8
 
 
 
-5
+2
 16
 3
 29
@@ -7528,7 +7499,7 @@ OID     N8
 
 
 
-5
+2
 20
 3
 71
@@ -7560,7 +7531,7 @@ OID     N8
 
 
 
-5
+2
 67
 3
 110
@@ -7592,7 +7563,7 @@ OID     N8
 
 
 
-5
+2
 108
 3
 114
@@ -7624,7 +7595,7 @@ OID     N8
 
 
 
-5
+2
 113
 3
 117
@@ -7656,7 +7627,7 @@ fefcfeff4dd6fffff370ffff4dd6ffff
 
 
 
-5
+2
 117
 3
 2401
@@ -7688,7 +7659,7 @@ fefcfeff4dd6fffff370ffff4dd6ffff
 
 
 
-5
+2
 1060
 3
 2415
@@ -7720,7 +7691,7 @@ a1a600001d420000850601001d420000850601005d7a0000
 
 
 
-5
+2
 1071
 3
 2553
@@ -7752,7 +7723,7 @@ a1a600001d420000850601001d420000850601005d7a0000
 
 
 
-5
+2
 1251
 3
 2556
@@ -7784,7 +7755,7 @@ d5d9ffff45000000350a000045000000350a0000cc200000
 
 
 
-5
+2
 1255
 3
 2665
@@ -7811,82 +7782,18 @@ d5d9ffff45000000350a000045000000350a0000cc200000
 0
 0
 2
-0b9d0000b82600000b9d0000c8e5ffff
+309d0000b8260000309d000007010000
 2
 
 
 
-5
+2
 1627
-3
-2687
-290
-0
-34
-0
-2664
-2686
-0
-0
-0
-0
-0
-0
-2
-2
-0
-0
-0
-0
-0
-1
-0
-0
-2
-289600008de1ffffd44a00008de1ffff
-2
-
-
-
-5
-1641
-3
-2690
-290
-0
-35
-0
-68
-2686
-0
-0
-0
-0
-0
-0
-2
-2
-0
-0
-0
-0
-0
-1
-0
-0
-2
-70d5ffff80e0ffff4b3c000080e0ffff
-2
-
-
-
-5
-1645
 3
 2922
 290
 0
-36
+34
 0
 4
 2921
@@ -7912,13 +7819,13 @@ d5d9ffff45000000350a000045000000350a0000cc200000
 
 
 
-5
+2
 2398
 3
 2925
 290
 0
-37
+35
 0
 168
 2921
@@ -7944,13 +7851,13 @@ d5d9ffff45000000350a000045000000350a0000cc200000
 
 
 
-5
+2
 2402
 3
 2932
 290
 0
-38
+36
 0
 68
 2921
@@ -7976,13 +7883,13 @@ cad7ffff60d3ffffcad7ffff29b4ffff
 
 
 
-5
+2
 2406
 3
 3338
 290
 0
-39
+37
 0
 3123
 68
@@ -8008,13 +7915,13 @@ a735ffffdc0a0000a735ffffb8ebffff6ce0ffffb8ebffff
 
 
 
-5
+2
 3336
 3
 3355
 290
 0
-40
+38
 0
 70
 3123
@@ -8040,8 +7947,72 @@ a735ffffdc0a0000a735ffffb8ebffff6ce0ffffb8ebffff
 
 
 
-5
+2
 3353
+3
+3484
+290
+0
+39
+0
+2664
+3483
+0
+0
+0
+0
+0
+0
+2
+2
+0
+0
+0
+0
+0
+1
+0
+0
+2
+349900006d0200003499000046cdffff
+2
+
+
+
+2
+3850
+3
+3615
+290
+0
+40
+0
+68
+3483
+0
+0
+0
+0
+0
+0
+2
+2
+0
+0
+0
+0
+0
+1
+0
+0
+4
+c4dfffff5bd1ffff643600005bd1ffff6436000087d7ffff2786000087d7ffff
+2
+
+
+
+2
+4070
 /END_TABLE AMCSYMB
 
 

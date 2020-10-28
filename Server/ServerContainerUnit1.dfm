@@ -156,4 +156,10 @@ object ServerContainer1: TServerContainer1
     Left = 264
     Top = 376
   end
+  object DSServerClass1: TDSServerClass
+    OnGetClass = DSServerClass1GetClass
+    Server = DSServer1
+    Left = 336
+    Top = 392
+  end
 end

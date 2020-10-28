@@ -8,8 +8,8 @@ uses
   Datasnap.DBClient, Datasnap.DSConnect, Vcl.Grids, Vcl.DBGrids, Vcl.ExtCtrls,
   Vcl.DBCtrls, Vcl.StdCtrls, Vcl.Mask, JvExComCtrls, JvDBTreeView, Vcl.Menus,
   System.Actions, Vcl.ActnList, f_gremiumList, JvDateTimePicker,
-  JvDBDateTimePicker, Vcl.Buttons, f_titel_edit, u_titel, xsd_protocol,
-  fr_chapter, xsd_chapter, i_personen;
+  JvDBDateTimePicker, Vcl.Buttons, f_titel_edit, xsd_protocol,
+  fr_chapter, xsd_chapter, i_personen, i_chapter, System.ImageList, Vcl.ImgList;
 
 type
   TProtokollForm = class(TForm)
@@ -64,13 +64,31 @@ type
     Button3: TBitBtn;
     TNTabPE_ID: TIntegerField;
     Label4: TLabel;
-    SpeedButton1: TBitBtn;
-    SpeedButton2: TBitBtn;
-    SpeedButton3: TBitBtn;
-    Button4: TBitBtn;
-    SpeedButton4: TBitBtn;
-    SpeedButton5: TBitBtn;
     Memo1: TMemo;
+    SpeedButton1: TSpeedButton;
+    SpeedButton2: TSpeedButton;
+    SpeedButton3: TSpeedButton;
+    SpeedButton6: TSpeedButton;
+    SpeedButton4: TSpeedButton;
+    SpeedButton5: TSpeedButton;
+    ActionList1: TActionList;
+    ImageList1: TImageList;
+    ac_add: TAction;
+    ac_edit: TAction;
+    ac_edit_content: TAction;
+    ac_delete: TAction;
+    ac_up: TAction;
+    ac_down: TAction;
+    PopupMenu1: TPopupMenu;
+    Hinzufgen1: TMenuItem;
+    Bearbeiten1: TMenuItem;
+    Inhaltbearbeiten1: TMenuItem;
+    N1: TMenuItem;
+    Lschen1: TMenuItem;
+    N2: TMenuItem;
+    Abschnitthoch1: TMenuItem;
+    Abschnittrunter1: TMenuItem;
+    CPTextTab: TClientDataSet;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -85,44 +103,40 @@ type
     procedure ac_pr_lockExecute(Sender: TObject);
     procedure ac_pr_unlockExecute(Sender: TObject);
     procedure DBNavigator3Click(Sender: TObject; Button: TNavigateBtn);
-    procedure SpeedButton1Click(Sender: TObject);
-    procedure SpeedButton2Click(Sender: TObject);
-    procedure SpeedButton3Click(Sender: TObject);
-    procedure SpeedButton4Click(Sender: TObject);
-    procedure SpeedButton5Click(Sender: TObject);
-    procedure Button4Click(Sender: TObject);
     procedure TVClick(Sender: TObject);
+    procedure ac_addExecute(Sender: TObject);
+    procedure ac_editExecute(Sender: TObject);
+    procedure ac_edit_contentExecute(Sender: TObject);
+    procedure ac_deleteExecute(Sender: TObject);
+    procedure ac_upExecute(Sender: TObject);
+    procedure ac_downExecute(Sender: TObject);
   private
     m_TitelEditform : TTitelEditform;
-    m_proto         : IXMLProtocol;
-    m_id            : integer;
+    m_proto         : IProtocol;
     m_treeChanged   : Boolean;
     m_locked        : Boolean;
 
     m_grList        : TGremiumListForm;
     m_ro            : Boolean;
 
-    m_cpList        : TChapterTitleList;
-
     procedure setID( value : integer );
+    function  getID : integer;
 
     procedure loadFromClientBlob( tab : TClientDataSet; FieldName : string );
     procedure saveToclientBlob( tab : TClientDataSet; FieldName : string );
-
-    function loadFromChapterBlob( tab : TClientDataSet; FieldName : string ) : IXMLChapter;
 
     procedure setRO( value : boolean );
 
     procedure updateCpList;
     procedure saveChangedChapter;
-    procedure buildTree( root : TTreeNode; xCp : IXMLChapter );
+    procedure buildTree( root : TTreeNode; ct : IChapterTitle );
 
     procedure UpdateGremium;
 
     procedure save;
     procedure reopen;
   public
-    property ID : integer read m_id write setID;
+    property ID : integer read getID write setID;
     property RO : boolean read m_ro write setRO;
   end;
 
@@ -134,12 +148,136 @@ implementation
 uses
   m_glob_client, Xml.XMLIntf, Xml.XMLDoc, u_bookmark, m_BookMarkHandler,
   u_berTypes, System.JSON, u_json, System.Generics.Collections,
-  m_WindowHandler, f_chapter_content, u_gremium, system.UITypes, i_chapter,
-  u_ChapterImpl;
+  m_WindowHandler, f_chapter_content, u_gremium, system.UITypes,
+  u_ChapterImpl, u_ProtocolImpl, u_speedbutton;
 
 {$R *.dfm}
 
 { TProtokollForm }
+
+procedure TProtokollForm.ac_addExecute(Sender: TObject);
+var
+  cp : IChapterTitle;
+begin
+  m_TitelEditform.TitelText := 'Titel '+IntToStr( m_proto.Chapter.Count+1);
+  if m_TitelEditform.ShowModal = mrOk then
+  begin
+    cp := m_proto.Chapter.NewEntry;
+    cp.Text := m_TitelEditform.TitelText;
+    updateCpList;
+
+    cp.ID := GM.autoInc('gen_cp_id');
+    cp.Modified := true;
+
+    CPTab.Append;
+    CPTab.FieldByName('PR_ID').AsInteger    := m_proto.ID;
+    CPTab.FieldByName('CP_ID').AsInteger    := cp.ID;
+    CPTab.FieldByName('CP_TITLE').AsString  := cp.Text;
+    CPTab.FieldByName('CP_NR').AsInteger    := cp.Nr;
+    CPTab.Post;
+
+    m_treeChanged := true;
+  end;
+end;
+
+procedure TProtokollForm.ac_deleteExecute(Sender: TObject);
+var
+  cp   : IChapterTitle;
+  node : TTreeNode;
+begin
+  node := TV.Selected;
+  if (node = NIL) then
+    exit;
+  if not (MessageDlg('Soll das Kapitel gelöscht werden?', mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
+    exit;
+
+  while Assigned(node.Parent)  do
+    node := node.Parent;
+
+  cp := IChapterTitle(node.Data);
+  m_proto.Chapter.remove(cp);
+  updateCpList;
+
+  m_treeChanged := true;
+end;
+
+procedure TProtokollForm.ac_downExecute(Sender: TObject);
+var
+  cp : IChapterTitle;
+  node : TTreeNode;
+begin
+  node := TV.Selected;
+  if (node = NIL) then
+    exit;
+  while Assigned(node.Parent)  do
+    node := node.Parent;
+
+  cp := IChapterTitle(node.Data);
+  cp.down;
+  updateCpList;
+
+  saveChangedChapter;
+  m_treeChanged := true;
+end;
+
+procedure TProtokollForm.ac_editExecute(Sender: TObject);
+var
+  cp   : IChapterTitle;
+  node : TTreeNode;
+begin
+  node := TV.Selected;
+  if (node = NIL) then
+    exit;
+  while Assigned(node.Parent)  do
+    node := node.Parent;
+
+  cp := IChapterTitle(node.Data);
+  m_TitelEditform.TitelText := cp.Text;
+  if m_TitelEditform.ShowModal = mrOk then
+  begin
+    cp.Text := m_TitelEditform.TitelText;
+    cp.Modified := true;
+    saveChangedChapter;
+    updateCpList;
+    m_treeChanged := true;
+  end;
+end;
+
+procedure TProtokollForm.ac_edit_contentExecute(Sender: TObject);
+var
+  cp : IChapterTitle;
+  node : TTreeNode;
+begin
+
+  node := TV.Selected;
+  if (node = NIL) then
+    exit;
+  while Assigned(node.Parent)  do
+    node := node.Parent;
+
+  cp := IChapterTitle(node.Data);
+
+  if m_treeChanged then
+    save;
+
+  Application.CreateForm(TChapterContentForm, ChapterContentForm);
+  ChapterContentForm.ChapterTitle := cp;
+  if ChapterContentForm.ShowModal = mrOk  then
+  begin
+
+    CPTextTab.Refresh;
+    CPTextTab.Filter := 'CP_ID='+intToStr(cp.ID);
+    CPTextTab.Filtered := true;
+
+    cp.Root.Childs.clear;
+    cp.loadFromDataSet(CPTextTab);
+
+    updateCpList;
+  end;
+  CPTextTab.Filtered := false;
+  ChapterContentForm.Free;
+  reopen;
+end;
 
 procedure TProtokollForm.ac_pr_bookmarkExecute(Sender: TObject);
 var
@@ -160,7 +298,7 @@ var
   obj : TJSONObject;
 begin
   //lock
-  obj := GM.LockDocument( m_id, integer(ltProtokoll));
+  obj := GM.LockDocument( m_proto.ID, integer(ltProtokoll));
   if not JBool( obj, 'result') then
     ShowMessage( JString( obj, 'text'))
   else
@@ -176,7 +314,7 @@ procedure TProtokollForm.ac_pr_unlockExecute(Sender: TObject);
 var
   data : TJSONObject;
 begin
-  data := GM.UnlockDocument(m_id, integer(ltProtokoll));
+  data := GM.UnlockDocument(m_proto.ID, integer(ltProtokoll));
   if JBool( data, 'result') then
   begin
     self.RO := true;
@@ -186,26 +324,25 @@ begin
   ShowMessage(JString(data, 'text'));
 end;
 
-procedure TProtokollForm.buildTree(root: TTreeNode; xCp: IXMLChapter);
+procedure TProtokollForm.ac_upExecute(Sender: TObject);
 var
-  list  : TList<IChapter>;
+  cp   : IChapterTitle;
+  node : TTreeNode;
+begin
+  node := TV.Selected;
+  if (node = NIL) then
+    exit;
+  while Assigned(node.Parent)  do
+    node := node.Parent;
 
-  procedure addToParent( cp : IChapter );
-  var
-    j : integer;
-  begin
-    if cp.PID = 0 then
-      exit;
-    for j := 0 to pred(list.Count) do
-    begin
-      if list[j].ID = cp.PID then
-      begin
-        list[j].add(cp);
-        break;
-      end;
-    end;
-  end;
+  cp := IChapterTitle(node.Data);
+  cp.up;
+  updateCpList;
+  saveChangedChapter;
+  m_treeChanged := true;
+end;
 
+procedure TProtokollForm.buildTree(root: TTreeNode; ct : IChapterTitle);
   procedure add( root : TTreeNode; items : IChapterList );
   var
     j :    integer;
@@ -227,44 +364,11 @@ var
     end;
   end;
 
-var
-  cp    : IChapter;
-  base  : Ichapter;
-  xTop  : IXMLTop;
-  i     : integer;
-
 begin
-  if xCp.Top.Count = 0 then
+  if ct.Root.Childs.Count = 0 then
     exit;
 
-  base := TChapterImpl.create(NIL);
-  list := TList<IChapter>.create;
-  for i := 0 to pred(xCp.Top.Count) do
-    begin
-      cp := TChapterImpl.create(NIL);
-      xTop := xCp.Top.Items[i];
-
-      cp.Name       := xTop.Titel;
-      cp.ID         := xTop.Id;
-      cp.PID        := xTop.Pid;
-      cp.Nr         := xTop.Nr;
-      cp.Numbering  := xTop.Numbering;
-      cp.TAID       := xTop.Taid;
-      cp.Rem        := xTop.Rem;
-      list.Add(cp)
-    end;
-  for i := 0 to pred(list.Count) do
-    begin
-      addToParent(list[i]);
-      if list[i].PID = 0 then
-        base.add(list[i]);
-    end;
-  add( root, base.Childs );
-  list.Clear;
-
-  list.Free;
-  base.release;
-
+  add( root, ct.Root.Childs );
   root.Expand(true);
 end;
 
@@ -290,33 +394,6 @@ begin
   TNTab.ApplyUpdates(0);
 end;
 
-procedure TProtokollForm.Button4Click(Sender: TObject);
-var
-  cp : TChapterTitle;
-  node : TTreeNode;
-begin
-
-  node := TV.Selected;
-  if (node = NIL) then
-    exit;
-  while Assigned(node.Parent)  do
-    node := node.Parent;
-
-  cp := node.Data;
-
-  if m_treeChanged then
-    save;
-
-  Application.CreateForm(TChapterContentForm, ChapterContentForm);
-  ChapterContentForm.ChapterTitle := cp;
-  if ChapterContentForm.ShowModal = mrOk  then
-  begin
-    updateCpList;
-  end;
-  ChapterContentForm.Free;
-  reopen;
-end;
-
 procedure TProtokollForm.DBNavigator3Click(Sender: TObject;
   Button: TNavigateBtn);
 begin
@@ -331,12 +408,13 @@ begin
 
   Action := caFree;
   if m_locked then
-    GM.UnLockDocument(m_id, integer(ltProtokoll));
+    GM.UnLockDocument(m_proto.ID, integer(ltProtokoll));
 
 end;
 
 procedure TProtokollForm.FormCreate(Sender: TObject);
 begin
+  updateSeedBtn( self, 1 );
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
   TV.Images := GM.ImageList2;
   Application.CreateForm(TTitelEditform, m_TitelEditform);
@@ -345,57 +423,39 @@ begin
   m_treeChanged := false;
 
   m_grList:= TGremiumListForm.Create(Self);
-  m_cpList:= TChapterTitleList.Create;
 
-  m_proto := NewProtocol;
-
+  m_proto := NIL;
 end;
 
 procedure TProtokollForm.FormDestroy(Sender: TObject);
 begin
   FreeAndNil(m_grList);
-  FreeAndNil(m_cpList);
-  WindowHandler.closeProtoclWindow(m_id);
+
+  WindowHandler.closeProtoclWindow(m_proto.ID);
+
+  m_proto.release;
   m_proto := NIL;
 end;
 
-function TProtokollForm.loadFromChapterBlob(tab: TClientDataSet;
-  FieldName: string): IXMLChapter;
-var
-  st : TStream;
-  xml: IXMLDocument;
+function TProtokollForm.getID: integer;
 begin
-  Result := NewChapter;
-  tab.FetchBlobs;
-  st := tab.CreateBlobStream( tab.FieldByName(FieldName), bmRead );
-  if Assigned(st) and ( st.Size > 0) then
-  begin
-    xml := NewXMLDocument;
-    xml.LoadFromStream(st);
-    Result := xml.GetDocBinding('Chapter', TXMLChapter, TargetNamespace) as IXMLChapter;
-  end;
-  if Assigned(st) then
-    st.Free;
+  Result := -1;
+  if Assigned(m_proto) then
+    Result := m_proto.ID;
+
 end;
+
 
 procedure TProtokollForm.loadFromClientBlob(tab: TClientDataSet;
   FieldName: string);
 var
   st : TStream;
-  xml: IXMLDocument;
 begin
   tab.FetchBlobs;
   st := tab.CreateBlobStream( tab.FieldByName(FieldName), bmRead );
-  if not Assigned(st) or ( st.Size = 0) then
-  begin
-    m_proto := NewProtocol;
-  end
-  else
-  begin
-    xml := NewXMLDocument;
-    xml.LoadFromStream(st);
-    m_proto := xml.GetDocBinding('Protocol', TXMLProtocol, TargetNamespace) as TXMLProtocol;
-  end;
+
+  m_proto.loadFromStream(st);
+
   if Assigned(st) then
     st.Free;
   m_treeChanged := false;
@@ -426,6 +486,9 @@ begin
   if CPTab.UpdatesPending then
     CPTab.ApplyUpdates(-1);
 
+  if CPTextTab.UpdatesPending then
+    CPTextTab.ApplyUpdates(-1);
+
   m_treeChanged := false;
 end;
 
@@ -433,15 +496,15 @@ procedure TProtokollForm.saveChangedChapter;
 var
   i : integer;
 begin
-  for i := 0 to pred(m_cpList.Count) do
+  for i := 0 to pred(m_proto.Chapter.Count) do
     begin
-      if m_cpList.Items[i].Modified then
+      if m_proto.Chapter.Items[i].Modified then
       begin
-        UpdateCPQry.ParamByName('CP_ID').AsInteger  := m_cpList.Items[i].ID;
-        UpdateCPQry.ParamByName('CP_NR').AsInteger  := m_cpList.Items[i].Nr;
-        UpdateCPQry.ParamByName('CP_TITLE').AsString:= m_cpList.Items[i].Text;
+        UpdateCPQry.ParamByName('CP_ID').AsInteger  := m_proto.Chapter.Items[i].ID;
+        UpdateCPQry.ParamByName('CP_NR').AsInteger  := m_proto.Chapter.Items[i].Nr;
+        UpdateCPQry.ParamByName('CP_TITLE').AsString:= m_proto.Chapter.Items[i].Text;
         UpdateCPQry.Execute;
-        m_cpList.Items[i].Modified := false;
+        m_proto.Chapter.Items[i].Modified := false;
       end;
     end;
 end;
@@ -452,24 +515,31 @@ var
   st : TStream;
 begin
   st := tab.CreateBlobStream( tab.FieldByName(fieldname), bmWrite );
-  m_proto.OwnerDocument.SaveToStream(st);
+  m_proto.SaveToStream(st);
   st.Free;
 end;
 
 procedure TProtokollForm.setID(value: integer);
 var
-  opts : TLocateOptions;
-  filter : string;
-  cp : TChapterTitle;
+  opts    : TLocateOptions;
+  filter  : string;
+  cp      : IChapterTitle;
 begin
-  m_id := value;
-  filter := 'PR_ID = '+IntToStr( m_id);
+  if Assigned(m_proto) then
+    m_proto.release;
+  m_proto := TProtocolImpl.create;
+
+  m_proto.ID := value;
+
+  filter := 'PR_ID = '+IntToStr( m_proto.ID);
   PRTab.Open;
-  if PRTab.Locate('PR_ID', VarArrayOf([m_id]), opts) then
+  if PRTab.Locate('PR_ID', VarArrayOf([m_proto.ID]), opts) then
   begin
     loadFromClientBlob( PRTab, 'PR_DATA');
 
     Caption := PRTab.FieldByName('PR_NAME').AsString;
+
+    CPTextTab.Open;
 
     PRTab.Edit;
     TNTab.Filter := filter;
@@ -486,11 +556,17 @@ begin
 
     while not CPTab.Eof do
     begin
-      cp          := m_cpList.NewEntry;
+      cp          := m_proto.Chapter.NewEntry;
       cp.ID       := CPTab.FieldByName('CP_ID').AsInteger;
       cp.Text     := CPTab.FieldByName('CP_TITLE').AsString;
       cp.Nr       := CPTab.FieldByName('CP_NR').AsInteger;
-      cp.xChapter := loadFromChapterBlob(CPTab, 'CP_DATA');
+
+
+      CPTextTab.Filter := 'CP_ID='+intToStr(cp.ID);
+      CPTextTab.Filtered := true;
+
+      cp.loadFromDataSet(CPTextTab);
+
       CPTab.Next;
     end;
     updateCpList;
@@ -514,119 +590,13 @@ begin
   Panel1.Enabled       := not m_ro;
   Panel4.Enabled       := not m_ro;
 
-  Button4.Enabled      := true;
+  SpeedButton6.Enabled      := true;
 end;
 
-
-procedure TProtokollForm.SpeedButton1Click(Sender: TObject);
-var
-  cp : TChapterTitle;
-begin
-  m_TitelEditform.TitelText := 'Titel '+IntToStr( m_cpList.Count+1);
-  if m_TitelEditform.ShowModal = mrOk then
-  begin
-    cp := m_cpList.NewEntry;
-    cp.Text := m_TitelEditform.TitelText;
-    updateCpList;
-
-    cp.ID := GM.autoInc('gen_cp_id');
-    cp.Modified := true;
-
-    CPTab.Append;
-    CPTab.FieldByName('PR_ID').AsInteger    := m_id;
-    CPTab.FieldByName('CP_ID').AsInteger    := cp.ID;
-    CPTab.FieldByName('CP_TITLE').AsString  := cp.Text;
-    CPTab.FieldByName('CP_NR').AsInteger    := cp.Nr;
-    CPTab.Post;
-
-    m_treeChanged := true;
-  end;
-end;
-
-procedure TProtokollForm.SpeedButton2Click(Sender: TObject);
-var
-  cp : TChapterTitle;
-  node : TTreeNode;
-begin
-  node := TV.Selected;
-  if (node = NIL) then
-    exit;
-  while Assigned(node.Parent)  do
-    node := node.Parent;
-
-  cp := node.Data;
-  m_TitelEditform.TitelText := cp.Text;
-  if m_TitelEditform.ShowModal = mrOk then
-  begin
-    cp.Text := m_TitelEditform.TitelText;
-    cp.Modified := true;
-    saveChangedChapter;
-    updateCpList;
-    m_treeChanged := true;
-  end;
-end;
-
-procedure TProtokollForm.SpeedButton3Click(Sender: TObject);
-var
-  cp : TChapterTitle;
-  node : TTreeNode;
-begin
-  node := TV.Selected;
-  if (node = NIL) then
-    exit;
-  if not (MessageDlg('Soll das Kapitel gelöscht werden?', mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
-    exit;
-
-  while Assigned(node.Parent)  do
-    node := node.Parent;
-
-  cp := node.Data;
-  m_cpList.remove(cp);
-  updateCpList;
-
-  m_treeChanged := true;
-end;
-
-procedure TProtokollForm.SpeedButton4Click(Sender: TObject);
-var
-  cp : TChapterTitle;
-  node : TTreeNode;
-begin
-  node := TV.Selected;
-  if (node = NIL) then
-    exit;
-  while Assigned(node.Parent)  do
-    node := node.Parent;
-
-  cp := node.Data;
-  cp.up;
-  updateCpList;
-  saveChangedChapter;
-  m_treeChanged := true;
-end;
-
-procedure TProtokollForm.SpeedButton5Click(Sender: TObject);
-var
-  cp : TChapterTitle;
-  node : TTreeNode;
-begin
-  node := TV.Selected;
-  if (node = NIL) then
-    exit;
-  while Assigned(node.Parent)  do
-    node := node.Parent;
-
-  cp := node.Data;
-  cp.down;
-  updateCpList;
-
-  saveChangedChapter;
-  m_treeChanged := true;
-end;
 
 procedure TProtokollForm.TGTabAfterInsert(DataSet: TDataSet);
 begin
-  TGTab.FieldByName('PR_ID').AsInteger := m_id;
+  TGTab.FieldByName('PR_ID').AsInteger := m_proto.ID;
   AutoIncValue.Open;
   TGTab.FieldByName('TG_ID').AsInteger := AutoIncValue.FieldByName('GEN_ID').AsInteger;
   AutoIncValue.close;
@@ -708,7 +678,7 @@ end;
 
 procedure TProtokollForm.updateCpList;
 var
-  cp, old   : TChapterTitle;
+  cp, old   : IChapterTitle;
   i         : integer;
   node      : TTreeNode;
 begin
@@ -716,17 +686,17 @@ begin
   TV.Items.BeginUpdate;
 
   if Assigned(TV.Selected) and not Assigned(TV.Selected.Parent) then
-    old := tV.Selected.Data;
+    old := IChapterTitle(tV.Selected.Data);
 
   TV.Items.Clear;
-  for i := 0 to pred(m_cpList.Count) do
+  for i := 0 to pred(m_proto.Chapter.Count) do
   begin
-    cp   := m_cpList.Items[i];
+    cp   := m_proto.Chapter.Items[i];
     node := TV.Items.AddObject(NIL, cp.FullTitle, cp);
     node.ImageIndex := 0;
     node.SelectedIndex := 0;
 
-    buildTree( node, cp.xChapter );
+    buildTree( node, cp );
 
     if cp = old then
       TV.Selected := node;
@@ -749,9 +719,9 @@ begin
   for i := 0 to pred(list.count) do begin
     p := list.Items[i];
 
-    if not TNTab.Locate('PR_ID;PE_ID', VarArrayOf([m_id, p.ID]), []) then begin
+    if not TNTab.Locate('PR_ID;PE_ID', VarArrayOf([m_proto.id, p.ID]), []) then begin
       TNTab.Append;
-      TNTab.FieldByName('PR_ID').AsInteger        := m_id;
+      TNTab.FieldByName('PR_ID').AsInteger        := m_proto.ID;
       TNTab.FieldByName('TN_ID').AsInteger        := GM.autoInc('gen_tn_id');
       TNTab.FieldByName('TN_NAME').AsString       := p.Name;
       TNTab.FieldByName('TN_VORNAME').AsString    := p.Vorname;

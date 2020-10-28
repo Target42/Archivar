@@ -1,10 +1,11 @@
 /* ============================================================ */
 /*   Database name:  MODEL_2                                    */
 /*   DBMS name:      InterBase                                  */
-/*   Created on:     11.09.2020  17:47                          */
+/*   Created on:     23.10.2020  20:24                          */
 /* ============================================================ */
 
 create generator gen_be_id;
+create generator gen_ct_id;
 create generator gen_cp_id;
 create generator gen_da_id;
 create generator gen_fi_id;
@@ -272,6 +273,8 @@ create table TA_TASK
     TA_CLID                         VARCHAR(38)                    ,
     TA_FLAGS                        INTEGER                        ,
     TA_STATUS                       VARCHAR(50)                    ,
+    TA_STYLE                        VARCHAR(200)                   ,
+    TA_STYLE_CLID                   VARCHAR(38)                    ,
     constraint PK_TA_TASK primary key (TA_ID)
 );
 
@@ -339,16 +342,6 @@ create table TO_OPEN
 );
 
 /* ============================================================ */
-/*   Table: TA_CP                                               */
-/* ============================================================ */
-create table TA_CP
-(
-    CP_ID                           INTEGER                not null,
-    TA_ID                           INTEGER                not null,
-    constraint PK_TA_CP primary key (CP_ID, TA_ID)
-);
-
-/* ============================================================ */
 /*   Table: GR_BE                                               */
 /* ============================================================ */
 create table GR_BE
@@ -357,6 +350,21 @@ create table GR_BE
     BE_ID                           INTEGER                not null,
     TA_ID                           INTEGER                        ,
     constraint PK_GR_BE primary key (GR_ID, BE_ID)
+);
+
+/* ============================================================ */
+/*   Table: CT_CHAPTER_TEXT                                     */
+/* ============================================================ */
+create table CT_CHAPTER_TEXT
+(
+    CP_ID                           INTEGER                        ,
+    CT_ID                           INTEGER                not null,
+    TA_ID                           INTEGER                        ,
+    CT_PARENT                       INTEGER                        ,
+    CT_TITLE                        VARCHAR(200)                   ,
+    CT_NUMBER                       INTEGER                        ,
+    CT_DATA                         BLOB                           ,
+    constraint PK_CT_CHAPTER_TEXT primary key (CT_ID)
 );
 
 alter table PR_PROTOKOL
@@ -411,14 +419,6 @@ alter table TO_OPEN
     add constraint FK_REF_1255 foreign key  (TA_ID)
        references TA_TASK;
 
-alter table TA_CP
-    add constraint FK_REF_1641 foreign key  (CP_ID)
-       references CP_CHAPTER;
-
-alter table TA_CP
-    add constraint FK_REF_1645 foreign key  (TA_ID)
-       references TA_TASK;
-
 alter table GR_BE
     add constraint FK_REF_2398 foreign key  (GR_ID)
        references GR_GREMIUM;
@@ -429,6 +429,14 @@ alter table GR_BE
 
 alter table GR_BE
     add constraint FK_REF_2406 foreign key  (TA_ID)
+       references TA_TASK;
+
+alter table CT_CHAPTER_TEXT
+    add constraint FK_REF_3850 foreign key  (CP_ID)
+       references CP_CHAPTER;
+
+alter table CT_CHAPTER_TEXT
+    add constraint FK_REF_4070 foreign key  (TA_ID)
        references TA_TASK;
 
 commit;

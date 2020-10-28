@@ -43,6 +43,8 @@ type
     TNTabPE_ID: TIntegerField;
     ListTasksQry: TIBQuery;
     ListTasks: TDataSetProvider;
+    CPText: TIBTable;
+    CPTextTab: TDataSetProvider;
   private
     { Private-Deklarationen }
   public
