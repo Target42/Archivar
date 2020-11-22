@@ -122,6 +122,7 @@ begin
     cp.Nr         := data.FieldByName('CT_NUMBER').AsInteger;
     cp.TAID       := data.FieldByName('TA_ID').AsInteger;
     CP.Pos        := data.FieldByName('CT_POS').AsInteger;
+    cp.Rem        := data.FieldByName('CT_DATA').AsString;
     cp.Numbering  := (cp.Nr <> -1 );
 
     list.Add(cp);

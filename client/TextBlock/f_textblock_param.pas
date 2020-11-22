@@ -77,6 +77,8 @@ begin
   begin
     SG.Cells[0, i+1]:= x_block.Fields[i].Name;
    end;
+   SG.Row   := 1;
+   SG.Col   := 1;
 end;
 
 end.

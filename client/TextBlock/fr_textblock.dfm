@@ -46,6 +46,8 @@ object TextBlockFrame: TTextBlockFrame
         Caption = 'Tags'
         Width = 150
       end>
+    ReadOnly = True
+    RowSelect = True
     TabOrder = 1
     ViewStyle = vsReport
     OnDragOver = LVDragOver

@@ -1,6 +1,7 @@
 object TextBlockParameterForm: TTextBlockParameterForm
   Left = 0
   Top = 0
+  ActiveControl = SG
   Caption = 'TextBlockParameterForm'
   ClientHeight = 299
   ClientWidth = 359
@@ -24,17 +25,19 @@ object TextBlockParameterForm: TTextBlockParameterForm
     Align = alBottom
     AutoSize = True
     TabOrder = 0
-    ExplicitLeft = 184
-    ExplicitTop = 40
+    ExplicitTop = 239
+    ExplicitWidth = 359
     inherited StatusBar1: TStatusBar
       Width = 359
-      ExplicitWidth = 361
+      ExplicitWidth = 359
     end
     inherited Panel1: TPanel
       Width = 359
+      ExplicitWidth = 359
       inherited OKBtn: TBitBtn
         Left = 260
         OnClick = BaseFrame1OKBtnClick
+        ExplicitLeft = 260
       end
     end
   end
@@ -45,9 +48,7 @@ object TextBlockParameterForm: TTextBlockParameterForm
     Height = 239
     Align = alClient
     ColCount = 2
-    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goEditing]
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goEditing, goTabs, goAlwaysShowEditor]
     TabOrder = 1
-    ExplicitLeft = 8
-    ExplicitTop = 2
   end
 end

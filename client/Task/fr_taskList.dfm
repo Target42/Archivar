@@ -40,6 +40,7 @@ object TaskListFrame: TTaskListFrame
         Caption = 'Status'
         Width = 100
       end>
+    GridLines = True
     ReadOnly = True
     RowSelect = True
     PopupMenu = PopupMenu1

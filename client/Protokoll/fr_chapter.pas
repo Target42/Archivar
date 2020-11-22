@@ -390,7 +390,7 @@ begin
   ChapterTextTab.FieldByName('CT_NUMBER').AsInteger := -1;
   ChapterTextTab.FieldByName('CT_TITLE').AsString   := cp.Name;
   ChapterTextTab.FieldByName('CT_POS').AsInteger    := cp.Pos;
-
+  ChapterTextTab.FieldByName('CT_DATA').AsString    := cp.Rem;
 
   if cp.TAID <> 0 then
     ChapterTextTab.FieldByName('TA_ID').AsInteger     := cp.TAID
