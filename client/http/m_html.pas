@@ -4,7 +4,8 @@ interface
 
 uses
   System.SysUtils, System.Classes, Web.HTTPApp, Web.HTTPProd, xsd_TaskData,
-  JvComponentBase, JvRichEditToHtml, i_taskEdit, SHDocVw;
+  JvComponentBase, JvRichEditToHtml, i_taskEdit, SHDocVw, Data.DB,
+  Datasnap.DBClient, Datasnap.DSConnect;
 
 type
   THtmlMod = class(TDataModule)
@@ -22,21 +23,29 @@ type
     m_style: ITaskStyle;
     m_tc   : ITaskContainer;
 
-    function getField( name : string ) : string;
+    function getField( name : string )          : string;
 
-    function createTable( name : string ) : String;
-    function addHeader( xHeader : IXMLHeader ) : string;
-    function execScript( TagParams: TStrings ) : string;
+    function createTable( name : string )       : String;
+    function addHeader( xHeader : IXMLHeader )  : string;
+    function execScript( TagParams: TStrings )  : string;
     procedure SaveImages( path : string );
+
   public
-    property TaskContainer  : ITaskContainer read m_tc write m_tc;
-    property TaskData       : IXMLList read m_task write m_task;
-    property TaskStyle      : ITaskStyle read m_style write m_style;
+    property TaskContainer  : ITaskContainer  read m_tc     write m_tc;
+    property TaskData       : IXMLList        read m_task   write m_task;
+    property TaskStyle      : ITaskStyle      read m_style  write m_style;
 
     function Content : string;
     procedure SaveToFile( fname : string );
 
-    procedure show(web : TWebBrowser; path : string );
+    function show(web : TWebBrowser ) : string;
+
+    class procedure SetHTML(st : TStream; WebBrowser: TWebBrowser);
+    class function  Test2HTML( text : string ) : TStream;
+
+    function loadByID(taid : integer ) : boolean;
+
+    procedure clearFiles( path : string );
   end;
 
 var
@@ -45,7 +54,8 @@ var
 implementation
 
 uses
-  System.StrUtils, m_dws, Vcl.Forms, System.IOUtils, m_glob_client;
+  System.StrUtils, m_dws, Vcl.Forms, System.IOUtils, m_glob_client,
+  Winapi.ActiveX, m_taskLoader, System.Types;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -76,6 +86,19 @@ begin
       [trunc(( xHeader.Field[i].Width / len)*100.0),
        xHeader.Field[i].Header]) + sLineBreak;
   Result := Result + '  </tr>'+sLineBreak;
+end;
+
+procedure THtmlMod.clearFiles( path : string );
+var
+  i : integer;
+  arr : TStringDynArray;
+begin
+  if (path<>'') and DirectoryExists(path) then
+  begin
+    arr := TDirectory.GetFiles(path);
+    for i := 0 to pred(Length(arr)) do
+      DeleteFile(arr[i]);
+  end;
 end;
 
 function THtmlMod.Content: string;
@@ -137,7 +160,8 @@ begin
 end;
 
 function THtmlMod.execScript(TagParams: TStrings): string;
-var                                             DwsMod : TDwsMod;
+var
+  DwsMod : TDwsMod;
   tf     : ITaskFile;
 begin
   tf := m_style.Files.getFile(TagParams[0]);
@@ -186,6 +210,21 @@ begin
   end;
   if Trim(Result) = '' then
     Result := '&nbsp;';
+end;
+
+function THtmlMod.loadByID(taid: integer): boolean;
+var
+  loader : TTaskLoaderMod;
+begin
+  loader := TTaskLoaderMod.Create(self);
+  Result := loader.load(taid);
+  if Result then
+  begin
+    self.TaskContainer  := loader.TaskContainer;
+    self.TaskStyle      := loader.TaskStyle;
+    self.TaskData       := loader.TaskData;
+  end;
+  loader.Free;
 end;
 
 procedure THtmlMod.PageProducer1HTMLTag(Sender: TObject; Tag: TTag;
@@ -248,16 +287,34 @@ begin
   end;
 end;
 
-procedure THtmlMod.show( web : TWebBrowser; path : string );
+class procedure THtmlMod.SetHTML(st: TStream; WebBrowser: TWebBrowser);
+begin
+  WebBrowser.Navigate('about:blank');
+  while WebBrowser.ReadyState < READYSTATE_INTERACTIVE do begin
+   Application.ProcessMessages;
+  end;
+
+  if Assigned(WebBrowser.Document) then begin
+    try
+      st.Seek(0, 0);
+      (WebBrowser.Document as IPersistStreamInit).Load
+        (TStreamAdapter.Create(st));
+    finally
+      st.Free;
+    end;
+  end;
+end;
+
+function THtmlMod.show( web : TWebBrowser) : string;
 var
   list : TStringList;
   err  : boolean;
   tf    : ITaskFile;
-  dir   : string;
 begin
+  Result := '';
+
   err := false;
   list:= TStringList.Create;
-  SaveImages(path);
   list.Add('<body>');
   list.Add('<ul>Fehler:<br>');
   if not Assigned(m_task) then
@@ -282,18 +339,41 @@ begin
     else
       PageProducer1.HTMLDoc.Text := tf.Text;
   end;
-  dir := TPath.Combine(GM.wwwHome, path);
-  ForceDirectories(dir);
+  Result := TPath.Combine(GM.wwwHome, m_tc.CLID);
+  ForceDirectories(Result);
+  clearFiles( Result );
+  SaveImages(Result);
 
   list.Add('</ul>');
   list.Add('</body>');
   if err then
-    list.SaveToFile(TPath.combine(dir, 'index.html'))
+    list.SaveToFile(TPath.combine(Result, 'index.html'))
   else
-    SaveToFile(TPath.combine(dir, 'index.html'));
+    SaveToFile(TPath.combine(Result, 'index.html'));
 
-  web.Navigate('http://localhost:42424/'+path+'/index.html');
+  web.Navigate('http://localhost:42424/'+m_tc.CLID+'/index.html');
   list.Free;
+end;
+
+class function THtmlMod.Test2HTML(text: string): TStream;
+var
+  list : TStringList;
+  i    : integer;
+begin
+  Result := TMemoryStream.create;
+
+  list := TStringList.Create;
+  list.Text := text;
+
+  for i := 0 to pred(list.Count) do
+    list[i] := list[i]+'<br>';
+  list.Insert(0, '<html>');
+  list.Append('</html>');
+
+  list.SaveToStream(Result);
+  list.Free;
+  Result.Position := 0;
+
 end;
 
 end.

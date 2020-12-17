@@ -5,7 +5,7 @@ interface
 uses
   System.SysUtils, System.Classes, Datasnap.DSServer,
   Datasnap.DSAuth, Datasnap.DSProviderDataModuleAdapter, IBX.IBDatabase,
-  Data.DB, IBX.IBCustomDataSet, IBX.IBQuery, Datasnap.Provider;
+  Data.DB, IBX.IBCustomDataSet, IBX.IBQuery, Datasnap.Provider, IBX.IBTable;
 
 type
   TdsTaskView = class(TDSServerModule)
@@ -14,6 +14,8 @@ type
     IBTransaction1: TIBTransaction;
     GetTAQry: TDataSetProvider;
     GetTEQry: TDataSetProvider;
+    Task: TIBTable;
+    TaskTab: TDataSetProvider;
   private
     { Private-Deklarationen }
   public

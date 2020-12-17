@@ -9,6 +9,7 @@ object ServerContainer1: TServerContainer1
   object DSServer1: TDSServer
     OnConnect = DSServer1Connect
     OnDisconnect = DSServer1Disconnect
+    OnError = DSServer1Error
     AutoStart = False
     Left = 56
     Top = 11

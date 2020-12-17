@@ -13,6 +13,7 @@ object TaskListForm: TTaskListForm
   OldCreateOrder = False
   Position = poMainFormCenter
   OnCreate = FormCreate
+  OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
   inline BaseFrame1: TBaseFrame
@@ -23,11 +24,11 @@ object TaskListForm: TTaskListForm
     Align = alBottom
     AutoSize = True
     TabOrder = 0
-    ExplicitLeft = 184
-    ExplicitTop = 24
+    ExplicitTop = 239
     ExplicitWidth = 635
     inherited StatusBar1: TStatusBar
       Width = 635
+      ExplicitWidth = 635
     end
     inherited Panel1: TPanel
       Width = 635
@@ -35,7 +36,7 @@ object TaskListForm: TTaskListForm
       inherited OKBtn: TBitBtn
         Left = 547
         OnClick = BaseFrame1OKBtnClick
-        ExplicitLeft = 363
+        ExplicitLeft = 547
       end
     end
   end
@@ -51,6 +52,8 @@ object TaskListForm: TTaskListForm
     inherited LV: TListView
       Width = 635
       Height = 239
+      ExplicitWidth = 635
+      ExplicitHeight = 239
     end
   end
 end

@@ -54,18 +54,6 @@ type
       constructor create(owner : IChapter);
       Destructor Destroy; override;
 
-      property Owner      : IChapter      read getOwner     write setOwner;
-      property Childs     : IChapterList  read getChilds;
-      property Name       : string        read getName      write setName;
-      property ID         : integer       read getID        write SetID;
-      property PID        : integer       read getPID       write setPID;
-      property Nr         : integer       read getNr        write SetNr;
-      property Numbering  : boolean       read getNumbering write SetNumbering;
-      property TAID       : integer       read getTAID      write setTAID;
-      property Data       : Pointer       read getData      write setData;
-      property Rem        : String        read getRem       write setRem;
-      property Modified   : boolean       read getModified  write setModified;
-
       procedure clearModified;
       function isModified : boolean;
 
@@ -98,7 +86,7 @@ begin
   m_childs.add(cp);
 
   cp.Owner  := self;
-  cp.PID    := self.PID;
+  cp.PID    := self.getPID;
 
  m_childs.renumber;
 end;
@@ -142,7 +130,7 @@ function TChapterImpl.fullTitle: string;
 begin
   Result := '';
   if FNumbering then
-    Result := IntToStr( nr ) +' ';
+    Result := IntToStr( self.getNr ) +' ';
   Result := Result + FName;
 
   if FTAID <> 0 then

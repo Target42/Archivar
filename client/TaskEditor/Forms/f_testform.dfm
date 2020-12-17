@@ -3,7 +3,7 @@ object TestForm: TTestForm
   Top = 0
   Caption = 'Testformular'
   ClientHeight = 615
-  ClientWidth = 802
+  ClientWidth = 646
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,7 +19,7 @@ object TestForm: TTestForm
   inline BaseFrame1: TBaseFrame
     Left = 0
     Top = 555
-    Width = 802
+    Width = 646
     Height = 60
     Align = alBottom
     AutoSize = True
@@ -27,14 +27,14 @@ object TestForm: TTestForm
     ExplicitTop = 555
     ExplicitWidth = 802
     inherited StatusBar1: TStatusBar
-      Width = 802
-      ExplicitWidth = 802
+      Width = 646
+      ExplicitWidth = 638
     end
     inherited Panel1: TPanel
-      Width = 802
+      Width = 646
       ExplicitWidth = 802
       inherited OKBtn: TBitBtn
-        Left = 714
+        Left = 558
         ExplicitLeft = 714
       end
     end
@@ -42,15 +42,17 @@ object TestForm: TTestForm
   inline FormFrame1: TFormFrame
     Left = 0
     Top = 0
-    Width = 802
+    Width = 646
     Height = 555
     Align = alClient
     TabOrder = 1
-    ExplicitLeft = 200
-    ExplicitTop = 96
+    ExplicitWidth = 802
+    ExplicitHeight = 555
     inherited ScrollBox1: TScrollBox
-      Width = 802
+      Width = 646
       Height = 555
+      ExplicitWidth = 802
+      ExplicitHeight = 555
     end
   end
 end

@@ -68,6 +68,7 @@ type
       var PersistentClass: TPersistentClass);
     procedure DSServerClass1GetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
+    procedure DSServer1Error(DSErrorEventObject: TDSErrorEventObject);
   private
     { Private declarations }
   protected
@@ -126,6 +127,12 @@ begin
   DebugMsg('disconnect : ' + IntToStr(DSConnectEventObject.ChannelInfo.Id));
 end;
 
+procedure TServerContainer1.DSServer1Error(
+  DSErrorEventObject: TDSErrorEventObject);
+begin
+  DebugMsg('DS Server Error: '+DSErrorEventObject.Error.ToString);
+end;
+
 procedure TServerContainer1.DSServerClass1GetClass(
   DSServerClass: TDSServerClass; var PersistentClass: TPersistentClass);
 begin
@@ -159,7 +166,7 @@ end;
 procedure TServerContainer1.DSTCPServerTransport1Disconnect(
   Event: TDSTCPDisconnectEventObject);
 begin
-  DebugMsg('Disconnect');
+  DebugMsg('disconnect !');
 end;
 
 procedure TServerContainer1.dsTemplateGetClass(DSServerClass: TDSServerClass;

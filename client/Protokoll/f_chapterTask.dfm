@@ -1,7 +1,7 @@
 object ChapterTaskForm: TChapterTaskForm
   Left = 0
   Top = 0
-  Caption = 'ChapterTaskForm'
+  Caption = 'Aufgabendetails'
   ClientHeight = 516
   ClientWidth = 635
   Color = clBtnFace
@@ -33,6 +33,9 @@ object ChapterTaskForm: TChapterTaskForm
     inherited Panel1: TPanel
       Width = 635
       ExplicitWidth = 635
+      inherited AbortBtn: TBitBtn
+        Visible = False
+      end
       inherited OKBtn: TBitBtn
         Left = 536
         OnClick = BaseFrame1OKBtnClick
@@ -44,19 +47,13 @@ object ChapterTaskForm: TChapterTaskForm
     Left = 0
     Top = 0
     Width = 635
-    Height = 73
+    Height = 57
     Align = alTop
     BevelOuter = bvNone
     Caption = 'Panel1'
+    Enabled = False
     ShowCaption = False
     TabOrder = 1
-    object Label1: TLabel
-      Left = 16
-      Top = 56
-      Width = 64
-      Height = 13
-      Caption = 'Beschreibung'
-    end
     object LabeledEdit1: TLabeledEdit
       Left = 71
       Top = 27
@@ -88,9 +85,9 @@ object ChapterTaskForm: TChapterTaskForm
   end
   inline FormFrame1: TFormFrame
     Left = 0
-    Top = 73
+    Top = 57
     Width = 635
-    Height = 383
+    Height = 399
     Align = alClient
     TabOrder = 2
     ExplicitTop = 73
@@ -98,40 +95,9 @@ object ChapterTaskForm: TChapterTaskForm
     ExplicitHeight = 383
     inherited ScrollBox1: TScrollBox
       Width = 635
-      Height = 383
+      Height = 399
       ExplicitWidth = 635
       ExplicitHeight = 383
     end
-  end
-  object DSProviderConnection1: TDSProviderConnection
-    ServerClassName = 'TdsTaskView'
-    Left = 104
-    Top = 32
-  end
-  object GetTAQry: TClientDataSet
-    Aggregates = <>
-    Params = <
-      item
-        DataType = ftInteger
-        Name = 'TA_ID'
-        ParamType = ptInput
-      end>
-    ProviderName = 'GetTAQry'
-    RemoteServer = DSProviderConnection1
-    Left = 72
-    Top = 104
-  end
-  object GetTEQry: TClientDataSet
-    Aggregates = <>
-    Params = <
-      item
-        DataType = ftInteger
-        Name = 'TE_ID'
-        ParamType = ptInput
-      end>
-    ProviderName = 'GetTEQry'
-    RemoteServer = DSProviderConnection1
-    Left = 128
-    Top = 104
   end
 end

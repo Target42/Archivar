@@ -438,6 +438,11 @@
             <Form>TextBlockParameterForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="Task\m_taskLoader.pas">
+            <Form>TaskLoaderMod</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
         <None Include="Datafields\ERA-NS.txt"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>

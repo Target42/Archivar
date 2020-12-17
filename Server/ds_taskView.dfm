@@ -57,4 +57,18 @@ object dsTaskView: TdsTaskView
     Left = 112
     Top = 192
   end
+  object Task: TIBTable
+    Database = DBMod.IBDatabase1
+    Transaction = IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    UniDirectional = False
+    Left = 264
+    Top = 112
+  end
+  object TaskTab: TDataSetProvider
+    DataSet = Task
+    Left = 264
+    Top = 184
+  end
 end

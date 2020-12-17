@@ -132,7 +132,8 @@ uses
   u_speedbutton in 'misc\u_speedbutton.pas',
   fr_textblock in 'TextBlock\fr_textblock.pas' {TextBlockFrame: TFrame},
   f_testblock_list in 'TextBlock\f_testblock_list.pas' {TestBlockListForm},
-  f_textblock_param in 'TextBlock\f_textblock_param.pas' {TextBlockParameterForm};
+  f_textblock_param in 'TextBlock\f_textblock_param.pas' {TextBlockParameterForm},
+  m_taskLoader in 'Task\m_taskLoader.pas' {TaskLoaderMod: TDataModule};
 
 {$R *.res}
 
@@ -150,6 +151,5 @@ begin
   Application.CreateForm(TWindowHandler, WindowHandler);
   Application.CreateForm(TBookMarkHandler, BookMarkHandler);
   Application.CreateForm(TMainForm, MainForm);
-
   Application.Run;
 end.

@@ -12,9 +12,12 @@ type
     TaskListFrame1: TTaskListFrame;
     procedure FormCreate(Sender: TObject);
     procedure BaseFrame1OKBtnClick(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
   private
     m_gremium : TGremium;
     procedure setGremium( value : TGremium);
+
+    procedure DBGrid1DblClick(Sender: TObject);
   public
     property Gremium : TGremium read m_gremium write setGremium;
   end;
@@ -33,9 +36,20 @@ begin
   TaskListFrame1.doOpen;
 end;
 
+procedure TTaskListForm.DBGrid1DblClick(Sender: TObject);
+begin
+  BaseFrame1.OKBtn.Click;
+end;
+
 procedure TTaskListForm.FormCreate(Sender: TObject);
 begin
-  TaskListFrame1.LV.OnDblClick := NIL;
+  TaskListFrame1.prepare;
+  TaskListFrame1.LV.OnDblClick := self.DBGrid1DblClick;
+end;
+
+procedure TTaskListForm.FormDestroy(Sender: TObject);
+begin
+  TaskListFrame1.shutdown;
 end;
 
 procedure TTaskListForm.setGremium(value: TGremium);

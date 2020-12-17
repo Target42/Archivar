@@ -9,7 +9,8 @@ uses
   Vcl.DBCtrls, Vcl.StdCtrls, Vcl.Mask, JvExComCtrls, JvDBTreeView, Vcl.Menus,
   System.Actions, Vcl.ActnList, f_gremiumList, JvDateTimePicker,
   JvDBDateTimePicker, Vcl.Buttons, f_titel_edit, xsd_protocol,
-  fr_chapter, xsd_chapter, i_personen, i_chapter, System.ImageList, Vcl.ImgList;
+  fr_chapter, xsd_chapter, i_personen, i_chapter, System.ImageList, Vcl.ImgList,
+  Vcl.OleCtrls, SHDocVw, m_taskLoader;
 
 type
   TProtokollForm = class(TForm)
@@ -64,7 +65,6 @@ type
     Button3: TBitBtn;
     TNTabPE_ID: TIntegerField;
     Label4: TLabel;
-    Memo1: TMemo;
     SpeedButton1: TSpeedButton;
     SpeedButton2: TSpeedButton;
     SpeedButton3: TSpeedButton;
@@ -89,6 +89,7 @@ type
     Abschnitthoch1: TMenuItem;
     Abschnittrunter1: TMenuItem;
     CPTextTab: TClientDataSet;
+    WebBrowser1: TWebBrowser;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -118,6 +119,7 @@ type
 
     m_grList        : TGremiumListForm;
     m_ro            : Boolean;
+    m_loader        : TTaskLoaderMod;
 
     procedure setID( value : integer );
     function  getID : integer;
@@ -149,7 +151,7 @@ uses
   m_glob_client, Xml.XMLIntf, Xml.XMLDoc, u_bookmark, m_BookMarkHandler,
   u_berTypes, System.JSON, u_json, System.Generics.Collections,
   m_WindowHandler, f_chapter_content, u_gremium, system.UITypes,
-  u_ChapterImpl, u_ProtocolImpl, u_speedbutton;
+  u_ChapterImpl, u_ProtocolImpl, u_speedbutton, m_html;
 
 {$R *.dfm}
 
@@ -415,7 +417,9 @@ end;
 procedure TProtokollForm.FormCreate(Sender: TObject);
 begin
   updateSeedBtn( self, 1 );
+
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
+
   TV.Images := GM.ImageList2;
   Application.CreateForm(TTitelEditform, m_TitelEditform);
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
@@ -424,7 +428,8 @@ begin
 
   m_grList:= TGremiumListForm.Create(Self);
 
-  m_proto := NIL;
+  m_proto   := NIL;
+  m_loader  := TTaskLoaderMod.Create(self);
 end;
 
 procedure TProtokollForm.FormDestroy(Sender: TObject);
@@ -435,6 +440,7 @@ begin
 
   m_proto.release;
   m_proto := NIL;
+  m_loader.Free;
 end;
 
 function TProtokollForm.getID: integer;
@@ -578,19 +584,20 @@ procedure TProtokollForm.setRO(value: boolean);
 begin
   m_ro := value;
 
-  Label4.Visible    := m_ro;
-  Sperren1.Enabled  := m_ro;
-  Freigeben1.Enabled:= not m_ro;
+  Label4.Visible        := m_ro;
+  Sperren1.Enabled      := m_ro;
+  Freigeben1.Enabled    := not m_ro;
 
-  Panel2.Enabled      := not m_ro;
+  Panel2.Enabled        := not m_ro;
+  Panel2.Visible        := not m_ro;
 
-  DBNavigator1.Enabled := not m_ro;
-  DBNavigator2.Enabled := not m_ro;
+  DBNavigator1.Enabled  := not m_ro;
+  DBNavigator2.Enabled  := not m_ro;
 
-  Panel1.Enabled       := not m_ro;
-  Panel4.Enabled       := not m_ro;
+  Panel1.Enabled        := not m_ro;
+  Panel4.Enabled        := not m_ro;
 
-  SpeedButton6.Enabled      := true;
+  SpeedButton6.Enabled  := true;
 end;
 
 
@@ -650,8 +657,17 @@ end;
 
 procedure TProtokollForm.TVClick(Sender: TObject);
 var
-  cp : IChapter;
-  ct : IChapterTitle;
+  cp    : IChapter;
+  ct    : IChapterTitle;
+  html  : THtmlMod;
+
+  procedure ShowText( text : string );
+  var
+    st : TStream;
+  begin
+    st := THtmlMod.Test2HTML(text);
+    THtmlMod.SetHTML(st, WebBrowser1 );
+  end;
 begin
   if not Assigned(TV.Selected.Data) then
     exit;
@@ -659,7 +675,7 @@ begin
   if TV.Selected.Level = 0 then
   begin
     ct := IChapterTitle(TV.Selected.Data);
-    Memo1.Lines.Text := ct.Text;
+    ShowText( ct.Text );
   end
   else
   begin
@@ -667,11 +683,20 @@ begin
 
     if cp.TAID > 0   then
     begin
-      // nichtr nur text ...
+      if m_loader.load(cp.TAID) then
+      begin
+        html  := THtmlMod.Create(self);
+        html.TaskContainer  := m_loader.TaskContainer;
+        html.TaskData       := m_loader.TaskData;
+        html.TaskStyle      := m_loader.TaskStyle;
+
+        html.show(WebBrowser1);
+        html.Free;
+      end;
     end
     else
     begin
-      Memo1.Lines.Text := cp.Rem;
+      ShowText( cp.Rem );
     end;
   end;
 end;

@@ -27,7 +27,7 @@ object HtmlMod: THtmlMod
     Top = 8
   end
   object JvRichEditToHtml1: TJvRichEditToHtml
-    Left = 128
+    Left = 32
     Top = 112
   end
 end

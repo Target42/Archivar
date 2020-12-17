@@ -24,10 +24,13 @@ type
       procedure load( name : string; form : ITaskForm ); overload;
       procedure load( st : TStream ; form : ITaskForm ); overload;
 
+      procedure fillData( form : ITaskForm; xList : IXMLList );
+
       function  save( name : string; form : ITaskForm ) : Boolean; overload;
       function  save( st : TStream; form : ITaskForm ) : boolean; overload;
 
-      function  getXML(form : ITaskForm ) : IXMLList;
+      function  getXML(form : ITaskForm ) : IXMLList; overload;
+      function  getXML( st : TStream ) : IXMLList; overload;
   end;
 
 implementation
@@ -49,21 +52,29 @@ begin
 end;
 
 procedure TTaskForm2XML.doLoad(form: ITaskForm);
+begin
+  fillData( form, m_xList );
+end;
+
+procedure TTaskForm2XML.fillData(form: ITaskForm; xList: IXMLList);
 var
   i   : integer;
   xf  : IXMLField;
   ctrl: ITaskCtrl;
 begin
-  for i := 0 to pred( m_xList.Values.Count) do
+  if not Assigned(xList) then
+    exit;
+
+  for i := 0 to pred( xList.Values.Count) do
   begin
-    xf := m_xList.Values.Field[i];
+    xf := xList.Values.Field[i];
     ctrl := form.Base.findCtrlByCLID(xf.Ctrlclid);
     if Assigned(ctrl) then
       ctrl.setData(xf.Value);
   end;
-  for i := 0 to pred(m_xList.Tables.Count) do
+  for i := 0 to pred(xList.Tables.Count) do
   begin
-    loadTable(m_xList.Tables[i], form );
+    loadTable(xList.Tables[i], form );
   end;
 end;
 
@@ -79,6 +90,19 @@ begin
     m_xList := NewList;
   end;
   doLoad( form);
+end;
+
+function TTaskForm2XML.getXML(st: TStream): IXMLList;
+var
+  xml: IXMLDocument;
+begin
+  try
+    xml := NewXMLDocument;
+    xml.LoadFromStream(st);
+    Result := xml.GetDocBinding('List', TXMLList, TargetNamespace) as IXMLList;
+  except
+    Result := NewList;
+  end;
 end;
 
 function TTaskForm2XML.getXML(form : ITaskForm ): IXMLList;
@@ -106,16 +130,8 @@ begin
 end;
 
 procedure TTaskForm2XML.load(st: TStream; form: ITaskForm);
-var
-  xml: IXMLDocument;
 begin
-  try
-    xml := NewXMLDocument;
-    xml.LoadFromStream(st);
-    m_xlist := xml.GetDocBinding('List', TXMLList, TargetNamespace) as IXMLList;
-  except
-    m_xList := NewList;
-  end;
+  m_xList := getXML( st );
   doLoad( form);
 end;
 

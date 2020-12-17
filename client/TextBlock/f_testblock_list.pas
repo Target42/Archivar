@@ -34,7 +34,7 @@ var
 implementation
 
 uses
-  m_glob_client;
+  m_glob_client, System.UITypes;
 
 {$R *.dfm}
 

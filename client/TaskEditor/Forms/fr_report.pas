@@ -162,14 +162,13 @@ begin
     useTestData;
 
   getStyle;
-  m_path := TPath.Combine( GM.wwwHome, m_tc.Task.CLID);
 
   Application.CreateForm(THtmlMod, HtmlMod);
   try
     HtmlMod.TaskContainer := m_tc;
     HtmlMod.TaskStyle     := st;
     HtmlMod.TaskData      := xList;
-    HtmlMod.show(WebBrowser1, m_tc.Task.CLID);
+    m_path := HtmlMod.show(WebBrowser1);
   finally
     HtmlMod.Free;
   end;

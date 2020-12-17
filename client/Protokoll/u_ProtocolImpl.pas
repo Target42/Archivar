@@ -74,13 +74,13 @@ var
 begin
   if not Assigned(st) or ( st.Size = 0) then
   begin
-    m_proto := NewProtocol;
+    setXProto(NewProtocol);
   end
   else
   begin
     xml := NewXMLDocument;
     xml.LoadFromStream(st);
-    m_proto := xml.GetDocBinding('Protocol', TXMLProtocol, TargetNamespace) as TXMLProtocol;
+    setXProto(  xml.GetDocBinding('Protocol', TXMLProtocol, TargetNamespace) as TXMLProtocol );
   end;
 end;
 

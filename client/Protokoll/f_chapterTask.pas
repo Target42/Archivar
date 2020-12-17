@@ -11,11 +11,7 @@ uses
 type
   TChapterTaskForm = class(TForm)
     BaseFrame1: TBaseFrame;
-    DSProviderConnection1: TDSProviderConnection;
-    GetTAQry: TClientDataSet;
-    GetTEQry: TClientDataSet;
     Panel1: TPanel;
-    Label1: TLabel;
     LabeledEdit1: TLabeledEdit;
     LabeledEdit2: TLabeledEdit;
     CheckBox1: TCheckBox;
@@ -51,7 +47,6 @@ end;
 
 procedure TChapterTaskForm.FormCreate(Sender: TObject);
 begin
-  DSProviderConnection1.SQLConnection := GM.SQLConnection1;
   FormFrame1.prepare;
 end;
 
@@ -61,22 +56,25 @@ begin
 end;
 
 procedure TChapterTaskForm.setCP(value: IChapter);
+var
+  h     : integer;
+  delta : integer;
 begin
   m_cp := value;
-
 
   CheckBox1.Checked := m_cp.Numbering;
   LabeledEdit1.Text := m_cp.Name;
 
-  GetTAQry.ParamByName('TA_ID').AsInteger := m_cp.TAID;
-  GetTAQry.Open;
-
-  GetTEQry.ParamByName('TE_ID').AsInteger := GetTAQry.FieldByName('TE_ID').AsInteger;
-  GetTEQry.Open;
-
-  FormFrame1.loadTask(GetTEQry);
-  FormFrame1.loadData(GetTAQry);
+  FormFrame1.loadByID( m_cp.TAID);
   FormFrame1.readOnly := true;
+
+  h := FormFrame1.getHeight;
+  if h > FormFrame1.Height then
+  begin
+    delta := h - FormFrame1.Height;
+    if Screen.Height >  self.Height + delta + 8 then
+      self.Height := self.Height + delta + 8;
+  end;
 end;
 
 end.

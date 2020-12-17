@@ -88,6 +88,7 @@ type
     function NewChild( newType : TControlType; x, y : integer ) : ITaskCtrl; overload;
     function NewChild( clName : string ) : ITaskCtrl;   overload;
     procedure setMouse( md : TControlMouseDown; mv : TControlMouseMove; mu : TControlMouseUp );
+    function getHeight : integer;
 
     function getPropertyByName( name : string ) : ITaskCtrlProp;
     function propertyValue( name : string ) : string;
@@ -373,6 +374,26 @@ end;
 function TaskCtrlImpl.getDataField: IDataField;
 begin
   Result := m_dataField;
+end;
+
+function TaskCtrlImpl.getHeight: integer;
+var
+  h     : integer;
+  i     : integer;
+begin
+  Result := 0;
+  if Assigned(m_ctrl) then
+  begin
+    h     := m_ctrl.Top + m_ctrl.Height;
+    if h > Result then
+      Result := h;
+    for i := 0 to pred(m_list.Count) do
+    begin
+      h := m_list[i].getHeight;
+      if h > Result then
+        Result := h;
+    end;
+  end;
 end;
 
 function TaskCtrlImpl.getOwner: ITaskForm;

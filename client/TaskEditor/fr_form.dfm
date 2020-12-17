@@ -11,6 +11,9 @@ object FormFrame: TFormFrame
     Width = 451
     Height = 305
     Align = alClient
+    BevelInner = bvNone
+    BevelOuter = bvNone
+    BorderStyle = bsNone
     TabOrder = 0
   end
 end

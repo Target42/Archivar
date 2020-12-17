@@ -89,7 +89,6 @@ type
   private
     m_ta_id : integer;
     m_ty_id : integeR;
-    m_clid  : string;
 
     m_form  : ITaskForm;
     m_tc    : ITaskContainer;
@@ -381,7 +380,7 @@ begin
     HtmlMod.TaskContainer := m_tc;
     HtmlMod.TaskStyle     := m_tc.Styles.DefaultStyle;
     HtmlMod.TaskData      := xList;
-    HtmlMod.show(WebBrowser1, m_clid);
+    HtmlMod.show(WebBrowser1);
   finally
     HtmlMod.Free;
   end;
@@ -443,7 +442,6 @@ begin
   else
     TaskTab.Close;
 
-  m_clid  := TaskTab.FieldByName('TA_CLID').AsString;
   LoadTemplate( TaskTab.FieldByName('TE_ID').AsInteger );
   LoadData;
 

@@ -5,35 +5,31 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, i_taskEdit,
-  Datasnap.DBClient;
+  Datasnap.DBClient, Data.DB, Datasnap.DSConnect, m_taskLoader;
 
 type
   TFormFrame = class(TFrame)
     ScrollBox1: TScrollBox;
   private
+    m_loader : TTaskLoaderMod;
     m_form : ITaskForm;
-    m_tc   : ITaskContainer;
 
-    function GetTaskContainer: ITaskContainer;
-    procedure SetTaskContainer(const Value: ITaskContainer);
     procedure setForm( value : ITaskForm);
 
     procedure setRO( value : boolean );
     function  getRO : boolean;
 
+    function saveDataToStream( st : TStream )         : boolean;
   public
-    property TaskContainer: ITaskContainer read GetTaskContainer write SetTaskContainer;
-    property TaskForm : ITaskForm read m_form write setForm;
+    property TaskForm       : ITaskForm       read m_form           write setForm;
+    property ReadOnly       : boolean         read getRO            write setRO;
 
-    property ReadOnly : boolean read getRO write setRO;
-
-    function loadTask( dataset : TClientDataset ): boolean;
-
-    function loadData( st : TStream ) : boolean; overload;
-    function loadData( dataset : TClientDataset ) : boolean; overload;
-    function saveDataToStream( st : TStream ): boolean;
+    function loadByID( taid : integer ) : boolean;
 
     procedure releaseData;
+
+    function getHeight : integer;
+
     procedure prepare;
     procedure release;
   end;
@@ -41,11 +37,18 @@ type
 implementation
 
 uses
-  u_taskForm2XML, Data.DB;
+  u_taskForm2XML, m_glob_client;
 
 {$R *.dfm}
 
 { TFrame1 }
+
+function TFormFrame.getHeight: integer;
+begin
+  Result := 0;
+  if Assigned(m_form) then
+    Result := m_form.Base.getHeight;
+end;
 
 function TFormFrame.getRO: boolean;
 begin
@@ -54,68 +57,38 @@ begin
     Result := m_form.ReadOnly;
 end;
 
-function TFormFrame.GetTaskContainer: ITaskContainer;
-begin
-  Result := m_tc;
-end;
-
-function TFormFrame.loadData(st: TStream): boolean;
+function TFormFrame.loadByID(taid: integer): boolean;
 var
   loader : TTaskForm2XML;
 begin
   Result := false;
-  if Assigned(st) and (st.Size > 0) then
+
+  if m_loader.load(taid) then
   begin
+    m_form := m_loader.BuildForm(ScrollBox1);
+
     loader := TTaskForm2XML.create;
-    loader.load( st, m_form);
+    loader.fillData( m_form, m_loader.TaskData);
     loader.Free;
-    Result := true;
+
+    Result := Assigned(m_form);
   end;
-end;
-
-function TFormFrame.loadData(dataset: TClientDataset): boolean;
-var
-  st : TStream;
-begin
-  st := dataset.CreateBlobStream(dataset.FieldByName('TA_DATA'), bmRead);
-  self.loadData(st);
-  st.Free;
-  Result := true;
-end;
-
-function TFormFrame.loadTask(dataset: TClientDataset): boolean;
-var
-  st  : TStream;
-begin
-  if not dataset.IsEmpty then
-  begin
-   st   := dataset.CreateBlobStream(dataset.FieldByName('TE_DATA'), bmRead);
-   m_tc := loadTaskContainer(st, dataset.FieldByName('TE_NAME').AsString);
-
-   self.SetTaskContainer(m_tc);
-  end;
-  Result := Assigned(m_tc) and Assigned(m_form);
 end;
 
 procedure TFormFrame.prepare;
 begin
+  m_loader := TTaskLoaderMod.Create(self);
   m_form  := NIL;
-  m_tc    := NIL;
 end;
 
 procedure TFormFrame.release;
 begin
+  m_loader.Free;
   m_form  := NIL;
-  m_tc    := NIL;
 end;
 
 procedure TFormFrame.releaseData;
 begin
-  if Assigned(m_tc) then
-  begin
-    m_tc.release;
-    m_tc := NIL;
-  end;
 end;
 
 function TFormFrame.saveDataToStream(st: TStream): boolean;
@@ -145,14 +118,6 @@ procedure TFormFrame.setRO(value: boolean);
 begin
   if Assigned(m_form) then
     m_form.ReadOnly := value;
-end;
-
-procedure TFormFrame.SetTaskContainer(const Value: ITaskContainer);
-begin
-  m_tc := value;
-  if Assigned(m_tc) then begin
-    setForm(m_tc.Task.getMainForm);
-  end;
 end;
 
 end.
