@@ -32,19 +32,19 @@ object TableCloumnForm: TTableCloumnForm
     Align = alBottom
     AutoSize = True
     TabOrder = 0
-    ExplicitTop = 112
-    ExplicitWidth = 276
+    ExplicitTop = 120
+    ExplicitWidth = 345
     inherited StatusBar1: TStatusBar
       Width = 345
-      ExplicitWidth = 276
+      ExplicitWidth = 345
     end
     inherited Panel1: TPanel
       Width = 345
-      ExplicitWidth = 276
+      ExplicitWidth = 345
       inherited OKBtn: TBitBtn
         Left = 257
         OnClick = BaseFrame1OKBtnClick
-        ExplicitLeft = 188
+        ExplicitLeft = 257
       end
     end
   end

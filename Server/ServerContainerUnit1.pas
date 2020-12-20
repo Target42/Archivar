@@ -29,6 +29,7 @@ type
     dsTemplate: TDSServerClass;
     dsTaskView: TDSServerClass;
     DSServerClass1: TDSServerClass;
+    dsFileCache: TDSServerClass;
     procedure dsAdminGetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
     procedure ServiceStart(Sender: TService; var Started: Boolean);
@@ -69,6 +70,8 @@ type
     procedure DSServerClass1GetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
     procedure DSServer1Error(DSErrorEventObject: TDSErrorEventObject);
+    procedure dsFileCacheGetClass(DSServerClass: TDSServerClass;
+      var PersistentClass: TPersistentClass);
   private
     { Private declarations }
   protected
@@ -95,7 +98,7 @@ implementation
 uses
   Winapi.Windows, m_db, ds_gremium, ds_admin, Datasnap.DSSession, ds_person, IOUtils,
   ds_taks, ds_file, ds_misc, ds_protocol, ds_image, ds_chapter,
-  ds_taskEdit, ds_template, ds_taskView, ds_textblock;
+  ds_taskEdit, ds_template, ds_taskView, ds_textblock, ds_fileCache;
 
 procedure TServerContainer1.dsAdminGetClass(
   DSServerClass: TDSServerClass; var PersistentClass: TPersistentClass);
@@ -281,6 +284,12 @@ procedure TServerContainer1.dsChapterGetClass(DSServerClass: TDSServerClass;
   var PersistentClass: TPersistentClass);
 begin
   PersistentClass := ds_chapter.TdsChapter;
+end;
+
+procedure TServerContainer1.dsFileCacheGetClass(DSServerClass: TDSServerClass;
+  var PersistentClass: TPersistentClass);
+begin
+  PersistentClass := ds_fileCache.TdsFileCache;
 end;
 
 procedure TServerContainer1.dsFileGetClass(DSServerClass: TDSServerClass;

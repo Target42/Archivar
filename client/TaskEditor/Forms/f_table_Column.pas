@@ -110,17 +110,36 @@ end;
 
 procedure TTableCloumnForm.setTable(value: ITaskCtrl);
 var
-  i : integer;
+  i     : integer;
+  prop  : ITaskCtrlProp;
+  p     : IProperty;
+  s     : string;
+  df    :IDataField;
+
 begin
   m_table := value;
-  LabeledEdit3.Text := m_table.DataField.Name;
 
+  LabeledEdit3.Text := m_table.DataField.Name;
   ComboBox1.Text := '';
 
-  for i := 0 to pred(m_table.DataField.Childs.Count) do
+  if SameTExt(m_table.DataField.Typ, 'linktable')  then
   begin
-    ComboBox1.Items.AddObject(m_table.DataField.Childs.Items[i].Name, TObject(i));
+    p := m_table.DataField.getPropertyByName('tablename');
+    if Assigned(p) then
+    begin
+      s:= p.Value;
+      df := m_table.DataField.Owner.getByName(s);
+    end;
+
+  end
+  else
+    df := m_table.DataField;
+
+  for i := 0 to pred(df.Childs.Count) do
+  begin
+    ComboBox1.Items.AddObject(df.Childs.Items[i].Name, TObject(i));
   end;
+
   ComboBox1.Items.AddObject('', TObject(-1));
 end;
 

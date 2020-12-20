@@ -12,6 +12,7 @@ object Beschlusform: TBeschlusform
   Font.Style = []
   OldCreateOrder = False
   Position = poOwnerFormCenter
+  OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   PixelsPerInch = 96
@@ -54,7 +55,7 @@ object Beschlusform: TBeschlusform
     Top = 0
     Width = 755
     Height = 583
-    ActivePage = TabSheet2
+    ActivePage = TabSheet1
     Align = alClient
     TabOrder = 1
     object TabSheet1: TTabSheet
@@ -408,7 +409,7 @@ object Beschlusform: TBeschlusform
       Caption = 'Beschlustext'
       ImageIndex = 1
       object Splitter1: TSplitter
-        Left = 538
+        Left = 477
         Top = 0
         Height = 328
         Align = alRight
@@ -684,36 +685,51 @@ object Beschlusform: TBeschlusform
         end
       end
       object GroupBox1: TGroupBox
-        Left = 541
+        Left = 480
         Top = 0
-        Width = 206
+        Width = 267
         Height = 328
         Align = alRight
         Caption = 'Textbausteine'
         TabOrder = 1
-        object ListBox1: TListBox
-          AlignWithMargins = True
-          Left = 5
-          Top = 18
-          Width = 196
-          Height = 305
+        inline TextBlockFrame1: TTextBlockFrame
+          Left = 2
+          Top = 15
+          Width = 263
+          Height = 311
           Align = alClient
-          ItemHeight = 13
           TabOrder = 0
+          ExplicitLeft = 4
+          ExplicitTop = 17
+          ExplicitWidth = 202
+          ExplicitHeight = 311
+          inherited Panel1: TPanel
+            Top = 255
+            Width = 263
+            inherited LabeledEdit1: TLabeledEdit
+              Width = 248
+            end
+          end
+          inherited LV: TListView
+            Width = 263
+            Height = 255
+          end
         end
       end
       inline EditFrame2: TEditFrame
         Left = 0
         Top = 0
-        Width = 538
+        Width = 477
         Height = 328
         Align = alClient
         TabOrder = 2
         ExplicitWidth = 538
         ExplicitHeight = 328
         inherited RE: TRichEdit
-          Width = 538
+          Width = 477
           Height = 328
+          OnDragDrop = EditFrame2REDragDrop
+          OnDragOver = EditFrame2REDragOver
           ExplicitWidth = 538
           ExplicitHeight = 328
         end
@@ -736,7 +752,7 @@ object Beschlusform: TBeschlusform
     Left = 399
     Top = 200
     Bitmap = {
-      494C0101010008002C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010101000800340010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       000000000000000000000000000000000000000000FF000000FF000000FF0000
       00FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF0000

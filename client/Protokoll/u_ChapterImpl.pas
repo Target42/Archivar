@@ -127,10 +127,22 @@ begin
 end;
 
 function TChapterImpl.fullTitle: string;
+var
+  cp : IChapter;
 begin
   Result := '';
   if FNumbering then
-    Result := IntToStr( self.getNr ) +' ';
+  begin
+    cp := self;
+    while Assigned(cp) do
+    begin
+      if cp.Numbering then
+        Result := IntToStr( cp.getNr ) +'.'+Result;
+      cp := cp.Owner;
+    end;
+    Result := Result + ' ';
+
+  end;
   Result := Result + FName;
 
   if FTAID <> 0 then
@@ -316,9 +328,23 @@ begin
 end;
 
 procedure TChapterImpl.SetNumbering(value: boolean);
+var
+  i : integer;
 begin
   m_modified  := m_modified or (value <> FNumbering);
   FNumbering := value;
+
+  if Assigned(m_owner) then
+  begin
+    if FNumbering then
+      m_owner.Numbering := true
+    else
+    begin
+      for i := 0 to pred(m_childs.Count) do
+        m_childs.Items[i].Numbering := false;
+    end;
+  end;
+  m_childs.renumber;
 end;
 
 procedure TChapterImpl.setOwner(value: IChapter);

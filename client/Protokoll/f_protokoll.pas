@@ -104,13 +104,13 @@ type
     procedure ac_pr_lockExecute(Sender: TObject);
     procedure ac_pr_unlockExecute(Sender: TObject);
     procedure DBNavigator3Click(Sender: TObject; Button: TNavigateBtn);
-    procedure TVClick(Sender: TObject);
     procedure ac_addExecute(Sender: TObject);
     procedure ac_editExecute(Sender: TObject);
     procedure ac_edit_contentExecute(Sender: TObject);
     procedure ac_deleteExecute(Sender: TObject);
     procedure ac_upExecute(Sender: TObject);
     procedure ac_downExecute(Sender: TObject);
+    procedure TVChange(Sender: TObject; Node: TTreeNode);
   private
     m_TitelEditform : TTitelEditform;
     m_proto         : IProtocol;
@@ -137,6 +137,8 @@ type
 
     procedure save;
     procedure reopen;
+
+    procedure showContent;
   public
     property ID : integer read getID write setID;
     property RO : boolean read m_ro write setRO;
@@ -416,6 +418,8 @@ end;
 
 procedure TProtokollForm.FormCreate(Sender: TObject);
 begin
+  PageControl1.ActivePage := TabSheet1;
+
   updateSeedBtn( self, 1 );
 
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
@@ -601,6 +605,52 @@ begin
 end;
 
 
+procedure TProtokollForm.showContent;
+var
+  cp    : IChapter;
+  ct    : IChapterTitle;
+  html  : THtmlMod;
+
+  procedure ShowText( text : string );
+  var
+    st : TStream;
+  begin
+    st := THtmlMod.Test2HTML(text);
+    THtmlMod.SetHTML(st, WebBrowser1 );
+  end;
+begin
+  if not Assigned(TV.Selected.Data) then
+    exit;
+
+  if TV.Selected.Level = 0 then
+  begin
+    ct := IChapterTitle(TV.Selected.Data);
+    ShowText( ct.Text );
+  end
+  else
+  begin
+    cp := IChapter( TV.Selected.Data);
+
+    if cp.TAID > 0   then
+    begin
+      if m_loader.load(cp.TAID) then
+      begin
+        html  := THtmlMod.Create(self);
+        html.TaskContainer  := m_loader.TaskContainer;
+        html.TaskData       := m_loader.TaskData;
+        html.TaskStyle      := m_loader.TaskStyle;
+
+        html.show(WebBrowser1);
+        html.Free;
+      end;
+    end
+    else
+    begin
+      ShowText( cp.Rem );
+    end;
+  end;
+end;
+
 procedure TProtokollForm.TGTabAfterInsert(DataSet: TDataSet);
 begin
   TGTab.FieldByName('PR_ID').AsInteger := m_proto.ID;
@@ -655,50 +705,9 @@ begin
     TNTab.FieldByName('TN_STATUS').Asinteger := 0;
 end;
 
-procedure TProtokollForm.TVClick(Sender: TObject);
-var
-  cp    : IChapter;
-  ct    : IChapterTitle;
-  html  : THtmlMod;
-
-  procedure ShowText( text : string );
-  var
-    st : TStream;
-  begin
-    st := THtmlMod.Test2HTML(text);
-    THtmlMod.SetHTML(st, WebBrowser1 );
-  end;
+procedure TProtokollForm.TVChange(Sender: TObject; Node: TTreeNode);
 begin
-  if not Assigned(TV.Selected.Data) then
-    exit;
-
-  if TV.Selected.Level = 0 then
-  begin
-    ct := IChapterTitle(TV.Selected.Data);
-    ShowText( ct.Text );
-  end
-  else
-  begin
-    cp := IChapter( TV.Selected.Data);
-
-    if cp.TAID > 0   then
-    begin
-      if m_loader.load(cp.TAID) then
-      begin
-        html  := THtmlMod.Create(self);
-        html.TaskContainer  := m_loader.TaskContainer;
-        html.TaskData       := m_loader.TaskData;
-        html.TaskStyle      := m_loader.TaskStyle;
-
-        html.show(WebBrowser1);
-        html.Free;
-      end;
-    end
-    else
-    begin
-      ShowText( cp.Rem );
-    end;
-  end;
+  showContent;
 end;
 
 procedure TProtokollForm.updateCpList;

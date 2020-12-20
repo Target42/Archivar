@@ -51,7 +51,6 @@ object ChapterTaskForm: TChapterTaskForm
     Align = alTop
     BevelOuter = bvNone
     Caption = 'Panel1'
-    Enabled = False
     ShowCaption = False
     TabOrder = 1
     object LabeledEdit1: TLabeledEdit
@@ -90,14 +89,14 @@ object ChapterTaskForm: TChapterTaskForm
     Height = 399
     Align = alClient
     TabOrder = 2
-    ExplicitTop = 73
+    ExplicitTop = 57
     ExplicitWidth = 635
-    ExplicitHeight = 383
+    ExplicitHeight = 399
     inherited ScrollBox1: TScrollBox
       Width = 635
       Height = 399
       ExplicitWidth = 635
-      ExplicitHeight = 383
+      ExplicitHeight = 399
     end
   end
 end

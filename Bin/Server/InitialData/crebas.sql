@@ -1,7 +1,7 @@
 /* ============================================================ */
 /*   Database name:  MODEL_2                                    */
 /*   DBMS name:      InterBase                                  */
-/*   Created on:     23.10.2020  20:24                          */
+/*   Created on:     19.12.2020  19:37                          */
 /* ============================================================ */
 
 create generator gen_be_id;
@@ -11,6 +11,7 @@ create generator gen_da_id;
 create generator gen_fi_id;
 create generator gen_fd_id;
 create generator gen_gr_id;
+create generator gen_hc_id;
 create generator gen_ma_id;
 create generator gen_pi_id;
 create generator gen_pe_id;
@@ -107,6 +108,19 @@ create table TB_TEXT
 /*   Index: TB_TEXT_NAME_INX                                    */
 /* ============================================================ */
 create unique ASC index TB_TEXT_NAME_INX on TB_TEXT (TB_NAME);
+
+/* ============================================================ */
+/*   Table: HC_HTTP                                             */
+/* ============================================================ */
+create table HC_HTTP
+(
+    HC_ID                           INTEGER                not null,
+    HC_NAME                         VARCHAR(255)                   ,
+    HC_PATH                         VARCHAR(255)                   ,
+    HC_MD5                          VARCHAR(32)                    ,
+    HC_DATA                         BLOB                           ,
+    constraint PK_HC_HTTP primary key (HC_ID)
+);
 
 /* ============================================================ */
 /*   Table: PE_PERSON                                           */
@@ -316,6 +330,11 @@ create table TN_TEILNEHMER
 );
 
 /* ============================================================ */
+/*   Index: TN_TELNEHMER_SEC                                    */
+/* ============================================================ */
+create ASC index TN_TELNEHMER_SEC on TN_TEILNEHMER (TN_NAME, TN_VORNAME, TN_DEPARTMENT);
+
+/* ============================================================ */
 /*   Table: TG_GAESTE                                           */
 /* ============================================================ */
 create table TG_GAESTE
@@ -364,6 +383,7 @@ create table CT_CHAPTER_TEXT
     CT_TITLE                        VARCHAR(200)                   ,
     CT_NUMBER                       INTEGER                        ,
     CT_DATA                         BLOB                           ,
+    CT_POS                          INTEGER                        ,
     constraint PK_CT_CHAPTER_TEXT primary key (CT_ID)
 );
 

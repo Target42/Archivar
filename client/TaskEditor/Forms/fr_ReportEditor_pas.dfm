@@ -48,9 +48,6 @@ inherited ReportFrameEditorPas: TReportFrameEditorPas
     Lines.Strings = (
       'SynEdit1')
     FontSmoothing = fsmNone
-    ExplicitLeft = 3
-    ExplicitTop = 19
-    ExplicitHeight = 250
   end
   object Panel2: TPanel
     Left = 0

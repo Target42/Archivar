@@ -66,6 +66,8 @@ type
     procedure checkimages;
     procedure checkImage( obj : TJSONObject; client : TdsImageClient );
 
+    procedure checkCache;
+
     function downloadimage( name : string;client : TdsImageClient) :  boolean;
   public
 
@@ -125,7 +127,7 @@ uses
   Vcl.Forms, Winapi.Windows, u_json,
   System.UITypes, system.IOUtils, FireDAC.Stan.Storagebin,
   System.Win.ComObj, m_WindowHandler, m_BookMarkHandler, IdHashMessageDigest,
-  Vcl.Graphics, u_PersonenListeImpl, u_PersonImpl;
+  Vcl.Graphics, u_PersonenListeImpl, u_PersonImpl, m_cache;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -136,6 +138,13 @@ uses
 function TGM.autoInc(name: string): integer;
 begin
   Result := m_misc.AutoInc(name);
+end;
+
+procedure TGM.checkCache;
+begin
+  Application.CreateForm(TCacheMod, CacheMod);
+  CacheMod.checkFiles;
+  CacheMod.Free;
 end;
 
 procedure TGM.checkImage(obj: TJSONObject; client : TdsImageClient);
@@ -518,8 +527,8 @@ begin
 
   req := TJSONObject.Create;
 
-  JReplace( req, 'host', JvComputerInfoEx1.Identification.LocalComputerName);
-  JReplace( req, 'hostuser', JvComputerInfoEx1.Identification.LocalUserName );
+  JReplace( req, 'host',      JvComputerInfoEx1.Identification.LocalComputerName);
+  JReplace( req, 'hostuser',  JvComputerInfoEx1.Identification.LocalUserName );
   client := NIL;
 
 
@@ -551,6 +560,7 @@ begin
 
   end;
   checkimages;
+  checkCache;
   PostMessage( Application.MainFormHandle, msgLoadLogo, 0, 0 );
 end;
 

@@ -46,6 +46,7 @@ object TextBlockFrame: TTextBlockFrame
         Caption = 'Tags'
         Width = 150
       end>
+    DragMode = dmAutomatic
     ReadOnly = True
     RowSelect = True
     TabOrder = 1

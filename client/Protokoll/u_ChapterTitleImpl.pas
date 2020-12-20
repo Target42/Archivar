@@ -192,6 +192,7 @@ end;
 procedure TChapterTitleImpl.setNr(value: integer);
 begin
   FNr := value;
+  m_root.Nr := value;
 end;
 
 procedure TChapterTitleImpl.setOwner;

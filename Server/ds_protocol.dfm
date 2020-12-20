@@ -88,6 +88,10 @@ object dsProtocol: TdsProtocol
       item
         Name = 'FK_REF_1060'
         Fields = 'PR_ID'
+      end
+      item
+        Name = 'TN_TELNEHMER_SEC'
+        Fields = 'TN_NAME;TN_VORNAME;TN_DEPARTMENT'
       end>
     StoreDefs = True
     TableName = 'TN_TEILNEHMER'

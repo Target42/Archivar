@@ -1,5 +1,7 @@
 program Archivar;
 
+{$R *.dres}
+
 uses
   Vcl.Forms,
   JclAppInst,
@@ -133,7 +135,10 @@ uses
   fr_textblock in 'TextBlock\fr_textblock.pas' {TextBlockFrame: TFrame},
   f_testblock_list in 'TextBlock\f_testblock_list.pas' {TestBlockListForm},
   f_textblock_param in 'TextBlock\f_textblock_param.pas' {TextBlockParameterForm},
-  m_taskLoader in 'Task\m_taskLoader.pas' {TaskLoaderMod: TDataModule};
+  m_taskLoader in 'Task\m_taskLoader.pas' {TaskLoaderMod: TDataModule},
+  m_cache in 'File\m_cache.pas' {CacheMod: TDataModule},
+  f_webserver_files in 'http\f_webserver_files.pas' {WebServerFilesForm},
+  f_web_file in 'http\f_web_file.pas' {WebFileForm};
 
 {$R *.res}
 
@@ -151,5 +156,6 @@ begin
   Application.CreateForm(TWindowHandler, WindowHandler);
   Application.CreateForm(TBookMarkHandler, BookMarkHandler);
   Application.CreateForm(TMainForm, MainForm);
+
   Application.Run;
 end.

@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB,
   Datasnap.DBClient, Datasnap.DSConnect, Vcl.Grids, Vcl.DBGrids, Vcl.ExtCtrls,
-  Vcl.StdCtrls, JvComponentBase, JvDragDrop;
+  Vcl.StdCtrls, JvComponentBase, JvDragDrop, Vcl.Buttons;
 
 type
   TFileFrame = class(TFrame)
@@ -15,12 +15,12 @@ type
     LitFilesSrc: TDataSource;
     DBGrid1: TDBGrid;
     GroupBox1: TGroupBox;
-    Button1: TButton;
-    Button2: TButton;
-    Button3: TButton;
     Panel1: TPanel;
     JvDragDrop1: TJvDragDrop;
     OpenDialog1: TOpenDialog;
+    Button1: TBitBtn;
+    Button2: TBitBtn;
+    Button3: TBitBtn;
     procedure Button1Click(Sender: TObject);
     procedure JvDragDrop1Drop(Sender: TObject; Pos: TPoint; Value: TStrings);
     procedure Button2Click(Sender: TObject);

@@ -1,17 +1,22 @@
 inherited ReportFrameEditorHtml: TReportFrameEditorHtml
+  Width = 468
+  Height = 324
+  ExplicitWidth = 451
+  ExplicitHeight = 305
   inherited Panel1: TPanel
+    Width = 468
     TabOrder = 1
     ExplicitWidth = 451
     inherited SpeedButton1: TSpeedButton
-      Left = 425
+      Left = 442
       ExplicitLeft = 425
     end
   end
   object SynEdit1: TSynEdit
     Left = 0
     Top = 21
-    Width = 451
-    Height = 284
+    Width = 468
+    Height = 303
     Align = alClient
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -33,6 +38,8 @@ inherited ReportFrameEditorHtml: TReportFrameEditorHtml
     Gutter.Font.Style = []
     Highlighter = SynHTMLSyn1
     FontSmoothing = fsmNone
+    ExplicitWidth = 451
+    ExplicitHeight = 284
   end
   object SynHTMLSyn1: TSynHTMLSyn
     Options.AutoDetectEnabled = False
@@ -47,5 +54,24 @@ inherited ReportFrameEditorHtml: TReportFrameEditorHtml
     Options.Visible = False
     Left = 224
     Top = 112
+  end
+  object SynCompletionProposal1: TSynCompletionProposal
+    EndOfTokenChr = '()[]. '
+    TriggerChars = '.'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -11
+    Font.Name = 'MS Sans Serif'
+    Font.Style = []
+    TitleFont.Charset = DEFAULT_CHARSET
+    TitleFont.Color = clBtnText
+    TitleFont.Height = -11
+    TitleFont.Name = 'MS Sans Serif'
+    TitleFont.Style = [fsBold]
+    Columns = <>
+    ShortCut = 16416
+    Editor = SynEdit1
+    Left = 88
+    Top = 208
   end
 end

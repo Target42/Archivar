@@ -32,7 +32,6 @@ object UploadForm: TUploadForm
     end
     inherited Panel1: TPanel
       Width = 635
-      ExplicitTop = -6
       ExplicitWidth = 635
       inherited AbortBtn: TBitBtn
         Visible = False

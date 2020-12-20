@@ -6,19 +6,21 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_ReportEditor, Vcl.StdCtrls,
   Vcl.ExtCtrls, SynEditHighlighter, SynHighlighterHtml, SynEdit, Vcl.Buttons,
-  i_taskEdit, Vcl.Menus, SynHighlighterCSS;
+  i_taskEdit, Vcl.Menus, SynHighlighterCSS, SynCompletionProposal;
 
 type
   TReportFrameEditorHtml = class(TReportFrameEditor)
     SynEdit1: TSynEdit;
     SynHTMLSyn1: TSynHTMLSyn;
     SynCssSyn1: TSynCssSyn;
+    SynCompletionProposal1: TSynCompletionProposal;
     procedure SynEdit1KeyPress(Sender: TObject; var Key: Char);
   protected
     function changed : boolean; override;
     procedure setDataFile( value : ITaskFile ); override;
   public
     procedure save; override;
+
     procedure insertFieldName( name : string ); override;
     procedure setPopup( pop : TPopupMenu ); override;
 

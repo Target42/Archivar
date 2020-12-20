@@ -85,13 +85,13 @@ type
     function findCtrl( ctrl : TControl): ITaskCtrl; overload;
     function find( pkt : TPoint ) : ITaskCtrl;
 
-    function NewChild( newType : TControlType; x, y : integer ) : ITaskCtrl; overload;
-    function NewChild( clName : string ) : ITaskCtrl;   overload;
+    function  NewChild( newType : TControlType; x, y : integer ) : ITaskCtrl; overload;
+    function  NewChild( clName : string ) : ITaskCtrl;   overload;
     procedure setMouse( md : TControlMouseDown; mv : TControlMouseMove; mu : TControlMouseUp );
-    function getHeight : integer;
+    function  getHeight : integer;
 
-    function getPropertyByName( name : string ) : ITaskCtrlProp;
-    function propertyValue( name : string ) : string;
+    function  getPropertyByName( name : string ) : ITaskCtrlProp;
+    function  propertyValue( name : string ) : string;
     procedure build;
 
     procedure dropControls; virtual;
@@ -106,10 +106,10 @@ type
     procedure check( list : TStringList ); virtual;
 
     procedure setData( value : string );
-    function getData( var name, value : string ) : boolean;
+    function  getData( var name, value : string ) : boolean;
 
-    function containData : boolean;
-    function isContainer : boolean;
+    function  containData : boolean;
+    function  isContainer : boolean;
   end;
 
 implementation

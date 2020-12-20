@@ -13,15 +13,16 @@ type
       function  newControl(parent : TWinControl; x, y : Integer) :  TControl; override;
       procedure doSetMouse( md : TControlMouseDown; mv : TControlMouseMove; mu : TControlMouseUp ); override;
 
-      function getTableCtrlIF : ITaskCtrlTable; override;
+      function  getTableCtrlIF : ITaskCtrlTable; override;
       procedure setReadOnly( value : boolean ); override;
       function  getReadOnly : boolean; override;
     private
       m_sg : TStringGrid;
-      function getCell( row, col : integer) : string;
+
+      function  getCell( row, col : integer) : string;
       procedure setCell( row, col : integer; value : string );
       procedure renumber;
-      function getRowCount : integer;
+      function  getRowCount : integer;
       procedure setRowCount( value : integer );
     public
 

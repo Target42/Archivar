@@ -78,6 +78,7 @@ type
     procedure setChapter( value : IChapterTitle );
 
     procedure saveCP( cp : IChapter; append : boolean = false );
+
   public
     { Public-Deklarationen }
     property Chapter : IChapterTitle read m_ct write setChapter;
@@ -240,6 +241,7 @@ begin
     node.ImageIndex    := 2;
 
     saveCP(cp, true);
+
   end
   else
     p.remove(cp);
@@ -387,7 +389,7 @@ begin
   end;
 
   ChapterTextTab.FieldByName('ct_parent').AsInteger := cp.PID;
-  ChapterTextTab.FieldByName('CT_NUMBER').AsInteger := -1;
+  ChapterTextTab.FieldByName('CT_NUMBER').AsInteger := cp.Nr;
   ChapterTextTab.FieldByName('CT_TITLE').AsString   := cp.Name;
   ChapterTextTab.FieldByName('CT_POS').AsInteger    := cp.Pos;
   ChapterTextTab.FieldByName('CT_DATA').AsString    := cp.Rem;
@@ -398,6 +400,7 @@ begin
     ChapterTextTab.FieldByName('TA_ID').Clear;
 
   ChapterTextTab.Post;
+
   cp.Modified := false;
 
 end;

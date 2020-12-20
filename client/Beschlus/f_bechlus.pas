@@ -6,7 +6,8 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_base, fr_editForm, Vcl.StdCtrls,
   Vcl.ExtCtrls, Vcl.Buttons, Vcl.ComCtrls, Vcl.Menus, System.Actions,
-  Vcl.ActnList, System.ImageList, Vcl.ImgList, xsd_TaskData, i_personen;
+  Vcl.ActnList, System.ImageList, Vcl.ImgList, xsd_TaskData, i_personen,
+  fr_textblock;
 
 type
   TBeschlusform = class(TForm)
@@ -26,7 +27,6 @@ type
     TabSheet2: TTabSheet;
     GroupBox3: TGroupBox;
     GroupBox1: TGroupBox;
-    ListBox1: TListBox;
     Splitter1: TSplitter;
     EditFrame2: TEditFrame;
     Panel1: TPanel;
@@ -52,6 +52,7 @@ type
     ActionList1: TActionList;
     ac_p1_delete: TAction;
     Lschen1: TMenuItem;
+    TextBlockFrame1: TTextBlockFrame;
     procedure LVGremiumDragOver(Sender, Source: TObject; X, Y: Integer;
       State: TDragState; var Accept: Boolean);
     procedure FormCreate(Sender: TObject);
@@ -65,6 +66,10 @@ type
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
+    procedure EditFrame2REDragOver(Sender, Source: TObject; X, Y: Integer;
+      State: TDragState; var Accept: Boolean);
+    procedure EditFrame2REDragDrop(Sender, Source: TObject; X, Y: Integer);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     m_data      : IXMLList;
     m_gremium   : IPersonenListe;
@@ -85,7 +90,7 @@ var
 implementation
 
 uses
-  u_PersonenListeImpl, m_glob_client;
+  u_PersonenListeImpl, m_glob_client, f_textblock_param, xsd_TextBlock;
 
 {$R *.dfm}
 
@@ -123,6 +128,43 @@ begin
   LabeledEdit3.Text := IntToStr(m_gremium.count);
 end;
 
+procedure TBeschlusform.EditFrame2REDragDrop(Sender, Source: TObject; X,
+  Y: Integer);
+var
+  blk : IXMLBlock;
+begin
+  if sender = Source then
+    exit;
+  if (source = TextBlockFrame1.LV)  and( Sender = EditFrame2.RE) then
+  begin
+    blk := TextBlockFrame1.getBlock;
+
+    if blk.Fields.Count = 0 then
+      EditFrame2.RE.Lines.Add(blk.Content)
+    else
+    begin
+      Application.CreateForm(TTextBlockParameterForm, TextBlockParameterForm);
+      TextBlockParameterForm.Xblock := blk;
+      if TextBlockParameterForm.ShowModal = mrOk then
+      begin
+        EditFrame2.RE.Lines.Add( TextBlockParameterForm.getContext );
+      end;
+      TextBlockParameterForm.free;
+    end;
+  end;
+end;
+
+procedure TBeschlusform.EditFrame2REDragOver(Sender, Source: TObject; X,
+  Y: Integer; State: TDragState; var Accept: Boolean);
+begin
+  Accept := true;
+end;
+
+procedure TBeschlusform.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  Action := caFree;
+end;
+
 procedure TBeschlusform.FormCreate(Sender: TObject);
 begin
   m_data      := NewList;
@@ -133,6 +175,8 @@ begin
   UpdateList( LVGremium,    m_gremium);
   UpdateList( LVAbwesend,   m_abwesende );
   UpdateList( LVanthalten,  m_enthalten );
+
+  TextBlockFrame1.init;
 end;
 
 procedure TBeschlusform.FormDestroy(Sender: TObject);
@@ -140,6 +184,8 @@ begin
   m_gremium.release;
   m_abwesende.release;
   m_enthalten.release;
+
+  TextBlockFrame1.release;
 end;
 
 procedure TBeschlusform.LVAbwesendDblClick(Sender: TObject);

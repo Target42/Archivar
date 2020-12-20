@@ -108,18 +108,20 @@ var
   len, w : integer;
 begin
   old := NIL;
-  len := LV.Columns[0].Width;
+
   LV.Items.BeginUpdate;
   if Assigned(LV.Selected) then
     old := ITaskCtrl(LV.Selected.Data);
+
   LV.Items.Clear;
-  w := 0;
+  len := LV.Canvas.TextWidth( LV.Columns[0].Caption) + 8;
+
   for i := 0 to pred(m_table.Childs.Count) do
   begin
     item := LV.Items.Add;
     ctrl := m_table.Childs.Items[i];
 
-    item.Data := ctrl;
+    item.Data    := ctrl;
     item.Caption := getPropertyValue(ctrl, 'Header');
     item.SubItems.Add( getPropertyValue(ctrl, 'Width'));
     item.SubItems.Add( getPropertyValue(ctrl, 'DataField'));
@@ -131,7 +133,7 @@ begin
       LV.Selected := item;
 
   end;
-  LV.Columns[0].Width := w;
+  LV.Columns[0].Width := len;
   LV.Items.EndUpdate;
 end;
 

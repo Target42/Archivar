@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_ReportEditor, Vcl.Buttons,
    m_dws, Vcl.ExtCtrls, Vcl.StdCtrls, SynEditHighlighter, SynHighlighterDWS,
-  SynEdit, i_taskEdit, SynHighlighterCSS, SynEditOptionsDialog;
+  SynEdit, i_taskEdit, SynHighlighterCSS, SynEditOptionsDialog, Vcl.Menus;
 
 type
   TReportFrameEditorPas = class(TReportFrameEditor)
@@ -27,6 +27,9 @@ type
     procedure setDataFile( value : ITaskFile ); override;
   public
     procedure save; override;
+
+    procedure setPopup( pop : TPopupMenu ); override;
+    procedure insertFieldName( name : string ); override;
 
     procedure init; override;
     procedure release; override;
@@ -65,6 +68,12 @@ begin
   m_dws       := TDwsMod.Create(NIL);
 end;
 
+procedure TReportFrameEditorPas.insertFieldName(name: string);
+begin
+  inherited;
+  SynEdit1.SelText := '<#field '+name+'>';
+end;
+
 procedure TReportFrameEditorPas.release;
 begin
   inherited;
@@ -85,6 +94,12 @@ begin
   inherited;
   SynEdit1.Lines.text := m_tf.Text;
   m_changed := false;
+end;
+
+procedure TReportFrameEditorPas.setPopup(pop: TPopupMenu);
+begin
+  inherited;
+  SynEdit1.PopupMenu := pop;
 end;
 
 procedure TReportFrameEditorPas.SynEdit1KeyPress(Sender: TObject;

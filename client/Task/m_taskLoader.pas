@@ -26,6 +26,7 @@ type
     function loadData( dataset    : TClientDataset )  : boolean; overload;
     function loadData( st         : TStream )         : boolean; overload;
 
+    function saveDataToStream(st: TStream): boolean;
   public
     function load( taid : integer ) : boolean;
 
@@ -35,6 +36,8 @@ type
     property TaskStyle      : ITaskStyle      read m_style  write m_style;
 
     function BuildForm( owner : TControl) : ITaskForm;
+
+
 
     function saveFormData : boolean;
   end;
@@ -143,6 +146,19 @@ begin
   Result := Assigned(m_tc);
 end;
 
+
+function TTaskLoaderMod.saveDataToStream(st: TStream): boolean;
+var
+  writer : TTaskForm2XML;
+begin
+  if Assigned(m_form) and Assigned(st) then
+  begin
+    writer := TTaskForm2XML.create;
+    writer.save(st, m_form);
+    writer.Free;
+  end;
+  Result := Assigned(st) and ( st.Size > 0 );
+end;
 
 function TTaskLoaderMod.saveFormData: boolean;
 var

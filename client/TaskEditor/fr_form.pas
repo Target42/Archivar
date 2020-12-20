@@ -19,7 +19,6 @@ type
     procedure setRO( value : boolean );
     function  getRO : boolean;
 
-    function saveDataToStream( st : TStream )         : boolean;
   public
     property TaskForm       : ITaskForm       read m_form           write setForm;
     property ReadOnly       : boolean         read getRO            write setRO;
@@ -89,19 +88,6 @@ end;
 
 procedure TFormFrame.releaseData;
 begin
-end;
-
-function TFormFrame.saveDataToStream(st: TStream): boolean;
-var
-  writer : TTaskForm2XML;
-begin
-  if Assigned(m_form) and Assigned(st) then
-  begin
-    writer := TTaskForm2XML.create;
-    writer.save(st, m_form);
-    writer.Free;
-  end;
-  Result := Assigned(st) and ( st.Size > 0 );
 end;
 
 procedure TFormFrame.setForm(value: ITaskForm);

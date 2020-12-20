@@ -43,6 +43,8 @@ type
     SpeedButton8: TSpeedButton;
     SpeedButton9: TSpeedButton;
     SpeedButton10: TSpeedButton;
+    TabSheet1: TTabSheet;
+    WebBrowser2: TWebBrowser;
     procedure PopupMenu1Popup(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure CheckBox1Click(Sender: TObject);
@@ -77,6 +79,8 @@ type
     procedure updateFileContainer;
     procedure closeEditor( tf : ITaskFile);
     procedure doCloseFrame( value : TReportFrameEditor );
+
+    procedure fillHelp;
   public
 
     procedure init;
@@ -203,6 +207,18 @@ begin
   m_form := frm;
 end;
 
+procedure TReportFrame.fillHelp;
+var
+  RS: TResourceStream;
+begin
+  RS := TResourceStream.Create(HInstance, 'dws_html', RT_RCDATA);
+  try
+    THtmlMod.SetHTML( RS, WebBrowser2);
+  finally
+
+  end;
+end;
+
 procedure TReportFrame.fillStyles;
 begin
   ListBox2.Items.Clear;
@@ -220,6 +236,8 @@ begin
   PageControl1.ActivePage := TabSheet3;
   m_files:= TList<TReportFrameEditor>.create;
   m_form := NIL;
+
+  fillHelp;
 end;
 
 procedure TReportFrame.initFile(tf: ITaskFile);
@@ -302,6 +320,7 @@ begin
     fc.Style            := ITaskStyle( Pointer( ListBox2.Items.Objects[ ListBox2.ItemIndex]));;
     fc.DataFile         := tf;
     fc.onCloseFrame     := self.doCloseFrame;
+    fc.setPopup(self.PopupMenu1);
 
     m_files.Add(fc);
     PageControl1.ActivePage := fc.Tab;

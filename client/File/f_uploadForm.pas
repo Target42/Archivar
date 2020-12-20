@@ -80,7 +80,7 @@ begin
           JReplace( req, 'fname', DataTab.FieldByName('FNAME').AsString);
           JReplace( req, 'todelete', m_map[DataTab.FieldByName('FD_ID').AsInteger]);
           JReplace( req, 'type', '');
-          JReplace( req, 'id', m_ta_id );
+          JReplace( req, 'taid', m_ta_id );
 
           res := client.upload(req, fs);
           DataTab.Edit;

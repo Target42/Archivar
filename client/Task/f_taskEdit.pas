@@ -459,6 +459,13 @@ end;
 
 procedure TTaskEditForm.setRO(value: boolean);
 begin
+  if not m_ro and m_changed then
+  begin
+    m_changed := false;
+    if Assigned(m_form) then
+      m_form.Changed := false;
+  end;
+
   m_ro                        := value;
   Bearbeiten1.Enabled         := m_ro;
   Bearbeitenbeenden1.Enabled  := not m_ro;

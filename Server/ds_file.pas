@@ -161,9 +161,10 @@ begin
 
     JResponse( Result, true, 'Der Upload war erfolgreich');
   except
+    on e : exception do
     begin
       IBTransaction1.Rollback;
-      JResponse( Result, false, 'Der Upload ist fehlgeschlagen');
+      JResponse( Result, false, 'Der Upload ist fehlgeschlagen'+sLineBreak+e.ToString);
     end;
   end;
 end;

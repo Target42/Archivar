@@ -105,7 +105,7 @@ object ChapterEditForm: TChapterEditForm
     Align = alClient
     TabOrder = 2
     ExplicitTop = 73
-    ExplicitWidth = 565
+    ExplicitWidth = 517
     ExplicitHeight = 273
     inherited RE: TRichEdit
       Width = 517

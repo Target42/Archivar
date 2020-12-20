@@ -244,6 +244,12 @@
           Action = ac_tb_löschen
         end
       end
+      object N6: TMenuItem
+        Caption = '-'
+      end
+      object Webserverdateienverwalten1: TMenuItem
+        Action = ac_ad_http
+      end
     end
     object Fenster1: TMenuItem
       Caption = 'Fenster'
@@ -269,7 +275,6 @@
       end
       object test21: TMenuItem
         Caption = 'test2'
-        OnClick = test21Click
       end
     end
   end
@@ -403,6 +408,11 @@
       Category = 'Textbausteine'
       Caption = 'L'#246'schen'
       OnExecute = ac_tb_löschenExecute
+    end
+    object ac_ad_http: TAction
+      Category = 'Admin'
+      Caption = 'Webserverdateien verwalten'
+      OnExecute = ac_ad_httpExecute
     end
   end
   object ApplicationEvents1: TApplicationEvents

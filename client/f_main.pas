@@ -88,6 +88,9 @@ type
     Bearbeiten1: TMenuItem;
     N5: TMenuItem;
     Lschen1: TMenuItem;
+    ac_ad_http: TAction;
+    N6: TMenuItem;
+    Webserverdateienverwalten1: TMenuItem;
     procedure ac_prg_closeExecute(Sender: TObject);
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure ac_prg_disconExecute(Sender: TObject);
@@ -106,11 +109,11 @@ type
     procedure ac_ad_templatesExecute(Sender: TObject);
     procedure est1Click(Sender: TObject);
     procedure ac_ad_sys_templateExecute(Sender: TObject);
-    procedure test21Click(Sender: TObject);
     procedure ac_prg_setExecute(Sender: TObject);
     procedure ac_tb_editExecute(Sender: TObject);
     procedure ac_tb_neuExecute(Sender: TObject);
     procedure ac_tb_löschenExecute(Sender: TObject);
+    procedure ac_ad_httpExecute(Sender: TObject);
   private
     procedure setPanel( id : integer ; text : string );
     procedure loadLogo;
@@ -130,7 +133,7 @@ uses
   f_protokoll, u_stub, System.JSON, u_json, f_protokoll_list, u_gremium, m_BookMarkHandler, m_WindowHandler,
   f_images, System.IOUtils, f_taksListForm, u_berTypes, f_datafields,
   f_template_new, f_taskEditor, f_select_templateForm, f_bechlus, f_set,
-  f_textblock_edit, f_testblock_list;
+  f_textblock_edit, f_testblock_list, f_webserver_files;
 
 {$R *.dfm}
 
@@ -151,6 +154,16 @@ begin
     GremiumForm.ShowModal;
   finally
     GremiumForm.free;
+  end;
+end;
+
+procedure TMainForm.ac_ad_httpExecute(Sender: TObject);
+begin
+  try
+    Application.CreateForm(TWebServerFilesForm, WebServerFilesForm);
+    WebServerFilesForm.ShowModal;
+  finally
+    WebServerFilesForm.free;
   end;
 end;
 
@@ -421,8 +434,8 @@ end;
 procedure TMainForm.est1Click(Sender: TObject);
 begin
   Application.CreateForm(TBeschlusform, Beschlusform);
-  Beschlusform.ShowModal;
-  Beschlusform.Free;
+  Beschlusform.Show;
+//  Beschlusform.Free;
 end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
@@ -479,13 +492,6 @@ begin
     frm.TEID := te_id;
     frm.Show;
   end;
-end;
-
-procedure TMainForm.test21Click(Sender: TObject);
-begin
-  Application.CreateForm(TTextBlockEditForm, TextBlockEditForm);
-  TextBlockEditForm.ShowModal;
-  TextBlockEditForm.free;
 end;
 
 end.
