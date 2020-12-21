@@ -20,15 +20,18 @@ type
 
 
   private
-    m_ctrl : ITaskCtrl;
-    m_data : IDataFieldList;
-    m_pchanged : TPropertyChanged;
-    m_updateFlag : boolean;
+    m_ctrl        : ITaskCtrl;
+    m_data        : IDataFieldList;
+    m_pchanged    : TPropertyChanged;
+    m_updateFlag  : boolean;
 
     procedure setCrtl( value : ITaskCtrl );
     procedure setDataFields( value : IDataFieldList );
 
     procedure doInform(event : TDataListChangeType; value : IDataField);
+
+    procedure CheckFields(val : string );
+    procedure setProperty( ctrl: ITaskCtrl; name, value : string );
   public
     property DataFields : IDataFieldList write setDataFields;
     property Ctrl : ITaskCtrl read m_ctrl write setCrtl;
@@ -46,6 +49,40 @@ implementation
 {$R *.dfm}
 
 { TFrame1 }
+
+procedure TPropertyFrame.CheckFields(val : string );
+var
+  s     : string;
+  df    : IDataField;
+  p     : IProperty;
+  i     : integer;
+  ctrl  : ITaskCtrl;
+begin
+  df := m_ctrl.DataField;
+  if Assigned(df) then
+  begin
+    if SameText(df.Typ, 'linktable') then
+    begin
+      p := df.getPropertyByName('tablename');
+      if Assigned(p) then
+      begin
+        s:= p.Value;
+        df := df.Owner.getByName(s);
+      end;
+      if m_ctrl.Childs.Count = 0  then
+      begin
+        for i:= 0 to pred(df.Childs.Count) do
+        begin
+          ctrl := m_ctrl.NewChild('TTableField');
+          setProperty(ctrl, 'Header', df.Childs.Items[i].Name);
+          setProperty(ctrl, 'Width', '100');
+          setProperty( ctrl, 'Datafield', df.Childs.Items[i].Name);
+          ctrl.DataField := df.Childs.Items[i];
+        end;
+      end;
+    end;
+  end;
+end;
 
 procedure TPropertyFrame.doInform(event: TDataListChangeType;
   value: IDataField);
@@ -83,6 +120,15 @@ begin
   m_data := value;
   m_data.RegisterListener(doInform);
 
+end;
+
+procedure TPropertyFrame.setProperty(ctrl : ITaskCtrl; name, value: string);
+var
+  p : ITaskCtrlProp;
+begin
+  p := ctrl.getPropertyByName(name);
+  if Assigned(p) then
+    p.Value := value;
 end;
 
 procedure TPropertyFrame.updateProps;
@@ -196,7 +242,13 @@ begin
   begin
     if not p.hasEditor then
       p.Value := val;
+    if SameText( p.Typ, 'TaskDataField') then
+      CheckFields(val);
   end;
+
+  if (m_ctrl.Typ = ctTable) or ( m_ctrl.Typ = ctTableField) then
+    m_ctrl.updateControl;
+
 end;
 
 end.

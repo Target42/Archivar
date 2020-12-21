@@ -21,6 +21,7 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
+    procedure BitBtn3Click(Sender: TObject);
   private
     m_table : ITaskCtrl;
     procedure setTable( value : ITaskCtrl );
@@ -66,6 +67,26 @@ begin
   if TableCloumnForm.ShowModal = mrOk then
     updateView;
   TableCloumnForm.Free;
+end;
+
+procedure TTableColumnsForm.BitBtn3Click(Sender: TObject);
+var
+  ctrl: ITaskCtrl;
+  i   : integer;
+begin
+  if not Assigned(LV.Selected) then
+    exit;
+  ctrl := ITaskCtrl(LV.Selected.Data);
+  for i := 0 to pred(m_table.Childs.Count) do
+  begin
+    if m_table.Childs.Items[i] = ctrl then
+    begin
+      m_table.Childs.Delete(i);
+      ctrl.release;
+      break;
+    end;
+  end;
+  updateView;
 end;
 
 procedure TTableColumnsForm.FormCreate(Sender: TObject);

@@ -231,7 +231,7 @@ begin
     for x := 0 to pred(m_list.Count) do
     begin
       SG.Cells[x+1, 0] := m_list[x].propertyValue('Header');
-      SG.ColWidths[x+1] := StrToint(m_list[x].propertyValue('Width'));
+      SG.ColWidths[x+1] := StrToIntDef(m_list[x].propertyValue('Width'), 100);
     end;
   end
   else

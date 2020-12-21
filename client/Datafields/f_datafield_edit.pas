@@ -248,7 +248,7 @@ begin
   p := m_data.getPropertyByName(key);
   if  Assigned(p) and  p.hasEditor then
   begin
-    p.ShowEditor;
+     p.ShowEditor;
     VE.Cells[1,row] := '('+p.Typ+')';
   end;
 end;

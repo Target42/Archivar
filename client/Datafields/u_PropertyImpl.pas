@@ -4,7 +4,7 @@ interface
 
 uses
   i_datafields, System.Generics.Collections, System.Classes, Vcl.Forms,
-  f_df_listbox;
+  f_df_listbox, Vcl.Controls;
 
 type
   TPropertyImpl = class(TInterfacedObject, IProperty)
@@ -177,7 +177,7 @@ begin
     try
       Application.CreateForm(TDFEnumListForm, DFEnumListForm);
       DFEnumListForm.Prop := self;
-      DFEnumListForm.ShowModal;
+      Result := (DFEnumListForm.ShowModal = mrOk);
     finally
       DFEnumListForm.Free;
     end;
@@ -187,7 +187,7 @@ begin
       Application.CreateForm(TListBoxForm, ListBoxForm);
       ListBoxForm.FieldList := IDataFieldList( m_ptr );
       ListBoxForm.Prop := self;
-      ListBoxForm.ShowModal;
+      Result := ( ListBoxForm.ShowModal = mrOk );
     finally
       ListBoxForm.Free;
     end;

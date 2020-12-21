@@ -210,7 +210,7 @@ type
     function  isList : boolean;
     function  hasEditor : boolean;
     procedure fillPickList( list : TStrings );
-    procedure ShowEditor;
+    function  ShowEditor : boolean;
   end;
 
   ITaskCtrlTable = interface

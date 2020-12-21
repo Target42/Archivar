@@ -105,13 +105,11 @@ begin
   p := m_ctrl.getPropertyByName(name);
   if Assigned(p) then
     p.Value := value;
-
 end;
 
 procedure TTableCloumnForm.setTable(value: ITaskCtrl);
 var
   i     : integer;
-  prop  : ITaskCtrlProp;
   p     : IProperty;
   s     : string;
   df    :IDataField;

@@ -64,7 +64,7 @@ type
     function  isList : boolean;
     function  hasEditor : boolean;
     procedure fillPickList( list : TStrings );
-    procedure ShowEditor;
+    function  ShowEditor : boolean;
 
     procedure config;
   end;
@@ -419,7 +419,7 @@ begin
   if m_ctrl is TRichEdit then   setRichEditProps(value);
 end;
 
-procedure TaskCtrlPropImpl.ShowEditor;
+function TaskCtrlPropImpl.ShowEditor : boolean;
 var
   ItemsEditorForm   : TItemsEditorForm;
   TableColumnsForm  : TTableColumnsForm;
@@ -434,10 +434,12 @@ var
     if StringEditorForm.ShowModal = mrok then
     begin
       (m_ctrl as TRichEdit).Lines.Text := StringEditorForm.Memo1.Lines.Text;
+      Result := true;
     end;
     StringEditorForm.Free;
   end;
 begin
+  Result := false;
   if m_ctrl is TComboBox then
   begin
     if Assigned(m_owner.DataField) and SameText( m_owner.DataField.Typ, 'enum') then begin
@@ -446,12 +448,11 @@ begin
     end;
 
     Application.CreateForm(TItemsEditorForm, ItemsEditorForm);
-    //ItemsEditorForm.Memo1.Lines.Assign( (m_ctrl as TComboBox).Items );
     ItemsEditorForm.Memo1.Lines.Assign( m_list );
     if ItemsEditorForm.ShowModal = mrOk then
     begin
-      //(m_ctrl as TComboBox).Items.Assign(ItemsEditorForm.Memo1.Lines);
       m_list.Assign( ItemsEditorForm.Memo1.Lines );
+      Result := true;
     end;
     ItemsEditorForm.Free;
   end
@@ -464,7 +465,7 @@ begin
     end;
     Application.CreateForm(TTableColumnsForm, TableColumnsForm);
     TableColumnsForm.Table := m_owner;
-    TableColumnsForm.ShowModal;
+    Result := ( TableColumnsForm.ShowModal = mrOk );
     TableColumnsForm.Free;
   end
   else if m_ctrl is TRichEdit then
