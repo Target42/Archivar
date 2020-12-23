@@ -91,6 +91,7 @@
         <Icon_MainIcon>icons8_Library.ico</Icon_MainIcon>
         <DCC_SYMBOL_PLATFORM>false</DCC_SYMBOL_PLATFORM>
         <DCC_UNIT_PLATFORM>false</DCC_UNIT_PLATFORM>
+        <DCC_DUPLICATE_CTOR_DTOR>false</DCC_DUPLICATE_CTOR_DTOR>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -377,7 +378,6 @@
         <DCCReference Include="Personen\u_PersonenListeImpl.pas"/>
         <DCCReference Include="Beschlus\i_beschluss.pas"/>
         <DCCReference Include="Beschlus\u_AbstimmungImpl.pas"/>
-        <DCCReference Include="Beschlus\u_AbstimmungenImpl.pas"/>
         <DCCReference Include="Beschlus\u_BeschlussImpl.pas"/>
         <DCCReference Include="..\misc\xsd_DataField.pas"/>
         <DCCReference Include="misc\f_set.pas">
@@ -458,6 +458,14 @@
             <Form>WebFileForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="Beschlus\u_BeschlussListeImpl.pas"/>
+        <DCCReference Include="Protokoll\m_protocol.pas">
+            <Form>ProtocolMod</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Protokoll\u_teilnehmerImpl.pas"/>
+        <DCCReference Include="Protokoll\u_TTeilnehmerListeImpl.pas"/>
         <None Include="Datafields\ERA-NS.txt"/>
         <RcItem Include="dws\dws.html">
             <ContainerId>ResourceItem</ContainerId>

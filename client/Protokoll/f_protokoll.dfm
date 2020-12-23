@@ -16,6 +16,7 @@ object ProtokollForm: TProtokollForm
   Visible = True
   WindowState = wsMaximized
   OnClose = FormClose
+  OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   PixelsPerInch = 96
@@ -159,61 +160,6 @@ object ProtokollForm: TProtokollForm
     object TabSheet2: TTabSheet
       Caption = 'Teilnehmer'
       ImageIndex = 1
-      object DBGrid1: TDBGrid
-        Left = 0
-        Top = 0
-        Width = 880
-        Height = 306
-        Align = alClient
-        DataSource = TNSrc
-        Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgMultiSelect, dgTitleClick, dgTitleHotTrack]
-        ReadOnly = True
-        TabOrder = 0
-        TitleFont.Charset = DEFAULT_CHARSET
-        TitleFont.Color = clWindowText
-        TitleFont.Height = -11
-        TitleFont.Name = 'Tahoma'
-        TitleFont.Style = []
-        Columns = <
-          item
-            Expanded = False
-            FieldName = 'TN_NAME'
-            Title.Caption = 'Name'
-            Width = 150
-            Visible = True
-          end
-          item
-            Expanded = False
-            FieldName = 'TN_VORNAME'
-            Title.Caption = 'Vorname'
-            Width = 150
-            Visible = True
-          end
-          item
-            Expanded = False
-            FieldName = 'TN_DEPARTMENT'
-            Title.Caption = 'Abteilung'
-            Visible = True
-          end
-          item
-            Expanded = False
-            FieldName = 'TN_ROLLE'
-            Title.Caption = 'Rolle'
-            Width = 75
-            Visible = True
-          end
-          item
-            Expanded = False
-            FieldName = 'StatusText'
-            PickList.Strings = (
-              'Anwesend'
-              'Entschuldigt'
-              'Abwesend'
-              'Eingeladen')
-            Title.Caption = 'Status'
-            Visible = True
-          end>
-      end
       object Panel1: TPanel
         Left = 0
         Top = 331
@@ -223,7 +169,7 @@ object ProtokollForm: TProtokollForm
         BevelOuter = bvNone
         Caption = 'Panel1'
         ShowCaption = False
-        TabOrder = 1
+        TabOrder = 0
         object Button1: TBitBtn
           Left = 8
           Top = 6
@@ -312,6 +258,7 @@ object ProtokollForm: TProtokollForm
             FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
           ParentDoubleBuffered = True
           TabOrder = 1
+          OnClick = Button2Click
         end
         object Button3: TBitBtn
           Left = 208
@@ -359,86 +306,74 @@ object ProtokollForm: TProtokollForm
           OnClick = Button3Click
         end
       end
-      object DBNavigator2: TDBNavigator
+      object TN: TListView
         Left = 0
-        Top = 306
+        Top = 0
         Width = 880
-        Height = 25
-        DataSource = TNSrc
-        Align = alBottom
-        TabOrder = 2
+        Height = 331
+        Align = alClient
+        Columns = <
+          item
+            Caption = 'Name'
+            Width = 150
+          end
+          item
+            Caption = 'Vorname'
+            Width = 150
+          end
+          item
+            Caption = 'Abteilung'
+            Width = 100
+          end
+          item
+            Caption = 'Rolle'
+            Width = 125
+          end>
+        GridLines = True
+        Groups = <
+          item
+            Header = 'Eingeladen'
+            GroupID = 0
+            State = [lgsNormal, lgsCollapsible]
+            HeaderAlign = taLeftJustify
+            FooterAlign = taRightJustify
+            TitleImage = -1
+          end
+          item
+            Header = 'Anwesend'
+            GroupID = 1
+            State = [lgsNormal, lgsCollapsible]
+            HeaderAlign = taLeftJustify
+            FooterAlign = taRightJustify
+            TitleImage = -1
+          end
+          item
+            Header = 'Entschuldigt'
+            GroupID = 2
+            State = [lgsNormal, lgsCollapsible]
+            HeaderAlign = taLeftJustify
+            FooterAlign = taRightJustify
+            TitleImage = -1
+          end
+          item
+            Header = 'Unentschuldigt'
+            GroupID = 3
+            State = [lgsNormal, lgsCollapsible]
+            HeaderAlign = taLeftJustify
+            FooterAlign = taRightJustify
+            TitleImage = -1
+          end>
+        MultiSelect = True
+        GroupView = True
+        ReadOnly = True
+        RowSelect = True
+        TabOrder = 1
+        ViewStyle = vsReport
       end
     end
     object TabSheet3: TTabSheet
       Caption = 'G'#228'ste'
       ImageIndex = 2
-      object DBGrid2: TDBGrid
-        Left = 0
-        Top = 0
-        Width = 880
-        Height = 347
-        Align = alClient
-        DataSource = TGSrc
-        Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
-        TabOrder = 0
-        TitleFont.Charset = DEFAULT_CHARSET
-        TitleFont.Color = clWindowText
-        TitleFont.Height = -11
-        TitleFont.Name = 'Tahoma'
-        TitleFont.Style = []
-        Columns = <
-          item
-            Expanded = False
-            FieldName = 'TG_NAME'
-            Title.Caption = 'Name'
-            Width = 150
-            Visible = True
-          end
-          item
-            Expanded = False
-            FieldName = 'TG_VORNAME'
-            Title.Caption = 'Vorname'
-            Width = 150
-            Visible = True
-          end
-          item
-            Expanded = False
-            FieldName = 'TG_DEPARTMENT'
-            Title.Caption = 'Abteilung'
-            Width = 75
-            Visible = True
-          end
-          item
-            Expanded = False
-            FieldName = 'TG_VON'
-            Title.Caption = 'von'
-            Width = 75
-            Visible = True
-          end
-          item
-            Expanded = False
-            FieldName = 'TG_BIS'
-            Title.Caption = 'bis'
-            Width = 75
-            Visible = True
-          end
-          item
-            Expanded = False
-            FieldName = 'TG_GRUND'
-            Title.Caption = 'Grund'
-            Width = 150
-            Visible = True
-          end>
-      end
-      object DBNavigator1: TDBNavigator
-        Left = 0
-        Top = 347
-        Width = 880
-        Height = 25
-        DataSource = TGSrc
-        Align = alBottom
-        TabOrder = 1
-      end
     end
   end
   object Panel4: TPanel
@@ -485,25 +420,25 @@ object ProtokollForm: TProtokollForm
       Font.Style = [fsBold]
       ParentFont = False
     end
-    object DBEdit1: TDBEdit
+    object DBEdit1: TEdit
       Left = 42
       Top = 12
       Width = 121
       Height = 21
-      DataField = 'PR_NAME'
-      DataSource = PrSrc
       TabOrder = 0
+      Text = 'DBEdit1'
+      OnChange = DBEdit1Change
     end
-    object DBEdit2: TDBEdit
+    object DBEdit2: TEdit
       Left = 192
       Top = 12
       Width = 57
       Height = 21
-      DataField = 'PR_NR'
-      DataSource = PrSrc
       TabOrder = 1
+      Text = 'DBEdit2'
+      OnChange = DBEdit1Change
     end
-    object JvDBDateTimePicker1: TJvDBDateTimePicker
+    object JvDBDateTimePicker1: TJvDateTimePicker
       Left = 292
       Top = 12
       Width = 186
@@ -511,107 +446,13 @@ object ProtokollForm: TProtokollForm
       Date = 43920.661384108800000000
       Time = 43920.661384108800000000
       TabOrder = 2
+      OnChange = DBEdit1Change
       DropDownDate = 43920.000000000000000000
-      DataField = 'PR_DATUM'
-      DataSource = PrSrc
-    end
-  end
-  object DSProviderConnection1: TDSProviderConnection
-    ServerClassName = 'TdsProtocol'
-    Left = 304
-    Top = 96
-  end
-  object PRTab: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    ProviderName = 'PRTable'
-    RemoteServer = DSProviderConnection1
-    Left = 48
-    Top = 80
-  end
-  object TGTab: TClientDataSet
-    Aggregates = <>
-    IndexFieldNames = 'PR_ID'
-    Params = <>
-    ProviderName = 'TGTable'
-    RemoteServer = DSProviderConnection1
-    AfterInsert = TGTabAfterInsert
-    Left = 144
-    Top = 80
-  end
-  object TNSrc: TDataSource
-    DataSet = TNTab
-    Left = 92
-    Top = 136
-  end
-  object PrSrc: TDataSource
-    DataSet = PRTab
-    Left = 44
-    Top = 136
-  end
-  object TGSrc: TDataSource
-    DataSet = TGTab
-    Left = 140
-    Top = 136
-  end
-  object AutoIncValue: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    ProviderName = 'AutoIncValue'
-    RemoteServer = DSProviderConnection1
-    Left = 204
-    Top = 80
-  end
-  object TNTab: TClientDataSet
-    Aggregates = <>
-    IndexFieldNames = 'PR_ID'
-    Params = <>
-    ProviderName = 'Teilnehmer'
-    RemoteServer = DSProviderConnection1
-    Left = 92
-    Top = 80
-    object TNTabPR_ID: TIntegerField
-      FieldName = 'PR_ID'
-      Required = True
-    end
-    object TNTabTN_ID: TIntegerField
-      FieldName = 'TN_ID'
-      Required = True
-    end
-    object TNTabTN_NAME: TWideStringField
-      FieldName = 'TN_NAME'
-      Size = 100
-    end
-    object TNTabTN_VORNAME: TWideStringField
-      FieldName = 'TN_VORNAME'
-      Size = 100
-    end
-    object TNTabTN_DEPARTMENT: TWideStringField
-      FieldName = 'TN_DEPARTMENT'
-      Size = 25
-    end
-    object TNTabTN_ROLLE: TWideStringField
-      FieldName = 'TN_ROLLE'
-      Size = 50
-    end
-    object TNTabStatusText: TStringField
-      FieldKind = fkInternalCalc
-      FieldName = 'StatusText'
-      OnChange = TNTabStatusTextChange
-      OnGetText = TNTabStatusTextGetText
-      OnSetText = TNTabStatusTextSetText
-      Size = 25
-    end
-    object TNTabTN_STATUS: TIntegerField
-      FieldName = 'TN_STATUS'
-    end
-    object TNTabPE_ID: TIntegerField
-      FieldName = 'PE_ID'
     end
   end
   object MainMenu1: TMainMenu
-    Left = 432
-    Top = 160
+    Left = 392
+    Top = 296
     object Protokoll1: TMenuItem
       Caption = 'Protokoll'
       GroupIndex = 120
@@ -633,49 +474,20 @@ object ProtokollForm: TProtokollForm
         ShortCut = 120
         OnClick = ac_pr_bookmarkExecute
       end
+      object N3: TMenuItem
+        Caption = '-'
+      end
+      object Speichern: TMenuItem
+        Caption = 'Speichern'
+        ShortCut = 16467
+        OnClick = SpeichernClick
+      end
     end
-  end
-  object CPTab: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    ProviderName = 'ChapterTab'
-    RemoteServer = DSProviderConnection1
-    Left = 44
-    Top = 192
-  end
-  object CpSrc: TDataSource
-    AutoEdit = False
-    DataSet = CPTab
-    Left = 92
-    Top = 192
-  end
-  object UpdateCPQry: TClientDataSet
-    Aggregates = <>
-    Params = <
-      item
-        DataType = ftInteger
-        Name = 'CP_NR'
-        ParamType = ptInput
-      end
-      item
-        DataType = ftString
-        Name = 'CP_TITLE'
-        ParamType = ptInput
-      end
-      item
-        DataType = ftInteger
-        Name = 'CP_ID'
-        ParamType = ptInput
-      end>
-    ProviderName = 'UpdateCPQry'
-    RemoteServer = DSProviderConnection1
-    Left = 156
-    Top = 200
   end
   object ActionList1: TActionList
     Images = ImageList1
-    Left = 172
-    Top = 281
+    Left = 300
+    Top = 297
     object ac_add: TAction
       Caption = 'Hinzuf'#252'gen'
       Hint = 'Abschnitt hinzuf'#252'gen'
@@ -714,10 +526,10 @@ object ProtokollForm: TProtokollForm
     end
   end
   object ImageList1: TImageList
-    Left = 108
-    Top = 313
+    Left = 212
+    Top = 305
     Bitmap = {
-      494C0101060008003C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C0101060008004C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -990,8 +802,8 @@ object ProtokollForm: TProtokollForm
   end
   object PopupMenu1: TPopupMenu
     Images = ImageList1
-    Left = 44
-    Top = 321
+    Left = 460
+    Top = 297
     object Hinzufgen1: TMenuItem
       Action = ac_add
     end
@@ -1016,13 +828,5 @@ object ProtokollForm: TProtokollForm
     object Abschnittrunter1: TMenuItem
       Action = ac_down
     end
-  end
-  object CPTextTab: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    ProviderName = 'CPTextTab'
-    RemoteServer = DSProviderConnection1
-    Left = 44
-    Top = 241
   end
 end

@@ -17,16 +17,16 @@ type
     procedure setItems( inx : integer; const value : IPerson );
     function  getItems( inx : integer ) :  IPerson;
     //püublic
-    property Name       : string  read getName      write setName;
-    property count      : integer read getCount;
+    property  Name       : string  read getName      write setName;
+    property  count      : integer read getCount;
 
-    property Items[inx : integer ] : IPerson read getItems write setItems;
+    property  Items[inx : integer ] : IPerson read getItems write setItems;
 
     procedure add( value : IPerson );
-    function remove( value : IPerson ) : boolean;
+    function  remove( value : IPerson ) : boolean;
     function  newPerson : IPerson;
 
-    function clone : IPersonenListe;
+    function  clone : IPersonenListe;
 
     procedure release;
   end;

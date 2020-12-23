@@ -38,10 +38,6 @@ object TaskEditForm: TTaskEditForm
     TabOrder = 1
     object TabSheet1: TTabSheet
       Caption = 'Daten'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GroupBox1: TGroupBox
         Left = 0
         Top = 0
@@ -217,10 +213,6 @@ object TaskEditForm: TTaskEditForm
         object TabSheet4: TTabSheet
           Caption = 'Vorschau'
           ImageIndex = 1
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object WebBrowser1: TWebBrowser
             Left = 0
             Top = 0

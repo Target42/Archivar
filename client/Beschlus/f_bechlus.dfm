@@ -1,15 +1,16 @@
 object Beschlusform: TBeschlusform
   Left = 0
   Top = 0
-  Caption = 'Beschlus'
-  ClientHeight = 643
-  ClientWidth = 758
+  Caption = 'Beschluss'
+  ClientHeight = 466
+  ClientWidth = 726
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  Menu = MainMenu1
   OldCreateOrder = False
   Position = poOwnerFormCenter
   OnClose = FormClose
@@ -17,33 +18,25 @@ object Beschlusform: TBeschlusform
   OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
-  object Splitter2: TSplitter
-    Left = 0
-    Top = 0
-    Height = 583
-    ExplicitLeft = 456
-    ExplicitTop = 72
-    ExplicitHeight = 100
-  end
   inline BaseFrame1: TBaseFrame
     Left = 0
-    Top = 583
-    Width = 758
+    Top = 406
+    Width = 726
     Height = 60
     Align = alBottom
     AutoSize = True
     TabOrder = 0
-    ExplicitTop = 583
+    ExplicitTop = 535
     ExplicitWidth = 758
     inherited StatusBar1: TStatusBar
-      Width = 758
-      ExplicitWidth = 758
+      Width = 726
+      ExplicitWidth = 726
     end
     inherited Panel1: TPanel
-      Width = 758
+      Width = 726
       ExplicitWidth = 758
       inherited OKBtn: TBitBtn
-        Left = 670
+        Left = 638
         Default = False
         Kind = bkCustom
         ExplicitLeft = 670
@@ -51,19 +44,281 @@ object Beschlusform: TBeschlusform
     end
   end
   object PageControl1: TPageControl
-    Left = 3
+    Left = 0
     Top = 0
-    Width = 755
-    Height = 583
-    ActivePage = TabSheet1
+    Width = 726
+    Height = 406
+    ActivePage = TabSheet2
     Align = alClient
     TabOrder = 1
+    object TabSheet2: TTabSheet
+      Caption = 'Beschlustext'
+      ImageIndex = 1
+      ExplicitWidth = 747
+      ExplicitHeight = 507
+      object Splitter1: TSplitter
+        Left = 448
+        Top = 0
+        Height = 295
+        Align = alRight
+        ExplicitLeft = 288
+        ExplicitTop = 64
+        ExplicitHeight = 100
+      end
+      object GroupBox3: TGroupBox
+        Left = 0
+        Top = 295
+        Width = 718
+        Height = 83
+        Align = alBottom
+        Caption = 'Abstimmung'
+        TabOrder = 0
+        ExplicitTop = 424
+        ExplicitWidth = 747
+        object Button1: TBitBtn
+          Left = 9
+          Top = 24
+          Width = 91
+          Height = 41
+          Caption = 'Zustimmung Einstimmig'
+          Glyph.Data = {
+            36040000424D3604000000000000360000002800000010000000100000000100
+            20000000000000040000C40E0000C40E00000000000000000000FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF008080800247A0437E4A9F4018FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF0000FF000146A0439147A043FF47A044CC4BA53C11FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF0055AA5503489F43A047A043F8489F426047A043D647A043D64A9F4018FFFF
+            FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0000FF
+            0001469F439547A043FA48A14251FFFFFF00489F402047A043DF47A044CC4BA5
+            3C11FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0047A1
+            423647A043F3489F414AFFFFFF00FFFFFF00FFFFFF004A9F401847A043D647A0
+            43D64A9F4018FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF0046A24616FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF004A9F401847A0
+            43D647A043D64A9F4018FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00489F
+            402047A043DF47A044CC4BA53C11FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00489F402047A043DF47A044CC4BA53C11FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00489F402047A043DF47A044CC4BA53C11FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF004A9F401847A043B7489F4020FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
+          ParentDoubleBuffered = True
+          TabOrder = 0
+          WordWrap = True
+          OnClick = Button1Click
+        end
+        object LabeledEdit1: TLabeledEdit
+          Left = 120
+          Top = 40
+          Width = 50
+          Height = 21
+          EditLabel.Width = 57
+          EditLabel.Height = 13
+          EditLabel.Caption = 'Zustimmung'
+          NumbersOnly = True
+          TabOrder = 1
+          OnExit = LabeledEdit1Exit
+        end
+        object LabeledEdit2: TLabeledEdit
+          Left = 191
+          Top = 40
+          Width = 50
+          Height = 21
+          EditLabel.Width = 51
+          EditLabel.Height = 13
+          EditLabel.Caption = 'Ablehnung'
+          NumbersOnly = True
+          TabOrder = 2
+          OnExit = LabeledEdit2Exit
+        end
+        object LabeledEdit3: TLabeledEdit
+          Left = 255
+          Top = 40
+          Width = 50
+          Height = 21
+          EditLabel.Width = 60
+          EditLabel.Height = 13
+          EditLabel.Caption = 'Enhaltungen'
+          NumbersOnly = True
+          TabOrder = 3
+        end
+        object Button2: TBitBtn
+          Left = 327
+          Top = 24
+          Width = 90
+          Height = 41
+          Caption = 'Ablehnung Einstimmig'
+          Glyph.Data = {
+            36040000424D3604000000000000360000002800000010000000100000000100
+            20000000000000040000C40E0000C40E00000000000000000000FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00FFFFFF001746D62C1443D7731543D99F1543D99F1443
+            D7731841D52BFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF001540D50C1543D9A01543D8FE1543D8FF1543D8FF1543D8FF1543
+            D8FF1543D8FE1544D89E1540D50CFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00143BD80D1543D8CF1543D8FF1543D8FF1543D8FF1543D8FF1543D8FF1543
+            D8FF1543D8FF1543D8FF1543D8CD1540D50CFFFFFF00FFFFFF00FFFFFF00FFFF
+            FF001543D7A11543D8FF1543D8FF1543D8FF1543D8FF1543D8FF1543D8FF1543
+            D8FF1543D8FF1543D8FF1543D8FF1543D89DFFFFFF00FFFFFF00FFFFFF001346
+            D9281543D8FD1543D8FF1543D8FF1543D8FF1543D8FF1543D8FF1543D8FF1543
+            D8FF1543D8FF1543D8FF1543D8FF1543D8FD1443D726FFFFFF00FFFFFF001542
+            D87B1543D8FF1543D8FF1543D8FF1543D8FF1543D8FF1543D8FF1543D8FF1543
+            D8FF1543D8FF1543D8FF1543D8FF1543D8FF1544D978FFFFFF00FFFFFF001543
+            D99F1543D8FF1543D8FF6382E5FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFF6382E5FF1543D8FF1543D8FF1544D89EFFFFFF00FFFFFF001543
+            D99F1543D8FF1543D8FF6382E5FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+            FFFFFFFFFFFF6382E5FF1543D8FF1543D8FF1544D89EFFFFFF00FFFFFF001542
+            D87B1543D8FF1543D8FF1543D8FF1543D8FF1543D8FF1543D8FF1543D8FF1543
+            D8FF1543D8FF1543D8FF1543D8FF1543D8FF1544D978FFFFFF00FFFFFF001346
+            D9281543D8FD1543D8FF1543D8FF1543D8FF1543D8FF1543D8FF1543D8FF1543
+            D8FF1543D8FF1543D8FF1543D8FF1543D8FD1443D726FFFFFF00FFFFFF00FFFF
+            FF001543D7A11543D8FF1543D8FF1543D8FF1543D8FF1543D8FF1543D8FF1543
+            D8FF1543D8FF1543D8FF1543D8FF1543D89DFFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00143BD80D1543D8D01543D8FF1543D8FF1543D8FF1543D8FF1543D8FF1543
+            D8FF1543D8FF1543D8FF1543D7CE1540D50CFFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF001040DF101542D9AD1543D8FF1543D8FF1543D8FF1543D8FF1543
+            D8FF1543D8FE1544D8AA1144DD0FFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00FFFFFF001641D92F1643D8821643D8A41643D8A41643
+            D7811643D82EFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+            FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
+          ParentDoubleBuffered = True
+          TabOrder = 4
+          WordWrap = True
+          OnClick = Button2Click
+        end
+        object LabeledEdit4: TLabeledEdit
+          Left = 477
+          Top = 40
+          Width = 33
+          Height = 21
+          EditLabel.Width = 50
+          EditLabel.Height = 13
+          EditLabel.Caption = 'Anwesend'
+          NumbersOnly = True
+          ReadOnly = True
+          TabOrder = 5
+        end
+        object LabeledEdit5: TLabeledEdit
+          Left = 536
+          Top = 40
+          Width = 34
+          Height = 21
+          EditLabel.Width = 50
+          EditLabel.Height = 13
+          EditLabel.Caption = 'Abwesend'
+          NumbersOnly = True
+          ReadOnly = True
+          TabOrder = 6
+        end
+        object LabeledEdit6: TLabeledEdit
+          Left = 600
+          Top = 40
+          Width = 34
+          Height = 21
+          EditLabel.Width = 75
+          EditLabel.Height = 13
+          EditLabel.Caption = 'Nicht Abgestimt'
+          NumbersOnly = True
+          ReadOnly = True
+          TabOrder = 7
+        end
+      end
+      object GroupBox1: TGroupBox
+        Left = 451
+        Top = 0
+        Width = 267
+        Height = 295
+        Align = alRight
+        Caption = 'Textbausteine'
+        TabOrder = 1
+        Visible = False
+        ExplicitLeft = 480
+        ExplicitHeight = 320
+        inline TextBlockFrame1: TTextBlockFrame
+          Left = 2
+          Top = 15
+          Width = 263
+          Height = 278
+          Align = alClient
+          TabOrder = 0
+          ExplicitLeft = 2
+          ExplicitTop = 15
+          ExplicitWidth = 263
+          ExplicitHeight = 303
+          inherited Panel1: TPanel
+            Top = 222
+            Width = 263
+            ExplicitTop = 247
+            ExplicitWidth = 263
+            inherited LabeledEdit1: TLabeledEdit
+              Width = 248
+              ExplicitWidth = 248
+            end
+          end
+          inherited LV: TListView
+            Width = 263
+            Height = 222
+            ExplicitWidth = 263
+            ExplicitHeight = 247
+          end
+        end
+      end
+      object GroupBox7: TGroupBox
+        Left = 0
+        Top = 0
+        Width = 448
+        Height = 295
+        Align = alClient
+        Caption = 'Erweiterter Text'
+        TabOrder = 2
+        ExplicitWidth = 477
+        ExplicitHeight = 320
+        inline EditFrame2: TEditFrame
+          Left = 2
+          Top = 15
+          Width = 444
+          Height = 278
+          Align = alClient
+          TabOrder = 0
+          ExplicitLeft = 2
+          ExplicitTop = 15
+          ExplicitWidth = 473
+          ExplicitHeight = 303
+          inherited RE: TRichEdit
+            Width = 444
+            Height = 278
+            OnDragDrop = EditFrame2REDragDrop
+            OnDragOver = EditFrame2REDragOver
+            ExplicitWidth = 473
+            ExplicitHeight = 303
+          end
+        end
+      end
+    end
     object TabSheet1: TTabSheet
       Caption = 'Teilnehmer'
+      ExplicitWidth = 747
+      ExplicitHeight = 507
       object Splitter4: TSplitter
         Left = 337
         Top = 0
-        Height = 555
+        Height = 378
         ExplicitLeft = 368
         ExplicitTop = 72
         ExplicitHeight = 100
@@ -72,16 +327,17 @@ object Beschlusform: TBeschlusform
         Left = 0
         Top = 0
         Width = 337
-        Height = 555
+        Height = 378
         Align = alLeft
         Caption = 'Gremium'
         TabOrder = 0
+        ExplicitHeight = 507
         object LVGremium: TListView
           AlignWithMargins = True
           Left = 5
           Top = 18
           Width = 327
-          Height = 532
+          Height = 355
           Align = alClient
           Columns = <
             item
@@ -108,22 +364,25 @@ object Beschlusform: TBeschlusform
           ViewStyle = vsReport
           OnDblClick = LVGremiumDblClick
           OnDragOver = LVGremiumDragOver
+          ExplicitHeight = 484
         end
       end
       object Panel4: TPanel
         Left = 340
         Top = 0
-        Width = 407
-        Height = 555
+        Width = 378
+        Height = 378
         Align = alClient
         BevelOuter = bvNone
         Caption = 'Panel4'
         ShowCaption = False
         TabOrder = 1
+        ExplicitWidth = 407
+        ExplicitHeight = 507
         object Splitter5: TSplitter
           Left = 0
-          Top = 363
-          Width = 407
+          Top = 186
+          Width = 378
           Height = 3
           Cursor = crVSplit
           Align = alBottom
@@ -133,17 +392,19 @@ object Beschlusform: TBeschlusform
         object GroupBox5: TGroupBox
           Left = 0
           Top = 0
-          Width = 407
-          Height = 363
+          Width = 378
+          Height = 186
           Align = alClient
           Caption = 'Abwesend'
           TabOrder = 0
+          ExplicitWidth = 407
+          ExplicitHeight = 315
           object LVAbwesend: TListView
             AlignWithMargins = True
             Left = 44
             Top = 18
-            Width = 358
-            Height = 340
+            Width = 329
+            Height = 163
             Align = alClient
             Columns = <
               item
@@ -170,17 +431,20 @@ object Beschlusform: TBeschlusform
             ViewStyle = vsReport
             OnDblClick = LVAbwesendDblClick
             OnDragOver = LVGremiumDragOver
+            ExplicitWidth = 358
+            ExplicitHeight = 292
           end
           object Panel1: TPanel
             Left = 2
             Top = 15
             Width = 39
-            Height = 346
+            Height = 169
             Align = alLeft
             BevelOuter = bvNone
             Caption = 'Panel1'
             ShowCaption = False
             TabOrder = 1
+            ExplicitHeight = 298
             object SpeedButton1: TSpeedButton
               Left = 4
               Top = 40
@@ -269,17 +533,19 @@ object Beschlusform: TBeschlusform
         end
         object GroupBox6: TGroupBox
           Left = 0
-          Top = 366
-          Width = 407
+          Top = 189
+          Width = 378
           Height = 189
           Align = alBottom
           Caption = 'Nicht mit Abgestimt'
           TabOrder = 1
+          ExplicitTop = 318
+          ExplicitWidth = 407
           object LVanthalten: TListView
             AlignWithMargins = True
             Left = 44
             Top = 18
-            Width = 358
+            Width = 329
             Height = 166
             Align = alClient
             Columns = <
@@ -305,7 +571,9 @@ object Beschlusform: TBeschlusform
             SortType = stText
             TabOrder = 0
             ViewStyle = vsReport
+            OnDblClick = LVanthaltenDblClick
             OnDragOver = LVGremiumDragOver
+            ExplicitWidth = 358
           end
           object Panel2: TPanel
             Left = 2
@@ -405,354 +673,12 @@ object Beschlusform: TBeschlusform
         end
       end
     end
-    object TabSheet2: TTabSheet
-      Caption = 'Beschlustext'
-      ImageIndex = 1
-      object Splitter1: TSplitter
-        Left = 477
-        Top = 0
-        Height = 328
-        Align = alRight
-        ExplicitLeft = 288
-        ExplicitTop = 64
-        ExplicitHeight = 100
-      end
-      object GroupBox3: TGroupBox
-        Left = 0
-        Top = 328
-        Width = 747
-        Height = 227
-        Align = alBottom
-        Caption = 'Abstimmung'
-        TabOrder = 0
-        object Panel3: TPanel
-          Left = 2
-          Top = 144
-          Width = 743
-          Height = 81
-          Align = alBottom
-          Caption = 'Panel3'
-          ParentBackground = False
-          ShowCaption = False
-          TabOrder = 0
-          object Button1: TBitBtn
-            Left = 0
-            Top = 16
-            Width = 91
-            Height = 41
-            Caption = 'Zustimmung Einstimmig'
-            Glyph.Data = {
-              36040000424D3604000000000000360000002800000010000000100000000100
-              20000000000000040000C40E0000C40E00000000000000000000FFFFFF00FFFF
-              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00FFFFFF00FFFFFF008080800247A0437E4A9F4018FFFFFF00FFFFFF00FFFF
-              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00FFFFFF0000FF000146A0439147A043FF47A044CC4BA53C11FFFFFF00FFFF
-              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-              FF0055AA5503489F43A047A043F8489F426047A043D647A043D64A9F4018FFFF
-              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0000FF
-              0001469F439547A043FA48A14251FFFFFF00489F402047A043DF47A044CC4BA5
-              3C11FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0047A1
-              423647A043F3489F414AFFFFFF00FFFFFF00FFFFFF004A9F401847A043D647A0
-              43D64A9F4018FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-              FF0046A24616FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF004A9F401847A0
-              43D647A043D64A9F4018FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00489F
-              402047A043DF47A044CC4BA53C11FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00489F402047A043DF47A044CC4BA53C11FFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00FFFFFF00489F402047A043DF47A044CC4BA53C11FFFFFF00FFFFFF00FFFF
-              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00FFFFFF00FFFFFF004A9F401847A043B7489F4020FFFFFF00FFFFFF00FFFF
-              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
-            ParentDoubleBuffered = True
-            TabOrder = 0
-            WordWrap = True
-            OnClick = Button1Click
-          end
-          object LabeledEdit1: TLabeledEdit
-            Left = 111
-            Top = 32
-            Width = 50
-            Height = 21
-            EditLabel.Width = 57
-            EditLabel.Height = 13
-            EditLabel.Caption = 'Zustimmung'
-            NumbersOnly = True
-            TabOrder = 1
-          end
-          object LabeledEdit2: TLabeledEdit
-            Left = 182
-            Top = 32
-            Width = 50
-            Height = 21
-            EditLabel.Width = 51
-            EditLabel.Height = 13
-            EditLabel.Caption = 'Ablehnung'
-            NumbersOnly = True
-            TabOrder = 2
-          end
-          object LabeledEdit3: TLabeledEdit
-            Left = 246
-            Top = 32
-            Width = 50
-            Height = 21
-            EditLabel.Width = 60
-            EditLabel.Height = 13
-            EditLabel.Caption = 'Enhaltungen'
-            NumbersOnly = True
-            TabOrder = 3
-          end
-          object Button2: TBitBtn
-            Left = 318
-            Top = 16
-            Width = 90
-            Height = 41
-            Caption = 'Ablehnung Einstimmig'
-            Glyph.Data = {
-              36040000424D3604000000000000360000002800000010000000100000000100
-              20000000000000040000C40E0000C40E00000000000000000000FFFFFF00FFFF
-              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00FFFFFF00FFFFFF00FFFFFF001746D62C1443D7731543D99F1543D99F1443
-              D7731841D52BFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00FFFFFF001540D50C1543D9A01543D8FE1543D8FF1543D8FF1543D8FF1543
-              D8FF1543D8FE1544D89E1540D50CFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00143BD80D1543D8CF1543D8FF1543D8FF1543D8FF1543D8FF1543D8FF1543
-              D8FF1543D8FF1543D8FF1543D8CD1540D50CFFFFFF00FFFFFF00FFFFFF00FFFF
-              FF001543D7A11543D8FF1543D8FF1543D8FF1543D8FF1543D8FF1543D8FF1543
-              D8FF1543D8FF1543D8FF1543D8FF1543D89DFFFFFF00FFFFFF00FFFFFF001346
-              D9281543D8FD1543D8FF1543D8FF1543D8FF1543D8FF1543D8FF1543D8FF1543
-              D8FF1543D8FF1543D8FF1543D8FF1543D8FD1443D726FFFFFF00FFFFFF001542
-              D87B1543D8FF1543D8FF1543D8FF1543D8FF1543D8FF1543D8FF1543D8FF1543
-              D8FF1543D8FF1543D8FF1543D8FF1543D8FF1544D978FFFFFF00FFFFFF001543
-              D99F1543D8FF1543D8FF6382E5FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-              FFFFFFFFFFFF6382E5FF1543D8FF1543D8FF1544D89EFFFFFF00FFFFFF001543
-              D99F1543D8FF1543D8FF6382E5FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-              FFFFFFFFFFFF6382E5FF1543D8FF1543D8FF1544D89EFFFFFF00FFFFFF001542
-              D87B1543D8FF1543D8FF1543D8FF1543D8FF1543D8FF1543D8FF1543D8FF1543
-              D8FF1543D8FF1543D8FF1543D8FF1543D8FF1544D978FFFFFF00FFFFFF001346
-              D9281543D8FD1543D8FF1543D8FF1543D8FF1543D8FF1543D8FF1543D8FF1543
-              D8FF1543D8FF1543D8FF1543D8FF1543D8FD1443D726FFFFFF00FFFFFF00FFFF
-              FF001543D7A11543D8FF1543D8FF1543D8FF1543D8FF1543D8FF1543D8FF1543
-              D8FF1543D8FF1543D8FF1543D8FF1543D89DFFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00143BD80D1543D8D01543D8FF1543D8FF1543D8FF1543D8FF1543D8FF1543
-              D8FF1543D8FF1543D8FF1543D7CE1540D50CFFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00FFFFFF001040DF101542D9AD1543D8FF1543D8FF1543D8FF1543D8FF1543
-              D8FF1543D8FE1544D8AA1144DD0FFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00FFFFFF00FFFFFF00FFFFFF001641D92F1643D8821643D8A41643D8A41643
-              D7811643D82EFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
-            ParentDoubleBuffered = True
-            TabOrder = 4
-            WordWrap = True
-            OnClick = Button2Click
-          end
-          object LabeledEdit4: TLabeledEdit
-            Left = 536
-            Top = 32
-            Width = 33
-            Height = 21
-            EditLabel.Width = 50
-            EditLabel.Height = 13
-            EditLabel.Caption = 'Anwesend'
-            NumbersOnly = True
-            ReadOnly = True
-            TabOrder = 5
-          end
-          object LabeledEdit5: TLabeledEdit
-            Left = 595
-            Top = 32
-            Width = 34
-            Height = 21
-            EditLabel.Width = 50
-            EditLabel.Height = 13
-            EditLabel.Caption = 'Abwesend'
-            NumbersOnly = True
-            ReadOnly = True
-            TabOrder = 6
-          end
-          object LabeledEdit6: TLabeledEdit
-            Left = 659
-            Top = 32
-            Width = 34
-            Height = 21
-            EditLabel.Width = 75
-            EditLabel.Height = 13
-            EditLabel.Caption = 'Nicht Abgestimt'
-            NumbersOnly = True
-            ReadOnly = True
-            TabOrder = 7
-          end
-          object BitBtn1: TBitBtn
-            Left = 424
-            Top = 16
-            Width = 89
-            Height = 41
-            Caption = '&Speichern'
-            Glyph.Data = {
-              36040000424D3604000000000000360000002800000010000000100000000100
-              20000000000000040000C40E0000C40E00000000000000000000FFFFFF00FFFF
-              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00DB9834FFE4B268FFE5B36AFFE5B36AFFE5B36AFFE5B36AFFE5B36AFFE5B3
-              6AFFE5B36AFFE5B36AFFE4B267FFDB9834FFFFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00DB9834FFFFFFFFFFF7F6F4FFF3F2EFFFF3F2EFFFF3F2EFFFF3F2EFFFF3F2
-              EFFFF3F2EFFFF7F6F4FFFFFFFFFFDB9834FFFFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00DB9834FFFFFFFFFFF7F6F4FFF3F2EFFFF3F2EFFFF3F2EFFFF3F2EFFFF3F2
-              EFFFF3F2EFFFF7F6F4FFFFFFFFFFDB9834FFFFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00DB9834FFFFFFFFFFEFEEEAFFE8E5DFFFE8E5DFFFE8E5DFFFE8E5DFFFE8E5
-              DFFFE8E5DFFFEFEEEAFFFFFFFFFFDB9834FFFFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00DB9834FFFFFFFFFFEFEEEAFFE8E5DFFFE8E5DFFFE8E5DFFFE8E5DFFFE8E5
-              DFFFE8E5DFFFEFEEEAFFFFFFFFFFDB9834FFFFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00DB9834FFFEFBF8FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-              FFFFFFFFFFFFFFFFFFFFFEFBF8FFDB9834FFFFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00DB9834FFDB9834FFDB9834FFDB9834FFDB9834FFDB9834FFDB9834FFDB98
-              34FFDB9834FFDB9834FFDB9834FFDB9834FFFFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00DB9834FFDB9834FFDB9834FFDB9834FFDB9834FFDB9834FFDB9834FFDB98
-              34FFDB9834FFDB9834FFDB9834FFDB9834FFFFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00DB9834FFBD822AFFB98029FFC4B7A1FFC5BEB0FFC5BEB0FFB5AEA1FF9690
-              82FFC6BEAFFFD6A050FFDB9834FFDB9834FFFFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00DB9834FFB98029FFB98029FFC5BEB0FFC5BEB0FFC5BEB0FF969082FF3832
-              26FFC5BEB0FFD4A45EFFDB9834FFDB9834FFFFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00DB9834FFB98029FFB98029FFC5BEB0FFC5BEB0FFC5BEB0FF969082FF3832
-              26FFC5BEB0FFD4A45EFFDB9834FFDB9734C0FFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00DB9834FFB98029FFB98029FFC5BEB0FFC5BEB0FFC5BEB0FFB5AEA1FF9690
-              82FFC5BEB0FFD4A45EFFDB9734C0D1A22E0BFFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-              FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
-            TabOrder = 8
-            OnClick = BitBtn1Click
-          end
-        end
-        object ListView4: TListView
-          AlignWithMargins = True
-          Left = 5
-          Top = 18
-          Width = 737
-          Height = 123
-          Align = alClient
-          Columns = <
-            item
-              Caption = 'Datum'
-            end
-            item
-              Caption = 'Uhrzeit'
-            end
-            item
-              Caption = 'Zustimmung'
-              Width = 70
-            end
-            item
-              Caption = 'Ablehnung'
-              Width = 70
-            end
-            item
-              Caption = 'Enthaltung'
-              Width = 70
-            end
-            item
-              Caption = 'Anwesend'
-              Width = 65
-            end
-            item
-              Caption = 'Abwesend'
-              Width = 65
-            end
-            item
-              Caption = 'Nicht abgestimmt'
-              Width = 100
-            end>
-          PopupMenu = PopupMenu1
-          TabOrder = 1
-          ViewStyle = vsReport
-        end
-      end
-      object GroupBox1: TGroupBox
-        Left = 480
-        Top = 0
-        Width = 267
-        Height = 328
-        Align = alRight
-        Caption = 'Textbausteine'
-        TabOrder = 1
-        inline TextBlockFrame1: TTextBlockFrame
-          Left = 2
-          Top = 15
-          Width = 263
-          Height = 311
-          Align = alClient
-          TabOrder = 0
-          ExplicitLeft = 4
-          ExplicitTop = 17
-          ExplicitWidth = 202
-          ExplicitHeight = 311
-          inherited Panel1: TPanel
-            Top = 255
-            Width = 263
-            inherited LabeledEdit1: TLabeledEdit
-              Width = 248
-            end
-          end
-          inherited LV: TListView
-            Width = 263
-            Height = 255
-          end
-        end
-      end
-      inline EditFrame2: TEditFrame
-        Left = 0
-        Top = 0
-        Width = 477
-        Height = 328
-        Align = alClient
-        TabOrder = 2
-        ExplicitWidth = 538
-        ExplicitHeight = 328
-        inherited RE: TRichEdit
-          Width = 477
-          Height = 328
-          OnDragDrop = EditFrame2REDragDrop
-          OnDragOver = EditFrame2REDragOver
-          ExplicitWidth = 538
-          ExplicitHeight = 328
-        end
-      end
-    end
-    object TabSheet3: TTabSheet
-      Caption = 'Vorschau'
-      ImageIndex = 2
-    end
-  end
-  object PopupMenu1: TPopupMenu
-    Images = ImageList1
-    Left = 543
-    Top = 424
-    object Lschen1: TMenuItem
-      Action = ac_p1_delete
-    end
   end
   object ImageList1: TImageList
-    Left = 399
-    Top = 200
+    Left = 559
+    Top = 208
     Bitmap = {
-      494C010101000800340010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010101000800400010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       000000000000000000000000000000000000000000FF000000FF000000FF0000
       00FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF0000
@@ -893,12 +819,23 @@ object Beschlusform: TBeschlusform
   end
   object ActionList1: TActionList
     Images = ImageList1
-    Left = 479
+    Left = 647
     Top = 200
     object ac_p1_delete: TAction
       Category = 'Popup1'
       Caption = 'L'#246'schen'
       ImageIndex = 0
+    end
+  end
+  object MainMenu1: TMainMenu
+    Left = 348
+    Top = 48
+    object Erweitert1: TMenuItem
+      Caption = 'Erweitert'
+      object extbeusteine1: TMenuItem
+        Caption = 'Textbeusteine'
+        OnClick = extbeusteine1Click
+      end
     end
   end
 end

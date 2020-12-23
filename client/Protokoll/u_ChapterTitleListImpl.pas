@@ -3,17 +3,20 @@ unit u_ChapterTitleListImpl;
 interface
 
 uses
-  i_chapter, System.Generics.Collections;
+  i_chapter, System.Generics.Collections, m_protocol;
 
 type
   TChapterTitleListImpl = class( TInterfacedObject, IChapterTitleList )
     private
-      m_list : TList<IChapterTitle>;
+      m_proto   : IProtocol;
+      m_loader  : TProtocolMod;
+      m_list    : TList<IChapterTitle>;
+
       function getIndex( cp : IChapterTitle) : integer;
       function getCount : integer;
       function getItem( inx : integer ) : IChapterTitle;
     public
-      constructor Create;
+      constructor Create(loader : TProtocolMod; proto : IProtocol);
       Destructor Destroy; override;
 
       procedure renumber;
@@ -23,6 +26,10 @@ type
       procedure down( cp    : IChapterTitle );
       procedure remove( cp  : IChapterTitle );
 
+      procedure saveChangedChapter;
+      procedure AddNewChaper( cp : IChapterTitle);
+      procedure updateChapter( cp : IChapterTitle );
+
       procedure release;
   end;
 
@@ -30,11 +37,27 @@ type
 implementation
 
 uses
-  System.SysUtils, u_ChapterTitleImpl;
+  System.SysUtils, u_ChapterTitleImpl, m_glob_client;
 
-constructor TChapterTitleListImpl.Create;
+procedure TChapterTitleListImpl.AddNewChaper(cp: IChapterTitle);
 begin
-  m_list := TList<IChapterTitle>.create;
+  cp.ID := GM.autoInc('gen_cp_id');
+  with m_loader do
+  begin
+    CPTab.Append;
+    CPTab.FieldByName('PR_ID').AsInteger    := m_proto.ID;
+    CPTab.FieldByName('CP_ID').AsInteger    := cp.ID;
+    CPTab.FieldByName('CP_TITLE').AsString  := cp.Text;
+    CPTab.FieldByName('CP_NR').AsInteger    := cp.Nr;
+    CPTab.Post;
+  end;
+end;
+
+constructor TChapterTitleListImpl.Create(loader : TProtocolMod; proto : IProtocol);
+begin
+  m_proto   := proto;
+  m_loader  := loader;
+  m_list    := TList<IChapterTitle>.create;
 end;
 
 destructor TChapterTitleListImpl.Destroy;
@@ -99,6 +122,7 @@ begin
   for i := 0 to pred(m_list.Count) do
     m_list[i].release;
   m_list.Clear;
+  m_proto := NIL;
 end;
 
 procedure TChapterTitleListImpl.remove(cp: IChapterTitle);
@@ -121,6 +145,24 @@ begin
   end;
 end;
 
+procedure TChapterTitleListImpl.saveChangedChapter;
+var
+  i : integer;
+begin
+  for i := 0 to pred(m_list.Count) do
+    begin
+      if m_list.Items[i].Modified then
+      begin
+        m_loader.UpdateCPQry.ParamByName('CP_ID').AsInteger  := m_list.Items[i].ID;
+        m_loader.UpdateCPQry.ParamByName('CP_NR').AsInteger  := m_list.Items[i].Nr;
+        m_loader.UpdateCPQry.ParamByName('CP_TITLE').AsString:= m_list.Items[i].Text;
+        m_loader.UpdateCPQry.Execute;
+
+        m_list.Items[i].Modified := false;
+      end;
+    end;
+end;
+
 procedure TChapterTitleListImpl.up(cp: IChapterTitle);
 var
   inx : integer;
@@ -135,6 +177,19 @@ begin
   m_list.Exchange(inx-1, inx);
 
   renumber;
+end;
+
+procedure TChapterTitleListImpl.updateChapter(cp: IChapterTitle);
+begin
+  with m_loader do
+  begin
+    CPTextTab.Refresh;
+    CPTextTab.Filter := 'CP_ID='+intToStr(cp.ID);
+    CPTextTab.Filtered := true;
+
+    cp.Root.Childs.clear;
+    cp.loadFromDataSet(CPTextTab);
+  end;
 end;
 
 end.

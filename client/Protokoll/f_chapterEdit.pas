@@ -100,7 +100,7 @@ end;
 
 procedure TChapterEditForm.FormCreate(Sender: TObject);
 begin
-  TextBlockFrame1.init;
+  TextBlockFrame1.init(false);
 end;
 
 procedure TChapterEditForm.FormDestroy(Sender: TObject);

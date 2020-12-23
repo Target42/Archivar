@@ -3,7 +3,7 @@ unit u_ChapterImpl;
 interface
 
 uses
-  i_chapter, xsd_chapter, System.Classes;
+  i_chapter, xsd_chapter, System.Classes, i_beschluss;
 
 type
     TChapterImpl = class( TInterfacedObject, IChapter )
@@ -21,6 +21,7 @@ type
       m_modified  : boolean;
       m_xData     : IXMLChapter;
       m_pos       : integer;
+      m_votes     : IBeschlussListe;
 
 
       procedure setModified(  value : boolean );
@@ -49,6 +50,7 @@ type
       function getChilds    : IChapterList;
       function getxData     : IXMLChapter;
       function getPos       : integer;
+      function getVotes     : IBeschlussListe;
 
     public
       constructor create(owner : IChapter);
@@ -76,7 +78,7 @@ type
 implementation
 
 uses
-  System.SysUtils, u_ChapterListImpl;
+  System.SysUtils, u_ChapterListImpl, u_BeschlussListeImpl;
 
 procedure TChapterImpl.add(cp: IChapter);
 begin
@@ -103,6 +105,7 @@ end;
 constructor TChapterImpl.create(owner : IChapter);
 begin
   m_childs := TChapterListImpl.create;
+  m_votes  := TBeschlussListeImpl.create;
   m_owner := owner;
   FID       := 0;
   FPID      := 0;
@@ -210,6 +213,11 @@ begin
   Result := FTAID;
 end;
 
+function TChapterImpl.getVotes: IBeschlussListe;
+begin
+  Result := m_votes;
+end;
+
 function TChapterImpl.getxData: IXMLChapter;
 begin
   Result := m_xData;
@@ -290,6 +298,7 @@ begin
   for i := 0 to pred(m_childs.Count) do
     m_childs.Items[i].release;
   m_childs.clear;
+  m_votes.Release;
 end;
 
 procedure TChapterImpl.remove(cp: IChapter);

@@ -3,14 +3,18 @@ unit i_chapter;
 interface
 
 uses
-  xsd_chapter, xsd_protocol, System.Classes, Data.DB;
+  xsd_chapter, xsd_protocol, System.Classes, Data.DB, i_beschluss, i_personen;
 
 type
+  TTeilnehmerStatus = ( tsUnbekannt = 0, tsAnwesend, tsEntschuldigt, tsUnentschuldigt, tsLast);
+
   IChapter          = interface;
   IChapterList      = interface;
   IChapterTitleList = interface;
   IChapterTitle     = interface;
   IProtocol         = interface;
+  ITeilnehmer       = interface;
+  ITeilnehmerListe  = interface;
 
   IProtocol = interface
     ['{22F955F2-2B4F-44B4-9319-438413D20842}']
@@ -22,13 +26,43 @@ type
     function  getID : integer;
 
     function  getList : IChapterTitleList;
+    function  GetTitle: string;
+    procedure SetTitle(const Value: string);
+    function GetCLID: string;
+    procedure SetCLID(const Value: string);
+    function getTeilnehmer : ITeilnehmerListe;
+    function GetGRID: integer;
+    procedure SetGRID(const Value: integer);
+    function  getRO : boolean;
+    procedure setRO( value : boolean );
+    function GetNr: integer;
+    procedure SetNr(const Value: integer);
+    function GetDate: TDateTime;
+    procedure SetDate(const Value: TDateTime);
+    procedure setModified( value : boolean );
+    function  getModified : boolean;
 
+    property GRID   : integer           read GetGRID    write SetGRID;
     property XProto : IXMLProtocol      read getXProto  write setXProto;
+    property Title  : string            read GetTitle   write SetTitle;
     property ID     : integer           read getID      write setID;
+    property CLID   : string            read GetCLID    write SetCLID;
     property Chapter: IChapterTitleList read getList;
+    property ReadOnly : boolean         read getRo      write setRO;
+    property Nr     : integer           read GetNr      write SetNr;
+    property Date   : TDateTime         read GetDate    write SetDate;
+    property Modified : boolean         read getModified write setModified;
+
+    property Teilnehmer : ITeilnehmerListe read getTeilnehmer;
 
     procedure loadFromStream( st : TStream );
     procedure saveToStream( st : TStream );
+
+    function load( id : integer ) : boolean;
+    function save : boolean;
+    function saveTree : boolean;
+    function edit : boolean;
+    function cancel : boolean;
 
     procedure release;
   end;
@@ -62,6 +96,7 @@ type
       function getChilds    : IChapterList;
       function getxData     : xsd_chapter.IXMLChapter;
       function getPos       : integer;
+      function getVotes     : IBeschlussListe;
 
       property Owner      : IChapter      read getOwner     write setOwner;
       property Childs     : IChapterList  read getChilds;
@@ -77,6 +112,8 @@ type
       property Pos        : integer       read getPos       write setPos;
 
       property xData      : xsd_chapter.IXMLChapter   read getxData     write setxData;
+
+      property Votes      : IBeschlussListe read getVotes;
 
       procedure clearModified;
       function isModified : boolean;
@@ -139,6 +176,10 @@ type
       procedure down( cp    : IChapterTitle );
       procedure remove( cp  : IChapterTitle );
 
+      procedure saveChangedChapter;
+      procedure updateChapter( cp : IChapterTitle );
+      procedure AddNewChaper( cp : IChapterTitle );
+
       procedure release;
   end;
 
@@ -176,6 +217,60 @@ type
       procedure release;
 
   end;
+
+  ITeilnehmer       = interface
+    ['{84956349-5E4D-47E8-A121-878C6728D7A0}']
+      function GetName: string;
+      procedure SetName(const Value: string);
+      function GetVorname: string;
+      procedure SetVorname(const Value: string);
+      function GetAbteilung: string;
+      procedure SetAbteilung(const Value: string);
+      function GetRolle: string;
+      procedure SetRolle(const Value: string);
+      function GetID: integer;
+      procedure SetID(const Value: integer);
+      function GetStatus: TTeilnehmerStatus;
+      procedure SetStatus(const Value: TTeilnehmerStatus);
+      procedure setPEID( value : integer );
+      function  getPEID : integer;
+      procedure setModified( value : boolean );
+      function  getModified : boolean;
+
+    //public
+
+      property ID         : integer           read GetID          write SetID;
+      property Name       : string            read GetName        write SetName;
+      property Vorname    : string            read GetVorname     write SetVorname;
+      property Abteilung  : string            read GetAbteilung   write SetAbteilung;
+      property Rolle      : string            read GetRolle       write SetRolle;
+      property Status     : TTeilnehmerStatus read GetStatus      write SetStatus;
+      property PEID       : integer           read getPEID        write setPEID;
+      property Modified   : boolean           read getModified    write setModified;
+
+      procedure Assign( pe : IPerson );
+
+      procedure release;
+    end;
+
+    ITeilnehmerListe  = interface
+      ['{0552ECEF-BD70-4554-A09B-FE2ED8F06179}']
+      //private
+      function GetCount: integer;
+
+      function GetItem(inx : integer ): ITeilnehmer;
+      procedure SetItem(int : integer; const Value: ITeilnehmer);
+      // public
+      property Count: integer read GetCount;
+      property Item[inx : integer ] : ITeilnehmer read GetItem write SetItem;
+
+      function newTeilnehmer : ITeilnehmer;
+      procedure load;
+      procedure init( list : IPersonenListe );
+
+      procedure saveChanged;
+      procedure release;
+    end;
 
 
 implementation

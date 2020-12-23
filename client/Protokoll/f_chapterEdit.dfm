@@ -149,7 +149,6 @@ object ChapterEditForm: TChapterEditForm
       inherited LV: TListView
         Width = 271
         Height = 200
-        DragMode = dmAutomatic
         ExplicitWidth = 271
         ExplicitHeight = 200
       end

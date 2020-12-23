@@ -3,17 +3,17 @@ unit u_BeschlussImpl;
 interface
 
 uses
-  i_beschluss, u_AbstimmungenImpl;
+  i_beschluss, u_AbstimmungImpl;
 
 type
   TBeschlussImpl = class(TInterfacedObject, IBeschluss )
     private
       m_text : string;
-      m_list : IAbstimmungen;
+      m_vote : IAbstimmung;
 
       procedure setText( value : string );
       function  getText : string;
-      function  getAbstimmungen : IAbstimmungen;
+      function  getAbstimmung : IAbstimmung;
     public
       constructor create;
       destructor Destroy; override;
@@ -27,18 +27,18 @@ implementation
 
 constructor TBeschlussImpl.create;
 begin
-  m_list := TAbstimmungenImpl.create;
+  m_vote := TAbstimmungImpl.create;
 end;
 
 destructor TBeschlussImpl.Destroy;
 begin
-  m_list := NIL;
+  m_vote := NIL;
   inherited;
 end;
 
-function TBeschlussImpl.getAbstimmungen: IAbstimmungen;
+function TBeschlussImpl.getAbstimmung: IAbstimmung;
 begin
-  Result := m_list;
+  Result := m_vote;
 end;
 
 function TBeschlussImpl.getText: string;
@@ -48,7 +48,7 @@ end;
 
 procedure TBeschlussImpl.Release;
 begin
-  m_list.Release;
+  m_vote.Release;
 end;
 
 procedure TBeschlussImpl.setText(value: string);

@@ -175,13 +175,15 @@ end;
 
 procedure TChapterTitleImpl.setxChapter(value: IXMLChapter);
 begin
-  m_xCp := value;
+  m_xCp     := value;
+  FModified := true;
 end;
 
 
 procedure TChapterTitleImpl.setID(value: integer);
 begin
-  FID := value;
+  FID       := value;
+  FModified := true;
 end;
 
 procedure TChapterTitleImpl.setModified(value: boolean);
@@ -191,8 +193,9 @@ end;
 
 procedure TChapterTitleImpl.setNr(value: integer);
 begin
-  FNr := value;
+  FNr       := value;
   m_root.Nr := value;
+  FModified := true;
 end;
 
 procedure TChapterTitleImpl.setOwner;
@@ -208,16 +211,19 @@ procedure TChapterTitleImpl.setOwner;
   end;
 begin
   setValue( m_root );
+  FModified := true;
 end;
 
 procedure TChapterTitleImpl.setText(value: string);
 begin
-  FText := value;
+  FText     := value;
+  FModified := true;
 end;
 
 procedure TChapterTitleImpl.up;
 begin
   m_owner.up(self);
+  FModified := true;
 end;
 
 

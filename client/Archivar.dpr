@@ -111,7 +111,6 @@ uses
   u_PersonenListeImpl in 'Personen\u_PersonenListeImpl.pas',
   i_beschluss in 'Beschlus\i_beschluss.pas',
   u_AbstimmungImpl in 'Beschlus\u_AbstimmungImpl.pas',
-  u_AbstimmungenImpl in 'Beschlus\u_AbstimmungenImpl.pas',
   u_BeschlussImpl in 'Beschlus\u_BeschlussImpl.pas',
   xsd_DataField in '..\misc\xsd_DataField.pas',
   f_set in 'misc\f_set.pas' {MySettingsForm},
@@ -138,7 +137,11 @@ uses
   m_taskLoader in 'Task\m_taskLoader.pas' {TaskLoaderMod: TDataModule},
   m_cache in 'File\m_cache.pas' {CacheMod: TDataModule},
   f_webserver_files in 'http\f_webserver_files.pas' {WebServerFilesForm},
-  f_web_file in 'http\f_web_file.pas' {WebFileForm};
+  f_web_file in 'http\f_web_file.pas' {WebFileForm},
+  u_BeschlussListeImpl in 'Beschlus\u_BeschlussListeImpl.pas',
+  m_protocol in 'Protokoll\m_protocol.pas' {ProtocolMod: TDataModule},
+  u_teilnehmerImpl in 'Protokoll\u_teilnehmerImpl.pas',
+  u_TTeilnehmerListeImpl in 'Protokoll\u_TTeilnehmerListeImpl.pas';
 
 {$R *.res}
 
@@ -156,6 +159,6 @@ begin
   Application.CreateForm(TWindowHandler, WindowHandler);
   Application.CreateForm(TBookMarkHandler, BookMarkHandler);
   Application.CreateForm(TMainForm, MainForm);
-
+  Application.CreateForm(TProtocolMod, ProtocolMod);
   Application.Run;
 end.

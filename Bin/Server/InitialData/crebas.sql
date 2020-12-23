@@ -1,7 +1,7 @@
 /* ============================================================ */
 /*   Database name:  MODEL_2                                    */
 /*   DBMS name:      InterBase                                  */
-/*   Created on:     19.12.2020  19:37                          */
+/*   Created on:     21.12.2020  19:08                          */
 /* ============================================================ */
 
 create generator gen_be_id;
@@ -293,6 +293,22 @@ create table TA_TASK
 );
 
 /* ============================================================ */
+/*   Table: CT_CHAPTER_TEXT                                     */
+/* ============================================================ */
+create table CT_CHAPTER_TEXT
+(
+    CP_ID                           INTEGER                        ,
+    CT_ID                           INTEGER                not null,
+    TA_ID                           INTEGER                        ,
+    CT_PARENT                       INTEGER                        ,
+    CT_TITLE                        VARCHAR(200)                   ,
+    CT_NUMBER                       INTEGER                        ,
+    CT_DATA                         BLOB                           ,
+    CT_POS                          INTEGER                        ,
+    constraint PK_CT_CHAPTER_TEXT primary key (CT_ID)
+);
+
+/* ============================================================ */
 /*   Table: GR_PA                                               */
 /* ============================================================ */
 create table GR_PA
@@ -330,9 +346,9 @@ create table TN_TEILNEHMER
 );
 
 /* ============================================================ */
-/*   Index: TN_TELNEHMER_SEC                                    */
+/*   Index: TN_TEILNEHMER_SEC                                   */
 /* ============================================================ */
-create ASC index TN_TELNEHMER_SEC on TN_TEILNEHMER (TN_NAME, TN_VORNAME, TN_DEPARTMENT);
+create ASC index TN_TEILNEHMER_SEC on TN_TEILNEHMER (TN_NAME, TN_VORNAME, TN_DEPARTMENT);
 
 /* ============================================================ */
 /*   Table: TG_GAESTE                                           */
@@ -372,19 +388,13 @@ create table GR_BE
 );
 
 /* ============================================================ */
-/*   Table: CT_CHAPTER_TEXT                                     */
+/*   Table: BE_CT                                               */
 /* ============================================================ */
-create table CT_CHAPTER_TEXT
+create table BE_CT
 (
-    CP_ID                           INTEGER                        ,
     CT_ID                           INTEGER                not null,
-    TA_ID                           INTEGER                        ,
-    CT_PARENT                       INTEGER                        ,
-    CT_TITLE                        VARCHAR(200)                   ,
-    CT_NUMBER                       INTEGER                        ,
-    CT_DATA                         BLOB                           ,
-    CT_POS                          INTEGER                        ,
-    constraint PK_CT_CHAPTER_TEXT primary key (CT_ID)
+    BE_ID                           INTEGER                not null,
+    constraint PK_BE_CT primary key (CT_ID, BE_ID)
 );
 
 alter table PR_PROTOKOL
@@ -406,6 +416,14 @@ alter table TA_TASK
 alter table TA_TASK
     add constraint FK_REF_3336 foreign key  (TE_ID)
        references TE_TEMPLATE;
+
+alter table CT_CHAPTER_TEXT
+    add constraint FK_REF_3850 foreign key  (CP_ID)
+       references CP_CHAPTER;
+
+alter table CT_CHAPTER_TEXT
+    add constraint FK_REF_4070 foreign key  (TA_ID)
+       references TA_TASK;
 
 alter table GR_PA
     add constraint FK_REF_16 foreign key  (GR_ID)
@@ -451,13 +469,13 @@ alter table GR_BE
     add constraint FK_REF_2406 foreign key  (TA_ID)
        references TA_TASK;
 
-alter table CT_CHAPTER_TEXT
-    add constraint FK_REF_3850 foreign key  (CP_ID)
-       references CP_CHAPTER;
+alter table BE_CT
+    add constraint FK_REF_4451 foreign key  (BE_ID)
+       references BE_BESCHLUS;
 
-alter table CT_CHAPTER_TEXT
-    add constraint FK_REF_4070 foreign key  (TA_ID)
-       references TA_TASK;
+alter table BE_CT
+    add constraint FK_REF_4455 foreign key  (CT_ID)
+       references CT_CHAPTER_TEXT;
 
 commit;
 

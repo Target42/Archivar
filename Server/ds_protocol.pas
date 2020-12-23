@@ -57,7 +57,7 @@ type
 implementation
 
 uses
-  m_db, u_json, System.SysUtils, m_glob_server;
+  m_db, u_json, System.SysUtils, m_glob_server, System.Win.ComObj;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -152,9 +152,9 @@ begin
     PRTab.Append;
     PRTab.FieldByName('PR_ID').AsInteger     := id;
     PRTab.FieldByName('GR_ID').AsInteger     := JInt( data, 'grid' );
-    PRTab.FieldByName('PR_DATUM').AsDateTime := now;
+    PRTab.FieldByName('PR_DATUM').AsDateTime := now + 7;
     PRTab.FieldByName('PR_NAME').AsString    := JString( data, 'short')+'_'+FormatDateTime('yyyyMMdd', now);
-
+    PRTab.FieldByName('PR_CLID').AsString    := createClassID;
     PRTab.post;
 
     PRTab.close;

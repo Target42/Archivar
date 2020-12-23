@@ -19,9 +19,10 @@ type
     procedure LVDragOver(Sender, Source: TObject; X, Y: Integer;
       State: TDragState; var Accept: Boolean);
   private
+    m_noTags : boolean;
     procedure FilterContent;
   public
-    procedure init;
+    procedure init( noTags : boolean);
 
     function getBlock : IXMLblock;
 
@@ -76,8 +77,8 @@ begin
     if found then
     begin
       item := LV.Items.Add;
-      item.Caption := TBTab.FieldByName('TB_NAME').AsString;
-      item.SubItems.Add(TBTab.FieldByName('TB_TAGS').AsString);
+      item.Caption :=       TBTab.FieldByName('TB_NAME').AsString;
+      item.SubItems.Add(    TBTab.FieldByName('TB_TAGS').AsString);
       item.Data := Pointer( TBTab.FieldByName('TB_ID').AsInteger);
     end;
 
@@ -106,9 +107,18 @@ begin
   st.Free;
 end;
 
-procedure TTextBlockFrame.init;
+procedure TTextBlockFrame.init( noTags : boolean);
+var
+  col : TListColumn;
 begin
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
+  m_noTags  := noTags;
+
+  if not noTags then
+  begin
+    col := LV.Columns.Add;
+    col.Caption := 'Tags';
+  end;
 
   TBTab.Open;
   FilterContent;
@@ -118,7 +128,6 @@ procedure TTextBlockFrame.LabeledEdit1KeyPress(Sender: TObject; var Key: Char);
 begin
   if key = #13 then
     FilterContent;
-
 end;
 
 procedure TTextBlockFrame.LVDragOver(Sender, Source: TObject; X, Y: Integer;

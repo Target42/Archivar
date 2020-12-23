@@ -12,7 +12,6 @@ uses
 type
   TBeschlusform = class(TForm)
     BaseFrame1: TBaseFrame;
-    Splitter2: TSplitter;
     PageControl1: TPageControl;
     TabSheet1: TTabSheet;
     GroupBox4: TGroupBox;
@@ -35,7 +34,11 @@ type
     Panel2: TPanel;
     SpeedButton3: TSpeedButton;
     SpeedButton4: TSpeedButton;
-    Panel3: TPanel;
+    ImageList1: TImageList;
+    ActionList1: TActionList;
+    ac_p1_delete: TAction;
+    TextBlockFrame1: TTextBlockFrame;
+    GroupBox7: TGroupBox;
     Button1: TBitBtn;
     LabeledEdit1: TLabeledEdit;
     LabeledEdit2: TLabeledEdit;
@@ -44,15 +47,9 @@ type
     LabeledEdit4: TLabeledEdit;
     LabeledEdit5: TLabeledEdit;
     LabeledEdit6: TLabeledEdit;
-    ListView4: TListView;
-    TabSheet3: TTabSheet;
-    BitBtn1: TBitBtn;
-    PopupMenu1: TPopupMenu;
-    ImageList1: TImageList;
-    ActionList1: TActionList;
-    ac_p1_delete: TAction;
-    Lschen1: TMenuItem;
-    TextBlockFrame1: TTextBlockFrame;
+    MainMenu1: TMainMenu;
+    Erweitert1: TMenuItem;
+    extbeusteine1: TMenuItem;
     procedure LVGremiumDragOver(Sender, Source: TObject; X, Y: Integer;
       State: TDragState; var Accept: Boolean);
     procedure FormCreate(Sender: TObject);
@@ -70,11 +67,19 @@ type
       State: TDragState; var Accept: Boolean);
     procedure EditFrame2REDragDrop(Sender, Source: TObject; X, Y: Integer);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure LVanthaltenDblClick(Sender: TObject);
+    procedure extbeusteine1Click(Sender: TObject);
+    procedure LabeledEdit1Exit(Sender: TObject);
+    procedure LabeledEdit2Exit(Sender: TObject);
   private
     m_data      : IXMLList;
     m_gremium   : IPersonenListe;
     m_abwesende : IPersonenListe;
     m_enthalten : IPersonenListe;
+
+    m_zustimmung  : integer;
+    m_ablehnung   : integer;
+    m_enthaltung  : integer;
 
     procedure UpdateList( LV : TListView; list : IPersonenListe );
 
@@ -116,16 +121,18 @@ end;
 
 procedure TBeschlusform.Button1Click(Sender: TObject);
 begin
-  LabeledEdit1.Text := IntToStr(m_gremium.count);
-  LabeledEdit2.Text := '0';
-  LabeledEdit3.Text := '0';
+  m_zustimmung  := m_gremium.count;
+  m_enthaltung  := 0;
+  m_ablehnung   := 0;
+  updateInfo;
 end;
 
 procedure TBeschlusform.Button2Click(Sender: TObject);
 begin
-  LabeledEdit1.Text := '0';
-  LabeledEdit2.Text := '0';
-  LabeledEdit3.Text := IntToStr(m_gremium.count);
+  m_zustimmung  := 0;
+  m_enthaltung  := 0;
+  m_ablehnung   := m_gremium.count;
+  updateInfo;
 end;
 
 procedure TBeschlusform.EditFrame2REDragDrop(Sender, Source: TObject; X,
@@ -160,6 +167,12 @@ begin
   Accept := true;
 end;
 
+procedure TBeschlusform.extbeusteine1Click(Sender: TObject);
+begin
+  extbeusteine1.Checked := not extbeusteine1.Checked;
+  GroupBox1.Visible := extbeusteine1.Checked;
+end;
+
 procedure TBeschlusform.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   Action := caFree;
@@ -167,6 +180,12 @@ end;
 
 procedure TBeschlusform.FormCreate(Sender: TObject);
 begin
+  PageControl1.ActivePage := TabSheet2;
+
+  m_zustimmung  := 0;
+  m_ablehnung   := 0;
+  m_enthaltung  := 0;
+
   m_data      := NewList;
   m_gremium   := GM.getGremiumMA(1);
   m_abwesende := TPersonenListeImpl.create;
@@ -176,7 +195,7 @@ begin
   UpdateList( LVAbwesend,   m_abwesende );
   UpdateList( LVanthalten,  m_enthalten );
 
-  TextBlockFrame1.init;
+  TextBlockFrame1.init(true);
 end;
 
 procedure TBeschlusform.FormDestroy(Sender: TObject);
@@ -188,9 +207,48 @@ begin
   TextBlockFrame1.release;
 end;
 
+procedure TBeschlusform.LabeledEdit1Exit(Sender: TObject);
+var
+  val : integer;
+begin
+  if TryStrToInt(LabeledEdit1.Text, val) then
+  begin
+    if val > m_gremium.count then
+      val := m_gremium.count;
+    m_zustimmung := val;
+    if val = m_gremium.count then
+    begin
+      m_ablehnung := 0;
+    end
+    else
+    begin
+      m_ablehnung := m_gremium.count - m_zustimmung;
+    end;
+    m_enthaltung := 0;
+  end;
+  updateInfo;
+end;
+
+procedure TBeschlusform.LabeledEdit2Exit(Sender: TObject);
+var
+  val : integer;
+begin
+  if TryStrToInt(LabeledEdit2.Text, val) then
+  begin
+    m_ablehnung := val;
+    m_enthaltung := m_gremium.count - m_zustimmung - m_ablehnung;
+  end;
+  updateInfo;
+end;
+
 procedure TBeschlusform.LVAbwesendDblClick(Sender: TObject);
 begin
   SpeedButton1.Click;
+end;
+
+procedure TBeschlusform.LVanthaltenDblClick(Sender: TObject);
+begin
+  SpeedButton3.Click;
 end;
 
 procedure TBeschlusform.LVGremiumDblClick(Sender: TObject);
@@ -266,9 +324,9 @@ begin
   LabeledEdit5.Text := IntToStr(m_abwesende.count);
   LabeledEdit6.Text := IntToStr(m_enthalten.count);
 
-  LabeledEdit1.Text := '0';
-  LabeledEdit2.Text := '0';
-  LabeledEdit3.Text := '0';
+  LabeledEdit1.Text := IntToStr(m_zustimmung);
+  LabeledEdit2.Text := IntToStr(m_ablehnung );
+  LabeledEdit3.Text := IntToStr(m_enthaltung);
 end;
 
 procedure TBeschlusform.UpdateList(LV: TListView; list: IPersonenListe);

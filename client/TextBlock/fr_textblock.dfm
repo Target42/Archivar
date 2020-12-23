@@ -39,12 +39,8 @@ object TextBlockFrame: TTextBlockFrame
     Align = alClient
     Columns = <
       item
+        AutoSize = True
         Caption = 'Name'
-        Width = 100
-      end
-      item
-        Caption = 'Tags'
-        Width = 150
       end>
     DragMode = dmAutomatic
     ReadOnly = True

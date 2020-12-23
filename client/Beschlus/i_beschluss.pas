@@ -6,9 +6,27 @@ uses
   i_personen;
 
 type
-  IBeschluss    = interface;
-  IAbstimmungen = interface;
-  IAbstimmung   = interface;
+  IBeschluss      = interface;
+  IBeschlussListe = interface;
+  IAbstimmung     = interface;
+
+  IBeschlussListe = interface
+    ['{C23CDA08-059A-4E90-86B4-917B3DE58AAF}']
+    //private
+    function  getItem( inx : integer ) : IBeschluss;
+    procedure setItem( inx : integer; const value : IBeschluss);
+    function  getCount : integer;
+
+    //public
+    property Item[ inx : integer ]  : IBeschluss  read getItem    write setItem;
+    property Count                  : integer     read getCount;
+
+    function  newBeschluss : IBeschluss;
+    procedure delete( inx : integer ) ; overload;
+    procedure delete( be : IBeschluss); overload;
+
+    procedure Release;
+  end;
 
 
   IBeschluss  = interface
@@ -16,26 +34,10 @@ type
     // private
     procedure setText( value : string );
     function  getText : string;
-    function  getAbstimmungen : IAbstimmungen;
+    function  getAbstimmung : IAbstimmung;
     // public
     property Text         : string        read getText          write setText;
-    property Abstimmungen : IAbstimmungen read getAbstimmungen ;
-
-    procedure Release;
-  end;
-
-  IAbstimmungen = interface
-    ['{DB6E3B28-7DDA-4D8C-AEDF-791616036298}']
-    //private
-    function getCount : integer;
-    procedure setItems( inx : integer ; const value : IAbstimmung );
-    function  getItems( inx : integer ) : IAbStimmung;
-    //public
-
-    property Count : integer    read getCount;
-    property Items[ inx : integer ] : IAbstimmung  read getItems write setItems;
-
-    function newAbstimmung : IAbStimmung;
+    property Abstimmung   : IAbstimmung   read getAbstimmung ;
 
     procedure Release;
   end;
