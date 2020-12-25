@@ -466,6 +466,16 @@
         </DCCReference>
         <DCCReference Include="Protokoll\u_teilnehmerImpl.pas"/>
         <DCCReference Include="Protokoll\u_TTeilnehmerListeImpl.pas"/>
+        <DCCReference Include="Protokoll\f_abwesenheit.pas">
+            <Form>AbwesenForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Protokoll\u_BesucherImpl.pas"/>
+        <DCCReference Include="Protokoll\u_BesucherlisteImpl.pas"/>
+        <DCCReference Include="Protokoll\f_besucher.pas">
+            <Form>BesucherForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <None Include="Datafields\ERA-NS.txt"/>
         <RcItem Include="dws\dws.html">
             <ContainerId>ResourceItem</ContainerId>

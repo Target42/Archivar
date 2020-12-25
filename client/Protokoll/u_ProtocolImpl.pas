@@ -22,6 +22,7 @@ type
 
     m_readOnly  : boolean;
     m_teilnehmer: ITeilnehmerListe;
+    m_besucher  : IBesucherListe;
 
     procedure setXProto( value : IXMLProtocol );
     function  getXProto : IXMLProtocol;
@@ -52,6 +53,7 @@ type
     procedure SetDate(const Value: TDateTime);
     procedure setModified( value : boolean );
     function  getModified : boolean;
+    function getBesucher : IBesucherListe;
 
   public
     constructor create;
@@ -71,7 +73,7 @@ implementation
 
 uses
   u_ChapterTitleListImpl, Xml.XMLIntf, Xml.XMLDoc, System.SysUtils, m_glob_client,
-  u_TTeilnehmerListeImpl;
+  u_TTeilnehmerListeImpl, u_BesucherlisteImpl;
 
 { TProtocolImpl }
 
@@ -105,7 +107,8 @@ begin
 
   m_loader      := TProtocolMod.Create(NIL);
   m_list        := TChapterTitleListImpl.create(m_loader, self);
-  m_teilnehmer  := TTeilnehmerListeImpl.create(m_loader, self);
+  m_teilnehmer  := TTeilnehmerListeImpl.create( m_loader, self);
+  m_besucher    := TBesucherListeImpl.create(   m_loader, self);
   m_modified    := false;
 end;
 
@@ -123,6 +126,11 @@ begin
       PRTab.Edit;
     Result :=PRTab.State = dsEdit;
   end;
+end;
+
+function TProtocolImpl.getBesucher: IBesucherListe;
+begin
+  Result := m_besucher;
 end;
 
 function TProtocolImpl.GetCLID: string;
@@ -202,6 +210,7 @@ begin
       st.Free;
 
       m_teilnehmer.load;
+      m_besucher.load;
 
       while not CPTab.Eof do
       begin
@@ -209,7 +218,6 @@ begin
         cp.ID       := CPTab.FieldByName('CP_ID').AsInteger;
         cp.Text     := CPTab.FieldByName('CP_TITLE').AsString;
         cp.Nr       := CPTab.FieldByName('CP_NR').AsInteger;
-
 
         CPTextTab.Filter := 'CP_ID='+intToStr(cp.ID);
         CPTextTab.Filtered := true;
@@ -243,6 +251,7 @@ procedure TProtocolImpl.release;
 begin
   m_list.release;
   m_teilnehmer.release;
+  m_besucher.release;
 end;
 
 function TProtocolImpl.save: boolean;

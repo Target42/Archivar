@@ -45,6 +45,7 @@ type
     ListTasks: TDataSetProvider;
     CPText: TIBTable;
     CPTextTab: TDataSetProvider;
+    TNTabTN_GRUND: TIBStringField;
   private
     { Private-Deklarationen }
   public

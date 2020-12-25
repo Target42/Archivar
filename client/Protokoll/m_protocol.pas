@@ -20,13 +20,14 @@ type
     TNTabTN_VORNAME: TWideStringField;
     TNTabTN_DEPARTMENT: TWideStringField;
     TNTabTN_ROLLE: TWideStringField;
-    TNTabStatusText: TStringField;
     TNTabTN_STATUS: TIntegerField;
     TNTabPE_ID: TIntegerField;
     TGTab: TClientDataSet;
+    TNTabTN_GRUND: TWideStringField;
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
     procedure TNTabBeforePost(DataSet: TDataSet);
+    procedure TGTabBeforePost(DataSet: TDataSet);
   private
     m_filter  : string;
     m_id      : integer;
@@ -118,6 +119,13 @@ end;
 procedure TProtocolMod.SetReadOnly(const Value: boolean);
 begin
   m_readOnly := value;
+
+end;
+
+procedure TProtocolMod.TGTabBeforePost(DataSet: TDataSet);
+begin
+  if DataSet.FieldByName('TG_ID').AsInteger = 0 then
+    DataSet.FieldByName('TG_ID').AsInteger := GM.autoInc('gen_tg_id');
 
 end;
 

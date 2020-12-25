@@ -6,7 +6,14 @@ uses
   xsd_chapter, xsd_protocol, System.Classes, Data.DB, i_beschluss, i_personen;
 
 type
-  TTeilnehmerStatus = ( tsUnbekannt = 0, tsAnwesend, tsEntschuldigt, tsUnentschuldigt, tsLast);
+  TTeilnehmerStatus = (
+    tsUnbekannt = 0,
+
+    tsAnwesend,
+    tsEntschuldigt,
+    tsUnentschuldigt,
+
+  tsLast);
 
   IChapter          = interface;
   IChapterList      = interface;
@@ -15,6 +22,8 @@ type
   IProtocol         = interface;
   ITeilnehmer       = interface;
   ITeilnehmerListe  = interface;
+  IBesucher         = interface;
+  IBesucherListe    = interface;
 
   IProtocol = interface
     ['{22F955F2-2B4F-44B4-9319-438413D20842}']
@@ -41,6 +50,7 @@ type
     procedure SetDate(const Value: TDateTime);
     procedure setModified( value : boolean );
     function  getModified : boolean;
+    function getBesucher : IBesucherListe;
 
     property GRID   : integer           read GetGRID    write SetGRID;
     property XProto : IXMLProtocol      read getXProto  write setXProto;
@@ -54,6 +64,7 @@ type
     property Modified : boolean         read getModified write setModified;
 
     property Teilnehmer : ITeilnehmerListe read getTeilnehmer;
+    property Besucher   : IBesucherListe   read getBesucher;
 
     procedure loadFromStream( st : TStream );
     procedure saveToStream( st : TStream );
@@ -236,6 +247,8 @@ type
       function  getPEID : integer;
       procedure setModified( value : boolean );
       function  getModified : boolean;
+      function GetGrund: string;
+      procedure SetGrund(const Value: string);
 
     //public
 
@@ -247,6 +260,7 @@ type
       property Status     : TTeilnehmerStatus read GetStatus      write SetStatus;
       property PEID       : integer           read getPEID        write setPEID;
       property Modified   : boolean           read getModified    write setModified;
+      property Grund      : string            read GetGrund       write SetGrund;
 
       procedure Assign( pe : IPerson );
 
@@ -272,6 +286,58 @@ type
       procedure release;
     end;
 
+  IBesucher         = interface
+    ['{CF5F3624-7558-486F-B1EF-321B9D3E45FE}']
+    function GetName: string;
+    procedure SetName(const Value: string);
+    function GetVorname: string;
+    procedure SetVorname(const Value: string);
+    function GetAbteilung: string;
+    procedure SetAbteilung(const Value: string);
+    function GetGrund: string;
+    procedure SetGrund(const Value: string);
+    function GetVon: TDateTime;
+    procedure SetVon(const Value: TDateTime);
+    function Getbis: TDateTime;
+    procedure Setbis(const Value: TDateTime);
+    function GetModified: boolean;
+    procedure SetModified(const Value: boolean);
+    function Getid: integer;
+    procedure Setid(const Value: integer);
+
+  //public
+    property Name: string read GetName write SetName;
+    property Vorname: string read GetVorname write SetVorname;
+    property Abteilung: string read GetAbteilung write SetAbteilung;
+    property Grund: string read GetGrund write SetGrund;
+    property Von: TDateTime read GetVon write SetVon;
+    property bis: TDateTime read Getbis write Setbis;
+    property Modified: boolean read GetModified write SetModified;
+    property id: integer read Getid write Setid;
+
+    procedure release;
+  end;
+
+  IBesucherListe    = interface
+    ['{A9E043F2-C921-46A5-AA64-CE24676A220E}']
+      //private
+      function GetCount: integer;
+
+      function GetItem(inx : integer ): IBesucher;
+      procedure SetItem(inx : integer; const Value: IBesucher);
+      // public
+      property Count: integer read GetCount;
+      property Item[inx : integer ] : IBesucher read GetItem write SetItem;
+
+      function newBesucher : IBesucher;
+
+      procedure load;
+      procedure saveChanged;
+
+      procedure remove( b : IBesucher );
+
+      procedure release;
+  end;
 
 implementation
 

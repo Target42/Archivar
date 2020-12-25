@@ -78,6 +78,11 @@ object dsProtocol: TdsProtocol
       item
         Name = 'PE_ID'
         DataType = ftInteger
+      end
+      item
+        Name = 'TN_GRUND'
+        DataType = ftWideString
+        Size = 100
       end>
     IndexDefs = <
       item
@@ -127,6 +132,10 @@ object dsProtocol: TdsProtocol
     end
     object TNTabPE_ID: TIntegerField
       FieldName = 'PE_ID'
+    end
+    object TNTabTN_GRUND: TIBStringField
+      FieldName = 'TN_GRUND'
+      Size = 100
     end
   end
   object TGTab: TIBTable

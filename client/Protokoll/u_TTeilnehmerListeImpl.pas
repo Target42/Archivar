@@ -129,6 +129,7 @@ begin
       t.Rolle     := TNTabTN_ROLLE.Value;
       t.Status    := TTeilnehmerStatus(TNTabTN_STATUS.Value);
       t.PEID      := TNTabPE_ID.Value;
+      t.Grund     := TNTabTN_GRUND.Value;
       t.Modified  := false;
 
       TNTab.Next;
@@ -180,7 +181,7 @@ begin
           TNTabTN_ROLLE.Value     := t.Rolle;
           TNTabTN_STATUS.Value    := integer(t.Status);
           TNTabPE_ID.Value        := t.PEID;
-
+          TNTabTN_GRUND.Value     := t.Grund;
           TNTab.Post;
           t.ID := TNTabTN_ID.Value;
         end;

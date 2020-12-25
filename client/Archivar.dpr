@@ -141,7 +141,11 @@ uses
   u_BeschlussListeImpl in 'Beschlus\u_BeschlussListeImpl.pas',
   m_protocol in 'Protokoll\m_protocol.pas' {ProtocolMod: TDataModule},
   u_teilnehmerImpl in 'Protokoll\u_teilnehmerImpl.pas',
-  u_TTeilnehmerListeImpl in 'Protokoll\u_TTeilnehmerListeImpl.pas';
+  u_TTeilnehmerListeImpl in 'Protokoll\u_TTeilnehmerListeImpl.pas',
+  f_abwesenheit in 'Protokoll\f_abwesenheit.pas' {AbwesenForm},
+  u_BesucherImpl in 'Protokoll\u_BesucherImpl.pas',
+  u_BesucherlisteImpl in 'Protokoll\u_BesucherlisteImpl.pas',
+  f_besucher in 'Protokoll\f_besucher.pas' {BesucherForm};
 
 {$R *.res}
 
@@ -159,6 +163,5 @@ begin
   Application.CreateForm(TWindowHandler, WindowHandler);
   Application.CreateForm(TBookMarkHandler, BookMarkHandler);
   Application.CreateForm(TMainForm, MainForm);
-  Application.CreateForm(TProtocolMod, ProtocolMod);
   Application.Run;
 end.

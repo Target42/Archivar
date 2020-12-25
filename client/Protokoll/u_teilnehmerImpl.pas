@@ -16,6 +16,7 @@ type
       m_status    : TTeilnehmerStatus;
       m_peid      : integer;
       m_modified  : boolean;
+      m_grund     : string;
 
       function GetName: string;
       procedure SetName(const Value: string);
@@ -33,6 +34,8 @@ type
       function  getPEID : integer;
       procedure setModified( value : boolean );
       function  getModified : boolean;
+      function GetGrund: string;
+      procedure SetGrund(const Value: string);
 
     public
       constructor create;
@@ -102,6 +105,11 @@ begin
   Result := m_abteilung;
 end;
 
+function TTeilnehmerImpl.GetGrund: string;
+begin
+  Result := m_grund;
+end;
+
 function TTeilnehmerImpl.GetID: integer;
 begin
   Result := m_id;
@@ -148,9 +156,15 @@ begin
   m_modified  := true;
 end;
 
+procedure TTeilnehmerImpl.SetGrund(const Value: string);
+begin
+  m_grund     := value;
+  m_modified  := true;
+end;
+
 procedure TTeilnehmerImpl.SetID(const Value: integer);
 begin
-  m_id := value;
+  m_id        := value;
   m_modified  := true;
 end;
 
@@ -161,31 +175,31 @@ end;
 
 procedure TTeilnehmerImpl.SetName(const Value: string);
 begin
-  m_name := value;
+  m_name      := value;
   m_modified  := true;
 end;
 
 procedure TTeilnehmerImpl.setPEID(value: integer);
 begin
-  m_peid := value;
+  m_peid      := value;
   m_modified  := true;
 end;
 
 procedure TTeilnehmerImpl.SetRolle(const Value: string);
 begin
-  m_rolle := value;
+  m_rolle     := value;
   m_modified  := true;
 end;
 
 procedure TTeilnehmerImpl.SetStatus(const Value: TTeilnehmerStatus);
 begin
-  m_status := value;
+  m_status    := value;
   m_modified  := true;
 end;
 
 procedure TTeilnehmerImpl.SetVorname(const Value: string);
 begin
-  m_vorname := value;
+  m_vorname   := value;
   m_modified  := true;
 end;
 

@@ -6,7 +6,7 @@ object ProtocolMod: TProtocolMod
   Width = 526
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsProtocol'
-    Left = 64
+    Left = 72
     Top = 8
   end
   object PRTab: TClientDataSet
@@ -89,16 +89,15 @@ object ProtocolMod: TProtocolMod
       FieldName = 'TN_ROLLE'
       Size = 50
     end
-    object TNTabStatusText: TStringField
-      FieldKind = fkInternalCalc
-      FieldName = 'StatusText'
-      Size = 25
-    end
     object TNTabTN_STATUS: TIntegerField
       FieldName = 'TN_STATUS'
     end
     object TNTabPE_ID: TIntegerField
       FieldName = 'PE_ID'
+    end
+    object TNTabTN_GRUND: TWideStringField
+      FieldName = 'TN_GRUND'
+      Size = 100
     end
   end
   object TGTab: TClientDataSet
@@ -107,6 +106,7 @@ object ProtocolMod: TProtocolMod
     Params = <>
     ProviderName = 'TGTable'
     RemoteServer = DSProviderConnection1
+    BeforePost = TGTabBeforePost
     Left = 168
     Top = 64
   end
