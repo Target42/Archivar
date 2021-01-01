@@ -26,20 +26,20 @@ object Beschlusform: TBeschlusform
     Align = alBottom
     AutoSize = True
     TabOrder = 0
-    ExplicitTop = 535
-    ExplicitWidth = 758
+    ExplicitTop = 406
+    ExplicitWidth = 726
     inherited StatusBar1: TStatusBar
       Width = 726
       ExplicitWidth = 726
     end
     inherited Panel1: TPanel
       Width = 726
-      ExplicitWidth = 758
+      ExplicitWidth = 726
       inherited OKBtn: TBitBtn
         Left = 638
         Default = False
         Kind = bkCustom
-        ExplicitLeft = 670
+        ExplicitLeft = 638
       end
     end
   end
@@ -54,8 +54,6 @@ object Beschlusform: TBeschlusform
     object TabSheet2: TTabSheet
       Caption = 'Beschlustext'
       ImageIndex = 1
-      ExplicitWidth = 747
-      ExplicitHeight = 507
       object Splitter1: TSplitter
         Left = 448
         Top = 0
@@ -73,8 +71,6 @@ object Beschlusform: TBeschlusform
         Align = alBottom
         Caption = 'Abstimmung'
         TabOrder = 0
-        ExplicitTop = 424
-        ExplicitWidth = 747
         object Button1: TBitBtn
           Left = 9
           Top = 24
@@ -248,8 +244,6 @@ object Beschlusform: TBeschlusform
         Caption = 'Textbausteine'
         TabOrder = 1
         Visible = False
-        ExplicitLeft = 480
-        ExplicitHeight = 320
         inline TextBlockFrame1: TTextBlockFrame
           Left = 2
           Top = 15
@@ -260,11 +254,11 @@ object Beschlusform: TBeschlusform
           ExplicitLeft = 2
           ExplicitTop = 15
           ExplicitWidth = 263
-          ExplicitHeight = 303
+          ExplicitHeight = 278
           inherited Panel1: TPanel
             Top = 222
             Width = 263
-            ExplicitTop = 247
+            ExplicitTop = 222
             ExplicitWidth = 263
             inherited LabeledEdit1: TLabeledEdit
               Width = 248
@@ -275,7 +269,7 @@ object Beschlusform: TBeschlusform
             Width = 263
             Height = 222
             ExplicitWidth = 263
-            ExplicitHeight = 247
+            ExplicitHeight = 222
           end
         end
       end
@@ -287,8 +281,6 @@ object Beschlusform: TBeschlusform
         Align = alClient
         Caption = 'Erweiterter Text'
         TabOrder = 2
-        ExplicitWidth = 477
-        ExplicitHeight = 320
         inline EditFrame2: TEditFrame
           Left = 2
           Top = 15
@@ -298,23 +290,21 @@ object Beschlusform: TBeschlusform
           TabOrder = 0
           ExplicitLeft = 2
           ExplicitTop = 15
-          ExplicitWidth = 473
-          ExplicitHeight = 303
+          ExplicitWidth = 444
+          ExplicitHeight = 278
           inherited RE: TRichEdit
             Width = 444
             Height = 278
             OnDragDrop = EditFrame2REDragDrop
             OnDragOver = EditFrame2REDragOver
-            ExplicitWidth = 473
-            ExplicitHeight = 303
+            ExplicitWidth = 444
+            ExplicitHeight = 278
           end
         end
       end
     end
     object TabSheet1: TTabSheet
       Caption = 'Teilnehmer'
-      ExplicitWidth = 747
-      ExplicitHeight = 507
       object Splitter4: TSplitter
         Left = 337
         Top = 0
@@ -331,7 +321,6 @@ object Beschlusform: TBeschlusform
         Align = alLeft
         Caption = 'Gremium'
         TabOrder = 0
-        ExplicitHeight = 507
         object LVGremium: TListView
           AlignWithMargins = True
           Left = 5
@@ -364,7 +353,6 @@ object Beschlusform: TBeschlusform
           ViewStyle = vsReport
           OnDblClick = LVGremiumDblClick
           OnDragOver = LVGremiumDragOver
-          ExplicitHeight = 484
         end
       end
       object Panel4: TPanel
@@ -377,8 +365,6 @@ object Beschlusform: TBeschlusform
         Caption = 'Panel4'
         ShowCaption = False
         TabOrder = 1
-        ExplicitWidth = 407
-        ExplicitHeight = 507
         object Splitter5: TSplitter
           Left = 0
           Top = 186
@@ -397,8 +383,6 @@ object Beschlusform: TBeschlusform
           Align = alClient
           Caption = 'Abwesend'
           TabOrder = 0
-          ExplicitWidth = 407
-          ExplicitHeight = 315
           object LVAbwesend: TListView
             AlignWithMargins = True
             Left = 44
@@ -431,8 +415,6 @@ object Beschlusform: TBeschlusform
             ViewStyle = vsReport
             OnDblClick = LVAbwesendDblClick
             OnDragOver = LVGremiumDragOver
-            ExplicitWidth = 358
-            ExplicitHeight = 292
           end
           object Panel1: TPanel
             Left = 2
@@ -444,7 +426,6 @@ object Beschlusform: TBeschlusform
             Caption = 'Panel1'
             ShowCaption = False
             TabOrder = 1
-            ExplicitHeight = 298
             object SpeedButton1: TSpeedButton
               Left = 4
               Top = 40
@@ -539,8 +520,6 @@ object Beschlusform: TBeschlusform
           Align = alBottom
           Caption = 'Nicht mit Abgestimt'
           TabOrder = 1
-          ExplicitTop = 318
-          ExplicitWidth = 407
           object LVanthalten: TListView
             AlignWithMargins = True
             Left = 44
@@ -573,7 +552,6 @@ object Beschlusform: TBeschlusform
             ViewStyle = vsReport
             OnDblClick = LVanthaltenDblClick
             OnDragOver = LVGremiumDragOver
-            ExplicitWidth = 358
           end
           object Panel2: TPanel
             Left = 2
@@ -678,7 +656,7 @@ object Beschlusform: TBeschlusform
     Left = 559
     Top = 208
     Bitmap = {
-      494C010101000800400010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010101000800440010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       000000000000000000000000000000000000000000FF000000FF000000FF0000
       00FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF0000

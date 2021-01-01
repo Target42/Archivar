@@ -109,7 +109,7 @@ end;
 
 function TChapterTitleListImpl.NewEntry: IChapterTitle;
 begin
-  Result := TChapterTitleImpl.create(self);
+  Result := TChapterTitleImpl.create(self, m_loader);
   m_list.Add(Result);
   renumber;
   Result.Text := 'Titel '+IntToStr(Result.Nr);

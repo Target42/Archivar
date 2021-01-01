@@ -3,11 +3,12 @@ unit u_ChapterImpl;
 interface
 
 uses
-  i_chapter, xsd_chapter, System.Classes, i_beschluss;
+  i_chapter, xsd_chapter, System.Classes, i_beschluss, m_protocol;
 
 type
     TChapterImpl = class( TInterfacedObject, IChapter )
     private
+      m_loader    : TProtocolMod;
       m_childs    : IChapterList;
       m_owner     : IChapter;
       FName       : string;
@@ -53,7 +54,7 @@ type
       function getVotes     : IBeschlussListe;
 
     public
-      constructor create(owner : IChapter);
+      constructor create(owner : IChapter; loader: TProtocolMod);
       Destructor Destroy; override;
 
       procedure clearModified;
@@ -102,11 +103,12 @@ begin
     m_childs.Items[i].clearModified;
 end;
 
-constructor TChapterImpl.create(owner : IChapter);
+constructor TChapterImpl.create(owner : IChapter; loader: TProtocolMod);
 begin
-  m_childs := TChapterListImpl.create;
-  m_votes  := TBeschlussListeImpl.create;
-  m_owner := owner;
+  m_loader  := loader;
+  m_childs  := TChapterListImpl.create;
+  m_votes   := TBeschlussListeImpl.create(m_loader);
+  m_owner   := owner;
   FID       := 0;
   FPID      := 0;
   FNr       := 0;
@@ -264,7 +266,7 @@ end;
 
 function TChapterImpl.newChapter: IChapter;
 begin
-  Result := TChapterImpl.create(self);
+  Result := TChapterImpl.create(self, m_loader);
   add(Result);
   m_childs.renumber;
 end;

@@ -3,12 +3,14 @@ unit i_beschluss;
 interface
 
 uses
-  i_personen;
+  i_personen, Data.DB, System.Classes;
 
 type
   IBeschluss      = interface;
   IBeschlussListe = interface;
   IAbstimmung     = interface;
+
+  TBeschlussStatus= (bsGeplant, bsZugestimmt, bsAbgelehnt, bsWarten);
 
   IBeschlussListe = interface
     ['{C23CDA08-059A-4E90-86B4-917B3DE58AAF}']
@@ -25,6 +27,8 @@ type
     procedure delete( inx : integer ) ; overload;
     procedure delete( be : IBeschluss); overload;
 
+    procedure saveModified;
+
     procedure Release;
   end;
 
@@ -35,9 +39,27 @@ type
     procedure setText( value : string );
     function  getText : string;
     function  getAbstimmung : IAbstimmung;
+    function  getTitel : string;
+    function  GetStatus: TBeschlussStatus;
+    procedure SetStatus(const Value: TBeschlussStatus);
+    function  GetModified: boolean;
+    procedure SetModified(const Value: boolean);
+    function  GetID: integer;
+    procedure SetID(const Value: integer);
+    function  GetCTID: integer;
+    procedure SetCTID(const Value: integer);
+
     // public
-    property Text         : string        read getText          write setText;
-    property Abstimmung   : IAbstimmung   read getAbstimmung ;
+    property ID           : integer           read GetID            write SetID;
+    property CTID         : integer           read GetCTID          write SetCTID;
+    property Status       : TBeschlussStatus  read GetStatus        write SetStatus;
+    property titel        : string            read getTitel;
+    property Text         : string            read getText          write setText;
+    property Abstimmung   : IAbstimmung       read getAbstimmung ;
+    property Modified     : boolean           read GetModified      write SetModified;
+
+    procedure loadFromDataSet( data : TDataSet );
+    procedure save( data : TDataSet );
 
     procedure Release;
   end;
@@ -59,6 +81,9 @@ type
     function  getEnthalten : integer;
     procedure setZeitpunkt( value : TDateTime);
     function  getZeitpunkt : TDateTime;
+    function  GetModified: boolean;
+    procedure SetModified(const Value: boolean);
+
     // public
     property Gremium        : IPersonenListe  read getGremium         write setGremium;
     property Abwesend       : IPersonenListe  read getAbwesend        write setAbwesend;
@@ -70,9 +95,51 @@ type
 
     property Zeitpunkt      : TDateTime       read getZeitpunkt       write setZeitpunkt;
 
+    property Modified     : boolean           read GetModified        write SetModified;
+
     procedure Release;
   end;
 
+function BeschlussStatusToStr( bs :TBeschlussStatus ) : string;
+function StrToBeschlussStatus( val : string ) : TBeschlussStatus;
+
+procedure fillBelschlussStatus( list : TStrings );
+
 implementation
+
+uses
+  System.SysUtils;
+
+function BeschlussStatusToStr( bs :TBeschlussStatus ) : string;
+begin
+  case bs of
+    bsGeplant:      Result := 'Geplant';
+    bsZugestimmt:   Result := 'Zugestimmt';
+    bsAbgelehnt:    Result := 'Abgelehnt';
+    bsWarten:       Result := 'Klärungsbedarf';
+  end;
+end;
+
+function StrToBeschlussStatus( val : string ) : TBeschlussStatus;
+begin
+  Result := bsGeplant;
+  if SameText( val, 'Geplant') then
+    Result := bsGeplant
+  else if SameText( val, 'Zugestimmt') then
+    Result := bsZugestimmt
+  else if SameText( val, 'Abgelehnt') then
+    Result := bsAbgelehnt
+  else if SameText( val, 'Klärungsbedarf') then
+    Result := bsWarten;
+end;
+
+procedure fillBelschlussStatus( list : TStrings );
+var
+  i : TBeschlussStatus;
+begin
+  for i := bsGeplant to bsWarten do
+    list.AddObject(BeschlussStatusToStr(i), TObject(i));
+
+end;
 
 end.

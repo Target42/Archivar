@@ -3,19 +3,20 @@ unit u_BeschlussListeImpl;
 interface
 
 uses
-  i_beschluss, System.Generics.Collections;
+  i_beschluss, System.Generics.Collections, m_protocol;
 
 type
   TBeschlussListeImpl = class( TInterfacedObject, IBeschlussListe )
   private
     m_list : TList<IBeschluss>;
+    m_loader: TProtocolMod;
 
     function  getItem( inx : integer ) : IBeschluss;
     procedure setItem( inx : integer; const value : IBeschluss);
     function  getCount : integer;
 
   public
-    constructor Create;
+    constructor Create(loader: TProtocolMod);
     Destructor Destroy; override;
 
     property Item[ inx : integer ]  : IBeschluss  read getItem    write setItem;
@@ -25,6 +26,8 @@ type
     procedure delete( inx : integer ) ; overload;
     procedure delete( be : IBeschluss); overload;
 
+    procedure saveModified;
+
     procedure Release;
 
   end;
@@ -32,17 +35,25 @@ type
 implementation
 
 uses
-  u_BeschlussImpl;
+  u_BeschlussImpl, System.Variants;
 
 { TBeschlussListeImpl }
 
-constructor TBeschlussListeImpl.Create;
+constructor TBeschlussListeImpl.Create(loader: TProtocolMod);
 begin
-  m_list := TList<IBeschluss>.create;
+  m_loader := loader;
+  m_list  := TList<IBeschluss>.create;
 end;
 
 procedure TBeschlussListeImpl.delete(be: IBeschluss);
+var
+  id : integer;
 begin
+  id := be.ID;
+  if (id <> 0 ) and m_loader.BETab.Locate('BE_ID', VarArrayOF([id]), []) then
+  begin
+    m_loader.BETab.Delete;
+  end;
   m_list.Remove(be);
   be.Release;
 end;
@@ -83,6 +94,18 @@ begin
     b.Release;
   m_list.Clear;
 
+end;
+
+procedure TBeschlussListeImpl.saveModified;
+var
+  b : IBeschluss;
+begin
+  for b in m_list do
+  begin
+    if b.Modified then
+      b.save( m_loader.BETab );
+    b.Modified := false;
+  end;
 end;
 
 procedure TBeschlussListeImpl.setItem(inx: integer; const value: IBeschluss);

@@ -145,7 +145,8 @@ uses
   f_abwesenheit in 'Protokoll\f_abwesenheit.pas' {AbwesenForm},
   u_BesucherImpl in 'Protokoll\u_BesucherImpl.pas',
   u_BesucherlisteImpl in 'Protokoll\u_BesucherlisteImpl.pas',
-  f_besucher in 'Protokoll\f_besucher.pas' {BesucherForm};
+  f_besucher in 'Protokoll\f_besucher.pas' {BesucherForm},
+  xsd_beschlus in '..\misc\xsd_beschlus.pas';
 
 {$R *.res}
 

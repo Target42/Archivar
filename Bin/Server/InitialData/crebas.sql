@@ -1,7 +1,7 @@
 /* ============================================================ */
 /*   Database name:  MODEL_2                                    */
 /*   DBMS name:      InterBase                                  */
-/*   Created on:     21.12.2020  19:08                          */
+/*   Created on:     30.12.2020  19:33                          */
 /* ============================================================ */
 
 create generator gen_be_id;
@@ -199,21 +199,6 @@ create table TY_TASKTYPE
 create ASC index TY_TASKTYPE_SEC on TY_TASKTYPE (TY_NAME);
 
 /* ============================================================ */
-/*   Table: BE_BESCHLUS                                         */
-/* ============================================================ */
-create table BE_BESCHLUS
-(
-    BE_ID                           INTEGER                not null,
-    BE_TIMESTAMP                    TIMESTAMP                      ,
-    BE_DATA                         BLOB                           ,
-    BE_ANZ                          INTEGER                        ,
-    BE_JA                           INTEGER                        ,
-    BE_NEIN                         INTEGER                        ,
-    BE_UN                           INTEGER                        ,
-    constraint PK_BE_BESCHLUS primary key (BE_ID)
-);
-
-/* ============================================================ */
 /*   Table: PR_PROTOKOL                                         */
 /* ============================================================ */
 create table PR_PROTOKOL
@@ -269,6 +254,11 @@ create table TE_TEMPLATE
 /*   Index: TE_TEMPLATE_NAME                                    */
 /* ============================================================ */
 create ASC index TE_TEMPLATE_NAME on TE_TEMPLATE (TE_NAME, TE_SYSTEM);
+
+/* ============================================================ */
+/*   Index: TE_TEMPLATE_CLID                                    */
+/* ============================================================ */
+create unique ASC index TE_TEMPLATE_CLID on TE_TEMPLATE (TE_CLID);
 
 /* ============================================================ */
 /*   Table: TA_TASK                                             */
@@ -330,6 +320,23 @@ create table FI_TA
 );
 
 /* ============================================================ */
+/*   Table: BE_BESCHLUS                                         */
+/* ============================================================ */
+create table BE_BESCHLUS
+(
+    CT_ID                           INTEGER                not null,
+    BE_ID                           INTEGER                not null,
+    BE_TIMESTAMP                    TIMESTAMP                      ,
+    BE_DATA                         BLOB                           ,
+    BE_ANZ                          INTEGER                        ,
+    BE_JA                           INTEGER                        ,
+    BE_NEIN                         INTEGER                        ,
+    BE_UN                           INTEGER                        ,
+    BE_TITEL                        VARCHAR(100)                   ,
+    constraint PK_BE_BESCHLUS primary key (CT_ID, BE_ID)
+);
+
+/* ============================================================ */
 /*   Table: TN_TEILNEHMER                                       */
 /* ============================================================ */
 create table TN_TEILNEHMER
@@ -342,6 +349,7 @@ create table TN_TEILNEHMER
     TN_ROLLE                        VARCHAR(50)                    ,
     TN_STATUS                       INTEGER                        ,
     PE_ID                           INTEGER                        ,
+    TN_GRUND                        VARCHAR(100)                   ,
     constraint PK_TN_TEILNEHMER primary key (PR_ID, TN_ID)
 );
 
@@ -374,27 +382,6 @@ create table TO_OPEN
     GR_ID                           INTEGER                not null,
     TA_ID                           INTEGER                not null,
     constraint PK_TO_OPEN primary key (GR_ID, TA_ID)
-);
-
-/* ============================================================ */
-/*   Table: GR_BE                                               */
-/* ============================================================ */
-create table GR_BE
-(
-    GR_ID                           INTEGER                not null,
-    BE_ID                           INTEGER                not null,
-    TA_ID                           INTEGER                        ,
-    constraint PK_GR_BE primary key (GR_ID, BE_ID)
-);
-
-/* ============================================================ */
-/*   Table: BE_CT                                               */
-/* ============================================================ */
-create table BE_CT
-(
-    CT_ID                           INTEGER                not null,
-    BE_ID                           INTEGER                not null,
-    constraint PK_BE_CT primary key (CT_ID, BE_ID)
 );
 
 alter table PR_PROTOKOL
@@ -441,6 +428,10 @@ alter table FI_TA
     add constraint FK_REF_117 foreign key  (FI_ID)
        references FI_FILE;
 
+alter table BE_BESCHLUS
+    add constraint FK_REF_5058 foreign key  (CT_ID)
+       references CT_CHAPTER_TEXT;
+
 alter table TN_TEILNEHMER
     add constraint FK_REF_1060 foreign key  (PR_ID)
        references PR_PROTOKOL;
@@ -456,26 +447,6 @@ alter table TO_OPEN
 alter table TO_OPEN
     add constraint FK_REF_1255 foreign key  (TA_ID)
        references TA_TASK;
-
-alter table GR_BE
-    add constraint FK_REF_2398 foreign key  (GR_ID)
-       references GR_GREMIUM;
-
-alter table GR_BE
-    add constraint FK_REF_2402 foreign key  (BE_ID)
-       references BE_BESCHLUS;
-
-alter table GR_BE
-    add constraint FK_REF_2406 foreign key  (TA_ID)
-       references TA_TASK;
-
-alter table BE_CT
-    add constraint FK_REF_4451 foreign key  (BE_ID)
-       references BE_BESCHLUS;
-
-alter table BE_CT
-    add constraint FK_REF_4455 foreign key  (CT_ID)
-       references CT_CHAPTER_TEXT;
 
 commit;
 

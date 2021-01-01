@@ -2,7 +2,7 @@ object AbwesenForm: TAbwesenForm
   Left = 0
   Top = 0
   Caption = 'Abwesenheit'
-  ClientHeight = 148
+  ClientHeight = 174
   ClientWidth = 248
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -12,18 +12,26 @@ object AbwesenForm: TAbwesenForm
   Font.Style = []
   OldCreateOrder = False
   Position = poOwnerFormCenter
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
     Left = 16
-    Top = 8
+    Top = 56
     Width = 29
     Height = 13
     Caption = 'Grund'
   end
+  object Label2: TLabel
+    Left = 16
+    Top = 8
+    Width = 31
+    Height = 13
+    Caption = 'Status'
+  end
   inline BaseFrame1: TBaseFrame
     Left = 0
-    Top = 88
+    Top = 114
     Width = 248
     Height = 60
     Align = alBottom
@@ -46,8 +54,8 @@ object AbwesenForm: TAbwesenForm
   end
   object ComboBox1: TComboBox
     Left = 16
-    Top = 32
-    Width = 217
+    Top = 75
+    Width = 219
     Height = 21
     ItemIndex = 0
     TabOrder = 1
@@ -58,5 +66,13 @@ object AbwesenForm: TAbwesenForm
       'Elternzeit'
       'Schulung'
       'Verpflichtungen a.d. Beriebsratsamt')
+  end
+  object ComboBox2: TComboBox
+    Left = 16
+    Top = 29
+    Width = 219
+    Height = 21
+    TabOrder = 2
+    Text = 'ComboBox2'
   end
 end

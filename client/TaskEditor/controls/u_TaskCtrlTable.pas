@@ -24,6 +24,11 @@ type
       procedure renumber;
       function  getRowCount : integer;
       procedure setRowCount( value : integer );
+
+      procedure SGAddRow( sender : TObject );
+      procedure SGClear( sender : TObject );
+      procedure SGRemoveRow( sender : TObject );
+      procedure SGInsertRow( sender : TObject );
     public
 
       constructor Create(owner : ITaskForm);
@@ -45,7 +50,7 @@ type
 implementation
 
 uses
-  u_TaskCtrlPropImpl, Vcl.StdCtrls, System.SysUtils, Winapi.Windows;
+  u_TaskCtrlPropImpl, Vcl.StdCtrls, System.SysUtils, Winapi.Windows, Vcl.Menus;
 { TaskCtrlTable }
 
 function TaskCtrlTable.addRow: integer;
@@ -164,6 +169,18 @@ begin
 end;
 
 function TaskCtrlTable.newControl(parent: TWinControl; x, y: Integer): TControl;
+var
+  pop : TPopupMenu;
+
+  procedure addItem( caption : string; handler : TNotifyEvent );
+  var
+    item : TMenuItem;
+  begin
+    item  := pop.CreateMenuItem;
+    pop.Items.Add(item);
+    item.Caption := caption;
+    item.OnClick := handler;
+  end;
 begin
   m_sg := TStringGrid.Create(parent as TComponent);
   m_sg.Parent := parent as TWinControl;
@@ -175,6 +192,16 @@ begin
   m_sg.Options := [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine,
     goRangeSelect, goDrawFocusSelected, goRowSizing, goColSizing, goEditing, goTabs, goAlwaysShowEditor,
     goThumbTracking, goFixedColClick, goFixedRowClick, goFixedHotTrack];
+
+  pop   := TPopupMenu.Create( m_sg );
+  m_sg.PopupMenu := pop;
+
+  addItem('Reihe einfügen', Self.SGInsertRow );
+  addItem('Reihe anhängen', self.SGAddRow);
+  addItem('Reihe löschen',  Self.SGRemoveRow );
+  addItem('-', NIL);
+  addItem('Reihe Einfügen', Self.SGClear );
+
   Result := m_sg;
 
 end;
@@ -212,6 +239,31 @@ procedure TaskCtrlTable.setRowCount(value: integer);
 begin
   if Assigned(m_sg) then
     m_sg.RowCount := value + 1;
+end;
+
+procedure TaskCtrlTable.SGAddRow(sender: TObject);
+var
+  col : integer;
+begin
+  m_sg.RowCount := m_sg.RowCount +1;
+  m_sg.Cells[0, m_sg.RowCount-1]     := intToStr( m_sg.RowCount );
+  for col := 1 to pred(m_sg.ColCount) do
+    m_sg.Cells[col, m_sg.RowCount-1] := '';
+end;
+
+procedure TaskCtrlTable.SGClear(sender: TObject);
+begin
+
+end;
+
+procedure TaskCtrlTable.SGInsertRow(sender: TObject);
+begin
+
+end;
+
+procedure TaskCtrlTable.SGRemoveRow(sender: TObject);
+begin
+
 end;
 
 procedure TaskCtrlTable.updateControl;

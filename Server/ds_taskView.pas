@@ -16,6 +16,8 @@ type
     GetTEQry: TDataSetProvider;
     Task: TIBTable;
     TaskTab: TDataSetProvider;
+    BE: TIBTable;
+    BETab: TDataSetProvider;
   private
     { Private-Deklarationen }
   public

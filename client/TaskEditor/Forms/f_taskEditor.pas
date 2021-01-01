@@ -286,6 +286,8 @@ var
 begin
   st := TETab.CreateBlobStream(  TETab.FieldByName('TE_DATA'), bmWrite);
   m_tc.saveToStream(st);
+  st.Position := 0;
+  TETab.FieldByName('TE_MD5').AsString := GM.md5(st);
   st.Free;
 end;
 
@@ -314,6 +316,11 @@ begin
 
   loadFromStream( TETab.CreateBlobStream(TETab.FieldByName('TE_DATA'), bmRead),
     TETab.FieldByName('TE_NAME').AsString);
+  if TETab.FieldByName('TE_SYSTEM').AsString = 'T' then
+  begin
+    GroupBox3.Enabled := false;
+  end;
+
 end;
 
 procedure TTaksEditorForm.updateVarList;
@@ -345,7 +352,7 @@ begin
 
     item.Caption  := df.Name;
     item.SubItems.Add(df.Typ);
-    if df.Typ = 'table' then
+    if SameText(df.Typ, 'table') or SameText( df.Typ, 'linktable') then
       item.SubItems.Add('Ja')
     else
       item.SubItems.Add('');

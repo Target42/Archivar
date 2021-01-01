@@ -12,6 +12,9 @@ type
     GetTAQry: TClientDataSet;
     GetTEQry: TClientDataSet;
     TaskTab: TClientDataSet;
+    BECTTab: TClientDataSet;
+    BEListQry: TClientDataSet;
+    BETab: TClientDataSet;
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
 

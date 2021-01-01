@@ -476,6 +476,7 @@
             <Form>BesucherForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="..\misc\xsd_beschlus.pas"/>
         <None Include="Datafields\ERA-NS.txt"/>
         <RcItem Include="dws\dws.html">
             <ContainerId>ResourceItem</ContainerId>

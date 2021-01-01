@@ -25,6 +25,7 @@ const
   msgNewBookMark    = WMUSER + 6;
   msgRemoveBookmark = WMUSER + 7;
   msgLoadLogo       = WMUSER + 8;
+  msgUpdateGremium  = WMUSER + 9;
 
 type
   TGM = class(TDataModule)
@@ -98,7 +99,9 @@ type
     function GremiumName( id : integer ) : string;
 
     function isValidTask( id : integer; dt : tDocType ) : Boolean;
-    function md5( fname : string ) : string;
+
+    function md5( fname : string  ) : string; overload;
+    function md5( st    : TStream ) : string; overload;
 
     function download( fname : string ; st : TStream ) : boolean;
     function getImageID( name : string ) : Integer;
@@ -481,23 +484,33 @@ begin
   Screen.Cursor := crDefault;
 end;
 
-function TGM.md5(fname: string): string;
+function TGM.md5(st: TStream): string;
 var
   IdMD5: TIdHashMessageDigest5;
+begin
+  IdMD5 := TIdHashMessageDigest5.Create;
+  try
+    Result := LowerCase( IdMD5.HashStreamAsHex(st));
+  finally
+    IdMD5.Free;
+  end;
+
+end;
+
+function TGM.md5(fname: string): string;
+var
   fs   : TFileStream;
 begin
   fs := NIL;
   if not FileExists(fname) then
     exit;
 
-  IdMD5 := TIdHashMessageDigest5.Create;
   try
     fs    := TFileStream.Create(fname, fmOpenRead + fmShareDenyWrite);
-    Result := LowerCase( IdMD5.HashStreamAsHex(fs));
+    Result := md5(fs);
   finally
     fs.Free;
   end;
-  IdMD5.Free;
 end;
 
 procedure TGM.setIsAdmin(value: boolean);

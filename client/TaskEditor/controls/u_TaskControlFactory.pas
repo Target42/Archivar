@@ -47,6 +47,7 @@ begin
   m_map.Add(LowerCase('TMemo'),        ctMemo );
   m_map.Add(LowerCase('TRichEdit'),    ctRichEdit );
   m_map.Add(LowerCase('TSplitter'),    ctSpliter );
+  m_map.Add(LowerCase('TPanel'),       ctPanel );
 
 end;
 
@@ -56,7 +57,7 @@ var
   ct : TControlType;
 begin
   newClass := lowerCase( newClass );
-  Assert(m_map.ContainsKey(newClass), 'No Class mapping');
+  Assert(m_map.ContainsKey(newClass), 'No Class mapping for ' + newClass);
   ct := m_map[newClass];
 
   Result := createControl( frm, p, ct, 0, 0);

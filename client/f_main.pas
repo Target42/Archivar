@@ -119,6 +119,7 @@ type
     procedure loadLogo;
 
     procedure templateEdit( sys : boolean );
+    procedure setGremiumName( id : integer );
   public
     { Public declarations }
   end;
@@ -422,10 +423,11 @@ begin
       Admin1.Visible := (msg.wParam = 1);
       Admin1.Enabled := (msg.wParam = 1);
     end;
-    msgUpdateGr : GremiumTreeFrame1.updateTree;
-    msgNewBookMark  : BookmarkFrame1.updatebookMarks;
+    msgUpdateGr       : GremiumTreeFrame1.updateTree;
+    msgNewBookMark    : BookmarkFrame1.updatebookMarks;
     msgRemoveBookmark : BookmarkFrame1.removeBookmark( TBookmark(Msg.LParam));
-    msgLoadLogo : loadLogo;
+    msgLoadLogo       : loadLogo;
+    msgUpdateGremium  : setGremiumName( msg.lParam );
     else
       Handled := false;
   end;
@@ -458,6 +460,21 @@ begin
   if FileExists( fname ) then
     Image1.Picture.LoadFromFile(fname);
 
+end;
+
+procedure TMainForm.setGremiumName(id: integer);
+var
+  gr : TGremium;
+begin
+  GroupBox2.Caption := 'Aufgaben';
+  if id > 0 then
+  begin
+    gr := GM.getGremium(id);
+    if Assigned(gr) then
+    begin
+      GroupBox2.Caption := 'Aufgaben : '+gr.Name;
+    end;
+  end
 end;
 
 procedure TMainForm.setPanel(id: integer; text: string);

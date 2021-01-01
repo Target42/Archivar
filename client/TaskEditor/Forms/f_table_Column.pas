@@ -112,8 +112,7 @@ var
   i     : integer;
   p     : IProperty;
   s     : string;
-  df    :IDataField;
-
+  df    : IDataField;
 begin
   m_table := value;
 

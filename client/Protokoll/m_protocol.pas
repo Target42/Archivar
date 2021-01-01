@@ -24,10 +24,12 @@ type
     TNTabPE_ID: TIntegerField;
     TGTab: TClientDataSet;
     TNTabTN_GRUND: TWideStringField;
+    BETab: TClientDataSet;
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
     procedure TNTabBeforePost(DataSet: TDataSet);
     procedure TGTabBeforePost(DataSet: TDataSet);
+    procedure BETabBeforePost(DataSet: TDataSet);
   private
     m_filter  : string;
     m_id      : integer;
@@ -58,6 +60,12 @@ uses
 
 {$R *.dfm}
 
+procedure TProtocolMod.BETabBeforePost(DataSet: TDataSet);
+begin
+  if dataSet.FieldByName('BE_ID').AsInteger = 0 then
+    dataSet.FieldByName('BE_ID').AsInteger := GM.autoInc('gen_BE_id');
+end;
+
 procedure TProtocolMod.DataModuleCreate(Sender: TObject);
 begin
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
@@ -69,6 +77,7 @@ begin
   CPTab.Close;
   TGTab.Close;
   TNTab.Close;
+  BETab.Close;
   CPTextTab.Close;
 end;
 
@@ -110,6 +119,7 @@ begin
     TGTab.Filtered  := true;
     TGTab.Open;
 
+    BETab.Open;
 
   end
   else

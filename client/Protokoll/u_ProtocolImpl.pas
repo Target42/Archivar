@@ -9,16 +9,16 @@ uses
 type
   TProtocolImpl = class( TInterfacedObject, IProtocol )
   private
-    m_proto : IXMLProtocol;
-    m_title : string;
-    m_id    : integer;
-    m_clid  : string;
-    m_list  : IChapterTitleList;
-    m_loader: TProtocolMod;
-    m_grid  : integer;
-    m_nr    : integer;
-    m_date  : TDateTime;
-    m_modified : boolean;
+    m_proto     : IXMLProtocol;
+    m_title     : string;
+    m_id        : integer;
+    m_clid      : string;
+    m_list      : IChapterTitleList;
+    m_loader    : TProtocolMod;
+    m_grid      : integer;
+    m_nr        : integer;
+    m_date      : TDateTime;
+    m_modified  : boolean;
 
     m_readOnly  : boolean;
     m_teilnehmer: ITeilnehmerListe;
@@ -31,29 +31,31 @@ type
     function  getID : integer;
 
     function  getList : IChapterTitleList;
-    function GetTitle: string;
+    function  GetTitle: string;
     procedure SetTitle(const Value: string);
 
     procedure loadFromStream( st : TStream );
     procedure saveToclientBlob( tab : TClientDataSet; FieldName : string );
 
-    function GetCLID: string;
+    function  GetCLID: string;
     procedure SetCLID(const Value: string);
 
-    function getTeilnehmer : ITeilnehmerListe;
-    function GetGRID: integer;
+    function  getTeilnehmer : ITeilnehmerListe;
+    function  GetGRID: integer;
     procedure SetGRID(const Value: integer);
     function  getRO : boolean;
     procedure setRO( value : boolean );
 
     procedure saveToStream( st : TStream );
-    function GetNr: integer;
+    function  GetNr: integer;
     procedure SetNr(const Value: integer);
-    function GetDate: TDateTime;
+    function  GetDate: TDateTime;
     procedure SetDate(const Value: TDateTime);
     procedure setModified( value : boolean );
     function  getModified : boolean;
-    function getBesucher : IBesucherListe;
+    function  getBesucher : IBesucherListe;
+
+    procedure loadBE( ct : IChapterTitle );
 
   public
     constructor create;
@@ -73,7 +75,7 @@ implementation
 
 uses
   u_ChapterTitleListImpl, Xml.XMLIntf, Xml.XMLDoc, System.SysUtils, m_glob_client,
-  u_TTeilnehmerListeImpl, u_BesucherlisteImpl;
+  u_TTeilnehmerListeImpl, u_BesucherlisteImpl, i_beschluss;
 
 { TProtocolImpl }
 
@@ -85,16 +87,13 @@ begin
     if PRTab.State = dsEdit then
       PRTab.Cancel;
 
-    if CPTab.UpdatesPending then
-      CPTab.CancelUpdates;
-    if CPTextTab.UpdatesPending then
-      CPTextTab.CancelUpdates;
-    if TNTab.UpdatesPending then
-      TNTab.CancelUpdates;
-    if TGTab.UpdatesPending then
-      TGTab.CancelUpdates;
-    if PRTab.UpdatesPending then
-      PRTab.CancelUpdates;
+    if CPTab.UpdatesPending     then  CPTab.CancelUpdates;
+    if CPTextTab.UpdatesPending then  CPTextTab.CancelUpdates;
+    if TNTab.UpdatesPending     then  TNTab.CancelUpdates;
+    if TGTab.UpdatesPending     then  TGTab.CancelUpdates;
+    if PRTab.UpdatesPending     then  PRTab.CancelUpdates;
+    if BETab.UpdatesPending     then  BETab.CancelUpdates;
+
   end;
   Result := true;
 end;
@@ -161,6 +160,15 @@ end;
 function TProtocolImpl.getModified: boolean;
 begin
   Result := m_modified;
+  with m_loader do
+  begin
+    Result := Result or PRTab.UpdatesPending;
+    Result := Result or CPTab.UpdatesPending;
+    Result := Result or TNTab.UpdatesPending;
+    Result := Result or TGTab.UpdatesPending;
+    Result := Result or CPTextTab.UpdatesPending;
+    Result := Result or BETab.UpdatesPending;
+  end;
 end;
 
 function TProtocolImpl.GetNr: integer;
@@ -224,10 +232,37 @@ begin
 
         cp.loadFromDataSet(CPTextTab);
 
+        loadBE( cp );
+
+
         CPTab.Next;
       end;
     end;
     Result := true;
+  end;
+end;
+
+procedure TProtocolImpl.loadBE(ct: IChapterTitle);
+var
+  i : integer;
+  cp : IChapter;
+  be : IBeschluss;
+begin
+  with m_loader do
+  begin
+    for i := 0 to pred(ct.Count) do
+    begin
+      cp := ct.Item[i];
+      BETab.Filter := 'CT_ID = '+IntToStr( cp.ID);
+      BETab.Filtered := true;
+      BETab.First;
+      while not BETab.Eof do
+      begin
+        be := cp.Votes.newBeschluss;
+        be.loadFromDataSet(BETab);
+        BETab.Next;
+      end;
+    end;
   end;
 end;
 
@@ -260,30 +295,27 @@ begin
   with m_loader do
   begin
     try
-      if (PRTab.State = dsEdit) or ( PRTab.State = dsInsert) then
+      if m_modified then
       begin
-        saveToclientBlob(prTab, 'PR_DATA');
-        PRTab.FieldByName('PR_NAME').AsString     := m_title;
-        PRTab.FieldByName('PR_NR').AsInteger      := m_nr;
-        PRTab.FieldByName('PR_DATUM').AsDateTime  := m_date;
+        if (PRTab.State = dsEdit) or ( PRTab.State = dsInsert) then
+        begin
+          saveToclientBlob(prTab, 'PR_DATA');
+          PRTab.FieldByName('PR_NAME').AsString     := m_title;
+          PRTab.FieldByName('PR_NR').AsInteger      := m_nr;
+          PRTab.FieldByName('PR_DATUM').AsDateTime  := m_date;
 
-        PRTab.Post;
+          PRTab.Post;
+        end;
       end;
 
-      if PRTab.UpdatesPending then
-        PRTab.ApplyUpdates(-1);
+      if PRTab.UpdatesPending     then PRTab.ApplyUpdates(-1);
+      if TNTab.UpdatesPending     then TNTab.ApplyUpdates(-1);
+      if TGTab.UpdatesPending     then TGTab.ApplyUpdates(-1);
+      if CPTab.UpdatesPending     then CPTab.ApplyUpdates(-1);
+      if CPTextTab.UpdatesPending then CPTextTab.ApplyUpdates(-1);
+      if BETab.UpdatesPending     then
+        BETab.ApplyUpdates(-1);
 
-      if TNTab.UpdatesPending then
-        TNTab.ApplyUpdates(-1);
-
-      if TGTab.UpdatesPending then
-        TGTab.ApplyUpdates(-1);
-
-      if CPTab.UpdatesPending then
-        CPTab.ApplyUpdates(-1);
-
-      if CPTextTab.UpdatesPending then
-        CPTextTab.ApplyUpdates(-1);
       m_modified := false;
     except
       Result := false;

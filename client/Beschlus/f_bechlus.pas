@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_base, fr_editForm, Vcl.StdCtrls,
   Vcl.ExtCtrls, Vcl.Buttons, Vcl.ComCtrls, Vcl.Menus, System.Actions,
   Vcl.ActnList, System.ImageList, Vcl.ImgList, xsd_TaskData, i_personen,
-  fr_textblock;
+  fr_textblock, i_beschluss;
 
 type
   TBeschlusform = class(TForm)
@@ -72,6 +72,7 @@ type
     procedure LabeledEdit1Exit(Sender: TObject);
     procedure LabeledEdit2Exit(Sender: TObject);
   private
+    m_be        : IBeschluss;
     m_data      : IXMLList;
     m_gremium   : IPersonenListe;
     m_abwesende : IPersonenListe;
@@ -84,9 +85,13 @@ type
     procedure UpdateList( LV : TListView; list : IPersonenListe );
 
     procedure updateInfo;
+    function GetBeschluss: IBeschluss;
+    procedure SetBeschluss(const Value: IBeschluss);
 
   public
-    { Public-Deklarationen }
+    property Beschluss: IBeschluss read GetBeschluss write SetBeschluss;
+
+    procedure setGremium( id : integer );
   end;
 
 var
@@ -124,6 +129,7 @@ begin
   m_zustimmung  := m_gremium.count;
   m_enthaltung  := 0;
   m_ablehnung   := 0;
+
   updateInfo;
 end;
 
@@ -182,16 +188,17 @@ procedure TBeschlusform.FormCreate(Sender: TObject);
 begin
   PageControl1.ActivePage := TabSheet2;
 
+  m_be          := NIL;
   m_zustimmung  := 0;
   m_ablehnung   := 0;
   m_enthaltung  := 0;
 
-  m_data      := NewList;
-  m_gremium   := GM.getGremiumMA(1);
-  m_abwesende := TPersonenListeImpl.create;
-  m_enthalten := TPersonenListeImpl.create;
+  m_data        := NewList;
 
-  UpdateList( LVGremium,    m_gremium);
+  m_abwesende   := TPersonenListeImpl.create;
+  m_enthalten   := TPersonenListeImpl.create;
+
+
   UpdateList( LVAbwesend,   m_abwesende );
   UpdateList( LVanthalten,  m_enthalten );
 
@@ -205,6 +212,11 @@ begin
   m_enthalten.release;
 
   TextBlockFrame1.release;
+end;
+
+function TBeschlusform.GetBeschluss: IBeschluss;
+begin
+  Result := m_be;
 end;
 
 procedure TBeschlusform.LabeledEdit1Exit(Sender: TObject);
@@ -260,6 +272,20 @@ procedure TBeschlusform.LVGremiumDragOver(Sender, Source: TObject; X,
   Y: Integer; State: TDragState; var Accept: Boolean);
 begin
   Accept := true;
+end;
+
+procedure TBeschlusform.SetBeschluss(const Value: IBeschluss);
+begin
+  m_be := value;
+  EditFrame2.setText( m_be.Text);
+
+  updateInfo;
+end;
+
+procedure TBeschlusform.setGremium(id: integer);
+begin
+  m_gremium     := GM.getGremiumMA(id);
+  UpdateList( LVGremium,    m_gremium);
 end;
 
 procedure TBeschlusform.SpeedButton1Click(Sender: TObject);
@@ -350,7 +376,6 @@ begin
   end;
   LV.Items.EndUpdate;
 
-  updateInfo;
 end;
 
 

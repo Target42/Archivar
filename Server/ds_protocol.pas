@@ -46,6 +46,8 @@ type
     CPText: TIBTable;
     CPTextTab: TDataSetProvider;
     TNTabTN_GRUND: TIBStringField;
+    BE: TIBTable;
+    BETab: TDataSetProvider;
   private
     { Private-Deklarationen }
   public

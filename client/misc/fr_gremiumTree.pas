@@ -179,6 +179,7 @@ begin
 
   gr := TGremium(TV.Selected.Data);
   PostMessage( Application.MainFormHandle, msgFilterTasks,0, gr.ID );
+  PostMessage( Application.MainFormHandle, msgUpdateGremium, 0, gr.ID);
 end;
 
 procedure TGremiumTreeFrame.TVDragOver(Sender, Source: TObject; X, Y: Integer;

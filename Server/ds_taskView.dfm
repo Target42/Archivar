@@ -29,7 +29,7 @@ object dsTaskView: TdsTaskView
     SQL.Strings = (
       'select * from TE_TEMPLATE'
       'where TE_ID = :TE_ID')
-    Left = 104
+    Left = 40
     Top = 120
     ParamData = <
       item
@@ -70,5 +70,20 @@ object dsTaskView: TdsTaskView
     DataSet = Task
     Left = 264
     Top = 184
+  end
+  object BE: TIBTable
+    Database = DBMod.IBDatabase1
+    Transaction = IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    TableName = 'BE_BESCHLUS'
+    UniDirectional = False
+    Left = 464
+    Top = 112
+  end
+  object BETab: TDataSetProvider
+    DataSet = BE
+    Left = 464
+    Top = 176
   end
 end

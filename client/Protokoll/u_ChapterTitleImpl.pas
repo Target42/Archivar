@@ -3,18 +3,23 @@ unit u_ChapterTitleImpl;
 interface
 
 uses
-  i_chapter, xsd_chapter, System.Classes, data.db;
+  i_chapter, xsd_chapter, System.Classes, data.db, System.Generics.Collections,
+  m_protocol;
 
 type
   TChapterTitleImpl = class(TInterfacedObject, IChapterTitle)
     private
       m_owner   : IChapterTitleList;
+      m_loader  : TProtocolMod;
+
       FNr       : integer;
       FText     : string;
       FID       : integer;
       FModified : boolean;
       m_xCp     : IXMLChapter;
       m_root    : IChapter;
+
+      m_list    : TList<IChapter>;
 
       procedure setID( value : integer );
       function  getID : integer;
@@ -28,9 +33,13 @@ type
       function  getxChapter : IXMLChapter;
       function  getRoot : IChapter;
 
+      function getCount : integer;
+      function getItem( inx : integer ) : IChapter;
+
       procedure setOwner;
+      procedure refreshList;
     public
-      constructor create(owner : IChapterTitleList);
+      constructor create(owner : IChapterTitleList; loader: TProtocolMod);
       Destructor Destroy; override;
 
       procedure up;
@@ -48,7 +57,7 @@ type
 implementation
 
 uses
-  System.SysUtils, u_ChapterListImpl, System.Generics.Collections,
+  System.SysUtils, u_ChapterListImpl,
   u_ChapterImpl, Xml.XMLIntf, Xml.XMLDoc;
 
 procedure TChapterTitleImpl.buildTree;
@@ -56,19 +65,22 @@ procedure TChapterTitleImpl.buildTree;
 begin
 end;
 
-constructor TChapterTitleImpl.create(owner : IChapterTitleList);
+constructor TChapterTitleImpl.create(owner : IChapterTitleList; loader: TProtocolMod);
 begin
+  m_loader  := loader;
   m_xCp     := NewChapter;
   m_owner   := owner;
   FNr       := 0;
   FModified := false;
-  m_root    := TChapterImpl.create(NIL);
+  m_root    := TChapterImpl.create(NIL, m_loader);
+  m_list    := TList<IChapter>.create;
 end;
 
 destructor TChapterTitleImpl.Destroy;
 begin
   m_xCp     := NIL;
   m_root    := NIL;
+  m_list.Free;
 
   inherited;
 end;
@@ -76,6 +88,8 @@ end;
 procedure TChapterTitleImpl.down;
 begin
   m_owner.down(self);
+  refreshList;
+  FModified := true;
 end;
 
 function TChapterTitleImpl.FullTitle: string;
@@ -115,7 +129,7 @@ begin
   data.First;
   while not data.Eof do
   begin
-    cp            := TChapterImpl.create(NIL);
+    cp            := TChapterImpl.create(NIL, m_loader);
     cp.ID         := data.FieldByName('CT_ID').AsInteger;
     cp.PID        := data.FieldByName('CT_PARENT').AsInteger;
     cp.Name       := data.FieldByName('CT_TITLE').AsString;
@@ -139,11 +153,23 @@ begin
   setOwner;
   list.Free;
   m_root.Childs.sortPos;
+  refreshList;
+end;
+
+function TChapterTitleImpl.getCount: integer;
+begin
+  refreshList;
+  Result := m_list.Count;
 end;
 
 function TChapterTitleImpl.getID: integer;
 begin
   Result := FID;
+end;
+
+function TChapterTitleImpl.getItem(inx: integer): IChapter;
+begin
+  Result := m_list[inx];
 end;
 
 function TChapterTitleImpl.getModified: boolean;
@@ -166,11 +192,28 @@ begin
   Result := FText;
 end;
 
+procedure TChapterTitleImpl.refreshList;
+  procedure add( list : IChapterList );
+  var
+    i : integer;
+  begin
+    for i := 0 to pred(list.Count) do
+    begin
+      m_list.Add(list.Items[i]);
+      add(list.Items[i].Childs);
+    end;
+  end;
+begin
+  m_list.Clear;
+  add(m_root.Childs);
+end;
+
 procedure TChapterTitleImpl.release;
 begin
   m_owner := NIL;
   m_xCp   := NIL;
   m_root.release;
+  m_list.Clear;
 end;
 
 procedure TChapterTitleImpl.setxChapter(value: IXMLChapter);
@@ -224,6 +267,7 @@ procedure TChapterTitleImpl.up;
 begin
   m_owner.up(self);
   FModified := true;
+  refreshList;
 end;
 
 

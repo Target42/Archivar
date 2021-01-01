@@ -1,7 +1,7 @@
 object dsProtocol: TdsProtocol
   OldCreateOrder = False
-  Height = 342
-  Width = 696
+  Height = 507
+  Width = 826
   object PRTab: TIBTable
     Database = DBMod.IBDatabase1
     Transaction = IBTransaction1
@@ -426,5 +426,20 @@ object dsProtocol: TdsProtocol
     DataSet = CPText
     Left = 272
     Top = 264
+  end
+  object BE: TIBTable
+    Database = DBMod.IBDatabase1
+    Transaction = IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    TableName = 'BE_BESCHLUS'
+    UniDirectional = False
+    Left = 360
+    Top = 360
+  end
+  object BETab: TDataSetProvider
+    DataSet = BE
+    Left = 360
+    Top = 424
   end
 end

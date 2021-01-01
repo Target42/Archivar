@@ -7,12 +7,14 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
-				<xs:element ref="Rem"/>
 				<xs:element ref="Gremium"/>
+				<xs:element ref="NichtAbgestimmt"/>
 				<xs:element ref="Abstimmung"/>
+				<xs:element ref="Rem"/>
 			</xs:sequence>
 			<xs:attribute name="datum" type="xs:string"/>
 			<xs:attribute name="zeit" type="xs:string"/>
+			<xs:attribute name="titel" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="Teilnehmer">
@@ -36,6 +38,14 @@
 			<xs:attribute name="ja" type="xs:integer"/>
 			<xs:attribute name="nein" type="xs:integer"/>
 			<xs:attribute name="un" type="xs:integer"/>
+			<xs:attribute name="Nicht" type="xs:integer"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="NichtAbgestimmt">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Teilnehmer" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
 		</xs:complexType>
 	</xs:element>
 </xs:schema>

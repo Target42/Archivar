@@ -110,4 +110,13 @@ object ProtocolMod: TProtocolMod
     Left = 168
     Top = 64
   end
+  object BETab: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    ProviderName = 'BETab'
+    RemoteServer = DSProviderConnection1
+    BeforePost = BETabBeforePost
+    Left = 440
+    Top = 112
+  end
 end

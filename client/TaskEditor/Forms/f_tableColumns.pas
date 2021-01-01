@@ -17,17 +17,22 @@ type
     BitBtn1: TBitBtn;
     BitBtn2: TBitBtn;
     BitBtn3: TBitBtn;
+    BitBtn4: TBitBtn;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
     procedure BitBtn3Click(Sender: TObject);
+    procedure BitBtn4Click(Sender: TObject);
   private
     m_table : ITaskCtrl;
+    m_df    : IDataField;
     procedure setTable( value : ITaskCtrl );
 
     procedure updateView;
     function  getPropertyValue( ctrl : ITaskCtrl; name : string ) : string;
+    procedure setPropertyValue(ctrl : ITaskCtrl; name, value: string);
+
   public
     property Table : ITaskCtrl read m_table write setTable;
   end;
@@ -89,14 +94,39 @@ begin
   updateView;
 end;
 
+procedure TTableColumnsForm.BitBtn4Click(Sender: TObject);
+var
+  i : integer;
+  ctrl: ITaskCtrl;
+begin
+  if not Assigned(m_table) or  not Assigned(m_df) then
+    exit;
+
+  for i := 0 to pred(m_df.Childs.Count) do
+  begin
+    ctrl := m_table.findCtrl(m_df.Childs.Items[i].Name);
+    if not Assigned( ctrl ) then
+    begin
+      ctrl := m_table.NewChild('TTableField');
+      setPropertyValue(ctrl, 'Header',    m_df.Childs.Items[i].Name);
+      setPropertyValue(ctrl, 'Width',     '100' );
+      setPropertyValue(ctrl, 'Datafield',m_df.Childs.Items[i].Name);
+      ctrl.DataField := m_df.Childs.Items[i];
+    end;
+  end;
+  updateView;
+end;
+
 procedure TTableColumnsForm.FormCreate(Sender: TObject);
 begin
   m_table := NIL;
+  m_df    := NIL;
 end;
 
 procedure TTableColumnsForm.FormDestroy(Sender: TObject);
 begin
   m_table := NIL;
+  m_df    := NIL;
 end;
 
 function TTableColumnsForm.getPropertyValue(ctrl: ITaskCtrl;
@@ -113,9 +143,30 @@ begin
 
 end;
 
+procedure TTableColumnsForm.setPropertyValue(ctrl: ITaskCtrl; name,
+  value: string);
+var
+  p : ITaskCtrlProp;
+begin
+  p := ctrl.getPropertyByName(name);
+  if Assigned(p) then
+    p.Value := value;
+end;
+
 procedure TTableColumnsForm.setTable(value: ITaskCtrl);
+var
+  p     : IProperty;
 begin
   m_table := value;
+
+  if SameTExt(m_table.DataField.Typ, 'linktable')  then
+  begin
+    p := m_table.DataField.getPropertyByName('tablename');
+    if Assigned(p) then
+      m_df := m_table.DataField.Owner.getByName(p.Value);
+  end
+  else
+    m_df := m_table.DataField;
 
   updateView;
 end;

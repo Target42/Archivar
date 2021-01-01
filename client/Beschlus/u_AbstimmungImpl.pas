@@ -17,6 +17,7 @@ type
     m_ja        : integer;
     m_nein      : integer;
     m_enthalten : integer;
+    m_modified  : boolean;
 
     procedure setGremium( value : IPersonenListe );
     function  getGremium : IPersonenListe;
@@ -32,6 +33,9 @@ type
     function  getEnthalten : integer;
     procedure setZeitpunkt( value : TDateTime);
     function  getZeitpunkt : TDateTime;
+    function  GetModified: boolean;
+    procedure SetModified(const Value: boolean);
+
   public
     constructor create;
     Destructor Destroy; override;
@@ -75,6 +79,11 @@ begin
   Result := m_gremium;
 end;
 
+function TAbstimmungImpl.GetModified: boolean;
+begin
+  Result := m_modified;
+end;
+
 function TAbstimmungImpl.getNichtabgetimmt: IPersonenListe;
 begin
   Result := m_na;
@@ -92,14 +101,18 @@ end;
 
 procedure TAbstimmungImpl.Release;
 begin
-  m_gremium.release;
-  m_abwesend.release;
-  m_na.release;
+  if Assigned(m_gremium) then
+    m_gremium.release;
+  if Assigned(m_abwesend) then
+    m_abwesend.release;
+  if Assigned(m_na) then
+    m_na.release;
 end;
 
 procedure TAbstimmungImpl.setAbgelehnt(value: integer);
 begin
   m_nein := value;
+  m_modified := true;
 end;
 
 procedure TAbstimmungImpl.setAbwesend(value: IPersonenListe);
@@ -110,26 +123,36 @@ end;
 procedure TAbstimmungImpl.setEnthalten(value: integer);
 begin
   m_enthalten := value;
+  m_modified := true;
 end;
 
 procedure TAbstimmungImpl.setGremium(value: IPersonenListe);
 begin
   m_gremium := value;
+  m_modified := true;
+end;
+
+procedure TAbstimmungImpl.SetModified(const Value: boolean);
+begin
+  m_modified := value;
 end;
 
 procedure TAbstimmungImpl.setNichtabgetimmt(value: IPersonenListe);
 begin
   m_na := value;
+  m_modified := true;
 end;
 
 procedure TAbstimmungImpl.setZeitpunkt(value: TDateTime);
 begin
   m_ts := value;
+  m_modified := true;
 end;
 
 procedure TAbstimmungImpl.setZustimmung(value: integer);
 begin
   m_ja := value;
+  m_modified := true;
 end;
 
 end.
