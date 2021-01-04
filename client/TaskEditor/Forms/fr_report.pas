@@ -45,6 +45,8 @@ type
     SpeedButton10: TSpeedButton;
     TabSheet1: TTabSheet;
     WebBrowser2: TWebBrowser;
+    SpeedButton11: TSpeedButton;
+    SaveDialog1: TSaveDialog;
     procedure PopupMenu1Popup(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure CheckBox1Click(Sender: TObject);
@@ -60,6 +62,7 @@ type
     procedure SpeedButton9Click(Sender: TObject);
     procedure SpeedButton4Click(Sender: TObject);
     procedure SpeedButton10Click(Sender: TObject);
+    procedure SpeedButton11Click(Sender: TObject);
   private
     m_Path : string;
     m_tc   : ITaskContainer;
@@ -191,6 +194,10 @@ begin
   begin
     if (m_files[i].DataFile = tf)  then
     begin
+      if m_files[i].IsChanged then begin
+        if (MessageDlg('Sollen die Änderungen gespeichert werden?', mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
+          m_files[i].save;
+      end;
       m_files[i].closeEditor;
       break;
     end;
@@ -200,6 +207,8 @@ end;
 procedure TReportFrame.doCloseFrame(value: TReportFrameEditor);
 begin
   m_files.Extract(value);
+  value.Tab.PageControl := NIL;
+  value.Tab.Free;
 end;
 
 procedure TReportFrame.doNewForm(frm: ITaskForm);
@@ -438,6 +447,21 @@ begin
   ListBox2Click(Sender);
 end;
 
+procedure TReportFrame.SpeedButton11Click(Sender: TObject);
+var
+  tf    : ITaskFile;
+begin
+  if ListBox1.ItemIndex = -1 then
+    exit;
+
+  SaveDialog1.FileName := ListBox1.Items.Strings[ListBox1.ItemIndex]+'.xml';
+  if SaveDialog1.Execute then
+  begin
+    tf := ITaskFile( Pointer(ListBox1.Items.Objects[ListBox1.ItemIndex] ));
+    TFile.WriteAllText( SaveDialog1.FileName, tf.Text, TEncoding.UTF8);
+  end;
+end;
+
 procedure TReportFrame.SpeedButton1Click(Sender: TObject);
 var
   InputBoxForm : TInputBoxForm;
@@ -644,7 +668,6 @@ var
   inx : integer;
   tf  : ITaskFile;
 begin
-  // style file löschen .
   inx := ListBox3.ItemIndex;
   if inx = -1 then
       exit;

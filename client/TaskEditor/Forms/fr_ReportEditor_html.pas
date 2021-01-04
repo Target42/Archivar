@@ -43,7 +43,7 @@ end;
 procedure TReportFrameEditorHtml.insertFieldName(name: string);
 begin
   inherited;
-  SynEdit1.SelText := name;
+  SynEdit1.SelText := '<#field '+name+'>';
 end;
 
 procedure TReportFrameEditorHtml.save;

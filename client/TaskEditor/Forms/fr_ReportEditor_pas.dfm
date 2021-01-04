@@ -1,6 +1,4 @@
 inherited ReportFrameEditorPas: TReportFrameEditorPas
-  ExplicitWidth = 451
-  ExplicitHeight = 305
   object Splitter1: TSplitter [0]
     Left = 0
     Top = 169
@@ -12,10 +10,7 @@ inherited ReportFrameEditorPas: TReportFrameEditorPas
     ExplicitWidth = 235
   end
   inherited Panel1: TPanel
-    Width = 451
-    ExplicitWidth = 451
     inherited SpeedButton1: TSpeedButton
-      Left = 425
       ExplicitLeft = 425
     end
   end
@@ -47,7 +42,11 @@ inherited ReportFrameEditorPas: TReportFrameEditorPas
     Highlighter = SynDWSSyn1
     Lines.Strings = (
       'SynEdit1')
+    Options = [eoAutoIndent, eoDragDropEditing, eoEnhanceEndKey, eoGroupUndo, eoScrollPastEol, eoShowScrollHint, eoSmartTabDelete, eoSmartTabs, eoTabIndent, eoTabsToSpaces]
+    WantTabs = True
     FontSmoothing = fsmNone
+    ExplicitLeft = 1
+    ExplicitTop = 19
   end
   object Panel2: TPanel
     Left = 0

@@ -311,6 +311,7 @@ type
       function isName( name : string ) : Boolean;
 
       function load( fname : string ) : boolean;
+      function loadFromStream( st : TStream ) : boolean;
       function loadFromZip( zip : TZipFile; fname : string ) : boolean;
 
       function save( path : string ) : boolean;

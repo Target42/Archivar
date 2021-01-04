@@ -18,6 +18,8 @@ type
     TaskTab: TDataSetProvider;
     BE: TIBTable;
     BETab: TDataSetProvider;
+    GetSysTe: TIBQuery;
+    GetSysTeQry: TDataSetProvider;
   private
     { Private-Deklarationen }
   public

@@ -3,7 +3,7 @@ unit i_beschluss;
 interface
 
 uses
-  i_personen, Data.DB, System.Classes;
+  i_personen, Data.DB, System.Classes, xsd_TaskData;
 
 type
   IBeschluss      = interface;
@@ -48,6 +48,8 @@ type
     procedure SetID(const Value: integer);
     function  GetCTID: integer;
     procedure SetCTID(const Value: integer);
+    procedure setData( value : IXMLList );
+    function  getData : IXMLList;
 
     // public
     property ID           : integer           read GetID            write SetID;
@@ -57,6 +59,7 @@ type
     property Text         : string            read getText          write setText;
     property Abstimmung   : IAbstimmung       read getAbstimmung ;
     property Modified     : boolean           read GetModified      write SetModified;
+    property Data         : IXMLList          read getData          write setData;
 
     procedure loadFromDataSet( data : TDataSet );
     procedure save( data : TDataSet );

@@ -760,6 +760,7 @@ begin
     FCurrentNodeControl := NIL;
   end;
   m_testMode := true;
+
   prepareDrop;
   m_form.Base.dropControls;
   m_form.Base.Control := NIL;

@@ -10,11 +10,7 @@ type
   TTaskLoaderMod = class(TDataModule)
     DSProviderConnection1: TDSProviderConnection;
     GetTAQry: TClientDataSet;
-    GetTEQry: TClientDataSet;
     TaskTab: TClientDataSet;
-    BECTTab: TClientDataSet;
-    BEListQry: TClientDataSet;
-    BETab: TClientDataSet;
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
 
@@ -25,22 +21,21 @@ type
     m_xList : IXMLList;
     m_style : ITaskStyle;
 
-    function loadTask( dataset : TClientDataset ): boolean;
     function loadData( dataset    : TClientDataset )  : boolean; overload;
     function loadData( st         : TStream )         : boolean; overload;
 
     function saveDataToStream(st: TStream): boolean;
   public
     function load( taid : integer ) : boolean;
+    function SysLoad( clid : string ) : boolean;
 
     property TaskContainer  : ITaskContainer  read m_tc     write m_tc;
     property Taskform       : ITaskForm       read m_form   write m_form;
-    property TaskData       : IXMLList        read m_xList  write m_xList;
     property TaskStyle      : ITaskStyle      read m_style  write m_style;
 
+    property TaskData       : IXMLList        read m_xList  write m_xList;
+
     function BuildForm( owner : TControl) : ITaskForm;
-
-
 
     function saveFormData : boolean;
   end;
@@ -51,7 +46,7 @@ var
 implementation
 
 uses
-  m_glob_client, u_taskForm2XML, System.Variants;
+  m_glob_client, u_taskForm2XML, System.Variants, u_templateCache;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -69,10 +64,10 @@ end;
 
 procedure TTaskLoaderMod.DataModuleDestroy(Sender: TObject);
 begin
-  if Assigned(m_tc) then
-    m_tc.release;
-  if Assigned(m_form) then
-    m_form.release;
+  m_form  := NIL;
+  m_tc    := NIL;
+  m_xList := NIL;
+  m_style := NIL;
 end;
 
 function TTaskLoaderMod.BuildForm(owner: TControl): ITaskForm;
@@ -90,21 +85,22 @@ begin
   m_taid := taid;
   if Assigned(m_tc) then
   begin
-    m_tc.release;
     m_tc := NIL;
   end;
   m_xList := NIL;
 
-  GetTAQry.ParamByName('TA_ID').AsInteger := m_taid;
+  GetTAQry.ParamByName('TA_ID').AsInteger := taid;
   GetTAQry.Open;
 
-  GetTEQry.ParamByName('TE_ID').AsInteger := GetTAQry.FieldByName('TE_ID').AsInteger;
-  GetTEQry.Open;
-
-  loadTask(GetTEQry);
   loadData(GetTAQry);
 
-  GetTAQry.Close;
+  m_tc    := TemplateCacheMod.load(GetTAQry.FieldByName('TE_ID').AsInteger);
+  if Assigned(m_tc) then
+  begin
+    m_style := m_tc.Styles.getStyle(GetTAQry.FieldByName('TA_STYLE').AsString);
+    m_form  := m_tc.Task.getMainForm;
+  end;
+
   GetTAQry.Close;
 
   Result := Assigned(m_tc);
@@ -117,7 +113,6 @@ begin
   st := dataset.CreateBlobStream(dataset.FieldByName('TA_DATA'), bmRead);
   self.loadData(st);
   st.Free;
-  m_style  := m_tc.Styles.getStyle(dataset.FieldByName('TA_STYLE').AsString );
 
   Result := true;
 end;
@@ -135,20 +130,6 @@ begin
     Result := Assigned(m_xList);
   end;
 end;
-
-function TTaskLoaderMod.loadTask(dataset: TClientDataset): boolean;
-var
-  st  : TStream;
-begin
-  if not dataset.IsEmpty then
-  begin
-   st       := dataset.CreateBlobStream(dataset.FieldByName('TE_DATA'), bmRead);
-   m_tc     := loadTaskContainer(st, dataset.FieldByName('TE_NAME').AsString);
-   m_form   := m_tc.Task.getMainForm;
-  end;
-  Result := Assigned(m_tc);
-end;
-
 
 function TTaskLoaderMod.saveDataToStream(st: TStream): boolean;
 var
@@ -187,6 +168,22 @@ begin
     end;
     TaskTab.Close;
   end;
+end;
+
+function TTaskLoaderMod.SysLoad(clid: string): boolean;
+begin
+  if Assigned(m_tc) then
+  begin
+    m_tc := NIL;
+  end;
+  m_xList := NIL;
+
+  m_tc    := TemplateCacheMod.SysLoad(clid);
+
+  if Assigned(m_tc) then
+    m_style  := m_tc.Styles.DefaultStyle;
+
+  Result := Assigned(m_tc);
 end;
 
 end.

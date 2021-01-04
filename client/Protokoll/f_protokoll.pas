@@ -811,11 +811,12 @@ var
   ct    : IChapterTitle;
   html  : THtmlMod;
   en    : TEntry;
+  be    : IBeschluss;
   procedure ShowText( text : string );
   var
     st : TStream;
   begin
-    st := THtmlMod.Test2HTML(text);
+    st := THtmlMod.Text2HTML(text);
     THtmlMod.SetHTML(st, WebBrowser1 );
   end;
 begin
@@ -844,7 +845,20 @@ begin
         html.Free;
       end;
     end;
-    etBeschluss: ;
+    etBeschluss:
+    begin
+      be := IBeschluss(en.Ptr);
+      if m_loader.SysLoad('{1C0F5A8C-2510-4D1C-BF21-C5D8604DAE28}') then
+      begin
+        html  := THtmlMod.Create(self);
+        html.TaskContainer  := m_loader.TaskContainer;
+        html.TaskData       := be.Data;
+        html.TaskStyle      := m_loader.TaskStyle;
+
+        html.show(WebBrowser1);
+        html.Free;
+      end;
+    end;
     etTitle:
     begin
       ct := IChapterTitle(en.Ptr);

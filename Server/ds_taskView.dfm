@@ -86,4 +86,27 @@ object dsTaskView: TdsTaskView
     Left = 464
     Top = 176
   end
+  object GetSysTe: TIBQuery
+    Database = DBMod.IBDatabase1
+    Transaction = IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    ParamCheck = True
+    SQL.Strings = (
+      'select * from TE_TEMPLATE'
+      'where TE_CLID = :clid')
+    Left = 144
+    Top = 80
+    ParamData = <
+      item
+        DataType = ftString
+        Name = 'clid'
+        ParamType = ptInput
+      end>
+  end
+  object GetSysTeQry: TDataSetProvider
+    DataSet = GetSysTe
+    Left = 136
+    Top = 136
+  end
 end

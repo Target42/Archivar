@@ -71,7 +71,7 @@ end;
 procedure TReportFrameEditorPas.insertFieldName(name: string);
 begin
   inherited;
-  SynEdit1.SelText := '<#field '+name+'>';
+  SynEdit1.SelText := ''''+name+'''';
 end;
 
 procedure TReportFrameEditorPas.release;

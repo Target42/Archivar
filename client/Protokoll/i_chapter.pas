@@ -110,7 +110,7 @@ type
       function getxData     : xsd_chapter.IXMLChapter;
       function getPos       : integer;
       function getVotes     : IBeschlussListe;
-
+      // public
       property Owner      : IChapter      read getOwner     write setOwner;
       property Childs     : IChapterList  read getChilds;
       property Name       : string        read getName      write setName;
@@ -124,7 +124,7 @@ type
       property Modified   : boolean       read getModified  write setModified;
       property Pos        : integer       read getPos       write setPos;
 
-      property xData      : xsd_chapter.IXMLChapter   read getxData     write setxData;
+      property xData      : xsd_chapter.IXMLChapter         read getxData     write setxData;
 
       property Votes      : IBeschlussListe read getVotes;
 

@@ -33,7 +33,7 @@ object TaksEditorForm: TTaksEditorForm
     Top = 0
     Width = 802
     Height = 480
-    ActivePage = TabSheet1
+    ActivePage = TabSheet2
     Align = alClient
     TabOrder = 1
     object TabSheet1: TTabSheet
@@ -467,7 +467,7 @@ object TaksEditorForm: TTaksEditorForm
         end
         inherited ImageList1: TImageList
           Bitmap = {
-            494C01010C001800A80010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+            494C01010C001800B00010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
             0000000000003600000028000000400000004000000001002000000000000040
             0000000000000000000000000000000000000000000000000000000000000000
             0000000000000000000000000000000000000000000000000000000000000000
@@ -1027,8 +1027,6 @@ object TaksEditorForm: TTaksEditorForm
           ExplicitWidth = 638
           ExplicitHeight = 452
           inherited TabSheet3: TTabSheet
-            ExplicitLeft = 4
-            ExplicitTop = 24
             ExplicitWidth = 630
             ExplicitHeight = 424
             inherited WebBrowser1: TWebBrowser
@@ -1052,13 +1050,7 @@ object TaksEditorForm: TTaksEditorForm
             end
           end
           inherited TabSheet1: TTabSheet
-            ExplicitLeft = 4
-            ExplicitTop = 24
-            ExplicitHeight = 277
             inherited WebBrowser2: TWebBrowser
-              Width = 287
-              ExplicitWidth = 473
-              ExplicitHeight = 277
               ControlData = {
                 4C000000AA1D0000A11C00000000000000000000000000000000000000000000
                 000000004C000000000000000000000001000000E0D057007335CF11AE690800

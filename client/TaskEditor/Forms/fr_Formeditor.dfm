@@ -37,7 +37,7 @@ object EditorFrame: TEditorFrame
       Left = 1
       Top = 246
       Width = 221
-      Height = 201
+      Height = 58
       Align = alClient
       ExplicitLeft = 88
       ExplicitTop = 264
@@ -78,7 +78,7 @@ object EditorFrame: TEditorFrame
       Left = 1
       Top = 246
       Width = 221
-      Height = 201
+      Height = 58
       Align = alClient
       TabOrder = 1
       ExplicitLeft = 1
@@ -87,7 +87,7 @@ object EditorFrame: TEditorFrame
       ExplicitHeight = 58
       inherited VE: TValueListEditor
         Width = 221
-        Height = 201
+        Height = 58
         DefaultColWidth = 75
         ExplicitWidth = 221
         ExplicitHeight = 58
@@ -781,7 +781,7 @@ object EditorFrame: TEditorFrame
     Left = 669
     Top = 113
     Bitmap = {
-      494C01010C001800580010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01010C0018005C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000004000000001002000000000000040
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

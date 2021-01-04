@@ -23,16 +23,18 @@ object SelectListform: TSelectListform
     Align = alBottom
     AutoSize = True
     TabOrder = 0
-    ExplicitLeft = 184
-    ExplicitTop = 64
+    ExplicitTop = 240
+    ExplicitWidth = 281
     inherited StatusBar1: TStatusBar
       Width = 281
-      ExplicitWidth = 635
+      ExplicitWidth = 281
     end
     inherited Panel1: TPanel
       Width = 281
+      ExplicitWidth = 281
       inherited OKBtn: TBitBtn
         Left = 182
+        ExplicitLeft = 182
       end
     end
   end
@@ -45,10 +47,6 @@ object SelectListform: TSelectListform
     ItemHeight = 13
     TabOrder = 1
     OnClick = ListBox1Click
-    ExplicitLeft = 56
-    ExplicitTop = 24
-    ExplicitWidth = 121
-    ExplicitHeight = 97
   end
   object Panel1: TPanel
     Left = 0
@@ -60,9 +58,6 @@ object SelectListform: TSelectListform
     Caption = 'Panel1'
     ShowCaption = False
     TabOrder = 2
-    ExplicitLeft = 88
-    ExplicitTop = 168
-    ExplicitWidth = 185
     object Edit1: TEdit
       Left = 16
       Top = 8

@@ -13,15 +13,17 @@ object HtmlMod: THtmlMod
     HTMLDoc.Strings = (
       '<!DOCTYPE html>'
       '<html>'
-      '<head>'
-      '<link rel="stylesheet" type="text/css" href="/css/archivar.css">'
-      '</head>'
+      '  <head>'
+      
+        '    <link rel="stylesheet" type="text/css" href="/css/archivar.c' +
+        'ss">'
+      '  </head>'
       '<body>'
       ''
       '<#data>'
       ''
-      ''
-      '</body>')
+      '</body>'
+      '</html>')
     OnHTMLTag = FrameHTMLTag
     Left = 24
     Top = 8

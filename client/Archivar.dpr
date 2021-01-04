@@ -146,7 +146,8 @@ uses
   u_BesucherImpl in 'Protokoll\u_BesucherImpl.pas',
   u_BesucherlisteImpl in 'Protokoll\u_BesucherlisteImpl.pas',
   f_besucher in 'Protokoll\f_besucher.pas' {BesucherForm},
-  xsd_beschlus in '..\misc\xsd_beschlus.pas';
+  xsd_beschlus in '..\misc\xsd_beschlus.pas',
+  u_templateCache in 'Task\u_templateCache.pas' {TemplateCacheMod: TDataModule};
 
 {$R *.res}
 
@@ -163,6 +164,7 @@ begin
   Application.CreateForm(THttpMod, HttpMod);
   Application.CreateForm(TWindowHandler, WindowHandler);
   Application.CreateForm(TBookMarkHandler, BookMarkHandler);
+  Application.CreateForm(TTemplateCacheMod, TemplateCacheMod);
   Application.CreateForm(TMainForm, MainForm);
   Application.Run;
 end.

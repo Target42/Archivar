@@ -41,7 +41,7 @@ type
     function show(web : TWebBrowser ) : string;
 
     class procedure SetHTML(st : TStream; WebBrowser: TWebBrowser);
-    class function  Test2HTML( text : string ) : TStream;
+    class function  Text2HTML( text : string ) : TStream;
 
     function loadByID(taid : integer ) : boolean;
 
@@ -355,7 +355,7 @@ begin
   list.Free;
 end;
 
-class function THtmlMod.Test2HTML(text: string): TStream;
+class function THtmlMod.Text2HTML(text: string): TStream;
 var
   list : TStringList;
   i    : integer;

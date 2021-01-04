@@ -207,9 +207,14 @@ end;
 
 procedure TBeschlusform.FormDestroy(Sender: TObject);
 begin
-  m_gremium.release;
-  m_abwesende.release;
-  m_enthalten.release;
+  if Assigned(m_gremium) then
+    m_gremium.release;
+
+  if Assigned(m_abwesende) then
+    m_abwesende.release;
+
+  if Assigned(m_enthalten) then
+    m_enthalten.release;
 
   TextBlockFrame1.release;
 end;

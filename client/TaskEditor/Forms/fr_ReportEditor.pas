@@ -37,6 +37,7 @@ type
       property Style: ITaskStyle read FSTyle write setStyle;
       property Tab  : TTabSheet read m_tab write setTab;
       property onCloseFrame : TCloseFrame write m_closeFrame;
+      property IsChanged : boolean  read m_changed write m_changed;
 
       procedure save; virtual;
       function isFile( fname : string) : boolean;
@@ -71,7 +72,6 @@ procedure TReportFrameEditor.closeEditor;
 begin
   if Assigned(m_closeFrame) then
     m_closeFrame(self);
-
 end;
 
 function TReportFrameEditor.getfileName: string;

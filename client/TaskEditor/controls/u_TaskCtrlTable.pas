@@ -190,8 +190,8 @@ begin
   m_sg.Top  := y;
   m_sg.Left := X;
   m_sg.Options := [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine,
-    goRangeSelect, goDrawFocusSelected, goRowSizing, goColSizing, goEditing, goTabs, goAlwaysShowEditor,
-    goThumbTracking, goFixedColClick, goFixedRowClick, goFixedHotTrack];
+    goRangeSelect, goDrawFocusSelected, goRowSizing, goColSizing, goEditing, goTabs, goAlwaysShowEditor ];
+//    goThumbTracking, goFixedColClick, goFixedRowClick, goFixedHotTrack];
 
   pop   := TPopupMenu.Create( m_sg );
   m_sg.PopupMenu := pop;
@@ -200,7 +200,7 @@ begin
   addItem('Reihe anhängen', self.SGAddRow);
   addItem('Reihe löschen',  Self.SGRemoveRow );
   addItem('-', NIL);
-  addItem('Reihe Einfügen', Self.SGClear );
+  addItem('Inhalt löschen', Self.SGClear );
 
   Result := m_sg;
 
@@ -249,21 +249,48 @@ begin
   m_sg.Cells[0, m_sg.RowCount-1]     := intToStr( m_sg.RowCount );
   for col := 1 to pred(m_sg.ColCount) do
     m_sg.Cells[col, m_sg.RowCount-1] := '';
+  renumber;
 end;
 
 procedure TaskCtrlTable.SGClear(sender: TObject);
+var
+  x, y : integer;
 begin
-
+  for y := 1 to pred(m_sg.RowCount) do
+    for x := 1 to pred(m_sg.ColCount) do
+      m_sg.Cells[x, y] := '';
 end;
 
 procedure TaskCtrlTable.SGInsertRow(sender: TObject);
+var
+  y : integer;
+  i : integer;
+  x : integer;
 begin
-
+  y := m_sg.Row;
+  SGAddRow( m_sg );
+  for i := pred(m_sg.RowCount) downto y + 1 do
+  begin
+    for x := 1 to pred(m_sg.ColCount) do
+      m_sg.Cells[ x, i ] := m_sg.Cells[ x, i-1 ];
+  end;
+  for x := 1 to pred(m_sg.ColCount) do
+    m_sg.Cells[ x, y ] := '';
+  renumber;
 end;
 
 procedure TaskCtrlTable.SGRemoveRow(sender: TObject);
+var
+  y : integer;
+  x : integer;
 begin
-
+  for y := m_sg.Row to pred(m_sg.RowCount) -1 do
+  begin
+    for x := 1 to pred(m_sg.ColCount) do
+      m_sg.Cells[ x, y ] := m_sg.Cells[ x, y+1 ];
+  end;
+  m_sg.RowCount := m_sg.RowCount - 1;
+  renumber;
 end;
 
 procedure TaskCtrlTable.updateControl;

@@ -30,6 +30,7 @@ type
       function isName( name : string ) : Boolean;
 
       function load( fname : string ) : boolean;
+      function loadFromStream( st : TStream ) : boolean;
       function loadFromZip( zip : TZipFile; fname : string ) : boolean;
 
       function save( path : string ) : boolean;
@@ -122,6 +123,14 @@ begin
   m_mem.LoadFromFile(fname);
   m_name := ExtractFileName(fname);
   m_path := ExtractFilePath(fname);
+end;
+
+function TTaskFileImpl.loadFromStream(st: TStream): boolean;
+begin
+  m_mem.Clear;
+  m_mem.CopyFrom(st, -1);
+
+  Result := (m_mem.Size <> 0 );
 end;
 
 function TTaskFileImpl.loadFromZip(zip: TZipFile; fname: string): boolean;
