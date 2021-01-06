@@ -2,15 +2,14 @@ object ReportFrame: TReportFrame
   Left = 0
   Top = 0
   Width = 451
-  Height = 523
+  Height = 305
   Align = alClient
   AutoSize = True
   TabOrder = 0
-  ExplicitHeight = 305
   object Splitter1: TSplitter
     Left = 153
     Top = 0
-    Height = 523
+    Height = 305
     ExplicitLeft = 200
     ExplicitTop = 48
     ExplicitHeight = 100
@@ -19,26 +18,24 @@ object ReportFrame: TReportFrame
     Left = 156
     Top = 0
     Width = 295
-    Height = 523
+    Height = 305
     ActivePage = TabSheet3
     Align = alClient
     TabOrder = 0
-    ExplicitHeight = 305
     object TabSheet3: TTabSheet
       Caption = 'Preview'
       ImageIndex = 2
-      ExplicitHeight = 277
       object WebBrowser1: TWebBrowser
         Left = 0
         Top = 41
         Width = 287
-        Height = 454
+        Height = 236
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 383
-        ExplicitHeight = 363
+        ExplicitWidth = 581
+        ExplicitHeight = 534
         ControlData = {
-          4C000000AA1D0000EC2E00000000000000000000000000000000000000000000
+          4C000000AA1D0000641800000000000000000000000000000000000000000000
           000000004C000000000000000000000001000000E0D057007335CF11AE690800
           2B2E126208000000000000004C0000000114020000000000C000000000000046
           8000000000000000000000000000000000000000000000000000000000000000
@@ -68,17 +65,20 @@ object ReportFrame: TReportFrame
     object TabSheet1: TTabSheet
       Caption = 'Hilfe'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object WebBrowser2: TWebBrowser
         Left = 0
         Top = 0
         Width = 287
-        Height = 495
+        Height = 277
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 383
-        ExplicitHeight = 404
+        ExplicitHeight = 495
         ControlData = {
-          4C000000AA1D0000293300000000000000000000000000000000000000000000
+          4C000000AA1D0000A11C00000000000000000000000000000000000000000000
           000000004C000000000000000000000001000000E0D057007335CF11AE690800
           2B2E126208000000000000004C0000000114020000000000C000000000000046
           8000000000000000000000000000000000000000000000000000000000000000
@@ -90,22 +90,20 @@ object ReportFrame: TReportFrame
     Left = 0
     Top = 0
     Width = 153
-    Height = 523
+    Height = 305
     Align = alLeft
     BevelOuter = bvNone
     Caption = 'Panel2'
     ShowCaption = False
     TabOrder = 1
-    ExplicitHeight = 305
     object GroupBox2: TGroupBox
       Left = 0
-      Top = 372
+      Top = 154
       Width = 153
       Height = 151
       Align = alBottom
       Caption = 'Testdaten'
       TabOrder = 0
-      ExplicitTop = 154
       object Panel3: TPanel
         Left = 2
         Top = 15
@@ -498,25 +496,23 @@ object ReportFrame: TReportFrame
       Left = 0
       Top = 145
       Width = 153
-      Height = 227
+      Height = 9
       Align = alClient
       Caption = 'Dateien'
       TabOrder = 2
-      ExplicitHeight = 9
       object ListBox3: TListBox
         Left = 2
         Top = 15
         Width = 149
-        Height = 171
+        Height = 251
         Align = alClient
         ItemHeight = 13
         TabOrder = 0
         OnClick = ListBox3DblClick
-        ExplicitHeight = 80
       end
       object Panel5: TPanel
         Left = 2
-        Top = 186
+        Top = -32
         Width = 149
         Height = 39
         Align = alBottom
@@ -524,7 +520,6 @@ object ReportFrame: TReportFrame
         Caption = 'Panel4'
         ShowCaption = False
         TabOrder = 1
-        ExplicitTop = -32
         object SpeedButton4: TSpeedButton
           Left = 8
           Top = 6

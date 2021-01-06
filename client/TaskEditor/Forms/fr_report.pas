@@ -175,6 +175,7 @@ begin
     HtmlMod.TaskContainer := m_tc;
     HtmlMod.TaskStyle     := st;
     HtmlMod.TaskData      := xList;
+    HtmlMod.Title         := 'Titeltext';
     m_path := HtmlMod.show(WebBrowser1);
   finally
     HtmlMod.Free;
@@ -208,7 +209,6 @@ procedure TReportFrame.doCloseFrame(value: TReportFrameEditor);
 begin
   m_files.Extract(value);
   value.Tab.PageControl := NIL;
-  value.Tab.Free;
 end;
 
 procedure TReportFrame.doNewForm(frm: ITaskForm);

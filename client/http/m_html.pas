@@ -22,7 +22,11 @@ type
     m_task : IXMLList;
     m_style: ITaskStyle;
     m_tc   : ITaskContainer;
+    m_title: string;
 
+    m_stack: TStringList;
+    m_path : string;
+    m_clid : string;
     function getField( name : string )          : string;
 
     function createTable( name : string )       : String;
@@ -34,9 +38,17 @@ type
     property TaskContainer  : ITaskContainer  read m_tc     write m_tc;
     property TaskData       : IXMLList        read m_task   write m_task;
     property TaskStyle      : ITaskStyle      read m_style  write m_style;
+    property Title          : string          read m_title  write m_title;
 
     function Content : string;
     procedure SaveToFile( fname : string );
+
+    procedure openStack(clid : string );
+    procedure AddToStack;
+    procedure AddTitleToStack( text : string ; level : integer );
+    procedure AddTextToStack( text : string );
+    procedure AddHtmlToStack( text : string );
+    function  showStack( web : TWebBrowser) : string;
 
     function show(web : TWebBrowser ) : string;
 
@@ -55,7 +67,7 @@ implementation
 
 uses
   System.StrUtils, m_dws, Vcl.Forms, System.IOUtils, m_glob_client,
-  Winapi.ActiveX, m_taskLoader, System.Types;
+  Winapi.ActiveX, m_taskLoader, System.Types, vcl.Clipbrd;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -86,6 +98,53 @@ begin
       [trunc(( xHeader.Field[i].Width / len)*100.0),
        xHeader.Field[i].Header]) + sLineBreak;
   Result := Result + '  </tr>'+sLineBreak;
+end;
+
+procedure THtmlMod.AddHtmlToStack(text: string);
+begin
+  m_stack.Add( text );
+end;
+
+procedure THtmlMod.AddTextToStack(text: string);
+var
+  list : TStringList;
+  i    : integer;
+begin
+  list := TStringList.Create;
+  list.Text := text;
+  for i := 0 to pred(list.Count) do
+    list.Strings[i] := list.Strings[i]+'<br>';
+  m_stack.AddStrings(list);
+  list.Free;
+end;
+
+procedure THtmlMod.AddTitleToStack(text: string; level: integer);
+begin
+  if Level <= 0 then
+    m_stack.Add(text+'<br>')
+  else
+    m_stack.Add(Format('<h%d>%s</h%d>', [level, text, level]));
+end;
+
+procedure THtmlMod.AddToStack;
+var
+  tf :ITaskFile;
+  list : TStringList;
+
+begin
+  list := TStringList.create;
+  PageProducer1.HTMLDoc.Clear;
+  if Assigned(m_style) then
+  begin
+    tf := m_style.Files.getFile('index.html');
+    if Assigned(tf) then
+      PageProducer1.HTMLDoc.Text := tf.Text;
+  end;
+  list.text := PageProducer1.Content;
+  m_stack.AddStrings(list);
+  SaveImages(m_path);
+  m_title := '';
+  list.Free;
 end;
 
 procedure THtmlMod.clearFiles( path : string );
@@ -151,12 +210,14 @@ procedure THtmlMod.DataModuleCreate(Sender: TObject);
 begin
   m_task  := NIL;
   m_style := NIL;
+  m_stack := TStringList.create;
 end;
 
 procedure THtmlMod.DataModuleDestroy(Sender: TObject);
 begin
   m_task  := NIL;
   m_style := NIL;
+  m_stack.Free;
 end;
 
 function THtmlMod.execScript(TagParams: TStrings): string;
@@ -193,7 +254,12 @@ begin
   cmd := LowerCase(TagString);
 
   if cmd = 'data' then
-    ReplaceText := PageProducer1.Content;
+  begin
+    if m_stack.Count > 0 then
+      ReplaceText := m_stack.Text
+    else
+      ReplaceText := PageProducer1.Content;
+  end;
 
 end;
 
@@ -227,6 +293,14 @@ begin
   loader.Free;
 end;
 
+procedure THtmlMod.openStack(clid: string);
+begin
+  m_clid := clid;
+  m_path := TPath.Combine(GM.wwwHome, m_clid);
+  ForceDirectories(m_path);
+  m_stack.Add('');
+end;
+
 procedure THtmlMod.PageProducer1HTMLTag(Sender: TObject; Tag: TTag;
   const TagString: string; TagParams: TStrings; var ReplaceText: string);
 var
@@ -249,7 +323,19 @@ begin
       ReplaceText := execScript( TagParams)
     else
       ReplaceText := '!!Es wurde kein Script-Name angegeben!!';
+  end
+  else if cmd = 'system' then
+  begin
+    if TagParams.Count > 0 then
+    begin
+      if SameText(TagParams.Strings[0], 'title') then
+        ReplaceText := m_title
+      else
+        ReplaceText := 'Unbekannter system parameter : '+TagParams.Strings[0]+'<br>';
+    end;
+
   end;
+
 end;
 
 procedure THtmlMod.SaveImages(path: string);
@@ -337,7 +423,9 @@ begin
       list.Add('<li>Die Datei "index.html" wurde nicht gefunden</li>');
     end
     else
+    begin
       PageProducer1.HTMLDoc.Text := tf.Text;
+    end;
   end;
   Result := TPath.Combine(GM.wwwHome, m_tc.CLID);
   ForceDirectories(Result);
@@ -353,6 +441,29 @@ begin
 
   web.Navigate('http://localhost:42424/'+m_tc.CLID+'/index.html');
   list.Free;
+end;
+
+function THtmlMod.showStack(web : TWebBrowser) : string;
+var
+  fname : string;
+  list  : TStringList;
+  url   : string;
+begin
+  if m_stack.Count = 0 then
+    m_stack.Add('Kein Inhalt!');
+
+  fname := TPath.Combine(m_path, 'index.html');
+  list := TStringList.Create;
+  try
+    list.text := Frame.Content;
+    list.SaveToFile(fname);
+  finally
+    list.Free;
+  end;
+  url := 'http://localhost:42424/'+m_clid+'/index.html';
+  web.Navigate(url);
+  Clipboard.AsText := url;
+
 end;
 
 class function THtmlMod.Text2HTML(text: string): TStream;

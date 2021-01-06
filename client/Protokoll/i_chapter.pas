@@ -143,6 +143,7 @@ type
       procedure reindex;
 
       function hasID( id : integer ) : Boolean;
+      function level : integer;
 
       procedure release;
   end;

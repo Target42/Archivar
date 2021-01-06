@@ -11,7 +11,7 @@ uses
   JvDBDateTimePicker, Vcl.Buttons, f_titel_edit, xsd_protocol,
   fr_chapter, xsd_chapter, i_personen, i_chapter, System.ImageList, Vcl.ImgList,
   Vcl.OleCtrls, SHDocVw, m_taskLoader, System.Generics.Collections,
-  i_beschluss;
+  i_beschluss, m_html;
 
 type
   TProtokollForm = class(TForm)
@@ -155,6 +155,9 @@ type
     procedure fillStatusMap;
 
     procedure clearTree;
+
+    procedure showChapterTitle( ct :IChapterTitle; html : THtmlMod);
+    procedure showTask( cp : IChapter; html : THtmlMod);
   public
     property ID : integer read getID write setID;
     property RO : boolean read m_ro write setRO;
@@ -169,7 +172,7 @@ uses
   m_glob_client, Xml.XMLIntf, Xml.XMLDoc, u_bookmark, m_BookMarkHandler,
   u_berTypes, System.JSON, u_json,
   m_WindowHandler, f_chapter_content, u_gremium, system.UITypes,
-  u_ChapterImpl, u_ProtocolImpl, u_speedbutton, m_html, f_abwesenheit,
+  u_ChapterImpl, u_ProtocolImpl, u_speedbutton, f_abwesenheit,
   f_besucher, f_bechlus;
 
 {$R *.dfm}
@@ -805,6 +808,22 @@ begin
   UpdateTN;
 end;
 
+procedure TProtokollForm.showChapterTitle(ct: IChapterTitle; html: THtmlMod);
+  procedure ShowChilds( childs : IChapterList );
+  var
+    i : integer;
+  begin
+    for i := 0 to pred(childs.Count) do
+    begin
+      showTask( childs.Items[i], html);
+      ShowChilds(childs.Items[i].Childs);
+    end;
+  end;
+begin
+  html.AddTitleToStack(ct.FullTitle, 1);
+  ShowChilds( ct.Root.Childs);
+end;
+
 procedure TProtokollForm.showContent;
 var
   cp    : IChapter;
@@ -812,12 +831,23 @@ var
   html  : THtmlMod;
   en    : TEntry;
   be    : IBeschluss;
+  s     : string;
   procedure ShowText( text : string );
   var
     st : TStream;
   begin
     st := THtmlMod.Text2HTML(text);
     THtmlMod.SetHTML(st, WebBrowser1 );
+  end;
+  procedure startHtml(clid : string );
+  begin
+    html  := THtmlMod.Create(self);
+    html.openStack(CLID);
+  end;
+  procedure endHtml;
+  begin
+    html.showStack(WebBrowser1);
+    html.Free;
   end;
 begin
   if not Assigned(TV.Selected.Data) then
@@ -829,21 +859,16 @@ begin
     etChapterText:
     begin
       cp := IChapter( en.Ptr);
-      ShowText( cp.Rem );
+      startHtml( m_proto.CLID);
+      showTask( cp, html );
+      endHtml;
     end;
     etTask:
     begin
       cp := IChapter( en.Ptr);
-      if m_loader.load(cp.TAID) then
-      begin
-        html  := THtmlMod.Create(self);
-        html.TaskContainer  := m_loader.TaskContainer;
-        html.TaskData       := m_loader.TaskData;
-        html.TaskStyle      := m_loader.TaskStyle;
-
-        html.show(WebBrowser1);
-        html.Free;
-      end;
+      startHtml( m_proto.CLID);
+      showTask( cp, html );
+      endHtml;
     end;
     etBeschluss:
     begin
@@ -862,7 +887,51 @@ begin
     etTitle:
     begin
       ct := IChapterTitle(en.Ptr);
-      ShowText( ct.Text );
+      startHtml(m_proto.CLID);
+      showChapterTitle( ct, html);
+      endHtml;
+    end;
+  end;
+end;
+
+procedure TProtokollForm.showTask(cp: IChapter; html : THtmlMod);
+var
+  be    : IBeschluss;
+  i     : integer;
+begin
+  if cp.TAID = 0 then
+  begin
+    if cp.Numbering then
+      html.AddTitleToStack( cp.fullTitle, cp.level)
+    else
+      html.AddTextToStack(cp.fullTitle);
+    html.AddTextToStack(cp.Rem);
+  end
+  else
+  begin
+    if m_loader.load(cp.TAID) then
+    begin
+      html.TaskContainer  := m_loader.TaskContainer;
+      html.TaskStyle      := m_loader.TaskStyle;
+      html.TaskData       := m_loader.TaskData;
+      html.Title          := cp.fullTitle;
+      if cp.Numbering then
+        html.AddTitleToStack( cp.fullTitle, cp.level)
+      else
+        html.AddTextToStack(cp.fullTitle);
+
+      html.AddToStack;
+      for i := 0 to pred( cp.Votes.Count ) do
+      begin
+        be := cp.Votes.Item[i];
+        if m_loader.SysLoad('{1C0F5A8C-2510-4D1C-BF21-C5D8604DAE28}') then
+        begin
+          html.TaskContainer  := m_loader.TaskContainer;
+          html.TaskData       := be.Data;
+          html.TaskStyle      := m_loader.TaskStyle;
+          html.AddToStack;
+        end;
+      end;
     end;
   end;
 end;

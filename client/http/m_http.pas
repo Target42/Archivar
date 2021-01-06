@@ -54,6 +54,9 @@ begin
   end
   else
   begin
+    if SameText(ExtractFileExt(fname), '.css') then
+      AResponseInfo.ContentType := 'text/css';
+
     AResponseInfo.ResponseNo := 200;
     AResponseInfo.ContentStream := TFileStream.Create(fname, fmOpenRead + fmShareDenyNone);
     AResponseInfo.FreeContentStream := true;

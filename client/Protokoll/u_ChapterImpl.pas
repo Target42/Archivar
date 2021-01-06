@@ -72,6 +72,7 @@ type
       procedure reindex;
 
       function hasID( id : integer ) : Boolean;
+      function level : integer;
 
       procedure release;
   end;
@@ -262,6 +263,20 @@ begin
     Result := checkChilds(m_childs);
   end;
 
+end;
+
+function TChapterImpl.level: integer;
+var
+  ptr : IChapter;
+begin
+  Result := 0;
+
+  ptr := self;
+  while Assigned(ptr) do
+  begin
+    ptr := ptr.Owner;
+    inc(Result);
+  end;
 end;
 
 function TChapterImpl.newChapter: IChapter;
