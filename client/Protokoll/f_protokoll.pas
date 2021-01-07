@@ -11,7 +11,7 @@ uses
   JvDBDateTimePicker, Vcl.Buttons, f_titel_edit, xsd_protocol,
   fr_chapter, xsd_chapter, i_personen, i_chapter, System.ImageList, Vcl.ImgList,
   Vcl.OleCtrls, SHDocVw, m_taskLoader, System.Generics.Collections,
-  i_beschluss, m_html;
+  i_beschluss, m_html, u_renderer;
 
 type
   TProtokollForm = class(TForm)
@@ -136,6 +136,8 @@ type
 
     m_statusMap     : TDictionary<TTeilnehmerStatus, integer>;
 
+    m_renderer      : TProtocolRenderer;
+
     procedure setID( value : integer );
     function  getID : integer;
 
@@ -155,9 +157,6 @@ type
     procedure fillStatusMap;
 
     procedure clearTree;
-
-    procedure showChapterTitle( ct :IChapterTitle; html : THtmlMod);
-    procedure showTask( cp : IChapter; html : THtmlMod);
   public
     property ID : integer read getID write setID;
     property RO : boolean read m_ro write setRO;
@@ -688,6 +687,7 @@ end;
 
 procedure TProtokollForm.FormCreate(Sender: TObject);
 begin
+  m_renderer  := TProtocolRenderer.create;
   m_statusMap := TDictionary<TTeilnehmerStatus, integer>.create;
 
   Application.CreateForm(TTitelEditform, m_TitelEditform);
@@ -702,6 +702,7 @@ begin
   m_grList      := TGremiumListForm.Create(Self);
   m_loader      := TTaskLoaderMod.Create(self);
   m_proto       := NIL;
+  m_renderer.Loader := m_loader;
 
   fillStatusMap;
 end;
@@ -718,6 +719,8 @@ begin
   m_statusMap.Free;
 
   clearTree;
+
+  m_renderer.Free;
 end;
 
 function TProtokollForm.getID: integer;
@@ -808,132 +811,23 @@ begin
   UpdateTN;
 end;
 
-procedure TProtokollForm.showChapterTitle(ct: IChapterTitle; html: THtmlMod);
-  procedure ShowChilds( childs : IChapterList );
-  var
-    i : integer;
-  begin
-    for i := 0 to pred(childs.Count) do
-    begin
-      showTask( childs.Items[i], html);
-      ShowChilds(childs.Items[i].Childs);
-    end;
-  end;
-begin
-  html.AddTitleToStack(ct.FullTitle, 1);
-  ShowChilds( ct.Root.Childs);
-end;
-
 procedure TProtokollForm.showContent;
 var
-  cp    : IChapter;
-  ct    : IChapterTitle;
-  html  : THtmlMod;
-  en    : TEntry;
-  be    : IBeschluss;
-  s     : string;
-  procedure ShowText( text : string );
-  var
-    st : TStream;
-  begin
-    st := THtmlMod.Text2HTML(text);
-    THtmlMod.SetHTML(st, WebBrowser1 );
-  end;
-  procedure startHtml(clid : string );
-  begin
-    html  := THtmlMod.Create(self);
-    html.openStack(CLID);
-  end;
-  procedure endHtml;
-  begin
-    html.showStack(WebBrowser1);
-    html.Free;
-  end;
+  en : TEntry;
 begin
   if not Assigned(TV.Selected.Data) then
     exit;
   en := TEntry(TV.Selected.Data);
 
+  m_renderer.renderStart;
   case en.Typ of
-    etNothing: ;
-    etChapterText:
-    begin
-      cp := IChapter( en.Ptr);
-      startHtml( m_proto.CLID);
-      showTask( cp, html );
-      endHtml;
-    end;
-    etTask:
-    begin
-      cp := IChapter( en.Ptr);
-      startHtml( m_proto.CLID);
-      showTask( cp, html );
-      endHtml;
-    end;
-    etBeschluss:
-    begin
-      be := IBeschluss(en.Ptr);
-      if m_loader.SysLoad('{1C0F5A8C-2510-4D1C-BF21-C5D8604DAE28}') then
-      begin
-        html  := THtmlMod.Create(self);
-        html.TaskContainer  := m_loader.TaskContainer;
-        html.TaskData       := be.Data;
-        html.TaskStyle      := m_loader.TaskStyle;
-
-        html.show(WebBrowser1);
-        html.Free;
-      end;
-    end;
-    etTitle:
-    begin
-      ct := IChapterTitle(en.Ptr);
-      startHtml(m_proto.CLID);
-      showChapterTitle( ct, html);
-      endHtml;
-    end;
+    etNothing     : m_renderer.renderProtocol(m_proto);
+    etChapterText : m_renderer.renderChapter( IChapter( en.Ptr ));
+    etTask        : m_renderer.renderChapter( IChapter( en.Ptr ));
+    etBeschluss   : m_renderer.renderBeschluss(IBeschluss(en.Ptr));
+    etTitle       : m_renderer.renderChapterTitle(IChapterTitle(en.Ptr));
   end;
-end;
-
-procedure TProtokollForm.showTask(cp: IChapter; html : THtmlMod);
-var
-  be    : IBeschluss;
-  i     : integer;
-begin
-  if cp.TAID = 0 then
-  begin
-    if cp.Numbering then
-      html.AddTitleToStack( cp.fullTitle, cp.level)
-    else
-      html.AddTextToStack(cp.fullTitle);
-    html.AddTextToStack(cp.Rem);
-  end
-  else
-  begin
-    if m_loader.load(cp.TAID) then
-    begin
-      html.TaskContainer  := m_loader.TaskContainer;
-      html.TaskStyle      := m_loader.TaskStyle;
-      html.TaskData       := m_loader.TaskData;
-      html.Title          := cp.fullTitle;
-      if cp.Numbering then
-        html.AddTitleToStack( cp.fullTitle, cp.level)
-      else
-        html.AddTextToStack(cp.fullTitle);
-
-      html.AddToStack;
-      for i := 0 to pred( cp.Votes.Count ) do
-      begin
-        be := cp.Votes.Item[i];
-        if m_loader.SysLoad('{1C0F5A8C-2510-4D1C-BF21-C5D8604DAE28}') then
-        begin
-          html.TaskContainer  := m_loader.TaskContainer;
-          html.TaskData       := be.Data;
-          html.TaskStyle      := m_loader.TaskStyle;
-          html.AddToStack;
-        end;
-      end;
-    end;
-  end;
+  m_renderer.Show(WebBrowser1);
 end;
 
 procedure TProtokollForm.SpeichernClick(Sender: TObject);
@@ -954,6 +848,7 @@ var
   cp, old   : IChapterTitle;
   i         : integer;
   node      : TTreeNode;
+  root      : TTreeNode;
   en        : TEntry;
 begin
   old := NIL;
@@ -968,13 +863,18 @@ begin
 
     clearTree;
 
+    en   := TEntry.create;
+    root := TV.Items.AddChildObject(NIL, 'Dokument', en);
+    root.ImageIndex     := 7;
+    root.SelectedIndex  := 7;
+
     for i := 0 to pred(m_proto.Chapter.Count) do
     begin
       cp   := m_proto.Chapter.Items[i];
       en   := Tentry.create(cp);
-      node := TV.Items.AddObject(NIL, cp.FullTitle, en);
-      node.ImageIndex := 0;
-      node.SelectedIndex := 0;
+      node := TV.Items.AddChildObject(root, cp.FullTitle, en);
+      node.ImageIndex     := 0;
+      node.SelectedIndex  := 0;
 
       buildTree( node, cp );
 
@@ -986,6 +886,7 @@ begin
     TV.Items.EndUpdate;
     Screen.Cursor := crDefault;
   end;
+  root.Expand(true);
 
 end;
 

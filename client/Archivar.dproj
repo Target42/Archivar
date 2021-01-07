@@ -482,6 +482,7 @@
             <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
+        <DCCReference Include="Protokoll\u_renderer.pas"/>
         <None Include="Datafields\ERA-NS.txt"/>
         <RcItem Include="dws\dws.html">
             <ContainerId>ResourceItem</ContainerId>

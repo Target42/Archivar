@@ -147,7 +147,8 @@ uses
   u_BesucherlisteImpl in 'Protokoll\u_BesucherlisteImpl.pas',
   f_besucher in 'Protokoll\f_besucher.pas' {BesucherForm},
   xsd_beschlus in '..\misc\xsd_beschlus.pas',
-  u_templateCache in 'Task\u_templateCache.pas' {TemplateCacheMod: TDataModule};
+  u_templateCache in 'Task\u_templateCache.pas' {TemplateCacheMod: TDataModule},
+  u_renderer in 'Protokoll\u_renderer.pas';
 
 {$R *.res}
 

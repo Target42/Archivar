@@ -298,7 +298,9 @@ begin
   m_clid := clid;
   m_path := TPath.Combine(GM.wwwHome, m_clid);
   ForceDirectories(m_path);
+  m_stack.Clear;
   m_stack.Add('');
+   { TODO : Löschen einfügen }
 end;
 
 procedure THtmlMod.PageProducer1HTMLTag(Sender: TObject; Tag: TTag;
