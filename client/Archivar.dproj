@@ -483,6 +483,10 @@
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
         <DCCReference Include="Protokoll\u_renderer.pas"/>
+        <DCCReference Include="Protokoll\f_protokoll_view.pas">
+            <Form>ProtokollViewForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <None Include="Datafields\ERA-NS.txt"/>
         <RcItem Include="dws\dws.html">
             <ContainerId>ResourceItem</ContainerId>

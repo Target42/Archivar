@@ -4,7 +4,7 @@ interface
 
 uses
   System.SysUtils, System.Classes, System.Generics.Collections, Vcl.Forms, f_taskEdit,
-  f_protokoll;
+  f_protokoll, f_protokoll_view;
 
 type
   TWindowHandler = class(TDataModule)
@@ -13,6 +13,7 @@ type
   private
     m_taskMap     : TDictionary<integer,TTaskEditForm>;
     m_protocolMap : TDictionary<integer,TProtokollForm>;
+    m_protoView   : TDictionary<integer,TProtokollViewForm>;
 
   public
     procedure openTaskWindow( id, typeID : integer; ro : boolean );
@@ -24,6 +25,10 @@ type
     procedure closeProtoclWindow( id : integer );
     function isProtocolOpen( id : integer ) : boolean;
     procedure closeProtocolWindowMsg( id : integer;  text : string );
+
+    procedure openProtocolView( id : integer );
+    procedure closeProtoclView( id : integer );
+
   end;
 
 var
@@ -41,6 +46,11 @@ uses
 procedure TWindowHandler.closeTaskWindow(id: integer);
 begin
   m_taskMap.Remove(id);
+end;
+
+procedure TWindowHandler.closeProtoclView(id: integer);
+begin
+  m_protoView.Remove(id);
 end;
 
 procedure TWindowHandler.closeProtoclWindow(id: integer);
@@ -76,12 +86,14 @@ procedure TWindowHandler.DataModuleCreate(Sender: TObject);
 begin
   m_taskMap     := TDictionary<integer,TTaskEditForm>.create;
   m_protocolMap := TDictionary<integer,TProtokollForm>.Create;
+  m_protoView   := TDictionary<integer,TProtokollViewForm>.create;
 end;
 
 procedure TWindowHandler.DataModuleDestroy(Sender: TObject);
 begin
   m_taskMap.Free;
   m_protocolMap.Free;
+  m_protoView.free;
 end;
 
 function TWindowHandler.isProtocolOpen(id: integer): boolean;
@@ -111,6 +123,25 @@ begin
     frm.Show;
   end;
   frm.RO := ro;
+  frm.Show;
+end;
+
+procedure TWindowHandler.openProtocolView(id: integer);
+var
+  frm : TProtokollViewForm;
+begin
+  if m_protoView.ContainsKey(id) then
+  begin
+    frm := m_protoView[id];
+    frm.BringToFront;
+    frm.WindowState := wsMaximized;
+  end
+  else
+  begin
+    Application.CreateForm(TProtokollViewForm, frm);
+    frm.ID := id;
+    frm.Show;
+  end;
   frm.Show;
 end;
 

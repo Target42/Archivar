@@ -91,6 +91,9 @@ type
     ac_ad_http: TAction;
     N6: TMenuItem;
     Webserverdateienverwalten1: TMenuItem;
+    ac_pr_view: TAction;
+    N7: TMenuItem;
+    Anzeigen1: TMenuItem;
     procedure ac_prg_closeExecute(Sender: TObject);
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure ac_prg_disconExecute(Sender: TObject);
@@ -114,6 +117,7 @@ type
     procedure ac_tb_neuExecute(Sender: TObject);
     procedure ac_tb_löschenExecute(Sender: TObject);
     procedure ac_ad_httpExecute(Sender: TObject);
+    procedure ac_pr_viewExecute(Sender: TObject);
   private
     procedure setPanel( id : integer ; text : string );
     procedure loadLogo;
@@ -311,6 +315,33 @@ begin
   GremiumListForm.Free;
 end;
 
+procedure TMainForm.ac_pr_viewExecute(Sender: TObject);
+var
+  GremiumListForm : TGremiumListForm;
+  gr              : TGremium;
+begin
+  gr := NIL;
+
+  Application.CreateForm(TGremiumListForm, GremiumListForm);
+  if GremiumListForm.ShowModal = mrOk then
+  begin
+    gr := GremiumListForm.Gremium;
+  end;
+
+  if Assigned(gr) then
+  begin
+    Application.CreateForm(TProtocollListForm, ProtocollListForm);
+    ProtocollListForm.GremiumID := gr.ID;
+    ProtocollListForm.Caption   := gr.Name;
+    if ProtocollListForm.ShowModal = mrOk then
+    begin
+      WindowHandler.openProtocolView(ProtocollListForm.PR_ID);
+    end;
+    ProtocollListForm.Free;
+  end;
+  GremiumListForm.Free;
+end;
+
 procedure TMainForm.ac_ta_loadExecute(Sender: TObject);
 begin
   Application.CreateForm(TGremiumListForm, GremiumListForm);
@@ -390,6 +421,7 @@ begin
         ac_ta_load.Enabled     := true;
         ac_pr_new.Enabled      := true;
         ac_pr_open.Enabled     := true;
+        ac_pr_view.Enabled     := true;
 
         setPanel(integer(stStatus), 'Verbunden');
         setPanel(integer(stLogin), GM.UserName);
@@ -410,6 +442,7 @@ begin
         ac_ta_load.Enabled     := false;
         ac_pr_new.Enabled      := false;
         ac_pr_open.Enabled     := false;
+        ac_pr_view.Enabled     := false;
 
         setPanel(integer(stStatus), 'Getrennt');
         setPanel(integer(stLogin), '  ');

@@ -193,6 +193,12 @@
         object Laden1: TMenuItem
           Action = ac_pr_open
         end
+        object N7: TMenuItem
+          Caption = '-'
+        end
+        object Anzeigen1: TMenuItem
+          Action = ac_pr_view
+        end
       end
     end
     object Admin1: TMenuItem
@@ -413,6 +419,11 @@
       Category = 'Admin'
       Caption = 'Webserverdateien verwalten'
       OnExecute = ac_ad_httpExecute
+    end
+    object ac_pr_view: TAction
+      Category = 'Protokoll'
+      Caption = 'Anzeigen'
+      OnExecute = ac_pr_viewExecute
     end
   end
   object ApplicationEvents1: TApplicationEvents

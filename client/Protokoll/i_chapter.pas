@@ -39,20 +39,20 @@ type
     function  getList : IChapterTitleList;
     function  GetTitle: string;
     procedure SetTitle(const Value: string);
-    function GetCLID: string;
+    function  GetCLID: string;
     procedure SetCLID(const Value: string);
-    function getTeilnehmer : ITeilnehmerListe;
-    function GetGRID: integer;
+    function  getTeilnehmer : ITeilnehmerListe;
+    function  GetGRID: integer;
     procedure SetGRID(const Value: integer);
     function  getRO : boolean;
     procedure setRO( value : boolean );
-    function GetNr: integer;
+    function  GetNr: integer;
     procedure SetNr(const Value: integer);
-    function GetDate: TDateTime;
+    function  GetDate: TDateTime;
     procedure SetDate(const Value: TDateTime);
     procedure setModified( value : boolean );
     function  getModified : boolean;
-    function getBesucher : IBesucherListe;
+    function  getBesucher : IBesucherListe;
 
     property GRID   : integer           read GetGRID    write SetGRID;
     property XProto : IXMLProtocol      read getXProto  write setXProto;

@@ -158,8 +158,8 @@ type
 
     procedure clearTree;
   public
-    property ID : integer read getID write setID;
-    property RO : boolean read m_ro write setRO;
+    property ID : integer read getID  write setID;
+    property RO : boolean read m_ro   write setRO;
   end;
 
 var
@@ -754,6 +754,7 @@ begin
     caption       := m_proto.Title;
     DBEdit1.Text  := m_proto.Title;
     DBEdit2.Text  := IntToStr(m_proto.Nr);
+
     JvDBDateTimePicker1.DateTime := m_proto.Date;
 
     updateCpList;
@@ -850,6 +851,12 @@ var
   node      : TTreeNode;
   root      : TTreeNode;
   en        : TEntry;
+
+  procedure setIndex( node : TTreeNode; inx : integer );
+  begin
+    node.ImageIndex     := inx;
+    node.SelectedIndex  := inx;
+  end;
 begin
   old := NIL;
   Screen.Cursor := crHourGlass;
@@ -865,16 +872,15 @@ begin
 
     en   := TEntry.create;
     root := TV.Items.AddChildObject(NIL, 'Dokument', en);
-    root.ImageIndex     := 7;
-    root.SelectedIndex  := 7;
+    setIndex( root, 7);
 
     for i := 0 to pred(m_proto.Chapter.Count) do
     begin
       cp   := m_proto.Chapter.Items[i];
       en   := Tentry.create(cp);
       node := TV.Items.AddChildObject(root, cp.FullTitle, en);
-      node.ImageIndex     := 0;
-      node.SelectedIndex  := 0;
+      setIndex( node, 0);
+
 
       buildTree( node, cp );
 

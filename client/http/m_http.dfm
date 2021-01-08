@@ -7,6 +7,7 @@ object HttpMod: THttpMod
     Bindings = <>
     DefaultPort = 42424
     OnCommandOther = IdHTTPServer1CommandOther
+    OnParseAuthentication = IdHTTPServer1ParseAuthentication
     OnCommandGet = IdHTTPServer1CommandGet
     Left = 72
     Top = 56

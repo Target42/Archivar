@@ -14,6 +14,9 @@ type
       ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
     procedure IdHTTPServer1CommandOther(AContext: TIdContext;
       ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
+    procedure IdHTTPServer1ParseAuthentication(AContext: TIdContext;
+      const AAuthType, AAuthData: string; var VUsername, VPassword: string;
+      var VHandled: Boolean);
   private
     m_home  : string;
   public
@@ -67,7 +70,14 @@ end;
 procedure THttpMod.IdHTTPServer1CommandOther(AContext: TIdContext;
   ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
 begin
-  ShowMessage( ARequestInfo.Document);
+  IdHTTPServer1CommandGet(AContext, ARequestInfo, AResponseInfo);
+end;
+
+procedure THttpMod.IdHTTPServer1ParseAuthentication(AContext: TIdContext;
+  const AAuthType, AAuthData: string; var VUsername, VPassword: string;
+  var VHandled: Boolean);
+begin
+  VHandled := true;
 end;
 
 end.
