@@ -487,6 +487,11 @@
             <Form>ProtokollViewForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="Protokoll\u_protocoll2XML.pas"/>
+        <DCCReference Include="http\f_web_editor.pas">
+            <Form>WebEditorForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <None Include="Datafields\ERA-NS.txt"/>
         <RcItem Include="dws\dws.html">
             <ContainerId>ResourceItem</ContainerId>

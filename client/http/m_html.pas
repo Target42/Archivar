@@ -19,26 +19,41 @@ type
     procedure FrameHTMLTag(Sender: TObject; Tag: TTag; const TagString: string;
       TagParams: TStrings; var ReplaceText: string);
   private
-    m_task : IXMLList;
+    // frame
+    m_Framestyle: ITaskStyle;
+    m_FrameTC   : ITaskContainer;
+    m_Framedata : IXMLList;
+    // task
     m_style: ITaskStyle;
     m_tc   : ITaskContainer;
+    m_task : IXMLList;
+
     m_title: string;
+
 
     m_stack: TStringList;
     m_path : string;
     m_clid : string;
-    function getField( name : string )          : string;
 
-    function createTable( name : string )       : String;
-    function addHeader( xHeader : IXMLHeader )  : string;
-    function execScript( TagParams: TStrings )  : string;
-    procedure SaveImages( path : string );
+    function  getField( name : string; data : IXMLList )    : string;
+    function  createTable( name : string; data : IXMLList ) : String;
+    function  addHeader( xHeader : IXMLHeader )  : string;
+    function  execScript( TagParams: TStrings; style : ITaskStyle; data : IXMLList )  : string;
+    procedure SaveImages( path : string; style : ITaskStyle );
 
+    procedure TaskHTMLTag(Sender: TObject; Tag: TTag;
+      cmd: string; TagParams: TStrings; var ReplaceText: string;
+      style : ITaskStyle; data : IXMLList);
+    procedure LoadHtlmFrame;
   public
+
+
     property TaskContainer  : ITaskContainer  read m_tc     write m_tc;
     property TaskData       : IXMLList        read m_task   write m_task;
     property TaskStyle      : ITaskStyle      read m_style  write m_style;
     property Title          : string          read m_title  write m_title;
+
+    procedure setFrameData( tc : ITaskContainer; style : ITaskStyle; data :IXMLList );
 
     function Content : string;
     procedure SaveToFile( fname : string );
@@ -73,6 +88,18 @@ uses
 
 {$R *.dfm}
 
+
+var
+  defHTML : string =
+  '<!DOCTYPE html>'+
+  '<html>'+
+    '<head>'+
+      '<link rel="stylesheet" type="text/css" href="/css/archivar.css">'+
+    '</head>'+
+  '<body>'+
+  '<#data>'+
+  '</body>'+
+  '</html>';
 { THtmlMod }
 
 function THtmlMod.addHeader(xHeader: IXMLHeader): string;
@@ -134,15 +161,18 @@ var
 begin
   list := TStringList.create;
   PageProducer1.HTMLDoc.Clear;
+
   if Assigned(m_style) then
   begin
     tf := m_style.Files.getFile('index.html');
     if Assigned(tf) then
       PageProducer1.HTMLDoc.Text := tf.Text;
   end;
+
   list.text := PageProducer1.Content;
   m_stack.AddStrings(list);
-  SaveImages(m_path);
+  SaveImages(m_path, m_style);
+
   m_title := '';
   list.Free;
 end;
@@ -165,7 +195,7 @@ begin
   Result := PageProducer1.Content;
 end;
 
-function THtmlMod.createTable(name: string): String;
+function THtmlMod.createTable(name: string; data : IXMLList): String;
 var
   xTab : IXMLTable;
   xRow : IXMLRow;
@@ -173,11 +203,14 @@ var
   s    : string;
 begin
   xTab := NIL;
-  for i := 0 to pred(m_task.Tables.Count) do
+  if not Assigned(data) then
+    exit;
+
+  for i := 0 to pred(data.Tables.Count) do
   begin
-    if SameTExt( name, m_task.Tables.Table[i].Field) then
+    if SameTExt( name, data.Tables.Table[i].Field) then
     begin
-      xTab := m_task.Tables.Table[i];
+      xTab := data.Tables.Table[i];
       break;
     end;
   end;
@@ -211,21 +244,31 @@ begin
   m_task  := NIL;
   m_style := NIL;
   m_stack := TStringList.create;
+
+  m_Framestyle:= NIL;
+  m_FrameTC   := NIL;
+  m_Framedata := NIL;
+
 end;
 
 procedure THtmlMod.DataModuleDestroy(Sender: TObject);
 begin
   m_task  := NIL;
   m_style := NIL;
+
   m_stack.Free;
+
+  m_Framestyle:= NIL;
+  m_FrameTC   := NIL;
+  m_Framedata := NIL;
 end;
 
-function THtmlMod.execScript(TagParams: TStrings): string;
+function THtmlMod.execScript(TagParams: TStrings; style : ITaskStyle; data : IXMLList): string;
 var
   DwsMod : TDwsMod;
   tf     : ITaskFile;
 begin
-  tf := m_style.Files.getFile(TagParams[0]);
+  tf := style.Files.getFile(TagParams[0]);
   if not Assigned(tf) then
   begin
     Result := '!!Das Script "'+TagParams[0]+'" wurde nicht gefunden!!';
@@ -235,8 +278,8 @@ begin
   Application.CreateForm(TDwsMod, DwsMod);
 
   DwsMod.Script     := tf.Text;
-  DwsMod.Data       := m_task;
-  DwsMod.TaskStyle  := m_style;
+  DwsMod.Data       := data;
+  DwsMod.TaskStyle  := style;
   DwsMod.Params.Assign(TagParams);
   try
     Result := DwsMod.run;
@@ -252,26 +295,30 @@ var
   cmd : string;
 begin
   cmd := LowerCase(TagString);
-
   if cmd = 'data' then
   begin
     if m_stack.Count > 0 then
       ReplaceText := m_stack.Text
     else
       ReplaceText := PageProducer1.Content;
-  end;
-
+  end
+  else
+    TaskHTMLTag( Sender, Tag, cmd, TagParams, ReplaceText, m_Framestyle, m_Framedata );
 end;
 
-function THtmlMod.getField(name: string): string;
+function THtmlMod.getField(name: string; data : IXMLList): string;
 var
   i : integer;
 begin
-  for i := 0 to pred( m_task.Values.Count) do
+  Result := '&nbsp;';
+  if not  Assigned(data) then
+    exit;
+
+  for i := 0 to pred( data.Values.Count) do
   begin
-    if SameText( name, m_task.Values.Field[i].Field) then
+    if SameText( name, data.Values.Field[i].Field) then
     begin
-      Result := ReplaceText( m_task.Values.Field[i].Value, #$A, '<br>' );
+      Result := ReplaceText( data.Values.Field[i].Value, #$A, '<br>' );
     end;
   end;
   if Trim(Result) = '' then
@@ -293,6 +340,11 @@ begin
   loader.Free;
 end;
 
+procedure THtmlMod.LoadHtlmFrame;
+begin
+  //{183C11C4-9864-451F-AFB2-05B10CC44D62}
+end;
+
 procedure THtmlMod.openStack(clid: string);
 begin
   m_clid := clid;
@@ -310,50 +362,23 @@ var
 begin
   cmd := LowerCase(tagString);
 
-  if cmd = 'field' then
-  begin
-    if TagParams.Count>0 then
-    ReplaceText := getField(  TagParams.Strings[0]);
-  end
-  else if cmd = 'table' then
-  begin
-    ReplaceText := createTable( TagParams.Strings[0]);
-  end
-  else if cmd = 'script' then
-  begin
-    if TagParams.Count > 0 then
-      ReplaceText := execScript( TagParams)
-    else
-      ReplaceText := '!!Es wurde kein Script-Name angegeben!!';
-  end
-  else if cmd = 'system' then
-  begin
-    if TagParams.Count > 0 then
-    begin
-      if SameText(TagParams.Strings[0], 'title') then
-        ReplaceText := m_title
-      else
-        ReplaceText := 'Unbekannter system parameter : '+TagParams.Strings[0]+'<br>';
-    end;
-
-  end;
-
+  TaskHTMLTag( Sender, Tag, cmd, TagParams, ReplaceText, m_style, m_task );
 end;
 
-procedure THtmlMod.SaveImages(path: string);
+procedure THtmlMod.SaveImages(path: string; style : ITaskStyle);
 var
   i : integer;
   ex : string;
 begin
-  if not Assigned(m_style) then
+  if not Assigned(style) then
     exit;
 
-  for i := 0 to pred(m_style.Files.Count) do
+  for i := 0 to pred(style.Files.Count) do
   begin
-    ex := LowerCase( m_style.Files.Items[i].Name);
+    ex := LowerCase( style.Files.Items[i].Name);
     if (ex = '.png') or (ex = '.jpg') then
     begin
-      m_style.Files.Items[i].save(path);
+      style.Files.Items[i].save(path);
     end;
   end;
 end;
@@ -373,6 +398,31 @@ begin
   finally
     list.Free;
   end;
+end;
+
+procedure THtmlMod.setFrameData(tc: ITaskContainer; style: ITaskStyle;
+  data: IXMLList);
+var
+  tf :ITaskFile;
+begin
+  m_FrameTC     := tc;
+  m_Framestyle  := style;
+  m_Framedata   := data;
+
+  //
+  if Assigned(m_FrameTC) then
+  begin
+    if not Assigned(m_Framestyle)  then
+      m_Framestyle := m_FrameTC.Styles.DefaultStyle;
+    if Assigned(m_Framestyle) then
+    begin
+      tf := m_Framestyle.Files.getFile('index.html');
+      if Assigned(tf) then
+        frame.HTMLDoc.Text := tf.Text;
+    end;
+  end
+  else
+    Frame.HTMLDoc.Text := defHTML;
 end;
 
 class procedure THtmlMod.SetHTML(st: TStream; WebBrowser: TWebBrowser);
@@ -429,12 +479,15 @@ begin
       PageProducer1.HTMLDoc.Text := tf.Text;
     end;
   end;
+
   Result := TPath.Combine(GM.wwwHome, m_tc.CLID);
+
   ForceDirectories(Result);
   clearFiles( Result );
-  SaveImages(Result);
+  SaveImages(Result, m_style);
 
   list.Add('</ul>');
+
   list.Add('</body>');
   if err then
     list.SaveToFile(TPath.combine(Result, 'index.html'))
@@ -466,6 +519,40 @@ begin
   web.Navigate(url);
   Clipboard.AsText := url;
 
+end;
+
+procedure THtmlMod.TaskHTMLTag(Sender: TObject; Tag: TTag; cmd: string;
+  TagParams: TStrings; var ReplaceText: string; style: ITaskStyle;
+  data: IXMLList);
+
+begin
+  if cmd = 'field' then
+  begin
+    if TagParams.Count>0 then
+    ReplaceText := getField(  TagParams.Strings[0], data);
+  end
+  else if cmd = 'table' then
+  begin
+    ReplaceText := createTable( TagParams.Strings[0], data);
+  end
+  else if cmd = 'script' then
+  begin
+    if TagParams.Count > 0 then
+      ReplaceText := execScript( TagParams, style, data)
+    else
+      ReplaceText := '!!Es wurde kein Script-Name angegeben!!';
+  end
+  else if cmd = 'system' then
+  begin
+    if TagParams.Count > 0 then
+    begin
+      if SameText(TagParams.Strings[0], 'title') then
+        ReplaceText := m_title
+      else
+        ReplaceText := 'Unbekannter system parameter : '+TagParams.Strings[0]+'<br>';
+    end;
+
+  end;
 end;
 
 class function THtmlMod.Text2HTML(text: string): TStream;

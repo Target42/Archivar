@@ -10,8 +10,10 @@ type
   TBookmarkFrame = class(TFrame)
     LV: TListView;
     procedure LVDblClick(Sender: TObject);
+    procedure LVKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure LVKeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
-    { Private-Deklarationen }
+    m_doEdit : boolean;
   public
     procedure updatebookMarks;
     procedure removeBookmark( mark : TBookmark );
@@ -40,8 +42,26 @@ begin
   end;
   case mark.DocType of
     dtTask      : WindowHandler.openTaskWindow(mark.ID, mark.TypeID, true);
-    dtProtokoll : WindowHandler.openProtoCclWindow(mark.ID, true);
+    dtProtokoll :
+     begin
+       if m_doEdit then
+         WindowHandler.openProtoCclWindow(mark.ID, true)
+       else
+         WindowHandler.openProtocolView(mark.ID);
+     end;
   end;
+end;
+
+procedure TBookmarkFrame.LVKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  m_doEdit := ssCtrl in Shift;
+end;
+
+procedure TBookmarkFrame.LVKeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  m_doEdit := false;
 end;
 
 procedure TBookmarkFrame.removeBookmark(mark: TBookmark);

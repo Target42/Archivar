@@ -9,6 +9,7 @@ type
   TTaskContainerImpl = class(TInterfacedObject, ITaskContainer)
     private
       m_clid    : string;
+      m_id      : integer;
       m_task    : ITask;
       m_files   : ITaskFiles;
       m_info    : ITaskFiles;
@@ -21,6 +22,9 @@ type
       function  getStyles : ITaskStyles;
       procedure setCLID( value : string );
       function  getCLID : string;
+      procedure setID( value : integer );
+      function  getID : integer;
+
     public
       constructor create;
       Destructor Destroy; override;
@@ -49,6 +53,7 @@ uses
 constructor TTaskContainerImpl.create;
 begin
   m_clid      := createCLassID;
+  m_id        := -1;
   m_files     := TTaskFilesImpl.create;
   m_info      := TTaskFilesimpl.create;
   m_styles    := TTaskStylesImpl.create;
@@ -98,7 +103,11 @@ begin
   Result := m_clid;
   if Assigned(m_task) then
     Result := m_task.CLID;
+end;
 
+function TTaskContainerImpl.getID: integer;
+begin
+  result := m_id;
 end;
 
 function TTaskContainerImpl.getInfoFiles: ITaskFiles;
@@ -235,6 +244,11 @@ begin
   if Assigned(m_task) then
     m_task.CLID := value;
 
+end;
+
+procedure TTaskContainerImpl.setID(value: integer);
+begin
+  m_id := value;
 end;
 
 procedure TTaskContainerImpl.setTask(value: ITask);

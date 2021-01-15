@@ -243,8 +243,12 @@ type
       function  getStyles : ITaskStyles;
       procedure setCLID( value : string );
       function  getCLID : string;
+      procedure setID( value : integer );
+      function  getID : integer;
+
     //public
       property CLID     : string      read getCLID      write setCLID;
+      property ID       : integer     read getID        write setID;
       property Task     : ITask       read getTask      write setTask;
       property TestData : ITaskFiles  read getTestdata;
       property Styles   : ITaskStyles read getStyles;

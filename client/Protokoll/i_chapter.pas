@@ -54,16 +54,16 @@ type
     function  getModified : boolean;
     function  getBesucher : IBesucherListe;
 
-    property GRID   : integer           read GetGRID    write SetGRID;
-    property XProto : IXMLProtocol      read getXProto  write setXProto;
-    property Title  : string            read GetTitle   write SetTitle;
-    property ID     : integer           read getID      write setID;
-    property CLID   : string            read GetCLID    write SetCLID;
+    property GRID   : integer           read GetGRID      write SetGRID;
+    property XProto : IXMLProtocol      read getXProto    write setXProto;
+    property Title  : string            read GetTitle     write SetTitle;
+    property ID     : integer           read getID        write setID;
+    property CLID   : string            read GetCLID      write SetCLID;
     property Chapter: IChapterTitleList read getList;
-    property ReadOnly : boolean         read getRo      write setRO;
-    property Nr     : integer           read GetNr      write SetNr;
-    property Date   : TDateTime         read GetDate    write SetDate;
-    property Modified : boolean         read getModified write setModified;
+    property ReadOnly : boolean         read getRo        write setRO;
+    property Nr     : integer           read GetNr        write SetNr;
+    property Date   : TDateTime         read GetDate      write SetDate;
+    property Modified : boolean         read getModified  write setModified;
 
     property Teilnehmer : ITeilnehmerListe read getTeilnehmer;
     property Besucher   : IBesucherListe   read getBesucher;

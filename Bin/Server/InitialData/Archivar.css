@@ -32,3 +32,9 @@ th, td {
 	border: 1px solid black;
 	border-collapse: collapse;
 }
+
+#tab1 
+ {
+  width: 100%;
+  background-color: #f1f1c1;
+}

@@ -32,8 +32,7 @@ object ReportFrame: TReportFrame
         Height = 236
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 581
-        ExplicitHeight = 534
+        ExplicitLeft = 2
         ControlData = {
           4C000000AA1D0000641800000000000000000000000000000000000000000000
           000000004C000000000000000000000001000000E0D057007335CF11AE690800
@@ -65,10 +64,6 @@ object ReportFrame: TReportFrame
     object TabSheet1: TTabSheet
       Caption = 'Hilfe'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object WebBrowser2: TWebBrowser
         Left = 0
         Top = 0

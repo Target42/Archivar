@@ -19,10 +19,12 @@ type
     btnDownload: TBitBtn;
     btnDelete: TBitBtn;
     btnNew: TBitBtn;
+    BitBtn1: TBitBtn;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure bntUploadClick(Sender: TObject);
     procedure btnNewClick(Sender: TObject);
+    procedure BitBtn1Click(Sender: TObject);
   private
     m_list : TStringList;
     procedure upload( field : TField; fname : string );
@@ -37,9 +39,40 @@ var
 implementation
 
 uses
-  m_glob_client, f_web_file;
+  m_glob_client, f_web_file, f_web_editor, System.IOUtils;
 
 {$R *.dfm}
+
+procedure TWebServerFilesForm.BitBtn1Click(Sender: TObject);
+var
+  fname : string;
+  needUpload : boolean;
+begin
+  if HCTab.IsEmpty then
+    exit;
+
+  fname := TPath.Combine( GM.wwwHome, HCTab.FieldByName('HC_PATH').AsString+'\'+HCTab.FieldByName('HC_NAME').AsString);
+
+  if not FileExists(fname) then
+  begin
+    ShowMessage('Die Datei wurde nicht gefunden!');
+    exit;
+  end;
+  Application.CreateForm(TWebEditorForm, WebEditorForm);
+  WebEditorForm.FileName := fname;
+  WebEditorForm.ShowModal;
+  needUpload := WebEditorForm.NeedUpload;
+  FreeAndNil(WebEditorForm);
+
+  if needUpload then
+  begin
+    HCTab.Edit;
+    upload(HCTab.FieldByName('HC_DATA'), fname);
+    HCTab.FieldByName('HC_MD5').AsString  := GM.md5(fname);
+    HCTab.Post;
+  end;
+
+end;
 
 procedure TWebServerFilesForm.bntUploadClick(Sender: TObject);
 begin

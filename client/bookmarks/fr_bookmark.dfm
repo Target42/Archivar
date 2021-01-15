@@ -31,5 +31,7 @@ object BookmarkFrame: TBookmarkFrame
     TabOrder = 0
     ViewStyle = vsReport
     OnDblClick = LVDblClick
+    OnKeyDown = LVKeyDown
+    OnKeyUp = LVKeyUp
   end
 end

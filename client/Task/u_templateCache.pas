@@ -14,15 +14,19 @@ type
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
   private
-    m_list  : Tlist<ITaskContainer>;
-    m_idMap : TDictionary<integer, ITaskContainer>;
-    m_map   : TDictionary<string, ITaskContainer>;
+    m_list      : Tlist<ITaskContainer>;
+    m_toDelete  : Tlist<ITaskContainer>;
+    m_idMap     : TDictionary<integer, ITaskContainer>;
+    m_map       : TDictionary<string, ITaskContainer>;
+
     function loadTemplate(dataset: TClientDataset) : boolean;
 
   public
     { Public-Deklarationen }
     function load( teid : integer ) : ITaskContainer;
     function SysLoad( clid : string ) : ITaskContainer;
+
+    procedure setDirty( clid : string );
 
   end;
 
@@ -39,9 +43,10 @@ implementation
 procedure TTemplateCacheMod.DataModuleCreate(Sender: TObject);
 begin
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
-  m_list  := Tlist<ITaskContainer>.create;
-  m_idMap := TDictionary<integer, ITaskContainer>.create;
-  m_map   := TDictionary<string, ITaskContainer>.create;
+  m_list      := Tlist<ITaskContainer>.create;
+  m_toDelete  := Tlist<ITaskContainer>.create;
+  m_idMap     := TDictionary<integer, ITaskContainer>.create;
+  m_map       := TDictionary<string, ITaskContainer>.create;
 end;
 
 procedure TTemplateCacheMod.DataModuleDestroy(Sender: TObject);
@@ -53,6 +58,10 @@ begin
   m_list.free;
   m_idMap.free;
   m_map.free;
+  for t in m_toDelete do
+    t.release;
+  m_toDelete.Free;
+
 end;
 
 function TTemplateCacheMod.load(teid: integer): ITaskContainer;
@@ -79,15 +88,35 @@ begin
   if not dataset.IsEmpty then
   begin
 
-   st := dataset.CreateBlobStream(dataset.FieldByName('TE_DATA'), bmRead);
-   tc := loadTaskContainer(st, dataset.FieldByName('TE_NAME').AsString);
+   st       := dataset.CreateBlobStream(dataset.FieldByName('TE_DATA'), bmRead);
+   tc       := loadTaskContainer(st, dataset.FieldByName('TE_NAME').AsString);
+   tc.ID    := dataset.FieldByName('TE_ID').AsInteger;
+   tc.CLID  := dataset.FieldByName('TE_CLID').AsString;
 
    m_list.Add(tc);
-   m_idMap.AddOrSetValue(dataset.FieldByName('TE_ID').AsInteger, tc );
-   m_map.AddOrSetValue(dataset.FieldByName('TE_CLID').AsString, tc );
+   m_idMap.AddOrSetValue(tc.ID, tc );
+   m_map.AddOrSetValue(tc.CLID, tc );
   end;
 
   Result := Assigned(tc);
+end;
+
+procedure TTemplateCacheMod.setDirty(clid: string);
+var
+  te : ITaskContainer;
+begin
+  for te in m_list do
+  begin
+    if te.clid = clid then
+    begin
+      m_list.Remove(te);
+      m_idMap.Remove(te.ID);
+      m_map.Remove(te.clid);
+
+      m_toDelete.Add(te);
+      break;
+    end;
+  end;
 end;
 
 function TTemplateCacheMod.SysLoad(clid: string): ITaskContainer;

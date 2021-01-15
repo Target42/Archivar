@@ -90,7 +90,7 @@ implementation
 uses
   u_TaskImpl, i_datafields, f_datafield_edit, System.IOUtils,
   u_TTaskContainerImpl, system.zip, m_glob_client, f_task_datafields,
-  System.UITypes;
+  System.UITypes, u_templateCache;
 
 {$R *.dfm}
 
@@ -283,12 +283,16 @@ end;
 procedure TTaksEditorForm.saveToStream;
 var
   st : TStream;
+  clid : String;
 begin
   st := TETab.CreateBlobStream(  TETab.FieldByName('TE_DATA'), bmWrite);
   m_tc.saveToStream(st);
   st.Position := 0;
   TETab.FieldByName('TE_MD5').AsString := GM.md5(st);
+  clid := TETab.FieldByName('TE_CLID').AsString;
   st.Free;
+
+  TemplateCacheMod.setDirty(CLID);
 end;
 
 procedure TTaksEditorForm.setTaskContainer(value: ITaskContainer);

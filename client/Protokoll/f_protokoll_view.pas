@@ -5,15 +5,23 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.OleCtrls, SHDocVw, Vcl.ComCtrls,
-  u_renderer, m_taskLoader, i_chapter;
+  u_renderer, m_taskLoader, i_chapter, Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls,
+  Vcl.Menus;
 
 type
   TProtokollViewForm = class(TForm)
     StatusBar1: TStatusBar;
     WebBrowser1: TWebBrowser;
+    PrintDialog1: TPrintDialog;
+    MainMenu1: TMainMenu;
+    Protokoll1: TMenuItem;
+    Drucken1: TMenuItem;
+    Speichernals1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure Drucken1Click(Sender: TObject);
+    procedure Speichernals1Click(Sender: TObject);
   private
     m_id : integer;
     m_proto : IProtocol;
@@ -23,7 +31,7 @@ type
 
     function GetID: integer;
     procedure SetID(const Value: integer);
-    { Private-Deklarationen }
+    procedure action( cmd : string );
   public
     property ID: integer read GetID write SetID;
   end;
@@ -34,11 +42,27 @@ var
 implementation
 
 uses
-  u_ProtocolImpl, m_WindowHandler;
+  u_ProtocolImpl, m_WindowHandler, MSHTML;
 
 {$R *.dfm}
 
 { TProtokollViewForm }
+
+procedure TProtokollViewForm.action(cmd: string);
+var
+  Doc: IHtmlDocument2;
+begin
+   Webbrowser1.Document.QueryInterface(IID_IHtmlDocument2, Doc);
+   if Doc <> nil then
+   begin
+     doc.execCommand(cmd, true, null);
+   end;
+end;
+
+procedure TProtokollViewForm.Drucken1Click(Sender: TObject);
+begin
+  action('print');
+end;
 
 procedure TProtokollViewForm.FormClose(Sender: TObject;
   var Action: TCloseAction);
@@ -72,7 +96,7 @@ end;
 
 procedure TProtokollViewForm.SetID(const Value: integer);
 begin
-  m_id := value;
+  m_id        := value;
   m_proto     := TProtocolImpl.create;
   m_proto.ID  := value;
   if m_proto.load(m_id) then
@@ -82,6 +106,11 @@ begin
     m_renderer.renderProtocol(m_proto);
     m_renderer.Show(WebBrowser1);
   end;
+end;
+
+procedure TProtokollViewForm.Speichernals1Click(Sender: TObject);
+begin
+  action('SaveAs');
 end;
 
 end.

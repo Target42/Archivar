@@ -149,7 +149,9 @@ uses
   xsd_beschlus in '..\misc\xsd_beschlus.pas',
   u_templateCache in 'Task\u_templateCache.pas' {TemplateCacheMod: TDataModule},
   u_renderer in 'Protokoll\u_renderer.pas',
-  f_protokoll_view in 'Protokoll\f_protokoll_view.pas' {ProtokollViewForm};
+  f_protokoll_view in 'Protokoll\f_protokoll_view.pas' {ProtokollViewForm},
+  u_protocoll2XML in 'Protokoll\u_protocoll2XML.pas',
+  f_web_editor in 'http\f_web_editor.pas' {WebEditorForm};
 
 {$R *.res}
 
