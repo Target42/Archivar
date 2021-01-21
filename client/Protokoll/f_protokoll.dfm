@@ -33,15 +33,11 @@ object ProtokollForm: TProtokollForm
     Top = 49
     Width = 888
     Height = 400
-    ActivePage = TabSheet1
+    ActivePage = TabSheet2
     Align = alClient
     TabOrder = 1
     object TabSheet1: TTabSheet
       Caption = 'Allgemines'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Splitter1: TSplitter
         Left = 225
         Top = 0
@@ -81,10 +77,6 @@ object ProtokollForm: TProtokollForm
           TabOrder = 1
           object TabSheet4: TTabSheet
             Caption = 'Struktur'
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object SpeedButton1: TSpeedButton
               Tag = 1
               Left = 4
@@ -149,10 +141,6 @@ object ProtokollForm: TProtokollForm
           object TabSheet5: TTabSheet
             Caption = 'Beschluss'
             ImageIndex = 1
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object SpeedButton7: TSpeedButton
               Tag = 1
               Left = 8
@@ -202,10 +190,6 @@ object ProtokollForm: TProtokollForm
     object TabSheet2: TTabSheet
       Caption = 'Teilnehmer'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel1: TPanel
         Left = 0
         Top = 331
@@ -301,10 +285,6 @@ object ProtokollForm: TProtokollForm
     object TabSheet3: TTabSheet
       Caption = 'G'#228'ste'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel3: TPanel
         Left = 0
         Top = 331
@@ -570,6 +550,7 @@ object ProtokollForm: TProtokollForm
         RowSelect = True
         TabOrder = 1
         ViewStyle = vsReport
+        OnDblClick = TGDblClick
       end
     end
   end
@@ -744,7 +725,7 @@ object ProtokollForm: TProtokollForm
     Left = 212
     Top = 305
     Bitmap = {
-      494C010106001001CC0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010106001001DC0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

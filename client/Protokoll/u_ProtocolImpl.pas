@@ -18,6 +18,8 @@ type
     m_grid      : integer;
     m_nr        : integer;
     m_date      : TDateTime;
+    m_start     : TDateTime;
+    m_ende      : TDateTime;
     m_modified  : boolean;
 
     m_readOnly  : boolean;
@@ -54,6 +56,10 @@ type
     procedure setModified( value : boolean );
     function  getModified : boolean;
     function  getBesucher : IBesucherListe;
+    procedure setStart( value : TDateTime );
+    function  getStart : TDateTime;
+    procedure setEnde( value : TDateTime );
+    function  getEnde : TDateTime;
 
     procedure loadBE( ct : IChapterTitle );
 
@@ -142,6 +148,11 @@ begin
   Result := m_date;
 end;
 
+function TProtocolImpl.getEnde: TDateTime;
+begin
+  Result := m_ende;
+end;
+
 function TProtocolImpl.GetGRID: integer;
 begin
   Result := m_grid;
@@ -179,6 +190,11 @@ end;
 function TProtocolImpl.getRO: boolean;
 begin
   Result := m_readOnly;
+end;
+
+function TProtocolImpl.getStart: TDateTime;
+begin
+  Result := m_start;
 end;
 
 function TProtocolImpl.getTeilnehmer: ITeilnehmerListe;
@@ -357,6 +373,12 @@ begin
   m_modified := true;
 end;
 
+procedure TProtocolImpl.setEnde(value: TDateTime);
+begin
+  m_ende := value;
+  m_modified := true;
+end;
+
 procedure TProtocolImpl.SetGRID(const Value: integer);
 begin
   m_grid := value;
@@ -385,6 +407,12 @@ begin
   m_loader.ReadOnly := m_readOnly;
 end;
 
+procedure TProtocolImpl.setStart(value: TDateTime);
+begin
+  m_start := value;
+  m_modified := true;
+end;
+
 procedure TProtocolImpl.SetTitle(const Value: string);
 begin
   m_title := value;
@@ -396,6 +424,5 @@ begin
   m_proto := value;
   m_modified := true;
 end;
-
 
 end.

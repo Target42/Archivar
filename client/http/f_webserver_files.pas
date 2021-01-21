@@ -25,6 +25,7 @@ type
     procedure bntUploadClick(Sender: TObject);
     procedure btnNewClick(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
+    procedure DBGrid1DblClick(Sender: TObject);
   private
     m_list : TStringList;
     procedure upload( field : TField; fname : string );
@@ -45,12 +46,19 @@ uses
 
 procedure TWebServerFilesForm.BitBtn1Click(Sender: TObject);
 var
-  fname : string;
-  needUpload : boolean;
+  fname       : string;
+  needUpload  : boolean;
+  ext         : string;
+  md5         : string;
 begin
   if HCTab.IsEmpty then
     exit;
-
+  ext := LowerCase(ExtractFileExt(HCTab.FieldByName('HC_NAME').AsString));
+  if  not( (ext = '.html') or ( ext = '.htm') or (ext = '.css') ) then
+  begin
+    ShowMessage('Diese Datei kann nicht direkt editiert werden!');
+    exit;
+  end;
   fname := TPath.Combine( GM.wwwHome, HCTab.FieldByName('HC_PATH').AsString+'\'+HCTab.FieldByName('HC_NAME').AsString);
 
   if not FileExists(fname) then
@@ -66,10 +74,14 @@ begin
 
   if needUpload then
   begin
-    HCTab.Edit;
-    upload(HCTab.FieldByName('HC_DATA'), fname);
-    HCTab.FieldByName('HC_MD5').AsString  := GM.md5(fname);
-    HCTab.Post;
+    md5 := GM.md5(fname);
+    if md5 <> HCTab.FieldByName('HC_MD5').AsString then
+    begin
+      HCTab.Edit;
+      upload(HCTab.FieldByName('HC_DATA'), fname);
+      HCTab.FieldByName('HC_MD5').AsString  := md5;
+      HCTab.Post;
+    end;
   end;
 
 end;
@@ -120,6 +132,11 @@ begin
   end;
   WebFileForm.free;
 
+end;
+
+procedure TWebServerFilesForm.DBGrid1DblClick(Sender: TObject);
+begin
+  BitBtn1.Click;
 end;
 
 function TWebServerFilesForm.exists(name, path: string): boolean;

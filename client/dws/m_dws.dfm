@@ -5,14 +5,19 @@ object DwsMod: TDwsMod
   Height = 253
   Width = 315
   object DelphiWebScript1: TDelphiWebScript
-    Left = 88
-    Top = 40
+    Left = 24
+    Top = 16
   end
   object dwsUnit1: TdwsUnit
     Script = DelphiWebScript1
     Classes = <
       item
         Name = 'TTable'
+        Constructors = <
+          item
+            Name = 'Create'
+            OnEval = dwsUnit1ClassesTTableConstructorsCreateEval
+          end>
         Methods = <
           item
             Name = 'getTableHeader'
@@ -45,7 +50,30 @@ object DwsMod: TDwsMod
                 DataType = 'Integer'
               end>
             ResultType = 'String'
+            Overloaded = True
             OnEval = dwsUnit1ClassesTTableMethodsCellEval
+            Kind = mkFunction
+          end
+          item
+            Name = 'Cell'
+            Parameters = <
+              item
+                Name = 'row'
+                DataType = 'Integer'
+              end
+              item
+                Name = 'Field'
+                DataType = 'String'
+              end>
+            ResultType = 'string'
+            Overloaded = True
+            OnEval = dwsUnit1ClassesTTableMethodsCell_IntegerString_Eval
+            Kind = mkFunction
+          end
+          item
+            Name = 'getName'
+            ResultType = 'string'
+            OnEval = dwsUnit1ClassesTTableMethodsgetNameEval
             Kind = mkFunction
           end>
         Properties = <
@@ -53,7 +81,13 @@ object DwsMod: TDwsMod
             Name = 'Header'
             DataType = 'TTableHeader'
             ReadAccess = 'getTableHeader'
+          end
+          item
+            Name = 'Name'
+            DataType = 'String'
+            ReadAccess = 'getName'
           end>
+        OnCleanUp = dwsUnit1ClassesTTableCleanUp
       end
       item
         Name = 'TTableHeader'
@@ -92,6 +126,7 @@ object DwsMod: TDwsMod
             OnEval = dwsUnit1ClassesTTableHeaderMethodsNamesEval
             Kind = mkFunction
           end>
+        OnCleanUp = dwsUnit1ClassesTTableHeaderCleanUp
       end>
     Functions = <
       item
@@ -173,7 +208,7 @@ object DwsMod: TDwsMod
       '</table>'
       ' <#tables>')
     OnHTMLTag = XMLDumpHTMLTag
-    Left = 104
+    Left = 144
     Top = 128
   end
   object DumpTable: TPageProducer
@@ -191,7 +226,12 @@ object DwsMod: TDwsMod
       '</table>'
       '')
     OnHTMLTag = DumpTableHTMLTag
-    Left = 192
-    Top = 128
+    Left = 216
+    Top = 120
+  end
+  object dwsDebugger1: TdwsDebugger
+    OnNotifyException = dwsDebugger1NotifyException
+    Left = 24
+    Top = 64
   end
 end

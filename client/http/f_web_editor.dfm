@@ -22,17 +22,19 @@ object WebEditorForm: TWebEditorForm
     Align = alBottom
     AutoSize = True
     TabOrder = 0
-    ExplicitLeft = 184
-    ExplicitTop = 96
+    ExplicitTop = 515
+    ExplicitWidth = 781
     inherited StatusBar1: TStatusBar
       Width = 781
       ExplicitWidth = 781
     end
     inherited Panel1: TPanel
       Width = 781
+      ExplicitWidth = 781
       inherited OKBtn: TBitBtn
         Left = 682
         OnClick = BaseFrame1OKBtnClick
+        ExplicitLeft = 682
       end
     end
   end
@@ -59,13 +61,10 @@ object WebEditorForm: TWebEditorForm
     Gutter.Font.Height = -11
     Gutter.Font.Name = 'Courier New'
     Gutter.Font.Style = []
+    Highlighter = SynCssSyn1
     Lines.Strings = (
       'SynEdit1')
     FontSmoothing = fsmNone
-    ExplicitLeft = 104
-    ExplicitTop = 32
-    ExplicitWidth = 200
-    ExplicitHeight = 150
   end
   object SynCssSyn1: TSynCssSyn
     Options.AutoDetectEnabled = False

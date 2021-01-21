@@ -4,10 +4,11 @@ interface
 
 uses
   System.SysUtils, System.Classes, dwsComp, xsd_TaskData, dwsErrors,
-  i_taskEdit, dwsExprs, Xml.XMLIntf, Web.HTTPApp, Web.HTTPProd;
+  i_taskEdit, dwsExprs, Xml.XMLIntf, Web.HTTPApp, Web.HTTPProd, dwsDebugger,
+  dwsInfo;
 
 type
-  TXmlContainer = class
+  TXmlContainer = class( TObject )
   private
     m_xml : IXMLNode;
   public
@@ -21,6 +22,7 @@ type
     dwsUnit1: TdwsUnit;
     XMLDump: TPageProducer;
     DumpTable: TPageProducer;
+    dwsDebugger1: TdwsDebugger;
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
     procedure dwsUnit1FunctionsScriptParamCVountEval(info: TProgramInfo);
@@ -50,6 +52,15 @@ type
       const TagString: string; TagParams: TStrings; var ReplaceText: string);
     procedure DumpTableHTMLTag(Sender: TObject; Tag: TTag;
       const TagString: string; TagParams: TStrings; var ReplaceText: string);
+    procedure dwsUnit1ClassesTTableMethodsCell_IntegerString_Eval(
+      Info: TProgramInfo; ExtObject: TObject);
+    procedure dwsDebugger1NotifyException(const exceptObj: IInfo);
+    procedure dwsUnit1ClassesTTableMethodsgetNameEval(Info: TProgramInfo;
+      ExtObject: TObject);
+    procedure dwsUnit1ClassesTTableConstructorsCreateEval(Info: TProgramInfo;
+      var ExtObject: TObject);
+    procedure dwsUnit1ClassesTTableCleanUp(ExternalObject: TObject);
+    procedure dwsUnit1ClassesTTableHeaderCleanUp(ExternalObject: TObject);
   private
     m_script : TStringList;
     m_params : TStringList;
@@ -153,6 +164,35 @@ begin
 
 end;
 
+procedure TDwsMod.dwsDebugger1NotifyException(const exceptObj: IInfo);
+begin
+  ShowMessage(ExceptObject.ToString);
+end;
+
+procedure TDwsMod.dwsUnit1ClassesTTableCleanUp(ExternalObject: TObject);
+begin
+  if ExternalObject is TXmlContainer then
+    (ExternalObject as TXmlContainer).Free;
+end;
+
+procedure TDwsMod.dwsUnit1ClassesTTableConstructorsCreateEval(
+  Info: TProgramInfo; var ExtObject: TObject);
+var
+  s : string;
+begin
+  s := (( ExtObject as TXmlContainer).XML as IXMLTable).Field;
+  if not Assigned(ExtObject) then
+  begin
+
+  end;
+end;
+
+procedure TDwsMod.dwsUnit1ClassesTTableHeaderCleanUp(ExternalObject: TObject);
+begin
+  if ExternalObject is TXmlContainer then
+    (ExternalObject as TXmlContainer).Free;
+end;
+
 procedure TDwsMod.dwsUnit1ClassesTTableHeaderMethodsCaptionEval(
   Info: TProgramInfo; ExtObject: TObject);
 var
@@ -228,6 +268,46 @@ begin
   end;
 end;
 
+procedure TDwsMod.dwsUnit1ClassesTTableMethodsCell_IntegerString_Eval(
+  Info: TProgramInfo; ExtObject: TObject);
+var
+  row, col  : integer;
+  colname   : string;
+  xRows     : IXMLRows;
+  xRow      : IXMLRow;
+  xTab      : IXMLTable;
+  i         : integer;
+begin
+
+  row := Info.ParamAsInteger[0];
+  colname := Info.ParamAsString[1];
+
+  if not ( ExtObject is TXmlContainer) then
+    exit;
+
+  col := -1;
+  xTab := ((ExtObject as TXmlContainer).XML as IXMLTable);
+  for i := 0 to pred(xTab.Header.Count) do
+  begin
+    if SameText(colname, xTab.Header.Field[i].Field)  then
+    begin
+      col := i;
+      break;
+    end;
+  end;
+
+  try
+    if col <> -1 then
+    begin
+      xRows := xTab.Rows;
+      xRow  := xRows.Row[ row ];
+      info.ResultAsString := xRow.Value[col];
+    end;
+  except
+    info.ResultAsString := 'Exception Cells!';
+  end;
+end;
+
 procedure TDwsMod.dwsUnit1ClassesTTableMethodsColsEval(Info: TProgramInfo;
   ExtObject: TObject);
 begin
@@ -235,6 +315,14 @@ begin
     exit;
 
   info.ResultAsInteger := ((ExtObject as TXmlContainer).XML as IXMLTable).Header.Count;
+end;
+
+procedure TDwsMod.dwsUnit1ClassesTTableMethodsgetNameEval(Info: TProgramInfo;
+  ExtObject: TObject);
+begin
+  if not ( ExtObject is TXmlContainer) then
+    exit;
+  info.ResultAsString := ((ExtObject as TXmlContainer).XML as IXMLTable).Field;
 end;
 
 procedure TDwsMod.dwsUnit1ClassesTTableMethodsgetTableHeaderEval(
@@ -246,7 +334,7 @@ begin
     exit;
 
   xml := TXmlContainer.create( ((ExtObject as TXmlContainer).XML as IXMLTable).Header);
-  info.ResultAsVariant := Info.Vars['TTableHeader'].GetConstructor('create', xml).Call;
+  info.ResultAsVariant := Info.Vars['TTableHeader'].GetConstructor('create', xml).Call.value;
 end;
 
 procedure TDwsMod.dwsUnit1ClassesTTableMethodsRowsEval(Info: TProgramInfo;
@@ -295,7 +383,8 @@ begin
       break;
     end;
   end;
-  info.ResultAsVariant := Info.Vars['TTable'].GetConstructor('create', xml).Call;
+  if Assigned(xml) then
+      info.ResultAsVariant := Info.Vars['TTable'].GetConstructor('create', xml).Call.value;
 end;
 
 procedure TDwsMod.dwsUnit1FunctionshasFieldEval(info: TProgramInfo);
@@ -409,7 +498,12 @@ begin
     exit;
   end;
 
-  exec := prog.Execute;
+  //exec := prog.Execute;
+
+  exec := prog.CreateNewExecution;
+  dwsDebugger1.BeginDebug(exec);
+  dwsDebugger1.EndDebug;
+
   Result := exec.Result.ToString;
 end;
 
@@ -431,7 +525,7 @@ begin
   else if cmd = 'tables' then begin
     for i := 0 to pred(m_xList.Tables.Count) do begin
       m_xTable := m_xList.Tables.Table[i];
-      ReplaceText := ReplaceText + DumpTable.Content;
+      ReplaceText := ReplaceText + DumpTable.Content
     end;
     m_xTable := NIL;
   end;

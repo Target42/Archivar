@@ -15,7 +15,7 @@ type
     tsEingeladen,
     tsUnentschuldigt,
 
-  tsLast);
+    tsLast);
 
   IChapter          = interface;
   IChapterList      = interface;
@@ -53,6 +53,10 @@ type
     procedure setModified( value : boolean );
     function  getModified : boolean;
     function  getBesucher : IBesucherListe;
+    procedure setStart( value : TDateTime );
+    function  getStart : TDateTime;
+    procedure setEnde( value : TDateTime );
+    function  getEnde : TDateTime;
 
     property GRID   : integer           read GetGRID      write SetGRID;
     property XProto : IXMLProtocol      read getXProto    write setXProto;
@@ -64,6 +68,8 @@ type
     property Nr     : integer           read GetNr        write SetNr;
     property Date   : TDateTime         read GetDate      write SetDate;
     property Modified : boolean         read getModified  write setModified;
+    property Start  : TDateTime         read getStart     write setStart;
+    property Ende   : TDateTime         read getEnde      write setEnde;
 
     property Teilnehmer : ITeilnehmerListe read getTeilnehmer;
     property Besucher   : IBesucherListe   read getBesucher;

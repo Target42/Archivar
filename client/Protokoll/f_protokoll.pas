@@ -107,6 +107,7 @@ type
     procedure ac_beschlussExecute(Sender: TObject);
     procedure ac_be_bearbeitenExecute(Sender: TObject);
     procedure ac_be_deleteExecute(Sender: TObject);
+    procedure TGDblClick(Sender: TObject);
   private
     type
       TEntryType = (etNothing, etChapterText, etTask, etBeschluss, etTitle);
@@ -507,27 +508,6 @@ begin
   if not Assigned(TG.Selected) then
     exit;
 
-  b := m_proto.Besucher.newBesucher;
-  Application.CreateForm(TBesucherForm, BesucherForm);
-  BesucherForm.Besucher := b;
-  if BesucherForm.ShowModal = mrOk then
-  begin
-    m_proto.Besucher.saveChanged;
-  end
-  else
-    m_proto.Besucher.remove( b );
-
-  BesucherForm.Free;
-  UpdateTG;
-end;
-
-procedure TProtokollForm.btnNeuClick(Sender: TObject);
-var
-  b : IBesucher;
-begin
-  if not Assigned(TG.Selected) then
-    exit;
-
   b := IBesucher( TG.Selected.Data);
   Application.CreateForm(TBesucherForm, BesucherForm);
   BesucherForm.Besucher := b;
@@ -536,6 +516,25 @@ begin
     m_proto.Besucher.saveChanged;
   end;
   BesucherForm.Free;
+
+  UpdateTG;
+end;
+
+procedure TProtokollForm.btnNeuClick(Sender: TObject);
+var
+  b : IBesucher;
+begin
+  b := m_proto.Besucher.newBesucher;
+  Application.CreateForm(TBesucherForm, BesucherForm);
+  BesucherForm.Besucher := b;
+  if BesucherForm.ShowModal = mrOk then
+  begin
+    m_proto.Besucher.saveChanged;
+  end
+  else
+    m_proto.Besucher.remove(b);
+  BesucherForm.Free;
+
   UpdateTG;
 end;
 
@@ -777,6 +776,7 @@ begin
 
   Panel1.Enabled        := not m_ro;
   Panel4.Enabled        := not m_ro;
+  Panel3.Enabled        := not m_ro;
 
   Speichern.Enabled     := not m_ro;
 
@@ -837,6 +837,11 @@ begin
     exit;
   m_proto.save;
   m_proto.edit;
+end;
+
+procedure TProtokollForm.TGDblClick(Sender: TObject);
+begin
+  btnEdit.Click;
 end;
 
 procedure TProtokollForm.TVChange(Sender: TObject; Node: TTreeNode);

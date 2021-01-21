@@ -180,6 +180,9 @@ begin
   finally
     HtmlMod.Free;
   end;
+
+  xList := NIL;
+  st    := NIL;
 end;
 
 procedure TReportFrame.CheckBox1Click(Sender: TObject);

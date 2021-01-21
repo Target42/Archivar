@@ -17,6 +17,7 @@ type
     DateTimePicker1: TDateTimePicker;
     Label2: TLabel;
     DateTimePicker2: TDateTimePicker;
+    LabeledEdit4: TLabeledEdit;
     procedure BaseFrame1OKBtnClick(Sender: TObject);
   private
     m_besucher : IBesucher;
@@ -40,6 +41,8 @@ begin
   m_besucher.Name     := LabeledEdit1.Text;
   m_besucher.Vorname  := LabeledEdit2.Text;
   m_besucher.Grund    := LabeledEdit3.Text;
+  m_besucher.Abteilung:= LabeledEdit4.Text;
+
   m_besucher.Von      := DateTimePicker1.DateTime;
   m_besucher.bis      := DateTimePicker2.DateTime;
 
@@ -57,6 +60,7 @@ begin
   LabeledEdit1.Text := m_besucher.Name;
   LabeledEdit2.Text := m_besucher.Vorname;
   LabeledEdit3.Text := m_besucher.Grund;
+  LabeledEdit4.Text := m_besucher.Abteilung;
 
   DateTimePicker1.DateTime := m_besucher.Von;
   DateTimePicker2.DateTime := m_besucher.bis;

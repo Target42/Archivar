@@ -40,6 +40,7 @@ implementation
 procedure TWebEditorForm.BaseFrame1OKBtnClick(Sender: TObject);
 begin
   SynEdit1.Lines.SaveToFile(m_fname);
+  FNeedUpload := true;
 end;
 
 function TWebEditorForm.GetFileName: string;

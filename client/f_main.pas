@@ -94,6 +94,7 @@ type
     ac_pr_view: TAction;
     N7: TMenuItem;
     Anzeigen1: TMenuItem;
+    N8: TMenuItem;
     procedure ac_prg_closeExecute(Sender: TObject);
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure ac_prg_disconExecute(Sender: TObject);

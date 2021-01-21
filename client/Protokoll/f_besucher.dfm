@@ -1,8 +1,9 @@
 object BesucherForm: TBesucherForm
   Left = 0
   Top = 0
+  ActiveControl = LabeledEdit1
   Caption = 'Besucher'
-  ClientHeight = 231
+  ClientHeight = 270
   ClientWidth = 311
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -16,27 +17,29 @@ object BesucherForm: TBesucherForm
   TextHeight = 13
   object Label1: TLabel
     Left = 16
-    Top = 107
+    Top = 147
     Width = 18
     Height = 13
     Caption = 'Von'
+    FocusControl = DateTimePicker1
   end
   object Label2: TLabel
     Left = 168
-    Top = 107
+    Top = 147
     Width = 13
     Height = 13
     Caption = 'Bis'
+    FocusControl = DateTimePicker2
   end
   inline BaseFrame1: TBaseFrame
     Left = 0
-    Top = 171
+    Top = 210
     Width = 311
     Height = 60
     Align = alBottom
     AutoSize = True
-    TabOrder = 0
-    ExplicitTop = 239
+    TabOrder = 6
+    ExplicitTop = 171
     ExplicitWidth = 311
     inherited StatusBar1: TStatusBar
       Width = 311
@@ -60,7 +63,7 @@ object BesucherForm: TBesucherForm
     EditLabel.Width = 27
     EditLabel.Height = 13
     EditLabel.Caption = 'Name'
-    TabOrder = 1
+    TabOrder = 0
   end
   object LabeledEdit2: TLabeledEdit
     Left = 168
@@ -70,11 +73,11 @@ object BesucherForm: TBesucherForm
     EditLabel.Width = 42
     EditLabel.Height = 13
     EditLabel.Caption = 'Vorname'
-    TabOrder = 2
+    TabOrder = 1
   end
   object LabeledEdit3: TLabeledEdit
     Left = 16
-    Top = 80
+    Top = 120
     Width = 273
     Height = 21
     EditLabel.Width = 29
@@ -84,7 +87,7 @@ object BesucherForm: TBesucherForm
   end
   object DateTimePicker1: TDateTimePicker
     Left = 16
-    Top = 126
+    Top = 166
     Width = 81
     Height = 21
     Date = 44190.829866851850000000
@@ -94,12 +97,22 @@ object BesucherForm: TBesucherForm
   end
   object DateTimePicker2: TDateTimePicker
     Left = 168
-    Top = 126
+    Top = 166
     Width = 81
     Height = 21
     Date = 44190.829866851850000000
     Time = 44190.829866851850000000
     Kind = dtkTime
     TabOrder = 5
+  end
+  object LabeledEdit4: TLabeledEdit
+    Left = 16
+    Top = 80
+    Width = 121
+    Height = 21
+    EditLabel.Width = 45
+    EditLabel.Height = 13
+    EditLabel.Caption = 'Abteilung'
+    TabOrder = 2
   end
 end

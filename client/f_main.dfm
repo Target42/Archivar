@@ -231,6 +231,9 @@
         object Vorlagenbearbeiten1: TMenuItem
           Action = ac_ad_templates
         end
+        object N8: TMenuItem
+          Caption = '-'
+        end
         object Systemvorlage1: TMenuItem
           Action = ac_ad_sys_template
         end
