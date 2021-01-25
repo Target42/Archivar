@@ -492,6 +492,13 @@
             <Form>WebEditorForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="ePub\u_ePub.pas"/>
+        <DCCReference Include="ePub\u_navpoint.pas"/>
+        <DCCReference Include="ePub\u_xml.pas"/>
+        <DCCReference Include="ePub\f_epub.pas">
+            <Form>epubform</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <None Include="Datafields\ERA-NS.txt"/>
         <RcItem Include="dws\dws.html">
             <ContainerId>ResourceItem</ContainerId>

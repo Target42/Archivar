@@ -151,7 +151,11 @@ uses
   u_renderer in 'Protokoll\u_renderer.pas',
   f_protokoll_view in 'Protokoll\f_protokoll_view.pas' {ProtokollViewForm},
   u_protocoll2XML in 'Protokoll\u_protocoll2XML.pas',
-  f_web_editor in 'http\f_web_editor.pas' {WebEditorForm};
+  f_web_editor in 'http\f_web_editor.pas' {WebEditorForm},
+  u_ePub in 'ePub\u_ePub.pas',
+  u_navpoint in 'ePub\u_navpoint.pas',
+  u_xml in 'ePub\u_xml.pas',
+  f_epub in 'ePub\f_epub.pas' {epubform};
 
 {$R *.res}
 
@@ -170,5 +174,7 @@ begin
   Application.CreateForm(TBookMarkHandler, BookMarkHandler);
   Application.CreateForm(TTemplateCacheMod, TemplateCacheMod);
   Application.CreateForm(TMainForm, MainForm);
+  Application.CreateForm(Tepubform, epubform);
+  epubform.FileName := 'D:\Users\steph\Documents\Archivar\epub\BJNR000130972.epub';
   Application.Run;
 end.
