@@ -259,6 +259,9 @@
       object Webserverdateienverwalten1: TMenuItem
         Action = ac_ad_http
       end
+      object ePubmanager1: TMenuItem
+        Action = ac_ad_epub
+      end
     end
     object Fenster1: TMenuItem
       Caption = 'Fenster'
@@ -427,6 +430,11 @@
       Category = 'Protokoll'
       Caption = 'Anzeigen'
       OnExecute = ac_pr_viewExecute
+    end
+    object ac_ad_epub: TAction
+      Category = 'Admin'
+      Caption = 'ePub Manager'
+      OnExecute = ac_ad_epubExecute
     end
   end
   object ApplicationEvents1: TApplicationEvents

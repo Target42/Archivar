@@ -95,6 +95,8 @@ type
     N7: TMenuItem;
     Anzeigen1: TMenuItem;
     N8: TMenuItem;
+    ac_ad_epub: TAction;
+    ePubmanager1: TMenuItem;
     procedure ac_prg_closeExecute(Sender: TObject);
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure ac_prg_disconExecute(Sender: TObject);
@@ -119,6 +121,7 @@ type
     procedure ac_tb_löschenExecute(Sender: TObject);
     procedure ac_ad_httpExecute(Sender: TObject);
     procedure ac_pr_viewExecute(Sender: TObject);
+    procedure ac_ad_epubExecute(Sender: TObject);
   private
     procedure setPanel( id : integer ; text : string );
     procedure loadLogo;
@@ -139,7 +142,7 @@ uses
   f_protokoll, u_stub, System.JSON, u_json, f_protokoll_list, u_gremium, m_BookMarkHandler, m_WindowHandler,
   f_images, System.IOUtils, f_taksListForm, u_berTypes, f_datafields,
   f_template_new, f_taskEditor, f_select_templateForm, f_bechlus, f_set,
-  f_textblock_edit, f_testblock_list, f_webserver_files;
+  f_textblock_edit, f_testblock_list, f_webserver_files, f_epub_mngr;
 
 {$R *.dfm}
 
@@ -150,6 +153,16 @@ begin
     DataFieldForm.ShowModal;
   finally
     DataFieldForm.free;
+  end;
+end;
+
+procedure TMainForm.ac_ad_epubExecute(Sender: TObject);
+begin
+  try
+    Application.CreateForm(TepubMngrForm, epubMngrForm);
+    epubMngrForm.ShowModal;
+  finally
+    epubMngrForm.Free;
   end;
 end;
 

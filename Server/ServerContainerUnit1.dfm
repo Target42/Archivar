@@ -4,7 +4,7 @@ object ServerContainer1: TServerContainer1
   DisplayName = 'ServerContainer1'
   OnStart = ServiceStart
   OnStop = ServiceStop
-  Height = 462
+  Height = 680
   Width = 415
   object DSServer1: TDSServer
     OnConnect = DSServer1Connect
@@ -168,5 +168,11 @@ object ServerContainer1: TServerContainer1
     Server = DSServer1
     Left = 176
     Top = 384
+  end
+  object dsEpub: TDSServerClass
+    OnGetClass = dsEpubGetClass
+    Server = DSServer1
+    Left = 248
+    Top = 456
   end
 end

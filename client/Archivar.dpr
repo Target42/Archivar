@@ -155,7 +155,8 @@ uses
   u_ePub in 'ePub\u_ePub.pas',
   u_navpoint in 'ePub\u_navpoint.pas',
   u_xml in 'ePub\u_xml.pas',
-  f_epub in 'ePub\f_epub.pas' {epubform};
+  f_epub in 'ePub\f_epub.pas' {epubform},
+  f_epub_mngr in 'ePub\f_epub_mngr.pas' {epubMngrForm};
 
 {$R *.res}
 

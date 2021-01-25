@@ -31,7 +31,8 @@ uses
   ds_template in 'ds_template.pas' {dsTemplate: TDSServerModule},
   ds_taskView in 'ds_taskView.pas' {dsTaskView: TDSServerModule},
   ds_textblock in 'ds_textblock.pas' {dsTextBlock: TDSServerModule},
-  ds_fileCache in 'ds_fileCache.pas' {dsFileCache: TDSServerModule};
+  ds_fileCache in 'ds_fileCache.pas' {dsFileCache: TDSServerModule},
+  ds_epub in 'ds_epub.pas' {dsEpub: TDSServerModule};
 
 var
   MyDummyBoolean : Boolean;

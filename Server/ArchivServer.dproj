@@ -179,6 +179,11 @@
             <FormType>dfm</FormType>
             <DesignClass>TDSServerModule</DesignClass>
         </DCCReference>
+        <DCCReference Include="ds_epub.pas">
+            <Form>dsEpub</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDSServerModule</DesignClass>
+        </DCCReference>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

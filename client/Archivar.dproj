@@ -499,6 +499,10 @@
             <Form>epubform</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="ePub\f_epub_mngr.pas">
+            <Form>epubMngrForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <None Include="Datafields\ERA-NS.txt"/>
         <RcItem Include="dws\dws.html">
             <ContainerId>ResourceItem</ContainerId>

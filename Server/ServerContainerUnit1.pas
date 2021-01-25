@@ -30,6 +30,7 @@ type
     dsTaskView: TDSServerClass;
     DSServerClass1: TDSServerClass;
     dsFileCache: TDSServerClass;
+    dsEpub: TDSServerClass;
     procedure dsAdminGetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
     procedure ServiceStart(Sender: TService; var Started: Boolean);
@@ -72,6 +73,8 @@ type
     procedure DSServer1Error(DSErrorEventObject: TDSErrorEventObject);
     procedure dsFileCacheGetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
+    procedure dsEpubGetClass(DSServerClass: TDSServerClass;
+      var PersistentClass: TPersistentClass);
   private
     { Private declarations }
   protected
@@ -98,7 +101,7 @@ implementation
 uses
   Winapi.Windows, m_db, ds_gremium, ds_admin, Datasnap.DSSession, ds_person, IOUtils,
   ds_taks, ds_file, ds_misc, ds_protocol, ds_image, ds_chapter,
-  ds_taskEdit, ds_template, ds_taskView, ds_textblock, ds_fileCache;
+  ds_taskEdit, ds_template, ds_taskView, ds_textblock, ds_fileCache, ds_epub;
 
 procedure TServerContainer1.dsAdminGetClass(
   DSServerClass: TDSServerClass; var PersistentClass: TPersistentClass);
@@ -284,6 +287,12 @@ procedure TServerContainer1.dsChapterGetClass(DSServerClass: TDSServerClass;
   var PersistentClass: TPersistentClass);
 begin
   PersistentClass := ds_chapter.TdsChapter;
+end;
+
+procedure TServerContainer1.dsEpubGetClass(DSServerClass: TDSServerClass;
+  var PersistentClass: TPersistentClass);
+begin
+  PersistentClass := ds_epub.TdsEpub;
 end;
 
 procedure TServerContainer1.dsFileCacheGetClass(DSServerClass: TDSServerClass;

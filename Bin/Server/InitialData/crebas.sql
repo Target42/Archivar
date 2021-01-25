@@ -1,7 +1,7 @@
 /* ============================================================ */
 /*   Database name:  MODEL_2                                    */
 /*   DBMS name:      InterBase                                  */
-/*   Created on:     30.12.2020  19:33                          */
+/*   Created on:     25.01.2021  18:52                          */
 /* ============================================================ */
 
 create generator gen_be_id;
@@ -22,6 +22,7 @@ create generator gen_te_id;
 create generator gen_tg_id;
 create generator gen_tn_id;
 create generator gen_ty_id;
+create generator gen_ep_id;
 /* ============================================================ */
 /*   Table: MA_MITAREITER                                       */
 /* ============================================================ */
@@ -120,6 +121,21 @@ create table HC_HTTP
     HC_MD5                          VARCHAR(32)                    ,
     HC_DATA                         BLOB                           ,
     constraint PK_HC_HTTP primary key (HC_ID)
+);
+
+/* ============================================================ */
+/*   Table: EP_EPUB                                             */
+/* ============================================================ */
+create table EP_EPUB
+(
+    EP_ID                           INTEGER                not null,
+    EP_NAME                         VARCHAR(100)                   ,
+    EP_TITLE                        VARCHAR(100)                   ,
+    EP_MD5                          VARCHAR(32)                    ,
+    EP_GROUP                        VARCHAR(50)                    ,
+    EP_SUB                          VARCHAR(50)                    ,
+    EP_DATA                         BLOB                           ,
+    constraint PK_EP_EPUB primary key (EP_ID)
 );
 
 /* ============================================================ */
@@ -247,6 +263,7 @@ create table TE_TEMPLATE
     TE_STATE                        CHAR(1)                        ,
     TE_VERSION                      INTEGER                        ,
     TE_CLID                         VARCHAR(38)                    ,
+    TE_MD5                          VARCHAR(32)                    ,
     constraint PK_TE_TEMPLATE primary key (TE_ID)
 );
 
