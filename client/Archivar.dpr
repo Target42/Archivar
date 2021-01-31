@@ -156,7 +156,10 @@ uses
   u_navpoint in 'ePub\u_navpoint.pas',
   u_xml in 'ePub\u_xml.pas',
   f_epub in 'ePub\f_epub.pas' {epubform},
-  f_epub_mngr in 'ePub\f_epub_mngr.pas' {epubMngrForm};
+  f_epub_mngr in 'ePub\f_epub_mngr.pas' {epubMngrForm},
+  fr_epub in 'ePub\fr_epub.pas' {ePupFrame: TFrame},
+  f_downloadEpub in 'ePub\f_downloadEpub.pas' {DownloadEpubform},
+  f_meeting_new in 'Sitzung\f_meeting_new.pas' {MeetingForm};
 
 {$R *.res}
 
@@ -175,7 +178,6 @@ begin
   Application.CreateForm(TBookMarkHandler, BookMarkHandler);
   Application.CreateForm(TTemplateCacheMod, TemplateCacheMod);
   Application.CreateForm(TMainForm, MainForm);
-  Application.CreateForm(Tepubform, epubform);
-  epubform.FileName := 'D:\Users\steph\Documents\Archivar\epub\BJNR000130972.epub';
+
   Application.Run;
 end.

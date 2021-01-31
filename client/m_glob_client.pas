@@ -56,6 +56,7 @@ type
     m_export  : string;
     m_images  : string;
     m_httpHome: string;
+    m_epubHome: string;
     m_misc    : TdsMiscClient;
     m_gremien : TList<TGremium>;
     m_imageNames : TDictionary<string,integer>;
@@ -87,6 +88,7 @@ type
     property Images     : string          read m_images;
     property Gremien    : TList<TGremium> read m_gremien;
     property wwwHome    : string          read m_httpHome;
+    property ePubHome   : string          read m_epubHome;
 
     procedure FillGremien( arr :TJSONArray );
 
@@ -244,11 +246,13 @@ begin
   m_images    := TPath.Combine(m_home, 'Images' );
   m_httpHome  := TPath.Combine(m_home, 'wwwroot');
   m_export    := TPath.Combine(m_home, 'export');
+  m_epubHome  := TPath.Combine(m_home, 'epubs');
 
   ForceDirectories(m_home);
   ForceDirectories(m_images);
   ForceDirectories(m_httpHome);
   ForceDirectories(m_export);
+  ForceDirectories(m_epubHome);
 end;
 
 procedure TGM.DataModuleDestroy(Sender: TObject);

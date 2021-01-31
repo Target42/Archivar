@@ -20,7 +20,7 @@
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter
-    Left = 241
+    Left = 249
     Top = 0
     Height = 466
     ExplicitLeft = 568
@@ -40,9 +40,9 @@
     ExplicitWidth = 301
   end
   object Image1: TImage
-    Left = 244
+    Left = 252
     Top = 0
-    Width = 882
+    Width = 874
     Height = 466
     Align = alClient
     Center = True
@@ -102,55 +102,92 @@
   object PageControl1: TPageControl
     Left = 0
     Top = 0
-    Width = 241
+    Width = 249
     Height = 466
-    ActivePage = TabSheet1
+    ActivePage = TabSheet3
     Align = alLeft
+    MultiLine = True
     TabOrder = 2
+    TabPosition = tpLeft
     Visible = False
     object TabSheet1: TTabSheet
       Caption = 'Gremien'
+      ExplicitWidth = 213
       inline GremiumTreeFrame1: TGremiumTreeFrame
         Left = 0
         Top = 0
-        Width = 233
-        Height = 438
+        Width = 221
+        Height = 458
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 233
-        ExplicitHeight = 438
+        ExplicitWidth = 213
+        ExplicitHeight = 458
         inherited TV: TTreeView
-          Width = 233
-          Height = 438
-          ExplicitWidth = 233
-          ExplicitHeight = 438
+          Width = 221
+          Height = 458
+          ExplicitWidth = 213
+          ExplicitHeight = 458
         end
       end
     end
     object TabSheet2: TTabSheet
       Caption = 'Lesezeichen'
       ImageIndex = 1
+      ExplicitWidth = 213
       inline BookmarkFrame1: TBookmarkFrame
         Left = 0
         Top = 0
-        Width = 233
-        Height = 438
+        Width = 221
+        Height = 458
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 233
-        ExplicitHeight = 438
+        ExplicitWidth = 213
+        ExplicitHeight = 458
         inherited LV: TListView
-          Width = 233
-          Height = 438
-          ExplicitWidth = 233
-          ExplicitHeight = 438
+          Width = 221
+          Height = 458
+          ExplicitWidth = 213
+          ExplicitHeight = 458
+        end
+      end
+    end
+    object TabSheet3: TTabSheet
+      Caption = 'B'#252'cher'
+      ImageIndex = 2
+      ExplicitWidth = 213
+      inline ePupFrame1: TePupFrame
+        Left = 0
+        Top = 0
+        Width = 221
+        Height = 458
+        Align = alClient
+        TabOrder = 0
+        ExplicitWidth = 213
+        ExplicitHeight = 458
+        inherited GroupBox1: TGroupBox
+          Top = 390
+          Width = 221
+          ExplicitTop = 390
+          ExplicitWidth = 213
+        end
+        inherited DBGrid1: TDBGrid
+          Width = 221
+          Height = 390
+        end
+        inherited EpubTab: TFDMemTable
+          Left = 16
+          Top = 8
+        end
+        inherited DataSource1: TDataSource
+          Left = 72
+          Top = 24
         end
       end
     end
   end
   object MainMenu1: TMainMenu
-    Left = 152
-    Top = 32
+    Left = 64
+    Top = 88
     object Programm1: TMenuItem
       Caption = '&Programm'
       object Einstellungen1: TMenuItem
@@ -198,6 +235,13 @@
         end
         object Anzeigen1: TMenuItem
           Action = ac_pr_view
+        end
+      end
+      object Sitzungen1: TMenuItem
+        Caption = 'Sitzungen'
+        GroupIndex = 200
+        object Neu3: TMenuItem
+          Action = ac_me_new
         end
       end
     end
@@ -291,8 +335,8 @@
     end
   end
   object ActionList1: TActionList
-    Left = 128
-    Top = 120
+    Left = 64
+    Top = 160
     object ac_prg_close: TAction
       Category = 'Program'
       Caption = 'Ende'
@@ -436,10 +480,15 @@
       Caption = 'ePub Manager'
       OnExecute = ac_ad_epubExecute
     end
+    object ac_me_new: TAction
+      Category = 'Meeting'
+      Caption = 'Neu'
+      OnExecute = ac_me_newExecute
+    end
   end
   object ApplicationEvents1: TApplicationEvents
     OnMessage = ApplicationEvents1Message
-    Left = 136
-    Top = 168
+    Left = 64
+    Top = 216
   end
 end

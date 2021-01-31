@@ -503,6 +503,19 @@
             <Form>epubMngrForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="ePub\fr_epub.pas">
+            <Form>ePupFrame</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="ePub\f_downloadEpub.pas">
+            <Form>DownloadEpubform</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Sitzung\f_meeting_new.pas">
+            <Form>MeetingForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <None Include="Datafields\ERA-NS.txt"/>
         <RcItem Include="dws\dws.html">
             <ContainerId>ResourceItem</ContainerId>

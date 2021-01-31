@@ -22,9 +22,6 @@ object epubMngrForm: TepubMngrForm
     Width = 635
     Height = 19
     Panels = <>
-    ExplicitLeft = 384
-    ExplicitTop = 152
-    ExplicitWidth = 0
   end
   object GroupBox1: TGroupBox
     Left = 0
@@ -34,10 +31,6 @@ object epubMngrForm: TepubMngrForm
     Align = alClient
     Caption = #220'bersicht'
     TabOrder = 1
-    ExplicitLeft = 8
-    ExplicitTop = 8
-    ExplicitWidth = 185
-    ExplicitHeight = 105
     object DBGrid1: TDBGrid
       Left = 2
       Top = 15
@@ -45,7 +38,7 @@ object epubMngrForm: TepubMngrForm
       Height = 215
       Align = alClient
       DataSource = EPSrc
-      Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+      Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgMultiSelect, dgTitleClick, dgTitleHotTrack]
       ReadOnly = True
       TabOrder = 0
       TitleFont.Charset = DEFAULT_CHARSET
@@ -94,17 +87,34 @@ object epubMngrForm: TepubMngrForm
     TabOrder = 2
     object btnUload: TBitBtn
       Left = 16
-      Top = 16
+      Top = 17
       Width = 75
       Height = 25
       Caption = 'Upload'
       TabOrder = 0
       OnClick = btnUloadClick
     end
+    object BitBtn1: TBitBtn
+      Left = 105
+      Top = 17
+      Width = 75
+      Height = 25
+      Caption = 'Gruppe'
+      TabOrder = 1
+      OnClick = BitBtn1Click
+    end
+    object BitBtn2: TBitBtn
+      Left = 200
+      Top = 17
+      Width = 75
+      Height = 25
+      Caption = 'Untergruppe'
+      TabOrder = 2
+      OnClick = BitBtn2Click
+    end
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsEpub'
-    SQLConnection = GM.SQLConnection1
     Left = 72
     Top = 64
   end
@@ -133,7 +143,7 @@ object epubMngrForm: TepubMngrForm
         DisplayName = 'Alle Datein(*.*)'
         FileMask = '*.*'
       end>
-    Options = [fdoFileMustExist]
+    Options = [fdoAllowMultiSelect, fdoFileMustExist]
     Title = 'ePub laden'
     Left = 136
     Top = 168

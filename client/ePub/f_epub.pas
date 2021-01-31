@@ -17,6 +17,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure TVChange(Sender: TObject; Node: TTreeNode);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     m_pub : ePub;
 
@@ -29,13 +30,41 @@ type
 
 var
   epubform: Tepubform;
-// D:\git\multi\Setup\Bibo\BJNR000130972.epub
+
+procedure showEPubFile( name : string );
+
 implementation
 
 uses
-  u_navpoint, system.IOUtils;
+  u_navpoint, system.IOUtils, System.Generics.Collections;
 
 {$R *.dfm}
+
+var
+  g_list : TList<Tepubform>;
+
+procedure showEPubFile( name : string );
+var
+  frm : Tepubform;
+begin
+  frm := NIL;
+  for frm in g_list do
+  begin
+    if SameText(frm.FileName, name) then
+    begin
+      frm.BringToFront;
+      if frm.WindowState = wsMinimized then
+        frm.WindowState := wsNormal;
+
+      exit;
+    end;
+
+  end;
+
+  Application.CreateForm(Tepubform, frm);
+  g_list.Add(frm);
+  frm.SetFileName(name);
+end;
 
 procedure Tepubform.createIndex;
   procedure add( root : TTreeNode ; nav : NavPoint );
@@ -61,6 +90,11 @@ begin
   TV.Items.EndUpdate;
 end;
 
+procedure Tepubform.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  Action := caFree;
+end;
+
 procedure Tepubform.FormCreate(Sender: TObject);
 begin
   m_pub := NIL;
@@ -69,6 +103,7 @@ end;
 procedure Tepubform.FormDestroy(Sender: TObject);
 begin
   m_pub.free;
+  g_list.Remove(self);
 end;
 
 function Tepubform.GetFileName: string;
@@ -104,5 +139,13 @@ begin
     WebBrowser1.Navigate(fname);
   end;
 end;
+
+initialization
+
+g_list := TList<Tepubform>.create;
+
+finalization
+
+g_list.Free;
 
 end.
