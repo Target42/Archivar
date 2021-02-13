@@ -104,7 +104,7 @@
     Top = 0
     Width = 249
     Height = 466
-    ActivePage = TabSheet3
+    ActivePage = TabSheet2
     Align = alLeft
     MultiLine = True
     TabOrder = 2
@@ -112,7 +112,6 @@
     Visible = False
     object TabSheet1: TTabSheet
       Caption = 'Gremien'
-      ExplicitWidth = 213
       inline GremiumTreeFrame1: TGremiumTreeFrame
         Left = 0
         Top = 0
@@ -120,12 +119,12 @@
         Height = 458
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 213
+        ExplicitWidth = 221
         ExplicitHeight = 458
         inherited TV: TTreeView
           Width = 221
           Height = 458
-          ExplicitWidth = 213
+          ExplicitWidth = 221
           ExplicitHeight = 458
         end
       end
@@ -133,7 +132,6 @@
     object TabSheet2: TTabSheet
       Caption = 'Lesezeichen'
       ImageIndex = 1
-      ExplicitWidth = 213
       inline BookmarkFrame1: TBookmarkFrame
         Left = 0
         Top = 0
@@ -141,12 +139,12 @@
         Height = 458
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 213
+        ExplicitWidth = 221
         ExplicitHeight = 458
         inherited LV: TListView
           Width = 221
           Height = 458
-          ExplicitWidth = 213
+          ExplicitWidth = 221
           ExplicitHeight = 458
         end
       end
@@ -154,7 +152,6 @@
     object TabSheet3: TTabSheet
       Caption = 'B'#252'cher'
       ImageIndex = 2
-      ExplicitWidth = 213
       inline ePupFrame1: TePupFrame
         Left = 0
         Top = 0
@@ -162,17 +159,11 @@
         Height = 458
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 213
+        ExplicitWidth = 221
         ExplicitHeight = 458
-        inherited GroupBox1: TGroupBox
-          Top = 390
-          Width = 221
-          ExplicitTop = 390
-          ExplicitWidth = 213
-        end
         inherited DBGrid1: TDBGrid
           Width = 221
-          Height = 390
+          Height = 458
         end
         inherited EpubTab: TFDMemTable
           Left = 16
@@ -220,6 +211,9 @@
         object Laden2: TMenuItem
           Action = ac_ta_load
         end
+        object N10: TMenuItem
+          Caption = '-'
+        end
       end
       object Proptokoll1: TMenuItem
         Caption = 'Protokoll'
@@ -236,12 +230,39 @@
         object Anzeigen1: TMenuItem
           Action = ac_pr_view
         end
+        object N9: TMenuItem
+          Caption = '-'
+        end
+        object Lschen2: TMenuItem
+          Action = ac_pr_delete
+        end
       end
       object Sitzungen1: TMenuItem
-        Caption = 'Sitzungen'
+        Caption = 'Sitzung'
         GroupIndex = 200
         object Neu3: TMenuItem
           Action = ac_me_new
+        end
+        object Bearbeiten2: TMenuItem
+          Action = ac_me_edit
+        end
+        object N11: TMenuItem
+          Caption = '-'
+        end
+        object Einladen1: TMenuItem
+          Action = ac_me_invite
+        end
+        object N12: TMenuItem
+          Caption = '-'
+        end
+        object Abschlieen1: TMenuItem
+          Action = ac_me_end
+        end
+        object N13: TMenuItem
+          Caption = '-'
+        end
+        object Lschen3: TMenuItem
+          Action = ac_me_delete
         end
       end
     end
@@ -335,8 +356,8 @@
     end
   end
   object ActionList1: TActionList
-    Left = 64
-    Top = 160
+    Left = 136
+    Top = 224
     object ac_prg_close: TAction
       Category = 'Program'
       Caption = 'Ende'
@@ -484,6 +505,26 @@
       Category = 'Meeting'
       Caption = 'Neu'
       OnExecute = ac_me_newExecute
+    end
+    object ac_pr_delete: TAction
+      Category = 'Protokoll'
+      Caption = '&L'#246'schen'
+    end
+    object ac_me_edit: TAction
+      Category = 'Meeting'
+      Caption = 'Bearbeiten'
+    end
+    object ac_me_invite: TAction
+      Category = 'Meeting'
+      Caption = 'Einladen'
+    end
+    object ac_me_delete: TAction
+      Category = 'Meeting'
+      Caption = '&L'#246'schen'
+    end
+    object ac_me_end: TAction
+      Category = 'Meeting'
+      Caption = 'Abschlie'#223'en'
     end
   end
   object ApplicationEvents1: TApplicationEvents

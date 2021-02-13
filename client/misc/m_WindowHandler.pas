@@ -29,6 +29,10 @@ type
     procedure openProtocolView( id : integer );
     procedure closeProtoclView( id : integer );
 
+    procedure openMeetingView( id : integer );
+    procedure closeMeetingView( id : integer );
+
+
   end;
 
 var
@@ -46,6 +50,11 @@ uses
 procedure TWindowHandler.closeTaskWindow(id: integer);
 begin
   m_taskMap.Remove(id);
+end;
+
+procedure TWindowHandler.closeMeetingView(id: integer);
+begin
+
 end;
 
 procedure TWindowHandler.closeProtoclView(id: integer);
@@ -106,6 +115,11 @@ begin
   Result := m_taskMap.ContainsKey(id);
 end;
 
+procedure TWindowHandler.openMeetingView(id: integer);
+begin
+
+end;
+
 procedure TWindowHandler.openProtoCclWindow(id: integer; ro: Boolean);
 var
   frm : TProtokollForm;
@@ -141,6 +155,7 @@ begin
     Application.CreateForm(TProtokollViewForm, frm);
     frm.ID := id;
     frm.Show;
+    m_protoView.AddOrSetValue( id, frm);
   end;
   frm.Show;
 end;

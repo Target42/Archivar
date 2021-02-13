@@ -1,16 +1,17 @@
 object TaskList2Frame: TTaskList2Frame
   Left = 0
   Top = 0
-  Width = 733
-  Height = 305
+  Width = 901
+  Height = 311
   Align = alClient
   TabOrder = 0
   ExplicitWidth = 451
+  ExplicitHeight = 305
   object LV: TListView
-    Left = 73
+    Left = 41
     Top = 0
-    Width = 660
-    Height = 264
+    Width = 860
+    Height = 311
     Align = alClient
     Columns = <
       item
@@ -43,109 +44,22 @@ object TaskList2Frame: TTaskList2Frame
     RowSelect = True
     TabOrder = 0
     ViewStyle = vsReport
+    ExplicitLeft = 73
     ExplicitWidth = 378
-  end
-  object Panel1: TPanel
-    Left = 0
-    Top = 264
-    Width = 733
-    Height = 41
-    Align = alBottom
-    BevelOuter = bvNone
-    Caption = 'Panel1'
-    ShowCaption = False
-    TabOrder = 1
-    ExplicitWidth = 451
-    object Label1: TLabel
-      Left = 8
-      Top = 8
-      Width = 24
-      Height = 13
-      Caption = 'Filter'
-    end
-    object CheckBox1: TCheckBox
-      Tag = 1
-      Left = 49
-      Top = 6
-      Width = 49
-      Height = 17
-      Caption = 'Neu'
-      TabOrder = 0
-      OnClick = CheckBox1Click
-    end
-    object CheckBox2: TCheckBox
-      Tag = 2
-      Left = 104
-      Top = 6
-      Width = 58
-      Height = 17
-      Caption = 'Gelesen'
-      TabOrder = 1
-      OnClick = CheckBox1Click
-    end
-    object CheckBox3: TCheckBox
-      Tag = 4
-      Left = 168
-      Top = 6
-      Width = 90
-      Height = 17
-      Caption = 'In Bearbeitung'
-      TabOrder = 2
-      OnClick = CheckBox1Click
-    end
-    object CheckBox4: TCheckBox
-      Tag = 8
-      Left = 264
-      Top = 6
-      Width = 154
-      Height = 17
-      Caption = 'Bearbeitung abgeschlossen'
-      TabOrder = 3
-      OnClick = CheckBox1Click
-    end
-    object CheckBox5: TCheckBox
-      Tag = 16
-      Left = 417
-      Top = 6
-      Width = 97
-      Height = 17
-      Caption = 'Kl'#228'rungsbedarf'
-      TabOrder = 4
-      OnClick = CheckBox1Click
-    end
-    object CheckBox6: TCheckBox
-      Tag = 32
-      Left = 520
-      Top = 6
-      Width = 97
-      Height = 17
-      Caption = 'Beschlusfassung'
-      TabOrder = 5
-      OnClick = CheckBox1Click
-    end
-    object CheckBox7: TCheckBox
-      Tag = 64
-      Left = 623
-      Top = 6
-      Width = 97
-      Height = 17
-      Caption = 'Protokoll'
-      TabOrder = 6
-      OnClick = CheckBox1Click
-    end
+    ExplicitHeight = 264
   end
   object Panel2: TPanel
     Left = 0
     Top = 0
-    Width = 73
-    Height = 264
+    Width = 41
+    Height = 311
     Align = alLeft
     BevelOuter = bvNone
     Caption = 'Panel2'
     ShowCaption = False
-    TabOrder = 2
+    TabOrder = 1
     object SpeedButton1: TSpeedButton
-      Left = 16
+      Left = 12
       Top = 48
       Width = 23
       Height = 22
@@ -187,7 +101,7 @@ object TaskList2Frame: TTaskList2Frame
       OnClick = SpeedButton1Click
     end
     object SpeedButton2: TSpeedButton
-      Left = 16
+      Left = 12
       Top = 76
       Width = 23
       Height = 22

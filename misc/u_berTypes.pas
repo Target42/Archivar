@@ -5,7 +5,7 @@ interface
 type
   tDocType    = ( dtTask = 1, dtProtokoll );
   tSubDocType = (dstEinstellung = 1, dstMehrarbeit, dstSamstagsarbeit, dtsFreitext );
-  tLockTypes  = ( ltTask = 1, ltProtokoll );
+  tLockTypes  = ( ltTask = 1, ltProtokoll, ltMeeting );
 
 
 implementation

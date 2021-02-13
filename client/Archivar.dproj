@@ -516,6 +516,10 @@
             <Form>MeetingForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="Task\f_task_filter.pas">
+            <Form>TaskFilterForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <None Include="Datafields\ERA-NS.txt"/>
         <RcItem Include="dws\dws.html">
             <ContainerId>ResourceItem</ContainerId>

@@ -1,14 +1,16 @@
 object ChapterFrame: TChapterFrame
   Left = 0
   Top = 0
-  Width = 451
-  Height = 305
+  Width = 945
+  Height = 398
   Align = alClient
   TabOrder = 0
+  ExplicitWidth = 451
+  ExplicitHeight = 305
   object Splitter1: TSplitter
     Left = 251
     Top = 0
-    Height = 305
+    Height = 398
     ExplicitLeft = 368
     ExplicitTop = 72
     ExplicitHeight = 100
@@ -17,10 +19,11 @@ object ChapterFrame: TChapterFrame
     Left = 0
     Top = 0
     Width = 251
-    Height = 305
+    Height = 398
     Align = alLeft
     Caption = 'Struktur'
     TabOrder = 0
+    ExplicitHeight = 305
     object Label2: TLabel
       Left = 2
       Top = 15
@@ -36,200 +39,144 @@ object ChapterFrame: TChapterFrame
       ParentFont = False
       ExplicitWidth = 4
     end
-    object Panel1: TPanel
-      Left = 2
-      Top = 232
-      Width = 247
-      Height = 71
-      Align = alBottom
-      BevelOuter = bvNone
-      Caption = 'Panel1'
-      ShowCaption = False
-      TabOrder = 0
-      object SpeedButton8: TSpeedButton
-        Tag = 1
-        Left = 82
-        Top = 6
-        Width = 27
-        Height = 27
-        Action = ac_sub_chapter
-        ParentShowHint = False
-        ShowHint = True
-      end
-      object SpeedButton1: TSpeedButton
-        Tag = 1
-        Left = 16
-        Top = 6
-        Width = 27
-        Height = 27
-        Action = ac_new_chapter
-        Glyph.Data = {
-          36040000424D3604000000000000360000002800000010000000100000000100
-          20000000000000040000C40E0000C40E00000000000000000000FFFFFF00FFFF
-          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF004499440F47A0
-          439B47A043ED47A043ED48A0439949A4490EFFFFFF00FFFFFF00FFFFFF00FFAA
-          5503F5A442D6F5A542FFF5A542FFF5A542FFF5A542FFF5A542FF7FA242FF47A0
-          43FF99CA97FF99CA97FF47A043FF56A142BDFFFFFF00FFFFFF00FFFFFF00F5A4
-          4335F5A542FFF5A542FFF5A542FFF5A542FFF5A542FFD7A543FF47A043FF84C0
-          82FFD6EAD6FFD6EAD6FF84C082FF47A043FF44A24429FFFFFF00FFFFFF00F6A4
-          4038F6AE57CAF7B461D2F7B461D2F7B461D2F7B461D2BEAE58DF47A043FFFFFF
-          FFFFFFFFFFFFFFFFFFFFFFFFFFFF47A043FF469F4345FFFFFF00FFFFFF00FFFF
-          FF00F9C991ABF9CA90FFF9CA90FFF9CA90FFF9CA90FFE9C689FF4BA145FF47A0
-          43FFC2E0C1FFC2E0C1FF47A043FF47A043F946A24616FFFFFF00FFFFFF00FFFF
-          FF00F9C991ABF9CA90FFF9CA90FFF9CA90FFF9CA90FFF9CA90FFA7B76CFF47A0
-          43FF6FB56CFF6FB56CFF47A043FE47A04373FFFFFF00FFFFFF00FFFFFF00FFFF
-          FF00F9C991ABF9CA90FFE8A55BFFE8A55BFFDF9241FFDF9241FFE39C4EFFC8BA
-          74FF8FB162FF7EAD5BDD469F4345FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-          FF00F9C991ABF9CA90FFF0B875FFF0B875FFECAE68FFECAE68FFECAE68FFECAE
-          68FFF9CA90FFF9C991ABFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-          FF00F9C991ABF9CA90FFF0B875FFF0B875FFECAE68FFECAE68FFECAE68FFECAE
-          68FFF9CA90FFF9C991ABFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-          FF00F9C991ABF9CA90FFE8A55BFFE8A55BFFDF9240FFDF9240FFDF9240FFDF92
-          40FFF9CA90FFF9C991ABFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-          FF00F9C991ABF9CA90FFE8A55BFFE8A55BFFDF9240FFDF9240FFDF9240FFDF92
-          40FFF9CA90FFF9C991ABFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-          FF00F9C991ABF9CA90FFF9CA90FFF9CA90FFF9CA90FFF9CA90FFF9CA90FFF9CA
-          90FFF9CA90FFF9C991ABFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-          FF00F9C991ABF9CA90FFF9CA90FFF9CA90FFF9CA90FFF9CA90FFF9CA90FFF9CA
-          90FFF9CA90FFF9C991ABFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-          FF00F9C991ABF9CA90FFF9CA90FFF9CA90FFF9CA90FFF9CA90FFF9CA90FFF9CA
-          90FFF9CA90FFF9C991ABFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
-        ParentShowHint = False
-        ShowHint = True
-      end
-      object SpeedButton2: TSpeedButton
-        Tag = 1
-        Left = 49
-        Top = 6
-        Width = 27
-        Height = 27
-        Action = ac_edit_chapter
-        Glyph.Data = {
-          36040000424D3604000000000000360000002800000010000000100000000100
-          20000000000000040000C40E0000C40E00000000000000000000FFFFFF00FFFF
-          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF003278889013ACE06C00AE
-          FF13FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF0011B0E56A06BBFFC60099
-          FFCF0097FF16FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FBDE
-          BAABFBDEBBFFFBDEBBFFFBDEBBFFFBDEBBFFFBDEBBFFE8DBC0FF24A3F5FF0098
-          FFFF24A2F5FFE0D6C2FFFBDEBAABFFFFFF00FFFFFF00FFFFFF00FFFFFF00FBDE
-          BAABFBDEBBFFFBDEBBFFFBDEBBFFFBDEBBFFFBDEBBFFFBDEBBFFDAD4C4FF1EA0
-          F7FF0098FFFF2AA3F4FFDAD6C3B3FFFFFF00FFFFFF00FFFFFF00FFFFFF00FBDE
-          BAABFBDEBBFFF2C797FFF2C797FFD57E24FFD57E24FFDA8A39FFE19A51FFDFD2
-          BAFF25A2F5FF0098FFFF189EF9F31199F71EFFFFFF00FFFFFF00FFFFFF00FBDE
-          BAABFBDEBBFFF2C797FFF2C797FFE0994FFFE0994FFFE0994FFFE0994FFFE099
-          4FFFDAC8ACFF1FA1F7FF51AAE1F1C3BCB1CF7B7BDC1DFFFFFF00FFFFFF00FBDE
-          BAABFBDEBBFFF6D3A9FFF6D3A9FFEDBB85FFEDBB85FFEDBB85FFEDBB85FFEDBB
-          85FFF6D3A9FFE4D8C1FFCAC3B3ED928FD3CB7373E683FFFFFF00FFFFFF00FBDE
-          BAABFBDEBBFFF6D3A9FFF6D3A9FFEDBB85FFEDBB85FFEDBB85FFEDBB85FFEDBB
-          85FFF6D3A9FFFBDEBBFFE8CFBFB47373E4856666CC05FFFFFF00FFFFFF00FBDE
-          BAABFBDEBBFFF2C797FFF2C797FFE0984FFFE0984FFFE0984FFFE0984FFFE098
-          4FFFF2C797FFFBDEBBFFFBDEBAABFFFFFF00FFFFFF00FFFFFF00FFFFFF00FBDE
-          BAABFBDEBBFFF2C797FFF2C797FFE0984FFFE0984FFFE0984FFFE0984FFFE098
-          4FFFF2C797FFFBDEBBFFFBDEBAABFFFFFF00FFFFFF00FFFFFF00FFFFFF00EFC6
-          A6CEFBDEBBFFFBDEBBFFFBDEBBFFFBDEBBFFFBDEBBFFFBDEBBFFFBDEBBFFFBDE
-          BBFFFBDEBBFFFBDEBBFFEFC6A6CEFFFFFF00FFFFFF00FFFFFF00FFFFFF00DB9E
-          83D0E4B092FFE4B092FFE4B092FFE4B092FFE4B092FFE4B092FFE4B092FFE4B0
-          92FFE4B092FFE4B092FFDB9E83D0FFFFFF00FFFFFF00FFFFFF00FFFFFF00B651
-          3FAAB5513FFFB5513FFFB5513FFFB5513FFFB5513FFFB5513FFFB5513FFFB551
-          3FFFB5513FFFB5513FFFB6513FAAFFFFFF00FFFFFF00FFFFFF00FFFFFF00B351
-          412FB4513F55B4513F55B4513F55B4513F55B4513F55B4513F55B4513F55B451
-          3F55B4513F55B4513F55B351412FFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
-          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
-        ParentShowHint = False
-        ShowHint = True
-      end
-      object SpeedButton3: TSpeedButton
-        Tag = 1
-        Left = 115
-        Top = 6
-        Width = 27
-        Height = 27
-        Action = ac_del_chapter
-        ParentShowHint = False
-        ShowHint = True
-      end
-      object SpeedButton4: TSpeedButton
-        Tag = 1
-        Left = 160
-        Top = 6
-        Width = 27
-        Height = 27
-        Action = ac_chapter_up
-        ParentShowHint = False
-        ShowHint = True
-      end
-      object SpeedButton5: TSpeedButton
-        Tag = 1
-        Left = 160
-        Top = 39
-        Width = 27
-        Height = 27
-        Action = ac_chapter_down
-        ParentShowHint = False
-        ShowHint = True
-      end
-      object SpeedButton6: TSpeedButton
-        Tag = 1
-        Left = 193
-        Top = 6
-        Width = 27
-        Height = 27
-        Action = ac_chapter_left
-        ParentShowHint = False
-        ShowHint = True
-      end
-      object SpeedButton7: TSpeedButton
-        Tag = 1
-        Left = 193
-        Top = 39
-        Width = 27
-        Height = 27
-        Action = ac_chapter_right
-        ParentShowHint = False
-        ShowHint = True
-      end
-    end
     object TV: TTreeView
       Left = 2
       Top = 31
       Width = 247
-      Height = 201
+      Height = 295
       Align = alClient
       DragMode = dmAutomatic
       Indent = 19
       PopupMenu = PopupMenu1
-      TabOrder = 1
+      TabOrder = 0
       OnDblClick = TVDblClick
       OnDragDrop = TVDragDrop
       OnDragOver = TVDragOver
+      ExplicitHeight = 202
+    end
+    object PageControl1: TPageControl
+      Left = 2
+      Top = 326
+      Width = 247
+      Height = 70
+      ActivePage = TabSheet1
+      Align = alBottom
+      TabOrder = 1
+      ExplicitTop = 233
+      object TabSheet1: TTabSheet
+        Caption = 'Bearbeiten'
+        object SpeedButton1: TSpeedButton
+          Tag = 1
+          Left = 3
+          Top = 3
+          Width = 27
+          Height = 27
+          Action = ac_new_chapter
+          ParentShowHint = False
+          ShowHint = True
+        end
+        object SpeedButton2: TSpeedButton
+          Tag = 1
+          Left = 36
+          Top = 3
+          Width = 27
+          Height = 27
+          Action = ac_edit_chapter
+          ParentShowHint = False
+          ShowHint = True
+        end
+        object SpeedButton8: TSpeedButton
+          Tag = 1
+          Left = 69
+          Top = 3
+          Width = 27
+          Height = 27
+          Action = ac_sub_chapter
+          ParentShowHint = False
+          ShowHint = True
+        end
+        object SpeedButton3: TSpeedButton
+          Tag = 1
+          Left = 102
+          Top = 3
+          Width = 27
+          Height = 27
+          Action = ac_del_chapter
+          ParentShowHint = False
+          ShowHint = True
+        end
+      end
+      object TabSheet2: TTabSheet
+        Caption = 'Verschieben'
+        ImageIndex = 1
+        object SpeedButton4: TSpeedButton
+          Tag = 1
+          Left = 3
+          Top = 3
+          Width = 27
+          Height = 27
+          Action = ac_chapter_up
+          ParentShowHint = False
+          ShowHint = True
+        end
+        object SpeedButton6: TSpeedButton
+          Tag = 1
+          Left = 36
+          Top = 3
+          Width = 27
+          Height = 27
+          Action = ac_chapter_left
+          ParentShowHint = False
+          ShowHint = True
+        end
+        object SpeedButton5: TSpeedButton
+          Tag = 1
+          Left = 69
+          Top = 3
+          Width = 27
+          Height = 27
+          Action = ac_chapter_down
+          ParentShowHint = False
+          ShowHint = True
+        end
+        object SpeedButton7: TSpeedButton
+          Tag = 1
+          Left = 102
+          Top = 3
+          Width = 27
+          Height = 27
+          Action = ac_chapter_right
+          ParentShowHint = False
+          ShowHint = True
+        end
+      end
+      object TabSheet3: TTabSheet
+        Caption = 'Beschluss'
+        ImageIndex = 2
+      end
     end
   end
   object GroupBox2: TGroupBox
     Left = 254
     Top = 0
-    Width = 197
-    Height = 305
+    Width = 691
+    Height = 398
     Align = alClient
     Caption = 'Aufgaben'
     TabOrder = 1
+    ExplicitWidth = 197
+    ExplicitHeight = 305
     object Panel2: TPanel
       Left = 2
       Top = 15
-      Width = 193
+      Width = 687
       Height = 41
       Align = alTop
       BevelOuter = bvNone
       Caption = 'Panel2'
       ShowCaption = False
       TabOrder = 0
+      ExplicitWidth = 193
       object Label1: TLabel
         Left = 16
         Top = 11
@@ -246,12 +193,21 @@ object ChapterFrame: TChapterFrame
         TabOrder = 0
         OnChange = ComboBox1Change
       end
+      object BitBtn1: TBitBtn
+        Left = 336
+        Top = 8
+        Width = 75
+        Height = 25
+        Caption = 'Filter'
+        TabOrder = 1
+        OnClick = BitBtn1Click
+      end
     end
     inline TaskList2Frame1: TTaskList2Frame
       Left = 2
       Top = 56
-      Width = 193
-      Height = 247
+      Width = 687
+      Height = 340
       Align = alClient
       TabOrder = 1
       ExplicitLeft = 2
@@ -259,26 +215,20 @@ object ChapterFrame: TChapterFrame
       ExplicitWidth = 193
       ExplicitHeight = 247
       inherited LV: TListView
-        Width = 120
-        Height = 206
-        ExplicitWidth = 489
-        ExplicitHeight = 420
+        Width = 614
+        Height = 299
+        ExplicitWidth = 120
+        ExplicitHeight = 206
       end
       inherited Panel1: TPanel
-        Top = 206
-        Width = 193
+        Top = 299
+        Width = 687
         ExplicitTop = 206
         ExplicitWidth = 193
-        inherited CheckBox5: TCheckBox
-          OnClick = TaskList2Frame1CheckBox5Click
-        end
       end
       inherited Panel2: TPanel
-        Height = 206
+        Height = 299
         ExplicitHeight = 206
-        inherited SpeedButton2: TSpeedButton
-          OnClick = TaskList2Frame1SpeedButton2Click
-        end
       end
     end
   end
@@ -297,8 +247,8 @@ object ChapterFrame: TChapterFrame
   end
   object ActionList1: TActionList
     Images = ImageList1
-    Left = 128
-    Top = 160
+    Left = 120
+    Top = 168
     object ac_new_chapter: TAction
       Caption = 'Neues Kapitel'
       Hint = 'Neues Kapitel'
@@ -306,7 +256,7 @@ object ChapterFrame: TChapterFrame
       OnExecute = ac_new_chapterExecute
     end
     object ac_edit_chapter: TAction
-      Caption = 'Kapitel bearbeiten'
+      Caption = 'Kapitel barbeiten'
       Hint = 'Kapitel barbeiten'
       ImageIndex = 1
       OnExecute = ac_edit_chapterExecute
@@ -353,7 +303,7 @@ object ChapterFrame: TChapterFrame
     Left = 208
     Top = 144
     Bitmap = {
-      494C010108002800380010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010108002800400010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000003000000001002000000000000030
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

@@ -33,7 +33,7 @@ object ProtokollForm: TProtokollForm
     Top = 49
     Width = 888
     Height = 400
-    ActivePage = TabSheet2
+    ActivePage = TabSheet1
     Align = alClient
     TabOrder = 1
     object TabSheet1: TTabSheet
@@ -667,25 +667,25 @@ object ProtokollForm: TProtokollForm
     Left = 300
     Top = 297
     object ac_add: TAction
-      Caption = 'Hinzuf'#252'gen'
+      Caption = 'Abschnitt hinzuf'#252'gen'
       Hint = 'Abschnitt hinzuf'#252'gen'
       ImageIndex = 0
       OnExecute = ac_addExecute
     end
     object ac_edit: TAction
-      Caption = 'Bearbeiten'
-      Hint = 'Abschnitt bearbeiten'
+      Caption = 'Abschnittstitel bearbeiten'
+      Hint = 'Abschnittstitel bearbeiten'
       ImageIndex = 1
       OnExecute = ac_editExecute
     end
     object ac_edit_content: TAction
-      Caption = 'Inhalt bearbeiten'
+      Caption = 'Abschnittsinhalt bearbeiten'
       Hint = 'Abschnittsinhalt bearbeiten'
       ImageIndex = 2
       OnExecute = ac_edit_contentExecute
     end
     object ac_delete: TAction
-      Caption = 'L'#246'schen'
+      Caption = 'Anschnitt l'#246'schen'
       Hint = 'Anschnitt l'#246'schen'
       ImageIndex = 3
       OnExecute = ac_deleteExecute
@@ -704,7 +704,7 @@ object ProtokollForm: TProtokollForm
     end
     object ac_beschluss: TAction
       Caption = 'Beschluss hinzuf'#252'gen'
-      Hint = 'Beschluss'
+      Hint = 'Beschluss hinzuf'#252'gen'
       ImageIndex = 0
       OnExecute = ac_beschlussExecute
     end
@@ -725,7 +725,7 @@ object ProtokollForm: TProtokollForm
     Left = 212
     Top = 305
     Bitmap = {
-      494C010106001001DC0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010106001001E80010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

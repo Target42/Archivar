@@ -13,25 +13,14 @@ type
     DSProviderConnection1: TDSProviderConnection;
     ListTasksQry: TClientDataSet;
     LV: TListView;
-    Panel1: TPanel;
-    CheckBox1: TCheckBox;
-    CheckBox2: TCheckBox;
-    CheckBox3: TCheckBox;
-    CheckBox4: TCheckBox;
-    CheckBox5: TCheckBox;
     Panel2: TPanel;
     SpeedButton1: TSpeedButton;
     SpeedButton2: TSpeedButton;
-    Label1: TLabel;
-    CheckBox6: TCheckBox;
-    CheckBox7: TCheckBox;
-    procedure CheckBox1Click(Sender: TObject);
     procedure SpeedButton2Click(Sender: TObject);
     procedure SpeedButton1Click(Sender: TObject);
   private
     m_id : integer;
     m_filter : integer;
-    m_noChange : boolean;
 
     m_all  : TList<TTaskEntry>;
     m_list : TList<TTaskEntry>;
@@ -44,6 +33,7 @@ type
 
     function getItem( inx : integer ) :TTaskEntry;
     function getCount : integer;
+
   public
 
     property GR_ID : integer read m_id write setGRID;
@@ -56,33 +46,18 @@ type
 
     property Items[ inx : integer ] :TTaskEntry read getItem;
     property Count : Integer  read getCount;
+
+    procedure ShowFilterDlg;
   end;
 
 implementation
 
 uses
-  m_glob_client, u_Konst;
+  m_glob_client, u_Konst, f_task_filter;
 
 {$R *.dfm}
 
 { TTaskList2Frame }
-
-procedure TTaskList2Frame.CheckBox1Click(Sender: TObject);
-var
-  cb :TCheckBox;
-begin
-  if m_noChange then
-    exit;
-
-  cb := sender as TCheckBox;
-
-  if not cb.Checked then
-    m_filter := m_filter and not cb.Tag
-  else
-    m_filter := m_filter or cb.Tag;
-
-  self.Filter := m_filter;
-end;
 
 procedure TTaskList2Frame.clear;
 var
@@ -113,18 +88,6 @@ begin
   m_all  := TList<TTaskEntry>.create;
   m_list := TList<TTaskEntry>.create;
   m_filter := taskReady;
-
-  m_noChange := true;
-
-  CheckBox1.Checked := (m_filter and taskNew)         = taskNew;
-  CheckBox2.Checked := (m_filter and taskRead)        = taskRead;
-  CheckBox3.Checked := (m_filter and taskInWork)      = taskInWork;
-  CheckBox4.Checked := (m_filter and taskWorkEnd)     = taskWorkEnd;
-  CheckBox5.Checked := (m_filter and taskWaitForInfo) = taskWaitForInfo;
-  CheckBox6.Checked := (m_filter and taskWaitForOK)   = taskWaitForOK;
-  CheckBox7.Checked := (m_filter and taskProtocol)    = taskProtocol;
-
-  m_noChange := false;
 end;
 
 procedure TTaskList2Frame.setFilter(value: integer);
@@ -184,6 +147,15 @@ begin
   end;
   ListTasksQry.Close;
   self.Filter := m_filter;
+end;
+
+procedure TTaskList2Frame.ShowFilterDlg;
+begin
+  Application.CreateForm(TTaskFilterForm, TaskFilterForm);
+  TaskFilterForm.Filter := m_filter;
+  if TaskFilterForm.ShowModal = mrOk then
+    setFilter(TaskFilterForm.Filter);
+  TaskFilterForm.Free;
 end;
 
 procedure TTaskList2Frame.shutdown;

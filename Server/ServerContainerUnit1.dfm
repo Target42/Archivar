@@ -175,4 +175,10 @@ object ServerContainer1: TServerContainer1
     Left = 248
     Top = 456
   end
+  object dsMeeing: TDSServerClass
+    OnGetClass = dsMeeingGetClass
+    Server = DSServer1
+    Left = 304
+    Top = 520
+  end
 end

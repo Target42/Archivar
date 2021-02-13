@@ -15,7 +15,6 @@ type
     DSProviderConnection1: TDSProviderConnection;
     ChapterTab: TClientDataSet;
     GroupBox1: TGroupBox;
-    Panel1: TPanel;
     TV: TTreeView;
     Splitter1: TSplitter;
     GroupBox2: TGroupBox;
@@ -24,14 +23,6 @@ type
     Label1: TLabel;
     TaskList2Frame1: TTaskList2Frame;
     Label2: TLabel;
-    SpeedButton8: TSpeedButton;
-    SpeedButton1: TSpeedButton;
-    SpeedButton2: TSpeedButton;
-    SpeedButton3: TSpeedButton;
-    SpeedButton4: TSpeedButton;
-    SpeedButton5: TSpeedButton;
-    SpeedButton6: TSpeedButton;
-    SpeedButton7: TSpeedButton;
     ActionList1: TActionList;
     ac_new_chapter: TAction;
     ac_edit_chapter: TAction;
@@ -54,13 +45,24 @@ type
     Kapitelausrcken1: TMenuItem;
     Kapiteleinrcken1: TMenuItem;
     ChapterTextTab: TClientDataSet;
+    PageControl1: TPageControl;
+    TabSheet1: TTabSheet;
+    TabSheet2: TTabSheet;
+    TabSheet3: TTabSheet;
+    SpeedButton1: TSpeedButton;
+    SpeedButton2: TSpeedButton;
+    SpeedButton8: TSpeedButton;
+    SpeedButton3: TSpeedButton;
+    SpeedButton4: TSpeedButton;
+    SpeedButton6: TSpeedButton;
+    SpeedButton5: TSpeedButton;
+    SpeedButton7: TSpeedButton;
+    BitBtn1: TBitBtn;
     procedure ComboBox1Change(Sender: TObject);
     procedure TVDragOver(Sender, Source: TObject; X, Y: Integer;
       State: TDragState; var Accept: Boolean);
     procedure TVDragDrop(Sender, Source: TObject; X, Y: Integer);
     procedure TVDblClick(Sender: TObject);
-    procedure TaskList2Frame1SpeedButton2Click(Sender: TObject);
-    procedure TaskList2Frame1CheckBox5Click(Sender: TObject);
     procedure ac_new_chapterExecute(Sender: TObject);
     procedure ac_edit_chapterExecute(Sender: TObject);
     procedure ac_sub_chapterExecute(Sender: TObject);
@@ -69,6 +71,7 @@ type
     procedure ac_chapter_downExecute(Sender: TObject);
     procedure ac_chapter_leftExecute(Sender: TObject);
     procedure ac_chapter_rightExecute(Sender: TObject);
+    procedure BitBtn1Click(Sender: TObject);
   private
     m_ct : IChapterTitle;
 
@@ -270,6 +273,11 @@ begin
     TV.Selected.Expand(false);
 end;
 
+procedure TChapterFrame.BitBtn1Click(Sender: TObject);
+begin
+  TaskList2Frame1.ShowFilterDlg;
+end;
+
 procedure TChapterFrame.cancel;
 begin
   if ChapterTab.State = dsEdit then
@@ -327,6 +335,7 @@ procedure TChapterFrame.prepare(con : TSQLConnection );
 var
   i : integer;
 begin
+  PageControl1.ActivePage := TabSheet1;
   m_ct  := NIL;
   if Assigned(con) then
     DSProviderConnection1.SQLConnection := con
@@ -428,18 +437,6 @@ procedure TChapterFrame.Shutdown;
 begin
   TaskList2Frame1.shutdown;
   ChapterTab.Close;
-end;
-
-procedure TChapterFrame.TaskList2Frame1CheckBox5Click(Sender: TObject);
-begin
-  TaskList2Frame1.CheckBox1Click(Sender);
-
-end;
-
-procedure TChapterFrame.TaskList2Frame1SpeedButton2Click(Sender: TObject);
-begin
-  TaskList2Frame1.SpeedButton2Click(Sender);
-
 end;
 
 procedure TChapterFrame.TVDblClick(Sender: TObject);

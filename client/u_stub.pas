@@ -1,6 +1,6 @@
 //
 // Erzeugt vom DataSnap-Proxy-Generator.
-// 08.07.2020 21:08:35
+// 06.02.2021 20:19:38
 //
 
 unit u_stub;
@@ -102,20 +102,6 @@ type
     function deleteFile(ta_id: Integer; fi_id: Integer): TJSONObject;
   end;
 
-  TdsEinstellungClient = class(TDSAdminClient)
-  private
-    FDSServerModuleDestroyCommand: TDBXCommand;
-    FAutoIncCommand: TDBXCommand;
-    FgetDataIDCommand: TDBXCommand;
-  public
-    constructor Create(ADBXConnection: TDBXConnection); overload;
-    constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
-    destructor Destroy; override;
-    procedure DSServerModuleDestroy(Sender: TObject);
-    function AutoInc(gen: string): Integer;
-    function getDataID(ta_id: Integer): Integer;
-  end;
-
   TdsMiscClient = class(TDSAdminClient)
   private
     FDSServerModuleCreateCommand: TDBXCommand;
@@ -192,6 +178,52 @@ type
     destructor Destroy; override;
     function AutoInc(gen: string): Integer;
     function hasName(name: string): Boolean;
+  end;
+
+  TdsTaskViewClient = class(TDSAdminClient)
+  private
+  public
+    constructor Create(ADBXConnection: TDBXConnection); overload;
+    constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
+    destructor Destroy; override;
+  end;
+
+  TdsTextBlockClient = class(TDSAdminClient)
+  private
+  public
+    constructor Create(ADBXConnection: TDBXConnection); overload;
+    constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
+    destructor Destroy; override;
+  end;
+
+  TdsFileCacheClient = class(TDSAdminClient)
+  private
+  public
+    constructor Create(ADBXConnection: TDBXConnection); overload;
+    constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
+    destructor Destroy; override;
+  end;
+
+  TdsEpubClient = class(TDSAdminClient)
+  private
+  public
+    constructor Create(ADBXConnection: TDBXConnection); overload;
+    constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
+    destructor Destroy; override;
+  end;
+
+  TdsMeeingClient = class(TDSAdminClient)
+  private
+    FnewMeetingCommand: TDBXCommand;
+    FdeleteMeetingCommand: TDBXCommand;
+    FSendmailCommand: TDBXCommand;
+  public
+    constructor Create(ADBXConnection: TDBXConnection); overload;
+    constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
+    destructor Destroy; override;
+    function newMeeting(req: TJSONObject): TJSONObject;
+    function deleteMeeting(req: TJSONObject): TJSONObject;
+    function Sendmail(req: TJSONObject): TJSONObject;
   end;
 
 implementation
@@ -684,77 +716,6 @@ begin
   inherited;
 end;
 
-procedure TdsEinstellungClient.DSServerModuleDestroy(Sender: TObject);
-begin
-  if FDSServerModuleDestroyCommand = nil then
-  begin
-    FDSServerModuleDestroyCommand := FDBXConnection.CreateCommand;
-    FDSServerModuleDestroyCommand.CommandType := TDBXCommandTypes.DSServerMethod;
-    FDSServerModuleDestroyCommand.Text := 'TdsEinstellung.DSServerModuleDestroy';
-    FDSServerModuleDestroyCommand.Prepare;
-  end;
-  if not Assigned(Sender) then
-    FDSServerModuleDestroyCommand.Parameters[0].Value.SetNull
-  else
-  begin
-    FMarshal := TDBXClientCommand(FDSServerModuleDestroyCommand.Parameters[0].ConnectionHandler).GetJSONMarshaler;
-    try
-      FDSServerModuleDestroyCommand.Parameters[0].Value.SetJSONValue(FMarshal.Marshal(Sender), True);
-      if FInstanceOwner then
-        Sender.Free
-    finally
-      FreeAndNil(FMarshal)
-    end
-  end;
-  FDSServerModuleDestroyCommand.ExecuteUpdate;
-end;
-
-function TdsEinstellungClient.AutoInc(gen: string): Integer;
-begin
-  if FAutoIncCommand = nil then
-  begin
-    FAutoIncCommand := FDBXConnection.CreateCommand;
-    FAutoIncCommand.CommandType := TDBXCommandTypes.DSServerMethod;
-    FAutoIncCommand.Text := 'TdsEinstellung.AutoInc';
-    FAutoIncCommand.Prepare;
-  end;
-  FAutoIncCommand.Parameters[0].Value.SetWideString(gen);
-  FAutoIncCommand.ExecuteUpdate;
-  Result := FAutoIncCommand.Parameters[1].Value.GetInt32;
-end;
-
-function TdsEinstellungClient.getDataID(ta_id: Integer): Integer;
-begin
-  if FgetDataIDCommand = nil then
-  begin
-    FgetDataIDCommand := FDBXConnection.CreateCommand;
-    FgetDataIDCommand.CommandType := TDBXCommandTypes.DSServerMethod;
-    FgetDataIDCommand.Text := 'TdsEinstellung.getDataID';
-    FgetDataIDCommand.Prepare;
-  end;
-  FgetDataIDCommand.Parameters[0].Value.SetInt32(ta_id);
-  FgetDataIDCommand.ExecuteUpdate;
-  Result := FgetDataIDCommand.Parameters[1].Value.GetInt32;
-end;
-
-constructor TdsEinstellungClient.Create(ADBXConnection: TDBXConnection);
-begin
-  inherited Create(ADBXConnection);
-end;
-
-constructor TdsEinstellungClient.Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean);
-begin
-  inherited Create(ADBXConnection, AInstanceOwner);
-end;
-
-destructor TdsEinstellungClient.Destroy;
-begin
-  FDSServerModuleDestroyCommand.DisposeOf;
-  FAutoIncCommand.DisposeOf;
-  FgetDataIDCommand.DisposeOf;
-  inherited;
-end;
-
 procedure TdsMiscClient.DSServerModuleCreate(Sender: TObject);
 begin
   if FDSServerModuleCreateCommand = nil then
@@ -1081,6 +1042,126 @@ destructor TdsTemplateClient.Destroy;
 begin
   FAutoIncCommand.DisposeOf;
   FhasNameCommand.DisposeOf;
+  inherited;
+end;
+
+constructor TdsTaskViewClient.Create(ADBXConnection: TDBXConnection);
+begin
+  inherited Create(ADBXConnection);
+end;
+
+constructor TdsTaskViewClient.Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean);
+begin
+  inherited Create(ADBXConnection, AInstanceOwner);
+end;
+
+destructor TdsTaskViewClient.Destroy;
+begin
+  inherited;
+end;
+
+constructor TdsTextBlockClient.Create(ADBXConnection: TDBXConnection);
+begin
+  inherited Create(ADBXConnection);
+end;
+
+constructor TdsTextBlockClient.Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean);
+begin
+  inherited Create(ADBXConnection, AInstanceOwner);
+end;
+
+destructor TdsTextBlockClient.Destroy;
+begin
+  inherited;
+end;
+
+constructor TdsFileCacheClient.Create(ADBXConnection: TDBXConnection);
+begin
+  inherited Create(ADBXConnection);
+end;
+
+constructor TdsFileCacheClient.Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean);
+begin
+  inherited Create(ADBXConnection, AInstanceOwner);
+end;
+
+destructor TdsFileCacheClient.Destroy;
+begin
+  inherited;
+end;
+
+constructor TdsEpubClient.Create(ADBXConnection: TDBXConnection);
+begin
+  inherited Create(ADBXConnection);
+end;
+
+constructor TdsEpubClient.Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean);
+begin
+  inherited Create(ADBXConnection, AInstanceOwner);
+end;
+
+destructor TdsEpubClient.Destroy;
+begin
+  inherited;
+end;
+
+function TdsMeeingClient.newMeeting(req: TJSONObject): TJSONObject;
+begin
+  if FnewMeetingCommand = nil then
+  begin
+    FnewMeetingCommand := FDBXConnection.CreateCommand;
+    FnewMeetingCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FnewMeetingCommand.Text := 'TdsMeeing.newMeeting';
+    FnewMeetingCommand.Prepare;
+  end;
+  FnewMeetingCommand.Parameters[0].Value.SetJSONValue(req, FInstanceOwner);
+  FnewMeetingCommand.ExecuteUpdate;
+  Result := TJSONObject(FnewMeetingCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
+end;
+
+function TdsMeeingClient.deleteMeeting(req: TJSONObject): TJSONObject;
+begin
+  if FdeleteMeetingCommand = nil then
+  begin
+    FdeleteMeetingCommand := FDBXConnection.CreateCommand;
+    FdeleteMeetingCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FdeleteMeetingCommand.Text := 'TdsMeeing.deleteMeeting';
+    FdeleteMeetingCommand.Prepare;
+  end;
+  FdeleteMeetingCommand.Parameters[0].Value.SetJSONValue(req, FInstanceOwner);
+  FdeleteMeetingCommand.ExecuteUpdate;
+  Result := TJSONObject(FdeleteMeetingCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
+end;
+
+function TdsMeeingClient.Sendmail(req: TJSONObject): TJSONObject;
+begin
+  if FSendmailCommand = nil then
+  begin
+    FSendmailCommand := FDBXConnection.CreateCommand;
+    FSendmailCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FSendmailCommand.Text := 'TdsMeeing.Sendmail';
+    FSendmailCommand.Prepare;
+  end;
+  FSendmailCommand.Parameters[0].Value.SetJSONValue(req, FInstanceOwner);
+  FSendmailCommand.ExecuteUpdate;
+  Result := TJSONObject(FSendmailCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
+end;
+
+constructor TdsMeeingClient.Create(ADBXConnection: TDBXConnection);
+begin
+  inherited Create(ADBXConnection);
+end;
+
+constructor TdsMeeingClient.Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean);
+begin
+  inherited Create(ADBXConnection, AInstanceOwner);
+end;
+
+destructor TdsMeeingClient.Destroy;
+begin
+  FnewMeetingCommand.DisposeOf;
+  FdeleteMeetingCommand.DisposeOf;
+  FSendmailCommand.DisposeOf;
   inherited;
 end;
 

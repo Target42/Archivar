@@ -159,7 +159,8 @@ uses
   f_epub_mngr in 'ePub\f_epub_mngr.pas' {epubMngrForm},
   fr_epub in 'ePub\fr_epub.pas' {ePupFrame: TFrame},
   f_downloadEpub in 'ePub\f_downloadEpub.pas' {DownloadEpubform},
-  f_meeting_new in 'Sitzung\f_meeting_new.pas' {MeetingForm};
+  f_meeting_new in 'Sitzung\f_meeting_new.pas' {MeetingForm},
+  f_task_filter in 'Task\f_task_filter.pas' {TaskFilterForm};
 
 {$R *.res}
 
@@ -178,6 +179,5 @@ begin
   Application.CreateForm(TBookMarkHandler, BookMarkHandler);
   Application.CreateForm(TTemplateCacheMod, TemplateCacheMod);
   Application.CreateForm(TMainForm, MainForm);
-
   Application.Run;
 end.

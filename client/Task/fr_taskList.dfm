@@ -1,15 +1,17 @@
 object TaskListFrame: TTaskListFrame
   Left = 0
   Top = 0
-  Width = 451
-  Height = 305
+  Width = 782
+  Height = 391
   Align = alClient
   TabOrder = 0
+  ExplicitWidth = 451
+  ExplicitHeight = 305
   object LV: TListView
     Left = 0
     Top = 0
-    Width = 451
-    Height = 305
+    Width = 782
+    Height = 391
     Align = alClient
     Columns = <
       item
@@ -51,6 +53,8 @@ object TaskListFrame: TTaskListFrame
     OnCustomDrawSubItem = LVCustomDrawSubItem
     OnDblClick = LVDblClick
     OnKeyUp = DBGrid1KeyUp
+    ExplicitWidth = 451
+    ExplicitHeight = 305
   end
   object ApplicationEvents1: TApplicationEvents
     OnMessage = ApplicationEvents1Message

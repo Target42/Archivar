@@ -59,83 +59,26 @@ object ChapterContentForm: TChapterContentForm
     inherited GroupBox1: TGroupBox
       Height = 399
       ExplicitHeight = 399
-      inherited Panel1: TPanel
-        Top = 356
-        Height = 41
-        ExplicitTop = 356
-        ExplicitHeight = 41
-        inherited SpeedButton8: TSpeedButton
-          Left = 70
-          Width = 22
-          Height = 22
-          ExplicitLeft = 70
-          ExplicitWidth = 22
-          ExplicitHeight = 22
-        end
-        inherited SpeedButton1: TSpeedButton
-          Left = 14
-          Width = 22
-          Height = 22
-          ExplicitLeft = 14
-          ExplicitWidth = 22
-          ExplicitHeight = 22
-        end
-        inherited SpeedButton2: TSpeedButton
-          Left = 42
-          Width = 22
-          Height = 22
-          ExplicitLeft = 42
-          ExplicitWidth = 22
-          ExplicitHeight = 22
-        end
-        inherited SpeedButton3: TSpeedButton
-          Left = 98
-          Width = 22
-          Height = 22
-          ExplicitLeft = 98
-          ExplicitWidth = 22
-          ExplicitHeight = 22
-        end
-        inherited SpeedButton4: TSpeedButton
-          Left = 126
-          Width = 22
-          Height = 22
-          ExplicitLeft = 126
-          ExplicitWidth = 22
-          ExplicitHeight = 22
-        end
-        inherited SpeedButton5: TSpeedButton
-          Left = 182
-          Top = 6
-          Width = 22
-          Height = 22
-          ExplicitLeft = 182
-          ExplicitTop = 6
-          ExplicitWidth = 22
-          ExplicitHeight = 22
-        end
-        inherited SpeedButton6: TSpeedButton
-          Left = 154
-          Width = 22
-          Height = 22
-          ExplicitLeft = 154
-          ExplicitWidth = 22
-          ExplicitHeight = 22
-        end
-        inherited SpeedButton7: TSpeedButton
-          Left = 210
-          Top = 6
-          Width = 22
-          Height = 22
-          ExplicitLeft = 210
-          ExplicitTop = 6
-          ExplicitWidth = 22
-          ExplicitHeight = 22
-        end
-      end
       inherited TV: TTreeView
-        Height = 325
-        ExplicitHeight = 325
+        Height = 296
+        ExplicitHeight = 296
+      end
+      inherited PageControl1: TPageControl
+        Top = 327
+        ExplicitTop = 327
+        inherited TabSheet1: TTabSheet
+          ExplicitHeight = 42
+        end
+        inherited TabSheet2: TTabSheet
+          ExplicitLeft = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
+        end
+        inherited TabSheet3: TTabSheet
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+        end
       end
     end
     inherited GroupBox2: TGroupBox
@@ -172,7 +115,7 @@ object ChapterContentForm: TChapterContentForm
     end
     inherited ImageList1: TImageList
       Bitmap = {
-        494C010108002800240010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+        494C010108002800280010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
         0000000000003600000028000000400000003000000001002000000000000030
         0000000000000000000000000000000000000000000000000000000000000000
         0000000000000000000000000000000000000000000000000000000000000000

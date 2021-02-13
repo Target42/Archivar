@@ -33,14 +33,16 @@ type
   end;
 
 var
-  FlagData : array[0..5] of FlagsRec =
+  FlagData : array[0..6] of FlagsRec =
   (
     (name:'Neu';                        flag:taskNew),
     (name:'Gelesen';                    flag:taskRead),
     (name:'In Bearbeitung';             flag:taskInWork),
     (name:'Bearbeitung abgeschlossen';  flag:taskWorkEnd),
     (name:'Klärungsbedarf';             flag:taskWaitForInfo),
-    (name:'Beschlusvorlage';            flag:taskWaitForOK)
+    (name:'Beschlusvorlage';            flag:taskWaitForOK),
+    (name:'Protokoll';                  flag:taskProtocol)
+
   );
 
 function flagsToStr( flags : integer ) : string;

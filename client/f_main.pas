@@ -102,6 +102,21 @@ type
     Sitzungen1: TMenuItem;
     ac_me_new: TAction;
     Neu3: TMenuItem;
+    N9: TMenuItem;
+    ac_pr_delete: TAction;
+    Lschen2: TMenuItem;
+    N10: TMenuItem;
+    ac_me_edit: TAction;
+    ac_me_invite: TAction;
+    ac_me_delete: TAction;
+    ac_me_end: TAction;
+    Bearbeiten2: TMenuItem;
+    N11: TMenuItem;
+    Einladen1: TMenuItem;
+    Abschlieen1: TMenuItem;
+    N12: TMenuItem;
+    N13: TMenuItem;
+    Lschen3: TMenuItem;
     procedure ac_prg_closeExecute(Sender: TObject);
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure ac_prg_disconExecute(Sender: TObject);
@@ -247,10 +262,23 @@ begin
 end;
 
 procedure TMainForm.ac_me_newExecute(Sender: TObject);
+var
+  GremiumListForm : TGremiumListForm;
+  gr              : TGremium;
 begin
-  Application.CreateForm(TMeetingForm, MeetingForm);
-  MeetingForm.ShowModal;
-  MeetingForm.Free;
+  Application.CreateForm(TGremiumListForm, GremiumListForm);
+  if GremiumListForm.ShowModal = mrOk then
+  begin
+    gr := GremiumListForm.Gremium;
+    if Assigned(gr) then
+    begin
+      Application.CreateForm(TMeetingForm, MeetingForm);
+      MeetingForm.Gremium := gr;
+      MeetingForm.ShowModal;
+      MeetingForm.Free;
+    end;
+  end;
+  GremiumListForm.Free;
 end;
 
 procedure TMainForm.ac_prg_closeExecute(Sender: TObject);
@@ -443,13 +471,21 @@ begin
   case Msg.message of
     msgConnected :
       begin
-        ac_prg_connect.Enabled := false;
-        ac_prg_discon.Enabled  := true;
-        ac_ta_neu.Enabled      := true;
-        ac_ta_load.Enabled     := true;
-        ac_pr_new.Enabled      := true;
-        ac_pr_open.Enabled     := true;
-        ac_pr_view.Enabled     := true;
+        ac_prg_connect.Enabled  := false;
+        ac_prg_discon.Enabled   := true;
+        ac_ta_neu.Enabled       := true;
+        ac_ta_load.Enabled      := true;
+
+        ac_pr_new.Enabled       := true;
+        ac_pr_open.Enabled      := true;
+        ac_pr_view.Enabled      := true;
+        ac_pr_delete.Enabled    := true;
+
+        ac_me_new.Enabled       := true;
+        ac_me_edit.Enabled      := true;
+        ac_me_invite.Enabled    := true;
+        ac_me_delete.Enabled    := true;
+        ac_me_end.Enabled       := true;
 
         setPanel(integer(stStatus), 'Verbunden');
         setPanel(integer(stLogin), GM.UserName);
@@ -465,13 +501,21 @@ begin
       end;
     msgDisconnected:
       begin
-        ac_prg_connect.Enabled := true;
-        ac_prg_discon.Enabled  := false;
-        ac_ta_neu.Enabled      := false;
-        ac_ta_load.Enabled     := false;
-        ac_pr_new.Enabled      := false;
-        ac_pr_open.Enabled     := false;
-        ac_pr_view.Enabled     := false;
+        ac_prg_connect.Enabled  := true;
+        ac_prg_discon.Enabled   := false;
+        ac_ta_neu.Enabled       := false;
+        ac_ta_load.Enabled      := false;
+
+        ac_pr_new.Enabled       := false;
+        ac_pr_open.Enabled      := false;
+        ac_pr_view.Enabled      := false;
+        ac_pr_delete.Enabled    := false;
+
+        ac_me_new.Enabled       := false;
+        ac_me_edit.Enabled      := false;
+        ac_me_invite.Enabled    := false;
+        ac_me_delete.Enabled    := false;
+        ac_me_end.Enabled       := false;
 
         setPanel(integer(stStatus), 'Getrennt');
         setPanel(integer(stLogin), '  ');

@@ -11,7 +11,7 @@ type
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
   private
-    m_locks :  array[1..2] of TThreadlist<TLockInfo>;
+    m_locks :  array[1..3] of TThreadlist<TLockInfo>;
 
     function find( ta_id:integer;list :  TList<TLockInfo>): TLockInfo;
   public

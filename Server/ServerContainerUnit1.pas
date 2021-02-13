@@ -31,6 +31,7 @@ type
     DSServerClass1: TDSServerClass;
     dsFileCache: TDSServerClass;
     dsEpub: TDSServerClass;
+    dsMeeing: TDSServerClass;
     procedure dsAdminGetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
     procedure ServiceStart(Sender: TService; var Started: Boolean);
@@ -75,6 +76,8 @@ type
       var PersistentClass: TPersistentClass);
     procedure dsEpubGetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
+    procedure dsMeeingGetClass(DSServerClass: TDSServerClass;
+      var PersistentClass: TPersistentClass);
   private
     { Private declarations }
   protected
@@ -101,7 +104,8 @@ implementation
 uses
   Winapi.Windows, m_db, ds_gremium, ds_admin, Datasnap.DSSession, ds_person, IOUtils,
   ds_taks, ds_file, ds_misc, ds_protocol, ds_image, ds_chapter,
-  ds_taskEdit, ds_template, ds_taskView, ds_textblock, ds_fileCache, ds_epub;
+  ds_taskEdit, ds_template, ds_taskView, ds_textblock, ds_fileCache, ds_epub,
+  ds_meeting;
 
 procedure TServerContainer1.dsAdminGetClass(
   DSServerClass: TDSServerClass; var PersistentClass: TPersistentClass);
@@ -317,6 +321,12 @@ procedure TServerContainer1.dsImageGetClass(DSServerClass: TDSServerClass;
   var PersistentClass: TPersistentClass);
 begin
   PersistentClass := ds_image.TdsImage;
+end;
+
+procedure TServerContainer1.dsMeeingGetClass(DSServerClass: TDSServerClass;
+  var PersistentClass: TPersistentClass);
+begin
+  PersistentClass := ds_meeting.TdsMeeing;
 end;
 
 procedure TServerContainer1.dsMiscGetClass(DSServerClass: TDSServerClass;

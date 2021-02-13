@@ -32,7 +32,8 @@ uses
   ds_taskView in 'ds_taskView.pas' {dsTaskView: TDSServerModule},
   ds_textblock in 'ds_textblock.pas' {dsTextBlock: TDSServerModule},
   ds_fileCache in 'ds_fileCache.pas' {dsFileCache: TDSServerModule},
-  ds_epub in 'ds_epub.pas' {dsEpub: TDSServerModule};
+  ds_epub in 'ds_epub.pas' {dsEpub: TDSServerModule},
+  ds_meeting in 'ds_meeting.pas' {dsMeeing: TDSServerModule};
 
 var
   MyDummyBoolean : Boolean;

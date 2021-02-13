@@ -126,7 +126,7 @@ begin
     deletePR.ParamByName('PR_ID').AsInteger := id;
     deletePR.ExecSQL;
 
-    JResult( Result, false, 'Es wurde gelöscht.');
+    JResult( Result, true, 'Es wurde gelöscht.');
     DeleteTrans.commit;
   except
     begin
@@ -158,6 +158,7 @@ begin
     PRTab.FieldByName('PR_DATUM').AsDateTime := now + 7;
     PRTab.FieldByName('PR_NAME').AsString    := JString( data, 'short')+'_'+FormatDateTime('yyyyMMdd', now);
     PRTab.FieldByName('PR_CLID').AsString    := createClassID;
+    PRTab.FieldByName('PR_STATUS').AsString  := 'E';
     PRTab.post;
 
     PRTab.close;

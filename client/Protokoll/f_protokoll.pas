@@ -3,7 +3,8 @@ unit f_protokoll;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Data.DB,
   Datasnap.DBClient, Datasnap.DSConnect, Vcl.Grids, Vcl.DBGrids, Vcl.ExtCtrls,
   Vcl.DBCtrls, Vcl.StdCtrls, Vcl.Mask, JvExComCtrls, JvDBTreeView, Vcl.Menus,
@@ -108,48 +109,48 @@ type
     procedure ac_be_bearbeitenExecute(Sender: TObject);
     procedure ac_be_deleteExecute(Sender: TObject);
     procedure TGDblClick(Sender: TObject);
+  private type
+    TEntryType = (etNothing, etChapterText, etTask, etBeschluss, etTitle);
+
+    TEntry = class(TObject)
+    private
+      FPtr: pointer;
+      FTyp: TEntryType;
+    public
+      constructor create; overload;
+      constructor create(cp: IChapterTitle); overload;
+      constructor create(cp: IChapter); overload;
+      constructor create(be: IBeschluss); overload;
+
+      Destructor Destroy; override;
+
+      property Ptr: pointer read FPtr write FPtr;
+      property Typ: TEntryType read FTyp write FTyp;
+    end;
   private
-    type
-      TEntryType = (etNothing, etChapterText, etTask, etBeschluss, etTitle);
-      TEntry = class( TObject)
-        private
-          FPtr: pointer;
-          FTyp: TEntryType;
-        public
-          constructor create; overload;
-          constructor create( cp : IChapterTitle ); overload;
-          constructor create( cp : IChapter ); overload;
-          constructor create( be : IBeschluss ); overload;
+    m_TitelEditform: TTitelEditform;
+    m_proto: IProtocol;
+    m_locked: Boolean;
 
-          Destructor Destroy; override;
+    m_grList: TGremiumListForm;
+    m_ro: Boolean;
+    m_loader: TTaskLoaderMod;
 
-          property Ptr: pointer read FPtr write FPtr;
-          property Typ: TEntryType read FTyp write FTyp;
-      end;
-  private
-    m_TitelEditform : TTitelEditform;
-    m_proto         : IProtocol;
-    m_locked        : Boolean;
+    m_statusMap: TDictionary<TTeilnehmerStatus, integer>;
 
-    m_grList        : TGremiumListForm;
-    m_ro            : Boolean;
-    m_loader        : TTaskLoaderMod;
+    m_renderer: TProtocolRenderer;
 
-    m_statusMap     : TDictionary<TTeilnehmerStatus, integer>;
+    procedure setID(value: integer);
+    function getID: integer;
 
-    m_renderer      : TProtocolRenderer;
-
-    procedure setID( value : integer );
-    function  getID : integer;
-
-    procedure setRO( value : boolean );
+    procedure setRO(value: Boolean);
 
     procedure updateCpList;
-    procedure buildTree( root : TTreeNode; ct : IChapterTitle );
+    procedure buildTree(root: TTreeNode; ct: IChapterTitle);
 
     procedure showContent;
 
-    procedure setStatus( ts : TTeilnehmerStatus; grund : string = '' );
+    procedure setStatus(ts: TTeilnehmerStatus; grund: string = '');
     procedure UpdateTN;
     procedure UpdateTG;
 
@@ -158,9 +159,11 @@ type
     procedure fillStatusMap;
 
     procedure clearTree;
+
+    function findNode(Node: TTreeNode; Typ: TEntryType): TEntry;
   public
-    property ID : integer read getID  write setID;
-    property RO : boolean read m_ro   write setRO;
+    property ID: integer read getID write setID;
+    property RO: Boolean read m_ro write setRO;
   end;
 
 var
@@ -171,26 +174,26 @@ implementation
 uses
   m_glob_client, Xml.XMLIntf, Xml.XMLDoc, u_bookmark, m_BookMarkHandler,
   u_berTypes, System.JSON, u_json,
-  m_WindowHandler, f_chapter_content, u_gremium, system.UITypes,
+  m_WindowHandler, f_chapter_content, u_gremium, System.UITypes,
   u_ChapterImpl, u_ProtocolImpl, u_speedbutton, f_abwesenheit,
   f_besucher, f_bechlus;
 
 {$R *.dfm}
-
 { TProtokollForm }
 
 procedure TProtokollForm.ac_addExecute(Sender: TObject);
 var
-  cp : IChapterTitle;
+  cp: IChapterTitle;
 begin
-  m_TitelEditform.TitelText := 'Titel '+IntToStr( m_proto.Chapter.Count+1);
+
+  m_TitelEditform.TitelText := 'Titel ' + IntToStr(m_proto.Chapter.Count + 1);
   if m_TitelEditform.ShowModal = mrOk then
   begin
     cp := m_proto.Chapter.NewEntry;
     cp.Text := m_TitelEditform.TitelText;
     updateCpList;
 
-    m_proto.Chapter.AddNewChaper( cp  );
+    m_proto.Chapter.AddNewChaper(cp);
 
     m_proto.Modified := true;
   end;
@@ -198,18 +201,19 @@ end;
 
 procedure TProtokollForm.ac_beschlussExecute(Sender: TObject);
 var
-  be : IBeschluss;
-  en : TEntry;
-  cp : IChapter;
+  be: IBeschluss;
+  en: TEntry;
+  cp: IChapter;
 begin
   if m_proto.ReadOnly or not Assigned(TV.Selected) then
     exit;
-  en := TEntry( TV.Selected.Data);
-  if not (en.Typ in [ etTask, etTitle]) then
+
+  en := TEntry(TV.Selected.Data);
+  if not(en.Typ in [etTask, etTitle]) then
     exit;
 
-  cp      := IChapter( en.Ptr );
-  be      := cp.Votes.newBeschluss;
+  cp := IChapter(en.Ptr);
+  be := cp.Votes.newBeschluss;
   be.CTID := cp.ID;
 
   Application.CreateForm(TBeschlusform, Beschlusform);
@@ -228,16 +232,16 @@ end;
 
 procedure TProtokollForm.ac_be_bearbeitenExecute(Sender: TObject);
 var
-  be : IBeschluss;
-  en : TEntry;
+  be: IBeschluss;
+  en: TEntry;
 begin
   if m_proto.ReadOnly or not Assigned(TV.Selected) then
     exit;
-  en := TEntry( TV.Selected.Data);
-  if not (en.Typ = etBeschluss) then
+  en := TEntry(TV.Selected.Data);
+  if not(en.Typ = etBeschluss) then
     exit;
 
-  be := IBeschluss( en.Ptr );
+  be := IBeschluss(en.Ptr);
   Application.CreateForm(TBeschlusform, Beschlusform);
   Beschlusform.setGremium(m_proto.GRID);
   Beschlusform.Beschluss := be;
@@ -250,25 +254,26 @@ end;
 
 procedure TProtokollForm.ac_be_deleteExecute(Sender: TObject);
 var
-  be : IBeschluss;
-  en : TEntry;
+  be: IBeschluss;
+  en: TEntry;
   pen: TEntry;
-  cp : IChapter;
+  cp: IChapter;
 begin
   if m_proto.ReadOnly or not Assigned(TV.Selected) then
     exit;
-  en := TEntry( TV.Selected.Data);
-  if not (en.Typ = etBeschluss) then
+  en := TEntry(TV.Selected.Data);
+  if not(en.Typ = etBeschluss) then
     exit;
-  be := IBeschluss( en.Ptr );
+  be := IBeschluss(en.Ptr);
 
   if not Assigned(TV.Selected.Parent) then
     exit;
   pen := TEntry(TV.Selected.Parent.Data);
-  if not ( pen.Typ in [etTask, etTitle]) then
+  if not(pen.Typ in [etTask, etTitle]) then
     exit;
 
-  if not (MessageDlg('Soll der Beschluss wirklich gelöscht werden?', mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
+  if not(MessageDlg('Soll der Beschluss wirklich gelöscht werden?',
+    mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
     exit;
 
   cp.Votes.delete(be);
@@ -278,20 +283,21 @@ end;
 
 procedure TProtokollForm.ac_deleteExecute(Sender: TObject);
 var
-  cp   : IChapterTitle;
-  node : TTreeNode;
-  en   : Tentry;
+  cp: IChapterTitle;
+  Node: TTreeNode;
+  en: TEntry;
 begin
-  node := TV.Selected;
-  if (node = NIL) then
+  Node := TV.Selected;
+  if (Node = NIL) then
     exit;
-  if not (MessageDlg('Soll das Kapitel gelöscht werden?', mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
+  if not(MessageDlg('Soll das Kapitel gelöscht werden?', mtConfirmation,
+    [mbYes, mbNo], 0) = mrYes) then
     exit;
 
-  while Assigned(node.Parent)  do
-    node := node.Parent;
+  en := findNode(Node, etTitle);
+  if not Assigned(en) then
+    exit;
 
-  en := TEntry(Node.Data);
   cp := IChapterTitle(en.Ptr);
   m_proto.Chapter.remove(cp);
   updateCpList;
@@ -301,17 +307,18 @@ end;
 
 procedure TProtokollForm.ac_downExecute(Sender: TObject);
 var
-  cp : IChapterTitle;
-  node : TTreeNode;
-  en   : TEntry;
+  cp: IChapterTitle;
+  Node: TTreeNode;
+  en: TEntry;
 begin
-  node := TV.Selected;
-  if (node = NIL) then
+  Node := TV.Selected;
+  if (Node = NIL) then
     exit;
-  while Assigned(node.Parent)  do
-    node := node.Parent;
 
-  en := TEntry(node.Data);
+  en := findNode(Node, etTitle);
+  if not Assigned(en) then
+    exit;
+
   cp := IChapterTitle(en.Ptr);
   cp.down;
   updateCpList;
@@ -322,18 +329,18 @@ end;
 
 procedure TProtokollForm.ac_editExecute(Sender: TObject);
 var
-  cp   : IChapterTitle;
-  node : TTreeNode;
-  en   : TEntry;
+  cp: IChapterTitle;
+  Node: TTreeNode;
+  en: TEntry;
 begin
-  node := TV.Selected;
-  if (node = NIL) then
+  Node := TV.Selected;
+  if (Node = NIL) then
     exit;
 
-  while Assigned(node.Parent)  do
-    node := node.Parent;
+  en := findNode(Node, etTitle);
+  if not Assigned(en) then
+    exit;
 
-  en := TEntry(node.Data);
   cp := IChapterTitle(en.Ptr);
   m_TitelEditform.TitelText := cp.Text;
   if m_TitelEditform.ShowModal = mrOk then
@@ -348,19 +355,19 @@ end;
 
 procedure TProtokollForm.ac_edit_contentExecute(Sender: TObject);
 var
-  cp   : IChapterTitle;
-  node : TTreeNode;
-  en   : TEntry;
+  cp: IChapterTitle;
+  Node: TTreeNode;
+  en: TEntry;
 begin
-  node := TV.Selected;
-  if (node = NIL) then
+  Node := TV.Selected;
+  if (Node = NIL) then
     exit;
 
-  while Assigned(node.Parent)  do
-    node := node.Parent;
+  en := findNode(Node, etTitle);
+  if not Assigned(en) then
+    exit;
 
-  en := TEntry(node.Data);
-  cp := IChapterTitle(en.ptr);
+  cp := IChapterTitle(en.Ptr);
 
   if m_proto.Modified then
   begin
@@ -369,7 +376,7 @@ begin
 
   Application.CreateForm(TChapterContentForm, ChapterContentForm);
   ChapterContentForm.ChapterTitle := cp;
-  if ChapterContentForm.ShowModal = mrOk  then
+  if ChapterContentForm.ShowModal = mrOk then
   begin
     m_proto.Chapter.updateChapter(cp);
     updateCpList;
@@ -379,30 +386,30 @@ end;
 
 procedure TProtokollForm.ac_pr_bookmarkExecute(Sender: TObject);
 var
-  mark : u_bookmark.TBookmark;
+  mark: u_bookmark.TBookmark;
 begin
-  mark            := BookMarkHandler.Bookmarks.newBookmark(m_proto.clid);
-  mark.ID         := m_proto.ID;
-  mark.Titel      := m_proto.Title;
-  mark.Group      := 'Protokoll';
-  mark.Internal   := true;
-  mark.TypeID     := 0;
-  mark.DocType    := dtProtokoll;
- PostMessage( Application.MainFormHandle, msgNewBookMark, 0, 0 );
+  mark := BookMarkHandler.Bookmarks.newBookmark(m_proto.clid);
+  mark.ID := m_proto.ID;
+  mark.Titel := m_proto.Title;
+  mark.Group := 'Protokoll';
+  mark.Internal := true;
+  mark.TypeID := 0;
+  mark.DocType := dtProtokoll;
+  PostMessage(Application.MainFormHandle, msgNewBookMark, 0, 0);
 end;
 
 procedure TProtokollForm.ac_pr_lockExecute(Sender: TObject);
 var
-  obj : TJSONObject;
+  obj: TJSONObject;
 begin
-  //lock
-  obj := GM.LockDocument( m_proto.ID, integer(ltProtokoll));
-  if not JBool( obj, 'result') then
-    ShowMessage( JString( obj, 'text'))
+  // lock
+  obj := GM.LockDocument(m_proto.ID, integer(ltProtokoll));
+  if not JBool(obj, 'result') then
+    ShowMessage(JString(obj, 'text'))
   else
   begin
     m_locked := true;
-    Caption := '*'+m_proto.Title;
+    Caption := '*' + m_proto.Title;
     self.RO := false;
     ShowMessage('Das Protokoll kann jetzt bearbeitet werden.');
   end;
@@ -410,31 +417,32 @@ end;
 
 procedure TProtokollForm.ac_pr_unlockExecute(Sender: TObject);
 var
-  data : TJSONObject;
+  Data: TJSONObject;
 begin
-  data := GM.UnlockDocument(m_proto.ID, integer(ltProtokoll));
-  if JBool( data, 'result') then
+  Data := GM.UnlockDocument(m_proto.ID, integer(ltProtokoll));
+  if JBool(Data, 'result') then
   begin
     self.RO := true;
     Caption := m_proto.Title;
     m_locked := false;
   end;
-  ShowMessage(JString(data, 'text'));
+  ShowMessage(JString(Data, 'text'));
 end;
 
 procedure TProtokollForm.ac_upExecute(Sender: TObject);
 var
-  cp   : IChapterTitle;
-  node : TTreeNode;
-  en   : TEntry;
+  cp: IChapterTitle;
+  Node: TTreeNode;
+  en: TEntry;
 begin
-  node := TV.Selected;
-  if (node = NIL) then
+  Node := TV.Selected;
+  if (Node = NIL) then
     exit;
-  while Assigned(node.Parent)  do
-    node := node.Parent;
 
-  en := TEntry(node.Data);
+  en := findNode(Node, etTitle);
+  if not Assigned(en) then
+    exit;
+
   cp := IChapterTitle(en.Ptr);
   cp.up;
 
@@ -446,8 +454,8 @@ end;
 
 procedure TProtokollForm.BitBtn1Click(Sender: TObject);
 var
-  i : integer;
-  b : IBesucher;
+  i: integer;
+  b: IBesucher;
 begin
   if m_proto.ReadOnly then
     exit;
@@ -456,7 +464,7 @@ begin
   begin
     if TG.Items.Item[i].Selected then
     begin
-      b := IBesucher( TG.Items.Item[i].Data);
+      b := IBesucher(TG.Items.Item[i].Data);
       b.Von := now;
     end;
   end;
@@ -464,8 +472,8 @@ end;
 
 procedure TProtokollForm.BitBtn2Click(Sender: TObject);
 var
-  i : integer;
-  b : IBesucher;
+  i: integer;
+  b: IBesucher;
 begin
   if m_proto.ReadOnly then
     exit;
@@ -474,7 +482,7 @@ begin
   begin
     if TG.Items.Item[i].Selected then
     begin
-      b := IBesucher( TG.Items.Item[i].Data);
+      b := IBesucher(TG.Items.Item[i].Data);
       b.bis := now;
     end;
   end;
@@ -482,19 +490,20 @@ end;
 
 procedure TProtokollForm.btnDeleteClick(Sender: TObject);
 var
-  i : integer;
-  b : IBesucher;
+  i: integer;
+  b: IBesucher;
 begin
   if m_proto.ReadOnly then
     exit;
-  if not (MessageDlg('Sollen die ausgwewählten Gäste gelöscht werden?', mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
+  if not(MessageDlg('Sollen die ausgwewählten Gäste gelöscht werden?',
+    mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
     exit;
 
   for i := pred(TG.Items.Count) downto 0 do
   begin
     if TG.Items.Item[i].Selected then
     begin
-      b := IBesucher( TG.Items.Item[i].Data);
+      b := IBesucher(TG.Items.Item[i].Data);
       m_proto.Besucher.remove(b);
     end;
   end;
@@ -503,12 +512,12 @@ end;
 
 procedure TProtokollForm.btnEditClick(Sender: TObject);
 var
-  b : IBesucher;
+  b: IBesucher;
 begin
   if not Assigned(TG.Selected) then
     exit;
 
-  b := IBesucher( TG.Selected.Data);
+  b := IBesucher(TG.Selected.Data);
   Application.CreateForm(TBesucherForm, BesucherForm);
   BesucherForm.Besucher := b;
   if BesucherForm.ShowModal = mrOk then
@@ -522,7 +531,7 @@ end;
 
 procedure TProtokollForm.btnNeuClick(Sender: TObject);
 var
-  b : IBesucher;
+  b: IBesucher;
 begin
   b := m_proto.Besucher.newBesucher;
   Application.CreateForm(TBesucherForm, BesucherForm);
@@ -538,59 +547,63 @@ begin
   UpdateTG;
 end;
 
-procedure TProtokollForm.buildTree(root: TTreeNode; ct : IChapterTitle);
-  procedure setInx( node :TTreeNode; inx : integer );
+procedure TProtokollForm.buildTree(root: TTreeNode; ct: IChapterTitle);
+  procedure setInx(Node: TTreeNode; inx: integer);
   begin
-    node.SelectedIndex := inx;
-    node.ImageIndex    := inx;
+    Node.SelectedIndex := inx;
+    Node.ImageIndex := inx;
   end;
-  procedure addVotes( root : TTreeNode; cp :IChapter );
+  procedure addVotes(root: TTreeNode; cp: IChapter);
   var
-    j   : integer;
-    en  : TEntry;
+    j: integer;
+    en: TEntry;
     sub: TTreeNode;
-    be  : IBeschluss;
+    be: IBeschluss;
   begin
     for j := 0 to pred(cp.Votes.Count) do
     begin
       be := cp.Votes.Item[j];
-      en := TEntry.create( be );
-      sub := TV.Items.AddChildObject(root, 'Beschluss: '+be.titel, en);
+      en := TEntry.create(be);
+      sub := TV.Items.AddChildObject(root, 'Beschluss: ' + be.Titel, en);
       case be.Status of
-        bsGeplant:    setInx(sub, 6);
-        bsZugestimmt: setInx(sub, 3);
-        bsAbgelehnt:  setInx(sub, 4);
-        bsWarten:     setInx(sub, 5);
+        bsGeplant:
+          setInx(sub, 6);
+        bsZugestimmt:
+          setInx(sub, 3);
+        bsAbgelehnt:
+          setInx(sub, 4);
+        bsWarten:
+          setInx(sub, 5);
       end;
     end;
   end;
 
-  procedure add( root : TTreeNode; items : IChapterList );
+  procedure add(root: TTreeNode; Items: IChapterList);
   var
-    j     :    integer;
-    node  : TTreeNode;
-    cp    : IChapter;
-    en    : TEntry;
+    j: integer;
+    Node: TTreeNode;
+    cp: IChapter;
+    en: TEntry;
   begin
-    for j := 0 to pred(items.Count) do
+    for j := 0 to pred(Items.Count) do
     begin
-      cp := items.Items[j];
-      en := TEntry.create( cp );
-      node := TV.Items.AddChildObject(root, cp.fullTitle, en);
-      if items.Items[j].TAID > 0 then
-        setInx(node, 1)
+      cp := Items.Items[j];
+      en := TEntry.create(cp);
+      Node := TV.Items.AddChildObject(root, cp.fullTitle, en);
+      if Items.Items[j].TAID > 0 then
+        setInx(Node, 1)
       else
-        setInx(node, 2);
-      addVotes( node, cp );
-      add(node, items.Items[j].Childs);
+        setInx(Node, 2);
+      addVotes(Node, cp);
+      add(Node, Items.Items[j].Childs);
     end;
   end;
 
 begin
-  if ct.Root.Childs.Count = 0 then
+  if ct.root.Childs.Count = 0 then
     exit;
 
-  add( root, ct.Root.Childs );
+  add(root, ct.root.Childs);
   root.Expand(true);
 end;
 
@@ -599,14 +612,14 @@ begin
   Application.CreateForm(TAbwesenForm, AbwesenForm);
   if AbwesenForm.ShowModal = mrOk then
   begin
-    setStatus( AbwesenForm.Status, AbwesenForm.Grund );
+    setStatus(AbwesenForm.Status, AbwesenForm.grund);
   end;
-  AbwesenForm.free;
+  AbwesenForm.Free;
 end;
 
 procedure TProtokollForm.clearTree;
 var
-  i : integer;
+  i: integer;
 begin
   for i := 0 to pred(TV.Items.Count) do
   begin
@@ -627,26 +640,44 @@ end;
 
 procedure TProtokollForm.fillStatusMap;
 var
-  inx : integer;
-  procedure addGrp( status : TTeilnehmerStatus; name : string );
+  inx: integer;
+  procedure addGrp(Status: TTeilnehmerStatus; name: string);
   var
-    grp : TListGroup;
+    grp: TListGroup;
   begin
-    grp             := TN.Groups.Add;
-    grp.Header      := name;
-    grp.GroupID     := inx;
+    grp := TN.Groups.add;
+    grp.Header := name;
+    grp.GroupID := inx;
     grp.FooterAlign := taRightJustify;
 
-    m_statusMap.Add( status, inx);
+    m_statusMap.add(Status, inx);
     inc(inx);
   end;
 
 var
-  st : TTeilnehmerStatus;
+  st: TTeilnehmerStatus;
 begin
   inx := 0;
   for st := tsUnbekannt to tsLast do
-    addGrp( st, TeilnehmerStatusToString(st));
+    addGrp(st, TeilnehmerStatusToString(st));
+end;
+
+function TProtokollForm.findNode(Node: TTreeNode; Typ: TEntryType): TEntry;
+var
+  en: TEntry;
+begin
+  Result := NIL;
+
+  while Assigned(Node) do
+  begin
+    en := TEntry(Node.Data);
+    if en.Typ = Typ then
+    begin
+      Result := en;
+      break;
+    end;
+    Node := Node.Parent;
+  end;
 end;
 
 procedure TProtokollForm.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -654,31 +685,29 @@ begin
   Action := caFree;
 
   if m_locked then
-    GM.UnLockDocument(m_proto.ID, integer(ltProtokoll));
+    GM.UnlockDocument(m_proto.ID, integer(ltProtokoll));
 end;
 
 procedure TProtokollForm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
   if m_proto.Modified then
   begin
-    case MessageDlg('Die Daten wurden geändert.'+#13+#10+
-                    ''+#13+#10+
-                    'Änderungen speichern (Ja)'+#13+#10+
-                    'Änderungen verwerfen (Nein)'+#13+#10+
-                    'Im Dialog bleiben (Abbrechen)'+#13+#10+'',
-                     mtConfirmation, [mbYes, mbNo, mbCancel], 0) of
-      mrYes :
-      begin
-        save;
-        CanClose := true;
-      end;
-      mrNo :
-      begin
-        m_proto.cancel;
-        CanClose := true;
-      end;
-      else
-        CanClose := false;
+    case MessageDlg('Die Daten wurden geändert.' + #13 + #10 + '' + #13 + #10 +
+      'Änderungen speichern (Ja)' + #13 + #10 + 'Änderungen verwerfen (Nein)' +
+      #13 + #10 + 'Im Dialog bleiben (Abbrechen)' + #13 + #10 + '',
+      mtConfirmation, [mbYes, mbNo, mbCancel], 0) of
+      mrYes:
+        begin
+          save;
+          CanClose := true;
+        end;
+      mrNo:
+        begin
+          m_proto.cancel;
+          CanClose := true;
+        end;
+    else
+      CanClose := false;
     end;
   end;
 
@@ -686,21 +715,21 @@ end;
 
 procedure TProtokollForm.FormCreate(Sender: TObject);
 begin
-  m_renderer  := TProtocolRenderer.create;
+  m_renderer := TProtocolRenderer.create;
   m_statusMap := TDictionary<TTeilnehmerStatus, integer>.create;
 
   Application.CreateForm(TTitelEditform, m_TitelEditform);
 
-  PageControl1.ActivePage             := TabSheet1;
+  PageControl1.ActivePage := TabSheet1;
 
-  updateSeedBtn( self, 1 );
+  updateSeedBtn(self, 1);
 
-  TV.Images     := GM.ImageList2;
-  m_locked      := true;
+  TV.Images := GM.ImageList2;
+  m_locked := true;
 
-  m_grList      := TGremiumListForm.Create(Self);
-  m_loader      := TTaskLoaderMod.Create(self);
-  m_proto       := NIL;
+  m_grList := TGremiumListForm.create(self);
+  m_loader := TTaskLoaderMod.create(self);
+  m_proto := NIL;
   m_renderer.Loader := m_loader;
 
   fillStatusMap;
@@ -735,8 +764,8 @@ begin
     exit;
 
   m_proto.Title := trim(DBEdit1.Text);
-  m_proto.Nr    := StrToIntDef(DBEdit2.Text, -1);
-  m_proto.Date  := JvDBDateTimePicker1.DateTime;
+  m_proto.Nr := StrToIntDef(DBEdit2.Text, -1);
+  m_proto.Date := JvDBDateTimePicker1.DateTime;
   m_proto.save;
 end;
 
@@ -745,14 +774,14 @@ begin
   if Assigned(m_proto) then
     m_proto.release;
 
-  m_proto     := TProtocolImpl.create;
-  m_proto.ID  := value;
+  m_proto := TProtocolImpl.create;
+  m_proto.ID := value;
 
   if m_proto.load(value) then
   begin
-    caption       := m_proto.Title;
-    DBEdit1.Text  := m_proto.Title;
-    DBEdit2.Text  := IntToStr(m_proto.Nr);
+    Caption := m_proto.Title;
+    DBEdit1.Text := m_proto.Title;
+    DBEdit2.Text := IntToStr(m_proto.Nr);
 
     JvDBDateTimePicker1.DateTime := m_proto.Date;
 
@@ -763,36 +792,46 @@ begin
   m_proto.Modified := false;
 end;
 
-procedure TProtokollForm.setRO(value: boolean);
+procedure TProtokollForm.setRO(value: Boolean);
 begin
   m_ro := value;
 
-  Label4.Visible        := m_ro;
-  Sperren1.Enabled      := m_ro;
-  Freigeben1.Enabled    := not m_ro;
+  Label4.Visible := m_ro;
+  Sperren1.Enabled := m_ro;
+  Freigeben1.Enabled := not m_ro;
 
-  PageControl2.Enabled  := not m_ro;
-  PageControl2.Visible  := not m_ro;
+  PageControl2.Enabled := not m_ro;
+  PageControl2.Visible := not m_ro;
 
-  Panel1.Enabled        := not m_ro;
-  Panel4.Enabled        := not m_ro;
-  Panel3.Enabled        := not m_ro;
+  Panel1.Enabled := not m_ro;
+  Panel4.Enabled := not m_ro;
+  Panel3.Enabled := not m_ro;
 
-  Speichern.Enabled     := not m_ro;
+  Speichern.Enabled := not m_ro;
 
-  SpeedButton6.Enabled  := not m_ro;
+  ac_add.Enabled := not m_ro;
+  ac_edit.Enabled := not m_ro;
+  ac_edit_content.Enabled := not m_ro;
+  ac_delete.Enabled := not m_ro;
+  ac_up.Enabled := not m_ro;
+  ac_down.Enabled := not m_ro;
+  ac_beschluss.Enabled := not m_ro;
+  ac_be_bearbeiten.Enabled := not m_ro;
+  ac_be_delete.Enabled := not m_ro;
 
-  m_proto.ReadOnly      := m_ro;
+  SpeedButton6.Enabled := not m_ro;
+
+  m_proto.ReadOnly := m_ro;
   if m_ro then
     m_proto.cancel
   else
     m_proto.edit;
 end;
 
-procedure TProtokollForm.setStatus(ts: TTeilnehmerStatus; grund : string );
+procedure TProtokollForm.setStatus(ts: TTeilnehmerStatus; grund: string);
 var
-  i : integer;
-  t : ITeilnehmer;
+  i: integer;
+  t: ITeilnehmer;
 begin
   if m_proto.ReadOnly then
     exit;
@@ -802,7 +841,7 @@ begin
     if TN.Items.Item[i].Selected then
     begin
       t := ITeilnehmer(TN.Items.Item[i].Data);
-      t.Grund := grund;
+      t.grund := grund;
       t.Status := ts
     end;
   end;
@@ -814,7 +853,7 @@ end;
 
 procedure TProtokollForm.showContent;
 var
-  en : TEntry;
+  en: TEntry;
 begin
   if not Assigned(TV.Selected.Data) then
     exit;
@@ -822,11 +861,16 @@ begin
 
   m_renderer.renderStart;
   case en.Typ of
-    etNothing     : m_renderer.renderProtocol(m_proto);
-    etChapterText : m_renderer.renderChapter( IChapter( en.Ptr ));
-    etTask        : m_renderer.renderChapter( IChapter( en.Ptr ));
-    etBeschluss   : m_renderer.renderBeschluss(IBeschluss(en.Ptr));
-    etTitle       : m_renderer.renderChapterTitle(IChapterTitle(en.Ptr));
+    etNothing:
+      m_renderer.renderProtocol(m_proto);
+    etChapterText:
+      m_renderer.renderChapter(IChapter(en.Ptr));
+    etTask:
+      m_renderer.renderChapter(IChapter(en.Ptr));
+    etBeschluss:
+      m_renderer.renderBeschluss(IBeschluss(en.Ptr));
+    etTitle:
+      m_renderer.renderChapterTitle(IChapterTitle(en.Ptr));
   end;
   m_renderer.Show(WebBrowser1);
 end;
@@ -851,17 +895,18 @@ end;
 
 procedure TProtokollForm.updateCpList;
 var
-  cp, old   : IChapterTitle;
-  i         : integer;
-  node      : TTreeNode;
-  root      : TTreeNode;
-  en        : TEntry;
+  cp, old: IChapterTitle;
+  i: integer;
+  Node: TTreeNode;
+  root: TTreeNode;
+  en: TEntry;
 
-  procedure setIndex( node : TTreeNode; inx : integer );
+  procedure setIndex(Node: TTreeNode; inx: integer);
   begin
-    node.ImageIndex     := inx;
-    node.SelectedIndex  := inx;
+    Node.ImageIndex := inx;
+    Node.SelectedIndex := inx;
   end;
+
 begin
   old := NIL;
   Screen.Cursor := crHourGlass;
@@ -869,28 +914,27 @@ begin
   try
     if Assigned(TV.Selected) and not Assigned(TV.Selected.Parent) then
     begin
-      en := tV.Selected.Data;
-      old := IChapterTitle(en.ptr);
+      en := TV.Selected.Data;
+      old := IChapterTitle(en.Ptr);
     end;
 
     clearTree;
 
-    en   := TEntry.create;
+    en := TEntry.create;
     root := TV.Items.AddChildObject(NIL, 'Dokument', en);
-    setIndex( root, 7);
+    setIndex(root, 7);
 
     for i := 0 to pred(m_proto.Chapter.Count) do
     begin
-      cp   := m_proto.Chapter.Items[i];
-      en   := Tentry.create(cp);
-      node := TV.Items.AddChildObject(root, cp.FullTitle, en);
-      setIndex( node, 0);
+      cp := m_proto.Chapter.Items[i];
+      en := TEntry.create(cp);
+      Node := TV.Items.AddChildObject(root, cp.fullTitle, en);
+      setIndex(Node, 0);
 
-
-      buildTree( node, cp );
+      buildTree(Node, cp);
 
       if cp = old then
-        TV.Selected := node;
+        TV.Selected := Node;
 
     end;
   finally
@@ -903,34 +947,34 @@ end;
 
 procedure TProtokollForm.UpdateTG;
 var
-  i     : integer;
-  b     : IBesucher;
-  item  : TListItem;
+  i: integer;
+  b: IBesucher;
+  Item: TListItem;
 begin
   TG.Items.BeginUpdate;
   TG.Items.Clear;
   for i := 0 to pred(m_proto.Besucher.Count) do
   begin
     b := m_proto.Besucher.Item[i];
-    item := TG.Items.Add;
+    Item := TG.Items.add;
 
-    item.Data := b;
-    item.Caption := b.Name;
-    item.SubItems.Add( b.Vorname);
-    item.SubItems.Add( b.Abteilung );
-    item.SubItems.Add( FormatDateTime('hh:mm', b.Von));
-    item.SubItems.Add( FormatDateTime('hh:mm', b.bis));
-    item.SubItems.Add( b.Grund );
+    Item.Data := b;
+    Item.Caption := b.name;
+    Item.SubItems.add(b.Vorname);
+    Item.SubItems.add(b.Abteilung);
+    Item.SubItems.add(FormatDateTime('hh:mm', b.Von));
+    Item.SubItems.add(FormatDateTime('hh:mm', b.bis));
+    Item.SubItems.add(b.grund);
   end;
   TG.Items.EndUpdate;
 end;
 
 procedure TProtokollForm.UpdateTN;
 var
-  i     : integer;
-  t     : ITeilnehmer;
-  item  : TListItem;
-  sum   : array of Integer;
+  i: integer;
+  t: ITeilnehmer;
+  Item: TListItem;
+  sum: array of integer;
 begin
   SetLength(sum, integer(tsLast));
   TN.Items.BeginUpdate;
@@ -939,20 +983,20 @@ begin
   for i := 0 to pred(m_proto.Teilnehmer.Count) do
   begin
     t := m_proto.Teilnehmer.Item[i];
-    item := TN.Items.Add;
+    Item := TN.Items.add;
 
-    item.Data := t;
-    item.GroupID := m_statusMap[t.Status];
-    item.Caption := t.Name;
-    item.SubItems.Add(t.Vorname);
-    item.SubItems.Add(t.Abteilung);
-    item.SubItems.Add(t.Rolle);
-    item.SubItems.Add(t.Grund );
+    Item.Data := t;
+    Item.GroupID := m_statusMap[t.Status];
+    Item.Caption := t.name;
+    Item.SubItems.add(t.Vorname);
+    Item.SubItems.add(t.Abteilung);
+    Item.SubItems.add(t.Rolle);
+    Item.SubItems.add(t.grund);
 
     sum[integer(t.Status)] := sum[integer(t.Status)] + 1;
   end;
   for i := 0 to pred(TN.Groups.Count) do
-    TN.Groups.Items[i].Footer := 'Anzahl:'+IntToStr( sum[i]);
+    TN.Groups.Items[i].Footer := 'Anzahl:' + IntToStr(sum[i]);
 
   TN.Items.EndUpdate;
   SetLength(sum, 0);
@@ -962,34 +1006,34 @@ end;
 
 constructor TProtokollForm.TEntry.create;
 begin
-  FPtr  := NIL;
-  FTyp  := etNothing;
+  FPtr := NIL;
+  FTyp := etNothing;
 end;
 
 constructor TProtokollForm.TEntry.create(cp: IChapterTitle);
 begin
-  FPtr  := Pointer(cp);
-  Ftyp := etTitle;
+  FPtr := pointer(cp);
+  FTyp := etTitle;
 end;
 
 constructor TProtokollForm.TEntry.create(be: IBeschluss);
 begin
-  FPtr := Pointer(be);
-  Ftyp := etBeschluss;
+  FPtr := pointer(be);
+  FTyp := etBeschluss;
 end;
 
 constructor TProtokollForm.TEntry.create(cp: IChapter);
 begin
-  FPtr := Pointer(cp);
+  FPtr := pointer(cp);
   if cp.TAID <> 0 then
     FTyp := etTask
   else
-    FTyp  := etChapterText;
+    FTyp := etChapterText;
 end;
 
 destructor TProtokollForm.TEntry.Destroy;
 begin
-  FPtr  := NIL;
+  FPtr := NIL;
   inherited;
 end;
 

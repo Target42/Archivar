@@ -1,13 +1,14 @@
 /* ============================================================ */
 /*   Database name:  MODEL_2                                    */
 /*   DBMS name:      InterBase                                  */
-/*   Created on:     25.01.2021  18:52                          */
+/*   Created on:     07.02.2021  19:57                          */
 /* ============================================================ */
 
 create generator gen_be_id;
 create generator gen_ct_id;
 create generator gen_cp_id;
 create generator gen_da_id;
+create generator gen_el_id;
 create generator gen_fi_id;
 create generator gen_fd_id;
 create generator gen_gr_id;
@@ -249,6 +250,22 @@ create table CP_CHAPTER
 create ASC index CP_CHAPTER_SEC on CP_CHAPTER (PR_ID, CP_ID);
 
 /* ============================================================ */
+/*   Table: EL_EINLADUNG                                        */
+/* ============================================================ */
+create table EL_EINLADUNG
+(
+    EL_ID                           INTEGER                not null,
+    GR_ID                           INTEGER                        ,
+    PR_ID                           INTEGER                        ,
+    EL_DATUM                        DATE                           ,
+    EL_ZEIT                         TIME                           ,
+    EL_TITEL                        VARCHAR(200)                   ,
+    EL_DATA                         BLOB                           ,
+    EL_DATA_STAMP                   TIMESTAMP                      ,
+    constraint PK_EL_EINLADUNG primary key (EL_ID)
+);
+
+/* ============================================================ */
 /*   Table: TE_TEMPLATE                                         */
 /* ============================================================ */
 create table TE_TEMPLATE
@@ -401,12 +418,34 @@ create table TO_OPEN
     constraint PK_TO_OPEN primary key (GR_ID, TA_ID)
 );
 
+/* ============================================================ */
+/*   Table: EL_PE                                               */
+/* ============================================================ */
+create table EL_PE
+(
+    EL_ID                           INTEGER                not null,
+    PE_ID                           INTEGER                not null,
+    EP_DATUM                        DATE                           ,
+    EP_ZEIT                         TIME                           ,
+    EP_STATUS                       VARCHAR(100)                   ,
+    EP_READ                         TIMESTAMP                      ,
+    constraint PK_EL_PE primary key (EL_ID, PE_ID)
+);
+
 alter table PR_PROTOKOL
     add constraint FK_REF_108 foreign key  (GR_ID)
        references GR_GREMIUM;
 
 alter table CP_CHAPTER
     add constraint FK_REF_1627 foreign key  (PR_ID)
+       references PR_PROTOKOL;
+
+alter table EL_EINLADUNG
+    add constraint FK_REF_5543 foreign key  (GR_ID)
+       references GR_GREMIUM;
+
+alter table EL_EINLADUNG
+    add constraint FK_REF_6027 foreign key  (PR_ID)
        references PR_PROTOKOL;
 
 alter table TE_TEMPLATE
@@ -464,6 +503,14 @@ alter table TO_OPEN
 alter table TO_OPEN
     add constraint FK_REF_1255 foreign key  (TA_ID)
        references TA_TASK;
+
+alter table EL_PE
+    add constraint FK_REF_5548 foreign key  (EL_ID)
+       references EL_EINLADUNG;
+
+alter table EL_PE
+    add constraint FK_REF_5552 foreign key  (PE_ID)
+       references PE_PERSON;
 
 commit;
 
