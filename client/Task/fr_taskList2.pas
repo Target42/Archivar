@@ -64,7 +64,7 @@ var
   i : integer;
 begin
   for i := 0 to pred(m_all.Count) do
-      m_all[i].Free;
+    m_all[i].Free;
   m_all.Clear;
   m_list.Clear;
 end;

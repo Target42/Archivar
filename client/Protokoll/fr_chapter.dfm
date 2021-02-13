@@ -1,8 +1,8 @@
 object ChapterFrame: TChapterFrame
   Left = 0
   Top = 0
-  Width = 945
-  Height = 398
+  Width = 1003
+  Height = 487
   Align = alClient
   TabOrder = 0
   ExplicitWidth = 451
@@ -10,7 +10,7 @@ object ChapterFrame: TChapterFrame
   object Splitter1: TSplitter
     Left = 251
     Top = 0
-    Height = 398
+    Height = 487
     ExplicitLeft = 368
     ExplicitTop = 72
     ExplicitHeight = 100
@@ -19,7 +19,7 @@ object ChapterFrame: TChapterFrame
     Left = 0
     Top = 0
     Width = 251
-    Height = 398
+    Height = 487
     Align = alLeft
     Caption = 'Struktur'
     TabOrder = 0
@@ -43,7 +43,7 @@ object ChapterFrame: TChapterFrame
       Left = 2
       Top = 31
       Width = 247
-      Height = 295
+      Height = 384
       Align = alClient
       DragMode = dmAutomatic
       Indent = 19
@@ -56,7 +56,7 @@ object ChapterFrame: TChapterFrame
     end
     object PageControl1: TPageControl
       Left = 2
-      Top = 326
+      Top = 415
       Width = 247
       Height = 70
       ActivePage = TabSheet1
@@ -159,8 +159,8 @@ object ChapterFrame: TChapterFrame
   object GroupBox2: TGroupBox
     Left = 254
     Top = 0
-    Width = 691
-    Height = 398
+    Width = 749
+    Height = 487
     Align = alClient
     Caption = 'Aufgaben'
     TabOrder = 1
@@ -169,7 +169,7 @@ object ChapterFrame: TChapterFrame
     object Panel2: TPanel
       Left = 2
       Top = 15
-      Width = 687
+      Width = 745
       Height = 41
       Align = alTop
       BevelOuter = bvNone
@@ -206,8 +206,8 @@ object ChapterFrame: TChapterFrame
     inline TaskList2Frame1: TTaskList2Frame
       Left = 2
       Top = 56
-      Width = 687
-      Height = 340
+      Width = 745
+      Height = 429
       Align = alClient
       TabOrder = 1
       ExplicitLeft = 2
@@ -215,20 +215,14 @@ object ChapterFrame: TChapterFrame
       ExplicitWidth = 193
       ExplicitHeight = 247
       inherited LV: TListView
-        Width = 614
-        Height = 299
-        ExplicitWidth = 120
-        ExplicitHeight = 206
-      end
-      inherited Panel1: TPanel
-        Top = 299
-        Width = 687
-        ExplicitTop = 206
-        ExplicitWidth = 193
+        Width = 704
+        Height = 429
+        ExplicitWidth = 152
+        ExplicitHeight = 247
       end
       inherited Panel2: TPanel
-        Height = 299
-        ExplicitHeight = 206
+        Height = 429
+        ExplicitHeight = 247
       end
     end
   end
@@ -303,7 +297,7 @@ object ChapterFrame: TChapterFrame
     Left = 208
     Top = 144
     Bitmap = {
-      494C010108002800400010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010108002800440010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000003000000001002000000000000030
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

@@ -861,16 +861,11 @@ begin
 
   m_renderer.renderStart;
   case en.Typ of
-    etNothing:
-      m_renderer.renderProtocol(m_proto);
-    etChapterText:
-      m_renderer.renderChapter(IChapter(en.Ptr));
-    etTask:
-      m_renderer.renderChapter(IChapter(en.Ptr));
-    etBeschluss:
-      m_renderer.renderBeschluss(IBeschluss(en.Ptr));
-    etTitle:
-      m_renderer.renderChapterTitle(IChapterTitle(en.Ptr));
+    etNothing:      m_renderer.renderProtocol(m_proto);
+    etChapterText:  m_renderer.renderChapter(IChapter(en.Ptr));
+    etTask:         m_renderer.renderChapter(IChapter(en.Ptr));
+    etBeschluss:    m_renderer.renderBeschluss(IBeschluss(en.Ptr));
+    etTitle:        m_renderer.renderChapterTitle(IChapterTitle(en.Ptr));
   end;
   m_renderer.Show(WebBrowser1);
 end;

@@ -66,19 +66,6 @@ object ChapterContentForm: TChapterContentForm
       inherited PageControl1: TPageControl
         Top = 327
         ExplicitTop = 327
-        inherited TabSheet1: TTabSheet
-          ExplicitHeight = 42
-        end
-        inherited TabSheet2: TTabSheet
-          ExplicitLeft = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
-        end
-        inherited TabSheet3: TTabSheet
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-        end
       end
     end
     inherited GroupBox2: TGroupBox
@@ -96,26 +83,20 @@ object ChapterContentForm: TChapterContentForm
         ExplicitWidth = 715
         ExplicitHeight = 341
         inherited LV: TListView
-          Width = 642
-          Height = 300
-          ExplicitWidth = 642
-          ExplicitHeight = 300
-        end
-        inherited Panel1: TPanel
-          Top = 300
-          Width = 715
-          ExplicitTop = 300
-          ExplicitWidth = 715
+          Width = 674
+          Height = 341
+          ExplicitWidth = 674
+          ExplicitHeight = 341
         end
         inherited Panel2: TPanel
-          Height = 300
-          ExplicitHeight = 300
+          Height = 341
+          ExplicitHeight = 341
         end
       end
     end
     inherited ImageList1: TImageList
       Bitmap = {
-        494C010108002800280010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+        494C010108002800300010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
         0000000000003600000028000000400000003000000001002000000000000030
         0000000000000000000000000000000000000000000000000000000000000000
         0000000000000000000000000000000000000000000000000000000000000000

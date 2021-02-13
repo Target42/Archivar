@@ -8,7 +8,7 @@ uses
   Datasnap.DBClient, Data.DB, Datasnap.DSConnect, Vcl.ComCtrls, Vcl.ExtCtrls,
   Vcl.StdCtrls, Vcl.Buttons, System.Generics.Collections,
   fr_taskList2, u_taskEntry, i_chapter, Data.SqlExpr, System.Actions,
-  Vcl.ActnList, System.ImageList, Vcl.ImgList, Vcl.Menus;
+  Vcl.ActnList, System.ImageList, Vcl.ImgList, Vcl.Menus, i_beschluss;
 
 type
   TChapterFrame = class(TFrame)
@@ -72,6 +72,24 @@ type
     procedure ac_chapter_leftExecute(Sender: TObject);
     procedure ac_chapter_rightExecute(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
+  private
+    type
+      TNodeType = ( etNothing, etChapterText, etTask, etBeschluss );
+    TEntry = class(TObject)
+    private
+      FPtr: Pointer;
+      FTyp: TNodeType;
+    public
+      constructor create; overload;
+      constructor create(cp: IChapter); overload;
+      constructor create(be: IBeschluss); overload;
+
+      Destructor Destroy; override;
+
+      property Ptr: pointer read FPtr write FPtr;
+      property Typ: TNodeType read FTyp write FTyp;
+    end;
+
   private
     m_ct : IChapterTitle;
 
@@ -225,13 +243,19 @@ end;
 
 procedure TChapterFrame.ac_new_chapterExecute(Sender: TObject);
 var
-  cp, p : IChapter;
+  cp, p           : IChapter;
   ChapterEditForm : TChapterEditForm;
-  node : TTreeNode;
+  node            : TTreeNode;
+  en              : TEntry;
 begin
   p := m_ct.Root;
+
+
   if Assigned(TV.Selected) then
-    p := IChapter(TV.Selected.Data);
+  begin
+    en := TEntry(TV.Selected.Data);
+    p := IChapter(en.Ptr);
+  end;
 
   cp := p.newChapter;
 
@@ -239,7 +263,8 @@ begin
   ChapterEditForm.CP := cp;
   if ChapterEditForm.ShowModal = mrOk then
   begin
-    node := TV.Items.AddChildObject(NIL, cp.fullTitle, cp);
+    en    := TEntry.create(cp);
+    node  := TV.Items.AddChildObject(NIL, cp.fullTitle, en);
     node.SelectedIndex := 2;
     node.ImageIndex    := 2;
 
@@ -254,20 +279,25 @@ end;
 
 procedure TChapterFrame.ac_sub_chapterExecute(Sender: TObject);
 var
- p : IChapter;
- cp : IChapter;
+ p    : IChapter;
+ cp   : IChapter;
  node : TTreeNode;
+ en   : TEntry;
 begin
   p := m_ct.Root;
   if Assigned(TV.Selected) then
-    p := IChapter(TV.Selected.Data);
+  begin
+    en := TEntry(TV.Selected.Data);
+    p := IChapter(en.Ptr);
+  end;
 
   cp := p.newChapter;
   saveCP(cp, true);
 
-  node := TV.Items.AddChildObject(TV.Selected, cp.fullTitle, cp);
-    node.SelectedIndex := 2;
-    node.ImageIndex    := 2;
+  en := TEntry.create(cp);
+  node := TV.Items.AddChildObject(TV.Selected, cp.fullTitle, en);
+  node.SelectedIndex := 2;
+  node.ImageIndex    := 2;
 
   if Assigned(TV.Selected) then
     TV.Selected.Expand(false);
@@ -308,13 +338,16 @@ end;
 
 procedure TChapterFrame.doNewTaskEntry(Sender: TObject; var dataList : TEntryList);
 var
-  i : integer;
+  i     : integer;
   p, cp : IChapter;
-
+  en    : Tentry;
 begin
   p := m_ct.Root;
   if Assigned(TV.Selected) then
-    p := IChapter(TV.Selected.Data);
+  begin
+    en  := TEntry(TV.Selected.Data);
+    p   := IChapter(en.Ptr);
+  end;
 
   for i := 0 to pred(dataList.Count) do
   begin
@@ -434,9 +467,14 @@ begin
 end;
 
 procedure TChapterFrame.Shutdown;
+var
+  i : integer;
 begin
   TaskList2Frame1.shutdown;
   ChapterTab.Close;
+
+  for i := 0 to pred(tv.Items.Count) do
+    TEntry(Tv.Items.Item[i].Data).Free;
 end;
 
 procedure TChapterFrame.TVDblClick(Sender: TObject);
@@ -451,6 +489,7 @@ var
   node  : TTreeNode;
   entry : TTaskEntry;
   i     : integer;
+  en    : TEntry;
 begin
   node := TV.GetNodeAt(X, Y);
 
@@ -467,7 +506,8 @@ begin
         cp := m_ct.Root.newChapter
       else
       begin
-        p := IChapter(node.Data);
+        en := TEntry(node.Data);
+        p  := IChapter(en.Ptr);
         cp := p.newChapter;
         cp.Numbering := false;
       end;
@@ -482,15 +522,16 @@ begin
   begin
     if node = TV.Selected then
       exit;
-
-    cp := IChapter(TV.Selected.Data);
+    en := TEntry(TV.Selected.Data);
+    cp := IChapter(en.ptr);
     cp.Owner.remove(cp);
 
     if not Assigned(node) then
       m_ct.Root.add(cp)
     else
     begin
-      p := IChapter(node.Data);
+      en  := TEntry( node.Data);
+      p   := IChapter(en.Ptr);
       p.add(cp);
     end;
     updateTree;
@@ -499,7 +540,24 @@ end;
 
 procedure TChapterFrame.TVDragOver(Sender, Source: TObject; X, Y: Integer;
   State: TDragState; var Accept: Boolean);
+var
+  en : TEntry;
+  node : TTreeNode;
 begin
+  Accept := false;
+  if Assigned(Tv.Selected) then
+  begin
+    en := TEntry(TV.Selected.Data);
+    if en.Typ = etBeschluss then
+      exit;
+  end;
+  node := TV.GetNodeAt(X, Y);
+  if Assigned(node) then
+  begin
+    en :=TEntry( node.Data);
+    if en.Typ = etBeschluss then
+      exit;
+  end;
   Accept := true;
 end;
 
@@ -509,20 +567,36 @@ var
 
   procedure add( root : TTreeNode; childs : IChapterList );
   var
-    node : TTreeNode;
-    i    : integer;
-    cp   : IChapter;
+    node  : TTreeNode;
+    i     : integer;
+    cp    : IChapter;
     inx   : integer;
+    en    : TEntry;
+
+    j     : integer;
+    sub   : TTreeNode;
+
   begin
     for i := 0 to pred(childs.Count) do
       begin
         cp := childs.Items[i];
-        node := TV.Items.AddChildObject(root, cp.fullTitle, cp);
+        en := TEntry.create(cp);
+        node := TV.Items.AddChildObject(root, cp.fullTitle, en);
+
         inx := 2;
-        if cp.TAID > 0 then
+        if en.Typ = etTask then
           inx := 1;
+
         node.SelectedIndex := inx;
         node.ImageIndex    := inx;
+
+        for j := 0 to pred(cp.Votes.Count) do
+          begin
+            en := TEntry.create(cp.Votes.Item[i]);
+            sub := TV.Items.AddChildObject( node, cp.Votes.Item[i].titel, en);
+            sub.SelectedIndex := 6;
+            sub.ImageIndex    := 6;
+          end;
 
         if cp = old then
           TV.Selected := node;
@@ -531,15 +605,51 @@ var
           node.Expand(true);
       end;
   end;
-
+var
+  i : integer;
 begin
   old := NIL;
   TV.Items.BeginUpdate;
+
   if Assigned(TV.Selected) then
-    old := IChapter(TV.Selected.Data);
+    old := IChapter(TEntry(TV.Selected.Data).Ptr);
+
+  for i := 0 to pred(tv.Items.Count) do
+    TEntry(tv.Items.Item[i].Data).Free;
+
   TV.Items.Clear;
+
   add( NIL, m_ct.Root.Childs );
+
   TV.Items.EndUpdate;
+end;
+
+{ TChapterFrame.TEntry }
+
+constructor TChapterFrame.TEntry.create;
+begin
+  FPtr:= NIL;
+  FTyp:= etNothing;
+end;
+
+constructor TChapterFrame.TEntry.create(cp: IChapter);
+begin
+  FPtr:= Pointer(cp);
+  if cp.TAID <> 0 then
+    FTyp := etTask
+  else
+    FTyp := etChapterText;
+end;
+
+constructor TChapterFrame.TEntry.create(be: IBeschluss);
+begin
+  FPtr:= Pointer(be);
+  FTyp:= etBeschluss;
+end;
+
+destructor TChapterFrame.TEntry.Destroy;
+begin
+  inherited;
 end;
 
 end.
