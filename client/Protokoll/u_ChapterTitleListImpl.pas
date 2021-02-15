@@ -109,7 +109,7 @@ end;
 
 function TChapterTitleListImpl.NewEntry: IChapterTitle;
 begin
-  Result := TChapterTitleImpl.create(self, m_loader);
+  Result := TChapterTitleImpl.create(self, m_loader, m_proto);
   m_list.Add(Result);
   renumber;
   Result.Text := 'Titel '+IntToStr(Result.Nr);
@@ -188,7 +188,7 @@ begin
     CPTextTab.Filtered := true;
 
     cp.Root.Childs.clear;
-    cp.loadFromDataSet(CPTextTab);
+    cp.loadFromDataSet(CPTextTab, BETab);
   end;
 end;
 

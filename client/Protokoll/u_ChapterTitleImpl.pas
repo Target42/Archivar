@@ -9,6 +9,7 @@ uses
 type
   TChapterTitleImpl = class(TInterfacedObject, IChapterTitle)
     private
+      m_proto   : IProtocol;
       m_owner   : IChapterTitleList;
       m_loader  : TProtocolMod;
 
@@ -36,10 +37,13 @@ type
       function getCount : integer;
       function getItem( inx : integer ) : IChapter;
 
+      function getProto : IProtocol;
+
       procedure setOwner;
       procedure refreshList;
+
     public
-      constructor create(owner : IChapterTitleList; loader: TProtocolMod);
+      constructor create(owner : IChapterTitleList; loader: TProtocolMod; proto : IProtocol);
       Destructor Destroy; override;
 
       procedure up;
@@ -49,7 +53,7 @@ type
 
       procedure buildTree;
 
-      procedure loadFromDataSet( data : TDataSet );
+      procedure loadFromDataSet( data, beData : TDataSet );
 
       procedure release;
   end;
@@ -58,15 +62,16 @@ implementation
 
 uses
   System.SysUtils, u_ChapterListImpl,
-  u_ChapterImpl, Xml.XMLIntf, Xml.XMLDoc;
+  u_ChapterImpl, Xml.XMLIntf, Xml.XMLDoc, i_beschluss;
 
 procedure TChapterTitleImpl.buildTree;
 
 begin
 end;
 
-constructor TChapterTitleImpl.create(owner : IChapterTitleList; loader: TProtocolMod);
+constructor TChapterTitleImpl.create(owner : IChapterTitleList; loader: TProtocolMod; proto : IProtocol);
 begin
+  m_proto   := proto;
   m_loader  := loader;
   m_xCp     := NewChapter;
   m_owner   := owner;
@@ -102,7 +107,7 @@ begin
   Result := m_xCp;
 end;
 
-procedure TChapterTitleImpl.loadFromDataSet(data: TDataSet);
+procedure TChapterTitleImpl.loadFromDataSet(data, beData: TDataSet);
 var
   list  : TList<IChapter>;
   cp    : IChapter;
@@ -121,6 +126,22 @@ var
       end;
     end;
   end;
+  procedure loadBE( cp :IChapter );
+  var
+    be : IBeschluss;
+  begin
+      beData.Filter := 'CT_ID = '+IntToStr( cp.ID);
+      beData.Filtered := true;
+      beData.First;
+      while not beData.Eof do
+      begin
+        be := cp.Votes.newBeschluss;
+        be.loadFromDataSet(beData);
+        beData.Next;
+      end;
+      beData.Filtered :=  false;
+  end;
+
 begin
   list := TList<IChapter>.create;
 
@@ -138,6 +159,8 @@ begin
     CP.Pos        := data.FieldByName('CT_POS').AsInteger;
     cp.Rem        := data.FieldByName('CT_DATA').AsString;
     cp.Numbering  := (cp.Nr <> -1 );
+
+    loadBE( cp );
 
     list.Add(cp);
 
@@ -182,6 +205,11 @@ begin
   Result := FNr;
 end;
 
+function TChapterTitleImpl.getProto: IProtocol;
+begin
+  Result := m_proto;
+end;
+
 function TChapterTitleImpl.getRoot: IChapter;
 begin
   Result := m_root;
@@ -210,6 +238,7 @@ end;
 
 procedure TChapterTitleImpl.release;
 begin
+  m_proto := NIL;
   m_owner := NIL;
   m_xCp   := NIL;
   m_root.release;

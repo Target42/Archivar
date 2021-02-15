@@ -39,6 +39,7 @@ object Beschlusform: TBeschlusform
         Left = 638
         Default = False
         Kind = bkCustom
+        OnClick = BaseFrame1OKBtnClick
         ExplicitLeft = 638
       end
     end
@@ -54,8 +55,6 @@ object Beschlusform: TBeschlusform
     object TabSheet2: TTabSheet
       Caption = 'Beschlustext'
       ImageIndex = 1
-      ExplicitWidth = 296
-      ExplicitHeight = 113
       object Splitter1: TSplitter
         Left = 448
         Top = 0
@@ -283,8 +282,6 @@ object Beschlusform: TBeschlusform
         Align = alClient
         Caption = 'Erweiterter Text'
         TabOrder = 2
-        ExplicitWidth = 26
-        ExplicitHeight = 30
         inline EditFrame2: TEditFrame
           Left = 2
           Top = 15
@@ -294,25 +291,21 @@ object Beschlusform: TBeschlusform
           TabOrder = 0
           ExplicitLeft = 2
           ExplicitTop = 15
-          ExplicitWidth = 22
-          ExplicitHeight = 13
+          ExplicitWidth = 444
+          ExplicitHeight = 278
           inherited RE: TRichEdit
             Width = 444
             Height = 278
             OnDragDrop = EditFrame2REDragDrop
             OnDragOver = EditFrame2REDragOver
-            ExplicitWidth = 22
-            ExplicitHeight = 13
+            ExplicitWidth = 444
+            ExplicitHeight = 278
           end
         end
       end
     end
     object TabSheet1: TTabSheet
       Caption = 'Teilnehmer'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Splitter4: TSplitter
         Left = 337
         Top = 0
@@ -664,7 +657,7 @@ object Beschlusform: TBeschlusform
     Left = 559
     Top = 208
     Bitmap = {
-      494C010101000800480010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010101000800540010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       000000000000000000000000000000000000000000FF000000FF000000FF0000
       00FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF0000

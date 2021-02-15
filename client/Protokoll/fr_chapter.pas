@@ -58,6 +58,12 @@ type
     SpeedButton5: TSpeedButton;
     SpeedButton7: TSpeedButton;
     BitBtn1: TBitBtn;
+    SpeedButton9: TSpeedButton;
+    SpeedButton10: TSpeedButton;
+    SpeedButton11: TSpeedButton;
+    ac_beschluss: TAction;
+    ac_be_bearbeiten: TAction;
+    ac_be_delete: TAction;
     procedure ComboBox1Change(Sender: TObject);
     procedure TVDragOver(Sender, Source: TObject; X, Y: Integer;
       State: TDragState; var Accept: Boolean);
@@ -72,6 +78,9 @@ type
     procedure ac_chapter_leftExecute(Sender: TObject);
     procedure ac_chapter_rightExecute(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
+    procedure ac_beschlussExecute(Sender: TObject);
+    procedure ac_be_bearbeitenExecute(Sender: TObject);
+    procedure ac_be_deleteExecute(Sender: TObject);
   private
     type
       TNodeType = ( etNothing, etChapterText, etTask, etBeschluss );
@@ -118,11 +127,95 @@ implementation
 
 uses
   m_glob_client, Xml.XMLIntf, Xml.XMLDoc,
-  f_chapterEdit, u_gremium, f_chapterTask, u_ChapterImpl;
+  f_chapterEdit, u_gremium, f_chapterTask, u_ChapterImpl, f_bechlus;
 
 {$R *.dfm}
 
 { TChapterFrame }
+
+procedure TChapterFrame.ac_beschlussExecute(Sender: TObject);
+var
+  be: IBeschluss;
+  en: TEntry;
+  cp: IChapter;
+begin
+  if not Assigned(TV.Selected) then
+    exit;
+
+  en := TEntry(TV.Selected.Data);
+  if not(en.Typ in [etTask, etChapterText]) then
+    exit;
+
+  cp := IChapter(en.Ptr);
+  be := cp.Votes.newBeschluss;
+  be.CTID := cp.ID;
+
+
+  Application.CreateForm(TBeschlusform, Beschlusform);
+  Beschlusform.setGremium(m_ct.Protocol.GRID);
+  Beschlusform.Beschluss := be;
+  if Beschlusform.ShowModal = mrOk then
+  begin
+    cp.Votes.saveModified;
+    updateTree;
+  end
+  else
+    cp.Votes.delete(be);
+
+  Beschlusform.Free;
+end;
+
+procedure TChapterFrame.ac_be_bearbeitenExecute(Sender: TObject);
+var
+  be: IBeschluss;
+  en: TEntry;
+begin
+  if not Assigned(TV.Selected) then
+    exit;
+  en := TEntry(TV.Selected.Data);
+  if not(en.Typ = etBeschluss) then
+    exit;
+
+  be := IBeschluss(en.Ptr);
+  Application.CreateForm(TBeschlusform, Beschlusform);
+  Beschlusform.setGremium(m_ct.Protocol.GRID);
+  Beschlusform.Beschluss := be;
+  if Beschlusform.ShowModal = mrOk then
+  begin
+
+    updateTree;
+  end;
+  Beschlusform.Free;
+end;
+
+procedure TChapterFrame.ac_be_deleteExecute(Sender: TObject);
+var
+  be: IBeschluss;
+  en: TEntry;
+  pen: TEntry;
+  cp: IChapter;
+begin
+  if not Assigned(TV.Selected) then
+    exit;
+  en := TEntry(TV.Selected.Data);
+  if not(en.Typ = etBeschluss) then
+    exit;
+  be := IBeschluss(en.Ptr);
+
+  if not Assigned(TV.Selected.Parent) then
+    exit;
+  pen := TEntry(TV.Selected.Parent.Data);
+  if not(pen.Typ in [etTask, etChapterText]) then
+    exit;
+
+  if not(MessageDlg('Soll der Beschluss wirklich gelöscht werden?',
+    mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
+    exit;
+
+  cp.Votes.delete(be);
+
+  updateTree;
+end;
 
 procedure TChapterFrame.ac_chapter_downExecute(Sender: TObject);
 var
@@ -212,33 +305,42 @@ end;
 procedure TChapterFrame.ac_edit_chapterExecute(Sender: TObject);
 var
   cp : IChapter;
+  en : TEntry;
   ChapterEditForm : TChapterEditForm;
+  upd : boolean;
 begin
   if not Assigned(TV.Selected) then
     exit;
-  cp := IChapter(TV.Selected.Data);
 
+  en := TEntry( TV.Selected.Data );
+  if en.Typ = etBeschluss then
+  begin
+    ac_be_bearbeiten.Execute;
+    exit;
+  end;
+  cp := IChapter(en.ptr);
+
+  upd := false;
   if cp.TAID = 0 then begin
     Application.CreateForm(TChapterEditForm, ChapterEditForm);
     ChapterEditForm.CP := cp;
-    if ChapterEditForm.ShowModal = mrOk then
-    begin
-      saveCP(cp);
-      updateTree
-    end;
+    upd := (ChapterEditForm.ShowModal = mrOk);
     ChapterEditForm.Free;
   end
   else
   begin
     Application.CreateForm(TChapterTaskForm, ChapterTaskForm);
     ChapterTaskForm.CP := cp;
-    if ChapterTaskForm.ShowModal = mrok then
-    begin
-      saveCP(cp);
-      updateTree;
-    end;
+    upd :=  (ChapterTaskForm.ShowModal = mrok);
     ChapterTaskForm.Free;
   end;
+
+  if upd then
+  begin
+    saveCP(cp);
+    updateTree;
+  end;
+
 end;
 
 procedure TChapterFrame.ac_new_chapterExecute(Sender: TObject);
@@ -442,6 +544,8 @@ begin
     ChapterTextTab.FieldByName('TA_ID').Clear;
 
   ChapterTextTab.Post;
+
+  cp.Votes.saveModified;
 
   cp.Modified := false;
 

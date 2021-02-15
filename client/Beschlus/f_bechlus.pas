@@ -71,6 +71,7 @@ type
     procedure extbeusteine1Click(Sender: TObject);
     procedure LabeledEdit1Exit(Sender: TObject);
     procedure LabeledEdit2Exit(Sender: TObject);
+    procedure BaseFrame1OKBtnClick(Sender: TObject);
   private
     m_be        : IBeschluss;
     m_data      : IXMLList;
@@ -103,6 +104,18 @@ uses
   u_PersonenListeImpl, m_glob_client, f_textblock_param, xsd_TextBlock;
 
 {$R *.dfm}
+
+procedure TBeschlusform.BaseFrame1OKBtnClick(Sender: TObject);
+begin
+  m_be.Text := EditFrame2.getText;
+
+  m_be.Abstimmung.Zustimmung  := m_zustimmung;
+  m_be.Abstimmung.Abgelehnt   := m_ablehnung;
+  m_be.Abstimmung.Enthalten   := m_enthaltung;
+  m_be.Abstimmung.Zeitpunkt   := now;
+
+  m_be.Modified := true;
+end;
 
 procedure TBeschlusform.BitBtn1Click(Sender: TObject);
 var
@@ -282,6 +295,7 @@ end;
 procedure TBeschlusform.SetBeschluss(const Value: IBeschluss);
 begin
   m_be := value;
+
   EditFrame2.setText( m_be.Text);
 
   updateInfo;

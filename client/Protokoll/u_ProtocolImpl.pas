@@ -61,8 +61,6 @@ type
     procedure setEnde( value : TDateTime );
     function  getEnde : TDateTime;
 
-    procedure loadBE( ct : IChapterTitle );
-
   public
     constructor create;
     Destructor Destroy; override;
@@ -246,39 +244,12 @@ begin
         CPTextTab.Filter := 'CP_ID='+intToStr(cp.ID);
         CPTextTab.Filtered := true;
 
-        cp.loadFromDataSet(CPTextTab);
-
-        loadBE( cp );
-
+        cp.loadFromDataSet(CPTextTab, BETab);
 
         CPTab.Next;
       end;
     end;
     Result := true;
-  end;
-end;
-
-procedure TProtocolImpl.loadBE(ct: IChapterTitle);
-var
-  i : integer;
-  cp : IChapter;
-  be : IBeschluss;
-begin
-  with m_loader do
-  begin
-    for i := 0 to pred(ct.Count) do
-    begin
-      cp := ct.Item[i];
-      BETab.Filter := 'CT_ID = '+IntToStr( cp.ID);
-      BETab.Filtered := true;
-      BETab.First;
-      while not BETab.Eof do
-      begin
-        be := cp.Votes.newBeschluss;
-        be.loadFromDataSet(BETab);
-        BETab.Next;
-      end;
-    end;
   end;
 end;
 

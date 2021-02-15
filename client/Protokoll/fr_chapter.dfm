@@ -1,8 +1,8 @@
 object ChapterFrame: TChapterFrame
   Left = 0
   Top = 0
-  Width = 1003
-  Height = 487
+  Width = 900
+  Height = 520
   Align = alClient
   TabOrder = 0
   ExplicitWidth = 451
@@ -10,7 +10,7 @@ object ChapterFrame: TChapterFrame
   object Splitter1: TSplitter
     Left = 251
     Top = 0
-    Height = 487
+    Height = 520
     ExplicitLeft = 368
     ExplicitTop = 72
     ExplicitHeight = 100
@@ -19,7 +19,7 @@ object ChapterFrame: TChapterFrame
     Left = 0
     Top = 0
     Width = 251
-    Height = 487
+    Height = 520
     Align = alLeft
     Caption = 'Struktur'
     TabOrder = 0
@@ -43,7 +43,7 @@ object ChapterFrame: TChapterFrame
       Left = 2
       Top = 31
       Width = 247
-      Height = 384
+      Height = 417
       Align = alClient
       DragMode = dmAutomatic
       Indent = 19
@@ -56,7 +56,7 @@ object ChapterFrame: TChapterFrame
     end
     object PageControl1: TPageControl
       Left = 2
-      Top = 415
+      Top = 448
       Width = 247
       Height = 70
       ActivePage = TabSheet1
@@ -109,6 +109,10 @@ object ChapterFrame: TChapterFrame
       object TabSheet2: TTabSheet
         Caption = 'Verschieben'
         ImageIndex = 1
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
         object SpeedButton4: TSpeedButton
           Tag = 1
           Left = 3
@@ -153,14 +157,42 @@ object ChapterFrame: TChapterFrame
       object TabSheet3: TTabSheet
         Caption = 'Beschluss'
         ImageIndex = 2
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 0
+        ExplicitHeight = 0
+        object SpeedButton9: TSpeedButton
+          Tag = 1
+          Left = 3
+          Top = 3
+          Width = 27
+          Height = 27
+          Action = ac_beschluss
+        end
+        object SpeedButton10: TSpeedButton
+          Tag = 1
+          Left = 36
+          Top = 3
+          Width = 27
+          Height = 27
+          Action = ac_be_bearbeiten
+        end
+        object SpeedButton11: TSpeedButton
+          Tag = 1
+          Left = 69
+          Top = 3
+          Width = 27
+          Height = 27
+          Action = ac_be_delete
+        end
       end
     end
   end
   object GroupBox2: TGroupBox
     Left = 254
     Top = 0
-    Width = 749
-    Height = 487
+    Width = 646
+    Height = 520
     Align = alClient
     Caption = 'Aufgaben'
     TabOrder = 1
@@ -169,7 +201,7 @@ object ChapterFrame: TChapterFrame
     object Panel2: TPanel
       Left = 2
       Top = 15
-      Width = 745
+      Width = 642
       Height = 41
       Align = alTop
       BevelOuter = bvNone
@@ -206,8 +238,8 @@ object ChapterFrame: TChapterFrame
     inline TaskList2Frame1: TTaskList2Frame
       Left = 2
       Top = 56
-      Width = 745
-      Height = 429
+      Width = 642
+      Height = 462
       Align = alClient
       TabOrder = 1
       ExplicitLeft = 2
@@ -215,19 +247,20 @@ object ChapterFrame: TChapterFrame
       ExplicitWidth = 193
       ExplicitHeight = 247
       inherited LV: TListView
-        Width = 704
-        Height = 429
+        Width = 601
+        Height = 462
         ExplicitWidth = 152
         ExplicitHeight = 247
       end
       inherited Panel2: TPanel
-        Height = 429
+        Height = 462
         ExplicitHeight = 247
       end
     end
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsChapter'
+    SQLConnection = GM.SQLConnection1
     Left = 40
     Top = 32
   end
@@ -292,12 +325,30 @@ object ChapterFrame: TChapterFrame
       ImageIndex = 7
       OnExecute = ac_chapter_rightExecute
     end
+    object ac_beschluss: TAction
+      Caption = 'Beschluss hinzuf'#252'gen'
+      Hint = 'Beschluss hinzuf'#252'gen'
+      ImageIndex = 0
+      OnExecute = ac_beschlussExecute
+    end
+    object ac_be_bearbeiten: TAction
+      Caption = 'Beschluss bearbeiten'
+      Hint = 'Beschluss bearbeiten'
+      ImageIndex = 1
+      OnExecute = ac_be_bearbeitenExecute
+    end
+    object ac_be_delete: TAction
+      Caption = 'Beschluss hinzuf'#252'gen'
+      Hint = 'Beschluss hinzuf'#252'gen'
+      ImageIndex = 3
+      OnExecute = ac_be_deleteExecute
+    end
   end
   object ImageList1: TImageList
     Left = 208
     Top = 144
     Bitmap = {
-      494C010108002800440010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010108002800580010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000003000000001002000000000000030
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

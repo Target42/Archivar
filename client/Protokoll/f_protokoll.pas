@@ -721,6 +721,7 @@ begin
   Application.CreateForm(TTitelEditform, m_TitelEditform);
 
   PageControl1.ActivePage := TabSheet1;
+  PageControl2.ActivePage := TabSheet4;
 
   updateSeedBtn(self, 1);
 

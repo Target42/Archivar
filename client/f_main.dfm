@@ -229,12 +229,14 @@
         end
         object Anzeigen1: TMenuItem
           Action = ac_pr_view
+          Enabled = False
         end
         object N9: TMenuItem
           Caption = '-'
         end
         object Lschen2: TMenuItem
           Action = ac_pr_delete
+          Enabled = False
         end
       end
       object Sitzungen1: TMenuItem
@@ -242,27 +244,32 @@
         GroupIndex = 200
         object Neu3: TMenuItem
           Action = ac_me_new
+          Enabled = False
         end
         object Bearbeiten2: TMenuItem
           Action = ac_me_edit
+          Enabled = False
         end
         object N11: TMenuItem
           Caption = '-'
         end
         object Einladen1: TMenuItem
           Action = ac_me_invite
+          Enabled = False
         end
         object N12: TMenuItem
           Caption = '-'
         end
         object Abschlieen1: TMenuItem
           Action = ac_me_end
+          Enabled = False
         end
         object N13: TMenuItem
           Caption = '-'
         end
         object Lschen3: TMenuItem
           Action = ac_me_delete
+          Enabled = False
         end
       end
     end

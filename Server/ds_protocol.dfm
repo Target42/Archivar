@@ -267,7 +267,7 @@ object dsProtocol: TdsProtocol
     SQL.Strings = (
       'select  * from PR_PROTOKOL'
       'where GR_ID = :GR_ID'
-      'order by PR_DATUM')
+      'order by PR_DATUM desc')
     Left = 376
     Top = 24
     ParamData = <

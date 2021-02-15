@@ -219,9 +219,11 @@ type
 
       function getCount : integer;
       function getItem( inx : integer ) : IChapter;
+      function getProto : IProtocol;
 
 
       // public
+      property Protocol : IProtocol     read getProto;
       property ID       : integer       read getID        write setID;
       property Nr       : integer       read getNr        write setNr;
       property Text     : string        read getText      write setText;
@@ -237,7 +239,7 @@ type
 
       function FullTitle : string;
 
-      procedure loadFromDataSet( data : TDataSet );
+      procedure loadFromDataSet( data, beData : TDataSet );
 
       procedure buildTree;
 

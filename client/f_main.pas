@@ -517,6 +517,7 @@ begin
         ac_me_delete.Enabled    := false;
         ac_me_end.Enabled       := false;
 
+
         setPanel(integer(stStatus), 'Getrennt');
         setPanel(integer(stLogin), '  ');
         setPanel(integer(stUser), '  ');

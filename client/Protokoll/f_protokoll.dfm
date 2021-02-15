@@ -72,7 +72,7 @@ object ProtokollForm: TProtokollForm
           Top = 304
           Width = 221
           Height = 66
-          ActivePage = TabSheet5
+          ActivePage = TabSheet4
           Align = alBottom
           TabOrder = 1
           object TabSheet4: TTabSheet
@@ -143,24 +143,24 @@ object ProtokollForm: TProtokollForm
             ImageIndex = 1
             object SpeedButton7: TSpeedButton
               Tag = 1
-              Left = 8
-              Top = 8
+              Left = 4
+              Top = 6
               Width = 23
               Height = 22
               Action = ac_beschluss
             end
             object SpeedButton8: TSpeedButton
               Tag = 1
-              Left = 37
-              Top = 8
+              Left = 32
+              Top = 6
               Width = 23
               Height = 22
               Action = ac_be_bearbeiten
             end
             object SpeedButton9: TSpeedButton
               Tag = 1
-              Left = 66
-              Top = 8
+              Left = 60
+              Top = 6
               Width = 23
               Height = 22
               Action = ac_be_delete
@@ -725,7 +725,7 @@ object ProtokollForm: TProtokollForm
     Left = 212
     Top = 305
     Bitmap = {
-      494C010106001001EC0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010106001001F00010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

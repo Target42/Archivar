@@ -1,15 +1,17 @@
 object TaskList2Frame: TTaskList2Frame
   Left = 0
   Top = 0
-  Width = 451
-  Height = 305
+  Width = 854
+  Height = 400
   Align = alClient
   TabOrder = 0
+  ExplicitWidth = 451
+  ExplicitHeight = 305
   object LV: TListView
     Left = 41
     Top = 0
-    Width = 410
-    Height = 305
+    Width = 813
+    Height = 400
     Align = alClient
     Columns = <
       item
@@ -42,21 +44,20 @@ object TaskList2Frame: TTaskList2Frame
     RowSelect = True
     TabOrder = 0
     ViewStyle = vsReport
-    ExplicitLeft = 73
-    ExplicitWidth = 378
-    ExplicitHeight = 264
+    ExplicitWidth = 410
+    ExplicitHeight = 305
   end
   object Panel2: TPanel
     Left = 0
     Top = 0
     Width = 41
-    Height = 305
+    Height = 400
     Align = alLeft
     BevelOuter = bvNone
     Caption = 'Panel2'
     ShowCaption = False
     TabOrder = 1
-    ExplicitHeight = 311
+    ExplicitHeight = 305
     object SpeedButton1: TSpeedButton
       Left = 12
       Top = 48

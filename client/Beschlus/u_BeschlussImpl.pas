@@ -196,7 +196,7 @@ end;
 procedure TBeschlussImpl.loadFromDataSet(data: TDataSet);
 begin
   m_id              := data.FieldByName('BE_ID').AsInteger;
-  m_id              := data.FieldByName('CT_ID').AsInteger;
+  m_ctid            := data.FieldByName('CT_ID').AsInteger;
   m_status          := StrToBeschlussStatus(data.FieldByName('BE_TITEL').AsString);
   m_vote.Zustimmung := data.FieldByName('BE_JA').AsInteger;
   m_vote.Abgelehnt  := data.FieldByName('BE_NEIN').AsInteger;
