@@ -54,7 +54,6 @@ type
     N2: TMenuItem;
     Abschnitthoch1: TMenuItem;
     Abschnittrunter1: TMenuItem;
-    WebBrowser1: TWebBrowser;
     TN: TListView;
     DBEdit1: TEdit;
     DBEdit2: TEdit;
@@ -83,6 +82,8 @@ type
     ac_be_delete: TAction;
     SpeedButton8: TSpeedButton;
     SpeedButton9: TSpeedButton;
+    GroupBox2: TGroupBox;
+    WebBrowser1: TWebBrowser;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);

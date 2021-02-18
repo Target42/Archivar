@@ -49,7 +49,7 @@ type
 implementation
 
 uses
-  System.Variants, System.SysUtils;
+  System.Variants, System.SysUtils, System.Classes, Xml.XMLIntf, Xml.XMLDoc;
 
 { TBeschlussImpl }
 
@@ -194,7 +194,33 @@ begin
 end;
 
 procedure TBeschlussImpl.loadFromDataSet(data: TDataSet);
+var
+  xList : IXMLList;
+  st    : TStream;
+  procedure loadXML;
+
+  var
+    xml: IXMLDocument;
+  begin
+    xList := NewList;
+    try
+      if st.Size <> 0 then
+      begin
+        xml := NewXMLDocument;
+        xml.LoadFromStream(st);
+        xList := xml.GetDocBinding('List', TXMLList, TargetNamespace) as IXMLList;
+      end;
+    except
+
+    end;
+  end;
+
 begin
+  st := data.CreateBlobStream(data.FieldByName('BE_DATA'), bmRead);
+  loadXML;
+  st.Free;
+  self.setData(xList);
+
   m_id              := data.FieldByName('BE_ID').AsInteger;
   m_ctid            := data.FieldByName('CT_ID').AsInteger;
   m_status          := StrToBeschlussStatus(data.FieldByName('BE_TITEL').AsString);
@@ -202,6 +228,7 @@ begin
   m_vote.Abgelehnt  := data.FieldByName('BE_NEIN').AsInteger;
   m_vote.Enthalten  := data.FieldByName('BE_UN').AsInteger;
   m_vote.Zeitpunkt  := data.FieldByName('BE_TIMESTAMP').AsDateTime;
+
   m_modified        := false;
 end;
 
@@ -218,6 +245,9 @@ begin
   xTab := findTable(name);
   if not Assigned(xTab) then
     exit;
+
+  if (list.count > 0) and ( xTab.Rows.Count > 0 ) then
+    list.release;
 
   for i := 0 to pred(xTab.Rows.Count) do
   begin
@@ -236,6 +266,9 @@ begin
 end;
 
 procedure TBeschlussImpl.save(data: TDataSet);
+var
+  xml : IXMLList;
+  st  : TStream;
 begin
   if m_ID = 0 then
     data.Append
@@ -251,6 +284,13 @@ begin
     data.FieldByName('BE_NEIN').AsInteger       := m_vote.Abgelehnt;
     data.FieldByName('BE_UN').AsInteger         := m_vote.Enthalten;
     data.FieldByName('BE_TIMESTAMP').AsDateTime := m_vote.Zeitpunkt;
+
+    xml := getData;
+
+    st := data.CreateBlobStream( data.FieldByName('BE_DATA'), bmWrite );
+    xml.OwnerDocument.SaveToStream(st);
+    st.free;
+
     data.Post;
   end;
   m_id := data.FieldByName('BE_ID').AsInteger;
@@ -265,6 +305,7 @@ begin
 end;
 
 procedure TBeschlussImpl.setData(value: IXMLList);
+
   function getField(name : string ) : IXMLField;
   var
     i : integer;

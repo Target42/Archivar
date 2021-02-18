@@ -169,20 +169,27 @@ procedure TChapterFrame.ac_be_bearbeitenExecute(Sender: TObject);
 var
   be: IBeschluss;
   en: TEntry;
+  cp  : IChapter;
 begin
-  if not Assigned(TV.Selected) then
+  if not Assigned(TV.Selected) or not Assigned( TV.Selected.Parent ) then
     exit;
+
   en := TEntry(TV.Selected.Data);
   if not(en.Typ = etBeschluss) then
     exit;
-
   be := IBeschluss(en.Ptr);
+
+  en := TEntry(TV.Selected.Parent.Data);
+  if not (en.Typ in [etTask, etChapterText]) then
+    exit;
+  cp := IChapter( en.Ptr);
+
   Application.CreateForm(TBeschlusform, Beschlusform);
   Beschlusform.setGremium(m_ct.Protocol.GRID);
   Beschlusform.Beschluss := be;
   if Beschlusform.ShowModal = mrOk then
   begin
-
+    cp.Votes.saveModified;
     updateTree;
   end;
   Beschlusform.Free;
@@ -204,6 +211,7 @@ begin
 
   if not Assigned(TV.Selected.Parent) then
     exit;
+
   pen := TEntry(TV.Selected.Parent.Data);
   if not(pen.Typ in [etTask, etChapterText]) then
     exit;
@@ -320,7 +328,6 @@ begin
   end;
   cp := IChapter(en.ptr);
 
-  upd := false;
   if cp.TAID = 0 then begin
     Application.CreateForm(TChapterEditForm, ChapterEditForm);
     ChapterEditForm.CP := cp;
