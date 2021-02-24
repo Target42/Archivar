@@ -798,32 +798,32 @@ procedure TProtokollForm.setRO(value: Boolean);
 begin
   m_ro := value;
 
-  Label4.Visible := m_ro;
-  Sperren1.Enabled := m_ro;
-  Freigeben1.Enabled := not m_ro;
+  Label4.Visible        := m_ro;
+  Sperren1.Enabled      := m_ro;
+  Freigeben1.Enabled    := not m_ro;
 
-  PageControl2.Enabled := not m_ro;
-  PageControl2.Visible := not m_ro;
+  PageControl2.Enabled  := not m_ro;
+  PageControl2.Visible  := not m_ro;
 
-  Panel1.Enabled := not m_ro;
-  Panel4.Enabled := not m_ro;
-  Panel3.Enabled := not m_ro;
+  Panel1.Enabled        := not m_ro;
+  Panel4.Enabled        := not m_ro;
+  Panel3.Enabled        := not m_ro;
 
-  Speichern.Enabled := not m_ro;
+  Speichern.Enabled     := not m_ro;
 
-  ac_add.Enabled := not m_ro;
-  ac_edit.Enabled := not m_ro;
+  ac_add.Enabled        := not m_ro;
+  ac_edit.Enabled       := not m_ro;
   ac_edit_content.Enabled := not m_ro;
-  ac_delete.Enabled := not m_ro;
-  ac_up.Enabled := not m_ro;
-  ac_down.Enabled := not m_ro;
-  ac_beschluss.Enabled := not m_ro;
+  ac_delete.Enabled     := not m_ro;
+  ac_up.Enabled         := not m_ro;
+  ac_down.Enabled       := not m_ro;
+  ac_beschluss.Enabled  := not m_ro;
   ac_be_bearbeiten.Enabled := not m_ro;
-  ac_be_delete.Enabled := not m_ro;
+  ac_be_delete.Enabled  := not m_ro;
 
-  SpeedButton6.Enabled := not m_ro;
+  SpeedButton6.Enabled  := not m_ro;
 
-  m_proto.ReadOnly := m_ro;
+  m_proto.ReadOnly      := m_ro;
   if m_ro then
     m_proto.cancel
   else

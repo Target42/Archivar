@@ -23,6 +23,7 @@ type
       m_xData     : IXMLChapter;
       m_pos       : integer;
       m_votes     : IBeschlussListe;
+      m_stamp     : TDateTime;
 
 
       procedure setModified(  value : boolean );
@@ -37,6 +38,7 @@ type
       procedure setRem(       value : string );
       procedure setxData(     value : IXMLChapter);
       procedure setPos(       value : integer );
+      procedure SetTimeStamp(const Value: TDateTime);
 
       function getModified  : boolean;
       function getOwner     : IChapter;
@@ -52,6 +54,8 @@ type
       function getxData     : IXMLChapter;
       function getPos       : integer;
       function getVotes     : IBeschlussListe;
+      function GetTimeStamp : TDateTime;
+
 
     public
       constructor create(owner : IChapter; loader: TProtocolMod);
@@ -117,6 +121,7 @@ begin
   FNumbering:= true;
   FName     := 'Titel';
   FData     := NIL;
+  m_stamp   := now;
   m_modified := false;
 end;
 
@@ -214,6 +219,11 @@ end;
 function TChapterImpl.getTAID: integer;
 begin
   Result := FTAID;
+end;
+
+function TChapterImpl.GetTimeStamp: TDateTime;
+begin
+  Result := m_stamp;
 end;
 
 function TChapterImpl.getVotes: IBeschlussListe;
@@ -401,6 +411,11 @@ procedure TChapterImpl.setTAID(value: integer);
 begin
   FTAID := value;
   m_modified := true;
+end;
+
+procedure TChapterImpl.SetTimeStamp(const Value: TDateTime);
+begin
+  m_stamp := value;
 end;
 
 procedure TChapterImpl.setxData(value: IXMLChapter);

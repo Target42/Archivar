@@ -19,6 +19,7 @@ type
       FModified : boolean;
       m_xCp     : IXMLChapter;
       m_root    : IChapter;
+      m_stamp   : TDateTime;
 
       m_list    : TList<IChapter>;
 
@@ -41,6 +42,8 @@ type
 
       procedure setOwner;
       procedure refreshList;
+      function GetTimeStamp: TDateTime;
+      procedure SetTimeStamp(const Value: TDateTime);
 
     public
       constructor create(owner : IChapterTitleList; loader: TProtocolMod; proto : IProtocol);
@@ -79,6 +82,7 @@ begin
   FModified := false;
   m_root    := TChapterImpl.create(NIL, m_loader);
   m_list    := TList<IChapter>.create;
+  m_stamp   := now;
 end;
 
 destructor TChapterTitleImpl.Destroy;
@@ -158,6 +162,7 @@ begin
     cp.TAID       := data.FieldByName('TA_ID').AsInteger;
     CP.Pos        := data.FieldByName('CT_POS').AsInteger;
     cp.Rem        := data.FieldByName('CT_DATA').AsString;
+    cp.TimeStamp  := data.FieldByName('CT_CREATED').AsDateTime;
     cp.Numbering  := (cp.Nr <> -1 );
 
     loadBE( cp );
@@ -218,6 +223,11 @@ end;
 function TChapterTitleImpl.getText: string;
 begin
   Result := FText;
+end;
+
+function TChapterTitleImpl.GetTimeStamp: TDateTime;
+begin
+  result := m_stamp;
 end;
 
 procedure TChapterTitleImpl.refreshList;
@@ -290,6 +300,11 @@ procedure TChapterTitleImpl.setText(value: string);
 begin
   FText     := value;
   FModified := true;
+end;
+
+procedure TChapterTitleImpl.SetTimeStamp(const Value: TDateTime);
+begin
+  m_stamp := value;
 end;
 
 procedure TChapterTitleImpl.up;

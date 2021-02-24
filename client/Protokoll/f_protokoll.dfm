@@ -141,6 +141,10 @@ object ProtokollForm: TProtokollForm
           object TabSheet5: TTabSheet
             Caption = 'Beschluss'
             ImageIndex = 1
+            ExplicitLeft = 0
+            ExplicitTop = 0
+            ExplicitWidth = 0
+            ExplicitHeight = 0
             object SpeedButton7: TSpeedButton
               Tag = 1
               Left = 4
@@ -176,10 +180,6 @@ object ProtokollForm: TProtokollForm
         Align = alClient
         Caption = 'Inhalt'
         TabOrder = 1
-        ExplicitLeft = 752
-        ExplicitTop = 184
-        ExplicitWidth = 185
-        ExplicitHeight = 105
         object WebBrowser1: TWebBrowser
           Left = 2
           Top = 15
@@ -187,12 +187,10 @@ object ProtokollForm: TProtokollForm
           Height = 355
           Align = alClient
           TabOrder = 0
-          ExplicitLeft = -115
-          ExplicitTop = -45
           ExplicitWidth = 300
           ExplicitHeight = 150
           ControlData = {
-            4C000000021F0000810F00000000000000000000000000000000000000000000
+            4C000000F9420000B12400000000000000000000000000000000000000000000
             000000004C000000000000000000000001000000E0D057007335CF11AE690800
             2B2E126208000000000000004C0000000114020000000000C000000000000046
             8000000000000000000000000000000000000000000000000000000000000000
@@ -203,6 +201,10 @@ object ProtokollForm: TProtokollForm
     object TabSheet2: TTabSheet
       Caption = 'Teilnehmer'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Panel1: TPanel
         Left = 0
         Top = 331
@@ -298,6 +300,10 @@ object ProtokollForm: TProtokollForm
     object TabSheet3: TTabSheet
       Caption = 'G'#228'ste'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Panel3: TPanel
         Left = 0
         Top = 331
@@ -738,7 +744,7 @@ object ProtokollForm: TProtokollForm
     Left = 212
     Top = 305
     Bitmap = {
-      494C010106001001F40010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010106001001F80010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

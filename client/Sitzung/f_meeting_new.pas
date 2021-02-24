@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_base, Vcl.ExtCtrls, Vcl.StdCtrls,
   Vcl.DBCtrls, Data.DB, Datasnap.DBClient, Datasnap.DSConnect, Vcl.Mask,
   u_gremium, Vcl.ComCtrls, JvExComCtrls, JvDateTimePicker, JvDBDateTimePicker,
-  i_chapter;
+  i_chapter, Vcl.Buttons, System.JSON;
 
 type
   TMeetingForm = class(TForm)
@@ -32,10 +32,13 @@ type
     Memo1: TMemo;
     ComboBox1: TComboBox;
     ComboBox2: TComboBox;
+    BitBtn1: TBitBtn;
+    Memo2: TMemo;
     procedure FormCreate(Sender: TObject);
     procedure ElTabBeforePost(DataSet: TDataSet);
     procedure ComboBox1Change(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure BitBtn1Click(Sender: TObject);
   private
     { Private-Deklarationen }
     m_gr : TGremium;
@@ -43,6 +46,8 @@ type
 
     function GetGremiumID: TGremium;
     procedure SetGremiumID(const Value: TGremium);
+
+    procedure ShowContent( data : TJSONObject );
   public
     property Gremium : TGremium read GetGremiumID write SetGremiumID;
   end;
@@ -53,9 +58,28 @@ var
 implementation
 
 uses
-  m_glob_client, system.DateUtils;
+  m_glob_client, system.DateUtils, u_stub, u_json;
 
 {$R *.dfm}
+
+procedure TMeetingForm.BitBtn1Click(Sender: TObject);
+var
+  client : TdsMeeingClient;
+  req    : TJSONObject;
+  res    : TJSONObject;
+begin
+  req := TJSONObject.create;
+  JReplace( req, 'prid', ProtoQry.FieldByName('PR_ID').AsInteger);
+
+  client := TdsMeeingClient.Create(GM.SQLConnection1.DBXConnection);
+  try
+    res := client.GetTree(req);
+    ShowContent( res );
+
+  finally
+    client.Free;
+  end;
+end;
 
 procedure TMeetingForm.ComboBox1Change(Sender: TObject);
 var
@@ -104,6 +128,7 @@ procedure TMeetingForm.FormCreate(Sender: TObject);
       ComboBox1.ItemIndex := inx;
     ComboBox1Change(Sender);
   end;
+
 begin
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
 
@@ -114,6 +139,7 @@ begin
 
   ElTab.Open;
   ElTab.Append;
+  ElTab.FieldByName('EL_DATUM').AsDateTime := now + 7;
 end;
 
 procedure TMeetingForm.FormDestroy(Sender: TObject);
@@ -135,6 +161,63 @@ begin
   ProtoQry.ParamByName('GR_ID').AsInteger := m_gr.ID;
   ProtoQry.ParamByName('status').AsString := 'E';
   ProtoQry.Open;
+end;
+
+procedure TMeetingForm.ShowContent(data: TJSONObject);
+var
+  line : string;
+
+  procedure add( text : string );
+  begin
+    Memo2.Lines.Add(text);
+  end;
+
+  procedure AddChilds( arr : TJSONArray; pre : string);
+  var
+    nr  : integer;
+    i   : integer;
+    p   : string;
+    row : TJSONObject;
+  begin
+    if not Assigned(arr) then
+      exit;
+    for i := 0 to pred(arr.Count) do
+    begin
+      row := getRow( arr, i);
+      nr := JInt(row, 'nr');
+
+      p := format('%s.%d', [pre, nr]);
+      if nr > 0 then
+        add(Format('%s %s', [p, JString(row, 'title')]));
+
+      AddChilds(JArray(row, 'childs'), '  '+p);
+    end;
+  end;
+
+var
+  titles  : TJSONArray;
+  row     : TJSONObject;
+  i       : integer;
+  obj     : TJSONObject;
+  nr      : integer;
+begin
+  Memo2.Lines.Clear;
+  add( JString( data, 'name'));
+
+  titles := JArray( data, 'titles');
+  if not Assigned(titles) then
+    exit;
+
+  for i := 0 to pred(titles.Count) do
+  begin
+    row := getRow( titles, i);
+    nr := JInt(row, 'nr');
+
+    line := Format('%d %s', [nr, JString( row, 'title')]);
+    add(line);
+    obj := JObject( row, 'childs');
+    AddChilds( JArray( obj, 'childs'), '  '+IntToStr(nr));
+  end;
 end;
 
 end.

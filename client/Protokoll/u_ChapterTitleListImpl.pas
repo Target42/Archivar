@@ -45,10 +45,11 @@ begin
   with m_loader do
   begin
     CPTab.Append;
-    CPTab.FieldByName('PR_ID').AsInteger    := m_proto.ID;
-    CPTab.FieldByName('CP_ID').AsInteger    := cp.ID;
-    CPTab.FieldByName('CP_TITLE').AsString  := cp.Text;
-    CPTab.FieldByName('CP_NR').AsInteger    := cp.Nr;
+    CPTab.FieldByName('PR_ID').AsInteger        := m_proto.ID;
+    CPTab.FieldByName('CP_ID').AsInteger        := cp.ID;
+    CPTab.FieldByName('CP_TITLE').AsString      := cp.Text;
+    CPTab.FieldByName('CP_NR').AsInteger        := cp.Nr;
+    CPTab.FieldByName('CP_CREATED').AsDateTime  := cp.TimeStamp;
     CPTab.Post;
   end;
 end;

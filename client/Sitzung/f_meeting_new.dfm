@@ -2,7 +2,7 @@ object MeetingForm: TMeetingForm
   Left = 0
   Top = 0
   Caption = 'Sitzungsplanung'
-  ClientHeight = 472
+  ClientHeight = 557
   ClientWidth = 599
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,7 +18,7 @@ object MeetingForm: TMeetingForm
   TextHeight = 13
   object Splitter1: TSplitter
     Left = 0
-    Top = 304
+    Top = 389
     Width = 599
     Height = 3
     Cursor = crVSplit
@@ -38,13 +38,13 @@ object MeetingForm: TMeetingForm
   end
   inline BaseFrame1: TBaseFrame
     Left = 0
-    Top = 412
+    Top = 497
     Width = 599
     Height = 60
     Align = alBottom
     AutoSize = True
     TabOrder = 0
-    ExplicitTop = 412
+    ExplicitTop = 497
     ExplicitWidth = 599
     inherited StatusBar1: TStatusBar
       Width = 599
@@ -147,19 +147,46 @@ object MeetingForm: TMeetingForm
       TabOrder = 4
       Text = 'ComboBox2'
     end
+    object BitBtn1: TBitBtn
+      Left = 392
+      Top = 48
+      Width = 75
+      Height = 25
+      Caption = 'BitBtn1'
+      TabOrder = 5
+      OnClick = BitBtn1Click
+    end
   end
   object GroupBox2: TGroupBox
     Left = 0
     Top = 140
     Width = 599
-    Height = 164
+    Height = 249
     Align = alClient
     Caption = 'Tagesordnung'
     TabOrder = 2
+    object Memo2: TMemo
+      Left = 2
+      Top = 15
+      Width = 595
+      Height = 232
+      Align = alClient
+      Font.Charset = ANSI_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Courier New'
+      Font.Style = []
+      Lines.Strings = (
+        'Memo2')
+      ParentFont = False
+      ScrollBars = ssBoth
+      TabOrder = 0
+      WordWrap = False
+    end
   end
   object GroupBox3: TGroupBox
     Left = 0
-    Top = 307
+    Top = 392
     Width = 599
     Height = 105
     Align = alBottom

@@ -101,6 +101,7 @@ type
       procedure setRem(       value : string );
       procedure setxData(     value : xsd_chapter.IXMLChapter );
       procedure setPos(       value : integer );
+      procedure SetTimeStamp(const Value: TDateTime);
 
       function getModified  : boolean;
       function getOwner     : IChapter;
@@ -116,6 +117,9 @@ type
       function getxData     : xsd_chapter.IXMLChapter;
       function getPos       : integer;
       function getVotes     : IBeschlussListe;
+      function GetTimeStamp: TDateTime;
+
+
       // public
       property Owner      : IChapter      read getOwner     write setOwner;
       property Childs     : IChapterList  read getChilds;
@@ -129,6 +133,7 @@ type
       property Rem        : String        read getRem       write setRem;
       property Modified   : boolean       read getModified  write setModified;
       property Pos        : integer       read getPos       write setPos;
+      property TimeStamp  : TDateTime     read GetTimeStamp write SetTimeStamp;
 
       property xData      : xsd_chapter.IXMLChapter         read getxData     write setxData;
 
@@ -220,6 +225,8 @@ type
       function getCount : integer;
       function getItem( inx : integer ) : IChapter;
       function getProto : IProtocol;
+      function GetTimeStamp: TDateTime;
+      procedure SetTimeStamp(const Value: TDateTime);
 
 
       // public
@@ -230,6 +237,7 @@ type
       property Modified : boolean       read getModified  write setModified;
       property xChapter : xsd_chapter.IXMLChapter   read getxChapter   write setxChapter;
       property Root     : IChapter      read getRoot;
+      property TimeStamp: TDateTime     read GetTimeStamp write SetTimeStamp;
 
       property Item[inx : integer] : IChapter read getItem;
       property Count    : integer   read getCount;

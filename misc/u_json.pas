@@ -25,7 +25,6 @@ function JObject( obj : TJSONObject; name : string ) : TJSONObject;
 function JArray ( obj : TJSONObject; name : string ) : TJSONArray;
 function JDate  ( obj : TJSONObject; name : string ) : TDate;
 
-
 function getRow( arr : TJSONArray ; inx : integer ) : TJSONObject;
 
 procedure setText( obj : TJSONObject; name : string ; text : string ); overload;
@@ -37,8 +36,8 @@ function loadJSON( st : TStream ) : TJSONObject; overload;
 function loadJSON( fileName : string ) : TJSONObject; overload;
 function JFromText( text : string) : TJSONObject;
 
-function saveJSON( obj : TJSONObject; st : TStream ) : boolean; overload;
-function saveJSON( obj : TJSONObject; fileName : string ) : boolean; overload;
+function saveJSON( obj : TJSONObject; st : TStream ; pretty : boolean = false ) : boolean; overload;
+function saveJSON( obj : TJSONObject; fileName : string ; pretty : boolean = false ) : boolean; overload;
 
 function JQuote( s : string ) : String;
 function JUnQuote( s : string ) : String;
@@ -49,10 +48,19 @@ function JExistsKey( obj : TJSONObject ; name : String ) : boolean;
 procedure JResult( obj : TJSONObject ; ok : Boolean ; text : string );
 procedure JResponse( data : TJSONObject ; state : boolean ; text : string );
 
+function formatJSON( obj : TJSONObject; indend : integer = -1 ) : string;
+
 implementation
 
 uses
-  System.SysUtils, System.StrUtils;
+  System.SysUtils, System.StrUtils, REST.Json;
+
+var
+  AddSpc : string;
+
+function parseArray( arr : TJSONArray; indent : string ) : string; forward;
+function ParseObject( obj : TJSONObject; indent : string ) : string; forward;
+
 
 {*******************************************************************************
 *                   JRemove
@@ -385,9 +393,9 @@ begin
 end;
 
 {*******************************************************************************
-*                   ac_ru_runExecute
+*                   saveJSON
 *******************************************************************************}
-function saveJSON( obj : TJSONObject; st : TStream ) : boolean;
+function saveJSON( obj : TJSONObject; st : TStream; pretty : boolean ) : boolean;
 var
   list : TStringList;
 begin
@@ -397,9 +405,12 @@ begin
 
   list := TStringList.Create;
   try
-    list.Text := obj.ToString;
+    if not pretty then
+      list.Text := obj.ToJSON
+    else
+      list.Text := formatJSON( obj );
+
     list.SaveToStream(st);
-    st.Position := 0;
     Result := true;
   finally
     list.Free;
@@ -409,7 +420,7 @@ end;
 {*******************************************************************************
 *                   saveJSON
 *******************************************************************************}
-function saveJSON( obj : TJSONObject; fileName : string ) : boolean;
+function saveJSON( obj : TJSONObject; fileName : string ; pretty : boolean  ) : boolean;
 var
   st : TFileStream;
 begin
@@ -420,7 +431,7 @@ begin
   st:= NIL;
   try
     st := TFileStream.Create(fileName, fmCreate + fmShareDenyNone);
-    Result := saveJSON( obj, st);
+    Result := saveJSON( obj, st,pretty);
   finally
     st.Free;
   end;
@@ -615,6 +626,84 @@ begin
   Jreplace( data, 'text', text);
 end;
 
-end.
 
+function parseArray( arr : TJSONArray; indent : string ) : string;
+var
+  spc   : string;
+  i, anz: integer;
+  val     : TJSONValue;
+begin
+  spc := indent + AddSpc;
+  Result := indent + '['+sLineBreak;
+
+  anz := pred(arr.Count);
+  for i := 0 to anz do
+  begin
+    val := arr.Items[i];
+
+    if val is TJSONArray then
+      Result := Result + parseArray(val as TJSONArray, spc)
+    else if val is TJSONObject then
+      Result := Result + parseObject( val as TJSONObject, spc )
+    else
+      Result := Result + spc + val.ToJSON;
+    if i < anz then
+      Result := Result +',';
+
+    Result := Result + sLineBreak;
+
+  end;
+  Result := Result + indent + ']';
+end;
+
+function ParseObject( obj : TJSONObject; indent : string ) : string;
+var
+  spc : string;
+  i, anz   : integer;
+  p   : TJSONPair;
+begin
+  spc := indent + AddSpc;
+  Result := indent + '{'+sLineBreak;
+  anz := pred(obj.Count);
+  for i := 0 to anz do
+  begin
+    p := obj.Pairs[i];
+    if (p.JsonValue is TJSONArray) then
+    begin
+      Result := Result + spc+p.JsonString.ToString +':'+sLineBreak;
+      Result := Result + parseArray( p.JsonValue as TJSONArray, spc );
+    end
+    else if (p.JsonValue is TJSONObject) then
+    begin
+      Result := Result + spc+p.JsonString.ToString +':'+sLineBreak;
+      Result := Result + ParseObject( p.JsonValue as TJSONObject, spc );
+    end
+    else
+      Result := Result + spc + p.ToJSON;
+    if i < anz then
+      Result := Result +',';
+
+    Result := Result + sLineBreak;
+  end;
+  Result := Result + indent + '}';
+end;
+
+function formatJSON( obj : TJSONObject; indend : integer ) : string;
+var
+  i : integer;
+begin
+  if indend <> -1 then
+  begin
+    AddSpc := '';
+    for i := 0 to pred(indend) do
+      AddSpc := AddSpc + ' ';
+  end;
+
+  Result := ParseObject( obj, '' );
+end;
+
+initialization
+  AddSpc:= '  ';
+
+end.
 

@@ -1,6 +1,6 @@
 object dsMeeing: TdsMeeing
   OldCreateOrder = False
-  Height = 251
+  Height = 447
   Width = 475
   object IBTransaction1: TIBTransaction
     DefaultDatabase = DBMod.IBDatabase1
@@ -71,5 +71,61 @@ object dsMeeing: TdsMeeing
     DataSet = ElTable
     Left = 328
     Top = 112
+  end
+  object ProtoQry: TIBQuery
+    Database = DBMod.IBDatabase1
+    Transaction = IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    ParamCheck = True
+    SQL.Strings = (
+      'select * from PR_PROTOKOL'
+      'where PR_ID = :pr_id')
+    Left = 320
+    Top = 208
+    ParamData = <
+      item
+        DataType = ftInteger
+        Name = 'pr_id'
+        ParamType = ptInput
+      end>
+  end
+  object CPTab: TIBQuery
+    Database = DBMod.IBDatabase1
+    Transaction = IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    ParamCheck = True
+    SQL.Strings = (
+      'select * from CP_CHAPTER'
+      'where PR_ID = :pr_id'
+      'order by CP_NR')
+    Left = 320
+    Top = 264
+    ParamData = <
+      item
+        DataType = ftInteger
+        Name = 'pr_id'
+        ParamType = ptInput
+      end>
+  end
+  object CTTab: TIBQuery
+    Database = DBMod.IBDatabase1
+    Transaction = IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    ParamCheck = True
+    SQL.Strings = (
+      'select * from CT_CHAPTER_TEXT'
+      'where CP_ID = :cp_id'
+      'order by CT_NUMBER')
+    Left = 320
+    Top = 320
+    ParamData = <
+      item
+        DataType = ftUnknown
+        Name = 'cp_id'
+        ParamType = ptUnknown
+      end>
   end
 end

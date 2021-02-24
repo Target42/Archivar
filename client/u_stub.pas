@@ -1,6 +1,6 @@
 //
 // Erzeugt vom DataSnap-Proxy-Generator.
-// 06.02.2021 20:19:38
+// 24.02.2021 10:53:36
 //
 
 unit u_stub;
@@ -217,6 +217,7 @@ type
     FnewMeetingCommand: TDBXCommand;
     FdeleteMeetingCommand: TDBXCommand;
     FSendmailCommand: TDBXCommand;
+    FGetTreeCommand: TDBXCommand;
   public
     constructor Create(ADBXConnection: TDBXConnection); overload;
     constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
@@ -224,6 +225,7 @@ type
     function newMeeting(req: TJSONObject): TJSONObject;
     function deleteMeeting(req: TJSONObject): TJSONObject;
     function Sendmail(req: TJSONObject): TJSONObject;
+    function GetTree(req: TJSONObject): TJSONObject;
   end;
 
 implementation
@@ -1147,6 +1149,20 @@ begin
   Result := TJSONObject(FSendmailCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
 end;
 
+function TdsMeeingClient.GetTree(req: TJSONObject): TJSONObject;
+begin
+  if FGetTreeCommand = nil then
+  begin
+    FGetTreeCommand := FDBXConnection.CreateCommand;
+    FGetTreeCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FGetTreeCommand.Text := 'TdsMeeing.GetTree';
+    FGetTreeCommand.Prepare;
+  end;
+  FGetTreeCommand.Parameters[0].Value.SetJSONValue(req, FInstanceOwner);
+  FGetTreeCommand.ExecuteUpdate;
+  Result := TJSONObject(FGetTreeCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
+end;
+
 constructor TdsMeeingClient.Create(ADBXConnection: TDBXConnection);
 begin
   inherited Create(ADBXConnection);
@@ -1162,6 +1178,7 @@ begin
   FnewMeetingCommand.DisposeOf;
   FdeleteMeetingCommand.DisposeOf;
   FSendmailCommand.DisposeOf;
+  FGetTreeCommand.DisposeOf;
   inherited;
 end;
 
