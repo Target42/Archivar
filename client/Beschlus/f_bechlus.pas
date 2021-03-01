@@ -107,7 +107,7 @@ uses
 
 procedure TBeschlusform.BaseFrame1OKBtnClick(Sender: TObject);
 begin
-  m_be.Text := EditFrame2.getText;
+  m_be.Text := EditFrame2.Text;
 
   m_be.Abstimmung.Zustimmung  := m_zustimmung;
   m_be.Abstimmung.Abgelehnt   := m_ablehnung;
@@ -296,7 +296,7 @@ procedure TBeschlusform.SetBeschluss(const Value: IBeschluss);
 begin
   m_be := value;
 
-  EditFrame2.setText( m_be.Text);
+  EditFrame2.Text := m_be.Text;
 
   updateInfo;
 end;

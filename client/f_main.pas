@@ -265,6 +265,7 @@ procedure TMainForm.ac_me_newExecute(Sender: TObject);
 var
   GremiumListForm : TGremiumListForm;
   gr              : TGremium;
+  id              : integer;
 begin
   Application.CreateForm(TGremiumListForm, GremiumListForm);
   if GremiumListForm.ShowModal = mrOk then
@@ -272,10 +273,17 @@ begin
     gr := GremiumListForm.Gremium;
     if Assigned(gr) then
     begin
-      Application.CreateForm(TMeetingForm, MeetingForm);
-      MeetingForm.Gremium := gr;
-      MeetingForm.ShowModal;
-      MeetingForm.Free;
+      id := newMeeting( gr.ID );
+      if id > 0 then
+      begin
+        Application.CreateForm(TMeetingForm, MeetingForm);
+
+        MeetingForm.EL_ID   := id;
+        MeetingForm.Gremium := gr;
+
+        MeetingForm.ShowModal;
+        MeetingForm.Free;
+      end;
     end;
   end;
   GremiumListForm.Free;

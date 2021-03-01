@@ -88,7 +88,6 @@ begin
   JReplace( Result, 'created',  FDate );
   JReplace( Result, 'nr',       FNr);
 
-
   arr     := TJSONArray.Create;
 
   for i := 0 to pred(FChilds.Count) do

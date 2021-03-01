@@ -128,4 +128,61 @@ object dsMeeing: TdsMeeing
         ParamType = ptUnknown
       end>
   end
+  object ELPETab: TIBTable
+    Database = DBMod.IBDatabase1
+    Transaction = IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    TableName = 'EL_PE'
+    UniDirectional = False
+    Left = 104
+    Top = 248
+  end
+  object GrPeQry: TIBQuery
+    Database = DBMod.IBDatabase1
+    Transaction = IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    ParamCheck = True
+    SQL.Strings = (
+      'select * from GR_PA'
+      'where GR_ID = :gr_id')
+    Left = 176
+    Top = 248
+    ParamData = <
+      item
+        DataType = ftInteger
+        Name = 'gr_id'
+        ParamType = ptInput
+      end>
+  end
+  object AutoIncQry: TIBQuery
+    Database = DBMod.IBDatabase1
+    Transaction = IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    ParamCheck = True
+    Left = 408
+    Top = 24
+  end
+  object LastDocQry: TIBQuery
+    Database = DBMod.IBDatabase1
+    Transaction = IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    ParamCheck = True
+    SQL.Strings = (
+      'select * from PR_PROTOKOL'
+      'where GR_ID = :gr_id'
+      'and PR_STATUS <> '#39'C'#39
+      'order by pr_id desc')
+    Left = 216
+    Top = 328
+    ParamData = <
+      item
+        DataType = ftInteger
+        Name = 'gr_id'
+        ParamType = ptInput
+      end>
+  end
 end

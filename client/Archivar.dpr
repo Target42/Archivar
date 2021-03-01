@@ -160,13 +160,16 @@ uses
   fr_epub in 'ePub\fr_epub.pas' {ePupFrame: TFrame},
   f_downloadEpub in 'ePub\f_downloadEpub.pas' {DownloadEpubform},
   f_meeting_new in 'Sitzung\f_meeting_new.pas' {MeetingForm},
-  f_task_filter in 'Task\f_task_filter.pas' {TaskFilterForm};
+  f_task_filter in 'Task\f_task_filter.pas' {TaskFilterForm},
+  fr_to in 'Sitzung\fr_to.pas' {TOFrame: TFrame};
 
 {$R *.res}
 
 begin
 {$ifdef RELEASE}
   JclAppInstances.CheckSingleInstance;
+{$else}
+  ReportMemoryLeaksOnShutdown := true;
 {$endif}
   ReportMemoryLeaksOnShutdown := true;
 

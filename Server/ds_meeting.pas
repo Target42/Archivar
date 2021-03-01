@@ -20,9 +20,14 @@ type
     ProtoQry: TIBQuery;
     CPTab: TIBQuery;
     CTTab: TIBQuery;
+    ELPETab: TIBTable;
+    GrPeQry: TIBQuery;
+    AutoIncQry: TIBQuery;
+    LastDocQry: TIBQuery;
   private
     { Private-Deklarationen }
   public
+    function AutoInc( gen : string ) : integer;
     function newMeeting(    req : TJSONObject ) : TJSONObject;
     function deleteMeeting( req : TJSONObject ) : TJSONObject;
     function Sendmail(      req : TJSONObject ) : TJSONObject;
@@ -40,6 +45,14 @@ uses
 {$R *.dfm}
 
 { TdsMeeing }
+
+function TdsMeeing.AutoInc(gen: string): integer;
+begin
+  AutoIncQry.SQL.Text := 'SELECT GEN_ID( '+gen+', 1 ) FROM RDB$DATABASE;';
+  AutoIncQry.Open;
+  Result := AutoIncQry.FieldByName('GEN_ID').AsInteger;
+  AutoIncQry.Close;
+end;
 
 function TdsMeeing.deleteMeeting(req: TJSONObject): TJSONObject;
 begin
@@ -98,6 +111,7 @@ var
       node.Title  := CTTab.FieldByName('CT_TITLE').AsString;
       node.Nr     := CTTab.FieldByName('CT_NUMBER').AsInteger;
       node.pos    := CTTab.FieldByName('CT_POS').AsInteger;
+      node.Date   := CTTab.FieldByName('CT_CREATED').AsDateTime;
 
       list.Add(node);
 
@@ -153,8 +167,61 @@ begin
 end;
 
 function TdsMeeing.newMeeting(req: TJSONObject): TJSONObject;
+var
+  grid : integer;
+  id   : integer;
 begin
-  Result := NIL;
+  Result  := TJSONObject.Create;
+  grid    := JInt( req, 'grid');
+  id      := AutoInc('gen_el_id');
+
+  try
+  ElTable.Open;
+  ElTable.Append;
+  ElTable.FieldByName('EL_ID').AsInteger      := id;
+  ElTable.FieldByName('GR_ID').AsInteger      := grid;
+  ElTable.FieldByName('EL_TITEL').AsString    :='Sitzungeinladung';
+  ElTable.FieldByName('EL_DATUM').AsDateTime  := Date + 3;
+  ElTable.FieldByName('EL_ZEIT').AsDateTime   := EncodeTime(  9, 0, 0, 0);
+  ElTable.FieldByName('EL_ENDE').AsDateTime   := EncodeTime( 12, 0, 0, 0);
+
+  LastDocQry.ParamByName('gr_id').AsInteger   := grid;
+  LastDocQry.Open;
+  if not LastDocQry.IsEmpty then
+  begin
+    ElTable.FieldByName('PR_ID').AsInteger := LastDocQry.FieldByName('PR_ID').AsInteger;
+  end;
+  LastDocQry.Close;
+  ElTable.Post;
+
+  ELPETab.Open;
+  GrPeQry.ParamByName('GR_ID').AsInteger := grid;
+  GrPeQry.Open;
+  while not GrPeQry.Eof do
+  begin
+    ELPETab.Append;
+    ELPETab.FieldByName('EL_ID').AsInteger := id;
+    ELPETab.FieldByName('PE_ID').AsInteger := GrPeQry.FieldByName('PE_ID').AsInteger;
+    ELPETab.Post;
+    GrPeQry.Next;
+  end;
+  GrPeQry.Close;
+  ELPETab.Close;
+
+  JReplace( Result, 'id', id);
+  JResult( Result, true, 'Eine neue sitzung wurde angelegt.');
+
+  if ElTable.Transaction.InTransaction then
+    ElTable.Transaction.Commit;
+  except
+    on e : exception do
+    begin
+      JReplace( Result, 'id', -1);
+      JResult( Result, false, e.ToString);
+      if ElTable.Transaction.InTransaction then
+        ElTable.Transaction.Rollback;
+    end;
+  end;
 end;
 
 function TdsMeeing.Sendmail(req: TJSONObject): TJSONObject;

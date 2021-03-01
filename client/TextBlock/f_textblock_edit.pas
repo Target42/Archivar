@@ -189,7 +189,7 @@ begin
 
   if Assigned(x_block) then
   begin
-    EditFrame1.setText(x_block.Content);
+    EditFrame1.Text := x_block.Content;
 
     for i := 0 to pred(x_block.Fields.Count) do
     begin
@@ -230,7 +230,7 @@ begin
   x_block         := NewBlock;
   x_block.Name    := trim( TBtab.FieldByName('TB_NAME').AsString);
   x_block.Tags    := Trim( TBtab.FieldByName('TB_TAGS').AsString);
-  x_block.Content := EditFrame1.getText;
+  x_block.Content := EditFrame1.Text;
 
   for i := 0 to pred(LV.Items.Count) do
   begin

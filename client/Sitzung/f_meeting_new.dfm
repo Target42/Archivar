@@ -2,7 +2,7 @@ object MeetingForm: TMeetingForm
   Left = 0
   Top = 0
   Caption = 'Sitzungsplanung'
-  ClientHeight = 557
+  ClientHeight = 824
   ClientWidth = 599
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,7 +18,7 @@ object MeetingForm: TMeetingForm
   TextHeight = 13
   object Splitter1: TSplitter
     Left = 0
-    Top = 389
+    Top = 477
     Width = 599
     Height = 3
     Cursor = crVSplit
@@ -38,13 +38,13 @@ object MeetingForm: TMeetingForm
   end
   inline BaseFrame1: TBaseFrame
     Left = 0
-    Top = 497
+    Top = 764
     Width = 599
     Height = 60
     Align = alBottom
     AutoSize = True
     TabOrder = 0
-    ExplicitTop = 497
+    ExplicitTop = 764
     ExplicitWidth = 599
     inherited StatusBar1: TStatusBar
       Width = 599
@@ -53,9 +53,15 @@ object MeetingForm: TMeetingForm
     inherited Panel1: TPanel
       Width = 599
       ExplicitWidth = 599
+      inherited AbortBtn: TBitBtn
+        OnClick = BaseFrame1AbortBtnClick
+      end
       inherited OKBtn: TBitBtn
         Left = 500
+        Top = 6
+        OnClick = BaseFrame1OKBtnClick
         ExplicitLeft = 500
+        ExplicitTop = 6
       end
     end
   end
@@ -161,46 +167,65 @@ object MeetingForm: TMeetingForm
     Left = 0
     Top = 140
     Width = 599
-    Height = 249
+    Height = 337
     Align = alClient
     Caption = 'Tagesordnung'
     TabOrder = 2
-    object Memo2: TMemo
+    inline TOFrame1: TTOFrame
       Left = 2
       Top = 15
       Width = 595
-      Height = 232
+      Height = 320
       Align = alClient
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Courier New'
-      Font.Style = []
-      Lines.Strings = (
-        'Memo2')
-      ParentFont = False
-      ScrollBars = ssBoth
       TabOrder = 0
-      WordWrap = False
+      ExplicitLeft = 2
+      ExplicitTop = 15
+      ExplicitWidth = 595
+      ExplicitHeight = 320
+      inherited VST: TVirtualStringTree
+        Width = 595
+        Height = 320
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        Columns = <
+          item
+            Position = 0
+            Text = #220'berschrift'
+            Width = 200
+          end
+          item
+            Position = 1
+            Text = 'Datum'
+            Width = 391
+          end>
+      end
     end
   end
   object GroupBox3: TGroupBox
     Left = 0
-    Top = 392
+    Top = 480
     Width = 599
-    Height = 105
+    Height = 284
     Align = alBottom
     Caption = 'Anmerkungen'
     TabOrder = 3
-    object Memo1: TMemo
+    inline EditFrame1: TEditFrame
       Left = 2
       Top = 15
       Width = 595
-      Height = 88
+      Height = 267
       Align = alClient
-      Lines.Strings = (
-        'Memo1')
       TabOrder = 0
+      ExplicitLeft = 2
+      ExplicitTop = 15
+      ExplicitWidth = 595
+      ExplicitHeight = 267
+      inherited RE: TRichEdit
+        Width = 595
+        Height = 267
+        ExplicitWidth = 595
+        ExplicitHeight = 267
+      end
     end
   end
   object DSProviderConnection1: TDSProviderConnection
@@ -237,6 +262,7 @@ object MeetingForm: TMeetingForm
       end>
     ProviderName = 'ListProtocolQry'
     RemoteServer = DSProviderConnection1
+    AfterScroll = ProtoQryAfterScroll
     Left = 72
     Top = 192
   end

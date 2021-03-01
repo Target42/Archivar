@@ -11,10 +11,14 @@ type
   TEditFrame = class(TFrame)
     RE: TRichEdit;
   private
-  public
     procedure setText( text : string);
     function getText : string;
+  public
+    property Text : string read getText write setText;
     function changed : boolean;
+
+    procedure saveToStream( st : TStream );
+    procedure loadFromStream( st : TStream );
   end;
 
 implementation
@@ -31,6 +35,16 @@ end;
 function TEditFrame.getText : string;
 begin
   Result := RE.Lines.Text;
+end;
+
+procedure TEditFrame.loadFromStream(st: TStream);
+begin
+  RE.Lines.LoadFromStream(st);
+end;
+
+procedure TEditFrame.saveToStream(st: TStream);
+begin
+  RE.Lines.SaveToStream(st);
 end;
 
 procedure TEditFrame.setText(text : string);

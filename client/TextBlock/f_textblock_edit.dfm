@@ -394,7 +394,6 @@ object TextBlockEditForm: TTextBlockEditForm
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsTextBlock'
-    SQLConnection = GM.SQLConnection1
     Left = 80
     Top = 112
   end
