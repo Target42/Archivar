@@ -39,14 +39,19 @@ object GremiumListForm: TGremiumListForm
       end
     end
   end
-  object TV: TTreeView
+  inline GremiumFrame1: TGremiumFrame
     Left = 0
     Top = 0
     Width = 329
     Height = 242
     Align = alClient
-    Indent = 19
     TabOrder = 1
-    OnDblClick = TVDblClick
+    ExplicitLeft = 9
+    ExplicitTop = 62
+    inherited TV: TTreeView
+      Width = 329
+      Height = 242
+      OnDblClick = GremiumFrame1TVDblClick
+    end
   end
 end

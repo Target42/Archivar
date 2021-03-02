@@ -1,15 +1,15 @@
 object TOFrame: TTOFrame
   Left = 0
   Top = 0
-  Width = 489
-  Height = 379
+  Width = 451
+  Height = 305
   Align = alClient
   TabOrder = 0
   object VST: TVirtualStringTree
     Left = 0
     Top = 0
-    Width = 489
-    Height = 379
+    Width = 451
+    Height = 305
     Align = alClient
     Header.AutoSizeIndex = -1
     Header.Options = [hoAutoResize, hoColumnResize, hoDrag, hoShowSortGlyphs]
@@ -21,10 +21,6 @@ object TOFrame: TTOFrame
     OnDrawText = VSTDrawText
     OnFreeNode = VSTFreeNode
     OnGetCellText = VSTGetCellText
-    ExplicitLeft = -106
-    ExplicitTop = 15
-    ExplicitWidth = 595
-    ExplicitHeight = 320
     Columns = <
       item
         Position = 0
@@ -34,7 +30,7 @@ object TOFrame: TTOFrame
       item
         Position = 1
         Text = 'Datum'
-        Width = 285
+        Width = 247
       end>
   end
 end

@@ -79,6 +79,18 @@ set term ;/\
 \
 commit;\
 \
+\
+SET TERM ^ ;\
+CREATE TRIGGER EL_LAST_CHANGE FOR EL_EINLADUNG\
+ACTIVE BEFORE INSERT OR UPDATE POSITION 0\
+AS\
+BEGIN\
+new.EL_DATA_STAMP = current_timestamp;\
+END^\
+SET TERM ; ^ \
+\
+commit;\
+\
 INSERT INTO PE_PERSON (PE_ID, PE_NAME, PE_VORNAME, PE_DEPARTMENT, PE_NET,\
     PE_MAIL, PE_PWD)\
 VALUES (\
@@ -100,7 +112,7 @@ commit;
 
 
 1582717246
-1613838780
+1614710308
 0
 0
 2
@@ -5796,6 +5808,40 @@ EL_ENDE
 
 9
 3
+6372
+6372
+EL_STATUS
+EL_STATUS
+
+
+
+5535
+0
+CHAR(1)
+1
+0
+0
+
+
+
+
+
+0
+0
+0
+
+
+
+0
+0
+0
+1
+0
+0
+
+
+10
+3
 5549
 5549
 EL_ID
@@ -8672,10 +8718,10 @@ OID     N8
 0
 0
 0
-18
-46908
-14642
-57257
+14
+46418
+14638
+57742
 2
 1
 0
@@ -8704,10 +8750,10 @@ OID     N8
 0
 0
 0
--22301
-48374
--10002
-55798
+-22302
+48373
+-10003
+55797
 2
 1
 0
@@ -9263,7 +9309,7 @@ a29a0000bdc7ffff419b00000590ffff
 0
 0
 2
-611b0000b45f0000611b0000b1c20000
+5d1b0000b45f00005d1b0000dbc10000
 2
 
 
@@ -9295,7 +9341,7 @@ a29a0000bdc7ffff419b00000590ffff
 0
 0
 2
-192a000010cb0000b2c8ffff10cb0000
+152a000007cb0000b1c8ffff07cb0000
 2
 
 
@@ -9327,7 +9373,7 @@ a29a0000bdc7ffff419b00000590ffff
 0
 0
 3
-e16affff42590000e16affff96cb000088b1ffff96cb0000
+e16affff42590000e16affff95cb000087b1ffff95cb0000
 2
 
 
@@ -9359,7 +9405,7 @@ e16affff42590000e16affff96cb000088b1ffff96cb0000
 0
 0
 3
-a3980000fc3a0000a3980000ffce0000572b0000ffce0000
+a3980000fc3a0000a398000052cf0000532b000052cf0000
 2
 
 

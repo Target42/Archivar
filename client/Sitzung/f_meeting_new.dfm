@@ -153,15 +153,6 @@ object MeetingForm: TMeetingForm
       TabOrder = 4
       Text = 'ComboBox2'
     end
-    object BitBtn1: TBitBtn
-      Left = 392
-      Top = 48
-      Width = 75
-      Height = 25
-      Caption = 'BitBtn1'
-      TabOrder = 5
-      OnClick = BitBtn1Click
-    end
   end
   object GroupBox2: TGroupBox
     Left = 0
@@ -185,8 +176,8 @@ object MeetingForm: TMeetingForm
       inherited VST: TVirtualStringTree
         Width = 595
         Height = 320
-        ExplicitLeft = 0
-        ExplicitTop = 0
+        ExplicitWidth = 595
+        ExplicitHeight = 320
         Columns = <
           item
             Position = 0

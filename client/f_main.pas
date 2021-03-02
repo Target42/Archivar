@@ -143,6 +143,7 @@ type
     procedure ac_pr_viewExecute(Sender: TObject);
     procedure ac_ad_epubExecute(Sender: TObject);
     procedure ac_me_newExecute(Sender: TObject);
+    procedure ac_me_editExecute(Sender: TObject);
   private
     procedure setPanel( id : integer ; text : string );
     procedure loadLogo;
@@ -164,7 +165,7 @@ uses
   f_images, System.IOUtils, f_taksListForm, u_berTypes, f_datafields,
   f_template_new, f_taskEditor, f_select_templateForm, f_bechlus, f_set,
   f_textblock_edit, f_testblock_list, f_webserver_files, f_epub_mngr,
-  f_meeting_new;
+  f_meeting_new, f_meeting_select;
 
 {$R *.dfm}
 
@@ -259,6 +260,25 @@ begin
     frm.TEID := te_id;
     frm.Show;
   end;
+end;
+
+procedure TMainForm.ac_me_editExecute(Sender: TObject);
+begin
+  Application.CreateForm(TSelectMeetingForm, SelectMeetingForm);
+  if SelectMeetingForm.ShowModal = mrok then
+  begin
+    if SelectMeetingForm.ME_ID > 0 then
+    begin
+      Application.CreateForm(TMeetingForm, MeetingForm);
+
+      MeetingForm.EL_ID   := SelectMeetingForm.ME_ID;
+
+      MeetingForm.ShowModal;
+      MeetingForm.Free;
+    end;
+  end;
+  SelectMeetingForm.free;
+
 end;
 
 procedure TMainForm.ac_me_newExecute(Sender: TObject);

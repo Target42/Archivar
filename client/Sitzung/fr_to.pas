@@ -183,6 +183,7 @@ var
   req    : TJSONObject;
   res    : TJSONObject;
 begin
+  vst.Clear;
   if m_prid = 0 then
     exit;
 

@@ -31,14 +31,12 @@ type
     Label4: TLabel;
     ComboBox1: TComboBox;
     ComboBox2: TComboBox;
-    BitBtn1: TBitBtn;
     EditFrame1: TEditFrame;
     TOFrame1: TTOFrame;
     procedure FormCreate(Sender: TObject);
     procedure ElTabBeforePost(DataSet: TDataSet);
     procedure ComboBox1Change(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    procedure BitBtn1Click(Sender: TObject);
     procedure ProtoQryAfterScroll(DataSet: TDataSet);
     procedure BaseFrame1AbortBtnClick(Sender: TObject);
     procedure BaseFrame1OKBtnClick(Sender: TObject);
@@ -53,6 +51,7 @@ type
 
     procedure SendUpdate( id : integer );
     procedure setELID( value : integer );
+    procedure updateTo;
   public
     property Gremium  : TGremium read GetGremiumID write SetGremiumID;
     property EL_ID    : integer read m_el_id write setELID;
@@ -122,12 +121,6 @@ begin
 
   SendUpdate( id );
 
-end;
-
-procedure TMeetingForm.BitBtn1Click(Sender: TObject);
-begin
-  TOFrame1.PR_ID := ProtoQry.FieldByName('PR_ID').AsInteger;
-  TOFrame1.updateContent;
 end;
 
 procedure TMeetingForm.ComboBox1Change(Sender: TObject);
@@ -212,7 +205,7 @@ end;
 
 procedure TMeetingForm.ProtoQryAfterScroll(DataSet: TDataSet);
 begin
-  TOFrame1.updateContent;
+  updateTo;
 end;
 
 procedure TMeetingForm.SendUpdate(id: integer);
@@ -237,7 +230,8 @@ end;
 
 procedure TMeetingForm.setELID(value: integer);
 var
-  st : TStream;
+  st  : TStream;
+  gr  : TGremium;
 begin
   m_el_id := value;
   ElTab.Open;
@@ -255,14 +249,21 @@ begin
       st := ElTab.CreateBlobStream(ElTab.FieldByName('EL_DATA'), bmRead);
       EditFrame1.loadFromStream(st);
       st.Free;
+
+      gr := GM.getGremium(ElTab.FieldByName('GR_ID').AsInteger);
+      if Assigned(gr) then
+        self.SetGremiumID( gr );
+      updateTo;
     end;
   end;
+
   BaseFrame1.OKBtn.Enabled := ( ElTab.FieldByName('PR_ID').AsInteger > 0 );
 end;
 
 procedure TMeetingForm.SetGremiumID(const Value: TGremium);
 begin
   m_gr := value;
+
   LabeledEdit1.Text := m_gr.Name;
 
   ProtoQry.ParamByName('GR_ID').AsInteger := m_gr.ID;
@@ -278,6 +279,12 @@ begin
     end;
   end;
   BaseFrame1.OKBtn.Enabled := ( ElTab.FieldByName('PR_ID').AsInteger > 0 );
+end;
+
+procedure TMeetingForm.updateTo;
+begin
+  TOFrame1.PR_ID := ProtoQry.FieldByName('PR_ID').AsInteger;
+  TOFrame1.updateContent;
 end;
 
 end.
