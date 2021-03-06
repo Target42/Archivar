@@ -163,7 +163,9 @@ uses
   f_task_filter in 'Task\f_task_filter.pas' {TaskFilterForm},
   fr_to in 'Sitzung\fr_to.pas' {TOFrame: TFrame},
   f_meeting_select in 'Sitzung\f_meeting_select.pas' {SelectMeetingForm},
-  fr_gremium in 'Gremium\fr_gremium.pas' {GremiumFrame: TFrame};
+  fr_gremium in 'Gremium\fr_gremium.pas' {GremiumFrame: TFrame},
+  f_meeting_proto in 'Sitzung\f_meeting_proto.pas' {MeetingProtoForm},
+  f_login in 'misc\f_login.pas' {LoginForm};
 
 {$R *.res}
 

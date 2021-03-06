@@ -100,6 +100,7 @@ begin
   JReplace( Result, 'admin',    (m_session.GetData('admin') = 'true'));
   JReplace( Result, 'name',     m_session.GetData('name'));
   JReplace( Result, 'vorname',  m_session.GetData('vorname'));
+  JReplace( Result, 'id',       StrToInt(m_session.GetData('ID')));
 
   DebugMsg('session : '+IntToStr(m_session.Id));
 

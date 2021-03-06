@@ -33,18 +33,18 @@ object SelectMeetingForm: TSelectMeetingForm
     Align = alBottom
     AutoSize = True
     TabOrder = 0
-    ExplicitTop = 239
-    ExplicitWidth = 635
+    ExplicitTop = 428
+    ExplicitWidth = 499
     inherited StatusBar1: TStatusBar
       Width = 499
-      ExplicitWidth = 464
+      ExplicitWidth = 499
     end
     inherited Panel1: TPanel
       Width = 499
-      ExplicitWidth = 635
+      ExplicitWidth = 499
       inherited OKBtn: TBitBtn
         Left = 400
-        ExplicitLeft = 536
+        ExplicitLeft = 400
       end
     end
   end
@@ -56,7 +56,6 @@ object SelectMeetingForm: TSelectMeetingForm
     Align = alTop
     Caption = 'Gremien'
     TabOrder = 1
-    ExplicitWidth = 744
     inline GremiumFrame1: TGremiumFrame
       Left = 2
       Top = 15
@@ -66,14 +65,14 @@ object SelectMeetingForm: TSelectMeetingForm
       TabOrder = 0
       ExplicitLeft = 2
       ExplicitTop = 15
+      ExplicitWidth = 495
+      ExplicitHeight = 232
       inherited TV: TTreeView
         Width = 495
         Height = 232
         OnChange = GremiumFrame1TVChange
-        ExplicitLeft = -4
-        ExplicitTop = -4
-        ExplicitWidth = 245
-        ExplicitHeight = 278
+        ExplicitWidth = 495
+        ExplicitHeight = 232
       end
     end
   end
@@ -85,10 +84,6 @@ object SelectMeetingForm: TSelectMeetingForm
     Align = alClient
     Caption = 'Sitzungen'
     TabOrder = 2
-    ExplicitLeft = 48
-    ExplicitTop = 280
-    ExplicitWidth = 185
-    ExplicitHeight = 105
     object DBGrid1: TDBGrid
       Left = 2
       Top = 15
@@ -141,7 +136,6 @@ object SelectMeetingForm: TSelectMeetingForm
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsMeeing'
-    SQLConnection = GM.SQLConnection1
     Left = 56
     Top = 32
   end
@@ -177,9 +171,6 @@ object SelectMeetingForm: TSelectMeetingForm
     object ELTabEL_DATA_STAMP: TDateTimeField
       FieldName = 'EL_DATA_STAMP'
       DisplayFormat = 'dd.mm.yy hh:nn'
-    end
-    object ELTabPR_ID: TIntegerField
-      FieldName = 'PR_ID'
     end
     object ELTabEL_ENDE: TTimeField
       FieldName = 'EL_ENDE'

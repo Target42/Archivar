@@ -26,7 +26,6 @@ type
     ELTabEL_TITEL: TWideStringField;
     ELTabEL_DATA: TBlobField;
     ELTabEL_DATA_STAMP: TDateTimeField;
-    ELTabPR_ID: TIntegerField;
     ELTabEL_ENDE: TTimeField;
     ELTabEL_STATUS: TWideStringField;
     procedure FormCreate(Sender: TObject);
@@ -34,9 +33,11 @@ type
     procedure GremiumFrame1TVChange(Sender: TObject; Node: TTreeNode);
     procedure DBGrid1DblClick(Sender: TObject);
   private
-    function getMEID : integer;
+    function getMEID  : integer;
+    function getTitle : string;
   public
     property ME_ID : integer read getMEID;
+    property Title : string read getTitle;
   end;
 
 var
@@ -78,6 +79,13 @@ begin
   Result := 0;
   if not ELTab.IsEmpty then
     Result := ELTab.FieldByName('EL_ID').AsInteger;
+end;
+
+function TSelectMeetingForm.getTitle: string;
+begin
+  Result :='';
+  if not ELTab.IsEmpty then
+    Result := ELTab.FieldByName('EL_TITEL').AsString;
 end;
 
 procedure TSelectMeetingForm.GremiumFrame1TVChange(Sender: TObject;

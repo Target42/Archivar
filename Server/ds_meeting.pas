@@ -24,6 +24,9 @@ type
     GrPeQry: TIBQuery;
     AutoIncQry: TIBQuery;
     LastDocQry: TIBQuery;
+    DelPEQry: TIBQuery;
+    DelELQry: TIBQuery;
+    FrindELQry: TIBQuery;
   private
     { Private-Deklarationen }
   public
@@ -55,8 +58,52 @@ begin
 end;
 
 function TdsMeeing.deleteMeeting(req: TJSONObject): TJSONObject;
+var
+  id : integer;
+  prid : integer;
 begin
-  Result := NIL;
+  id     := JInt( req, 'id');
+  Result := TJSONObject.Create;
+
+  prid := -1;
+
+  FrindELQry.ParamByName('el_id').AsInteger;
+  FrindELQry.Open;
+  if not FrindELQry.IsEmpty then
+    prid := FrindELQry.FieldByName('PR_ID').AsInteger;
+  FrindELQry.Close;
+
+  if prid = -1 then
+  begin
+    if FrindELQry.Transaction.InTransaction then
+      FrindELQry.Transaction.Commit;
+
+    JResult( Result, false, 'Die Sitzung wurde nicht gefunden!');
+    exit;
+  end;
+
+  try
+    // delete the people from the meeting
+    DelPEQry.ParamByName('EL_ID').AsInteger := id;
+    DelPEQry.ExecSQL;
+
+    // delete the meeting ifself
+    DelELQry.ParamByName('EL_ID').AsInteger := id;
+    DelELQry.ExecSQL;
+
+    if DelELQry.Transaction.InTransaction then
+      DelELQry.Transaction.Commit;
+
+    JResult( Result, true, 'Die Einladung wurde gelöscht');
+  except
+    on e : exception do
+    begin
+      JResult( Result, false, e.ToString);
+
+      if DelELQry.Transaction.InTransaction then
+        DelELQry.Transaction.Rollback;
+    end;
+  end;
 end;
 
 function TdsMeeing.GetTree(req: TJSONObject): TJSONObject;
@@ -168,51 +215,49 @@ end;
 
 function TdsMeeing.newMeeting(req: TJSONObject): TJSONObject;
 var
-  grid : integer;
-  id   : integer;
+  grid  : integer;
+  id    : integer;
+  prid  : integer;
+  doExit: boolean;
 begin
   Result  := TJSONObject.Create;
   grid    := JInt( req, 'grid');
-  id      := AutoInc('gen_el_id');
+  prid    := JInt( req, 'prid');
 
+  id    := AutoInc('gen_el_id');
   try
-  ElTable.Open;
-  ElTable.Append;
-  ElTable.FieldByName('EL_ID').AsInteger      := id;
-  ElTable.FieldByName('GR_ID').AsInteger      := grid;
-  ElTable.FieldByName('EL_TITEL').AsString    :='Sitzungeinladung';
-  ElTable.FieldByName('EL_DATUM').AsDateTime  := Date + 3;
-  ElTable.FieldByName('EL_ZEIT').AsDateTime   := EncodeTime(  9, 0, 0, 0);
-  ElTable.FieldByName('EL_ENDE').AsDateTime   := EncodeTime( 12, 0, 0, 0);
+    ElTable.Open;
+    ElTable.Append;
+    ElTable.FieldByName('EL_ID').AsInteger      := id;
+    ElTable.FieldByName('GR_ID').AsInteger      := grid;
+    ElTable.FieldByName('EL_TITEL').AsString    :='Sitzungeinladung';
+    ElTable.FieldByName('EL_DATUM').AsDateTime  := Date + 3;
+    ElTable.FieldByName('EL_ZEIT').AsDateTime   := EncodeTime(  9, 0, 0, 0);
+    ElTable.FieldByName('EL_ENDE').AsDateTime   := EncodeTime( 12, 0, 0, 0);
+    ElTable.FieldByName('EL_STATUS').AsString   := 'O';
+    ElTable.FieldByName('PR_ID').AsInteger      := prid;
+    ElTable.Post;
 
-  LastDocQry.ParamByName('gr_id').AsInteger   := grid;
-  LastDocQry.Open;
-  if not LastDocQry.IsEmpty then
-  begin
-    ElTable.FieldByName('PR_ID').AsInteger := LastDocQry.FieldByName('PR_ID').AsInteger;
-  end;
-  LastDocQry.Close;
-  ElTable.Post;
+    ELPETab.Open;
 
-  ELPETab.Open;
-  GrPeQry.ParamByName('GR_ID').AsInteger := grid;
-  GrPeQry.Open;
-  while not GrPeQry.Eof do
-  begin
-    ELPETab.Append;
-    ELPETab.FieldByName('EL_ID').AsInteger := id;
-    ELPETab.FieldByName('PE_ID').AsInteger := GrPeQry.FieldByName('PE_ID').AsInteger;
-    ELPETab.Post;
-    GrPeQry.Next;
-  end;
-  GrPeQry.Close;
-  ELPETab.Close;
+    GrPeQry.ParamByName('PR_ID').AsInteger := prid;
+    GrPeQry.Open;
+    while not GrPeQry.Eof do
+    begin
+      ELPETab.Append;
+      ELPETab.FieldByName('EL_ID').AsInteger := id;
+      ELPETab.FieldByName('PE_ID').AsInteger := GrPeQry.FieldByName('PE_ID').AsInteger;
+      ELPETab.Post;
+      GrPeQry.Next;
+    end;
+    GrPeQry.Close;
+    ELPETab.Close;
 
-  JReplace( Result, 'id', id);
-  JResult( Result, true, 'Eine neue sitzung wurde angelegt.');
+    JReplace( Result, 'id', id);
+    JResult( Result, true, 'Eine neue Sitzung wurde angelegt.');
 
-  if ElTable.Transaction.InTransaction then
-    ElTable.Transaction.Commit;
+    if ElTable.Transaction.InTransaction then
+      ElTable.Transaction.Commit;
   except
     on e : exception do
     begin
@@ -222,11 +267,13 @@ begin
         ElTable.Transaction.Rollback;
     end;
   end;
+
 end;
 
 function TdsMeeing.Sendmail(req: TJSONObject): TJSONObject;
 begin
-  Result := NIL;
+  Result := TJSONObject.Create;
+  JResult( Result, true, '');
 end;
 
 end.

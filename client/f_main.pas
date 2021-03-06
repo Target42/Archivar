@@ -144,6 +144,7 @@ type
     procedure ac_ad_epubExecute(Sender: TObject);
     procedure ac_me_newExecute(Sender: TObject);
     procedure ac_me_editExecute(Sender: TObject);
+    procedure ac_me_deleteExecute(Sender: TObject);
   private
     procedure setPanel( id : integer ; text : string );
     procedure loadLogo;
@@ -165,7 +166,7 @@ uses
   f_images, System.IOUtils, f_taksListForm, u_berTypes, f_datafields,
   f_template_new, f_taskEditor, f_select_templateForm, f_bechlus, f_set,
   f_textblock_edit, f_testblock_list, f_webserver_files, f_epub_mngr,
-  f_meeting_new, f_meeting_select;
+  f_meeting_new, f_meeting_select, f_meeting_proto, f_login;
 
 {$R *.dfm}
 
@@ -262,6 +263,24 @@ begin
   end;
 end;
 
+procedure TMainForm.ac_me_deleteExecute(Sender: TObject);
+begin
+  Application.CreateForm(TSelectMeetingForm, SelectMeetingForm);
+  if SelectMeetingForm.ShowModal = mrok then
+  begin
+    if SelectMeetingForm.ME_ID > 0 then
+    begin
+
+      if (MessageDlg('Soll die Sitzungseinladung:'+ sLineBreak+
+          SelectMeetingForm.Title+sLineBreak+
+          'wirklich gelöscht werden?', mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
+        DeleteMeeting( SelectMeetingForm.ME_ID )
+    end;
+  end;
+  SelectMeetingForm.free;
+
+end;
+
 procedure TMainForm.ac_me_editExecute(Sender: TObject);
 begin
   Application.CreateForm(TSelectMeetingForm, SelectMeetingForm);
@@ -278,35 +297,29 @@ begin
     end;
   end;
   SelectMeetingForm.free;
-
 end;
 
 procedure TMainForm.ac_me_newExecute(Sender: TObject);
 var
-  GremiumListForm : TGremiumListForm;
-  gr              : TGremium;
   id              : integer;
 begin
-  Application.CreateForm(TGremiumListForm, GremiumListForm);
-  if GremiumListForm.ShowModal = mrOk then
+  id := -1;
+  Application.CreateForm(TMeetingProtoForm, MeetingProtoForm);
+  if MeetingProtoForm.ShowModal = mrOk then
   begin
-    gr := GremiumListForm.Gremium;
-    if Assigned(gr) then
-    begin
-      id := newMeeting( gr.ID );
-      if id > 0 then
-      begin
-        Application.CreateForm(TMeetingForm, MeetingForm);
-
-        MeetingForm.EL_ID   := id;
-        MeetingForm.Gremium := gr;
-
-        MeetingForm.ShowModal;
-        MeetingForm.Free;
-      end;
-    end;
+    id := newMeeting( MeetingProtoForm.GR_ID, MeetingProtoForm.PR_ID );
   end;
   GremiumListForm.Free;
+
+  if id > 0 then
+  begin
+    Application.CreateForm(TMeetingForm, MeetingForm);
+
+    MeetingForm.EL_ID   := id;
+
+    MeetingForm.ShowModal;
+    MeetingForm.Free;
+  end;
 end;
 
 procedure TMainForm.ac_prg_closeExecute(Sender: TObject);
@@ -373,57 +386,23 @@ begin
 end;
 
 procedure TMainForm.ac_pr_openExecute(Sender: TObject);
-var
-  GremiumListForm : TGremiumListForm;
-  gr              : TGremium;
 begin
-  gr := NIL;
-
-  Application.CreateForm(TGremiumListForm, GremiumListForm);
-  if GremiumListForm.ShowModal = mrOk then
+  Application.CreateForm(TProtocollListForm, ProtocollListForm);
+  if ProtocollListForm.ShowModal = mrOk then
   begin
-    gr := GremiumListForm.Gremium;
+    WindowHandler.openProtoCclWindow(ProtocollListForm.PR_ID, true);
   end;
-
-  if Assigned(gr) then
-  begin
-    Application.CreateForm(TProtocollListForm, ProtocollListForm);
-    ProtocollListForm.GremiumID := gr.ID;
-    ProtocollListForm.Caption   := gr.Name;
-    if ProtocollListForm.ShowModal = mrOk then
-    begin
-      WindowHandler.openProtoCclWindow(ProtocollListForm.PR_ID, true);
-    end;
-    ProtocollListForm.Free;
-  end;
-  GremiumListForm.Free;
+  ProtocollListForm.Free;
 end;
 
 procedure TMainForm.ac_pr_viewExecute(Sender: TObject);
-var
-  GremiumListForm : TGremiumListForm;
-  gr              : TGremium;
 begin
-  gr := NIL;
-
-  Application.CreateForm(TGremiumListForm, GremiumListForm);
-  if GremiumListForm.ShowModal = mrOk then
+  Application.CreateForm(TProtocollListForm, ProtocollListForm);
+  if ProtocollListForm.ShowModal = mrOk then
   begin
-    gr := GremiumListForm.Gremium;
+    WindowHandler.openProtocolView(ProtocollListForm.PR_ID);
   end;
-
-  if Assigned(gr) then
-  begin
-    Application.CreateForm(TProtocollListForm, ProtocollListForm);
-    ProtocollListForm.GremiumID := gr.ID;
-    ProtocollListForm.Caption   := gr.Name;
-    if ProtocollListForm.ShowModal = mrOk then
-    begin
-      WindowHandler.openProtocolView(ProtocollListForm.PR_ID);
-    end;
-    ProtocollListForm.Free;
-  end;
-  GremiumListForm.Free;
+  ProtocollListForm.Free;
 end;
 
 procedure TMainForm.ac_ta_loadExecute(Sender: TObject);

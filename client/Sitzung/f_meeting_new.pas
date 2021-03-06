@@ -13,10 +13,6 @@ type
   TMeetingForm = class(TForm)
     BaseFrame1: TBaseFrame;
     GroupBox1: TGroupBox;
-    GroupBox2: TGroupBox;
-    GroupBox3: TGroupBox;
-    Splitter1: TSplitter;
-    Splitter2: TSplitter;
     DSProviderConnection1: TDSProviderConnection;
     ElTab: TClientDataSet;
     ElSrc: TDataSource;
@@ -31,8 +27,15 @@ type
     Label4: TLabel;
     ComboBox1: TComboBox;
     ComboBox2: TComboBox;
-    EditFrame1: TEditFrame;
+    PRTab: TClientDataSet;
+    PageControl1: TPageControl;
+    TabSheet1: TTabSheet;
+    TabSheet2: TTabSheet;
+    GroupBox2: TGroupBox;
     TOFrame1: TTOFrame;
+    GroupBox3: TGroupBox;
+    EditFrame1: TEditFrame;
+    Splitter1: TSplitter;
     procedure FormCreate(Sender: TObject);
     procedure ElTabBeforePost(DataSet: TDataSet);
     procedure ComboBox1Change(Sender: TObject);
@@ -60,7 +63,8 @@ type
 var
   MeetingForm: TMeetingForm;
 
-function newMeeting( gr_id : integer ) : integer;
+function newMeeting( gr_id, pr_id : integer ) : integer;
+function DeleteMeeting( id : integer ) : boolean;
 
 implementation
 
@@ -69,7 +73,7 @@ uses
 
 {$R *.dfm}
 
-function newMeeting( gr_id : integer ) : integer;
+function newMeeting( gr_id, pr_id : integer ) : integer;
 var
   client  : TdsMeeingClient;
   req     : TJSONObject;
@@ -79,6 +83,7 @@ begin
 
   req    := TJSONObject.Create;
   JReplace( req, 'grid', gr_id);
+  JReplace( req, 'prid', pr_id);
 
   client := TdsMeeingClient.Create(GM.SQLConnection1.DBXConnection);
   try
@@ -86,6 +91,28 @@ begin
     Result := JInt(res, 'id');
     if Result < 1 then
       ShowMessage(JString( res, 'text'));
+
+    client.Free;
+  except
+
+  end;
+end;
+
+function DeleteMeeting( id : integer ) : boolean;
+var
+  client  : TdsMeeingClient;
+  req     : TJSONObject;
+  res     : TJSONObject;
+begin
+  Result := false;
+
+  req    := TJSONObject.Create;
+  JReplace( req, 'id', id);
+
+  client := TdsMeeingClient.Create(GM.SQLConnection1.DBXConnection);
+  try
+    res  := client.deleteMeeting(req);
+    Result := JBool( res, 'result');
 
     client.Free;
   except
@@ -110,6 +137,7 @@ begin
   begin
     st := ElTab.CreateBlobStream(ElTab.FieldByName('EL_DATA'),bmWrite);
     EditFrame1.saveToStream(st);
+    st.Free;
   end;
 
   ELtab.Post;
@@ -267,7 +295,6 @@ begin
   LabeledEdit1.Text := m_gr.Name;
 
   ProtoQry.ParamByName('GR_ID').AsInteger := m_gr.ID;
-  ProtoQry.ParamByName('status').AsString := 'E';
   ProtoQry.Open;
 
   if ElTab.FieldByName('PR_ID').AsInteger = 0 then

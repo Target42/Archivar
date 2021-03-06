@@ -18,7 +18,7 @@ object GM: TGM
         '.Data.DbxClientDriver,Version=24.0.0.0,Culture=neutral,PublicKey' +
         'Token=91d62ebb5b0d1b1b'
       'Filters={}'
-      'DSAuthenticationPassword=admim'
+      'DSAuthenticationPassword=admin'
       'DSAuthenticationUser=admin')
     AfterConnect = SQLConnection1AfterConnect
     AfterDisconnect = SQLConnection1AfterDisconnect
@@ -73,7 +73,7 @@ object GM: TGM
     Left = 392
     Top = 24
     Bitmap = {
-      494C010108007801DC0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010108007801EC0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000003000000001002000000000000030
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

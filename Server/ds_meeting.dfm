@@ -18,19 +18,13 @@ object dsMeeing: TdsMeeing
     CachedUpdates = False
     ParamCheck = True
     SQL.Strings = (
-      'select * from PR_PROTOKOL'
-      'where PR_STATUS = :status'
-      'and GR_ID = :gr_id'
-      'order by pr_id desc'
-      ' ')
+      'SELECT * FROM PR_PROTOKOL'
+      'where gr_id = :gr_id'
+      'and PR_STATUS <> '#39'C'#39
+      'order by pr_id desc')
     Left = 112
-    Top = 48
+    Top = 16
     ParamData = <
-      item
-        DataType = ftString
-        Name = 'status'
-        ParamType = ptInput
-      end
       item
         DataType = ftInteger
         Name = 'gr_id'
@@ -40,7 +34,7 @@ object dsMeeing: TdsMeeing
   object ListProtocolQry: TDataSetProvider
     DataSet = ListProtocol
     Left = 112
-    Top = 112
+    Top = 64
   end
   object PRTable: TIBTable
     Database = DBMod.IBDatabase1
@@ -49,13 +43,13 @@ object dsMeeing: TdsMeeing
     CachedUpdates = False
     TableName = 'PR_PROTOKOL'
     UniDirectional = False
-    Left = 224
-    Top = 48
+    Left = 208
+    Top = 16
   end
   object PRTab: TDataSetProvider
     DataSet = PRTable
-    Left = 224
-    Top = 112
+    Left = 216
+    Top = 72
   end
   object ElTable: TIBTable
     Database = DBMod.IBDatabase1
@@ -64,13 +58,13 @@ object dsMeeing: TdsMeeing
     CachedUpdates = False
     TableName = 'EL_EINLADUNG'
     UniDirectional = False
-    Left = 328
-    Top = 40
+    Left = 280
+    Top = 24
   end
   object ElTab: TDataSetProvider
     DataSet = ElTable
-    Left = 328
-    Top = 112
+    Left = 280
+    Top = 80
   end
   object ProtoQry: TIBQuery
     Database = DBMod.IBDatabase1
@@ -135,8 +129,8 @@ object dsMeeing: TdsMeeing
     CachedUpdates = False
     TableName = 'EL_PE'
     UniDirectional = False
-    Left = 104
-    Top = 248
+    Left = 16
+    Top = 192
   end
   object GrPeQry: TIBQuery
     Database = DBMod.IBDatabase1
@@ -145,14 +139,14 @@ object dsMeeing: TdsMeeing
     CachedUpdates = False
     ParamCheck = True
     SQL.Strings = (
-      'select * from GR_PA'
-      'where GR_ID = :gr_id')
-    Left = 176
-    Top = 248
+      'SELECT * FROM TN_TEILNEHMER'
+      'where PR_ID = :pr_id')
+    Left = 208
+    Top = 256
     ParamData = <
       item
         DataType = ftInteger
-        Name = 'gr_id'
+        Name = 'pr_id'
         ParamType = ptInput
       end>
   end
@@ -172,9 +166,9 @@ object dsMeeing: TdsMeeing
     CachedUpdates = False
     ParamCheck = True
     SQL.Strings = (
-      'select * from PR_PROTOKOL'
-      'where GR_ID = :gr_id'
-      'and PR_STATUS <> '#39'C'#39
+      'SELECT * FROM PR_PROTOKOL'
+      'where gr_id = :gr_id'
+      'and el_id is null'
       'order by pr_id desc')
     Left = 216
     Top = 328
@@ -182,6 +176,60 @@ object dsMeeing: TdsMeeing
       item
         DataType = ftInteger
         Name = 'gr_id'
+        ParamType = ptInput
+      end>
+  end
+  object DelPEQry: TIBQuery
+    Database = DBMod.IBDatabase1
+    Transaction = IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    ParamCheck = True
+    SQL.Strings = (
+      'delete from EL_PE'
+      'where EL_ID = :EL_ID')
+    Left = 16
+    Top = 384
+    ParamData = <
+      item
+        DataType = ftInteger
+        Name = 'EL_ID'
+        ParamType = ptInput
+      end>
+  end
+  object DelELQry: TIBQuery
+    Database = DBMod.IBDatabase1
+    Transaction = IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    ParamCheck = True
+    SQL.Strings = (
+      'delete from EL_EINLADUNG'
+      'where EL_ID = :EL_ID')
+    Left = 16
+    Top = 320
+    ParamData = <
+      item
+        DataType = ftInteger
+        Name = 'EL_ID'
+        ParamType = ptInput
+      end>
+  end
+  object FrindELQry: TIBQuery
+    Database = DBMod.IBDatabase1
+    Transaction = IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    ParamCheck = True
+    SQL.Strings = (
+      'select * from PR_PROTOKOL'
+      'where EL_ID = :el_id')
+    Left = 120
+    Top = 288
+    ParamData = <
+      item
+        DataType = ftInteger
+        Name = 'el_id'
         ParamType = ptInput
       end>
   end

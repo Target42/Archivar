@@ -1,7 +1,7 @@
 /* ============================================================ */
 /*   Database name:  MODEL_2                                    */
 /*   DBMS name:      InterBase                                  */
-/*   Created on:     07.02.2021  19:57                          */
+/*   Created on:     06.03.2021  12:31                          */
 /* ============================================================ */
 
 create generator gen_be_id;
@@ -241,6 +241,7 @@ create table CP_CHAPTER
     CP_TITLE                        VARCHAR(200)                   ,
     CP_DATA                         BLOB                           ,
     CP_NR                           INTEGER                        ,
+    CP_CREATED                      TIMESTAMP                      ,
     constraint PK_CP_CHAPTER primary key (CP_ID)
 );
 
@@ -254,14 +255,16 @@ create ASC index CP_CHAPTER_SEC on CP_CHAPTER (PR_ID, CP_ID);
 /* ============================================================ */
 create table EL_EINLADUNG
 (
+    PR_ID                           INTEGER                        ,
     EL_ID                           INTEGER                not null,
     GR_ID                           INTEGER                        ,
-    PR_ID                           INTEGER                        ,
     EL_DATUM                        DATE                           ,
     EL_ZEIT                         TIME                           ,
     EL_TITEL                        VARCHAR(200)                   ,
     EL_DATA                         BLOB                           ,
     EL_DATA_STAMP                   TIMESTAMP                      ,
+    EL_ENDE                         TIME                           ,
+    EL_STATUS                       CHAR(1)                        ,
     constraint PK_EL_EINLADUNG primary key (EL_ID)
 );
 
@@ -329,6 +332,7 @@ create table CT_CHAPTER_TEXT
     CT_NUMBER                       INTEGER                        ,
     CT_DATA                         BLOB                           ,
     CT_POS                          INTEGER                        ,
+    CT_CREATED                      TIMESTAMP                      ,
     constraint PK_CT_CHAPTER_TEXT primary key (CT_ID)
 );
 
@@ -445,7 +449,7 @@ alter table EL_EINLADUNG
        references GR_GREMIUM;
 
 alter table EL_EINLADUNG
-    add constraint FK_REF_6027 foreign key  (PR_ID)
+    add constraint FK_REF_6727 foreign key  (PR_ID)
        references PR_PROTOKOL;
 
 alter table TE_TEMPLATE
@@ -524,6 +528,18 @@ BEGIN
 END
 ;/
 set term ;/
+
+commit;
+
+
+SET TERM ^ ;
+CREATE TRIGGER EL_LAST_CHANGE FOR EL_EINLADUNG
+ACTIVE BEFORE INSERT OR UPDATE POSITION 0
+AS
+BEGIN
+new.EL_DATA_STAMP = current_timestamp;
+END^
+SET TERM ; ^ 
 
 commit;
 

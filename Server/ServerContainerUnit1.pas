@@ -105,7 +105,7 @@ uses
   Winapi.Windows, m_db, ds_gremium, ds_admin, Datasnap.DSSession, ds_person, IOUtils,
   ds_taks, ds_file, ds_misc, ds_protocol, ds_image, ds_chapter,
   ds_taskEdit, ds_template, ds_taskView, ds_textblock, ds_fileCache, ds_epub,
-  ds_meeting;
+  ds_meeting, System.Hash;
 
 procedure TServerContainer1.dsAdminGetClass(
   DSServerClass: TDSServerClass; var PersistentClass: TPersistentClass);
@@ -227,11 +227,13 @@ procedure TServerContainer1.DSAuthenticationManager1UserAuthenticate(
   Sender: TObject; const Protocol, Context, User, Password: string;
   var valid: Boolean; UserRoles: TStrings);
 var
-  Session : TDSSession;
-  userName : string;
+  Session   : TDSSession;
+  userName  : string;
+  ph        : string;
 begin
+  valid   := false;
   userName:= LowerCase(User);
-
+  ph      := THashSHA2.GetHashString(Password);
 
   DebugMsg('Authenticate user :' +userName);
 
@@ -255,27 +257,31 @@ begin
   DebugMsg('Session name : ' + Session.UserName);
 
   Session.PutData('user', userName);
+
   QueryUser.ParamByName('net').AsString := userName;
   QueryUser.Open;
   if QueryUser.RecordCount = 1 then
   begin
-    Session.PutData('ID',       QueryUser.FieldByName('PE_ID').AsString );
-    Session.PutData('name',     QueryUser.FieldByName('pe_name').AsString);
-    Session.PutData('vorname',  QueryUser.FieldByName('pe_vorname').AsString);
+    valid := SameText( ph, QueryUser.FieldByName('pe_pwd').AsString);
 
-    if QueryUser.FieldByName('PE_ID').AsInteger = 1 then
+    if valid then
     begin
-      Session.PutData('admin', 'true');
-      UserRoles.Add('admin');
-    end
-    else
-      Session.PutData('admin', 'false');
-    UserRoles.Add('user');
+      Session.PutData('ID',       QueryUser.FieldByName('PE_ID').AsString );
+      Session.PutData('name',     QueryUser.FieldByName('pe_name').AsString);
+      Session.PutData('vorname',  QueryUser.FieldByName('pe_vorname').AsString);
+
+      if QueryUser.FieldByName('PE_ID').AsInteger = 1 then
+      begin
+        Session.PutData('admin', 'true');
+        UserRoles.Add('admin');
+      end
+      else
+        Session.PutData('admin', 'false');
+      UserRoles.Add('user');
+    end;
   end;
   QueryUser.Close;
   IBTransaction1.Commit;
-
-  Valid := true;
   debugMsg('user :'+ User );
 end;
 

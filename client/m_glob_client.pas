@@ -47,10 +47,10 @@ type
     procedure DataModuleDestroy(Sender: TObject);
     procedure SQLConnection1BeforeDisconnect(Sender: TObject);
   private
-    FIsAdmin: boolean;
-    FUserName: string;
-    FVorname: string;
-    FName: string;
+    FIsAdmin  : boolean;
+    FUserName : string;
+    FVorname  : string;
+    FName     : string;
 
     m_home    : string;
     m_export  : string;
@@ -60,6 +60,7 @@ type
     m_misc    : TdsMiscClient;
     m_gremien : TList<TGremium>;
     m_imageNames : TDictionary<string,integer>;
+    FUserID: integer;
     procedure setIsAdmin( value : boolean );
 
     procedure FillTimes( arr :TJSONArray );
@@ -82,6 +83,7 @@ type
     property UserName   : string          read FUserName    write FUserName;
     property Vorname    : string          read FVorname     write FVorname;
     property Name       : string          read FName        write FName;
+    property UserID     : integer         read FUserID      write FUserID;
 
     property Home       : string          read m_home;
     property ExportDir  : string          read m_export;
@@ -132,7 +134,7 @@ uses
   Vcl.Forms, Winapi.Windows, u_json,
   System.UITypes, system.IOUtils, FireDAC.Stan.Storagebin,
   System.Win.ComObj, m_WindowHandler, m_BookMarkHandler, IdHashMessageDigest,
-  Vcl.Graphics, u_PersonenListeImpl, u_PersonImpl, m_cache;
+  Vcl.Graphics, u_PersonenListeImpl, u_PersonImpl, m_cache, f_login;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -226,8 +228,19 @@ end;
 function TGM.Connect: boolean;
 begin
   Result := false;
+  if not Assigned(LoginForm) then
+  begin
+    Application.CreateForm(TLoginForm, LoginForm);
+  end;
+  if LoginForm.ShowModal <> mrOk then
+    exit;
+
+  SQLConnection1.Params.Values['DSAuthenticationUser']      := LoginForm.UserName;
+  SQLConnection1.Params.Values['DSAuthenticationPassword']  := LoginForm.Password;
+
   try
     SQLConnection1.Open;
+    Result := SQLConnection1.Connected;
   except
     on e : Exception do
       ShowMessage( e.ToString );
@@ -559,10 +572,11 @@ begin
     data := Client.getUserInfo(req);
     if Assigned(data) then
     begin
-      self.UserName:= JString( data, 'user' );
-      self.IsAdmin := JBool(   data, 'admin');
-      Self.Name    := JString( data, 'name');
-      Self.Vorname := JString( data, 'vorname');
+      self.UserName := JString( data, 'user' );
+      self.IsAdmin  := JBool(   data, 'admin');
+      Self.Name     := JString( data, 'name');
+      Self.Vorname  := JString( data, 'vorname');
+      Self.UserID   := JInt(    data, 'id' );
     end;
 
     data := client.getDeleteTimes;
@@ -583,6 +597,9 @@ end;
 
 procedure TGM.SQLConnection1AfterDisconnect(Sender: TObject);
 begin
+  if Assigned(LoginForm) then
+    LoginForm.Password := '';
+
   PostMessage( Application.MainFormHandle, msgDisconnected, 0, 0 );
 end;
 

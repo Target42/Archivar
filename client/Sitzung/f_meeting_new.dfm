@@ -2,7 +2,7 @@ object MeetingForm: TMeetingForm
   Left = 0
   Top = 0
   Caption = 'Sitzungsplanung'
-  ClientHeight = 824
+  ClientHeight = 681
   ClientWidth = 599
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -16,35 +16,15 @@ object MeetingForm: TMeetingForm
   OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
-  object Splitter1: TSplitter
-    Left = 0
-    Top = 477
-    Width = 599
-    Height = 3
-    Cursor = crVSplit
-    Align = alBottom
-    ExplicitTop = 105
-    ExplicitWidth = 176
-  end
-  object Splitter2: TSplitter
-    Left = 0
-    Top = 137
-    Width = 599
-    Height = 3
-    Cursor = crVSplit
-    Align = alTop
-    ExplicitTop = 105
-    ExplicitWidth = 173
-  end
   inline BaseFrame1: TBaseFrame
     Left = 0
-    Top = 764
+    Top = 621
     Width = 599
     Height = 60
     Align = alBottom
     AutoSize = True
     TabOrder = 0
-    ExplicitTop = 764
+    ExplicitTop = 711
     ExplicitWidth = 599
     inherited StatusBar1: TStatusBar
       Width = 599
@@ -154,75 +134,113 @@ object MeetingForm: TMeetingForm
       Text = 'ComboBox2'
     end
   end
-  object GroupBox2: TGroupBox
+  object PageControl1: TPageControl
     Left = 0
-    Top = 140
+    Top = 137
     Width = 599
-    Height = 337
+    Height = 484
+    ActivePage = TabSheet2
     Align = alClient
-    Caption = 'Tagesordnung'
     TabOrder = 2
-    inline TOFrame1: TTOFrame
-      Left = 2
-      Top = 15
-      Width = 595
-      Height = 320
-      Align = alClient
-      TabOrder = 0
-      ExplicitLeft = 2
-      ExplicitTop = 15
-      ExplicitWidth = 595
-      ExplicitHeight = 320
-      inherited VST: TVirtualStringTree
-        Width = 595
-        Height = 320
-        ExplicitWidth = 595
-        ExplicitHeight = 320
-        Columns = <
-          item
-            Position = 0
-            Text = #220'berschrift'
-            Width = 200
+    object TabSheet1: TTabSheet
+      Caption = 'Inhalt'
+      ExplicitWidth = 281
+      ExplicitHeight = 165
+      object Splitter1: TSplitter
+        Left = 0
+        Top = 264
+        Width = 591
+        Height = 3
+        Cursor = crVSplit
+        Align = alBottom
+        ExplicitTop = 0
+        ExplicitWidth = 267
+      end
+      object GroupBox2: TGroupBox
+        Left = 0
+        Top = 0
+        Width = 591
+        Height = 264
+        Align = alClient
+        Caption = 'Tagesordnung'
+        TabOrder = 0
+        ExplicitLeft = -318
+        ExplicitTop = -119
+        ExplicitWidth = 599
+        ExplicitHeight = 284
+        inline TOFrame1: TTOFrame
+          Left = 2
+          Top = 15
+          Width = 587
+          Height = 247
+          Align = alClient
+          TabOrder = 0
+          ExplicitLeft = 2
+          ExplicitTop = 15
+          ExplicitWidth = 595
+          ExplicitHeight = 267
+          inherited VST: TVirtualStringTree
+            Width = 587
+            Height = 247
+            ExplicitWidth = 595
+            ExplicitHeight = 267
+            Columns = <
+              item
+                Position = 0
+                Text = #220'berschrift'
+                Width = 200
+              end
+              item
+                Position = 1
+                Text = 'Datum'
+                Width = 383
+              end>
           end
-          item
-            Position = 1
-            Text = 'Datum'
-            Width = 391
-          end>
+        end
+      end
+      object GroupBox3: TGroupBox
+        Left = 0
+        Top = 267
+        Width = 591
+        Height = 189
+        Align = alBottom
+        Caption = 'Anmerkungen'
+        TabOrder = 1
+        ExplicitLeft = -182
+        ExplicitTop = 104
+        ExplicitWidth = 599
+        inline EditFrame1: TEditFrame
+          Left = 2
+          Top = 15
+          Width = 587
+          Height = 172
+          Align = alClient
+          TabOrder = 0
+          ExplicitLeft = 2
+          ExplicitTop = 15
+          ExplicitWidth = 595
+          ExplicitHeight = 172
+          inherited RE: TRichEdit
+            Width = 587
+            Height = 172
+            ExplicitWidth = 595
+            ExplicitHeight = 172
+          end
+        end
       end
     end
-  end
-  object GroupBox3: TGroupBox
-    Left = 0
-    Top = 480
-    Width = 599
-    Height = 284
-    Align = alBottom
-    Caption = 'Anmerkungen'
-    TabOrder = 3
-    inline EditFrame1: TEditFrame
-      Left = 2
-      Top = 15
-      Width = 595
-      Height = 267
-      Align = alClient
-      TabOrder = 0
-      ExplicitLeft = 2
-      ExplicitTop = 15
-      ExplicitWidth = 595
-      ExplicitHeight = 267
-      inherited RE: TRichEdit
-        Width = 595
-        Height = 267
-        ExplicitWidth = 595
-        ExplicitHeight = 267
-      end
+    object TabSheet2: TTabSheet
+      Caption = 'Teilnehmer'
+      ImageIndex = 1
+      ExplicitWidth = 281
+      ExplicitHeight = 165
     end
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsMeeing'
-    Left = 16
-    Top = 128
+    SQLConnection = GM.SQLConnection1
+    Left = 40
+    Top = 136
   end
   object ElTab: TClientDataSet
     Aggregates = <>
@@ -242,11 +260,6 @@ object MeetingForm: TMeetingForm
     Aggregates = <>
     Params = <
       item
-        DataType = ftString
-        Name = 'status'
-        ParamType = ptInput
-      end
-      item
         DataType = ftInteger
         Name = 'gr_id'
         ParamType = ptInput
@@ -261,5 +274,13 @@ object MeetingForm: TMeetingForm
     DataSet = ProtoQry
     Left = 72
     Top = 244
+  end
+  object PRTab: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    ProviderName = 'PRTab'
+    RemoteServer = DSProviderConnection1
+    Left = 152
+    Top = 196
   end
 end

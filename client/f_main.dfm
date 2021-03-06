@@ -132,10 +132,6 @@
     object TabSheet2: TTabSheet
       Caption = 'Lesezeichen'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       inline BookmarkFrame1: TBookmarkFrame
         Left = 0
         Top = 0
@@ -527,6 +523,7 @@
     object ac_me_delete: TAction
       Category = 'Meeting'
       Caption = '&L'#246'schen'
+      OnExecute = ac_me_deleteExecute
     end
     object ac_me_end: TAction
       Category = 'Meeting'
