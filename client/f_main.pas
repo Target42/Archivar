@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.Menus, System.Actions,
   Vcl.ActnList, Vcl.AppEvnts, fr_gremiumTree, Vcl.ExtCtrls, Vcl.StdCtrls,
-  fr_taskList, Vcl.StdActns, u_bookmark, fr_bookmark, fr_epub;
+  fr_taskList, Vcl.StdActns, u_bookmark, fr_bookmark, fr_epub, fr_meeting;
 
 type
   TStatusInx = (stStatus = 0, stLogin, stUser );
@@ -37,9 +37,7 @@ type
     ac_ta_neu: TAction;
     Splitter1: TSplitter;
     GremiumTreeFrame1: TGremiumTreeFrame;
-    GroupBox2: TGroupBox;
     Splitter2: TSplitter;
-    TaskListFrame1: TTaskListFrame;
     Fenster1: TMenuItem;
     WindowCascade1: TWindowCascade;
     WindowTileHorizontal1: TWindowTileHorizontal;
@@ -117,6 +115,12 @@ type
     N12: TMenuItem;
     N13: TMenuItem;
     Lschen3: TMenuItem;
+    PageControl2: TPageControl;
+    TabSheet4: TTabSheet;
+    GroupBox2: TGroupBox;
+    TaskListFrame1: TTaskListFrame;
+    TabSheet5: TTabSheet;
+    MeetingFrame1: TMeetingFrame;
     procedure ac_prg_closeExecute(Sender: TObject);
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure ac_prg_disconExecute(Sender: TObject);
@@ -499,7 +503,7 @@ begin
         setPanel(integer(stUser),  GM.Name+', '+GM.Vorname);
         GremiumTreeFrame1.updateTree;
         PageControl1.Visible := true;
-        GroupBox2.Visible := true;
+        PageControl2.Visible := true;
         Splitter2.Visible := true;
         GremiumTreeFrame1.selectFirst;
 
@@ -528,9 +532,10 @@ begin
         setPanel(integer(stStatus), 'Getrennt');
         setPanel(integer(stLogin), '  ');
         setPanel(integer(stUser), '  ');
-        PageControl1.Visible := false;
-        GroupBox2.Visible := false;
-        Splitter2.Visible := false;
+
+        PageControl1.Visible  := false;
+        PageControl2.Visible  := false;
+        Splitter2.Visible     := false;
         ePupFrame1.release;
       end;
     msgStatus:
@@ -557,7 +562,9 @@ end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
+  PageControl2.ActivePage := TabSheet4;
   TaskListFrame1.prepare;
+  MeetingFrame1.init;
   PageControl1.ActivePage := TabSheet1;
 end;
 
@@ -565,6 +572,7 @@ procedure TMainForm.FormDestroy(Sender: TObject);
 begin
   GremiumTreeFrame1.clear;
   TaskListFrame1.shutdown;
+  MeetingFrame1.release;
 end;
 
 procedure TMainForm.loadLogo;

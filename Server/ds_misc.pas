@@ -19,6 +19,8 @@ type
     GetProtoInfo: TIBQuery;
     AutoIncQry: TIBQuery;
     IncTrans: TIBTransaction;
+    Meetings: TIBQuery;
+    MeetingQry: TDataSetProvider;
     procedure DSServerModuleCreate(Sender: TObject);
   private
   private

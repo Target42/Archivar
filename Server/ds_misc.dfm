@@ -1,8 +1,8 @@
 object dsMisc: TdsMisc
   OldCreateOrder = False
   OnCreate = DSServerModuleCreate
-  Height = 247
-  Width = 441
+  Height = 262
+  Width = 689
   object openTasks: TIBQuery
     Database = DBMod.IBDatabase1
     Transaction = IBTransaction1
@@ -99,5 +99,35 @@ object dsMisc: TdsMisc
       'nowait')
     Left = 296
     Top = 160
+  end
+  object Meetings: TIBQuery
+    Database = DBMod.IBDatabase1
+    Transaction = IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    ParamCheck = True
+    SQL.Strings = (
+      'SELECT * FROM EL_EINLADUNG a, el_pe b'
+      'where a.el_id = b.el_id'
+      'and pe_id = :pe_id'
+      'and EL_STATUS = :status')
+    Left = 464
+    Top = 48
+    ParamData = <
+      item
+        DataType = ftInteger
+        Name = 'pe_id'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftString
+        Name = 'status'
+        ParamType = ptInput
+      end>
+  end
+  object MeetingQry: TDataSetProvider
+    DataSet = Meetings
+    Left = 464
+    Top = 112
   end
 end

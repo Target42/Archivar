@@ -22,14 +22,14 @@
   object Splitter1: TSplitter
     Left = 249
     Top = 0
-    Height = 466
+    Height = 469
     ExplicitLeft = 568
     ExplicitTop = 96
     ExplicitHeight = 100
   end
   object Splitter2: TSplitter
     Left = 0
-    Top = 466
+    Top = 469
     Width = 1126
     Height = 3
     Cursor = crVSplit
@@ -43,7 +43,7 @@
     Left = 252
     Top = 0
     Width = 874
-    Height = 466
+    Height = 469
     Align = alClient
     Center = True
     ExplicitLeft = 392
@@ -67,47 +67,15 @@
         Width = 50
       end>
   end
-  object GroupBox2: TGroupBox
-    Left = 0
-    Top = 469
-    Width = 1126
-    Height = 190
-    Align = alBottom
-    Caption = 'Aufgaben'
-    TabOrder = 1
-    Visible = False
-    inline TaskListFrame1: TTaskListFrame
-      Left = 2
-      Top = 15
-      Width = 1122
-      Height = 173
-      Align = alClient
-      TabOrder = 0
-      ExplicitLeft = 2
-      ExplicitTop = 15
-      ExplicitWidth = 1122
-      ExplicitHeight = 173
-      inherited LV: TListView
-        Width = 1122
-        Height = 173
-        ExplicitWidth = 1122
-        ExplicitHeight = 173
-      end
-      inherited ActionList1: TActionList
-        Left = 176
-        Top = 80
-      end
-    end
-  end
   object PageControl1: TPageControl
     Left = 0
     Top = 0
     Width = 249
-    Height = 466
+    Height = 469
     ActivePage = TabSheet2
     Align = alLeft
     MultiLine = True
-    TabOrder = 2
+    TabOrder = 1
     TabPosition = tpLeft
     Visible = False
     object TabSheet1: TTabSheet
@@ -116,16 +84,16 @@
         Left = 0
         Top = 0
         Width = 221
-        Height = 458
+        Height = 461
         Align = alClient
         TabOrder = 0
         ExplicitWidth = 221
-        ExplicitHeight = 458
+        ExplicitHeight = 461
         inherited TV: TTreeView
           Width = 221
-          Height = 458
+          Height = 461
           ExplicitWidth = 221
-          ExplicitHeight = 458
+          ExplicitHeight = 461
         end
       end
     end
@@ -136,16 +104,16 @@
         Left = 0
         Top = 0
         Width = 221
-        Height = 458
+        Height = 461
         Align = alClient
         TabOrder = 0
         ExplicitWidth = 221
-        ExplicitHeight = 458
+        ExplicitHeight = 461
         inherited LV: TListView
           Width = 221
-          Height = 458
+          Height = 461
           ExplicitWidth = 221
-          ExplicitHeight = 458
+          ExplicitHeight = 461
         end
       end
     end
@@ -156,14 +124,14 @@
         Left = 0
         Top = 0
         Width = 221
-        Height = 458
+        Height = 461
         Align = alClient
         TabOrder = 0
         ExplicitWidth = 221
-        ExplicitHeight = 458
+        ExplicitHeight = 461
         inherited DBGrid1: TDBGrid
           Width = 221
-          Height = 458
+          Height = 461
         end
         inherited EpubTab: TFDMemTable
           Left = 16
@@ -172,6 +140,75 @@
         inherited DataSource1: TDataSource
           Left = 72
           Top = 24
+        end
+      end
+    end
+  end
+  object PageControl2: TPageControl
+    Left = 0
+    Top = 472
+    Width = 1126
+    Height = 187
+    ActivePage = TabSheet5
+    Align = alBottom
+    TabOrder = 2
+    Visible = False
+    object TabSheet4: TTabSheet
+      Caption = 'Aufgaben'
+      object GroupBox2: TGroupBox
+        Left = 0
+        Top = 0
+        Width = 1118
+        Height = 159
+        Align = alClient
+        Caption = 'Aufgaben'
+        TabOrder = 0
+        inline TaskListFrame1: TTaskListFrame
+          Left = 2
+          Top = 15
+          Width = 1114
+          Height = 142
+          Align = alClient
+          TabOrder = 0
+          ExplicitLeft = 2
+          ExplicitTop = 15
+          ExplicitWidth = 1114
+          ExplicitHeight = 142
+          inherited LV: TListView
+            Width = 1114
+            Height = 142
+            ExplicitLeft = 448
+            ExplicitTop = -33
+            ExplicitWidth = 1114
+            ExplicitHeight = 142
+          end
+          inherited ActionList1: TActionList
+            Left = 176
+            Top = 80
+          end
+        end
+      end
+    end
+    object TabSheet5: TTabSheet
+      Caption = 'Termine'
+      ImageIndex = 1
+      inline MeetingFrame1: TMeetingFrame
+        Left = 0
+        Top = 0
+        Width = 1118
+        Height = 159
+        Align = alClient
+        TabOrder = 0
+        inherited Lv: TListView
+          Width = 1118
+          Height = 159
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 858
+          ExplicitHeight = 178
+        end
+        inherited DSProviderConnection1: TDSProviderConnection
+          SQLConnection = nil
         end
       end
     end

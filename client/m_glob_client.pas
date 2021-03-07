@@ -26,6 +26,7 @@ const
   msgRemoveBookmark = WMUSER + 7;
   msgLoadLogo       = WMUSER + 8;
   msgUpdateGremium  = WMUSER + 9;
+  msgUpdateMeetings = WMUSER + 10;
 
 type
   TGM = class(TDataModule)
@@ -592,7 +593,8 @@ begin
   end;
   checkimages;
   checkCache;
-  PostMessage( Application.MainFormHandle, msgLoadLogo, 0, 0 );
+  PostMessage( Application.MainFormHandle, msgLoadLogo,       0, 0 );
+  PostMessage( Application.MainFormHandle, msgUpdateMeetings, 0, 0 );
 end;
 
 procedure TGM.SQLConnection1AfterDisconnect(Sender: TObject);

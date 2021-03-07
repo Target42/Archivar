@@ -165,7 +165,8 @@ uses
   f_meeting_select in 'Sitzung\f_meeting_select.pas' {SelectMeetingForm},
   fr_gremium in 'Gremium\fr_gremium.pas' {GremiumFrame: TFrame},
   f_meeting_proto in 'Sitzung\f_meeting_proto.pas' {MeetingProtoForm},
-  f_login in 'misc\f_login.pas' {LoginForm};
+  f_login in 'misc\f_login.pas' {LoginForm},
+  fr_meeting in 'Sitzung\fr_meeting.pas' {MeetingFrame: TFrame};
 
 {$R *.res}
 
