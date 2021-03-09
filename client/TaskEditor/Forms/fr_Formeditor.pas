@@ -122,11 +122,14 @@ type
     procedure updateForms;
 
     procedure prepareDrop;
+    procedure saveDFM(ctrl : ITaskCtrl );
   public
     procedure init;
 
     property OnNewForm : TOnNewForm read m_onNewForm write m_onNewForm;
     property Task : ITask read m_task write setTask;
+
+    procedure saveCurrentForm;
 
     procedure release;
   end;
@@ -135,7 +138,7 @@ implementation
 
 uses
   System.Types, u_TaskFormImpl, u_taskForm2XML, f_testform, f_form_props, System.IOUtils,
-  f_selectList, Vcl.Dialogs, System.UITypes;
+  f_selectList, Vcl.Dialogs, System.UITypes, System.Generics.Collections;
 
 {$R *.dfm}
 
@@ -659,6 +662,59 @@ begin
   FNodes.Free;
 end;
 
+function ComponentToString(Component: TComponent): string;
+var
+  BinStream: TMemoryStream;
+  StrStream: TStringStream;
+  s: string;
+begin
+  BinStream := TMemoryStream.Create;
+  try
+    StrStream := TStringStream.Create(s);
+    try
+      BinStream.WriteComponent(Component);
+      BinStream.Seek(0, soFromBeginning);
+      ObjectBinaryToText(BinStream, StrStream);
+      StrStream.Seek(0, soFromBeginning);
+      Result := StrStream.DataString;
+    finally
+      StrStream.Free;
+    end;
+  finally
+    BinStream.Free
+  end;
+end;
+
+procedure TEditorFrame.saveCurrentForm;
+begin
+  if Assigned(m_form) then
+    saveDFM(m_form.Base);
+end;
+
+procedure TEditorFrame.saveDFM(ctrl : ITaskCtrl );
+
+  procedure changeOwner( list : TList<ITaskCtrl> );
+  var
+    c : ITaskCtrl;
+  begin
+    for c in list do
+    begin
+      if Assigned(c.Control) then
+        EditPanel.InsertComponent(c.Control);
+        changeOwner(c.Childs);
+    end;
+  end;
+
+begin
+  if not Assigned(m_form) then
+    exit;
+  changeOwner( ctrl.Childs );
+
+  m_form.DFM.clear;
+  m_form.DFM.WriteComponent(  EditPanel );
+
+end;
+
 procedure TEditorFrame.SelectControl(c: TControl);
 begin
   try
@@ -727,6 +783,8 @@ procedure TEditorFrame.setTaskForm(value: ITaskForm);
 begin
   if Assigned(m_form) then
   begin
+    saveDFM(m_form.Base);
+
     prepareDrop;
     m_form.Base.dropControls;
   end;
@@ -761,17 +819,21 @@ begin
   end;
   m_testMode := true;
 
+  saveDFM(m_form.Base);
+
   prepareDrop;
   m_form.Base.dropControls;
   m_form.Base.Control := NIL;
 
   Application.CreateForm(TTestForm, TestForm);
   TestForm.TaskForm := m_form;
+
   TestForm.ShowModal;
   TestForm.free;
 
   m_testMode := false;
   setTaskForm( m_form );
+
 
 end;
 

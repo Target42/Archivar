@@ -285,9 +285,12 @@ var
   st : TStream;
   clid : String;
 begin
+  EditorFrame1.saveCurrentForm;
+
   st := TETab.CreateBlobStream(  TETab.FieldByName('TE_DATA'), bmWrite);
   m_tc.saveToStream(st);
   st.Position := 0;
+
   TETab.FieldByName('TE_MD5').AsString := GM.md5(st);
   clid := TETab.FieldByName('TE_CLID').AsString;
   st.Free;

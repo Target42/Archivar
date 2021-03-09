@@ -209,7 +209,7 @@ var
   p : ITaskCtrlProp;
   xp :  IXMLProperty_;
 begin
-  xCtrl.Clid        := ctrl.CLID;
+  xCtrl.Clid      := ctrl.CLID;
   xCtrl.Field     := '';
   xCtrl.Fieldclid := '';
 

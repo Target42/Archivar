@@ -223,6 +223,7 @@ procedure TReportFrame.fillHelp;
 var
   RS: TResourceStream;
 begin
+  exit;
   RS := TResourceStream.Create(HInstance, 'dws_html', RT_RCDATA);
   try
     THtmlMod.SetHTML( RS, WebBrowser2);

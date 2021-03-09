@@ -3,17 +3,18 @@ unit u_TaskFormImpl;
 interface
 
 uses
-  i_taskEdit, System.Generics.Collections, Vcl.Controls;
+  i_taskEdit, System.Generics.Collections, Vcl.Controls, System.Classes;
 
 type
   TaskFormImpl = class( TInterfacedObject, ITaskForm )
   private
-    m_owner : ITask;
-    m_name : string;
-    m_clid : string;
-    m_list : Tlist<ITaskCtrl>;
-    m_isMain : boolean;
-    m_base : ITaskCtrl;
+    m_owner   : ITask;
+    m_name    : string;
+    m_clid    : string;
+    m_list    : Tlist<ITaskCtrl>;
+    m_isMain  : boolean;
+    m_base    : ITaskCtrl;
+    m_dfm     : TMemoryStream;
 
     procedure setName( value : string );
     function  getName : string;
@@ -28,6 +29,7 @@ type
 
     procedure setChanged( value : boolean );
     function  getChanged : boolean;
+    function getdfm : TMemoryStream;
   public
 
     constructor Create(Owner : ITask );
@@ -54,13 +56,14 @@ end;
 
 constructor TaskFormImpl.Create(owner : ITask);
 begin
-  m_owner := owner;
-  m_list := Tlist<ITaskCtrl>.create;
-  m_isMain := false;
-  m_clid   := CreateClassID;
-  m_base   := TaskCtrlImpl.create(self);
+  m_owner   := owner;
+  m_list    := Tlist<ITaskCtrl>.create;
+  m_isMain  := false;
+  m_clid    := CreateClassID;
+  m_base    := TaskCtrlImpl.create(self);
   (m_base as TaskCtrlImpl).isBase := true;
-  m_name   := 'Form';
+  m_name    := 'Form';
+  m_dfm     := TMemoryStream.create;
 end;
 
 function TaskFormImpl.createControl(parent: TControl; newType: TControlType; x,
@@ -81,6 +84,7 @@ destructor TaskFormImpl.Destroy;
 begin
   m_base := NIL;
   m_list.Free;
+  m_dfm.free;
   inherited;
 end;
 
@@ -115,6 +119,11 @@ end;
 function TaskFormImpl.getCLID: string;
 begin
   Result := m_clid;
+end;
+
+function TaskFormImpl.getdfm: TMemoryStream;
+begin
+  Result := m_dfm;
 end;
 
 function TaskFormImpl.getMainForm: Boolean;

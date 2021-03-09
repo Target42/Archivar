@@ -427,8 +427,11 @@ end;
 
 class procedure THtmlMod.SetHTML(st: TStream; WebBrowser: TWebBrowser);
 begin
+
   WebBrowser.Navigate('about:blank');
+
   while WebBrowser.ReadyState < READYSTATE_INTERACTIVE do begin
+//  while WebBrowser.ReadyState <> READYSTATE_COMPLETE do begin
    Application.ProcessMessages;
   end;
 

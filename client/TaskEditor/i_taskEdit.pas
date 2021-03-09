@@ -81,6 +81,8 @@ type
 
     function  getBase : ITaskCtrl;
     function  getOwner :ITask;
+
+    function getdfm : TMemoryStream;
   //public
     property Name  : string read getName write setName;
 
@@ -91,6 +93,8 @@ type
 
     property Changed  : boolean read getChanged write setChanged;
     property ReadOnly : boolean read getReadOnly write setReadOnly;
+
+    property DFM      : TMemoryStream read getdfm;
 
     procedure release;
     procedure clearContent;

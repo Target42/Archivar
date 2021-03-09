@@ -143,6 +143,26 @@ end;
 function TTaskContainerImpl.loadFromPath(path: string): boolean;
 var
   xw : Task2XML;
+
+  function loadForms : boolean;
+  var
+    fname : string;
+    frm   : ITaskForm;
+  begin
+    Result := true;
+    for frm in m_task.Forms do
+    begin
+      fname := TPath.Combine(path, 'forms\'+frm.Name+'.dfm');
+      if FileExists(fname) then
+      begin
+        try
+          frm.DFM.LoadFromFile(fname);
+        except
+
+        end;
+      end;
+    end;
+  end;
 begin
   Result := false;
   if not DirectoryExists( path ) then
@@ -153,15 +173,37 @@ begin
   xw.Free;
   m_task.Owner := self;
 
-
-  Result := m_files.loadFromPath(TPath.Combine(path, 'TestData'), '*.xml') and Result;
-  Result := m_info.loadFromPath(TPath.Combine(path, 'info'), '*.*') and Result;
-  Result := m_styles.loadFromPath(TPath.Combine(path, 'Styles'))  and Result;
+  Result := loadForms                                                       and Result;
+  Result := m_files.loadFromPath(TPath.Combine(path, 'TestData'), '*.xml')  and Result;
+  Result := m_info.loadFromPath(TPath.Combine(path, 'info'), '*.*')         and Result;
+  Result := m_styles.loadFromPath(TPath.Combine(path, 'Styles'))            and Result;
 end;
 
 function TTaskContainerImpl.loadFromZip(zip: TZipFile): boolean;
 var
-  xw : Task2XML;
+  xw    : Task2XML;
+  fname : string;
+
+  function loadForms : boolean;
+  var
+    frm : ITaskForm;
+    inx : integer;
+    h   : TZipHeader;
+    st  : TStream;
+  begin
+    Result := true;
+    for frm in m_task.Forms do
+    begin
+      fname := TPath.Combine('forms', frm.Name+'.dfm');
+      inx   := zip.IndexOf(fname);
+      if inx > -1 then
+      begin
+        zip.Read( fname, st, h );
+        frm.DFM.CopyFrom( st, -1);
+        st.Free;
+      end;
+    end;
+  end;
 begin
   Result := false;
 
@@ -170,9 +212,10 @@ begin
   xw.Free;
   m_task.Owner := self;
 
-  Result := m_files.loadFromZip(zip, 'TestData', '[\w]*\.xml') and Result;
-  Result := m_info.loadFromZip(zip, 'info', '[\w]*\.[\w]*') and Result;
-  Result := m_styles.loadFromZip(zip, 'Styles')  and Result;
+  Result := loadForms                                           and Result;
+  Result := m_files.loadFromZip(zip, 'TestData', '[\w]*\.xml')  and Result;
+  Result := m_info.loadFromZip(zip, 'info', '[\w]*\.[\w]*')     and Result;
+  Result := m_styles.loadFromZip(zip, 'Styles')                 and Result;
 end;
 
 procedure TTaskContainerImpl.release;
@@ -192,6 +235,32 @@ end;
 function TTaskContainerImpl.saveToPath(path: string): boolean;
 var
   xw : Task2XML;
+
+  function saveForms : boolean;
+  var
+    frm   : ITaskForm;
+    fname : string;
+    st    : TStream;
+  begin
+    Result := true;
+
+    ForceDirectories(TPath.Combine(path, 'forms'));
+    for frm in m_task.Forms do
+    begin
+      if frm.DFM.Size > 0  then
+      begin
+        fname := TPath.Combine(path, 'forms\'+frm.Name+'.dfm');
+        frm.DFM.Position := 0;
+
+        try
+          st := TFileStream.Create(fname, fmCreate + fmShareDenyNone);
+          st.CopyFrom(frm.DFM, -1);
+        finally
+          st.Free;
+        end;
+      end;
+    end;
+  end;
 begin
   ForceDirectories(path);
 
@@ -199,8 +268,9 @@ begin
   Result := xw.save(m_task, TPath.combine( path, 'task.xml'));
   xw.Free;
 
+  Result := saveForms                                           and Result;
   Result := m_files.saveToPath(TPath.Combine(path, 'TestData')) and Result;
-  Result := m_info.saveToPath(TPath.Combine(path, 'Info')) and Result;
+  Result := m_info.saveToPath(TPath.Combine(path, 'Info'))      and Result;
   Result := m_styles.saveToPath(TPath.Combine(path, 'Styles'))  and Result;
 end;
 
@@ -217,15 +287,32 @@ var
     xw.Free;
   end;
 
+  function saveForms : boolean;
+  var
+    frm : ITaskForm;
+  begin
+    Result := true;
+
+    for frm in m_task.Forms do
+    begin
+      if frm.DFM.Size > 0  then
+      begin
+        frm.DFM.Position := 0;
+        zip.Add(frm.DFM, 'forms\'+frm.Name+'.dfm');
+      end;
+    end;
+  end;
+
 begin
 
   zip := TZipFile.Create;
   zip.Open(st, zmWrite );
 
   Result := saveTask;
-  Result := m_files.saveToZip( zip, 'TestData') and Result;
-  Result := m_info.saveToZip(zip, 'Info') and Result;
-  Result := m_styles.saveToZip(zip, 'Styles')  and Result;
+  Result := saveForms                             and Result;
+  Result := m_files.saveToZip(  zip, 'TestData')  and Result;
+  Result := m_info.saveToZip(   zip, 'Info')      and Result;
+  Result := m_styles.saveToZip( zip, 'Styles')    and Result;
 
   zip.Free;
   st.Position := 0;
