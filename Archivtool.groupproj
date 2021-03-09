@@ -3,13 +3,13 @@
         <ProjectGuid>{5528771C-AE3B-44BC-80EE-8A08CC8EF32E}</ProjectGuid>
     </PropertyGroup>
     <ItemGroup>
+        <Projects Include="Setup\Setup.dproj">
+            <Dependencies/>
+        </Projects>
         <Projects Include="Server\ArchivServer.dproj">
             <Dependencies/>
         </Projects>
         <Projects Include="client\Archivar.dproj">
-            <Dependencies/>
-        </Projects>
-        <Projects Include="Setup\Setup.dproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -20,6 +20,15 @@
             <Default.Personality/>
         </BorlandProject>
     </ProjectExtensions>
+    <Target Name="Setup">
+        <MSBuild Projects="Setup\Setup.dproj"/>
+    </Target>
+    <Target Name="Setup:Clean">
+        <MSBuild Projects="Setup\Setup.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Setup:Make">
+        <MSBuild Projects="Setup\Setup.dproj" Targets="Make"/>
+    </Target>
     <Target Name="ArchivServer">
         <MSBuild Projects="Server\ArchivServer.dproj"/>
     </Target>
@@ -38,23 +47,14 @@
     <Target Name="Archivar:Make">
         <MSBuild Projects="client\Archivar.dproj" Targets="Make"/>
     </Target>
-    <Target Name="Setup">
-        <MSBuild Projects="Setup\Setup.dproj"/>
-    </Target>
-    <Target Name="Setup:Clean">
-        <MSBuild Projects="Setup\Setup.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="Setup:Make">
-        <MSBuild Projects="Setup\Setup.dproj" Targets="Make"/>
-    </Target>
     <Target Name="Build">
-        <CallTarget Targets="ArchivServer;Archivar;Setup"/>
+        <CallTarget Targets="Setup;ArchivServer;Archivar"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="ArchivServer:Clean;Archivar:Clean;Setup:Clean"/>
+        <CallTarget Targets="Setup:Clean;ArchivServer:Clean;Archivar:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="ArchivServer:Make;Archivar:Make;Setup:Make"/>
+        <CallTarget Targets="Setup:Make;ArchivServer:Make;Archivar:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>
