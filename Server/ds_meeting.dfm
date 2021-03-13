@@ -43,13 +43,13 @@ object dsMeeing: TdsMeeing
     CachedUpdates = False
     TableName = 'PR_PROTOKOL'
     UniDirectional = False
-    Left = 208
+    Left = 184
     Top = 16
   end
   object PRTab: TDataSetProvider
     DataSet = PRTable
-    Left = 216
-    Top = 72
+    Left = 184
+    Top = 64
   end
   object ElTable: TIBTable
     Database = DBMod.IBDatabase1
@@ -58,13 +58,13 @@ object dsMeeing: TdsMeeing
     CachedUpdates = False
     TableName = 'EL_EINLADUNG'
     UniDirectional = False
-    Left = 280
-    Top = 24
+    Left = 240
+    Top = 16
   end
   object ElTab: TDataSetProvider
     DataSet = ElTable
-    Left = 280
-    Top = 80
+    Left = 240
+    Top = 64
   end
   object ProtoQry: TIBQuery
     Database = DBMod.IBDatabase1
@@ -230,6 +230,92 @@ object dsMeeing: TdsMeeing
       item
         DataType = ftInteger
         Name = 'el_id'
+        ParamType = ptInput
+      end>
+  end
+  object Teilnehmer: TIBQuery
+    Database = DBMod.IBDatabase1
+    Transaction = IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    ParamCheck = True
+    SQL.Strings = (
+      'SELECT * FROM el_pe a, TN_TEILNEHMER b'
+      'where a.el_id = :el_id'
+      'and b.pr_id = :pr_id'
+      'and a.PE_ID = b.PE_ID'
+      'order by tn_name, tn_vorname')
+    Left = 304
+    Top = 24
+    ParamData = <
+      item
+        DataType = ftInteger
+        Name = 'el_id'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftInteger
+        Name = 'pr_id'
+        ParamType = ptInput
+      end>
+  end
+  object TNQry: TDataSetProvider
+    DataSet = Teilnehmer
+    Left = 304
+    Top = 72
+  end
+  object SetReadQry: TIBQuery
+    Database = DBMod.IBDatabase1
+    Transaction = IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    ParamCheck = True
+    SQL.Strings = (
+      'update el_pe'
+      'set ep_read = current_timestamp'
+      'where el_id = :el_id'
+      'and pe_id = :pe_id'
+      'and ep_read is NULL')
+    Left = 400
+    Top = 112
+    ParamData = <
+      item
+        DataType = ftInteger
+        Name = 'el_id'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftInteger
+        Name = 'pe_id'
+        ParamType = ptInput
+      end>
+  end
+  object UpdateTnQry: TIBQuery
+    Database = DBMod.IBDatabase1
+    Transaction = IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    ParamCheck = True
+    SQL.Strings = (
+      'update TN_TEILNEHMER'
+      'set TN_GRUND = :grund, TN_STATUS = :status'
+      'where TN_ID = :tn_ID')
+    Left = 408
+    Top = 176
+    ParamData = <
+      item
+        DataType = ftString
+        Name = 'grund'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftInteger
+        Name = 'status'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftInteger
+        Name = 'tn_ID'
         ParamType = ptInput
       end>
   end

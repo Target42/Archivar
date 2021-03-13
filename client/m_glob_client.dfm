@@ -49,8 +49,8 @@ object GM: TGM
     end
   end
   object JvComputerInfoEx1: TJvComputerInfoEx
-    Left = 64
-    Top = 120
+    Left = 48
+    Top = 104
   end
   object DSClientCallbackChannelManager1: TDSClientCallbackChannelManager
     DSHostname = 'localhost'
@@ -60,8 +60,8 @@ object GM: TGM
     ManagerId = '246585.16461.649512'
     UserName = '{E4DBFC6B-C573-47FF-AC01-9CE6C5F63DB9}'
     Password = 'dev'
-    Left = 48
-    Top = 174
+    Left = 160
+    Top = 166
   end
   object ImageList1: TImageList
     ColorDepth = cd32Bit
@@ -70,10 +70,10 @@ object GM: TGM
     Top = 32
   end
   object ImageList2: TImageList
-    Left = 392
-    Top = 24
+    Left = 296
+    Top = 32
     Bitmap = {
-      494C010108007801F00010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010108007801F80010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000003000000001002000000000000030
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -479,8 +479,8 @@ object GM: TGM
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsGremium'
     SQLConnection = SQLConnection1
-    Left = 208
-    Top = 144
+    Left = 160
+    Top = 104
   end
   object GremiumMA: TClientDataSet
     Aggregates = <>
@@ -492,13 +492,13 @@ object GM: TGM
       end>
     ProviderName = 'GrUserQry'
     RemoteServer = DSProviderConnection1
-    Left = 313
-    Top = 152
+    Left = 256
+    Top = 104
   end
   object JvSHFileOperation1: TJvSHFileOperation
     Operation = foDelete
     Options = [fofNoConfirmation, fofSilent, fofNoErrorUI]
-    Left = 344
-    Top = 112
+    Left = 352
+    Top = 104
   end
 end

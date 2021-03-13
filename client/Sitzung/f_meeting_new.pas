@@ -7,7 +7,8 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_base, Vcl.ExtCtrls, Vcl.StdCtrls,
   Vcl.DBCtrls, Data.DB, Datasnap.DBClient, Datasnap.DSConnect, Vcl.Mask,
   u_gremium, Vcl.ComCtrls, JvExComCtrls, JvDateTimePicker, JvDBDateTimePicker,
-  i_chapter, Vcl.Buttons, System.JSON, VirtualTrees, fr_editForm, fr_to;
+  i_chapter, Vcl.Buttons, System.JSON, VirtualTrees, fr_editForm, fr_to,
+  Vcl.Grids, Vcl.DBGrids;
 
 type
   TMeetingForm = class(TForm)
@@ -36,6 +37,28 @@ type
     GroupBox3: TGroupBox;
     EditFrame1: TEditFrame;
     Splitter1: TSplitter;
+    TNQry: TClientDataSet;
+    GroupBox4: TGroupBox;
+    DBGrid1: TDBGrid;
+    TNSrc: TDataSource;
+    TNQryEL_ID: TIntegerField;
+    TNQryPE_ID: TIntegerField;
+    TNQryEP_STATUS: TWideStringField;
+    TNQryEP_READ: TDateTimeField;
+    TNQryPR_ID: TIntegerField;
+    TNQryTN_ID: TIntegerField;
+    TNQryTN_NAME: TWideStringField;
+    TNQryTN_VORNAME: TWideStringField;
+    TNQryTN_DEPARTMENT: TWideStringField;
+    TNQryTN_ROLLE: TWideStringField;
+    TNQryTN_STATUS: TIntegerField;
+    TNQryTN_GRUND: TWideStringField;
+    TNQryTN_STATUS_STR: TStringField;
+    BitBtn1: TBitBtn;
+    RadioButton1: TRadioButton;
+    RadioButton2: TRadioButton;
+    Label5: TLabel;
+    ComboBox3: TComboBox;
     procedure FormCreate(Sender: TObject);
     procedure ElTabBeforePost(DataSet: TDataSet);
     procedure ComboBox1Change(Sender: TObject);
@@ -43,6 +66,13 @@ type
     procedure ProtoQryAfterScroll(DataSet: TDataSet);
     procedure BaseFrame1AbortBtnClick(Sender: TObject);
     procedure BaseFrame1OKBtnClick(Sender: TObject);
+    procedure DBGrid1DrawColumnCell(Sender: TObject; const Rect: TRect;
+      DataCol: Integer; Column: TColumn; State: TGridDrawState);
+    procedure TNQryTN_STATUS_STRGetText(Sender: TField; var Text: string;
+      DisplayText: Boolean);
+    procedure BitBtn1Click(Sender: TObject);
+    procedure RadioButton1Click(Sender: TObject);
+    procedure RadioButton2Click(Sender: TObject);
   private
     { Private-Deklarationen }
     m_el_id : integer;
@@ -55,6 +85,9 @@ type
     procedure SendUpdate( id : integer );
     procedure setELID( value : integer );
     procedure updateTo;
+    procedure changeStatus;
+
+    function execStatus( req : TJSONObject ) : boolean;
   public
     property Gremium  : TGremium read GetGremiumID write SetGremiumID;
     property EL_ID    : integer read m_el_id write setELID;
@@ -69,7 +102,8 @@ function DeleteMeeting( id : integer ) : boolean;
 implementation
 
 uses
-  m_glob_client, system.DateUtils, u_stub, u_json, System.Generics.Collections;
+  m_glob_client, system.DateUtils, u_stub, u_json, System.Generics.Collections,
+  f_abwesenheit;
 
 {$R *.dfm}
 
@@ -151,6 +185,57 @@ begin
 
 end;
 
+procedure TMeetingForm.BitBtn1Click(Sender: TObject);
+var
+  req   : TJSONObject;
+  val   : integer;
+  grund : string;
+begin
+  if (RadioButton2.Checked) and (ComboBox3.ItemIndex = -1 ) then
+  begin
+    ShowMessage('Bitte einen konkreten Grund auswählen.');
+    exit;
+  end;
+
+  if TNQry.Locate('PE_ID', VarArrayOf([GM.UserID]), [] ) then
+  begin
+    grund := '';
+    Req := TJSONObject.Create;
+    JReplace( req, 'tnid',  TNQryTN_ID.Value );
+    if RadioButton1.Checked then
+      JReplace( req, 'state', integer(tsZugesagt) )
+    else
+    begin
+      grund := ComboBox3.Items.Strings[ComboBox3.ItemIndex];
+      val   := integer( ComboBox3.Items.Objects[ComboBox3.ItemIndex] );
+      if val = 0 then
+        JReplace( req, 'state', integer(tsEntschuldigt) )
+      else
+        JReplace( req, 'state', integer(tsUnentschuldigt) );
+    end;
+    JReplace( req, 'grund', grund );
+    execStatus( req );
+
+    TNQry.Refresh;
+  end
+  else
+    ShowMessage('Sie sind kein Teilnehmer dieser Sitzung!');
+end;
+
+procedure TMeetingForm.changeStatus;
+var
+  req     : TJSONObject;
+begin
+  if ElTab.ReadOnly then
+    exit;
+
+  req := TJSONObject.Create;
+  JReplace( req, 'elid', m_el_id);
+  JReplace( req, 'peid', GM.UserID );
+
+  execStatus(req);
+end;
+
 procedure TMeetingForm.ComboBox1Change(Sender: TObject);
 var
   i : integer;
@@ -164,10 +249,43 @@ begin
     ComboBox2.ItemIndex := 0;
 end;
 
+procedure TMeetingForm.DBGrid1DrawColumnCell(Sender: TObject; const Rect: TRect;
+  DataCol: Integer; Column: TColumn; State: TGridDrawState);
+var
+  col : TColor;
+begin
+  case TTeilnehmerStatus(TNQryTN_STATUS.Value) of
+    tsZugesagt      : col := clGreen;
+    tsEntschuldigt  : col := clBlue;
+    tsUnentschuldigt: col := clRed;
+    else
+      col := clWindowText;
+  end;
+  DBGrid1.Canvas.Font.Color:= col;
+
+  DBGrid1.DefaultDrawColumnCell(Rect, DataCol, Column, State);
+end;
+
 procedure TMeetingForm.ElTabBeforePost(DataSet: TDataSet);
 begin
   if DataSet.FieldByName('EL_ID').AsInteger = 0 then
     DataSet.FieldByName('EL_ID').AsInteger := GM.autoInc('gen_el_id');
+end;
+
+function TMeetingForm.execStatus(req: TJSONObject) : boolean;
+var
+  client : TdsMeeingClient;
+  res    : TJSONObject;
+begin
+  client := TdsMeeingClient.Create(GM.SQLConnection1.DBXConnection);
+  try
+    res := client.changeStatus(req);
+    Result := JBool(res, 'result');
+    if not  Result then
+      ShowMessage( JString( res, 'text'));
+  finally
+    client.Free;
+  end;
 end;
 
 procedure TMeetingForm.FormCreate(Sender: TObject);
@@ -213,6 +331,7 @@ begin
 
   setup;
 
+  RadioButton1.Checked := true;
   BaseFrame1.OKBtn.Enabled := false;
 end;
 
@@ -234,6 +353,22 @@ end;
 procedure TMeetingForm.ProtoQryAfterScroll(DataSet: TDataSet);
 begin
   updateTo;
+end;
+
+procedure TMeetingForm.RadioButton1Click(Sender: TObject);
+begin
+  ComboBox3.Text := '';
+  ComboBox3.Items.Clear;
+end;
+
+procedure TMeetingForm.RadioButton2Click(Sender: TObject);
+begin
+  ComboBox3.Items.AddObject('Urlaub',    NIL);
+  ComboBox3.Items.AddObject('Schulung',  NIL);
+  ComboBox3.Items.AddObject('Krankheit', NIL);
+
+  ComboBox3.Items.AddObject('Private',  TObject(1));
+  ComboBox3.Items.AddObject('Unbekannt', TObject(1));
 end;
 
 procedure TMeetingForm.SendUpdate(id: integer);
@@ -262,30 +397,42 @@ var
   gr  : TGremium;
 begin
   m_el_id := value;
-  ElTab.Open;
 
-  if m_el_id < 1 then
+  BaseFrame1.OKBtn.Enabled := false;
+
+  if m_el_id >0  then
   begin
-    ElTab.Append;
-    ElTab.FieldByName('EL_DATUM').AsDateTime := now + 7;
-  end
-  else
-  begin
+    ElTab.Open;
     if ElTab.Locate('EL_ID', VarArrayOf([m_el_id]), []) then
     begin
-      ELTab.Edit;
-      st := ElTab.CreateBlobStream(ElTab.FieldByName('EL_DATA'), bmRead);
-      EditFrame1.loadFromStream(st);
-      st.Free;
+      ELTab.ReadOnly := SameText( ElTab.FieldByName('EL_STATUS').AsString, 'c');
+
+
+      if not ElTab.ReadOnly then
+      begin
+        ELTab.Edit;
+        st := ElTab.CreateBlobStream(ElTab.FieldByName('EL_DATA'), bmRead);
+        EditFrame1.loadFromStream(st);
+        st.Free;
+      end;
 
       gr := GM.getGremium(ElTab.FieldByName('GR_ID').AsInteger);
       if Assigned(gr) then
         self.SetGremiumID( gr );
+
       updateTo;
+
+      changeStatus;
+
+      TNQry.ParamByName('EL_ID').AsInteger  := m_el_id;
+      TNQry.ParamByName('PR_ID').AsInteger  := ElTab.FieldByName('PR_ID').AsInteger;
+      TNQry.Open;
+
+      GroupBox4.Enabled := not ElTab.ReadOnly;
+
+      BaseFrame1.OKBtn.Enabled := ( ElTab.FieldByName('PR_ID').AsInteger > 0 );
     end;
   end;
-
-  BaseFrame1.OKBtn.Enabled := ( ElTab.FieldByName('PR_ID').AsInteger > 0 );
 end;
 
 procedure TMeetingForm.SetGremiumID(const Value: TGremium);
@@ -306,6 +453,12 @@ begin
     end;
   end;
   BaseFrame1.OKBtn.Enabled := ( ElTab.FieldByName('PR_ID').AsInteger > 0 );
+end;
+
+procedure TMeetingForm.TNQryTN_STATUS_STRGetText(Sender: TField;
+  var Text: string; DisplayText: Boolean);
+begin
+  Text := TeilnehmerStatusToString( TTeilnehmerStatus(TNQryTN_STATUS.Value) );
 end;
 
 procedure TMeetingForm.updateTo;

@@ -84,8 +84,8 @@ object ServerContainer1: TServerContainer1
     SQL.Strings = (
       'select * from PE_PERSON'
       'where PE_NET = :net')
-    Left = 56
-    Top = 192
+    Left = 32
+    Top = 200
     ParamData = <
       item
         DataType = ftString
@@ -99,7 +99,7 @@ object ServerContainer1: TServerContainer1
       'read_committed'
       'rec_version'
       'nowait')
-    Left = 120
+    Left = 104
     Top = 192
   end
   object dsFile: TDSServerClass
@@ -120,28 +120,28 @@ object ServerContainer1: TServerContainer1
     Server = DSServer1
     LifeCycle = 'Invocation'
     Left = 256
-    Top = 128
+    Top = 64
   end
   object dsImage: TDSServerClass
     OnGetClass = dsImageGetClass
     Server = DSServer1
     LifeCycle = 'Invocation'
     Left = 256
-    Top = 192
+    Top = 128
   end
   object dsChapter: TDSServerClass
     OnGetClass = dsChapterGetClass
     Server = DSServer1
     LifeCycle = 'Invocation'
     Left = 256
-    Top = 248
+    Top = 184
   end
   object dsTaskEdit: TDSServerClass
     OnGetClass = dsTaskEditGetClass
     Server = DSServer1
     LifeCycle = 'Invocation'
-    Left = 256
-    Top = 304
+    Left = 264
+    Top = 248
   end
   object dsTemplate: TDSServerClass
     OnGetClass = dsTemplateGetClass
@@ -155,30 +155,30 @@ object ServerContainer1: TServerContainer1
     Server = DSServer1
     LifeCycle = 'Invocation'
     Left = 264
-    Top = 376
+    Top = 312
   end
   object DSServerClass1: TDSServerClass
     OnGetClass = DSServerClass1GetClass
     Server = DSServer1
-    Left = 336
-    Top = 392
+    Left = 344
+    Top = 480
   end
   object dsFileCache: TDSServerClass
     OnGetClass = dsFileCacheGetClass
     Server = DSServer1
-    Left = 176
-    Top = 384
+    Left = 264
+    Top = 368
   end
   object dsEpub: TDSServerClass
     OnGetClass = dsEpubGetClass
     Server = DSServer1
-    Left = 248
-    Top = 456
+    Left = 336
+    Top = 376
   end
   object dsMeeing: TDSServerClass
     OnGetClass = dsMeeingGetClass
     Server = DSServer1
-    Left = 304
-    Top = 520
+    Left = 264
+    Top = 424
   end
 end

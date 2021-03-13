@@ -142,6 +142,7 @@ begin
   Result.isGlobal   := m_glob;
   Result.Typ        := m_typ;
   Result.GlobalName := m_gname;
+  Result.Rem        := m_rem;
 
   for i := 0 to pred(m_list.Count) do
   begin

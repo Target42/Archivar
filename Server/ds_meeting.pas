@@ -27,6 +27,10 @@ type
     DelPEQry: TIBQuery;
     DelELQry: TIBQuery;
     FrindELQry: TIBQuery;
+    Teilnehmer: TIBQuery;
+    TNQry: TDataSetProvider;
+    SetReadQry: TIBQuery;
+    UpdateTnQry: TIBQuery;
   private
     { Private-Deklarationen }
   public
@@ -36,6 +40,8 @@ type
     function Sendmail(      req : TJSONObject ) : TJSONObject;
 
     function GetTree(       req : TJSONObject ) : TJSONObject;
+
+    function changeStatus(  req : TJSONObject ) : TJSONObject ;
   end;
 
 implementation
@@ -55,6 +61,59 @@ begin
   AutoIncQry.Open;
   Result := AutoIncQry.FieldByName('GEN_ID').AsInteger;
   AutoIncQry.Close;
+end;
+
+function TdsMeeing.changeStatus(req: TJSONObject): TJSONObject;
+var
+  el_id     : integer;
+  pe_id     : integer;
+  tn_id     : integer;
+  newState  : integer;
+  grund     : string;
+begin
+  Result := TJSONObject.Create;
+
+  el_id     := JInt(    req, 'elid' );
+  pe_id     := JInt(    req, 'peid' );
+  tn_id     := JInt(    req, 'tnid' );
+  newState  := JInt(    req, 'state', -1);
+  Grund     := JString( req, 'grund' );
+
+  if newState = -1 then
+  begin
+    SetReadQry.ParamByName('EL_ID').AsInteger := el_id;
+    SetReadQry.ParamByName('PE_ID').AsInteger := pe_id;
+    try
+      SetReadQry.ExecSQL;
+      if SetReadQry.Transaction.InTransaction then
+        SetReadQry.Transaction.Commit;
+      JResult(Result, true, '');
+    except
+      on e : exception do
+      begin
+        JResult( Result, false, e.ToString);
+      end;
+    end;
+  end
+  else
+  begin
+    UpdateTnQry.ParamByName('grund').AsString   := grund;
+    UpdateTnQry.ParamByName('status').AsInteger := newState;
+    UpdateTnQry.ParamByName('TN_ID').AsInteger  := tn_id;
+
+    try
+      UpdateTnQry.ExecSQL;
+
+      if UpdateTnQry.Transaction.InTransaction then
+        UpdateTnQry.Transaction.Commit;
+      JResult(Result, true, '');
+    except
+      on e : exception do
+      begin
+        JResult( Result, false, e.ToString);
+      end;
+    end;
+  end;
 end;
 
 function TdsMeeing.deleteMeeting(req: TJSONObject): TJSONObject;
@@ -218,7 +277,7 @@ var
   grid  : integer;
   id    : integer;
   prid  : integer;
-  doExit: boolean;
+
 begin
   Result  := TJSONObject.Create;
   grid    := JInt( req, 'grid');

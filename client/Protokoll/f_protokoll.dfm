@@ -33,7 +33,7 @@ object ProtokollForm: TProtokollForm
     Top = 49
     Width = 888
     Height = 400
-    ActivePage = TabSheet1
+    ActivePage = TabSheet2
     Align = alClient
     TabOrder = 1
     object TabSheet1: TTabSheet
@@ -141,10 +141,6 @@ object ProtokollForm: TProtokollForm
           object TabSheet5: TTabSheet
             Caption = 'Beschluss'
             ImageIndex = 1
-            ExplicitLeft = 0
-            ExplicitTop = 0
-            ExplicitWidth = 0
-            ExplicitHeight = 0
             object SpeedButton7: TSpeedButton
               Tag = 1
               Left = 4
@@ -201,10 +197,6 @@ object ProtokollForm: TProtokollForm
     object TabSheet2: TTabSheet
       Caption = 'Teilnehmer'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel1: TPanel
         Left = 0
         Top = 331
@@ -300,10 +292,6 @@ object ProtokollForm: TProtokollForm
     object TabSheet3: TTabSheet
       Caption = 'G'#228'ste'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel3: TPanel
         Left = 0
         Top = 331
@@ -744,7 +732,7 @@ object ProtokollForm: TProtokollForm
     Left = 212
     Top = 305
     Bitmap = {
-      494C010106001001F80010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010106001001FC0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

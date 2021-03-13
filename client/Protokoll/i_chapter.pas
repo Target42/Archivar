@@ -14,6 +14,8 @@ type
     tsEntschuldigt,
     tsEingeladen,
     tsUnentschuldigt,
+    tsZugesagt,
+    tsAbgelehnt,
 
     tsLast);
 
@@ -383,7 +385,11 @@ begin
     tsEntschuldigt:   Result := 'Entschuldigt';
     tsUnentschuldigt: Result := 'Unentschuldigt';
     tsEingeladen:     Result := 'Eingeladen';
+    tsZugesagt:       Result := 'Zugesagt';
+    tsAbgelehnt:      Result := 'Abgelehnt';
     tsLast:           Result := 'Last';
+    else
+      Result := '??';
   end;
 end;
 
@@ -401,6 +407,10 @@ begin
     Result := tsEingeladen
   else if SameText(value, 'Unentschuldigt') then
     Result := tsUnentschuldigt
+  else if SameText(value, 'Zugesagt') then
+    Result := tsZugesagt
+  else if SameText(value, 'Abgelehnt') then
+    Result := tsAbgelehnt
   else
     Result := tsUnbekannt;
 

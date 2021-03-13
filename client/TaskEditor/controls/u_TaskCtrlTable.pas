@@ -303,6 +303,7 @@ begin
   sg := m_ctrl as TStringGrid;
 
   SG.Cells[0,0] := 'Nr';
+  SG.ColWidths[0] := 35;
 
   if m_list.Count > 0 then
   begin

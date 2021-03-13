@@ -15,6 +15,7 @@ type
     Lv: TListView;
     ApplicationEvents1: TApplicationEvents;
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
+    procedure LvDblClick(Sender: TObject);
   private
     type
       DataRec = class
@@ -84,6 +85,17 @@ begin
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
 end;
 
+procedure TMeetingFrame.LvDblClick(Sender: TObject);
+var
+  da    : DataRec;
+begin
+  if not Assigned(LV.Selected) then
+    exit;
+
+  da := LV.Selected.Data;
+  PostMessage(Application.MainFormHandle, msgEditMeeting, 0, da.ID );
+end;
+
 procedure TMeetingFrame.readData;
 var
   da : DataRec;
@@ -126,7 +138,8 @@ begin
   for da in m_list do
   begin
     item := Lv.Items.Add;
-    item.Caption := FormatDateTime('dd.mm.yyyy', da.Datum);
+    item.Data     := da;
+    item.Caption  := FormatDateTime('dd.mm.yyyy', da.Datum);
     item.SubItems.Add(FormatDateTime('hh:nn', da.Zeit));
     item.SubItems.Add(da.Title);
     item.SubItems.Add(FormatDateTime('hh:nn', da.Ende));

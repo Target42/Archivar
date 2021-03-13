@@ -31,10 +31,11 @@ type
     procedure setRoot( value : IDataField );
     function  getRoot : IDataField;
     function  getList : IDataFieldList;
+    procedure setList( value : IDataFieldList);
     procedure updateView;
   public
     property Root       : IDataField      read getRoot write setRoot;
-    property FieldList  : IDataFieldList  read getList write m_list;
+    property FieldList  : IDataFieldList  read getList write setList;
   end;
 
 var
@@ -148,13 +149,18 @@ begin
   BitBtn2.Click;
 end;
 
+procedure TTableFieldEditorForm.setList(value: IDataFieldList);
+begin
+  m_list := value;
+  updateView;
+end;
+
 procedure TTableFieldEditorForm.setRoot(value: IDataField);
 begin
   m_root := value;
   m_list := m_root.Childs.clone;
 
   updateView;
-
 end;
 
 procedure TTableFieldEditorForm.updateView;

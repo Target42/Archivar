@@ -1,6 +1,6 @@
 //
 // Erzeugt vom DataSnap-Proxy-Generator.
-// 24.02.2021 10:53:36
+// 11.03.2021 20:00:24
 //
 
 unit u_stub;
@@ -214,18 +214,22 @@ type
 
   TdsMeeingClient = class(TDSAdminClient)
   private
+    FAutoIncCommand: TDBXCommand;
     FnewMeetingCommand: TDBXCommand;
     FdeleteMeetingCommand: TDBXCommand;
     FSendmailCommand: TDBXCommand;
     FGetTreeCommand: TDBXCommand;
+    FchangeStatusCommand: TDBXCommand;
   public
     constructor Create(ADBXConnection: TDBXConnection); overload;
     constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
     destructor Destroy; override;
+    function AutoInc(gen: string): Integer;
     function newMeeting(req: TJSONObject): TJSONObject;
     function deleteMeeting(req: TJSONObject): TJSONObject;
     function Sendmail(req: TJSONObject): TJSONObject;
     function GetTree(req: TJSONObject): TJSONObject;
+    function changeStatus(req: TJSONObject): TJSONObject;
   end;
 
 implementation
@@ -1107,6 +1111,20 @@ begin
   inherited;
 end;
 
+function TdsMeeingClient.AutoInc(gen: string): Integer;
+begin
+  if FAutoIncCommand = nil then
+  begin
+    FAutoIncCommand := FDBXConnection.CreateCommand;
+    FAutoIncCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FAutoIncCommand.Text := 'TdsMeeing.AutoInc';
+    FAutoIncCommand.Prepare;
+  end;
+  FAutoIncCommand.Parameters[0].Value.SetWideString(gen);
+  FAutoIncCommand.ExecuteUpdate;
+  Result := FAutoIncCommand.Parameters[1].Value.GetInt32;
+end;
+
 function TdsMeeingClient.newMeeting(req: TJSONObject): TJSONObject;
 begin
   if FnewMeetingCommand = nil then
@@ -1163,6 +1181,20 @@ begin
   Result := TJSONObject(FGetTreeCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
 end;
 
+function TdsMeeingClient.changeStatus(req: TJSONObject): TJSONObject;
+begin
+  if FchangeStatusCommand = nil then
+  begin
+    FchangeStatusCommand := FDBXConnection.CreateCommand;
+    FchangeStatusCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FchangeStatusCommand.Text := 'TdsMeeing.changeStatus';
+    FchangeStatusCommand.Prepare;
+  end;
+  FchangeStatusCommand.Parameters[0].Value.SetJSONValue(req, FInstanceOwner);
+  FchangeStatusCommand.ExecuteUpdate;
+  Result := TJSONObject(FchangeStatusCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
+end;
+
 constructor TdsMeeingClient.Create(ADBXConnection: TDBXConnection);
 begin
   inherited Create(ADBXConnection);
@@ -1175,10 +1207,12 @@ end;
 
 destructor TdsMeeingClient.Destroy;
 begin
+  FAutoIncCommand.DisposeOf;
   FnewMeetingCommand.DisposeOf;
   FdeleteMeetingCommand.DisposeOf;
   FSendmailCommand.DisposeOf;
   FGetTreeCommand.DisposeOf;
+  FchangeStatusCommand.DisposeOf;
   inherited;
 end;
 

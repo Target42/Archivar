@@ -150,11 +150,13 @@ type
     procedure ac_me_editExecute(Sender: TObject);
     procedure ac_me_deleteExecute(Sender: TObject);
   private
+    procedure ApplicationSetMenu( flag : boolean );
     procedure setPanel( id : integer ; text : string );
     procedure loadLogo;
 
     procedure templateEdit( sys : boolean );
     procedure setGremiumName( id : integer );
+    procedure showMeeting( id : integer );
   public
     { Public declarations }
   end;
@@ -292,12 +294,7 @@ begin
   begin
     if SelectMeetingForm.ME_ID > 0 then
     begin
-      Application.CreateForm(TMeetingForm, MeetingForm);
-
-      MeetingForm.EL_ID   := SelectMeetingForm.ME_ID;
-
-      MeetingForm.ShowModal;
-      MeetingForm.Free;
+      showMeeting( SelectMeetingForm.ME_ID );
     end;
   end;
   SelectMeetingForm.free;
@@ -482,29 +479,13 @@ begin
   case Msg.message of
     msgConnected :
       begin
-        ac_prg_connect.Enabled  := false;
-        ac_prg_discon.Enabled   := true;
-        ac_ta_neu.Enabled       := true;
-        ac_ta_load.Enabled      := true;
-
-        ac_pr_new.Enabled       := true;
-        ac_pr_open.Enabled      := true;
-        ac_pr_view.Enabled      := true;
-        ac_pr_delete.Enabled    := true;
-
-        ac_me_new.Enabled       := true;
-        ac_me_edit.Enabled      := true;
-        ac_me_invite.Enabled    := true;
-        ac_me_delete.Enabled    := true;
-        ac_me_end.Enabled       := true;
+        ApplicationSetMenu( true );
 
         setPanel(integer(stStatus), 'Verbunden');
         setPanel(integer(stLogin), GM.UserName);
         setPanel(integer(stUser),  GM.Name+', '+GM.Vorname);
+
         GremiumTreeFrame1.updateTree;
-        PageControl1.Visible := true;
-        PageControl2.Visible := true;
-        Splitter2.Visible := true;
         GremiumTreeFrame1.selectFirst;
 
         BookmarkFrame1.updatebookMarks;
@@ -512,45 +493,59 @@ begin
       end;
     msgDisconnected:
       begin
-        ac_prg_connect.Enabled  := true;
-        ac_prg_discon.Enabled   := false;
-        ac_ta_neu.Enabled       := false;
-        ac_ta_load.Enabled      := false;
-
-        ac_pr_new.Enabled       := false;
-        ac_pr_open.Enabled      := false;
-        ac_pr_view.Enabled      := false;
-        ac_pr_delete.Enabled    := false;
-
-        ac_me_new.Enabled       := false;
-        ac_me_edit.Enabled      := false;
-        ac_me_invite.Enabled    := false;
-        ac_me_delete.Enabled    := false;
-        ac_me_end.Enabled       := false;
-
+        ApplicationSetMenu( false );
 
         setPanel(integer(stStatus), 'Getrennt');
         setPanel(integer(stLogin), '  ');
         setPanel(integer(stUser), '  ');
 
-        PageControl1.Visible  := false;
-        PageControl2.Visible  := false;
-        Splitter2.Visible     := false;
         ePupFrame1.release;
       end;
     msgStatus:
-    begin
-      Admin1.Visible := (msg.wParam = 1);
-      Admin1.Enabled := (msg.wParam = 1);
-    end;
+      begin
+        Admin1.Visible := (msg.wParam = 1);
+        Admin1.Enabled := (msg.wParam = 1);
+      end;
     msgUpdateGr       : GremiumTreeFrame1.updateTree;
     msgNewBookMark    : BookmarkFrame1.updatebookMarks;
     msgRemoveBookmark : BookmarkFrame1.removeBookmark( TBookmark(Msg.LParam));
     msgLoadLogo       : loadLogo;
     msgUpdateGremium  : setGremiumName( msg.lParam );
+    msgEditMeeting    : showMeeting(msg.lParam);
     else
       Handled := false;
   end;
+end;
+
+procedure TMainForm.ApplicationSetMenu(flag: boolean);
+begin
+  Aufgabe1.Visible        := flag;
+
+  ac_prg_connect.Enabled  := not flag;
+  ac_prg_discon.Enabled   := flag;
+
+  ac_ta_neu.Enabled       := flag;
+  ac_ta_load.Enabled      := flag;
+
+  ac_pr_new.Enabled       := flag;
+  ac_pr_open.Enabled      := flag;
+  ac_pr_view.Enabled      := flag;
+  ac_pr_delete.Enabled    := flag;
+
+  ac_me_new.Enabled       := flag;
+  ac_me_edit.Enabled      := flag;
+  ac_me_invite.Enabled    := flag;
+  ac_me_delete.Enabled    := flag;
+  ac_me_end.Enabled       := flag;
+
+  ac_tb_neu.Enabled       := flag;
+  ac_tb_edit.Enabled      := flag;
+  ac_tb_löschen.Enabled   := flag;
+
+  PageControl1.Visible    := flag;
+  PageControl2.Visible    := flag;
+  Splitter2.Visible       := false;
+
 end;
 
 procedure TMainForm.est1Click(Sender: TObject);
@@ -609,6 +604,13 @@ begin
   StatusBar1.Panels.Items[ id ].Text := text;
 end;
 
+procedure TMainForm.showMeeting(id: integer);
+begin
+  Application.CreateForm(TMeetingForm, MeetingForm);
+  MeetingForm.EL_ID   := id;
+  MeetingForm.ShowModal;
+  MeetingForm.Free;
+end;
 
 procedure TMainForm.templateEdit(sys: boolean);
 var

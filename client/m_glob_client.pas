@@ -27,6 +27,7 @@ const
   msgLoadLogo       = WMUSER + 8;
   msgUpdateGremium  = WMUSER + 9;
   msgUpdateMeetings = WMUSER + 10;
+  msgEditMeeting    = WMUSER + 11;
 
 type
   TGM = class(TDataModule)

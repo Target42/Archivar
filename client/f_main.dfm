@@ -177,8 +177,6 @@
           inherited LV: TListView
             Width = 1114
             Height = 142
-            ExplicitLeft = 448
-            ExplicitTop = -33
             ExplicitWidth = 1114
             ExplicitHeight = 142
           end
@@ -199,16 +197,13 @@
         Height = 159
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 1118
+        ExplicitHeight = 159
         inherited Lv: TListView
           Width = 1118
           Height = 159
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 858
-          ExplicitHeight = 178
-        end
-        inherited DSProviderConnection1: TDSProviderConnection
-          SQLConnection = nil
+          ExplicitWidth = 1118
+          ExplicitHeight = 159
         end
       end
     end
@@ -239,6 +234,7 @@
     end
     object Aufgabe1: TMenuItem
       Caption = 'Aktionen'
+      Visible = False
       object Aufgabe2: TMenuItem
         Caption = 'Aufgabe'
         GroupIndex = 200
@@ -511,16 +507,19 @@
     object ac_tb_neu: TAction
       Category = 'Textbausteine'
       Caption = 'Neu'
+      Enabled = False
       OnExecute = ac_tb_neuExecute
     end
     object ac_tb_edit: TAction
       Category = 'Textbausteine'
       Caption = 'Bearbeiten'
+      Enabled = False
       OnExecute = ac_tb_editExecute
     end
     object ac_tb_löschen: TAction
       Category = 'Textbausteine'
       Caption = 'L'#246'schen'
+      Enabled = False
       OnExecute = ac_tb_löschenExecute
     end
     object ac_ad_http: TAction
@@ -531,6 +530,7 @@
     object ac_pr_view: TAction
       Category = 'Protokoll'
       Caption = 'Anzeigen'
+      Enabled = False
       OnExecute = ac_pr_viewExecute
     end
     object ac_ad_epub: TAction
@@ -547,24 +547,29 @@
     object ac_pr_delete: TAction
       Category = 'Protokoll'
       Caption = '&L'#246'schen'
+      Enabled = False
     end
     object ac_me_edit: TAction
       Category = 'Meeting'
       Caption = 'Bearbeiten'
+      Enabled = False
       OnExecute = ac_me_editExecute
     end
     object ac_me_invite: TAction
       Category = 'Meeting'
       Caption = 'Einladen'
+      Enabled = False
     end
     object ac_me_delete: TAction
       Category = 'Meeting'
       Caption = '&L'#246'schen'
+      Enabled = False
       OnExecute = ac_me_deleteExecute
     end
     object ac_me_end: TAction
       Category = 'Meeting'
       Caption = 'Abschlie'#223'en'
+      Enabled = False
     end
   end
   object ApplicationEvents1: TApplicationEvents

@@ -37,7 +37,7 @@ object AbwesenForm: TAbwesenForm
     Align = alBottom
     AutoSize = True
     TabOrder = 0
-    ExplicitTop = 88
+    ExplicitTop = 114
     ExplicitWidth = 248
     inherited StatusBar1: TStatusBar
       Width = 248
@@ -57,7 +57,6 @@ object AbwesenForm: TAbwesenForm
     Top = 75
     Width = 219
     Height = 21
-    ItemIndex = 0
     TabOrder = 1
     Text = 'Krankheit'
     Items.Strings = (
@@ -65,7 +64,8 @@ object AbwesenForm: TAbwesenForm
       'Urlaub'
       'Elternzeit'
       'Schulung'
-      'Verpflichtungen a.d. Beriebsratsamt')
+      'Verpflichtungen a.d. Beriebsratsamt'
+      'Privat')
   end
   object ComboBox2: TComboBox
     Left = 16

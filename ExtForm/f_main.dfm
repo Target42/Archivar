@@ -21,7 +21,9 @@ object Form1: TForm1
     Width = 635
     Height = 41
     Align = alTop
+    BevelOuter = bvNone
     Caption = 'Panel1'
+    ShowCaption = False
     TabOrder = 0
     object Button1: TButton
       Left = 224
@@ -37,9 +39,29 @@ object Form1: TForm1
     Left = 0
     Top = 41
     Width = 635
-    Height = 258
+    Height = 198
     Align = alClient
+    BevelOuter = bvNone
     Caption = 'Panel2'
+    ShowCaption = False
     TabOrder = 1
+  end
+  object StatusBar1: TStatusBar
+    Left = 0
+    Top = 280
+    Width = 635
+    Height = 19
+    Panels = <>
+  end
+  object Panel3: TPanel
+    Left = 0
+    Top = 239
+    Width = 635
+    Height = 41
+    Align = alBottom
+    BevelOuter = bvNone
+    Caption = 'Panel3'
+    ShowCaption = False
+    TabOrder = 3
   end
 end
