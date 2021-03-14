@@ -21,7 +21,6 @@ type
     ProtoQry: TClientDataSet;
     ProcolSrc: TDataSource;
     Label1: TLabel;
-    DBLookupComboBox1: TDBLookupComboBox;
     JvDBDateTimePicker1: TJvDBDateTimePicker;
     Label2: TLabel;
     Label3: TLabel;
@@ -59,6 +58,11 @@ type
     RadioButton2: TRadioButton;
     Label5: TLabel;
     ComboBox3: TComboBox;
+    TabSheet3: TTabSheet;
+    DBGrid2: TDBGrid;
+    TGQry: TClientDataSet;
+    TGSrc: TDataSource;
+    DBEdit1: TDBEdit;
     procedure FormCreate(Sender: TObject);
     procedure ElTabBeforePost(DataSet: TDataSet);
     procedure ComboBox1Change(Sender: TObject);
@@ -407,7 +411,6 @@ begin
     begin
       ELTab.ReadOnly := SameText( ElTab.FieldByName('EL_STATUS').AsString, 'c');
 
-
       if not ElTab.ReadOnly then
       begin
         ELTab.Edit;
@@ -423,10 +426,6 @@ begin
       updateTo;
 
       changeStatus;
-
-      TNQry.ParamByName('EL_ID').AsInteger  := m_el_id;
-      TNQry.ParamByName('PR_ID').AsInteger  := ElTab.FieldByName('PR_ID').AsInteger;
-      TNQry.Open;
 
       GroupBox4.Enabled := not ElTab.ReadOnly;
 
@@ -451,7 +450,10 @@ begin
       TOFrame1.PR_ID                        := ProtoQry.FieldByName('PR_ID').AsInteger;
       ElTab.FieldByName('PR_ID').AsInteger  := ProtoQry.FieldByName('PR_ID').AsInteger;
     end;
-  end;
+  end
+  else
+    ProtoQry.Locate('PR_ID', VarArrayOf([ElTab.FieldByName('PR_ID').AsInteger]), []);
+
   BaseFrame1.OKBtn.Enabled := ( ElTab.FieldByName('PR_ID').AsInteger > 0 );
 end;
 
@@ -465,6 +467,16 @@ procedure TMeetingForm.updateTo;
 begin
   TOFrame1.PR_ID := ProtoQry.FieldByName('PR_ID').AsInteger;
   TOFrame1.updateContent;
+
+  TNQry.Close;
+  TNQry.ParamByName('EL_ID').AsInteger  := m_el_id;
+  TNQry.ParamByName('PR_ID').AsInteger  := ElTab.FieldByName('PR_ID').AsInteger;
+  TNQry.Open;
+
+  TGQry.Close;
+  TGQry.ParamByName('PR_ID').AsInteger := ElTab.FieldByName('PR_ID').AsInteger;
+  TGQry.Open;
+
 end;
 
 end.

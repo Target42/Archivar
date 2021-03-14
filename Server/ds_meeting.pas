@@ -31,6 +31,8 @@ type
     TNQry: TDataSetProvider;
     SetReadQry: TIBQuery;
     UpdateTnQry: TIBQuery;
+    Gaeste: TIBQuery;
+    TGQry: TDataSetProvider;
   private
     { Private-Deklarationen }
   public

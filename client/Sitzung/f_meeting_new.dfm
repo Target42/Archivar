@@ -94,18 +94,6 @@ object MeetingForm: TMeetingForm
       ReadOnly = True
       TabOrder = 0
     end
-    object DBLookupComboBox1: TDBLookupComboBox
-      Left = 224
-      Top = 43
-      Width = 145
-      Height = 21
-      DataField = 'PR_ID'
-      DataSource = ElSrc
-      KeyField = 'PR_ID'
-      ListField = 'PR_NAME'
-      ListSource = ProcolSrc
-      TabOrder = 1
-    end
     object JvDBDateTimePicker1: TJvDBDateTimePicker
       Left = 16
       Top = 89
@@ -113,7 +101,7 @@ object MeetingForm: TMeetingForm
       Height = 21
       Date = 44234.839669270830000000
       Time = 44234.839669270830000000
-      TabOrder = 2
+      TabOrder = 1
       DropDownDate = 44234.000000000000000000
       DataField = 'EL_DATUM'
       DataSource = ElSrc
@@ -123,7 +111,7 @@ object MeetingForm: TMeetingForm
       Top = 89
       Width = 73
       Height = 21
-      TabOrder = 3
+      TabOrder = 2
       Text = 'ComboBox1'
       OnChange = ComboBox1Change
     end
@@ -132,8 +120,18 @@ object MeetingForm: TMeetingForm
       Top = 89
       Width = 66
       Height = 21
-      TabOrder = 4
+      TabOrder = 3
       Text = 'ComboBox2'
+    end
+    object DBEdit1: TDBEdit
+      Left = 224
+      Top = 43
+      Width = 145
+      Height = 21
+      DataField = 'PR_NAME'
+      DataSource = ProcolSrc
+      ReadOnly = True
+      TabOrder = 4
     end
   end
   object PageControl1: TPageControl
@@ -141,7 +139,7 @@ object MeetingForm: TMeetingForm
     Top = 137
     Width = 677
     Height = 484
-    ActivePage = TabSheet2
+    ActivePage = TabSheet3
     Align = alClient
     TabOrder = 2
     object TabSheet1: TTabSheet
@@ -343,11 +341,72 @@ object MeetingForm: TMeetingForm
           end>
       end
     end
+    object TabSheet3: TTabSheet
+      Caption = 'G'#228'ste'
+      ImageIndex = 2
+      object DBGrid2: TDBGrid
+        Left = 0
+        Top = 0
+        Width = 669
+        Height = 456
+        Align = alClient
+        DataSource = TGSrc
+        ReadOnly = True
+        TabOrder = 0
+        TitleFont.Charset = DEFAULT_CHARSET
+        TitleFont.Color = clWindowText
+        TitleFont.Height = -11
+        TitleFont.Name = 'Tahoma'
+        TitleFont.Style = []
+        Columns = <
+          item
+            Expanded = False
+            FieldName = 'TG_NAME'
+            Title.Caption = 'Name'
+            Width = 100
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'TG_VORNAME'
+            Title.Caption = 'Vorname'
+            Width = 100
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'TG_DEPARTMENT'
+            Title.Caption = 'Abteilung'
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'TG_VON'
+            Title.Caption = 'Von'
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'TG_BIS'
+            Title.Caption = 'bis'
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'TG_GRUND'
+            Title.Caption = 'Grund'
+            Width = 150
+            Visible = True
+          end>
+      end
+    end
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsMeeing'
-    Left = 40
-    Top = 136
+    Connected = True
+    SQLConnection = GM.SQLConnection1
+    Left = 48
+    Top = 176
   end
   object ElTab: TClientDataSet
     Aggregates = <>
@@ -355,13 +414,13 @@ object MeetingForm: TMeetingForm
     ProviderName = 'ElTab'
     RemoteServer = DSProviderConnection1
     BeforePost = ElTabBeforePost
-    Left = 16
-    Top = 192
+    Left = 24
+    Top = 232
   end
   object ElSrc: TDataSource
     DataSet = ElTab
-    Left = 16
-    Top = 244
+    Left = 24
+    Top = 284
   end
   object ProtoQry: TClientDataSet
     Aggregates = <>
@@ -374,21 +433,21 @@ object MeetingForm: TMeetingForm
     ProviderName = 'ListProtocolQry'
     RemoteServer = DSProviderConnection1
     AfterScroll = ProtoQryAfterScroll
-    Left = 72
-    Top = 192
+    Left = 80
+    Top = 232
   end
   object ProcolSrc: TDataSource
     DataSet = ProtoQry
-    Left = 72
-    Top = 244
+    Left = 80
+    Top = 284
   end
   object PRTab: TClientDataSet
     Aggregates = <>
     Params = <>
     ProviderName = 'PRTab'
     RemoteServer = DSProviderConnection1
-    Left = 16
-    Top = 308
+    Left = 24
+    Top = 348
   end
   object TNQry: TClientDataSet
     Aggregates = <>
@@ -405,8 +464,8 @@ object MeetingForm: TMeetingForm
       end>
     ProviderName = 'TNQry'
     RemoteServer = DSProviderConnection1
-    Left = 148
-    Top = 193
+    Left = 132
+    Top = 233
     object TNQryEL_ID: TIntegerField
       FieldName = 'EL_ID'
       Origin = '"EL_PE"."EL_ID"'
@@ -479,7 +538,26 @@ object MeetingForm: TMeetingForm
   end
   object TNSrc: TDataSource
     DataSet = TNQry
-    Left = 148
-    Top = 249
+    Left = 132
+    Top = 289
+  end
+  object TGQry: TClientDataSet
+    Aggregates = <>
+    Params = <
+      item
+        DataType = ftInteger
+        Name = 'pr_id'
+        ParamType = ptInput
+      end>
+    ProviderName = 'TGQry'
+    ReadOnly = True
+    RemoteServer = DSProviderConnection1
+    Left = 188
+    Top = 233
+  end
+  object TGSrc: TDataSource
+    DataSet = TGQry
+    Left = 188
+    Top = 289
   end
 end

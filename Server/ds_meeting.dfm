@@ -75,8 +75,8 @@ object dsMeeing: TdsMeeing
     SQL.Strings = (
       'select * from PR_PROTOKOL'
       'where PR_ID = :pr_id')
-    Left = 320
-    Top = 208
+    Left = 136
+    Top = 192
     ParamData = <
       item
         DataType = ftInteger
@@ -94,8 +94,8 @@ object dsMeeing: TdsMeeing
       'select * from CP_CHAPTER'
       'where PR_ID = :pr_id'
       'order by CP_NR')
-    Left = 320
-    Top = 264
+    Left = 136
+    Top = 248
     ParamData = <
       item
         DataType = ftInteger
@@ -113,8 +113,8 @@ object dsMeeing: TdsMeeing
       'select * from CT_CHAPTER_TEXT'
       'where CP_ID = :cp_id'
       'order by CT_NUMBER')
-    Left = 320
-    Top = 320
+    Left = 136
+    Top = 304
     ParamData = <
       item
         DataType = ftUnknown
@@ -141,8 +141,8 @@ object dsMeeing: TdsMeeing
     SQL.Strings = (
       'SELECT * FROM TN_TEILNEHMER'
       'where PR_ID = :pr_id')
-    Left = 208
-    Top = 256
+    Left = 72
+    Top = 248
     ParamData = <
       item
         DataType = ftInteger
@@ -156,8 +156,8 @@ object dsMeeing: TdsMeeing
     BufferChunks = 1000
     CachedUpdates = False
     ParamCheck = True
-    Left = 408
-    Top = 24
+    Left = 24
+    Top = 104
   end
   object LastDocQry: TIBQuery
     Database = DBMod.IBDatabase1
@@ -170,8 +170,8 @@ object dsMeeing: TdsMeeing
       'where gr_id = :gr_id'
       'and el_id is null'
       'order by pr_id desc')
-    Left = 216
-    Top = 328
+    Left = 64
+    Top = 312
     ParamData = <
       item
         DataType = ftInteger
@@ -224,8 +224,8 @@ object dsMeeing: TdsMeeing
     SQL.Strings = (
       'select * from PR_PROTOKOL'
       'where EL_ID = :el_id')
-    Left = 120
-    Top = 288
+    Left = 72
+    Top = 192
     ParamData = <
       item
         DataType = ftInteger
@@ -246,7 +246,7 @@ object dsMeeing: TdsMeeing
       'and a.PE_ID = b.PE_ID'
       'order by tn_name, tn_vorname')
     Left = 304
-    Top = 24
+    Top = 16
     ParamData = <
       item
         DataType = ftInteger
@@ -262,7 +262,7 @@ object dsMeeing: TdsMeeing
   object TNQry: TDataSetProvider
     DataSet = Teilnehmer
     Left = 304
-    Top = 72
+    Top = 64
   end
   object SetReadQry: TIBQuery
     Database = DBMod.IBDatabase1
@@ -276,8 +276,8 @@ object dsMeeing: TdsMeeing
       'where el_id = :el_id'
       'and pe_id = :pe_id'
       'and ep_read is NULL')
-    Left = 400
-    Top = 112
+    Left = 200
+    Top = 192
     ParamData = <
       item
         DataType = ftInteger
@@ -300,8 +300,8 @@ object dsMeeing: TdsMeeing
       'update TN_TEILNEHMER'
       'set TN_GRUND = :grund, TN_STATUS = :status'
       'where TN_ID = :tn_ID')
-    Left = 408
-    Top = 176
+    Left = 208
+    Top = 256
     ParamData = <
       item
         DataType = ftString
@@ -318,5 +318,29 @@ object dsMeeing: TdsMeeing
         Name = 'tn_ID'
         ParamType = ptInput
       end>
+  end
+  object Gaeste: TIBQuery
+    Database = DBMod.IBDatabase1
+    Transaction = IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    ParamCheck = True
+    SQL.Strings = (
+      'select * from TG_GAESTE'
+      'where pr_id = :pr_id'
+      'order by tg_grund, tg_name, tg_vorname')
+    Left = 360
+    Top = 16
+    ParamData = <
+      item
+        DataType = ftInteger
+        Name = 'pr_id'
+        ParamType = ptInput
+      end>
+  end
+  object TGQry: TDataSetProvider
+    DataSet = Gaeste
+    Left = 360
+    Top = 64
   end
 end
