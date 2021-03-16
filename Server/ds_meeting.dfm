@@ -63,6 +63,7 @@ object dsMeeing: TdsMeeing
   end
   object ElTab: TDataSetProvider
     DataSet = ElTable
+    UpdateMode = upWhereChanged
     Left = 240
     Top = 64
   end

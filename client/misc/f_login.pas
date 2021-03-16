@@ -11,6 +11,8 @@ type
     LabeledEdit1: TLabeledEdit;
     LabeledEdit2: TLabeledEdit;
     BaseFrame1: TBaseFrame;
+    procedure FormCreate(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     function GetUserName: string;
     procedure SetUserName(const Value: string);
@@ -27,9 +29,23 @@ var
 
 implementation
 
+uses
+  m_glob_client;
+
 {$R *.dfm}
 
 { TLoginForm }
+
+procedure TLoginForm.FormCreate(Sender: TObject);
+begin
+  LabeledEdit1.Text := GM.UserName;
+  LabeledEdit2.Text := '';
+end;
+
+procedure TLoginForm.FormShow(Sender: TObject);
+begin
+  LabeledEdit2.SetFocus;
+end;
 
 function TLoginForm.GetPassword: string;
 begin

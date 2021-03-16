@@ -28,6 +28,7 @@ const
   msgUpdateGremium  = WMUSER + 9;
   msgUpdateMeetings = WMUSER + 10;
   msgEditMeeting    = WMUSER + 11;
+  msgLogin          = WMUSER + 12;
 
 type
   TGM = class(TDataModule)
@@ -249,6 +250,17 @@ begin
   end;
 end;
 
+function GetUsername: String;
+var
+  Buffer: array[0..256] of Char; // UNLEN (= 256) +1 (definiert in Lmcons.h)
+  Size: DWord;
+begin
+  Size := length(Buffer); // length stat SizeOf, da Anzahl in TChar und nicht BufferSize in Byte
+   if not Winapi.Windows.GetUserName(Buffer, Size) then
+    RaiseLastOSError;
+  SetString(Result, Buffer, Size - 1);
+end;
+
 procedure TGM.DataModuleCreate(Sender: TObject);
 begin
   DSClientCallbackChannelManager1.ManagerId := createClassID;
@@ -268,6 +280,8 @@ begin
   ForceDirectories(m_httpHome);
   ForceDirectories(m_export);
   ForceDirectories(m_epubHome);
+
+  FUserName := GetUsername;
 end;
 
 procedure TGM.DataModuleDestroy(Sender: TObject);

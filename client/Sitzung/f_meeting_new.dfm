@@ -139,7 +139,7 @@ object MeetingForm: TMeetingForm
     Top = 137
     Width = 677
     Height = 484
-    ActivePage = TabSheet3
+    ActivePage = TabSheet1
     Align = alClient
     TabOrder = 2
     object TabSheet1: TTabSheet
@@ -403,7 +403,6 @@ object MeetingForm: TMeetingForm
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsMeeing'
-    Connected = True
     SQLConnection = GM.SQLConnection1
     Left = 48
     Top = 176
@@ -414,6 +413,7 @@ object MeetingForm: TMeetingForm
     ProviderName = 'ElTab'
     RemoteServer = DSProviderConnection1
     BeforePost = ElTabBeforePost
+    OnReconcileError = ElTabReconcileError
     Left = 24
     Top = 232
   end

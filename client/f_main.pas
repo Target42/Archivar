@@ -290,6 +290,7 @@ end;
 procedure TMainForm.ac_me_editExecute(Sender: TObject);
 begin
   Application.CreateForm(TSelectMeetingForm, SelectMeetingForm);
+  SelectMeetingForm.Filter := 'E';
   if SelectMeetingForm.ShowModal = mrok then
   begin
     if SelectMeetingForm.ME_ID > 0 then
@@ -512,6 +513,7 @@ begin
     msgLoadLogo       : loadLogo;
     msgUpdateGremium  : setGremiumName( msg.lParam );
     msgEditMeeting    : showMeeting(msg.lParam);
+    msgLogin          : ac_prg_connect.Execute;
     else
       Handled := false;
   end;
@@ -561,6 +563,8 @@ begin
   TaskListFrame1.prepare;
   MeetingFrame1.init;
   PageControl1.ActivePage := TabSheet1;
+
+  PostMessage( Application.MainFormHandle, msgLogin, 0, 0 );
 end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);

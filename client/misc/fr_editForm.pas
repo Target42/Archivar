@@ -13,8 +13,13 @@ type
   private
     procedure setText( text : string);
     function getText : string;
+
+    procedure setRO( value : boolean );
+    function  getRO : boolean;
   public
-    property Text : string read getText write setText;
+    property Text     : string  read getText  write setText;
+    property ReadOnly : boolean read getRO    write setRO;
+
     function changed : boolean;
 
     procedure saveToStream( st : TStream );
@@ -32,6 +37,11 @@ begin
   Result := RE.Modified;
 end;
 
+function TEditFrame.getRO: boolean;
+begin
+  Result := RE.ReadOnly;
+end;
+
 function TEditFrame.getText : string;
 begin
   Result := RE.Lines.Text;
@@ -45,6 +55,11 @@ end;
 procedure TEditFrame.saveToStream(st: TStream);
 begin
   RE.Lines.SaveToStream(st);
+end;
+
+procedure TEditFrame.setRO(value: boolean);
+begin
+  RE.ReadOnly := value;
 end;
 
 procedure TEditFrame.setText(text : string);

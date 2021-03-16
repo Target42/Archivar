@@ -63,6 +63,10 @@ begin
   AutoIncQry.Open;
   Result := AutoIncQry.FieldByName('GEN_ID').AsInteger;
   AutoIncQry.Close;
+
+  if AutoIncQry.Transaction.InTransaction then
+    AutoIncQry.Transaction.Commit;
+
 end;
 
 function TdsMeeing.changeStatus(req: TJSONObject): TJSONObject;

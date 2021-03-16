@@ -33,11 +33,15 @@ type
     procedure GremiumFrame1TVChange(Sender: TObject; Node: TTreeNode);
     procedure DBGrid1DblClick(Sender: TObject);
   private
+    m_filter : string;
+
     function getMEID  : integer;
     function getTitle : string;
+    procedure setFilter( value : string );
   public
-    property ME_ID : integer read getMEID;
-    property Title : string read getTitle;
+    property ME_ID  : integer read getMEID;
+    property Title  : string  read getTitle;
+    property Filter : string  read m_filter write setFilter;
   end;
 
 var
@@ -60,6 +64,7 @@ begin
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
   GremiumFrame1.init;
 
+  m_filter        := 'O';
   ELTab.Filter    := 'EL_STATUS=''X''';
   ELTab.Filtered  := true;
   ELTab.Open;
@@ -97,11 +102,18 @@ begin
     exit;
 
   grid := GremiumFrame1.GremiumID;
-  ELTab.Filter   := Format('GR_ID=%d and EL_STATUS=''%s''', [grid, 'O']);
+  ELTab.Filter   := Format('GR_ID=%d and EL_STATUS=''%s''', [grid, m_filter]);
   ELTab.Filtered := true;
 
   DBGrid1.Enabled           := not ELTab.IsEmpty;
   BaseFrame1.OKBtn.Enabled  := not ELTab.IsEmpty;
 end;
+
+procedure TSelectMeetingForm.setFilter(value: string);
+begin
+  m_filter := value;
+  GremiumFrame1TVChange( NIL, NIL );
+end;
+
 
 end.

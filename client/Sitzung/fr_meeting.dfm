@@ -1,15 +1,17 @@
 object MeetingFrame: TMeetingFrame
   Left = 0
   Top = 0
-  Width = 451
-  Height = 305
+  Width = 827
+  Height = 300
   Align = alClient
   TabOrder = 0
+  ExplicitWidth = 451
+  ExplicitHeight = 305
   object Lv: TListView
     Left = 0
     Top = 0
-    Width = 451
-    Height = 305
+    Width = 827
+    Height = 300
     Align = alClient
     Columns = <
       item
@@ -37,6 +39,8 @@ object MeetingFrame: TMeetingFrame
     TabOrder = 0
     ViewStyle = vsReport
     OnDblClick = LvDblClick
+    ExplicitWidth = 451
+    ExplicitHeight = 305
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsMisc'

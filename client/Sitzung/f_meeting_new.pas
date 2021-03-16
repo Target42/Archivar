@@ -77,6 +77,9 @@ type
     procedure BitBtn1Click(Sender: TObject);
     procedure RadioButton1Click(Sender: TObject);
     procedure RadioButton2Click(Sender: TObject);
+    procedure ElTabReconcileError(DataSet: TCustomClientDataSet;
+      E: EReconcileError; UpdateKind: TUpdateKind;
+      var Action: TReconcileAction);
   private
     { Private-Deklarationen }
     m_el_id : integer;
@@ -92,6 +95,8 @@ type
     procedure changeStatus;
 
     function execStatus( req : TJSONObject ) : boolean;
+
+    procedure setReadOnly( flag :Boolean );
   public
     property Gremium  : TGremium read GetGremiumID write SetGremiumID;
     property EL_ID    : integer read m_el_id write setELID;
@@ -171,13 +176,13 @@ var
   id  : integer;
   st  : TStream;
 begin
-  if EditFrame1.changed then
+
+  if EditFrame1.changed and not ElTab.ReadOnly then
   begin
     st := ElTab.CreateBlobStream(ElTab.FieldByName('EL_DATA'),bmWrite);
     EditFrame1.saveToStream(st);
     st.Free;
   end;
-
   ELtab.Post;
 
   id := ELtab.FieldByName('EL_ID').AsInteger;
@@ -186,7 +191,6 @@ begin
     ElTab.ApplyUpdates(0);
 
   SendUpdate( id );
-
 end;
 
 procedure TMeetingForm.BitBtn1Click(Sender: TObject);
@@ -274,6 +278,12 @@ procedure TMeetingForm.ElTabBeforePost(DataSet: TDataSet);
 begin
   if DataSet.FieldByName('EL_ID').AsInteger = 0 then
     DataSet.FieldByName('EL_ID').AsInteger := GM.autoInc('gen_el_id');
+end;
+
+procedure TMeetingForm.ElTabReconcileError(DataSet: TCustomClientDataSet;
+  E: EReconcileError; UpdateKind: TUpdateKind; var Action: TReconcileAction);
+begin
+  ShowMessage(e.ToString);
 end;
 
 function TMeetingForm.execStatus(req: TJSONObject) : boolean;
@@ -407,6 +417,7 @@ begin
   if m_el_id >0  then
   begin
     ElTab.Open;
+
     if ElTab.Locate('EL_ID', VarArrayOf([m_el_id]), []) then
     begin
       ELTab.ReadOnly := SameText( ElTab.FieldByName('EL_STATUS').AsString, 'c');
@@ -414,10 +425,12 @@ begin
       if not ElTab.ReadOnly then
       begin
         ELTab.Edit;
-        st := ElTab.CreateBlobStream(ElTab.FieldByName('EL_DATA'), bmRead);
-        EditFrame1.loadFromStream(st);
-        st.Free;
       end;
+
+      st := ElTab.CreateBlobStream(ElTab.FieldByName('EL_DATA'), bmRead);
+      EditFrame1.loadFromStream(st);
+      st.Free;
+
 
       gr := GM.getGremium(ElTab.FieldByName('GR_ID').AsInteger);
       if Assigned(gr) then
@@ -454,7 +467,14 @@ begin
   else
     ProtoQry.Locate('PR_ID', VarArrayOf([ElTab.FieldByName('PR_ID').AsInteger]), []);
 
+  setReadOnly( ElTab.FieldByName('EL_STATUS').AsString <> 'E' );
+
   BaseFrame1.OKBtn.Enabled := ( ElTab.FieldByName('PR_ID').AsInteger > 0 );
+end;
+
+procedure TMeetingForm.setReadOnly(flag: Boolean);
+begin
+  EditFrame1.ReadOnly := flag;
 end;
 
 procedure TMeetingForm.TNQryTN_STATUS_STRGetText(Sender: TField;
