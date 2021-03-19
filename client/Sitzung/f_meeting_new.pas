@@ -82,9 +82,10 @@ type
       var Action: TReconcileAction);
   private
     { Private-Deklarationen }
-    m_el_id : integer;
-    m_gr    : TGremium;
-    m_proto : IProtocol;
+    m_el_id     : integer;
+    m_gr        : TGremium;
+    m_proto     : IProtocol;
+    m_readOnly  : boolean;
 
     function GetGremiumID: TGremium;
     procedure SetGremiumID(const Value: TGremium);
@@ -97,9 +98,12 @@ type
     function execStatus( req : TJSONObject ) : boolean;
 
     procedure setReadOnly( flag :Boolean );
+    function GetReadOnly: boolean;
   public
     property Gremium  : TGremium read GetGremiumID write SetGremiumID;
     property EL_ID    : integer read m_el_id write setELID;
+    property ReadOnly: boolean read GetReadOnly write SetReadOnly;
+
   end;
 
 var
@@ -107,6 +111,7 @@ var
 
 function newMeeting( gr_id, pr_id : integer ) : integer;
 function DeleteMeeting( id : integer ) : boolean;
+function invite( id : integer ) : boolean;
 
 implementation
 
@@ -156,6 +161,32 @@ begin
   try
     res  := client.deleteMeeting(req);
     Result := JBool( res, 'result');
+    if not Result then
+      ShowMessage(JString( res, 'text'));
+
+    client.Free;
+  except
+
+  end;
+end;
+
+function invite( id : integer ) : boolean;
+var
+  client  : TdsMeeingClient;
+  req     : TJSONObject;
+  res     : TJSONObject;
+begin
+  Result := false;
+
+  req    := TJSONObject.Create;
+  JReplace( req, 'id', id);
+
+  client := TdsMeeingClient.Create(GM.SQLConnection1.DBXConnection);
+  try
+    res  := client.invite(req);
+    Result := JBool( res, 'result');
+    if not Result then
+      ShowMessage(JString( res, 'text'));
 
     client.Free;
   except
@@ -332,16 +363,16 @@ procedure TMeetingForm.FormCreate(Sender: TObject);
   end;
 
 begin
-  TOFrame1.init;
-  m_el_id := 0;
-
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
   DSProviderConnection1.Open;
 
+  TOFrame1.init;
   TOFrame1.Connection := GM.SQLConnection1.DBXConnection;
 
-  m_gr   := NIL;
-  m_proto:= NIL;
+  m_el_id     := 0;
+  m_readOnly  := false;
+  m_gr        := NIL;
+  m_proto     := NIL;
 
   setup;
 
@@ -362,6 +393,11 @@ end;
 function TMeetingForm.GetGremiumID: TGremium;
 begin
   Result := m_gr;
+end;
+
+function TMeetingForm.GetReadOnly: boolean;
+begin
+  Result := m_readOnly;
 end;
 
 procedure TMeetingForm.ProtoQryAfterScroll(DataSet: TDataSet);
@@ -420,7 +456,7 @@ begin
 
     if ElTab.Locate('EL_ID', VarArrayOf([m_el_id]), []) then
     begin
-      ELTab.ReadOnly := SameText( ElTab.FieldByName('EL_STATUS').AsString, 'c');
+      self.ReadOnly := SameText( ElTab.FieldByName('EL_STATUS').AsString, 'c');
 
       if not ElTab.ReadOnly then
       begin
@@ -467,13 +503,29 @@ begin
   else
     ProtoQry.Locate('PR_ID', VarArrayOf([ElTab.FieldByName('PR_ID').AsInteger]), []);
 
-  setReadOnly( ElTab.FieldByName('EL_STATUS').AsString <> 'E' );
+  setReadOnly( m_readOnly );
 
   BaseFrame1.OKBtn.Enabled := ( ElTab.FieldByName('PR_ID').AsInteger > 0 );
 end;
 
 procedure TMeetingForm.setReadOnly(flag: Boolean);
 begin
+  if flag then
+  begin
+    if ElTab.State <> dsBrowse then
+      ElTab.Cancel;
+
+    if ElTab.UpdatesPending then
+      ElTab.Cancel;
+
+    ElTab.ReadOnly      := true;
+  end
+  else
+  begin
+    ElTab.ReadOnly := false;
+    if ElTab.State = dsBrowse then
+      elTab.Edit;
+  end;
   EditFrame1.ReadOnly := flag;
 end;
 

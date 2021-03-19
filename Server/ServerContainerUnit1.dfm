@@ -160,8 +160,8 @@ object ServerContainer1: TServerContainer1
   object DSServerClass1: TDSServerClass
     OnGetClass = DSServerClass1GetClass
     Server = DSServer1
-    Left = 344
-    Top = 480
+    Left = 336
+    Top = 432
   end
   object dsFileCache: TDSServerClass
     OnGetClass = dsFileCacheGetClass

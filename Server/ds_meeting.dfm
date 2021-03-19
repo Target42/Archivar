@@ -115,7 +115,7 @@ object dsMeeing: TdsMeeing
       'where CP_ID = :cp_id'
       'order by CT_NUMBER')
     Left = 136
-    Top = 304
+    Top = 328
     ParamData = <
       item
         DataType = ftUnknown
@@ -171,8 +171,8 @@ object dsMeeing: TdsMeeing
       'where gr_id = :gr_id'
       'and el_id is null'
       'order by pr_id desc')
-    Left = 64
-    Top = 312
+    Left = 80
+    Top = 328
     ParamData = <
       item
         DataType = ftInteger
@@ -301,8 +301,8 @@ object dsMeeing: TdsMeeing
       'update TN_TEILNEHMER'
       'set TN_GRUND = :grund, TN_STATUS = :status'
       'where TN_ID = :tn_ID')
-    Left = 208
-    Top = 256
+    Left = 200
+    Top = 248
     ParamData = <
       item
         DataType = ftString
@@ -343,5 +343,48 @@ object dsMeeing: TdsMeeing
     DataSet = Gaeste
     Left = 360
     Top = 64
+  end
+  object ChangeELStatusQry: TIBQuery
+    Database = DBMod.IBDatabase1
+    Transaction = IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    ParamCheck = True
+    SQL.Strings = (
+      'update EL_EINLADUNG'
+      'set EL_STATUS = :status'
+      'where EL_ID = :el_id')
+    Left = 288
+    Top = 192
+    ParamData = <
+      item
+        DataType = ftString
+        Name = 'status'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftInteger
+        Name = 'el_id'
+        ParamType = ptInput
+      end>
+  end
+  object ResetReadQry: TIBQuery
+    Database = DBMod.IBDatabase1
+    Transaction = IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    ParamCheck = True
+    SQL.Strings = (
+      'update EL_PE'
+      'set  EP_READ = NULL'
+      'where EL_ID = :el_id')
+    Left = 288
+    Top = 248
+    ParamData = <
+      item
+        DataType = ftInteger
+        Name = 'el_id'
+        ParamType = ptInput
+      end>
   end
 end

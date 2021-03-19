@@ -33,6 +33,8 @@ type
     UpdateTnQry: TIBQuery;
     Gaeste: TIBQuery;
     TGQry: TDataSetProvider;
+    ChangeELStatusQry: TIBQuery;
+    ResetReadQry: TIBQuery;
   private
     { Private-Deklarationen }
   public
@@ -40,6 +42,7 @@ type
     function newMeeting(    req : TJSONObject ) : TJSONObject;
     function deleteMeeting( req : TJSONObject ) : TJSONObject;
     function Sendmail(      req : TJSONObject ) : TJSONObject;
+    function invite(        req : TJSONObject ) : TJSONObject;
 
     function GetTree(       req : TJSONObject ) : TJSONObject;
 
@@ -49,7 +52,7 @@ type
 implementation
 
 uses
-  m_db, u_json, System.Generics.Collections, u_tree;
+  m_db, u_json, System.Generics.Collections, u_tree, ServerContainerUnit1;
 
 {%CLASSGROUP 'System.Classes.TPersistent'}
 
@@ -276,6 +279,44 @@ begin
   else
     JResult( Result, false, 'Das Protokoll wurde nicht gefunden!');
   ProtoQry.Close;
+end;
+
+function TdsMeeing.invite(req: TJSONObject): TJSONObject;
+var
+  el_id : integer;
+  msg   : TJSONObject;
+begin
+  Result := TJSONObject.Create;
+  el_id  := JInt( req, 'id');
+
+  try
+    ChangeELStatusQry.ParamByName('status').AsString  := 'O';
+    ChangeELStatusQry.ParamByName('el_id').AsInteger  := el_id;
+    ChangeELStatusQry.ExecSQL;
+
+    ResetReadQry.ParamByName('el_id').AsInteger       := el_id;
+    ResetReadQry.ExecSQL;
+
+    if IBTransaction1.InTransaction then
+      IBTransaction1.Commit;
+    JResult(Result, true, 'ok');
+
+    msg := TJSONObject.Create;
+    JReplace(msg, 'action', 'newmeeting');
+    JReplace( msg, 'id', el_id);
+    ServerContainer1.DSServer1.BroadcastMessage('storage', msg);
+
+  except
+    on e : exception do
+    begin
+      JResult( Result, false, e.ToString);
+    end;
+  end;
+  if IBTransaction1.InTransaction then
+    IBTransaction1.Rollback;
+
+
+
 end;
 
 function TdsMeeing.newMeeting(req: TJSONObject): TJSONObject;

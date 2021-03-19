@@ -121,6 +121,9 @@ type
     TaskListFrame1: TTaskListFrame;
     TabSheet5: TTabSheet;
     MeetingFrame1: TMeetingFrame;
+    ac_me_update: TAction;
+    Update1: TMenuItem;
+    N14: TMenuItem;
     procedure ac_prg_closeExecute(Sender: TObject);
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure ac_prg_disconExecute(Sender: TObject);
@@ -149,6 +152,8 @@ type
     procedure ac_me_newExecute(Sender: TObject);
     procedure ac_me_editExecute(Sender: TObject);
     procedure ac_me_deleteExecute(Sender: TObject);
+    procedure ac_me_inviteExecute(Sender: TObject);
+    procedure ac_me_updateExecute(Sender: TObject);
   private
     procedure ApplicationSetMenu( flag : boolean );
     procedure setPanel( id : integer ; text : string );
@@ -301,6 +306,24 @@ begin
   SelectMeetingForm.free;
 end;
 
+procedure TMainForm.ac_me_inviteExecute(Sender: TObject);
+begin
+  Application.CreateForm(TSelectMeetingForm, SelectMeetingForm);
+  SelectMeetingForm.Filter := 'E';
+  if SelectMeetingForm.ShowModal = mrok then
+  begin
+    if SelectMeetingForm.ME_ID > 0 then
+    begin
+      Application.CreateForm(TMeetingForm, MeetingForm);
+      MeetingForm.EL_ID   := SelectMeetingForm.ME_ID;
+      if MeetingForm.ShowModal = mrOk then
+        invite( MeetingForm.EL_ID );
+      MeetingForm.Free;
+    end;
+  end;
+  SelectMeetingForm.free;
+end;
+
 procedure TMainForm.ac_me_newExecute(Sender: TObject);
 var
   id              : integer;
@@ -322,6 +345,26 @@ begin
     MeetingForm.ShowModal;
     MeetingForm.Free;
   end;
+end;
+
+procedure TMainForm.ac_me_updateExecute(Sender: TObject);
+begin
+  Application.CreateForm(TSelectMeetingForm, SelectMeetingForm);
+  SelectMeetingForm.Filter := 'O';
+  if SelectMeetingForm.ShowModal = mrok then
+  begin
+    if SelectMeetingForm.ME_ID > 0 then
+    begin
+      Application.CreateForm(TMeetingForm, MeetingForm);
+      MeetingForm.EL_ID   := SelectMeetingForm.ME_ID;
+      MeetingForm.ReadOnly:= false;
+      if MeetingForm.ShowModal = mrOk then
+        invite( MeetingForm.EL_ID );
+      MeetingForm.Free;
+    end;
+  end;
+  SelectMeetingForm.free;
+
 end;
 
 procedure TMainForm.ac_prg_closeExecute(Sender: TObject);
@@ -539,6 +582,7 @@ begin
   ac_me_invite.Enabled    := flag;
   ac_me_delete.Enabled    := flag;
   ac_me_end.Enabled       := flag;
+  ac_me_update.Enabled    := flag;
 
   ac_tb_neu.Enabled       := flag;
   ac_tb_edit.Enabled      := flag;

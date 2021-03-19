@@ -12,7 +12,7 @@ uses
   JvComputerInfoEx, IdBaseComponent, IdComponent, IdIPWatch, Datasnap.DSCommon,
   Data.DBXJSON, pngimage, System.ImageList, Vcl.ImgList, Vcl.Controls,
   u_berTypes, Datasnap.DSConnect, i_personen, Vcl.Dialogs, JvBaseDlg,
-  JvSHFileOperation;
+  JvSHFileOperation, System.Notification;
 
 const
   WMUSER            = WM_USER + 25;
@@ -29,6 +29,7 @@ const
   msgUpdateMeetings = WMUSER + 10;
   msgEditMeeting    = WMUSER + 11;
   msgLogin          = WMUSER + 12;
+  msgNewMeeting     = WMUSER + 13;
 
 type
   TGM = class(TDataModule)
@@ -44,6 +45,7 @@ type
     DSProviderConnection1: TDSProviderConnection;
     GremiumMA: TClientDataSet;
     JvSHFileOperation1: TJvSHFileOperation;
+    NotificationCenter1: TNotificationCenter;
     procedure SQLConnection1AfterConnect(Sender: TObject);
     procedure SQLConnection1AfterDisconnect(Sender: TObject);
     procedure DataModuleCreate(Sender: TObject);
@@ -349,17 +351,21 @@ var
   cmd : string;
 
 begin
-  cmd := Jstring( arg, 'action');
+  cmd := lowerCase(Jstring( arg, 'action'));
   if cmd = 'taskmove' then
   begin
     WindowHandler.closeTaksWindowMsg( JInt(Arg, 'taid'), 'Die Aufgabe wurde verschoben!');
+    PostMessage( Application.MainFormHandle, msgFilterTasks, 1, 0 );
   end
   else if cmd = 'taskdelete' then
   begin
     WindowHandler.closeTaksWindowMsg( JInt(Arg, 'taid'), 'Die Aufgabe wurde gelöscht!');
     BookMarkHandler.Bookmarks.remove( JString( ARg, 'clid'));
+    PostMessage( Application.MainFormHandle, msgFilterTasks, 1, 0 );
+  end else if cmd = 'newmeeting' then
+  begin
+    PostMessage(Application.MainFormHandle, msgNewMeeting, 0, JInt(Arg, 'id'));
   end;
-  PostMessage( Application.MainFormHandle, msgFilterTasks, 1, 0 );
 end;
 
 procedure TGM.FillGremien(arr :TJSONArray );

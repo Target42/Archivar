@@ -100,6 +100,10 @@
     object TabSheet2: TTabSheet
       Caption = 'Lesezeichen'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       inline BookmarkFrame1: TBookmarkFrame
         Left = 0
         Top = 0
@@ -285,6 +289,12 @@
         object Einladen1: TMenuItem
           Action = ac_me_invite
         end
+        object N14: TMenuItem
+          Caption = '-'
+        end
+        object Update1: TMenuItem
+          Action = ac_me_update
+        end
         object N12: TMenuItem
           Caption = '-'
         end
@@ -389,8 +399,8 @@
     end
   end
   object ActionList1: TActionList
-    Left = 136
-    Top = 224
+    Left = 152
+    Top = 160
     object ac_prg_close: TAction
       Category = 'Program'
       Caption = 'Ende'
@@ -559,6 +569,7 @@
       Category = 'Meeting'
       Caption = 'Einladen'
       Enabled = False
+      OnExecute = ac_me_inviteExecute
     end
     object ac_me_delete: TAction
       Category = 'Meeting'
@@ -570,6 +581,12 @@
       Category = 'Meeting'
       Caption = 'Abschlie'#223'en'
       Enabled = False
+    end
+    object ac_me_update: TAction
+      Category = 'Meeting'
+      Caption = 'Update'
+      Enabled = False
+      OnExecute = ac_me_updateExecute
     end
   end
   object ApplicationEvents1: TApplicationEvents

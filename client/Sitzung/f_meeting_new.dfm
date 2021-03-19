@@ -144,6 +144,7 @@ object MeetingForm: TMeetingForm
     TabOrder = 2
     object TabSheet1: TTabSheet
       Caption = 'Inhalt'
+      ExplicitWidth = 296
       object Splitter1: TSplitter
         Left = 0
         Top = 264
@@ -187,7 +188,7 @@ object MeetingForm: TMeetingForm
               item
                 Position = 1
                 Text = 'Datum'
-                Width = 461
+                Width = 465
               end>
           end
         end
@@ -200,6 +201,7 @@ object MeetingForm: TMeetingForm
         Align = alBottom
         Caption = 'Anmerkungen'
         TabOrder = 1
+        ExplicitWidth = 296
         inline EditFrame1: TEditFrame
           Left = 2
           Top = 15
@@ -209,7 +211,7 @@ object MeetingForm: TMeetingForm
           TabOrder = 0
           ExplicitLeft = 2
           ExplicitTop = 15
-          ExplicitWidth = 665
+          ExplicitWidth = 292
           ExplicitHeight = 172
           inherited RE: TRichEdit
             Width = 665
@@ -223,6 +225,10 @@ object MeetingForm: TMeetingForm
     object TabSheet2: TTabSheet
       Caption = 'Teilnehmer'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GroupBox4: TGroupBox
         Left = 0
         Top = 384
@@ -344,6 +350,10 @@ object MeetingForm: TMeetingForm
     object TabSheet3: TTabSheet
       Caption = 'G'#228'ste'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object DBGrid2: TDBGrid
         Left = 0
         Top = 0
@@ -403,7 +413,6 @@ object MeetingForm: TMeetingForm
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsMeeing'
-    SQLConnection = GM.SQLConnection1
     Left = 48
     Top = 176
   end

@@ -43,6 +43,7 @@ type
     procedure readData;
     procedure clear;
     procedure updateView;
+    procedure UpdateMeetings( id : integer );
   public
     procedure init;
     procedure release;
@@ -51,7 +52,7 @@ type
 implementation
 
 uses
-  m_glob_client;
+  m_glob_client, System.Notification;
 
 {$R *.dfm}
 
@@ -64,6 +65,7 @@ begin
 
   case Msg.message of
     msgUpdateMeetings : readData;
+    msgNewMeeting     : UpdateMeetings( msg.lParam );
   else
     handled := false;
   end;
@@ -130,11 +132,42 @@ begin
   m_list.Free;
 end;
 
+procedure TMeetingFrame.UpdateMeetings(id: integer);
+var
+  i : integer;
+  da : DataRec;
+  MyNotification: TNotification;
+begin
+  readData;
+  for i := 0 to pred(Lv.Items.Count) do
+  begin
+    da := LV.Items.Item[i].Data;
+    if da.ID = id  then
+    begin
+      LV.Selected := LV.Items.Item[i];
+      MyNotification := GM.NotificationCenter1.CreateNotification;
+      try
+        MyNotification.Name       := 'Archivar';
+        MyNotification.Title      := da.Title;
+        MyNotification.AlertBody  := DateToStr(da.Datum)+' um '+FormatDateTime('hh:mm', da.Zeit);
+        MyNotification.EnableSound:= true;
+
+        GM.NotificationCenter1.PresentNotification(MyNotification);
+      finally
+        MyNotification.Free;
+      end;
+      break;
+    end;
+  end;
+end;
+
 procedure TMeetingFrame.updateView;
 var
   da    : DataRec;
   item  : TListItem;
 begin
+  LV.Items.BeginUpdate;
+  LV.Items.Clear;
   for da in m_list do
   begin
     item := Lv.Items.Add;
@@ -145,6 +178,7 @@ begin
     item.SubItems.Add(FormatDateTime('hh:nn', da.Ende));
     item.SubItems.Add(DateTimeToStr(da.Changed));
   end;
+  LV.Items.EndUpdate;
 end;
 
 { TMeetingFrame.DataRec }

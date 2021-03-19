@@ -1,6 +1,6 @@
 //
 // Erzeugt vom DataSnap-Proxy-Generator.
-// 11.03.2021 20:00:24
+// 17.03.2021 16:45:57
 //
 
 unit u_stub;
@@ -218,6 +218,7 @@ type
     FnewMeetingCommand: TDBXCommand;
     FdeleteMeetingCommand: TDBXCommand;
     FSendmailCommand: TDBXCommand;
+    FinviteCommand: TDBXCommand;
     FGetTreeCommand: TDBXCommand;
     FchangeStatusCommand: TDBXCommand;
   public
@@ -228,6 +229,7 @@ type
     function newMeeting(req: TJSONObject): TJSONObject;
     function deleteMeeting(req: TJSONObject): TJSONObject;
     function Sendmail(req: TJSONObject): TJSONObject;
+    function invite(req: TJSONObject): TJSONObject;
     function GetTree(req: TJSONObject): TJSONObject;
     function changeStatus(req: TJSONObject): TJSONObject;
   end;
@@ -1167,6 +1169,20 @@ begin
   Result := TJSONObject(FSendmailCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
 end;
 
+function TdsMeeingClient.invite(req: TJSONObject): TJSONObject;
+begin
+  if FinviteCommand = nil then
+  begin
+    FinviteCommand := FDBXConnection.CreateCommand;
+    FinviteCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FinviteCommand.Text := 'TdsMeeing.invite';
+    FinviteCommand.Prepare;
+  end;
+  FinviteCommand.Parameters[0].Value.SetJSONValue(req, FInstanceOwner);
+  FinviteCommand.ExecuteUpdate;
+  Result := TJSONObject(FinviteCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
+end;
+
 function TdsMeeingClient.GetTree(req: TJSONObject): TJSONObject;
 begin
   if FGetTreeCommand = nil then
@@ -1211,6 +1227,7 @@ begin
   FnewMeetingCommand.DisposeOf;
   FdeleteMeetingCommand.DisposeOf;
   FSendmailCommand.DisposeOf;
+  FinviteCommand.DisposeOf;
   FGetTreeCommand.DisposeOf;
   FchangeStatusCommand.DisposeOf;
   inherited;
