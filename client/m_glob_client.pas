@@ -243,6 +243,9 @@ begin
   SQLConnection1.Params.Values['DSAuthenticationUser']      := LoginForm.UserName;
   SQLConnection1.Params.Values['DSAuthenticationPassword']  := LoginForm.Password;
 
+  DSClientCallbackChannelManager1.UserName  := '*'+LoginForm.UserName;
+  DSClientCallbackChannelManager1.Password  := LoginForm.Password;
+
   try
     SQLConnection1.Open;
     Result := SQLConnection1.Connected;

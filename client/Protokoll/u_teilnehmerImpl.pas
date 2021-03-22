@@ -3,7 +3,7 @@ unit u_teilnehmerImpl;
 interface
 
 uses
-  i_chapter, i_personen;
+  i_chapter, i_personen, u_teilnehmer;
 
 type
   TTeilnehmerImpl = class( TInterfacedObject, ITeilnehmer )

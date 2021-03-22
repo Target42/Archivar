@@ -16,6 +16,10 @@ type
     ApplicationEvents1: TApplicationEvents;
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure LvDblClick(Sender: TObject);
+    procedure LvCustomDrawItem(Sender: TCustomListView; Item: TListItem;
+      State: TCustomDrawState; var DefaultDraw: Boolean);
+    procedure LvCustomDrawSubItem(Sender: TCustomListView; Item: TListItem;
+      SubItem: Integer; State: TCustomDrawState; var DefaultDraw: Boolean);
   private
     type
       DataRec = class
@@ -26,6 +30,7 @@ type
         FTitle: string;
         FChanged: TDateTime;
         FEnde: TDateTime;
+        FRead: boolean;
         public
           constructor create;
           Destructor Destroy; override;
@@ -36,6 +41,7 @@ type
           property Title  : string      read FTitle     write FTitle;
           property Changed: TDateTime   read FChanged   write FChanged;
           property Ende   : TDateTime   read FEnde      write FEnde;
+          property Read   : boolean     read FRead      write FRead;
       end;
   private
     m_list : TList<DataRec>;
@@ -87,6 +93,31 @@ begin
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
 end;
 
+procedure TMeetingFrame.LvCustomDrawItem(Sender: TCustomListView;
+  Item: TListItem; State: TCustomDrawState; var DefaultDraw: Boolean);
+var
+  da : DataRec;
+begin
+  da := item.Data;
+  if not da.Read then
+    LV.Canvas.Font.Color := clBlue
+  else
+    LV.Canvas.Font.Color := clWindowText;
+end;
+
+procedure TMeetingFrame.LvCustomDrawSubItem(Sender: TCustomListView;
+  Item: TListItem; SubItem: Integer; State: TCustomDrawState;
+  var DefaultDraw: Boolean);
+var
+  da : DataRec;
+begin
+  da := item.Data;
+  if not da.Read then
+    LV.Canvas.Font.Color := clBlue
+  else
+    LV.Canvas.Font.Color := clWindowText;
+end;
+
 procedure TMeetingFrame.LvDblClick(Sender: TObject);
 var
   da    : DataRec;
@@ -96,6 +127,8 @@ begin
 
   da := LV.Selected.Data;
   PostMessage(Application.MainFormHandle, msgEditMeeting, 0, da.ID );
+  da.Read := true;
+  Lv.Invalidate;
 end;
 
 procedure TMeetingFrame.readData;
@@ -120,6 +153,7 @@ begin
     da.Title  := MeetingQry.FieldByName('EL_TITEL').AsString;
     da.Changed:= MeetingQry.FieldByName('EL_DATA_STAMP').AsDateTime;
     da.Ende   := MeetingQry.FieldByName('EL_ENDE').AsDateTime;
+    da.Read   := not MeetingQry.FieldByName('EP_READ').IsNull;
     MeetingQry.Next;
   end;
   MeetingQry.Close;

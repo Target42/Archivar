@@ -35,6 +35,7 @@ type
     TGQry: TDataSetProvider;
     ChangeELStatusQry: TIBQuery;
     ResetReadQry: TIBQuery;
+    ChangeELPEStatusQry: TIBQuery;
   private
     { Private-Deklarationen }
   public
@@ -52,7 +53,7 @@ type
 implementation
 
 uses
-  m_db, u_json, System.Generics.Collections, u_tree, ServerContainerUnit1;
+  m_db, u_json, System.Generics.Collections, u_tree, ServerContainerUnit1, u_teilnehmer;
 
 {%CLASSGROUP 'System.Classes.TPersistent'}
 
@@ -106,12 +107,18 @@ begin
   end
   else
   begin
-    UpdateTnQry.ParamByName('grund').AsString   := grund;
-    UpdateTnQry.ParamByName('status').AsInteger := newState;
-    UpdateTnQry.ParamByName('TN_ID').AsInteger  := tn_id;
-
     try
+      UpdateTnQry.ParamByName('grund').AsString   := grund;
+      UpdateTnQry.ParamByName('status').AsInteger := newState;
+      UpdateTnQry.ParamByName('TN_ID').AsInteger  := tn_id;
+
       UpdateTnQry.ExecSQL;
+
+      ChangeELPEStatusQry.ParamByName('EL_ID').AsInteger  := el_id;
+      ChangeELPEStatusQry.ParamByName('PE_ID').AsInteger  := pe_id;
+      ChangeELPEStatusQry.ParamByName('status').AsString  := TeilnehmerStatusToString( TTeilnehmerStatus(newState));
+
+      ChangeELPEStatusQry.ExecSQL;
 
       if UpdateTnQry.Transaction.InTransaction then
         UpdateTnQry.Transaction.Commit;

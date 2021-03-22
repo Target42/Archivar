@@ -26,6 +26,8 @@ type
 
     procedure init;
     procedure release;
+
+    procedure selectFirst;
   end;
 
 implementation
@@ -123,6 +125,12 @@ begin
   for i := low(m_list) to High(m_list) do
     m_list[i].Free;
   SetLength(m_list, 0);
+end;
+
+procedure TGremiumFrame.selectFirst;
+begin
+  if TV.Items.Count > 0 then
+    TV.Select( TV.Items.GetFirstNode);
 end;
 
 procedure TGremiumFrame.setGremiumID(value: integer);

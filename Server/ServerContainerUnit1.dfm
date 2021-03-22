@@ -66,14 +66,14 @@ object ServerContainer1: TServerContainer1
     Server = DSServer1
     LifeCycle = 'Invocation'
     Left = 328
-    Top = 128
+    Top = 120
   end
   object dsTask: TDSServerClass
     OnGetClass = dsTaskGetClass
     Server = DSServer1
     LifeCycle = 'Invocation'
     Left = 328
-    Top = 184
+    Top = 176
   end
   object QueryUser: TIBQuery
     Database = DBMod.IBDatabase1
@@ -84,8 +84,8 @@ object ServerContainer1: TServerContainer1
     SQL.Strings = (
       'select * from PE_PERSON'
       'where PE_NET = :net')
-    Left = 32
-    Top = 200
+    Left = 40
+    Top = 328
     ParamData = <
       item
         DataType = ftString
@@ -99,15 +99,15 @@ object ServerContainer1: TServerContainer1
       'read_committed'
       'rec_version'
       'nowait')
-    Left = 104
-    Top = 192
+    Left = 120
+    Top = 328
   end
   object dsFile: TDSServerClass
     OnGetClass = dsFileGetClass
     Server = DSServer1
     LifeCycle = 'Invocation'
     Left = 328
-    Top = 248
+    Top = 232
   end
   object dsMisc: TDSServerClass
     OnGetClass = dsMiscGetClass
@@ -127,58 +127,58 @@ object ServerContainer1: TServerContainer1
     Server = DSServer1
     LifeCycle = 'Invocation'
     Left = 256
-    Top = 128
+    Top = 120
   end
   object dsChapter: TDSServerClass
     OnGetClass = dsChapterGetClass
     Server = DSServer1
     LifeCycle = 'Invocation'
     Left = 256
-    Top = 184
+    Top = 176
   end
   object dsTaskEdit: TDSServerClass
     OnGetClass = dsTaskEditGetClass
     Server = DSServer1
     LifeCycle = 'Invocation'
-    Left = 264
-    Top = 248
+    Left = 256
+    Top = 232
   end
   object dsTemplate: TDSServerClass
     OnGetClass = dsTemplateGetClass
     Server = DSServer1
     LifeCycle = 'Invocation'
-    Left = 336
-    Top = 312
+    Left = 328
+    Top = 288
   end
   object dsTaskView: TDSServerClass
     OnGetClass = dsTaskViewGetClass
     Server = DSServer1
     LifeCycle = 'Invocation'
-    Left = 264
-    Top = 312
+    Left = 256
+    Top = 288
   end
   object DSServerClass1: TDSServerClass
     OnGetClass = DSServerClass1GetClass
     Server = DSServer1
-    Left = 336
-    Top = 432
+    Left = 328
+    Top = 400
   end
   object dsFileCache: TDSServerClass
     OnGetClass = dsFileCacheGetClass
     Server = DSServer1
-    Left = 264
-    Top = 368
+    Left = 256
+    Top = 344
   end
   object dsEpub: TDSServerClass
     OnGetClass = dsEpubGetClass
     Server = DSServer1
-    Left = 336
-    Top = 376
+    Left = 328
+    Top = 344
   end
   object dsMeeing: TDSServerClass
     OnGetClass = dsMeeingGetClass
     Server = DSServer1
-    Left = 264
-    Top = 424
+    Left = 256
+    Top = 400
   end
 end

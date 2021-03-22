@@ -37,7 +37,6 @@ type
     EditFrame1: TEditFrame;
     Splitter1: TSplitter;
     TNQry: TClientDataSet;
-    GroupBox4: TGroupBox;
     DBGrid1: TDBGrid;
     TNSrc: TDataSource;
     TNQryEL_ID: TIntegerField;
@@ -53,16 +52,17 @@ type
     TNQryTN_STATUS: TIntegerField;
     TNQryTN_GRUND: TWideStringField;
     TNQryTN_STATUS_STR: TStringField;
-    BitBtn1: TBitBtn;
-    RadioButton1: TRadioButton;
-    RadioButton2: TRadioButton;
-    Label5: TLabel;
-    ComboBox3: TComboBox;
     TabSheet3: TTabSheet;
     DBGrid2: TDBGrid;
     TGQry: TClientDataSet;
     TGSrc: TDataSource;
     DBEdit1: TDBEdit;
+    GroupBox4: TGroupBox;
+    Label5: TLabel;
+    BitBtn1: TBitBtn;
+    RadioButton1: TRadioButton;
+    RadioButton2: TRadioButton;
+    ComboBox3: TComboBox;
     procedure FormCreate(Sender: TObject);
     procedure ElTabBeforePost(DataSet: TDataSet);
     procedure ComboBox1Change(Sender: TObject);
@@ -117,7 +117,7 @@ implementation
 
 uses
   m_glob_client, system.DateUtils, u_stub, u_json, System.Generics.Collections,
-  f_abwesenheit;
+  f_abwesenheit, u_teilnehmer;
 
 {$R *.dfm}
 
@@ -229,6 +229,7 @@ var
   req   : TJSONObject;
   val   : integer;
   grund : string;
+  state : integer;
 begin
   if (RadioButton2.Checked) and (ComboBox3.ItemIndex = -1 ) then
   begin
@@ -240,20 +241,26 @@ begin
   begin
     grund := '';
     Req := TJSONObject.Create;
-    JReplace( req, 'tnid',  TNQryTN_ID.Value );
+
+    JReplace( req, 'tnid', TNQryTN_ID.Value );
+    JReplace( req, 'elid', m_el_id);
+    JReplace( req, 'peid', GM.UserID);
+
     if RadioButton1.Checked then
-      JReplace( req, 'state', integer(tsZugesagt) )
+      state := integer(tsZugesagt)
     else
     begin
       grund := ComboBox3.Items.Strings[ComboBox3.ItemIndex];
       val   := integer( ComboBox3.Items.Objects[ComboBox3.ItemIndex] );
       if val = 0 then
-        JReplace( req, 'state', integer(tsEntschuldigt) )
+        state := integer(tsEntschuldigt)
       else
-        JReplace( req, 'state', integer(tsUnentschuldigt) );
+        state := integer(tsUnentschuldigt);
     end;
+    JReplace( req, 'state', state);
     JReplace( req, 'grund', grund );
     execStatus( req );
+    ShowMessage('Telnahemstatus geändert!');
 
     TNQry.Refresh;
   end
@@ -476,6 +483,7 @@ begin
 
       changeStatus;
 
+      GroupBox4.Visible := SameText( ElTab.FieldByName('EL_STATUS').AsString, 'O');
       GroupBox4.Enabled := not ElTab.ReadOnly;
 
       BaseFrame1.OKBtn.Enabled := ( ElTab.FieldByName('PR_ID').AsInteger > 0 );

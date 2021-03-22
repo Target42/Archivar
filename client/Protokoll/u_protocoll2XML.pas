@@ -3,7 +3,7 @@ unit u_protocoll2XML;
 interface
 
 uses
-  i_chapter, xsd_TaskData;
+  i_chapter, xsd_TaskData, u_teilnehmer;
 
 type
   Protocoll2XML = class

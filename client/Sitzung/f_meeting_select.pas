@@ -71,6 +71,8 @@ begin
 
   DBGrid1.Enabled           := not ELTab.IsEmpty;
   BaseFrame1.OKBtn.Enabled  := not ELTab.IsEmpty;
+
+
 end;
 
 procedure TSelectMeetingForm.FormDestroy(Sender: TObject);
@@ -107,6 +109,9 @@ begin
 
   DBGrid1.Enabled           := not ELTab.IsEmpty;
   BaseFrame1.OKBtn.Enabled  := not ELTab.IsEmpty;
+
+
+  GremiumFrame1.selectFirst;
 end;
 
 procedure TSelectMeetingForm.setFilter(value: string);

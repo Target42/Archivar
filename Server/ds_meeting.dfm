@@ -387,4 +387,34 @@ object dsMeeing: TdsMeeing
         ParamType = ptInput
       end>
   end
+  object ChangeELPEStatusQry: TIBQuery
+    Database = DBMod.IBDatabase1
+    Transaction = IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    ParamCheck = True
+    SQL.Strings = (
+      'update EL_PE'
+      'set EP_STATUS = :status'
+      'where el_id = :EL_ID'
+      'and pe_id = :pe_id')
+    Left = 240
+    Top = 304
+    ParamData = <
+      item
+        DataType = ftString
+        Name = 'status'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftInteger
+        Name = 'EL_ID'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftInteger
+        Name = 'pe_id'
+        ParamType = ptInput
+      end>
+  end
 end

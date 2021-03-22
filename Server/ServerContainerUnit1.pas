@@ -237,14 +237,28 @@ begin
 
   DebugMsg('Authenticate user :' +userName);
 
-  if (user = '{E4DBFC6B-C573-47FF-AC01-9CE6C5F63DB9}') then
+  if pos('*', userName) > 0 then
   begin
-    valid := true;
-    debugMsg( 'Login ok');
-    UserRoles.Add('broadcast');
+    userName := trim(StringReplace(userName, '*', '',[rfReplaceAll, rfIgnoreCase]));
+
+    QueryUser.ParamByName('net').AsString := userName;
+    QueryUser.Open;
+    if QueryUser.RecordCount = 1 then
+    begin
+      valid := SameText( ph, QueryUser.FieldByName('pe_pwd').AsString);
+    end;
+    QueryUser.Close;
+    if QueryUser.Transaction.InTransaction then
+      QueryUser.Transaction.Commit;
+
+    if valid then
+    begin
+      debugMsg( 'Login ok');
+      UserRoles.Add('broadcast');
+    end;
+
     exit;
   end;
-
 
   if IBTransaction1.InTransaction then
     IBTransaction1.Rollback;

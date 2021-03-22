@@ -12,7 +12,7 @@ uses
   JvDBDateTimePicker, Vcl.Buttons, f_titel_edit, xsd_protocol,
   fr_chapter, xsd_chapter, i_personen, i_chapter, System.ImageList, Vcl.ImgList,
   Vcl.OleCtrls, SHDocVw, m_taskLoader, System.Generics.Collections,
-  i_beschluss, m_html, u_renderer;
+  i_beschluss, m_html, u_renderer, u_teilnehmer;
 
 type
   TProtokollForm = class(TForm)

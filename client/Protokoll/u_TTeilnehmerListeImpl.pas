@@ -37,7 +37,7 @@ type
 implementation
 
 uses
-  u_teilnehmerImpl, m_glob_client, System.Variants, Data.DB;
+  u_teilnehmerImpl, m_glob_client, System.Variants, Data.DB, u_teilnehmer;
 
 { TTeilnehmerListeImpl }
 

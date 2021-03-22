@@ -358,6 +358,8 @@ begin
       Application.CreateForm(TMeetingForm, MeetingForm);
       MeetingForm.EL_ID   := SelectMeetingForm.ME_ID;
       MeetingForm.ReadOnly:= false;
+      MeetingForm.GroupBox4.Visible := false;
+
       if MeetingForm.ShowModal = mrOk then
         invite( MeetingForm.EL_ID );
       MeetingForm.Free;

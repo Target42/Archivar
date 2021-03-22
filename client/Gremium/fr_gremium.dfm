@@ -1,15 +1,17 @@
 object GremiumFrame: TGremiumFrame
   Left = 0
   Top = 0
-  Width = 320
-  Height = 240
+  Width = 451
+  Height = 305
   Align = alClient
   TabOrder = 0
+  ExplicitWidth = 320
+  ExplicitHeight = 240
   object TV: TTreeView
     Left = 0
     Top = 0
-    Width = 320
-    Height = 240
+    Width = 451
+    Height = 305
     Align = alClient
     Indent = 19
     ReadOnly = True
