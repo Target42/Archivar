@@ -45,7 +45,7 @@ var
   db : string;
 begin
   db := GM.DBHost+':'+GM.DBName;
-  DebugMsg('Database : '+db);
+  DebugMsg('Database:name : '+db);
   try
     IBDatabase1.DatabaseName := db;
     IBDatabase1.Params.Clear;
@@ -54,14 +54,15 @@ begin
 
     IBDatabase1.Open;
     Result := IBDatabase1.Connected;
-    DebugMsg('database connected');
+    DebugMsg('Database:connected');
   except
     on e : Exception do
     begin
-      DebugMsg(e.ToString);
+      DebugMsg('Database:'+ e.ToString);
       Result := false;
     end;
   end;
+  DebugMsg('');
 end;
 
 procedure TDBMod.stopDB;

@@ -4,20 +4,27 @@ interface
 
 uses
   System.SysUtils, System.Generics.Collections, System.Classes, u_lockInfo,
-  System.JSON, IBX.IBDatabase;
+  System.JSON, IBX.IBDatabase, System.SyncObjs;
 
 type
   TLockMod = class(TDataModule)
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
   private
-    m_locks :  array[1..3] of TThreadlist<TLockInfo>;
+    type
+      TLockElements = TDictionary<integer, TLockInfo>;        // document child elements
+      TLockDict     = TDictionary<integer, TLockElements>;    // documents
+  private
+    m_mutex : TMutex;
+    m_locks :  array[1..3] of TLockDict;
 
-    function find( ta_id:integer;list :  TList<TLockInfo>): TLockInfo;
   public
-    function LockDocument( id, typ : integer ) : TJSONObject;
-    function UnLockDocument( id, typ : integer ) : TJSONObject;
-    function isLocked( id, typ : integer ) : TJSONObject;
+    function LockDocument(    req : TJSONObject ) : TJSONObject;
+    function UnLockDocument(  req : TJSONObject ) : TJSONObject;
+    function isLocked(        req : TJSONObject ) : TJSONObject;
+
+    function isLockedByID(  id, typ : integer ) : TJSONObject;
+
 
     procedure removeLocks( id : NativeInt );
   end;
@@ -38,157 +45,272 @@ procedure TLockMod.DataModuleCreate(Sender: TObject);
 var
   i : integer;
 begin
+  m_mutex := TMutex.Create;
   for i := low(m_locks) to High(m_locks) do
-    m_locks[i] := TThreadlist<TLockInfo>.create;
+    m_locks[i] := TLockDict.Create;
 end;
 
 procedure TLockMod.DataModuleDestroy(Sender: TObject);
 var
-  i, j : integer;
-  list : Tlist<TLockInfo>;
+  i     : integer;
+  dict  : TLockDict;
+  list  : TLockElements;
+  info  : TLockInfo;
 begin
-  for j := low(m_locks) to High(m_locks) do
+  for i := low(m_locks) to High(m_locks) do
   begin
-    list := m_locks[j].LockList;
-    for i := 0 to pred(list.Count) do
-      list[i].Free;
-    m_locks[j].UnlockList;
-
-    m_locks[j].Free;
-  end;
-end;
-
-function TLockMod.find(ta_id:integer;list: TList<TLockInfo>): TLockInfo;
-var
-  i : integer;
-begin
-  Result := NIL;
-  for i := 0 to pred(list.Count) do
-  begin
-    if list[i].ID = ta_id then
+    dict := m_locks[i];
+    for list in dict.Values do
     begin
-      Result := list[i];
-      break;
+      for info in list.Values do
+      begin
+        info.Free;
+      end;
+      list.Free;
     end;
-
+    m_locks[i].Free;
   end;
-
+  m_mutex.Free;
 end;
 
-function TLockMod.isLocked(id, typ: integer): TJSONObject;
+
+function TLockMod.isLocked(req : TJSONObject): TJSONObject;
 var
-  list : TList<TLockInfo>;
-  info : TLockInfo;
-  session : TDSSession;
-begin
-  list := m_locks[typ].LockList;
-  info := find( id, list );
-  if Assigned( info) then
+  dict    : TLockDict;
+  elements: TLockElements;
+  info    : TLockInfo;
+  id, typ : integer;
+  sub     : integer;
+
+  procedure sendFail;
   begin
-    Session := TDSSessionManager.GetThreadSession;
-    Result := info.getJSON;
-    DebugMsg(Format('%s %d %d', ['TLockMod.isLocked: is locked', id, typ]));
+    Result  := info.getJSON;
     JResponse( Result, true, 'Das Dokument ist von '+info.User+' gesperrt');
-    JReplace( Result, 'self', session.Id = info.SessionID);
-  end
-  else
+    JReplace(  Result, 'self', TDSSessionManager.GetThreadSession.Id = info.SessionID);
+    DebugMsg(  Format('%s %d %d', ['TLockMod.isLocked: is locked', id, typ]));
+  end;
+  procedure sendOk;
   begin
     Result := TJSONObject.Create;
     JResult( Result, false, 'Das Dokument ist nicht gesperrt');
     DebugMsg(Format('%s %d %d', ['TLockMod.isLocked: is NOT locked', id, typ]));
   end;
+begin
+  id  := JInt( req, 'id');
+  typ := JInt( req, 'typ');
+  sub := JInt( req, 'sub' );
 
-  m_locks[typ].UnlockList;
+  m_mutex.Acquire;
+  try
+    dict := m_locks[typ];
+
+    if dict.ContainsKey(id) then
+    begin
+      elements := dict[id];
+
+      if elements.ContainsKey(0) then
+      begin
+        info := elements[0];
+        sendFail;
+      end
+      else if elements.ContainsKey(sub) then
+      begin
+        info := elements[sub];
+        sendFail;
+      end
+      else
+        sendOk;
+    end
+    else
+      sendOk;
+
+  finally
+    m_mutex.Release;
+  end;
 end;
 
-function TLockMod.LockDocument(id, typ: integer): TJSONObject;
+function TLockMod.isLockedByID(id, typ: integer): TJSONObject;
 var
-  list : TList<TLockInfo>;
-  info : TLockInfo;
-  session : TDSSession;
+  req : TJSONObject;
 begin
-  list := m_locks[typ].LockList;
-  info := find( id, list );
-  if Assigned( info) then
-  begin
-    Result := info.getJSON;
-    DebugMsg(Format('%s %d %d', ['TLockMod.LockDocument: is locked', id, typ]));
-    JResult( Result, false, 'Das Dokument ist bereits gesperrt');
-  end
-  else
-  begin
-    Session := TDSSessionManager.GetThreadSession;
+  req     := TJSONObject.Create;
+  JReplace(req, 'id',   id);
+  JReplace(req, 'type', typ);
 
-    info := TLockInfo.create;
-    list.Add(info);
-    info.ID         := id;
-    info.Locked     := true;
-    info.Host       := session.GetData('host');
-    info.TimeStamp  := now;
-    info.SessionID  := session.Id;
-    info.User       := session.GetData('user');
+  Result  := isLocked(req);
 
+  req.Free;
+end;
+
+function TLockMod.LockDocument(req : TJSONObject): TJSONObject;
+var
+  dict    : TLockDict;
+  elements: TLockElements;
+  info    : TLockInfo;
+  session : TDSSession;
+
+  id, typ : integer;
+  sub     : integer;
+
+  function addLock : TLockInfo;
+  begin
+    Session           := TDSSessionManager.GetThreadSession;
+    Result            := TLockInfo.create;
+    Result.ID         := id;
+    Result.Sub        := sub;
+    Result.Locked     := true;
+    Result.Host       := session.GetData('host');
+    Result.TimeStamp  := now;
+    Result.SessionID  := session.Id;
+    Result.User       := session.GetData('user');
+  end;
+
+  procedure sendOk;
+  begin
     Result := info.getJSON;
     DebugMsg(Format('%s %d %d', ['TLockMod.LockDocument: is NOW locked', id, typ]));
     JResult( Result, true, 'Das Dokument wurde gesperrt');
   end;
-  m_locks[typ].UnlockList;
+  procedure sendFail;
+  begin
+    Result := info.getJSON;
+    DebugMsg(Format('%s %d %d', ['TLockMod.LockDocument: is locked', id, typ]));
+    JResult( Result, false, 'Das Dokument ist bereits gesperrt');
+  end;
+
+begin
+  id  := JInt( req, 'id');
+  typ := JInt( req, 'typ');
+  sub := JInt( req, 'sub');
+
+  m_mutex.Acquire;
+  try
+    dict := m_locks[typ];
+
+    if dict.ContainsKey(id) then
+    begin
+      elements := dict[id];
+
+      if elements.ContainsKey(sub) or elements.ContainsKey(0) then
+        sendFail
+      else
+      begin
+        info := addLock;
+        elements.Add(sub, info);
+        sendOK;
+      end;
+    end
+    else
+    begin
+      elements := TLockElements.Create();
+      dict.Add( id, elements);
+
+      info := addLock;
+      elements.Add(sub, info);
+      sendOK;
+    end;
+  finally
+    m_mutex.Release;
+  end;
+
+
 end;
 
 procedure TLockMod.removeLocks(id: NativeInt);
 var
-  i, j : integer;
-  list : TList<TLockInfo>;
+  j       : integer;
+  dict    : TLockDict;
+  elements: TLockElements;
+  info    : TLockInfo;
+  keys    : TList<TLockInfo>;
 begin
-  for j := Low(m_locks) to High(m_locks) do
-  begin
-    list := m_locks[j].LockList;
-    for i := pred(list.Count) downto 0 do
+
+  m_mutex.Acquire;
+  keys    := TList<TLockInfo>.create;
+  try
+    for j := Low(m_locks) to High(m_locks) do
     begin
-      if list[i].SessionID = id  then
+      dict      := m_locks[j];
+
+      for elements in dict.Values do
       begin
-        DebugMsg( 'removeLocks : '+list[i].CLID+' session id : '+IntToStr(id ));
-        list[i].Free;
-        list.Delete(i);
+        for info in elements.Values do
+        begin
+          if info.SessionID = id then
+            keys.Add(info);
+        end;
+        for info in keys do
+        begin
+          elements.Remove( info.Sub );
+          DebugMsg( 'removeLocks : '+info.CLID+' session id : '+IntToStr(id ));
+          info.Free;
+        end;
       end;
+      keys.Clear;
     end;
-    m_locks[j].UnlockList;
+  finally
+    keys.Free;
+    m_mutex.Release;
   end;
 end;
 
-function TLockMod.UnLockDocument(id, typ: integer): TJSONObject;
+function TLockMod.UnLockDocument(Req : TJSONObject): TJSONObject;
 var
-  list : TList<TLockInfo>;
+  dict    : TLockDict;
+  elements: TLockElements;
+
   info : TLockInfo;
   session : TDSSession;
+  id, typ : integer;
+  sub     : integer;
 begin
-  list := m_locks[typ].LockList;
-  info := find( id, list );
-  if Assigned( info) then
-  begin
-    Session := TDSSessionManager.GetThreadSession;
-    if info.SessionID = session.Id then
+  id  := JInt( req, 'id');
+  typ := JInt( req, 'typ');
+  sub := JInt( req, 'sub' );
+
+  m_mutex.Acquire;
+  try
+    dict := m_locks[typ];
+    if dict.ContainsKey(id) then
     begin
-      Result := info.getJSON;
-      JResponse( Result, true, 'Das Dokument wurde freigegeben.');
-      DebugMsg(Format('%s %d %d', ['TLockMod.UnLockDocument: is unlocked', id, typ]));
-      list.Remove(info);
+      elements := dict[id];
+      if elements.ContainsKey(sub) then
+      begin
+        Session := TDSSessionManager.GetThreadSession;
+        info := elements[sub];
+        if info.SessionID = session.Id then
+        begin
+          Result := info.getJSON;
+          JResponse( Result, true, 'Das Dokument wurde freigegeben.');
+          DebugMsg(Format('%s %d %d', ['TLockMod.UnLockDocument: is unlocked', id, typ]));
+
+          elements.Remove(sub);
+          info.Free;
+        end
+        else
+        begin
+          Result := info.getJSON;
+          JResponse( Result, false, 'Das Dokument ist in einer anderen Sitzung gesperrt');
+          DebugMsg(Format('%s %d %d', ['TLockMod.UnLockDocument: locked in differend session', id, typ]));
+        end;
+      end
+      else
+      begin
+        Result := TJSONObject.Create;
+        DebugMsg(Format('%s %d %d', ['TLockMod.UnLockDocument: is not locked', id, typ]));
+        JResult( Result, false, 'Das Dokument ist nicht gesperrt');
+      end;
     end
     else
     begin
-      Result := info.getJSON;
-      JResponse( Result, false, 'Das Dokument ist in einer anderen Sitzung gesperrt');
-      DebugMsg(Format('%s %d %d', ['TLockMod.UnLockDocument: locked in differend session', id, typ]));
+      Result := TJSONObject.Create;
+      DebugMsg(Format('%s %d %d', ['TLockMod.UnLockDocument: is not locked', id, typ]));
+      JResult( Result, false, 'Das Dokument ist nicht gesperrt');
     end;
-  end
-  else
-  begin
-    Result := TJSONObject.Create;
-    DebugMsg(Format('%s %d %d', ['TLockMod.UnLockDocument: is not locked', id, typ]));
-    JResult( Result, false, 'Das Dokument ist nicht gesperrt');
-  end;
 
-  m_locks[typ].UnlockList;
+  finally
+    m_mutex.Release;
+  end;
 end;
 
 end.

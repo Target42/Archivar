@@ -42,9 +42,6 @@ type
       UserRoles: TStrings);
     procedure DSAuthenticationManager1UserAuthorize(Sender: TObject;
       AuthorizeEventObject: TDSAuthorizeEventObject; var valid: Boolean);
-    procedure DSTCPServerTransport1Connect(Event: TDSTCPConnectEventObject);
-    procedure DSTCPServerTransport1Disconnect(
-      Event: TDSTCPDisconnectEventObject);
     procedure ServiceCreate(Sender: TObject);
     procedure dsPersonGetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
@@ -118,12 +115,13 @@ procedure TServerContainer1.DSServer1Connect(
 var
   Session : TDSSession;
 begin
-  DebugMsg('connect : ' + IntToStr(DSConnectEventObject.ChannelInfo.Id));
   Session := TDSSessionManager.GetThreadSession;
-  DebugMsg('session : ' + intToStr(Session.Id));
-  DebugMsg('Session name : ' + Session.UserName);
 
-  DebugMsg(DSConnectEventObject.ChannelInfo.ClientInfo.IpAddress);
+  DebugMsg('Connect::connect      : ' + IntToStr(DSConnectEventObject.ChannelInfo.Id));
+  DebugMsg('Connect::session id   : ' + intToStr(Session.Id));
+  DebugMsg('Connect::Session name : ' + Session.UserName);
+  DebugMsg('Connect::remote host  : ' + DSConnectEventObject.ChannelInfo.ClientInfo.IpAddress);
+  DebugMsg('');
 end;
 
 procedure TServerContainer1.DSServer1Disconnect(
@@ -133,14 +131,19 @@ var
 begin
   Session := TDSSessionManager.GetThreadSession;
   if Assigned(session) then
+  begin
     LockMod.removeLocks(session.Id);
-  DebugMsg('disconnect : ' + IntToStr(DSConnectEventObject.ChannelInfo.Id));
+    DebugMsg('Disconnect::session id : ' + intToStr( session.Id ));
+  end;
+  DebugMsg(  'Disconnect::disconnect : ' + IntToStr(DSConnectEventObject.ChannelInfo.Id));
+  DebugMsg('');
 end;
 
 procedure TServerContainer1.DSServer1Error(
   DSErrorEventObject: TDSErrorEventObject);
 begin
-  DebugMsg('DS Server Error: '+DSErrorEventObject.Error.ToString);
+  DebugMsg('Error::DS Server Error: '+DSErrorEventObject.Error.ToString);
+  DebugMsg('');
 end;
 
 procedure TServerContainer1.DSServerClass1GetClass(
@@ -165,18 +168,6 @@ procedure TServerContainer1.dsTaskViewGetClass(DSServerClass: TDSServerClass;
   var PersistentClass: TPersistentClass);
 begin
   PersistentClass := ds_taskView.TdsTaskView;
-end;
-
-procedure TServerContainer1.DSTCPServerTransport1Connect(
-  Event: TDSTCPConnectEventObject);
-begin
-  DebugMsg('connect');
-end;
-
-procedure TServerContainer1.DSTCPServerTransport1Disconnect(
-  Event: TDSTCPDisconnectEventObject);
-begin
-  DebugMsg('disconnect !');
 end;
 
 procedure TServerContainer1.dsTemplateGetClass(DSServerClass: TDSServerClass;
@@ -230,56 +221,50 @@ var
   Session   : TDSSession;
   userName  : string;
   ph        : string;
-begin
-  valid   := false;
-  userName:= LowerCase(User);
-  ph      := THashSHA2.GetHashString(Password);
 
-  DebugMsg('Authenticate user :' +userName);
-
-  if pos('*', userName) > 0 then
+  function checkUser : Boolean;
   begin
-    userName := trim(StringReplace(userName, '*', '',[rfReplaceAll, rfIgnoreCase]));
+    Result := false;
 
     QueryUser.ParamByName('net').AsString := userName;
     QueryUser.Open;
     if QueryUser.RecordCount = 1 then
     begin
-      valid := SameText( ph, QueryUser.FieldByName('pe_pwd').AsString);
+      Result := SameText( ph, QueryUser.FieldByName('pe_pwd').AsString);
     end;
-    QueryUser.Close;
-    if QueryUser.Transaction.InTransaction then
-      QueryUser.Transaction.Commit;
-
-    if valid then
-    begin
-      debugMsg( 'Login ok');
-      UserRoles.Add('broadcast');
-    end;
-
-    exit;
   end;
+begin
+  valid   := false;
+  userName:= LowerCase(User);
+  ph      := THashSHA2.GetHashString(Password);
 
-  if IBTransaction1.InTransaction then
-    IBTransaction1.Rollback;
-
+  if IBTransaction1.InTransaction then IBTransaction1.Rollback;
   IBTransaction1.StartTransaction;
 
   Session := TDSSessionManager.GetThreadSession;
 
-  DebugMsg('session : ' + intToStr(Session.Id));
-  DebugMsg('Session name : ' + Session.UserName);
-
-  Session.PutData('user', userName);
-
-  QueryUser.ParamByName('net').AsString := userName;
-  QueryUser.Open;
-  if QueryUser.RecordCount = 1 then
+  DebugMsg('UserAuthenticate::user :' +userName);
+  // callback channel ...
+  if pos('*', userName) > 0 then
   begin
-    valid := SameText( ph, QueryUser.FieldByName('pe_pwd').AsString);
+    userName := trim(StringReplace(userName, '*', '',[rfReplaceAll, rfIgnoreCase]));
 
+    valid := checkUser;
     if valid then
     begin
+      UserRoles.Add('broadcast');
+    end;
+  end
+  else
+  begin
+    // normal user
+    DebugMsg('UserAuthenticate::session id   : '  + intToStr(Session.Id));
+    DebugMsg('UserAuthenticate::Session name : '  + Session.UserName);
+
+    valid := checkUser;
+    if valid then
+    begin
+      Session.PutData('user',     userName);
       Session.PutData('ID',       QueryUser.FieldByName('PE_ID').AsString );
       Session.PutData('name',     QueryUser.FieldByName('pe_name').AsString);
       Session.PutData('vorname',  QueryUser.FieldByName('pe_vorname').AsString);
@@ -291,19 +276,24 @@ begin
       end
       else
         Session.PutData('admin', 'false');
+
       UserRoles.Add('user');
     end;
   end;
+
+  if valid then
+    debugMsg( 'UserAuthenticate::Login ok');
+
   QueryUser.Close;
   IBTransaction1.Commit;
-  debugMsg('user :'+ User );
+
+  DebugMsg('');
 end;
 
 procedure TServerContainer1.DSAuthenticationManager1UserAuthorize(
   Sender: TObject; AuthorizeEventObject: TDSAuthorizeEventObject;
   var valid: Boolean);
 begin
-//  DebugMsg(AuthorizeEventObject.MethodAlias);
   valid := true;
 end;
 

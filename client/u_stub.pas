@@ -1,6 +1,6 @@
 //
 // Erzeugt vom DataSnap-Proxy-Generator.
-// 17.03.2021 16:45:57
+// 23.03.2021 17:52:23
 //
 
 unit u_stub;
@@ -115,9 +115,9 @@ type
     constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
     destructor Destroy; override;
     procedure DSServerModuleCreate(Sender: TObject);
-    function LockDocument(id: Integer; typ: Integer): TJSONObject;
-    function UnLockDocument(id: Integer; typ: Integer): TJSONObject;
-    function isLocked(id: Integer; typ: Integer): TJSONObject;
+    function LockDocument(req: TJSONObject): TJSONObject;
+    function UnLockDocument(req: TJSONObject): TJSONObject;
+    function isLocked(req: TJSONObject): TJSONObject;
     function validTask(id: Integer; dt: Integer): Boolean;
     function AutoInc(gen: string): Integer;
   end;
@@ -749,7 +749,7 @@ begin
   FDSServerModuleCreateCommand.ExecuteUpdate;
 end;
 
-function TdsMiscClient.LockDocument(id: Integer; typ: Integer): TJSONObject;
+function TdsMiscClient.LockDocument(req: TJSONObject): TJSONObject;
 begin
   if FLockDocumentCommand = nil then
   begin
@@ -758,13 +758,12 @@ begin
     FLockDocumentCommand.Text := 'TdsMisc.LockDocument';
     FLockDocumentCommand.Prepare;
   end;
-  FLockDocumentCommand.Parameters[0].Value.SetInt32(id);
-  FLockDocumentCommand.Parameters[1].Value.SetInt32(typ);
+  FLockDocumentCommand.Parameters[0].Value.SetJSONValue(req, FInstanceOwner);
   FLockDocumentCommand.ExecuteUpdate;
-  Result := TJSONObject(FLockDocumentCommand.Parameters[2].Value.GetJSONValue(FInstanceOwner));
+  Result := TJSONObject(FLockDocumentCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
 end;
 
-function TdsMiscClient.UnLockDocument(id: Integer; typ: Integer): TJSONObject;
+function TdsMiscClient.UnLockDocument(req: TJSONObject): TJSONObject;
 begin
   if FUnLockDocumentCommand = nil then
   begin
@@ -773,13 +772,12 @@ begin
     FUnLockDocumentCommand.Text := 'TdsMisc.UnLockDocument';
     FUnLockDocumentCommand.Prepare;
   end;
-  FUnLockDocumentCommand.Parameters[0].Value.SetInt32(id);
-  FUnLockDocumentCommand.Parameters[1].Value.SetInt32(typ);
+  FUnLockDocumentCommand.Parameters[0].Value.SetJSONValue(req, FInstanceOwner);
   FUnLockDocumentCommand.ExecuteUpdate;
-  Result := TJSONObject(FUnLockDocumentCommand.Parameters[2].Value.GetJSONValue(FInstanceOwner));
+  Result := TJSONObject(FUnLockDocumentCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
 end;
 
-function TdsMiscClient.isLocked(id: Integer; typ: Integer): TJSONObject;
+function TdsMiscClient.isLocked(req: TJSONObject): TJSONObject;
 begin
   if FisLockedCommand = nil then
   begin
@@ -788,10 +786,9 @@ begin
     FisLockedCommand.Text := 'TdsMisc.isLocked';
     FisLockedCommand.Prepare;
   end;
-  FisLockedCommand.Parameters[0].Value.SetInt32(id);
-  FisLockedCommand.Parameters[1].Value.SetInt32(typ);
+  FisLockedCommand.Parameters[0].Value.SetJSONValue(req, FInstanceOwner);
   FisLockedCommand.ExecuteUpdate;
-  Result := TJSONObject(FisLockedCommand.Parameters[2].Value.GetJSONValue(FInstanceOwner));
+  Result := TJSONObject(FisLockedCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
 end;
 
 function TdsMiscClient.validTask(id: Integer; dt: Integer): Boolean;

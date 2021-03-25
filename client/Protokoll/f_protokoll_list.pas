@@ -50,9 +50,11 @@ end;
 
 procedure TProtocollListForm.FormCreate(Sender: TObject);
 begin
-  GremiumFrame1.init;
+
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
   BaseFrame1.OKBtn.Enabled := false;
+
+  GremiumFrame1.init;
 end;
 
 procedure TProtocollListForm.FormDestroy(Sender: TObject);

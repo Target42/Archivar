@@ -116,6 +116,8 @@ begin
   end;
 
   TV.Items.EndUpdate;
+
+  selectFirst;
 end;
 
 procedure TGremiumFrame.release;

@@ -75,7 +75,7 @@ function TdsTask.AssignGremium(grid, taid: integer; status: string) : TJSONObjec
 var
   opts : TLocateOptions;
 begin
-  Result := LockMod.isLocked( taid, integer(ltTask));
+  Result := LockMod.isLockedByID( taid, integer(ltTask));
   if Jbool( Result, 'result') then
   begin
     DebugMsg('TdsTask.AssignGremium document is locked!');
@@ -169,7 +169,7 @@ var
   msg : TJSONObject;
   clid: string;
 begin
-  Result := LockMod.isLocked( ta_id, integer(ltTask ));
+  Result := LockMod.isLockedByID( ta_id, integer(ltTask ));
   if Jbool( Result, 'result') then
   begin
     JReplace( Result, 'result', false);
@@ -234,7 +234,7 @@ var
   flags : integer;
   msg : TJSONObject;
 begin
-  Result := LockMod.isLocked( taid, integer(ltTask));
+  Result := LockMod.isLockedByID( taid, integer(ltTask));
   if Jbool( Result, 'result') then
   begin
     JReplace( Result, 'result', false);

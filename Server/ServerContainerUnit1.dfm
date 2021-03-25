@@ -35,8 +35,6 @@ object ServerContainer1: TServerContainer1
           'CompressMoreThan=1024')
       end>
     AuthenticationManager = DSAuthenticationManager1
-    OnConnect = DSTCPServerTransport1Connect
-    OnDisconnect = DSTCPServerTransport1Disconnect
     Left = 56
     Top = 65
   end

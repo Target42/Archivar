@@ -99,13 +99,13 @@ type
 
     procedure FillGremien( arr :TJSONArray );
 
-    function LockDocument( id, typ : integer ) : TJSONObject;
-    function UnLockDocument( id, typ : integer ) : TJSONObject;
-    function isLocked( id, typ : integer ) : TJSONObject;
-    procedure ShowLockInfo( data : TJSONObject);
+    function LockDocument(   id, typ : integer; subid : integer = 0 ) : TJSONObject;
+    function UnLockDocument( id, typ : integer; subid : integer = 0 ) : TJSONObject;
+    function isLocked(       id, typ : integer; subid : integer = 0 ) : TJSONObject;
+    procedure ShowLockInfo(  data    : TJSONObject);
 
     procedure Execute(const Arg: TJSONObject);
-    function GremiumName( id : integer ) : string;
+    function  GremiumName( id : integer ) : string;
 
     function isValidTask( id : integer; dt : tDocType ) : Boolean;
 
@@ -487,9 +487,16 @@ begin
   end;
 end;
 
-function TGM.isLocked(id, typ: integer): TJSONObject;
+function TGM.isLocked(id, typ: integer; subid : integer): TJSONObject;
+var
+  req : TJSONObject;
 begin
-  Result := m_misc.isLocked(id, typ);
+  req := TJSONObject.Create;
+  JReplace( req, 'id',  id);
+  JReplace( req, 'typ', typ);
+  JReplace( req, 'sub', subid );
+
+  Result := m_misc.isLocked(req);
 end;
 
 function TGM.isValidTask(id: integer; dt : tDocType): Boolean;
@@ -497,9 +504,17 @@ begin
   Result := m_misc.validTask(id, integer(dt));
 end;
 
-function TGM.LockDocument(id, typ: integer): TJSONObject;
+function TGM.LockDocument(id, typ: integer; subid : integer): TJSONObject;
+var
+  req : TJSONObject;
 begin
-  Result := m_misc.LockDocument(id, typ);
+  req := TJSONObject.Create;
+
+  JReplace( req, 'id',  id);
+  JReplace( req, 'typ', typ);
+  JReplace( req, 'sub', subid );
+
+  Result := m_misc.LockDocument(req);
 end;
 
 function TGM.login(user, pwd: string): boolean;
@@ -637,9 +652,16 @@ begin
   m_misc := NIL;
 end;
 
-function TGM.UnLockDocument(id, typ: integer): TJSONObject;
+function TGM.UnLockDocument(id, typ: integer; subid : integer): TJSONObject;
+var
+  req : TJSONObject;
 begin
-  Result := m_misc.UnLockDocument(id, typ);
+  req := TJSONObject.Create;
+  JReplace( req, 'id', id);
+  JReplace( req, 'typ',typ);
+  JReplace( req, 'sub', subid );
+
+  Result := m_misc.UnLockDocument(req);
 end;
 
 { TMyCallback }

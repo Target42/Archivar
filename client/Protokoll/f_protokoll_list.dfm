@@ -56,6 +56,7 @@ object ProtocollListForm: TProtocollListForm
     Align = alTop
     Caption = 'Gremium'
     TabOrder = 1
+    ExplicitWidth = 304
     inline GremiumFrame1: TGremiumFrame
       Left = 2
       Top = 15
@@ -65,10 +66,16 @@ object ProtocollListForm: TProtocollListForm
       TabOrder = 0
       ExplicitLeft = 2
       ExplicitTop = 15
+      ExplicitWidth = 300
+      ExplicitHeight = 168
       inherited TV: TTreeView
         Width = 631
         Height = 168
         OnChange = GremiumFrame1TVChange
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitWidth = 300
+        ExplicitHeight = 168
       end
     end
   end

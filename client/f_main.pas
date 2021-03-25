@@ -124,6 +124,11 @@ type
     ac_me_update: TAction;
     Update1: TMenuItem;
     N14: TMenuItem;
+    ac_me_execute: TAction;
+    Ausfhren1: TMenuItem;
+    ac_pr_abschnitt: TAction;
+    Abschnittbearbeiten1: TMenuItem;
+    N15: TMenuItem;
     procedure ac_prg_closeExecute(Sender: TObject);
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure ac_prg_disconExecute(Sender: TObject);
@@ -154,6 +159,8 @@ type
     procedure ac_me_deleteExecute(Sender: TObject);
     procedure ac_me_inviteExecute(Sender: TObject);
     procedure ac_me_updateExecute(Sender: TObject);
+    procedure ac_me_executeExecute(Sender: TObject);
+    procedure ac_pr_abschnittExecute(Sender: TObject);
   private
     procedure ApplicationSetMenu( flag : boolean );
     procedure setPanel( id : integer ; text : string );
@@ -306,6 +313,19 @@ begin
   SelectMeetingForm.free;
 end;
 
+procedure TMainForm.ac_me_executeExecute(Sender: TObject);
+begin
+  Application.CreateForm(TSelectMeetingForm, SelectMeetingForm);
+  if SelectMeetingForm.ShowModal = mrok then
+  begin
+    if SelectMeetingForm.ME_ID > 0 then
+    begin
+
+    end;
+  end;
+  SelectMeetingForm.free;
+end;
+
 procedure TMainForm.ac_me_inviteExecute(Sender: TObject);
 begin
   Application.CreateForm(TSelectMeetingForm, SelectMeetingForm);
@@ -392,6 +412,16 @@ begin
   finally
     MySettingsForm.free;
   end;
+end;
+
+procedure TMainForm.ac_pr_abschnittExecute(Sender: TObject);
+begin
+  Application.CreateForm(TProtocollListForm, ProtocollListForm);
+  if ProtocollListForm.ShowModal = mrOk then
+  begin
+    WindowHandler.openProtocolView(ProtocollListForm.PR_ID);
+  end;
+  ProtocollListForm.Free;
 end;
 
 procedure TMainForm.ac_pr_newExecute(Sender: TObject);
@@ -578,6 +608,7 @@ begin
   ac_pr_open.Enabled      := flag;
   ac_pr_view.Enabled      := flag;
   ac_pr_delete.Enabled    := flag;
+  ac_pr_abschnitt.Enabled := flag;
 
   ac_me_new.Enabled       := flag;
   ac_me_edit.Enabled      := flag;
@@ -585,6 +616,7 @@ begin
   ac_me_delete.Enabled    := flag;
   ac_me_end.Enabled       := flag;
   ac_me_update.Enabled    := flag;
+  ac_me_execute.Enabled   := flag;
 
   ac_tb_neu.Enabled       := flag;
   ac_tb_edit.Enabled      := flag;

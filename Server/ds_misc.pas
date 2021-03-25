@@ -27,10 +27,11 @@ type
     m_Session : TDSSession;
 
   public
-    function LockDocument( id, typ : integer ) : TJSONObject;
-    function UnLockDocument( id, typ : integer ) : TJSONObject;
-    function isLocked( id, typ : integer ) : TJSONObject;
-    function validTask( id, dt : integer ) : boolean;
+    function LockDocument(   req : TJSONObject ) : TJSONObject;
+    function UnLockDocument( req : TJSONObject ) : TJSONObject;
+    function isLocked(       req : TJSONObject ) : TJSONObject;
+
+    function validTask(      id, dt  : integer ) : boolean;
 
     function AutoInc( gen : string ) : integer;
   end;
@@ -66,19 +67,19 @@ begin
   m_Session := TDSSessionManager.GetThreadSession;
 end;
 
-function TdsMisc.isLocked(id, typ: integer): TJSONObject;
+function TdsMisc.isLocked( req : TJSONObject ): TJSONObject;
 begin
-  Result := LockMod.isLocked( id, typ );
+  Result := LockMod.isLocked( req );
 end;
 
-function TdsMisc.LockDocument(id, typ: integer): TJSONObject;
+function TdsMisc.LockDocument(req : TJSONObject): TJSONObject;
 begin
-  Result := LockMod.LockDocument( id, typ );
+  Result := LockMod.LockDocument( req );
 end;
 
-function TdsMisc.UnLockDocument(id, typ: integer): TJSONObject;
+function TdsMisc.UnLockDocument(req : TJSONObject): TJSONObject;
 begin
-  Result := LockMod.UnLockDocument( id, typ );
+  Result := LockMod.UnLockDocument( req  );
 end;
 
 function TdsMisc.validTask(id, dt: integer): boolean;
@@ -86,7 +87,6 @@ var
   t : TDocType;
 begin
   t := tDocType(dt);
-  Result := false;
 
   DebugMsg(format('valid task: %d %d', [id, dt]));
 

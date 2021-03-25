@@ -102,7 +102,8 @@ begin
   JReplace( Result, 'vorname',  m_session.GetData('vorname'));
   JReplace( Result, 'id',       StrToInt(m_session.GetData('ID')));
 
-  DebugMsg('session : '+IntToStr(m_session.Id));
+  DebugMsg('getUserInfo::session : '+IntToStr(m_session.Id));
+  DebugMsg('');
 
   m_session.PutData('host', JString(data, 'host'));
   m_session.PutData('hostuser', JString( data, 'hostuser'));

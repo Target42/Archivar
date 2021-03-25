@@ -418,6 +418,9 @@ var
   i : integer;
 begin
   Result := NIL;
+  if not Assigned(m_xList) then
+    exit;
+
   for i := 0 to pred(m_xList.Values.Count) do
   begin
     if SameText(name, m_xList.Values.Field[i].Field) then
