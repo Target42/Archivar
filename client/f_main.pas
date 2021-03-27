@@ -184,7 +184,8 @@ uses
   f_images, System.IOUtils, f_taksListForm, u_berTypes, f_datafields,
   f_template_new, f_taskEditor, f_select_templateForm, f_bechlus, f_set,
   f_textblock_edit, f_testblock_list, f_webserver_files, f_epub_mngr,
-  f_meeting_new, f_meeting_select, f_meeting_proto, f_login;
+  f_meeting_new, f_meeting_select, f_meeting_proto, f_login,
+  system.UITypes;
 
 {$R *.dfm}
 
@@ -288,7 +289,6 @@ begin
   begin
     if SelectMeetingForm.ME_ID > 0 then
     begin
-
       if (MessageDlg('Soll die Sitzungseinladung:'+ sLineBreak+
           SelectMeetingForm.Title+sLineBreak+
           'wirklich gelöscht werden?', mtConfirmation, [mbYes, mbNo], 0) = mrYes) then

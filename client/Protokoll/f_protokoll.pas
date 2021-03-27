@@ -777,7 +777,6 @@ begin
     m_proto.release;
 
   m_proto := TProtocolImpl.create;
-  m_proto.ID := value;
 
   if m_proto.load(value) then
   begin

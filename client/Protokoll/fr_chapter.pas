@@ -127,7 +127,8 @@ implementation
 
 uses
   m_glob_client, Xml.XMLIntf, Xml.XMLDoc,
-  f_chapterEdit, u_gremium, f_chapterTask, u_ChapterImpl, f_bechlus;
+  f_chapterEdit, u_gremium, f_chapterTask, u_ChapterImpl, f_bechlus,
+  system.UITypes;
 
 {$R *.dfm}
 
@@ -245,11 +246,11 @@ begin
   if not Assigned(TV.Selected) then
     exit;
   cp := IChapter(TV.Selected.Data);
-  if cp.Owner = m_ct.Root then
+  if cp.Parent = m_ct.Root then
     exit;
 
-  p := cp.Owner.Owner;
-  cp.Owner.remove(cp);
+  p := cp.Parent.Parent;
+  cp.Parent.remove(cp);
   p.add(cp);
   cp.Modified := true;
 
@@ -268,18 +269,18 @@ begin
   cp := IChapter(TV.Selected.Data);
   prev := NIL;
 
-  for i := 1 to pred(cp.Owner.Childs.Count) do
+  for i := 1 to pred(cp.Parent.Childs.Count) do
   begin
-    if cp.Owner.Childs.Items[i] = cp  then
+    if cp.Parent.Childs.Items[i] = cp  then
     begin
-      prev := cp.Owner.Childs.Items[i-1];
+      prev := cp.Parent.Childs.Items[i-1];
       break;
     end;
   end;
 
   if Assigned(prev) then
   begin
-    cp.Owner.Childs.remove(cp);
+    cp.Parent.Childs.remove(cp);
     prev.add(cp);
     cp.Modified := true;
     updateTree
@@ -305,7 +306,7 @@ begin
   if not Assigned(TV.Selected) then
     exit;
   cp := IChapter(TV.Selected.Data);
-  cp.Owner.remove(cp);
+  cp.Parent.remove(cp);
   cp.release;
   updateTree;
 end;
@@ -524,38 +525,10 @@ end;
 
 procedure TChapterFrame.saveCP(cp: IChapter; append: boolean);
 begin
-  if append then
-  begin
-    if cp.ID = 0 then
-      cp.ID := GM.autoInc('GEN_CT_ID');
-
-    ChapterTextTab.Append;
-    ChapterTextTab.FieldByName('CP_ID').AsInteger     := m_ct.ID;
-    ChapterTextTab.FieldByName('CT_ID').AsInteger     := cp.ID;
-  end
-  else
-  begin
-    ChapterTextTab.Locate('CT_ID', VarArrayOf([cp.ID]), []);
-    ChapterTextTab.Edit;
-  end;
-
-  ChapterTextTab.FieldByName('ct_parent').AsInteger := cp.PID;
-  ChapterTextTab.FieldByName('CT_NUMBER').AsInteger := cp.Nr;
-  ChapterTextTab.FieldByName('CT_TITLE').AsString   := cp.Name;
-  ChapterTextTab.FieldByName('CT_POS').AsInteger    := cp.Pos;
-  ChapterTextTab.FieldByName('CT_DATA').AsString    := cp.Rem;
-
-  if cp.TAID <> 0 then
-    ChapterTextTab.FieldByName('TA_ID').AsInteger     := cp.TAID
-  else
-    ChapterTextTab.FieldByName('TA_ID').Clear;
-
-  ChapterTextTab.Post;
-
+  cp.save(ChapterTextTab);
   cp.Votes.saveModified;
 
   cp.Modified := false;
-
 end;
 
 procedure TChapterFrame.setChapter(value: IChapterTitle);
@@ -635,7 +608,7 @@ begin
       exit;
     en := TEntry(TV.Selected.Data);
     cp := IChapter(en.ptr);
-    cp.Owner.remove(cp);
+    cp.Parent.remove(cp);
 
     if not Assigned(node) then
       m_ct.Root.add(cp)

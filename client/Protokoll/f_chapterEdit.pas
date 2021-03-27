@@ -57,8 +57,8 @@ procedure TChapterEditForm.CheckBox1Click(Sender: TObject);
 begin
   if CheckBox1.Checked then
   begin
-    if Assigned(m_cp.Owner) then
-      m_cp.Owner.Childs.renumber;
+    if Assigned(m_cp.Parent) then
+      m_cp.Parent.Childs.renumber;
     LabeledEdit2.Text := IntToStr( cp.Nr);
   end
   else

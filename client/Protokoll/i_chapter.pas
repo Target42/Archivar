@@ -81,7 +81,7 @@ type
     ['{573E438F-18D6-4AA4-93CB-B16C342C7EDE}']
 
       procedure setModified(  value : boolean );
-      procedure setOwner(     value : IChapter);
+      procedure setParent(    value : IChapter);
       procedure setName(      value : string );
       procedure SetID(        value : integer);
       procedure setPID(       value : integer );
@@ -95,7 +95,7 @@ type
       procedure SetTimeStamp(const Value: TDateTime);
 
       function getModified  : boolean;
-      function getOwner     : IChapter;
+      function getParent    : IChapter;
       function getName      : string;
       function getID        : integer;
       function getPID       : integer;
@@ -112,7 +112,7 @@ type
 
 
       // public
-      property Owner      : IChapter      read getOwner     write setOwner;
+      property Parent     : IChapter      read getParent     write setParent;
       property Childs     : IChapterList  read getChilds;
       property Name       : string        read getName      write setName;
       property ID         : integer       read getID        write SetID;
@@ -146,6 +146,9 @@ type
 
       function hasID( id : integer ) : Boolean;
       function level : integer;
+
+      function save( data : TDataSet ) : boolean;
+      function load( data : TDataSet ) : boolean;
 
       procedure release;
   end;

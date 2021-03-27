@@ -226,6 +226,7 @@ begin
       m_grid  := PRTab.FieldByName('GR_ID').AsInteger;
       m_nr    := PRTab.FieldByName('PR_NR').AsInteger;
       m_date  := PRTab.FieldByName('PR_DATUM').AsDateTime;
+      m_id    := PRTab.FieldByName('PR_ID').AsInteger;
 
       st := getProtocolStream;
       loadFromStream( st );

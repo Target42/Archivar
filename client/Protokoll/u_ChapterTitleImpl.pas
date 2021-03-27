@@ -67,9 +67,10 @@ uses
   System.SysUtils, u_ChapterListImpl,
   u_ChapterImpl, Xml.XMLIntf, Xml.XMLDoc, i_beschluss;
 
-procedure TChapterTitleImpl.buildTree;
 
+procedure TChapterTitleImpl.buildTree;
 begin
+
 end;
 
 constructor TChapterTitleImpl.create(owner : IChapterTitleList; loader: TProtocolMod; proto : IProtocol);
@@ -80,7 +81,7 @@ begin
   m_owner   := owner;
   FNr       := 0;
   FModified := false;
-  m_root    := TChapterImpl.create(NIL, m_loader);
+  m_root    := TChapterImpl.create(NIL, m_loader, self);
   m_list    := TList<IChapter>.create;
   m_stamp   := now;
 end;
@@ -151,11 +152,13 @@ begin
 
   m_root.Childs.clear;
 
+
   data.First;
   while not data.Eof do
   begin
-    cp            := TChapterImpl.create(NIL, m_loader);
-    cp.ID         := data.FieldByName('CT_ID').AsInteger;
+    cp            := TChapterImpl.create(NIL, m_loader, self);
+    cp.load(data);
+{    cp.ID         := data.FieldByName('CT_ID').AsInteger;
     cp.PID        := data.FieldByName('CT_PARENT').AsInteger;
     cp.Name       := data.FieldByName('CT_TITLE').AsString;
     cp.Nr         := data.FieldByName('CT_NUMBER').AsInteger;
@@ -163,7 +166,7 @@ begin
     CP.Pos        := data.FieldByName('CT_POS').AsInteger;
     cp.Rem        := data.FieldByName('CT_DATA').AsString;
     cp.TimeStamp  := data.FieldByName('CT_CREATED').AsDateTime;
-    cp.Numbering  := (cp.Nr <> -1 );
+    cp.Numbering  := (cp.Nr <> -1 );}
 
     loadBE( cp );
 
@@ -287,7 +290,7 @@ procedure TChapterTitleImpl.setOwner;
   begin
     for i := 0 to pred(root.Childs.Count) do
     begin
-      root.Childs.Items[i].Owner := root;
+      root.Childs.Items[i].Parent := root;
       setValue(root.Childs.Items[i]);
     end;
   end;

@@ -3,14 +3,15 @@ unit u_ChapterImpl;
 interface
 
 uses
-  i_chapter, xsd_chapter, System.Classes, i_beschluss, m_protocol;
+  i_chapter, xsd_chapter, System.Classes, i_beschluss, m_protocol, Data.DB;
 
 type
     TChapterImpl = class( TInterfacedObject, IChapter )
     private
       m_loader    : TProtocolMod;
+      m_owner     : IChapterTitle;
       m_childs    : IChapterList;
-      m_owner     : IChapter;
+      m_parent    : IChapter;
       FName       : string;
       FID         : integer;
       FPID        : integer;
@@ -27,7 +28,7 @@ type
 
 
       procedure setModified(  value : boolean );
-      procedure setOwner(     value : IChapter);
+      procedure setParent(    value : IChapter);
       procedure setName(      value : string );
       procedure SetID(        value : integer);
       procedure setPID(       value : integer );
@@ -41,7 +42,7 @@ type
       procedure SetTimeStamp(const Value: TDateTime);
 
       function getModified  : boolean;
-      function getOwner     : IChapter;
+      function getParent    : IChapter;
       function getName      : string;
       function getID        : integer;
       function getPID       : integer;
@@ -58,7 +59,7 @@ type
 
 
     public
-      constructor create(owner : IChapter; loader: TProtocolMod);
+      constructor create(parent : IChapter; loader: TProtocolMod; owner : IChapterTitle);
       Destructor Destroy; override;
 
       procedure clearModified;
@@ -78,13 +79,17 @@ type
       function hasID( id : integer ) : Boolean;
       function level : integer;
 
+      function save( data : TDataSet ) : boolean;
+      function load( data : TDataSet ) : boolean;
+
       procedure release;
   end;
 
 implementation
 
 uses
-  System.SysUtils, u_ChapterListImpl, u_BeschlussListeImpl;
+  System.SysUtils, u_ChapterListImpl, u_BeschlussListeImpl, m_glob_client,
+  System.Variants;
 
 procedure TChapterImpl.add(cp: IChapter);
 begin
@@ -93,7 +98,7 @@ begin
 
   m_childs.add(cp);
 
-  cp.Owner  := self;
+  cp.Parent  := self;
   cp.PID    := self.getPID;
 
  m_childs.renumber;
@@ -108,11 +113,12 @@ begin
     m_childs.Items[i].clearModified;
 end;
 
-constructor TChapterImpl.create(owner : IChapter; loader: TProtocolMod);
+constructor TChapterImpl.create(parent : IChapter; loader: TProtocolMod; owner : IChapterTitle);
 begin
   m_loader  := loader;
   m_childs  := TChapterListImpl.create;
   m_votes   := TBeschlussListeImpl.create(m_loader);
+  m_parent  := parent;
   m_owner   := owner;
   FID       := 0;
   FPID      := 0;
@@ -133,7 +139,7 @@ end;
 
 procedure TChapterImpl.down;
 begin
-  m_owner.Childs.down(self);
+  m_parent.Childs.down(self);
   m_modified    := true;
 end;
 
@@ -149,7 +155,7 @@ begin
     begin
       if cp.Numbering then
         Result := IntToStr( cp.getNr ) +'.'+Result;
-      cp := cp.Owner;
+      cp := cp.Parent;
     end;
     Result := Result + ' ';
 
@@ -196,9 +202,9 @@ begin
   Result := FNumbering;
 end;
 
-function TChapterImpl.getOwner: IChapter;
+function TChapterImpl.getParent: IChapter;
 begin
-  Result := m_owner;
+  Result := m_parent;
 end;
 
 function TChapterImpl.getPID: integer;
@@ -284,14 +290,34 @@ begin
   ptr := self;
   while Assigned(ptr) do
   begin
-    ptr := ptr.Owner;
+    ptr := ptr.Parent;
     inc(Result);
   end;
 end;
 
+function TChapterImpl.load(data: TDataSet): boolean;
+begin
+  try
+    setID(         data.FieldByName('CT_ID').AsInteger);
+    setPID(        data.FieldByName('CT_PARENT').AsInteger);
+    setName(       data.FieldByName('CT_TITLE').AsString);
+    setNr(         data.FieldByName('CT_NUMBER').AsInteger);
+    setTAID(       data.FieldByName('TA_ID').AsInteger);
+    setPos(        data.FieldByName('CT_POS').AsInteger);
+    setRem(        data.FieldByName('CT_DATA').AsString);
+    setTimeStamp(  data.FieldByName('CT_CREATED').AsDateTime);
+    setNumbering(  getNr <> -1 );
+
+    Result := true;
+  except
+    Result := false;
+  end;
+
+end;
+
 function TChapterImpl.newChapter: IChapter;
 begin
-  Result := TChapterImpl.create(self, m_loader);
+  Result := TChapterImpl.create(self, m_loader, m_owner);
   add(Result);
   m_childs.renumber;
 end;
@@ -322,6 +348,8 @@ procedure TChapterImpl.release;
 var
   i : integer;
 begin
+  m_owner := NIL;
+
   for i := 0 to pred(m_childs.Count) do
     m_childs.Items[i].release;
   m_childs.clear;
@@ -331,7 +359,41 @@ end;
 procedure TChapterImpl.remove(cp: IChapter);
 begin
   m_childs.remove(cp);
-  cp.Owner := NIL;
+  cp.Parent := NIL;
+end;
+
+function TChapterImpl.save(data: TDataSet): boolean;
+begin
+  try
+    if FID = 0 then
+    begin
+      FID := GM.autoInc('GEN_CT_ID');
+
+      data.Append;
+      data.FieldByName('CP_ID').AsInteger     := m_owner.ID;  //m_ct.ID;
+      data.FieldByName('CT_ID').AsInteger     := FID;
+    end
+    else
+    begin
+      data.Locate('CT_ID', VarArrayOf([FID]), []);
+      data.Edit;
+    end;
+
+    data.FieldByName('ct_parent').AsInteger := FPID;
+    data.FieldByName('CT_NUMBER').AsInteger := FNr;
+    data.FieldByName('CT_TITLE').AsString   := FName;
+    data.FieldByName('CT_POS').AsInteger    := m_pos;
+    data.FieldByName('CT_DATA').AsString    := FRem;
+
+    if FTAID <> 0 then
+      data.FieldByName('TA_ID').AsInteger     := FTAID
+    else
+      data.FieldByName('TA_ID').Clear;
+    data.Post;
+    Result := true;
+  except
+    Result := false;
+  end;
 end;
 
 procedure TChapterImpl.setData(value: pointer);
@@ -370,10 +432,10 @@ begin
   m_modified  := m_modified or (value <> FNumbering);
   FNumbering := value;
 
-  if Assigned(m_owner) then
+  if Assigned(m_parent) then
   begin
     if FNumbering then
-      m_owner.Numbering := true
+      m_parent.Numbering := true
     else
     begin
       for i := 0 to pred(m_childs.Count) do
@@ -383,10 +445,10 @@ begin
   m_childs.renumber;
 end;
 
-procedure TChapterImpl.setOwner(value: IChapter);
+procedure TChapterImpl.setParent(value: IChapter);
 begin
-  m_modified  := m_modified or (value <> m_owner);
-  m_owner := value;
+  m_modified  := m_modified or (value <> m_parent);
+  m_parent := value;
 end;
 
 procedure TChapterImpl.setPID(value: integer);
@@ -425,7 +487,7 @@ end;
 
 procedure TChapterImpl.up;
 begin
-  m_owner.Childs.up(self);
+  m_parent.Childs.up(self);
   m_modified := true;
 end;
 

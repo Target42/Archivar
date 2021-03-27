@@ -251,12 +251,13 @@ var
       begin
         fname := TPath.Combine(path, 'forms\'+frm.Name+'.dfm');
         frm.DFM.Position := 0;
-
+        st := NIL;
         try
           st := TFileStream.Create(fname, fmCreate + fmShareDenyNone);
           st.CopyFrom(frm.DFM, -1);
         finally
-          st.Free;
+          if Assigned(st) then
+            st.Free;
         end;
       end;
     end;
