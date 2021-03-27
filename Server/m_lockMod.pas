@@ -191,8 +191,15 @@ begin
     begin
       elements := dict[id];
 
-      if elements.ContainsKey(sub) or elements.ContainsKey(0) then
+      if elements.ContainsKey(0) then
+      begin
+        info := elements[0];
+        sendFail;
+      end else if elements.ContainsKey(sub)  then
+      begin
+        info := elements[sub];
         sendFail
+      end
       else
       begin
         info := addLock;
