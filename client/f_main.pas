@@ -185,7 +185,7 @@ uses
   f_template_new, f_taskEditor, f_select_templateForm, f_bechlus, f_set,
   f_textblock_edit, f_testblock_list, f_webserver_files, f_epub_mngr,
   f_meeting_new, f_meeting_select, f_meeting_proto, f_login,
-  system.UITypes;
+  system.UITypes, f_protocol_sec;
 
 {$R *.dfm}
 
@@ -419,7 +419,9 @@ begin
   Application.CreateForm(TProtocollListForm, ProtocollListForm);
   if ProtocollListForm.ShowModal = mrOk then
   begin
-    WindowHandler.openProtocolView(ProtocollListForm.PR_ID);
+    Application.CreateForm(TProtocolSectionForm, ProtocolSectionForm);
+    ProtocolSectionForm.PRID := ProtocollListForm.PR_ID;
+    ProtocolSectionForm.Show;
   end;
   ProtocollListForm.Free;
 end;
@@ -484,16 +486,9 @@ end;
 
 procedure TMainForm.ac_ta_loadExecute(Sender: TObject);
 begin
-  Application.CreateForm(TGremiumListForm, GremiumListForm);
-  if GremiumListForm.ShowModal = mrOk then
-  begin
-    Application.CreateForm(TTaskListForm, TaskListForm);
-    TaskListForm.Gremium := GremiumListForm.Gremium;
-    TaskListForm.ShowModal;
-    TaskListForm.Free;
-
-  end;
-  GremiumListForm.Free;
+  Application.CreateForm(TTaskListForm, TaskListForm);
+  TaskListForm.ShowModal;
+  TaskListForm.Free;
 end;
 
 procedure TMainForm.ac_ta_neuExecute(Sender: TObject);

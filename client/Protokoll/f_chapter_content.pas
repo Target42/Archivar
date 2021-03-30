@@ -16,11 +16,15 @@ type
     procedure BaseFrame1AbortBtnClick(Sender: TObject);
     procedure BaseFrame1OKBtnClick(Sender: TObject);
   private
-    m_cp : IChapterTitle;
+    m_cp  : IChapterTitle;
+    m_ro  : boolean;
     function GetChapterTitle: IChapterTitle;
     procedure SetChapterTitle(const Value: IChapterTitle);
+    function GetReadOnly: boolean;
+    procedure SetReadOnly(const Value: boolean);
   public
     property ChapterTitle: IChapterTitle read GetChapterTitle write SetChapterTitle;
+    property ReadOnly: boolean read GetReadOnly write SetReadOnly;
   end;
 
 var
@@ -60,11 +64,23 @@ begin
   Result := m_cp;
 end;
 
+function TChapterContentForm.GetReadOnly: boolean;
+begin
+  Result := m_ro;
+end;
+
 procedure TChapterContentForm.SetChapterTitle(const Value: IChapterTitle);
 begin
   m_cp := value;
   ChapterFrame1.Chapter := m_cp;
 end;
 
+
+procedure TChapterContentForm.SetReadOnly(const Value: boolean);
+begin
+  m_ro := Value;
+
+  ChapterFrame1.ReadOnly := m_ro;
+end;
 
 end.

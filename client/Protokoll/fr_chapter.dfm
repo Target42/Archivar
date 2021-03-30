@@ -1,14 +1,16 @@
 object ChapterFrame: TChapterFrame
   Left = 0
   Top = 0
-  Width = 451
-  Height = 305
+  Width = 601
+  Height = 363
   Align = alClient
   TabOrder = 0
+  ExplicitWidth = 451
+  ExplicitHeight = 305
   object Splitter1: TSplitter
     Left = 251
     Top = 0
-    Height = 305
+    Height = 363
     ExplicitLeft = 368
     ExplicitTop = 72
     ExplicitHeight = 100
@@ -17,10 +19,11 @@ object ChapterFrame: TChapterFrame
     Left = 0
     Top = 0
     Width = 251
-    Height = 305
+    Height = 363
     Align = alLeft
     Caption = 'Struktur'
     TabOrder = 0
+    ExplicitHeight = 305
     object Label2: TLabel
       Left = 2
       Top = 15
@@ -40,7 +43,7 @@ object ChapterFrame: TChapterFrame
       Left = 2
       Top = 31
       Width = 247
-      Height = 202
+      Height = 260
       Align = alClient
       DragMode = dmAutomatic
       Indent = 19
@@ -49,21 +52,19 @@ object ChapterFrame: TChapterFrame
       OnDblClick = TVDblClick
       OnDragDrop = TVDragDrop
       OnDragOver = TVDragOver
+      ExplicitHeight = 202
     end
     object PageControl1: TPageControl
       Left = 2
-      Top = 233
+      Top = 291
       Width = 247
       Height = 70
       ActivePage = TabSheet1
       Align = alBottom
       TabOrder = 1
+      ExplicitTop = 233
       object TabSheet1: TTabSheet
         Caption = 'Bearbeiten'
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object SpeedButton1: TSpeedButton
           Tag = 1
           Left = 3
@@ -108,10 +109,6 @@ object ChapterFrame: TChapterFrame
       object TabSheet2: TTabSheet
         Caption = 'Verschieben'
         ImageIndex = 1
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object SpeedButton4: TSpeedButton
           Tag = 1
           Left = 3
@@ -156,10 +153,6 @@ object ChapterFrame: TChapterFrame
       object TabSheet3: TTabSheet
         Caption = 'Beschluss'
         ImageIndex = 2
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object SpeedButton9: TSpeedButton
           Tag = 1
           Left = 3
@@ -190,21 +183,24 @@ object ChapterFrame: TChapterFrame
   object GroupBox2: TGroupBox
     Left = 254
     Top = 0
-    Width = 197
-    Height = 305
+    Width = 347
+    Height = 363
     Align = alClient
     Caption = 'Aufgaben'
     TabOrder = 1
+    ExplicitWidth = 197
+    ExplicitHeight = 305
     object Panel2: TPanel
       Left = 2
       Top = 15
-      Width = 193
+      Width = 343
       Height = 41
       Align = alTop
       BevelOuter = bvNone
       Caption = 'Panel2'
       ShowCaption = False
       TabOrder = 0
+      ExplicitWidth = 193
       object Label1: TLabel
         Left = 16
         Top = 11
@@ -234,8 +230,8 @@ object ChapterFrame: TChapterFrame
     inline TaskList2Frame1: TTaskList2Frame
       Left = 2
       Top = 56
-      Width = 193
-      Height = 247
+      Width = 343
+      Height = 305
       Align = alClient
       TabOrder = 1
       ExplicitLeft = 2
@@ -243,13 +239,10 @@ object ChapterFrame: TChapterFrame
       ExplicitWidth = 193
       ExplicitHeight = 247
       inherited LV: TListView
-        Width = 152
-        Height = 247
-        ExplicitWidth = 152
-        ExplicitHeight = 247
+        Width = 302
+        ExplicitWidth = 302
       end
       inherited Panel2: TPanel
-        Height = 247
         ExplicitHeight = 247
       end
     end
@@ -343,7 +336,7 @@ object ChapterFrame: TChapterFrame
     Left = 208
     Top = 144
     Bitmap = {
-      494C010108002800680010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C0101080028006C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000003000000001002000000000000030
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

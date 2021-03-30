@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Data.DB,
   Datasnap.DBClient, Datasnap.DSConnect, System.Generics.Collections, u_taskEntry,
-  Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Buttons;
+  Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Buttons, Vcl.Menus;
 
 type
   TTaskList2Frame = class(TFrame)
@@ -16,11 +16,13 @@ type
     Panel2: TPanel;
     SpeedButton1: TSpeedButton;
     SpeedButton2: TSpeedButton;
+    ChapterTextTab: TClientDataSet;
     procedure SpeedButton2Click(Sender: TObject);
     procedure SpeedButton1Click(Sender: TObject);
   private
-    m_id : integer;
+    m_id     : integer;
     m_filter : integer;
+    m_ro     : boolean;
 
     m_all  : TList<TTaskEntry>;
     m_list : TList<TTaskEntry>;
@@ -33,6 +35,8 @@ type
 
     function getItem( inx : integer ) :TTaskEntry;
     function getCount : integer;
+    function GetReadOnly: boolean;
+    procedure SetReadOnly(const Value: boolean);
 
   public
 
@@ -48,6 +52,8 @@ type
     property Count : Integer  read getCount;
 
     procedure ShowFilterDlg;
+
+    property ReadOnly: boolean read GetReadOnly write SetReadOnly;
   end;
 
 implementation
@@ -79,15 +85,21 @@ begin
   Result := m_list[inx];
 end;
 
+function TTaskList2Frame.GetReadOnly: boolean;
+begin
+  Result := m_ro;
+end;
+
 procedure TTaskList2Frame.prepare;
 begin
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
 
   FOnTaskEntry := NIL;
 
-  m_all  := TList<TTaskEntry>.create;
-  m_list := TList<TTaskEntry>.create;
-  m_filter := taskReady;
+  m_all     := TList<TTaskEntry>.create;
+  m_list    := TList<TTaskEntry>.create;
+  m_filter  := taskReady;
+  m_ro      := false;
 end;
 
 procedure TTaskList2Frame.setFilter(value: integer);
@@ -147,6 +159,15 @@ begin
   end;
   ListTasksQry.Close;
   self.Filter := m_filter;
+end;
+
+procedure TTaskList2Frame.SetReadOnly(const Value: boolean);
+begin
+  m_ro := value;
+
+  SpeedButton1.Enabled  := not m_ro;
+  SpeedButton2.Enabled  := not m_ro;
+
 end;
 
 procedure TTaskList2Frame.ShowFilterDlg;

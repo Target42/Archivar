@@ -22,14 +22,14 @@ type
     constructor Create;
     destructor Destroy; override;
 
-    property TaskID: integer read FTaskID write FTaskID;
-    property TaskName: string read FTaskName write FTaskName;
-    property Flags: integer read FFlags write FFlags;
-    property TaskType: string read FTaskType write FTaskType;
-    property Termin: string read FTermin write FTermin;
-    property TaskStart: string read FTaskStart write FTaskStart;
-    property Status : string read m_status;
-    property Gremium: string read FGremium write FGremium;
+    property TaskID   : integer read FTaskID      write FTaskID;
+    property TaskName : string  read FTaskName    write FTaskName;
+    property Flags    : integer read FFlags       write FFlags;
+    property TaskType : string  read FTaskType    write FTaskType;
+    property Termin   : string  read FTermin      write FTermin;
+    property TaskStart: string  read FTaskStart   write FTaskStart;
+    property Status   : string  read m_status;
+    property Gremium  : string  read FGremium     write FGremium;
 
     procedure setData( dataset : TDataSet );
 

@@ -101,17 +101,20 @@ type
 
   private
     m_ct : IChapterTitle;
-
+    m_ro  : boolean;
 
     procedure updateTree;
 
     procedure setChapter( value : IChapterTitle );
 
     procedure saveCP( cp : IChapter; append : boolean = false );
+    function GetReadOnly: boolean;
+    procedure SetReadOnly(const Value: boolean);
 
   public
     { Public-Deklarationen }
     property Chapter : IChapterTitle read m_ct write setChapter;
+    property ReadOnly: boolean read GetReadOnly write SetReadOnly;
 
     procedure prepare(con : TSQLConnection);
     procedure Shutdown;
@@ -474,6 +477,11 @@ begin
   updateTree;
 end;
 
+function TChapterFrame.GetReadOnly: boolean;
+begin
+  Result := m_ro;
+end;
+
 procedure TChapterFrame.prepare(con : TSQLConnection );
 var
   i : integer;
@@ -493,6 +501,7 @@ begin
   TV.Images := GM.ImageList2;
   TaskList2Frame1.prepare;
   TaskList2Frame1.OnTaskEntry := doNewTaskEntry;
+  m_ro := false;
 end;
 
 procedure TChapterFrame.save;
@@ -548,6 +557,14 @@ begin
   ChapterTextTab.Filtered := true;
   ChapterTextTab.Open;
 
+end;
+
+procedure TChapterFrame.SetReadOnly(const Value: boolean);
+begin
+  m_ro := value;
+
+  PageControl1.Visible := not m_ro;
+  TaskList2Frame1.ReadOnly := m_ro;
 end;
 
 procedure TChapterFrame.Shutdown;

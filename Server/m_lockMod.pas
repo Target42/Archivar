@@ -152,6 +152,8 @@ var
   id, typ : integer;
   sub     : integer;
 
+  arr     : TArray<TLockInfo>;
+
   function addLock : TLockInfo;
   begin
     Session           := TDSSessionManager.GetThreadSession;
@@ -199,6 +201,12 @@ begin
       begin
         info := elements[sub];
         sendFail
+      end
+      else if (sub = 0) and ( elements.Count > 0 ) then
+      begin
+        arr := elements.Values.ToArray;
+        info := arr[0];
+        sendFail;
       end
       else
       begin

@@ -548,6 +548,10 @@
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="..\misc\u_teilnehmer.pas"/>
+        <DCCReference Include="Protokoll\f_protocol_sec.pas">
+            <Form>ProtocolSectionForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <None Include="Datafields\ERA-NS.txt"/>
         <RcItem Include="dws\dws.html">
             <ContainerId>ResourceItem</ContainerId>

@@ -167,7 +167,8 @@ uses
   f_meeting_proto in 'Sitzung\f_meeting_proto.pas' {MeetingProtoForm},
   f_login in 'misc\f_login.pas' {LoginForm},
   fr_meeting in 'Sitzung\fr_meeting.pas' {MeetingFrame: TFrame},
-  u_teilnehmer in '..\misc\u_teilnehmer.pas';
+  u_teilnehmer in '..\misc\u_teilnehmer.pas',
+  f_protocol_sec in 'Protokoll\f_protocol_sec.pas' {ProtocolSectionForm};
 
 {$R *.res}
 

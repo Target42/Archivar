@@ -1,8 +1,8 @@
 object TaskList2Frame: TTaskList2Frame
   Left = 0
   Top = 0
-  Width = 854
-  Height = 400
+  Width = 659
+  Height = 408
   Align = alClient
   TabOrder = 0
   ExplicitWidth = 451
@@ -10,8 +10,8 @@ object TaskList2Frame: TTaskList2Frame
   object LV: TListView
     Left = 41
     Top = 0
-    Width = 813
-    Height = 400
+    Width = 618
+    Height = 408
     Align = alClient
     Columns = <
       item
@@ -51,7 +51,7 @@ object TaskList2Frame: TTaskList2Frame
     Left = 0
     Top = 0
     Width = 41
-    Height = 400
+    Height = 408
     Align = alLeft
     BevelOuter = bvNone
     Caption = 'Panel2'
@@ -145,6 +145,8 @@ object TaskList2Frame: TTaskList2Frame
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsChapter'
+    Connected = True
+    SQLConnection = GM.SQLConnection1
     Left = 128
     Top = 24
   end
@@ -155,5 +157,13 @@ object TaskList2Frame: TTaskList2Frame
     RemoteServer = DSProviderConnection1
     Left = 136
     Top = 80
+  end
+  object ChapterTextTab: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    ProviderName = 'ChapterTextTab'
+    RemoteServer = DSProviderConnection1
+    Left = 240
+    Top = 88
   end
 end
