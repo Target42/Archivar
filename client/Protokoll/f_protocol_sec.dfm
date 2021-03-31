@@ -11,6 +11,7 @@ object ProtocolSectionForm: TProtocolSectionForm
   Font.Name = 'Tahoma'
   Font.Style = []
   FormStyle = fsMDIChild
+  Menu = MainMenu1
   OldCreateOrder = False
   Visible = True
   WindowState = wsMaximized
@@ -42,15 +43,6 @@ object ProtocolSectionForm: TProtocolSectionForm
       TabOrder = 0
       Text = 'ComboBox1'
       OnChange = ComboBox1Change
-    end
-    object BitBtn1: TBitBtn
-      Left = 232
-      Top = 24
-      Width = 75
-      Height = 25
-      Caption = 'Bearbeiten'
-      TabOrder = 1
-      OnClick = BitBtn1Click
     end
   end
   inline ChapterFrame1: TChapterFrame
@@ -125,7 +117,7 @@ object ProtocolSectionForm: TProtocolSectionForm
     end
     inherited ImageList1: TImageList
       Bitmap = {
-        494C010108002800780010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+        494C0101080028007C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
         0000000000003600000028000000400000003000000001002000000000000030
         0000000000000000000000000000000000000000000000000000000000000000
         0000000000000000000000000000000000000000000000000000000000000000
@@ -527,6 +519,34 @@ object ProtocolSectionForm: TProtocolSectionForm
         C00F8007C0038007C00F8007C0038007C00F8007C0038007C00F8007C07F8007
         C00F8007C0FF8007FFFFFFFFFFFFFFFF00000000000000000000000000000000
         000000000000}
+    end
+  end
+  object MainMenu1: TMainMenu
+    Left = 472
+    Top = 280
+    object Abschnitt1: TMenuItem
+      Caption = 'Abschnitt'
+      GroupIndex = 130
+      object Bearbeiten1: TMenuItem
+        Action = ac_lock
+      end
+      object Bearbeitenbeenden1: TMenuItem
+        Action = ac_unlock
+      end
+    end
+  end
+  object ActionList1: TActionList
+    Left = 480
+    Top = 344
+    object ac_lock: TAction
+      Caption = 'Bearbeiten'
+      ShortCut = 114
+      OnExecute = ac_lockExecute
+    end
+    object ac_unlock: TAction
+      Caption = 'Bearbeiten beenden'
+      ShortCut = 115
+      OnExecute = ac_unlockExecute
     end
   end
 end
