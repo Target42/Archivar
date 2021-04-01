@@ -33,7 +33,7 @@ object ProtocolSectionForm: TProtocolSectionForm
     Width = 957
     Height = 65
     Align = alTop
-    Caption = 'GroupBox1'
+    Caption = 'Abschnitt'
     TabOrder = 1
     object ComboBox1: TComboBox
       Left = 24
@@ -69,24 +69,6 @@ object ProtocolSectionForm: TProtocolSectionForm
       inherited PageControl1: TPageControl
         Top = 387
         ExplicitTop = 387
-        inherited TabSheet1: TTabSheet
-          ExplicitLeft = 4
-          ExplicitTop = 24
-          ExplicitWidth = 239
-          ExplicitHeight = 42
-        end
-        inherited TabSheet2: TTabSheet
-          ExplicitLeft = 4
-          ExplicitTop = 24
-          ExplicitWidth = 239
-          ExplicitHeight = 42
-        end
-        inherited TabSheet3: TTabSheet
-          ExplicitLeft = 4
-          ExplicitTop = 24
-          ExplicitWidth = 239
-          ExplicitHeight = 42
-        end
       end
     end
     inherited GroupBox2: TGroupBox
@@ -117,7 +99,7 @@ object ProtocolSectionForm: TProtocolSectionForm
     end
     inherited ImageList1: TImageList
       Bitmap = {
-        494C0101080028007C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+        494C010108002800840010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
         0000000000003600000028000000400000003000000001002000000000000030
         0000000000000000000000000000000000000000000000000000000000000000
         0000000000000000000000000000000000000000000000000000000000000000
@@ -533,6 +515,19 @@ object ProtocolSectionForm: TProtocolSectionForm
       object Bearbeitenbeenden1: TMenuItem
         Action = ac_unlock
       end
+      object N2: TMenuItem
+        Caption = '-'
+      end
+      object Speichern1: TMenuItem
+        Caption = 'Speichern'
+        ShortCut = 16467
+      end
+      object N1: TMenuItem
+        Caption = '-'
+      end
+      object Aktualisieren1: TMenuItem
+        Action = ac_refresh
+      end
     end
   end
   object ActionList1: TActionList
@@ -547,6 +542,16 @@ object ProtocolSectionForm: TProtocolSectionForm
       Caption = 'Bearbeiten beenden'
       ShortCut = 115
       OnExecute = ac_unlockExecute
+    end
+    object ac_refresh: TAction
+      Caption = 'Aktualisieren'
+      ShortCut = 116
+      OnExecute = ac_refreshExecute
+    end
+    object ac_ave: TAction
+      Caption = 'Speichern'
+      ShortCut = 16467
+      OnExecute = ac_aveExecute
     end
   end
 end

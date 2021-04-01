@@ -196,10 +196,6 @@ object TaskEditForm: TTaskEditForm
         OnChange = PageControl2Change
         object TabSheet3: TTabSheet
           Caption = 'Details'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object ScrollBox1: TScrollBox
             Left = 0
             Top = 0
@@ -280,9 +276,19 @@ object TaskEditForm: TTaskEditForm
         Caption = '-'
       end
       object Lesezeichenerstellen1: TMenuItem
-        Caption = 'Lesezeichen erstellen'
-        ShortCut = 120
-        OnClick = Lesezeichenerstellen1Click
+        Action = ac_bookmark
+      end
+      object N2: TMenuItem
+        Caption = '-'
+      end
+      object acsave1: TMenuItem
+        Action = ac_save
+      end
+      object N3: TMenuItem
+        Caption = '-'
+      end
+      object Aktualisieren1: TMenuItem
+        Action = ac_refresh
       end
     end
   end
@@ -295,12 +301,24 @@ object TaskEditForm: TTaskEditForm
       OnExecute = ac_bearbeitenExecute
     end
     object ac_save: TAction
-      Caption = 'ac_save'
+      Caption = 'Speichern'
+      ShortCut = 16467
+      OnExecute = ac_saveExecute
     end
     object ac_unlock: TAction
       Caption = 'Bearbeiten beenden'
       ShortCut = 115
       OnExecute = ac_unlockExecute
+    end
+    object ac_refresh: TAction
+      Caption = 'Aktualisieren'
+      ShortCut = 116
+      OnExecute = ac_refreshExecute
+    end
+    object ac_bookmark: TAction
+      Caption = 'Leesezeichen erstellen'
+      ShortCut = 120
+      OnExecute = ac_bookmarkExecute
     end
   end
   object TaskSrc: TDataSource

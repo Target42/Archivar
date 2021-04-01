@@ -379,6 +379,8 @@ type
       function saveToZip( zip : TZipFile; path : string ) : Boolean;
 
       function getStyle( name : string ) : ITaskStyle;
+      function getStyleByClid( clid : string ) : ITaskStyle;
+
       function rename( style : ITaskStyle; name :string ) : boolean;
       function delete(style : ITaskStyle ) : boolean;
 

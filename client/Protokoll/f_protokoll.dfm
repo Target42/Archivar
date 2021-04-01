@@ -667,6 +667,14 @@ object ProtokollForm: TProtokollForm
         ShortCut = 16467
         OnClick = SpeichernClick
       end
+      object N4: TMenuItem
+        Caption = '-'
+      end
+      object Aktualisieren1: TMenuItem
+        Caption = 'Aktualisieren'
+        ShortCut = 116
+        OnClick = Aktualisieren1Click
+      end
     end
   end
   object ActionList1: TActionList
@@ -732,7 +740,7 @@ object ProtokollForm: TProtokollForm
     Left = 212
     Top = 305
     Bitmap = {
-      494C010106001001080110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C0101060010010C0110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

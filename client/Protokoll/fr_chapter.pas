@@ -77,10 +77,10 @@ type
     procedure ac_chapter_downExecute(Sender: TObject);
     procedure ac_chapter_leftExecute(Sender: TObject);
     procedure ac_chapter_rightExecute(Sender: TObject);
-    procedure BitBtn1Click(Sender: TObject);
     procedure ac_beschlussExecute(Sender: TObject);
     procedure ac_be_bearbeitenExecute(Sender: TObject);
     procedure ac_be_deleteExecute(Sender: TObject);
+    procedure BitBtn1Click(Sender: TObject);
   private
     type
       TNodeType = ( etNothing, etChapterText, etTask, etBeschluss );

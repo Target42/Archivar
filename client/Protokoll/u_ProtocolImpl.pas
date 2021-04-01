@@ -79,7 +79,8 @@ implementation
 
 uses
   u_ChapterTitleListImpl, Xml.XMLIntf, Xml.XMLDoc, System.SysUtils, m_glob_client,
-  u_TTeilnehmerListeImpl, u_BesucherlisteImpl, i_beschluss;
+  u_TTeilnehmerListeImpl, u_BesucherlisteImpl, i_beschluss, Vcl.Forms,
+  Vcl.Controls;
 
 { TProtocolImpl }
 
@@ -215,6 +216,7 @@ var
   st  : TStream;
   cp  : IChapterTitle;
 begin
+  Screen.Cursor := crSQLWait;
   Result := false;
   m_loader.PR_ID := id;
   if m_loader.PRTab.Active then
@@ -252,6 +254,7 @@ begin
     end;
     Result := true;
   end;
+  Screen.Cursor := crDefault;
 end;
 
 procedure TProtocolImpl.loadFromStream(st: TStream);

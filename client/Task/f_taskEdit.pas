@@ -67,12 +67,17 @@ type
     TabSheet4: TTabSheet;
     ScrollBox1: TScrollBox;
     WebBrowser1: TWebBrowser;
+    ac_refresh: TAction;
+    N2: TMenuItem;
+    acsave1: TMenuItem;
+    N3: TMenuItem;
+    Aktualisieren1: TMenuItem;
+    ac_bookmark: TAction;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure ac_bearbeitenExecute(Sender: TObject);
-    procedure Lesezeichenerstellen1Click(Sender: TObject);
     procedure ac_unlockExecute(Sender: TObject);
     procedure TaskTabTA_RESTGetText(Sender: TField; var Text: string;
       DisplayText: Boolean);
@@ -86,12 +91,16 @@ type
     procedure ComboBox1Change(Sender: TObject);
     procedure ComboBox2Change(Sender: TObject);
     procedure PageControl2Change(Sender: TObject);
+    procedure ac_bookmarkExecute(Sender: TObject);
+    procedure ac_saveExecute(Sender: TObject);
+    procedure ac_refreshExecute(Sender: TObject);
   private
     m_ta_id : integer;
     m_ty_id : integeR;
 
     m_form  : ITaskForm;
     m_tc    : ITaskContainer;
+    m_style : ITaskStyle;
 
     m_ro    : boolean;
     m_changed : boolean;
@@ -107,6 +116,8 @@ type
     procedure LoadData;
 
     procedure renderPreview;
+
+    procedure reload;
   public
     procedure setID( ta_id, ty_id: integer );
     property RO : Boolean read getRO write setRO;
@@ -122,7 +133,7 @@ implementation
 uses
   m_WindowHandler, Vcl.Dialogs, m_glob_client, System.UITypes,
   System.JSON, u_json, u_bookmark, u_berTypes, m_BookMarkHandler, DateUtils,
-  u_taskForm2XML, u_konst, m_html, xsd_TaskData;
+  u_taskForm2XML, u_konst, m_html, xsd_TaskData, u_templateCache;
 
 {$R *.dfm}
 
@@ -132,10 +143,13 @@ var
   s : string;
 begin
   data := GM.LockDocument(m_ta_id, integer(ltTask));
-
   if JBool( data, 'result') then
   begin
     self.RO := false;
+    reload;
+
+    TaskTab.Edit;
+
     ShowMessage('Das Dokument kann jetzt bearbeitet werden.');
   end
   else
@@ -149,10 +163,54 @@ begin
   end;
 end;
 
+procedure TTaskEditForm.ac_bookmarkExecute(Sender: TObject);
+var
+  mark : TBookmark;
+begin
+  mark := BookMarkHandler.Bookmarks.newBookmark(TaskTab.FieldByName('TA_CLID').AsString);
+  mark.ID         := TaskTab.FieldByName('TA_ID').AsInteger;
+  mark.Titel      := TaskTab.FieldByName('TA_NAME').AsString;
+  mark.Group      := 'Einstellung';
+  mark.Internal   := false;
+  mark.TypeID     := integer(dstEinstellung);
+  mark.DocType    := dtTask;
+ PostMessage( Application.MainFormHandle, msgNewBookMark, 0, 0 );
+end;
+
+procedure TTaskEditForm.ac_refreshExecute(Sender: TObject);
+begin
+  reload;
+end;
+
+procedure TTaskEditForm.ac_saveExecute(Sender: TObject);
+begin
+  if not m_changed then
+    exit;
+
+  save;
+  reload;
+  TaskTab.Edit;
+end;
+
 procedure TTaskEditForm.ac_unlockExecute(Sender: TObject);
 var
   data : TJSONObject;
 begin
+  if m_changed then
+  begin
+    case MessageDlg('Die Daten wurden geändert.'+#13+#10+
+                    ''+#13+#10+
+                    'Änderungen speichern (Ja)'+#13+#10+
+                    'Änderungen verwerfen (Nein)'+#13+#10+
+                    'Im Dialog bleiben (Abbrechen)'+#13+#10+'',
+                     mtConfirmation, [mbYes, mbNo, mbCancel], 0) of
+      mrYes : save;
+      mrNo  : cancel;
+      else
+        exit;
+    end;
+  end;
+
   data := GM.UnlockDocument(m_ta_id, integer(ltTask));
   if JBool( data, 'result') then
     self.RO := true
@@ -183,15 +241,13 @@ end;
 
 procedure TTaskEditForm.ComboBox2Change(Sender: TObject);
 var
-  st : ITaskStyle;
   inx: integer;
 begin
   inx := ComboBox2.ItemIndex;
   if inx = -1 then
     exit;
-  st := m_tc.Styles.Items[ integer(ComboBox2.Items.Objects[inx])];
 
-  m_tc.Styles.DefaultStyle := st;
+  m_style := m_tc.Styles.Items[ integer(ComboBox2.Items.Objects[inx])];
   m_changed := true;
 
   renderPreview;
@@ -240,6 +296,8 @@ begin
 
   m_form  := NIL;
   m_tc    := NIL;
+  m_style := NIL;
+
   FillFlagslist( ComboBox1.Items);
 end;
 
@@ -250,8 +308,9 @@ begin
 
   FileFrame1.release;
 
-  if Assigned(m_tc) then
-    m_tc.release;
+  m_form  := NIL;
+  m_tc    := NIL;
+  m_style := NIL;
 
   WindowHandler.closeTaskWindow(m_ta_id);
   PostMessage(Application.MainFormHandle, msgFilterTasks, 1, 0);
@@ -265,20 +324,6 @@ end;
 procedure TTaskEditForm.JvDBDatePickerEdit1Change(Sender: TObject);
 begin
   m_changed := true;
-end;
-
-procedure TTaskEditForm.Lesezeichenerstellen1Click(Sender: TObject);
-var
-  mark : TBookmark;
-begin
-  mark := BookMarkHandler.Bookmarks.newBookmark(TaskTab.FieldByName('TA_CLID').AsString);
-  mark.ID         := TaskTab.FieldByName('TA_ID').AsInteger;
-  mark.Titel      := TaskTab.FieldByName('TA_NAME').AsString;
-  mark.Group      := 'Einstellung';
-  mark.Internal   := false;
-  mark.TypeID     := integer(dstEinstellung);
-  mark.DocType    := dtTask;
- PostMessage( Application.MainFormHandle, msgNewBookMark, 0, 0 );
 end;
 
 procedure TTaskEditForm.LoadData;
@@ -302,6 +347,32 @@ begin
 end;
 
 procedure TTaskEditForm.LoadTemplate(teid: integer);
+var
+  i, inx  : integer;
+begin
+  m_tc  := TemplateCacheMod.load(teid);
+  if Assigned(m_tc) then
+  begin
+    m_style := m_tc.Styles.getStyle(TaskTab.FieldByName('TA_STYLE_CLID').AsString);
+
+     m_form  := m_tc.Task.getMainForm;
+     if Assigned(m_form) then begin
+        m_form.Base.Control := ScrollBox1;
+        m_form.Base.build;
+        m_form.Base.clearContent(true);
+     end;
+  end;
+
+  ComboBox2.Items.Clear;
+  ComboBox2.Text := '';
+  for i := 0 to pred(m_tc.Styles.Count) do
+  begin
+    inx := ComboBox2.Items.AddObject(m_tc.Styles.Items[i].Name, TObject(i));
+    if m_style = m_tc.Styles.Items[i] then
+      ComboBox2.ItemIndex := inx;
+  end;
+end;
+{$ifdef unused}
 var
   st  : TStream;
   i   : integer;
@@ -344,6 +415,7 @@ begin
 
   TemplateTab.Close;
 end;
+{$endif}
 
 procedure TTaskEditForm.LockCheck;
 var
@@ -363,6 +435,39 @@ begin
     renderPreview;
 end;
 
+procedure TTaskEditForm.reload;
+var
+  i : integer;
+begin
+  screen.Cursor := crSQLWait;
+
+  TaskTab.Close;
+  TaskTab.Open;
+
+  if not TaskTab.Locate('TA_ID', VarArrayOf([m_ta_id]), []) then
+  begin
+    TaskTab.Close;
+    exit;
+  end;
+
+  if not Assigned(m_tc) then
+    LoadTemplate( TaskTab.FieldByName('TE_ID').AsInteger );
+
+  LoadData;
+
+  FileFrame1.ID := m_ta_id;
+  for i := 0 to pred(ComboBox1.Items.Count) do
+  begin
+    if integer(ComboBox1.Items.Objects[i]) = TaskTab.FieldByName('TA_FLAGS').AsInteger then
+    begin
+      ComboBox1.ItemIndex := i;
+      break;
+    end;
+  end;
+  m_changed := false;
+  Screen.Cursor := crDefault;
+end;
+
 procedure TTaskEditForm.renderPreview;
 var
   writer  : TTaskForm2XML;
@@ -378,7 +483,7 @@ begin
   Application.CreateForm(THtmlMod, HtmlMod);
   try
     HtmlMod.TaskContainer := m_tc;
-    HtmlMod.TaskStyle     := m_tc.Styles.DefaultStyle;
+    HtmlMod.TaskStyle     := m_style;
     HtmlMod.TaskData      := xList;
     HtmlMod.show(WebBrowser1);
   finally
@@ -392,14 +497,12 @@ var
   writer  : TTaskForm2XML;
   st      : TStream;
   mem     : TMemoryStream;
-  style   : ITaskStyle;
 begin
 
-  if ComboBox2.ItemIndex <> - 1 then
+  if Assigned(m_style) then
   begin
-    style := m_tc.Styles.Items[ integer(ComboBox2.ItemIndex)];
-    TaskTab.FieldByName('TA_STYLE').AsString      := style.Name;
-    TaskTab.FieldByName('TA_STYLE_CLID').AsString := style.CLID;
+    TaskTab.FieldByName('TA_STYLE').AsString      := m_style.Name;
+    TaskTab.FieldByName('TA_STYLE_CLID').AsString := m_style.CLID;
   end;
 
   mem := TMemoryStream.Create;
@@ -421,40 +524,18 @@ begin
 
   if (TaskTab.State = dsInsert) or ( TaskTab.State = dsEdit) then
     TaskTab.Post;
+
   if TaskTab.UpdatesPending then
     TaskTab.ApplyUpdates(-1);
 end;
 
 procedure TTaskEditForm.setID(ta_id, ty_id: integer);
-var
-  i : integer;
 begin
   m_ta_id := ta_id;
   m_ty_id := ty_id;
 
-
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
-
-  TaskTab.Open;
-
-  if TaskTab.Locate('TA_ID', VarArrayOf([m_ta_id]), []) then
-    TaskTab.Edit
-  else
-    TaskTab.Close;
-
-  LoadTemplate( TaskTab.FieldByName('TE_ID').AsInteger );
-  LoadData;
-
-  FileFrame1.ID := ta_id;
-  for i := 0 to pred(ComboBox1.Items.Count) do
-  begin
-    if integer(ComboBox1.Items.Objects[i]) = TaskTab.FieldByName('TA_FLAGS').AsInteger then
-    begin
-      ComboBox1.ItemIndex := i;
-      break;
-    end;
-  end;
-  m_changed := false;
+  reload;
 end;
 
 procedure TTaskEditForm.setRO(value: boolean);
@@ -467,10 +548,14 @@ begin
   end;
 
   m_ro                        := value;
-  Bearbeiten1.Enabled         := m_ro;
-  Bearbeitenbeenden1.Enabled  := not m_ro;
+  ac_bearbeiten.Enabled       := m_ro;
+  ac_unlock.Enabled           := not m_ro;
+  ac_save.Enabled             := not m_ro;
+  ac_refresh.Enabled          := m_ro;
+
   GroupBox1.Enabled           := not m_ro;
   Label6.Visible              := m_ro;
+
 
   TaskTab.ReadOnly  := m_ro;
 

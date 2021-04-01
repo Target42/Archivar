@@ -4,13 +4,21 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.CheckLst, fr_base;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.CheckLst, fr_base,
+  Vcl.Buttons;
 
 type
   TTaskFilterForm = class(TForm)
     BaseFrame1: TBaseFrame;
     LB: TCheckListBox;
+    Panel1: TGroupBox;
+    BitBtn1: TBitBtn;
+    BitBtn2: TBitBtn;
+    BitBtn3: TBitBtn;
     procedure FormCreate(Sender: TObject);
+    procedure BitBtn1Click(Sender: TObject);
+    procedure BitBtn2Click(Sender: TObject);
+    procedure BitBtn3Click(Sender: TObject);
   private
     function GetFilter: integer;
     procedure SetFilter(const Value: integer);
@@ -28,6 +36,24 @@ uses
   u_Konst;
 
 {$R *.dfm}
+
+procedure TTaskFilterForm.BitBtn1Click(Sender: TObject);
+begin
+  SetFilter(taskAll);
+end;
+
+procedure TTaskFilterForm.BitBtn2Click(Sender: TObject);
+var
+  i : integer;
+begin
+  for i := 0 to pred(LB.Items.Count) do
+    LB.Checked[i] := false;
+end;
+
+procedure TTaskFilterForm.BitBtn3Click(Sender: TObject);
+begin
+  SetFilter( taskReady);
+end;
 
 procedure TTaskFilterForm.FormCreate(Sender: TObject);
 begin

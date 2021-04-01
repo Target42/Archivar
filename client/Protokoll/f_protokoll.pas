@@ -84,6 +84,8 @@ type
     SpeedButton9: TSpeedButton;
     GroupBox2: TGroupBox;
     WebBrowser1: TWebBrowser;
+    Aktualisieren1: TMenuItem;
+    N4: TMenuItem;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -110,6 +112,7 @@ type
     procedure ac_be_bearbeitenExecute(Sender: TObject);
     procedure ac_be_deleteExecute(Sender: TObject);
     procedure TGDblClick(Sender: TObject);
+    procedure Aktualisieren1Click(Sender: TObject);
   private type
     TEntryType = (etNothing, etChapterText, etTask, etBeschluss, etTitle);
 
@@ -129,13 +132,14 @@ type
       property Typ: TEntryType read FTyp write FTyp;
     end;
   private
-    m_TitelEditform: TTitelEditform;
-    m_proto: IProtocol;
-    m_locked: Boolean;
+    m_prid          : integer;
+    m_TitelEditform : TTitelEditform;
+    m_proto         : IProtocol;
+    m_locked        : Boolean;
 
-    m_grList: TGremiumListForm;
-    m_ro: Boolean;
-    m_loader: TTaskLoaderMod;
+    m_grList        : TGremiumListForm;
+    m_ro            : Boolean;
+    m_loader        : TTaskLoaderMod;
 
     m_statusMap: TDictionary<TTeilnehmerStatus, integer>;
 
@@ -162,6 +166,8 @@ type
     procedure clearTree;
 
     function findNode(Node: TTreeNode; Typ: TEntryType): TEntry;
+
+    procedure reload;
   public
     property ID: integer read getID write setID;
     property RO: Boolean read m_ro write setRO;
@@ -410,6 +416,8 @@ begin
   else
   begin
     m_locked := true;
+    reload;
+
     Caption := '*' + m_proto.Title;
     self.RO := false;
     ShowMessage('Das Protokoll kann jetzt bearbeitet werden.');
@@ -420,12 +428,34 @@ procedure TProtokollForm.ac_pr_unlockExecute(Sender: TObject);
 var
   Data: TJSONObject;
 begin
+  if m_proto.Modified then
+  begin
+    case MessageDlg('Die Daten wurden geändert.'+#13+#10+
+                    ''+#13+#10+
+                    'Änderungen speichern (Ja)'+#13+#10+
+                    'Änderungen verwerfen (Nein)'+#13+#10+
+                    'Im Dialog bleiben (Abbrechen)'+#13+#10+'',
+                     mtConfirmation, [mbYes, mbNo, mbCancel], 0) of
+      mrYes :
+      begin
+        m_proto.save;
+      end;
+      mrNo :
+      begin
+        m_proto.cancel;
+        reload
+      end;
+      else
+        exit
+    end;
+  end;
+
   Data := GM.UnlockDocument(m_proto.ID, integer(ltProtokoll));
   if JBool(Data, 'result') then
   begin
-    self.RO := true;
-    Caption := m_proto.Title;
-    m_locked := false;
+    self.RO   := true;
+    Caption   := m_proto.Title;
+    m_locked  := false;
   end;
   ShowMessage(JString(Data, 'text'));
 end;
@@ -451,6 +481,12 @@ begin
 
   m_proto.Chapter.saveChangedChapter;
   m_proto.Modified := true;
+end;
+
+procedure TProtokollForm.Aktualisieren1Click(Sender: TObject);
+begin
+  if m_ro then
+    reload;
 end;
 
 procedure TProtokollForm.BitBtn1Click(Sender: TObject);
@@ -711,7 +747,6 @@ begin
       CanClose := false;
     end;
   end;
-
 end;
 
 procedure TProtokollForm.FormCreate(Sender: TObject);
@@ -735,6 +770,8 @@ begin
   m_renderer.Loader := m_loader;
 
   fillStatusMap;
+  m_prid := 0;
+
 end;
 
 procedure TProtokollForm.FormDestroy(Sender: TObject);
@@ -760,6 +797,29 @@ begin
     Result := m_proto.ID;
 end;
 
+procedure TProtokollForm.reload;
+begin
+  if Assigned(m_proto) then
+    m_proto.release;
+
+  m_proto := TProtocolImpl.create;
+
+  if m_proto.load(m_prid) then
+  begin
+    Caption       := m_proto.Title;
+    DBEdit1.Text  := m_proto.Title;
+    DBEdit2.Text  := IntToStr(m_proto.Nr);
+
+    JvDBDateTimePicker1.DateTime := m_proto.Date;
+
+    updateCpList;
+    UpdateTN;
+    UpdateTG;
+    WebBrowser1.Navigate('about:blank');
+  end;
+  m_proto.Modified := false;
+end;
+
 procedure TProtokollForm.save;
 begin
   if m_ro then
@@ -773,24 +833,8 @@ end;
 
 procedure TProtokollForm.setID(value: integer);
 begin
-  if Assigned(m_proto) then
-    m_proto.release;
-
-  m_proto := TProtocolImpl.create;
-
-  if m_proto.load(value) then
-  begin
-    Caption := m_proto.Title;
-    DBEdit1.Text := m_proto.Title;
-    DBEdit2.Text := IntToStr(m_proto.Nr);
-
-    JvDBDateTimePicker1.DateTime := m_proto.Date;
-
-    updateCpList;
-    UpdateTN;
-    UpdateTG;
-  end;
-  m_proto.Modified := false;
+  m_prid := value;
+  reload;
 end;
 
 procedure TProtokollForm.setRO(value: Boolean);
@@ -800,6 +844,7 @@ begin
   Label4.Visible        := m_ro;
   Sperren1.Enabled      := m_ro;
   Freigeben1.Enabled    := not m_ro;
+  Aktualisieren1.Enabled:= m_ro;
 
   PageControl2.Enabled  := not m_ro;
   PageControl2.Visible  := not m_ro;
@@ -875,6 +920,7 @@ procedure TProtokollForm.SpeichernClick(Sender: TObject);
 begin
   if m_ro then
     exit;
+
   m_proto.save;
   m_proto.edit;
 end;

@@ -37,6 +37,7 @@ type
       procedure FillList( list : TStrings );
 
       function getStyle( name : string ) : ITaskStyle;
+      function getStyleByClid( clid : string ) : ITaskStyle;
       function rename( style : ITaskStyle; name :string ) : boolean;
 
       function delete(style : ITaskStyle ) : boolean;
@@ -123,10 +124,25 @@ function TTaskStylesImpl.getStyle(name: string): ITaskStyle;
 var
   i : integer;
 begin
-  Result := NIL;
+  Result := m_default;
   for i := 0 to pred(m_list.Count) do
   begin
     if m_list[i].isName(name) then
+    begin
+      Result := m_list[i];
+      break;
+    end;
+  end;
+end;
+
+function TTaskStylesImpl.getStyleByClid(clid: string): ITaskStyle;
+var
+  i : integer;
+begin
+  Result := m_default;
+  for i := 0 to pred(m_list.Count) do
+  begin
+    if SameText( m_list[i].CLID, clid) then
     begin
       Result := m_list[i];
       break;

@@ -484,7 +484,7 @@
     end
     object ac_pr_open: TAction
       Category = 'Protokoll'
-      Caption = 'Laden'
+      Caption = 'Bearbeiten'
       Enabled = False
       OnExecute = ac_pr_openExecute
     end

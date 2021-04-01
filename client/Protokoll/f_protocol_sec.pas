@@ -20,12 +20,20 @@ type
     ac_unlock: TAction;
     Bearbeiten1: TMenuItem;
     Bearbeitenbeenden1: TMenuItem;
+    ac_refresh: TAction;
+    N1: TMenuItem;
+    Aktualisieren1: TMenuItem;
+    Speichern1: TMenuItem;
+    N2: TMenuItem;
+    ac_ave: TAction;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure ComboBox1Change(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure ac_lockExecute(Sender: TObject);
     procedure ac_unlockExecute(Sender: TObject);
+    procedure ac_refreshExecute(Sender: TObject);
+    procedure ac_aveExecute(Sender: TObject);
   private
     m_proto : IProtocol;
     m_locked: boolean;
@@ -54,6 +62,12 @@ uses
 
 { TProtocolSectionForm }
 
+procedure TProtocolSectionForm.ac_aveExecute(Sender: TObject);
+begin
+  if m_locked then
+    exit;
+end;
+
 procedure TProtocolSectionForm.ac_lockExecute(Sender: TObject);
 var
   nr : integer;
@@ -78,6 +92,15 @@ begin
     reloadDoc;
     ShowMessage('Das Protokoll kann jetzt bearbeitet werden.');
   end;
+end;
+
+procedure TProtocolSectionForm.ac_refreshExecute(Sender: TObject);
+begin
+  if m_locked then
+    reloadDoc
+  else
+    ShowMessage('In der Bearbeitung kann das Dokument nicht aktualisiert werden.');
+
 end;
 
 procedure TProtocolSectionForm.ac_unlockExecute(Sender: TObject);
@@ -144,6 +167,7 @@ var
 begin
   if Assigned(m_proto) then
   begin
+    ComboBox1.Items.Clear;
     m_proto.release;
   end;
 
@@ -174,6 +198,8 @@ begin
   ComboBox1.Enabled       := not m_locked;
   ac_lock.Enabled         := not m_locked;
   ac_unlock.Enabled       := m_locked;
+  ac_refresh.Enabled      := not m_locked;
+  ac_ave.Enabled          := not m_locked;
 
   if m_locked then
     Caption := m_proto.Title + ' - '+ m_title
