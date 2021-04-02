@@ -287,6 +287,10 @@ begin
   ForceDirectories(m_epubHome);
 
   FUserName := GetUsername;
+{$ifndef RELEASE}
+  if ParamStr(1) <> '' then
+    FUserName := ParamStr(1);
+{$endif}
 end;
 
 procedure TGM.DataModuleDestroy(Sender: TObject);
