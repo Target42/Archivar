@@ -184,7 +184,7 @@ end;
 
 procedure TTaskEditForm.ac_saveExecute(Sender: TObject);
 begin
-  if not m_changed then
+  if not changed then
     exit;
 
   save;
@@ -196,7 +196,7 @@ procedure TTaskEditForm.ac_unlockExecute(Sender: TObject);
 var
   data : TJSONObject;
 begin
-  if m_changed then
+  if changed then
   begin
     case MessageDlg('Die Daten wurden geändert.'+#13+#10+
                     ''+#13+#10+
@@ -265,7 +265,8 @@ end;
 
 procedure TTaskEditForm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
 begin
-  if changed then
+  CanClose := true;
+  if changed and (TaskTab.State =  dsEdit ) then
   begin
     case MessageDlg('Die Daten wurden geändert.'+#13+#10+
                     ''+#13+#10+
@@ -307,6 +308,9 @@ begin
     GM.UnLockDocument(m_ta_id, integer(ltTask));
 
   FileFrame1.release;
+
+  if Assigned(m_tc) then
+    m_tc.release;
 
   m_form  := NIL;
   m_tc    := NIL;
@@ -441,6 +445,10 @@ var
 begin
   screen.Cursor := crSQLWait;
 
+  if Assigned(m_tc) then
+    m_tc.release;
+  m_tc := NIL;
+
   TaskTab.Close;
   TaskTab.Open;
 
@@ -527,6 +535,10 @@ begin
 
   if TaskTab.UpdatesPending then
     TaskTab.ApplyUpdates(-1);
+
+  m_changed := false;
+  if Assigned(m_form) then
+    m_form.Changed := false;
 end;
 
 procedure TTaskEditForm.setID(ta_id, ty_id: integer);
@@ -582,6 +594,9 @@ var
   dif : integer;
 begin
   dif := DaysBetween( TaskTab.FieldByName('TA_TERMIN').AsDateTime, Date);
+  if date > TaskTab.FieldByName('TA_TERMIN').AsDateTime then
+    dif := -dif;
+
   if dif <= 0 then
     DBEdit4.Font.Color := clRed
   else if dif < 3  then
