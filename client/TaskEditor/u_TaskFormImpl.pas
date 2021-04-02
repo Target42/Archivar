@@ -179,6 +179,7 @@ begin
     m_list[i].release;
 
   m_list.Clear;
+  m_base.dropControls;
   m_base.release;
 end;
 

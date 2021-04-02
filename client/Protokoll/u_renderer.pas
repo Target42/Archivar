@@ -4,13 +4,14 @@ interface
 
 uses
   m_taskLoader, i_chapter, SHDocVw, i_beschluss, m_html, xsd_TaskData,
-  u_protocoll2XML;
+  u_protocoll2XML, i_taskEdit;
 
 type
   TProtocolRenderer = class
     private
       m_html    : THtmlMod;
       m_data    : IXMLList;
+      m_frame   : ITaskContainer;
       FLoader   : TTaskLoaderMod;
       FProtocol : IProtocol;
       FCLID: string;
@@ -48,10 +49,15 @@ begin
   FLoader   := NIL;
   FCLID     := CreateClassID;
   m_data    := NIL;
+  m_frame   := NIL;
 end;
 
 destructor TProtocolRenderer.Destroy;
 begin
+  if Assigned(m_frame) then
+    m_frame.release;
+  m_frame := NIL;
+
   m_html.Free;
   inherited;
 end;
@@ -65,6 +71,8 @@ begin
     m_html.TaskStyle      := FLoader.TaskStyle;
 
     m_html.AddToStack;
+
+    FLoader.clearData;
   end;
 end;
 
@@ -94,6 +102,8 @@ begin
         m_html.AddTextToStack(cp.fullTitle);
 
       m_html.AddToStack;
+      FLoader.clearData;
+
       for i := 0 to pred( cp.Votes.Count ) do
         renderBeschluss( cp.Votes.Item[i] );
     end;
@@ -126,7 +136,9 @@ begin
   p2x := Protocoll2XML.create;
   if FLoader.SysLoad('{183C11C4-9864-451F-AFB2-05B10CC44D62}') then
   begin
-    m_html.setFrameData( FLoader.TaskContainer, FLoader.TaskStyle, p2x.xml(proto));
+    // store this task container until rendering end ....
+    m_frame := FLoader.TaskContainer;
+    m_html.setFrameData( m_frame, FLoader.TaskStyle, p2x.xml(proto));
   end;
   p2x.Free;
 

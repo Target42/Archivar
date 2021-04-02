@@ -38,6 +38,8 @@ type
     function BuildForm( owner : TControl) : ITaskForm;
 
     function saveFormData : boolean;
+
+    procedure clearData;
   end;
 
 var
@@ -51,6 +53,18 @@ uses
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
 {$R *.dfm}
+
+procedure TTaskLoaderMod.clearData;
+begin
+  m_taid  := -1;
+  if Assigned(m_tc) then
+    m_tc.release;
+  m_tc    := NIL;
+  m_form  := NIL;
+  m_xList := NIL;
+  m_style := NIL;
+
+end;
 
 procedure TTaskLoaderMod.DataModuleCreate(Sender: TObject);
 begin
@@ -82,11 +96,8 @@ end;
 
 function TTaskLoaderMod.load(taid: integer ): boolean;
 begin
-  m_taid := taid;
-  if Assigned(m_tc) then
-  begin
-    m_tc := NIL;
-  end;
+  m_taid  := taid;
+  m_tc    := NIL;
   m_xList := NIL;
 
   GetTAQry.ParamByName('TA_ID').AsInteger := taid;
@@ -172,12 +183,8 @@ end;
 
 function TTaskLoaderMod.SysLoad(clid: string): boolean;
 begin
-  if Assigned(m_tc) then
-  begin
-    m_tc := NIL;
-  end;
+  m_tc    := NIL;
   m_xList := NIL;
-
   m_tc    := TemplateCacheMod.SysLoad(clid);
 
   if Assigned(m_tc) then

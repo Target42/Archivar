@@ -14,16 +14,35 @@ type
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
   private
-    m_list      : Tlist<ITaskContainer>;
-    m_toDelete  : Tlist<ITaskContainer>;
-    m_idMap     : TDictionary<integer, ITaskContainer>;
-    m_map       : TDictionary<string, ITaskContainer>;
+    type
+      Template = class
+        private
+          FCLID : string;
+          FID   : integer;
+          FNAME : string;
+          m_st  : TMemoryStream;
+
+          function Getst: TStream;
+        public
+          constructor create;
+          Destructor Destroy; override;
+
+          property Name : string read FNAME write FNAME;
+          property CLID: string read FCLID write FCLID;
+          property ID: integer read FID write FID;
+          property st: TStream read Getst;
+      end;
+  private
+    m_list      : Tlist<Template>;
+    m_idMap     : TDictionary<integer, Template>;
+    m_map       : TDictionary<string,  Template>;
 
     function loadTemplate(dataset: TClientDataset) : boolean;
 
+    function createTC( te : Template ):ITaskContainer;
   public
     { Public-Deklarationen }
-    function load( teid : integer ) : ITaskContainer;
+    function load( teid : integer )   : ITaskContainer;
     function SysLoad( clid : string ) : ITaskContainer;
 
     procedure setDirty( clid : string );
@@ -40,28 +59,40 @@ implementation
 
 {$R *.dfm}
 
+function TTemplateCacheMod.createTC(te: Template): ITaskContainer;
+var
+  st : TStream;
+begin
+  Result := NIL;
+  if not Assigned(te) then
+    exit;
+
+  st := TMemoryStream.Create;
+  te.m_st.Position := 0;
+  st.CopyFrom( te.st, -1);
+  st.Position := 0;
+
+  Result := loadTaskContainer(st, te.Name);
+end;
+
 procedure TTemplateCacheMod.DataModuleCreate(Sender: TObject);
 begin
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
-  m_list      := Tlist<ITaskContainer>.create;
-  m_toDelete  := Tlist<ITaskContainer>.create;
-  m_idMap     := TDictionary<integer, ITaskContainer>.create;
-  m_map       := TDictionary<string, ITaskContainer>.create;
+  m_list      := Tlist<Template>.create;
+  m_idMap     := TDictionary<integer, Template>.create;
+  m_map       := TDictionary<string, Template>.create;
 end;
 
 procedure TTemplateCacheMod.DataModuleDestroy(Sender: TObject);
 var
-  t : ITaskContainer;
+  t : Template;
 begin
   for t in m_list do
-    t.release;
+    t.free;
+
   m_list.free;
   m_idMap.free;
   m_map.free;
-  for t in m_toDelete do
-    t.release;
-  m_toDelete.Free;
-
 end;
 
 function TTemplateCacheMod.load(teid: integer): ITaskContainer;
@@ -77,33 +108,43 @@ begin
     GetTEQry.Close;
   end;
   if m_idMap.ContainsKey(teid) then
-    Result := m_idMap[teid];
+  begin
+    Result := createTC(m_idMap[teid]);
+  end;
+
 end;
 
 function TTemplateCacheMod.loadTemplate(dataset: TClientDataset): boolean;
 var
+  te  : Template;
+
   st  : TStream;
   tc  : ITaskContainer;
 begin
+  te := NIL;
+
   if not dataset.IsEmpty then
   begin
+    te      := Template.create;
+    te.ID   := dataset.FieldByName('TE_ID').AsInteger;
+    te.CLID := dataset.FieldByName('TE_CLID').AsString;
+    te.Name := dataset.FieldByName('TE_NAME').AsString;
 
-   st       := dataset.CreateBlobStream(dataset.FieldByName('TE_DATA'), bmRead);
-   tc       := loadTaskContainer(st, dataset.FieldByName('TE_NAME').AsString);
-   tc.ID    := dataset.FieldByName('TE_ID').AsInteger;
-   tc.CLID  := dataset.FieldByName('TE_CLID').AsString;
+    st      := dataset.CreateBlobStream(dataset.FieldByName('TE_DATA'), bmRead);
+    te.st.CopyFrom( st, -1);
+    st.Free;
 
-   m_list.Add(tc);
-   m_idMap.AddOrSetValue(tc.ID, tc );
-   m_map.AddOrSetValue(tc.CLID, tc );
+     m_list.Add(te);
+     m_idMap.AddOrSetValue(te.ID, te );
+     m_map.AddOrSetValue(te.CLID, te );
   end;
 
-  Result := Assigned(tc);
+  Result := Assigned(te);
 end;
 
 procedure TTemplateCacheMod.setDirty(clid: string);
 var
-  te : ITaskContainer;
+  te : Template;
 begin
   for te in m_list do
   begin
@@ -113,7 +154,6 @@ begin
       m_idMap.Remove(te.ID);
       m_map.Remove(te.clid);
 
-      m_toDelete.Add(te);
       break;
     end;
   end;
@@ -132,7 +172,26 @@ begin
     GetSysTeQry.Close;
   end;
   if m_map.ContainsKey(clid) then
-    Result := m_map[clid];
+    Result := createTC(m_map[clid]);
 end;
+
+{ TTemplateCacheMod.Template }
+
+constructor TTemplateCacheMod.Template.create;
+begin
+  m_st  := TMemoryStream.Create;
+end;
+
+destructor TTemplateCacheMod.Template.Destroy;
+begin
+  m_st.Free;
+  inherited;
+end;
+
+function TTemplateCacheMod.Template.Getst: TStream;
+begin
+  Result := m_st;
+end;
+
 
 end.
