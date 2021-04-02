@@ -17,16 +17,12 @@ object LoginForm: TLoginForm
   OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
-  object LabeledEdit1: TLabeledEdit
+  object Label1: TLabel
     Left = 16
-    Top = 24
-    Width = 193
-    Height = 21
-    EditLabel.Width = 43
-    EditLabel.Height = 13
-    EditLabel.Caption = 'Benutzer'
-    TabOrder = 0
-    Text = 'Admin'
+    Top = 5
+    Width = 43
+    Height = 13
+    Caption = 'Benutzer'
   end
   object LabeledEdit2: TLabeledEdit
     Left = 16
@@ -62,5 +58,35 @@ object LoginForm: TLoginForm
         ExplicitLeft = 141
       end
     end
+  end
+  object LabeledEdit1: TComboBox
+    Left = 16
+    Top = 24
+    Width = 193
+    Height = 21
+    TabOrder = 0
+    Text = 'Admin'
+    Items.Strings = (
+      'admin'
+      'npn2hi'
+      'bmn2hi'
+      'abn2hi'
+      'rke2hi'
+      'pbr2hi'
+      'sfa2hi'
+      'rce2gi'
+      'ird2hi'
+      'ole2hi'
+      'bss2hi'
+      'abe2hi'
+      'eol2hi'
+      'sao2hi'
+      'rfc2hi'
+      'asy2hi'
+      'dhy2hi'
+      'steph'
+      'dln2hi'
+      'mwe2hi'
+      'chn2hi')
   end
 end

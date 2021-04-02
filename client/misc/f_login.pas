@@ -8,9 +8,10 @@ uses
 
 type
   TLoginForm = class(TForm)
-    LabeledEdit1: TLabeledEdit;
     LabeledEdit2: TLabeledEdit;
     BaseFrame1: TBaseFrame;
+    LabeledEdit1: TComboBox;
+    Label1: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
