@@ -11,8 +11,11 @@ type
     DSProviderConnection1: TDSProviderConnection;
     HCTab: TClientDataSet;
     procedure DataModuleCreate(Sender: TObject);
+    procedure DataModuleDestroy(Sender: TObject);
   private
+    m_files : TStringList;
     procedure download( fname : string );
+    procedure fillFiles;
   public
     procedure checkFiles;
   end;
@@ -23,7 +26,7 @@ var
 implementation
 
 uses
-  system.IOUtils, IdHashMessageDigest;
+  system.IOUtils, IdHashMessageDigest, System.Types;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -32,8 +35,12 @@ uses
 procedure TCacheMod.checkFiles;
 var
   fname : string;
+  inx   : integer;
+  i     : integer;
   needUpdate : boolean;
 begin
+  fillFiles;
+
   HCTab.Open;
   while not HCTab.Eof do
   begin
@@ -46,14 +53,34 @@ begin
     begin
       download( fname );
     end;
+    inx := m_files.IndexOf(LowerCase(fname));
+    if inx <> -1 then
+      m_files.Delete(inx);
     HCTab.Next;
   end;
   HCTab.close;
+
+  if m_files.Count > 0 then
+  begin
+    for i := 0 to pred(m_files.Count) do
+      try
+        DeleteFile(m_files[i])
+      except
+
+      end;
+  end;
+  m_files.Clear;
 end;
 
 procedure TCacheMod.DataModuleCreate(Sender: TObject);
 begin
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
+  m_files := TStringList.Create;
+end;
+
+procedure TCacheMod.DataModuleDestroy(Sender: TObject);
+begin
+  m_files.Free;
 end;
 
 procedure TCacheMod.download(fname: string);
@@ -70,5 +97,16 @@ begin
   end;
 end;
 
+
+procedure TCacheMod.fillFiles;
+var
+  i : integer;
+  arr : TStringDynArray;
+begin
+  m_files.Clear;
+  arr := TDirectory.GetFiles(GM.wwwHome, '*.*', TSearchOption.soAllDirectories);
+  for i := 0 to pred(Length(arr)) do
+    m_files.Add(LowerCase(arr[i]));
+end;
 
 end.

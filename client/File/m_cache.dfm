@@ -1,6 +1,7 @@
 object CacheMod: TCacheMod
   OldCreateOrder = False
   OnCreate = DataModuleCreate
+  OnDestroy = DataModuleDestroy
   Height = 243
   Width = 325
   object DSProviderConnection1: TDSProviderConnection
