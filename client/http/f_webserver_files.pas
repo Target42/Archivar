@@ -20,15 +20,19 @@ type
     btnDelete: TBitBtn;
     btnNew: TBitBtn;
     BitBtn1: TBitBtn;
+    FileSaveDialog1: TFileSaveDialog;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure bntUploadClick(Sender: TObject);
     procedure btnNewClick(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
     procedure DBGrid1DblClick(Sender: TObject);
+    procedure btnDownloadClick(Sender: TObject);
+    procedure btnDeleteClick(Sender: TObject);
   private
     m_list : TStringList;
     procedure upload( field : TField; fname : string );
+    procedure download ( field : TField; fname : string );
     function  exists( name, path : string ) : boolean;
   public
     { Public-Deklarationen }
@@ -47,18 +51,10 @@ uses
 procedure TWebServerFilesForm.BitBtn1Click(Sender: TObject);
 var
   fname       : string;
-  needUpload  : boolean;
-  ext         : string;
   md5         : string;
 begin
   if HCTab.IsEmpty then
     exit;
-  ext := LowerCase(ExtractFileExt(HCTab.FieldByName('HC_NAME').AsString));
-  if  not( (ext = '.html') or ( ext = '.htm') or (ext = '.css') ) then
-  begin
-    ShowMessage('Diese Datei kann nicht direkt editiert werden!');
-    exit;
-  end;
   fname := TPath.Combine( GM.wwwHome, HCTab.FieldByName('HC_PATH').AsString+'\'+HCTab.FieldByName('HC_NAME').AsString);
 
   if not FileExists(fname) then
@@ -66,24 +62,33 @@ begin
     ShowMessage('Die Datei wurde nicht gefunden!');
     exit;
   end;
-  Application.CreateForm(TWebEditorForm, WebEditorForm);
-  WebEditorForm.FileName := fname;
-  WebEditorForm.ShowModal;
-  needUpload := WebEditorForm.NeedUpload;
-  FreeAndNil(WebEditorForm);
 
-  if needUpload then
+  Application.CreateForm(TWebEditorForm, WebEditorForm);
+  if not  WebEditorForm.canEdit(HCTab.FieldByName('HC_NAME').AsString) then
   begin
-    md5 := GM.md5(fname);
-    if md5 <> HCTab.FieldByName('HC_MD5').AsString then
+    WebEditorForm.Free;
+    ShowMessage('Diese Datei kann nicht direkt editiert werden!');
+    exit;
+
+  end;
+
+  WebEditorForm.FileName := fname;
+  if WebEditorForm.ShowModal = mrOk then
+  begin
+    if WebEditorForm.NeedUpload then
     begin
-      HCTab.Edit;
-      upload(HCTab.FieldByName('HC_DATA'), fname);
-      HCTab.FieldByName('HC_MD5').AsString  := md5;
-      HCTab.Post;
+      md5 := GM.md5(fname);
+      if md5 <> HCTab.FieldByName('HC_MD5').AsString then
+      begin
+        HCTab.Edit;
+        upload(HCTab.FieldByName('HC_DATA'), fname);
+        HCTab.FieldByName('HC_MD5').AsString  := md5;
+        HCTab.Post;
+      end;
     end;
   end;
 
+  FreeAndNil(WebEditorForm);
 end;
 
 procedure TWebServerFilesForm.bntUploadClick(Sender: TObject);
@@ -95,6 +100,7 @@ begin
   WebFileForm.Dirs      := m_list;
   WebFileForm.Path      := HCTab.FieldByName('HC_PATH').AsString;
   WebFileForm.FileName  := HCTab.FieldByName('HC_NAME').AsString;
+
   if WebFileForm.ShowModal = mrOk then
   begin
     HCTab.Edit;
@@ -105,6 +111,38 @@ begin
   end;
   WebFileForm.free;
 
+end;
+
+procedure TWebServerFilesForm.btnDeleteClick(Sender: TObject);
+var
+  name : string;
+begin
+  if HCTab.IsEmpty then
+    exit;
+
+  name := HCTab.FieldByName('HC_PATH').AsString+'\'+HCTab.FieldByName('HC_NAME').AsString;
+  if (MessageDlg('Soll die Datei '+name+' wirklich gelöscht werden?',
+      mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
+  begin
+    HCTab.Delete;
+  end;
+end;
+
+procedure TWebServerFilesForm.btnDownloadClick(Sender: TObject);
+begin
+  if HCTab.IsEmpty then
+    exit;
+
+  FileSaveDialog1.FileName := HCTab.FieldByName('HC_NAME').AsString;
+  if FileSaveDialog1.Execute then
+  begin
+    try
+      download(HCTab.FieldByName('HC_DATA'), FileSaveDialog1.FileName);
+    except
+      on e : exception do
+        ShowMessage( e.ToString );
+    end;
+  end;
 end;
 
 procedure TWebServerFilesForm.btnNewClick(Sender: TObject);
@@ -137,6 +175,18 @@ end;
 procedure TWebServerFilesForm.DBGrid1DblClick(Sender: TObject);
 begin
   BitBtn1.Click;
+end;
+
+procedure TWebServerFilesForm.download(field: TField; fname: string);
+var
+  st  : TStream;
+  src : TFileStream;
+begin
+  src := TFileStream.Create(fname, fmCreate + fmShareDenyNone);
+  st  := HCTab.CreateBlobStream(field, bmRead);
+  st.CopyFrom( src, -1);
+  st.Free;
+  src.Free;
 end;
 
 function TWebServerFilesForm.exists(name, path: string): boolean;
@@ -190,7 +240,6 @@ begin
   st.CopyFrom( src, -1);
   st.Free;
   src.Free;
-
 end;
 
 end.

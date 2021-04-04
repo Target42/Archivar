@@ -171,6 +171,7 @@ object WebServerFilesForm: TWebServerFilesForm
         FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
         FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
       TabOrder = 2
+      OnClick = btnDownloadClick
     end
     object btnDelete: TBitBtn
       Left = 273
@@ -214,6 +215,7 @@ object WebServerFilesForm: TWebServerFilesForm
         FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
         FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
       TabOrder = 3
+      OnClick = btnDeleteClick
     end
     object btnNew: TBitBtn
       Left = 16
@@ -321,5 +323,13 @@ object WebServerFilesForm: TWebServerFilesForm
     DataSet = HCTab
     Left = 136
     Top = 72
+  end
+  object FileSaveDialog1: TFileSaveDialog
+    FavoriteLinks = <>
+    FileTypes = <>
+    Options = [fdoPathMustExist]
+    Title = 'Datei download'
+    Left = 240
+    Top = 120
   end
 end
