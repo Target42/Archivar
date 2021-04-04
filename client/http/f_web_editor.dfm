@@ -12,6 +12,8 @@ object WebEditorForm: TWebEditorForm
   Font.Style = []
   OldCreateOrder = False
   Position = poOwnerFormCenter
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
   inline BaseFrame1: TBaseFrame
@@ -70,21 +72,21 @@ object WebEditorForm: TWebEditorForm
     Options.AutoDetectEnabled = False
     Options.AutoDetectLineLimit = 0
     Options.Visible = False
-    Left = 8
+    Left = 32
     Top = 8
   end
   object SynHTMLSyn1: TSynHTMLSyn
     Options.AutoDetectEnabled = False
     Options.AutoDetectLineLimit = 0
     Options.Visible = False
-    Left = 40
-    Top = 8
+    Left = 48
+    Top = 104
   end
   object SynJSONSyn1: TSynJSONSyn
     Options.AutoDetectEnabled = False
     Options.AutoDetectLineLimit = 0
     Options.Visible = False
-    Left = 72
+    Left = 112
     Top = 8
   end
   object SynDWSSyn1: TSynDWSSyn
@@ -92,7 +94,7 @@ object WebEditorForm: TWebEditorForm
     Options.AutoDetectEnabled = False
     Options.AutoDetectLineLimit = 0
     Options.Visible = False
-    Left = 104
+    Left = 192
     Top = 8
   end
   object SynXMLSyn1: TSynXMLSyn
@@ -100,7 +102,7 @@ object WebEditorForm: TWebEditorForm
     Options.AutoDetectLineLimit = 0
     Options.Visible = False
     WantBracesParsed = False
-    Left = 136
+    Left = 272
     Top = 8
   end
 end
