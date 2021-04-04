@@ -76,7 +76,8 @@ type
     procedure dsMeeingGetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
   private
-    { Private declarations }
+    const
+      MaxUserNameLength = 25;
   protected
     function DoStop: Boolean; override;
     function DoPause: Boolean; override;
@@ -236,6 +237,9 @@ var
 begin
   valid   := false;
   userName:= LowerCase(User);
+
+  if Length(userName) > MaxUserNameLength then exit;
+
   ph      := THashSHA2.GetHashString(Password);
 
   if IBTransaction1.InTransaction then IBTransaction1.Rollback;

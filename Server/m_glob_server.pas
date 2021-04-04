@@ -141,7 +141,7 @@ var
   FName : string;
   ini   : TIniFile;
 begin
-  fname := TPath.Combine(ExtractFilePath(ParamStr(0)), 'server.dat');
+  fname := ParamStr(0)+'.ini';
 
   ini := TIniFile.Create(fname);
 

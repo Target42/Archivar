@@ -53,21 +53,25 @@ type
           Fty: integer;
         FFlags: integer;
         FIndex: integer;
+        FRems: string;
+        FColor: TColor;
         public
           constructor create;
           Destructor Destroy; override;
 
-          property Title: string read FTitle write FTitle;
-          property Termin: TDateTime read FTermin write FTermin;
-          property Rest: integer read FRest write FRest;
-          property Typ: string read FType write FType;
-          property Erzeugt: TDateTime read FErzeugt write FErzeugt;
-          property Eingang: TDate read FEingang write FEingang;
-          property Status: String read FStatus write FStatus;
-          property id: integer read Fid write Fid;
-          property ty: integer read Fty write Fty;
-          property Flags: integer read FFlags write FFlags;
-          property Index: integer read FIndex write FIndex;
+          property Title  : string      read FTitle   write FTitle;
+          property Termin : TDateTime   read FTermin  write FTermin;
+          property Rest   : integer     read FRest    write FRest;
+          property Typ    : string      read FType    write FType;
+          property Erzeugt: TDateTime   read FErzeugt write FErzeugt;
+          property Eingang: TDate       read FEingang write FEingang;
+          property Status : String      read FStatus  write FStatus;
+          property id     : integer     read Fid      write Fid;
+          property ty     : integer     read Fty      write Fty;
+          property Flags  : integer     read FFlags   write FFlags;
+          property Index  : integer     read FIndex   write FIndex;
+          property Rem    : string      read FRems    write FRems;
+          property Color  : TColor      read FColor   write FColor;
       end;
   private
     m_id      : integer;
@@ -289,6 +293,8 @@ begin
     data.Rest     := round(Tasks.FieldByName('TA_TERMIN').AsDateTime - now);
     data.Status   := Tasks.FieldByName('TA_STATUS').AsString;
     data.Flags    := Tasks.FieldByName('TA_FLAGS').AsInteger;
+    data.Rem      := Tasks.FieldByName('TA_REM').AsString;
+    data.Color    := TColor(Tasks.FieldByName('TA_COLOR').AsInteger );
     Tasks.Next;
   end;
 
@@ -527,6 +533,7 @@ begin
       item.SubItems.Add(FormatDateTime('dd.MM.yyyy', Erzeugt));
       item.SubItems.Add(FormatDateTime('dd.MM.yyyy', Eingang));
       item.SubItems.Add(flagsToStr(flags));
+      item.SubItems.Add(Rem);
     end;
   end;
   LV.Items.EndUpdate;

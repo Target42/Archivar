@@ -99,10 +99,10 @@ type
 
     procedure FillGremien( arr :TJSONArray );
 
-    function LockDocument(   id, typ : integer; subid : integer = 0 ) : TJSONObject;
-    function UnLockDocument( id, typ : integer; subid : integer = 0 ) : TJSONObject;
-    function isLocked(       id, typ : integer; subid : integer = 0 ) : TJSONObject;
-    procedure ShowLockInfo(  data    : TJSONObject);
+    function  LockDocument(   id, typ : integer; subid : integer = 0 ) : TJSONObject;
+    function  UnLockDocument( id, typ : integer; subid : integer = 0 ) : TJSONObject;
+    function  isLocked(       id, typ : integer; subid : integer = 0 ) : TJSONObject;
+    procedure ShowLockInfo(   data    : TJSONObject);
 
     procedure Execute(const Arg: TJSONObject);
     function  GremiumName( id : integer ) : string;
@@ -139,7 +139,7 @@ uses
   Vcl.Forms, Winapi.Windows, u_json,
   System.UITypes, system.IOUtils, FireDAC.Stan.Storagebin,
   System.Win.ComObj, m_WindowHandler, m_BookMarkHandler, IdHashMessageDigest,
-  Vcl.Graphics, u_PersonenListeImpl, u_PersonImpl, m_cache, f_login;
+  Vcl.Graphics, u_PersonenListeImpl, u_PersonImpl, m_cache, f_login, u_kategorie;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -163,25 +163,18 @@ procedure TGM.checkImage(obj: TJSONObject; client : TdsImageClient);
 var
   name    : string;
   fname   : string;
-  needdnl : Boolean;
   png     : TPNGImage;
   bmp     : TBitmap;
 
 begin
   if not Assigned(obj) then
     exit;
+
   name := JString( obj, 'name');
   fname := TPath.Combine( m_images, name );
 
-  needdnl := not FileExists(fname);
-  if not needdnl then
-  begin
-    needdnl := JString(obj, 'md5') <> md5(fname);
-  end;
-  if needdnl then
-  begin
+  if JString(obj, 'md5', 'xxx') <> md5(fname) then
     downloadimage( name, client );
-  end;
 
   png := TPNGImage.Create;
   bmp := TBitmap.Create;
@@ -562,6 +555,8 @@ function TGM.md5(fname: string): string;
 var
   fs   : TFileStream;
 begin
+  Result := '';
+
   fs := NIL;
   if not FileExists(fname) then
     exit;
@@ -596,6 +591,8 @@ var
   Client : TAdminModClient;
   data   : TJSONObject;
   req    : TJSONObject;
+
+  fname : string;
 begin
   PostMessage( Application.MainFormHandle, msgConnected, 0, 0 );
 
@@ -636,6 +633,10 @@ begin
   end;
   checkimages;
   checkCache;
+
+  fname := TPath.Combine( self.wwwHome, 'data\Kategorie.json');
+  Kategorien.load(fname);
+
   PostMessage( Application.MainFormHandle, msgLoadLogo,       0, 0 );
   PostMessage( Application.MainFormHandle, msgUpdateMeetings, 0, 0 );
 end;

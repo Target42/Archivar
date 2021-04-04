@@ -1,8 +1,8 @@
 object TaskListFrame: TTaskListFrame
   Left = 0
   Top = 0
-  Width = 782
-  Height = 391
+  Width = 859
+  Height = 290
   Align = alClient
   TabOrder = 0
   ExplicitWidth = 451
@@ -10,8 +10,8 @@ object TaskListFrame: TTaskListFrame
   object LV: TListView
     Left = 0
     Top = 0
-    Width = 782
-    Height = 391
+    Width = 859
+    Height = 290
     Align = alClient
     Columns = <
       item
@@ -32,7 +32,7 @@ object TaskListFrame: TTaskListFrame
       end
       item
         Caption = 'Erzeugt'
-        Width = 100
+        Width = 75
       end
       item
         Caption = 'Eingang'
@@ -41,6 +41,10 @@ object TaskListFrame: TTaskListFrame
       item
         Caption = 'Status'
         Width = 100
+      end
+      item
+        Caption = 'Kommentar'
+        Width = 250
       end>
     GridLines = True
     ReadOnly = True
@@ -53,8 +57,6 @@ object TaskListFrame: TTaskListFrame
     OnCustomDrawSubItem = LVCustomDrawSubItem
     OnDblClick = LVDblClick
     OnKeyUp = DBGrid1KeyUp
-    ExplicitWidth = 451
-    ExplicitHeight = 305
   end
   object ApplicationEvents1: TApplicationEvents
     OnMessage = ApplicationEvents1Message

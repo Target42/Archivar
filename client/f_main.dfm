@@ -149,7 +149,7 @@
     Top = 472
     Width = 1126
     Height = 187
-    ActivePage = TabSheet5
+    ActivePage = TabSheet4
     Align = alBottom
     TabOrder = 2
     Visible = False

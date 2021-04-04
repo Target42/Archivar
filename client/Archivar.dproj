@@ -552,6 +552,7 @@
             <Form>ProtocolSectionForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="Task\u_kategorie.pas"/>
         <None Include="Datafields\ERA-NS.txt"/>
         <RcItem Include="dws\dws.html">
             <ContainerId>ResourceItem</ContainerId>

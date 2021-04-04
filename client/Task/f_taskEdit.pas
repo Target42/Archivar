@@ -8,7 +8,7 @@ uses
   Vcl.ActnList, Vcl.Menus, i_taskEdit, Data.DB, Datasnap.DBClient,
   Datasnap.DSConnect, JvExMask, JvToolEdit, JvMaskEdit, JvCheckedMaskEdit,
   JvDatePickerEdit, JvDBDatePickerEdit, Vcl.StdCtrls, Vcl.Mask, Vcl.DBCtrls,
-  Vcl.OleCtrls, SHDocVw;
+  Vcl.OleCtrls, SHDocVw, JvExStdCtrls, JvCombobox, JvColorCombo;
 
 type
   TTaskEditForm = class(TForm)
@@ -73,6 +73,12 @@ type
     N3: TMenuItem;
     Aktualisieren1: TMenuItem;
     ac_bookmark: TAction;
+    Label9: TLabel;
+    DBEdit5: TDBEdit;
+    TaskTabTA_REM: TWideStringField;
+    TaskTabTA_COLOR: TIntegerField;
+    JvColorComboBox1: TJvColorComboBox;
+    Label10: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -133,7 +139,7 @@ implementation
 uses
   m_WindowHandler, Vcl.Dialogs, m_glob_client, System.UITypes,
   System.JSON, u_json, u_bookmark, u_berTypes, m_BookMarkHandler, DateUtils,
-  u_taskForm2XML, u_konst, m_html, xsd_TaskData, u_templateCache;
+  u_taskForm2XML, u_konst, m_html, xsd_TaskData, u_templateCache, u_kategorie;
 
 {$R *.dfm}
 
@@ -226,7 +232,7 @@ end;
 
 function TTaskEditForm.changed: boolean;
 begin
-  Result := m_changed;
+  Result := m_changed or TaskTab.Modified;
   if not Result then
   begin
     if Assigned(m_form) then
@@ -291,6 +297,8 @@ begin
 end;
 
 procedure TTaskEditForm.FormCreate(Sender: TObject);
+var
+  i : integer;
 begin
   PageControl1.ActivePage := TabSheet1;
   PageControl2.ActivePage := TabSheet3;
@@ -300,6 +308,11 @@ begin
   m_style := NIL;
 
   FillFlagslist( ComboBox1.Items);
+
+  for i := 0 to pred(Kategorien.count) do
+  begin
+    JvColorComboBox1.AddColor( Kategorien.Items[i].Color, Kategorien.Items[i].Name );
+  end;
 end;
 
 procedure TTaskEditForm.FormDestroy(Sender: TObject);
@@ -452,11 +465,14 @@ begin
   TaskTab.Close;
   TaskTab.Open;
 
+
   if not TaskTab.Locate('TA_ID', VarArrayOf([m_ta_id]), []) then
   begin
     TaskTab.Close;
     exit;
   end;
+
+  JvColorComboBox1.ColorValue := TColor(TaskTab.FieldByName('TA_COLOR').AsInteger);
 
   if not Assigned(m_tc) then
     LoadTemplate( TaskTab.FieldByName('TE_ID').AsInteger );
@@ -507,6 +523,7 @@ var
   mem     : TMemoryStream;
 begin
 
+  TaskTab.FieldByName('TA_COLOR').AsInteger := integer(JvColorComboBox1.ColorValue);
   if Assigned(m_style) then
   begin
     TaskTab.FieldByName('TA_STYLE').AsString      := m_style.Name;
