@@ -3,7 +3,7 @@ unit u_json;
 interface
 
 uses
-  System.JSON, System.Classes;
+  System.JSON, System.Classes, System.Generics.Collections;
 
 
 procedure JReplace( obj : TJSONObject ; name : string ; value : string ); overload;
@@ -31,6 +31,8 @@ procedure setText( obj : TJSONObject; name : string ; text : string ); overload;
 procedure setText( obj : TJSONObject; name : string ; list : TStringList ); overload;
 function  getText( obj : TJSONObject; name : string ) : String; overload;
 procedure getText( obj : TJSONObject; name : string ; list : TStringList ); overload;
+
+function  getIntNumbers( obj : TJSONObject; name : string ) : Tlist<integer>;
 
 function loadJSON( st : TStream ) : TJSONObject; overload;
 function loadJSON( fileName : string ) : TJSONObject; overload;
@@ -491,6 +493,27 @@ begin
   for i := 0 to pred(arr.Count) do
     begin
       list.Add( JUnQuote(arr.Items[i].Value));
+    end;
+end;
+
+{*******************************************************************************
+*                   getIntNumbers
+*******************************************************************************}
+function  getIntNumbers( obj : TJSONObject; name : string ) : Tlist<integer>;
+var
+  arr : TJSONArray;
+  i   : integer;
+begin
+  Result := TList<integer>.create;
+
+  arr := JArray( obj, name);
+  if not Assigned(arr) then
+    exit;
+
+  for i := 0 to pred(arr.Count) do
+    begin
+      if arr.Items[i] is TJSONNumber then
+        Result.Add((arr.Items[i] as TJSONNumber).AsInt);
     end;
 end;
 

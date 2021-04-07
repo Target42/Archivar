@@ -35,7 +35,10 @@ uses
   ds_epub in 'ds_epub.pas' {dsEpub: TDSServerModule},
   ds_meeting in 'ds_meeting.pas' {dsMeeing: TDSServerModule},
   u_tree in 'u_tree.pas',
-  u_teilnehmer in '..\misc\u_teilnehmer.pas';
+  u_teilnehmer in '..\misc\u_teilnehmer.pas',
+  i_user in 'User\i_user.pas',
+  u_TServerUserImpl in 'User\u_TServerUserImpl.pas',
+  u_TOnlineUserServerImpl in 'User\u_TOnlineUserServerImpl.pas';
 
 var
   MyDummyBoolean : Boolean;

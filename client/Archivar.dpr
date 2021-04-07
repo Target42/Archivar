@@ -169,7 +169,8 @@ uses
   fr_meeting in 'Sitzung\fr_meeting.pas' {MeetingFrame: TFrame},
   u_teilnehmer in '..\misc\u_teilnehmer.pas',
   f_protocol_sec in 'Protokoll\f_protocol_sec.pas' {ProtocolSectionForm},
-  u_kategorie in 'Task\u_kategorie.pas';
+  u_kategorie in 'Task\u_kategorie.pas',
+  u_onlineUser in 'misc\u_onlineUser.pas';
 
 {$R *.res}
 

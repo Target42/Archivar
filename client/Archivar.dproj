@@ -553,6 +553,7 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Task\u_kategorie.pas"/>
+        <DCCReference Include="misc\u_onlineUser.pas"/>
         <None Include="Datafields\ERA-NS.txt"/>
         <RcItem Include="dws\dws.html">
             <ContainerId>ResourceItem</ContainerId>

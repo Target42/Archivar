@@ -311,7 +311,7 @@ begin
     msg := TJSONObject.Create;
     JReplace(msg, 'action', 'newmeeting');
     JReplace( msg, 'id', el_id);
-    ServerContainer1.DSServer1.BroadcastMessage('storage', msg);
+    ServerContainer1.BroadcastMessage('storage', msg);
 
   except
     on e : exception do

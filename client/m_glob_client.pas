@@ -75,6 +75,7 @@ type
     procedure checkImage( obj : TJSONObject; client : TdsImageClient );
 
     procedure checkCache;
+    procedure requestUser;
 
     function downloadimage( name : string;client : TdsImageClient) :  boolean;
   public
@@ -139,7 +140,8 @@ uses
   Vcl.Forms, Winapi.Windows, u_json,
   System.UITypes, system.IOUtils, FireDAC.Stan.Storagebin,
   System.Win.ComObj, m_WindowHandler, m_BookMarkHandler, IdHashMessageDigest,
-  Vcl.Graphics, u_PersonenListeImpl, u_PersonImpl, m_cache, f_login, u_kategorie;
+  Vcl.Graphics, u_PersonenListeImpl, u_PersonImpl, m_cache, f_login, u_kategorie,
+  u_onlineUser;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -355,17 +357,21 @@ begin
   if cmd = 'taskmove' then
   begin
     WindowHandler.closeTaksWindowMsg( JInt(Arg, 'taid'), 'Die Aufgabe wurde verschoben!');
+
     PostMessage( Application.MainFormHandle, msgFilterTasks, 1, 0 );
   end
   else if cmd = 'taskdelete' then
   begin
     WindowHandler.closeTaksWindowMsg( JInt(Arg, 'taid'), 'Die Aufgabe wurde gelöscht!');
     BookMarkHandler.Bookmarks.remove( JString( ARg, 'clid'));
+
     PostMessage( Application.MainFormHandle, msgFilterTasks, 1, 0 );
   end else if cmd = 'newmeeting' then
   begin
     PostMessage(Application.MainFormHandle, msgNewMeeting, 0, JInt(Arg, 'id'));
-  end;
+  end else if cmd = 'onlineuser' then
+    OnlineUser.updateData(arg);
+
 end;
 
 procedure TGM.FillGremien(arr :TJSONArray );
@@ -551,6 +557,24 @@ begin
 
 end;
 
+procedure TGM.requestUser;
+var
+  res : TJSONObject;
+  req : TJSONObject;
+begin
+  try
+    res := m_misc.getUserList;
+    OnlineUser.fillUserList(res);
+
+    req := TJSONObject.Create;
+    JReplace( req, 'online', true);
+
+    m_misc.changeOnlineStatus(req);
+  except
+
+  end;
+end;
+
 function TGM.md5(fname: string): string;
 var
   fs   : TFileStream;
@@ -605,7 +629,6 @@ begin
 
   DSClientCallbackChannelManager1.DSHostname  := SQLConnection1.ConnectionData.Properties.Values['HostName'];
   DSClientCallbackChannelManager1.DSPort      := SQLConnection1.ConnectionData.Properties.Values['Port'];
-
   DSClientCallbackChannelManager1.RegisterCallback('storage', TMyCallback.Create);
 
   try
@@ -631,8 +654,11 @@ begin
   finally
 
   end;
+
   checkimages;
   checkCache;
+
+  requestUser;
 
   fname := TPath.Combine( self.wwwHome, 'data\Kategorie.json');
   Kategorien.load(fname);

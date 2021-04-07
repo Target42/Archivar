@@ -130,4 +130,46 @@ object dsMisc: TdsMisc
     Left = 464
     Top = 112
   end
+  object PEQry: TIBQuery
+    Database = DBMod.IBDatabase1
+    Transaction = IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    ParamCheck = True
+    SQL.Strings = (
+      'select * from PE_PERSON')
+    Left = 560
+    Top = 96
+    object PEQryPE_ID: TIntegerField
+      FieldName = 'PE_ID'
+      Origin = '"PE_PERSON"."PE_ID"'
+      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
+      Required = True
+    end
+    object PEQryPE_NAME: TIBStringField
+      FieldName = 'PE_NAME'
+      Origin = '"PE_PERSON"."PE_NAME"'
+      Size = 100
+    end
+    object PEQryPE_VORNAME: TIBStringField
+      FieldName = 'PE_VORNAME'
+      Origin = '"PE_PERSON"."PE_VORNAME"'
+      Size = 100
+    end
+    object PEQryPE_DEPARTMENT: TIBStringField
+      FieldName = 'PE_DEPARTMENT'
+      Origin = '"PE_PERSON"."PE_DEPARTMENT"'
+      Size = 25
+    end
+    object PEQryPE_NET: TIBStringField
+      FieldName = 'PE_NET'
+      Origin = '"PE_PERSON"."PE_NET"'
+      Size = 25
+    end
+    object PEQryPE_MAIL: TIBStringField
+      FieldName = 'PE_MAIL'
+      Origin = '"PE_PERSON"."PE_MAIL"'
+      Size = 200
+    end
+  end
 end

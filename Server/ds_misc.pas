@@ -6,7 +6,7 @@ uses
   System.SysUtils, System.Classes, Datasnap.DSServer, 
   Datasnap.DSAuth, Datasnap.DSProviderDataModuleAdapter, Datasnap.Provider,
   IBX.IBDatabase, Data.DB, IBX.IBCustomDataSet, IBX.IBQuery, System.JSON,
-  Datasnap.DSSession, u_lockInfo;
+  Datasnap.DSSession, u_lockInfo, u_json;
 
 type
   [TRoleAuth('user,admin')]
@@ -21,6 +21,13 @@ type
     IncTrans: TIBTransaction;
     Meetings: TIBQuery;
     MeetingQry: TDataSetProvider;
+    PEQry: TIBQuery;
+    PEQryPE_ID: TIntegerField;
+    PEQryPE_NAME: TIBStringField;
+    PEQryPE_VORNAME: TIBStringField;
+    PEQryPE_DEPARTMENT: TIBStringField;
+    PEQryPE_NET: TIBStringField;
+    PEQryPE_MAIL: TIBStringField;
     procedure DSServerModuleCreate(Sender: TObject);
   private
   private
@@ -34,13 +41,16 @@ type
     function validTask(      id, dt  : integer ) : boolean;
 
     function AutoInc( gen : string ) : integer;
+
+    function getUserList : TJSONobject;
+    function changeOnlineStatus(req: TJSONObject) : TJSONObject;
   end;
 
 implementation
 
 uses
-  m_db, u_json, m_glob_server, m_lockMod, System.Generics.Collections,
-  u_berTypes;
+  m_db, m_glob_server, m_lockMod, System.Generics.Collections,
+  u_berTypes, i_user;
 
 {%CLASSGROUP 'System.Classes.TPersistent'}
 
@@ -62,9 +72,66 @@ begin
   IncTrans.Commit;
 end;
 
+function TdsMisc.changeOnlineStatus(req: TJSONObject) : TJSONObject;
+var
+  online : Boolean;
+  s       : string;
+begin
+  Result := TJSONObject.create;
+
+  online := JBool( req, 'online');
+
+  try
+    if online then
+    begin
+      s := m_Session.GetData('ID');
+      ous.addUser( StrToInt( s ),
+        m_Session.GetData('name'),
+        m_Session.GetData('vorname'),
+        m_Session.Id );
+    end
+    else
+      ous.removeSessionID(m_Session.Id);
+  except
+    on e : exception do
+    begin
+
+    end;
+  end;
+end;
+
 procedure TdsMisc.DSServerModuleCreate(Sender: TObject);
 begin
   m_Session := TDSSessionManager.GetThreadSession;
+end;
+
+function TdsMisc.getUserList: TJSONobject;
+var
+  arr : TJSONArray;
+  row : TJSONObject;
+begin
+  arr := TJSONArray.Create;
+
+  PEQry.Open;
+  while not PEQry.Eof do
+  begin
+    row := TJSONObject.Create;
+
+    JReplace( row, 'id',      PEQryPE_ID.Value);
+    JReplace( row, 'name',    PEQryPE_NAME.Value);
+    JReplace( row, 'vorname', PEQryPE_VORNAME.Value);
+    JReplace( row, 'dept',    PEQryPE_DEPARTMENT.Value);
+
+    arr.AddElement(row);
+    PEQry.Next;
+  end;
+  PEQry.Close;
+
+  if PEQry.Transaction.InTransaction then
+    PEQry.Transaction.Commit;
+
+  Result := TJSONObject.Create;
+  JReplace( Result, 'user', arr);
 end;
 
 function TdsMisc.isLocked( req : TJSONObject ): TJSONObject;

@@ -7,7 +7,8 @@ uses System.SysUtils, System.Classes,
   Datasnap.DSServer, Datasnap.DSCommonServer,
   IPPeerServer, IPPeerAPI, Datasnap.DSAuth, DbxSocketChannelNative,
   DbxCompressionFilter, Vcl.SvcMgr, m_glob_server, IBX.IBDatabase, Data.DB,
-  IBX.IBCustomDataSet, IBX.IBQuery, m_lockMod;
+  IBX.IBCustomDataSet, IBX.IBQuery, m_lockMod, Datasnap.DSSession, i_user,
+  System.JSON;
 
 type
   TServerContainer1 = class(TService)
@@ -85,6 +86,8 @@ type
     procedure DoInterrogate; override;
   public
     function GetServiceController: TServiceController; override;
+
+    procedure BroadcastMessage( id : string ; data : TJSONObject );
   end;
 
 var
@@ -100,10 +103,10 @@ implementation
   http://docwiki.embarcadero.com/RADStudio/Seattle/en/Server_Side_Session_Management
 }
 uses
-  Winapi.Windows, m_db, ds_gremium, ds_admin, Datasnap.DSSession, ds_person, IOUtils,
+  Winapi.Windows, m_db, ds_gremium, ds_admin, ds_person, IOUtils,
   ds_taks, ds_file, ds_misc, ds_protocol, ds_image, ds_chapter,
   ds_taskEdit, ds_template, ds_taskView, ds_textblock, ds_fileCache, ds_epub,
-  ds_meeting, System.Hash;
+  ds_meeting, System.Hash, u_json;
 
 procedure TServerContainer1.dsAdminGetClass(
   DSServerClass: TDSServerClass; var PersistentClass: TPersistentClass);
@@ -135,6 +138,7 @@ begin
   begin
     LockMod.removeLocks(session.Id);
     DebugMsg('Disconnect::session id : ' + intToStr( session.Id ));
+    ous.removeSessionID( session.Id );
   end;
   DebugMsg(  'Disconnect::disconnect : ' + IntToStr(DSConnectEventObject.ChannelInfo.Id));
   DebugMsg('');
@@ -185,6 +189,14 @@ end;
 function TServerContainer1.GetServiceController: TServiceController;
 begin
   Result := ServiceController;
+end;
+
+procedure TServerContainer1.BroadcastMessage(id: string; data: TJSONObject);
+begin
+  DebugMsg('Broadcast : '+id);
+  DebugMsg(formatJSON(data));
+
+  DSServer1.BroadcastMessage(id, data);
 end;
 
 function TServerContainer1.DoContinue: Boolean;
@@ -247,6 +259,7 @@ begin
 
   Session := TDSSessionManager.GetThreadSession;
 
+  DebugMsg('UserAuthenticate::user thread id  :'+IntToStr(GetCurrentThreadID));
   DebugMsg('UserAuthenticate::user :' +userName);
   // callback channel ...
   if pos('*', userName) > 0 then
@@ -256,6 +269,7 @@ begin
     valid := checkUser;
     if valid then
     begin
+      Session.PutData('ID',       '-1' );
       UserRoles.Add('broadcast');
     end;
   end
@@ -272,6 +286,7 @@ begin
       Session.PutData('ID',       QueryUser.FieldByName('PE_ID').AsString );
       Session.PutData('name',     QueryUser.FieldByName('pe_name').AsString);
       Session.PutData('vorname',  QueryUser.FieldByName('pe_vorname').AsString);
+      Session.PutData('dept',     QueryUser.FieldByName('PE_DEPARTMENT').AsString);
 
       if QueryUser.FieldByName('PE_ID').AsInteger = 1 then
       begin
@@ -368,6 +383,19 @@ begin
   DBMod   := TDBMod.Create(self);
 
   DSTCPServerTransport1.Port := GM.DSPort;
+
+  TDSSessionManager.Instance.AddSessionEvent(
+    procedure(Sender: TObject;
+              const EventType: TDSSessionEventType;
+              const Session: TDSSession)
+    begin
+      case EventType of
+        SessionCreate: ;
+          {The provided Session was just created.}
+        SessionClose: ;
+          {The provided Session has just been closed, either intentionally or it has expired.}
+      end;
+    end);
 end;
 
 procedure TServerContainer1.ServiceStart(Sender: TService; var Started: Boolean);

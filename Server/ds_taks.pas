@@ -209,7 +209,7 @@ begin
       JReplace(msg, 'action', 'taskdelete');
       JReplace( msg, 'taid', ta_id);
       JReplace( msg, 'clid', clid);
-      ServerContainer1.DSServer1.BroadcastMessage('storage', msg);
+      ServerContainer1.BroadcastMessage('storage', msg);
     except
       on e : exception do
       begin
@@ -271,7 +271,7 @@ begin
       JReplace(msg, 'action', 'taskmove');
       JReplace( msg, 'taid', taid);
       JReplace( msg, 'grid', grid);
-      ServerContainer1.DSServer1.BroadcastMessage('storage', msg);
+      ServerContainer1.BroadcastMessage('storage', msg);
     except
 
     end;

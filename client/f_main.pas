@@ -129,6 +129,8 @@ type
     ac_pr_abschnitt: TAction;
     Abschnittbearbeiten1: TMenuItem;
     N15: TMenuItem;
+    TabSheet6: TTabSheet;
+    UserView: TListView;
     procedure ac_prg_closeExecute(Sender: TObject);
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure ac_prg_disconExecute(Sender: TObject);
@@ -169,6 +171,8 @@ type
     procedure templateEdit( sys : boolean );
     procedure setGremiumName( id : integer );
     procedure showMeeting( id : integer );
+
+    procedure UpdateUserView( sender : TObject );
   public
     { Public declarations }
   end;
@@ -185,7 +189,7 @@ uses
   f_template_new, f_taskEditor, f_select_templateForm, f_bechlus, f_set,
   f_textblock_edit, f_testblock_list, f_webserver_files, f_epub_mngr,
   f_meeting_new, f_meeting_select, f_meeting_proto, f_login,
-  system.UITypes, f_protocol_sec;
+  system.UITypes, f_protocol_sec, u_onlineUser;
 
 {$R *.dfm}
 
@@ -638,10 +642,13 @@ begin
   PageControl1.ActivePage := TabSheet1;
 
   PostMessage( Application.MainFormHandle, msgLogin, 0, 0 );
+
+  OnlineUser.OnChangeData := UpdateUserView;
 end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
+  OnlineUser.OnChangeData := NIL;
   GremiumTreeFrame1.clear;
   TaskListFrame1.shutdown;
   MeetingFrame1.release;
@@ -711,6 +718,24 @@ begin
     frm.TEID := te_id;
     frm.Show;
   end;
+end;
+
+procedure TMainForm.UpdateUserView(sender: TObject);
+var
+  i     : integer;
+  item  : TListItem;
+begin
+  UserView.Clear;
+
+  for i := 0 to pred(OnlineUser.Count) do
+    begin
+      if OnlineUser.Data[i].status <> '' then
+      begin
+        item := UserView.Items.Add;
+        item.Caption := OnlineUser.Data[i].name;
+        item.SubItems.Add(OnlineUser.Data[i].vorname);
+      end;
+    end;
 end;
 
 end.

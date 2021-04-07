@@ -1,6 +1,6 @@
 //
 // Erzeugt vom DataSnap-Proxy-Generator.
-// 23.03.2021 17:52:23
+// 07.04.2021 19:33:10
 //
 
 unit u_stub;
@@ -110,6 +110,8 @@ type
     FisLockedCommand: TDBXCommand;
     FvalidTaskCommand: TDBXCommand;
     FAutoIncCommand: TDBXCommand;
+    FgetUserListCommand: TDBXCommand;
+    FchangeOnlineStatusCommand: TDBXCommand;
   public
     constructor Create(ADBXConnection: TDBXConnection); overload;
     constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
@@ -120,6 +122,8 @@ type
     function isLocked(req: TJSONObject): TJSONObject;
     function validTask(id: Integer; dt: Integer): Boolean;
     function AutoInc(gen: string): Integer;
+    function getUserList: TJSONObject;
+    function changeOnlineStatus(req: TJSONObject): TJSONObject;
   end;
 
   TdsProtocolClient = class(TDSAdminClient)
@@ -820,6 +824,33 @@ begin
   Result := FAutoIncCommand.Parameters[1].Value.GetInt32;
 end;
 
+function TdsMiscClient.getUserList: TJSONObject;
+begin
+  if FgetUserListCommand = nil then
+  begin
+    FgetUserListCommand := FDBXConnection.CreateCommand;
+    FgetUserListCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FgetUserListCommand.Text := 'TdsMisc.getUserList';
+    FgetUserListCommand.Prepare;
+  end;
+  FgetUserListCommand.ExecuteUpdate;
+  Result := TJSONObject(FgetUserListCommand.Parameters[0].Value.GetJSONValue(FInstanceOwner));
+end;
+
+function TdsMiscClient.changeOnlineStatus(req: TJSONObject): TJSONObject;
+begin
+  if FchangeOnlineStatusCommand = nil then
+  begin
+    FchangeOnlineStatusCommand := FDBXConnection.CreateCommand;
+    FchangeOnlineStatusCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FchangeOnlineStatusCommand.Text := 'TdsMisc.changeOnlineStatus';
+    FchangeOnlineStatusCommand.Prepare;
+  end;
+  FchangeOnlineStatusCommand.Parameters[0].Value.SetJSONValue(req, FInstanceOwner);
+  FchangeOnlineStatusCommand.ExecuteUpdate;
+  Result := TJSONObject(FchangeOnlineStatusCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
+end;
+
 constructor TdsMiscClient.Create(ADBXConnection: TDBXConnection);
 begin
   inherited Create(ADBXConnection);
@@ -838,6 +869,8 @@ begin
   FisLockedCommand.DisposeOf;
   FvalidTaskCommand.DisposeOf;
   FAutoIncCommand.DisposeOf;
+  FgetUserListCommand.DisposeOf;
+  FchangeOnlineStatusCommand.DisposeOf;
   inherited;
 end;
 

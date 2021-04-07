@@ -72,7 +72,7 @@
     Top = 0
     Width = 249
     Height = 469
-    ActivePage = TabSheet2
+    ActivePage = TabSheet6
     Align = alLeft
     MultiLine = True
     TabOrder = 1
@@ -141,6 +141,28 @@
           Left = 72
           Top = 24
         end
+      end
+    end
+    object TabSheet6: TTabSheet
+      Caption = 'Online'
+      ImageIndex = 3
+      object UserView: TListView
+        Left = 0
+        Top = 0
+        Width = 221
+        Height = 461
+        Align = alClient
+        Columns = <
+          item
+            Caption = 'Name'
+            Width = 75
+          end
+          item
+            Caption = 'Vorname'
+            Width = 75
+          end>
+        TabOrder = 0
+        ViewStyle = vsReport
       end
     end
   end
