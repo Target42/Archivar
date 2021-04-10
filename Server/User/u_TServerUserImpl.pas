@@ -11,6 +11,7 @@ type
     m_id        : integer;
     m_name      : string;
     m_vorname   : string;
+    m_status    : string;
 
     m_list      : TList<NativeInt>;
 
@@ -20,15 +21,14 @@ type
     procedure SetName(const Value: string);
     function GetVorname: string;
     procedure SetVorname(const Value: string);
+    function GetStatus: string;
+    procedure SetStatus(const Value: string);
 
   public
 
     constructor create;
     Destructor Destroy; override;
 
-    property ID         : integer     read GetID          write SetID;
-    property Name       : string      read GetName        write SetName;
-    property Vorname    : string      read GetVorname     write SetVorname;
 
     procedure addSessionID( id : NativeInt );
     procedure removeSessionID( id : NativeInt );
@@ -71,6 +71,11 @@ begin
   Result := m_name;
 end;
 
+function TServerUserImpl.GetStatus: string;
+begin
+  Result := m_status;
+end;
+
 function TServerUserImpl.GetVorname: string;
 begin
   Result := m_vorname;
@@ -109,6 +114,11 @@ end;
 procedure TServerUserImpl.SetName(const Value: string);
 begin
   m_name := value;
+end;
+
+procedure TServerUserImpl.SetStatus(const Value: string);
+begin
+  m_status := value;
 end;
 
 procedure TServerUserImpl.SetVorname(const Value: string);

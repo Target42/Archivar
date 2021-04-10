@@ -3,13 +3,14 @@ unit u_onlineUser;
 interface
 
 uses
-  System.JSON, System.Classes;
+  System.JSON, System.Classes, System.Generics.Collections;
 
 type
 
   TOnlineUser = class(TObject)
     public
       type
+        pREntry= ^REntry;
         REntry = record
           id      : integer;
           name    : string;
@@ -21,6 +22,7 @@ type
     private
        m_evt  : TNotifyEvent;
        m_data : TEntryData;
+       m_map  : TDictionary<integer, pREntry>;
 
        function getCount : integer;
     public
@@ -35,6 +37,7 @@ type
 
       procedure fillUserList( obj : TJSONObject );
       procedure updateData(   obj : TJSONObject );
+      procedure changeState(  obj : TJSONObject );
       procedure clear;
   end;
 
@@ -45,9 +48,24 @@ var
 implementation
 
 uses
-  u_json, System.Generics.Collections;
+  u_json;
 
 { TOnlineUser }
+
+procedure TOnlineUser.changeState(obj: TJSONObject);
+var
+  ptr : pREntry;
+  id  : Integer;
+begin
+  id := JInt( obj, 'id');
+  if m_map.ContainsKey(id) then
+  begin
+    ptr := m_map[id];
+    ptr^.status := JString( obj, 'state');
+    if Assigned(m_evt) then
+      m_evt(self);
+  end;
+end;
 
 procedure TOnlineUser.clear;
 begin
@@ -58,12 +76,13 @@ constructor TOnlineUser.create;
 begin
   inherited;
   m_evt := NIL;
+  m_map := TDictionary<integer, pREntry>.create;
 end;
 
 destructor TOnlineUser.Destroy;
 begin
   m_evt := NIL;
-
+  m_map.free;
   inherited;
 end;
 
@@ -74,6 +93,7 @@ var
   i   : integer;
 begin
   SetLength(m_data, 0);
+  m_map.Clear;
 
   arr := JArray( obj, 'user');
   if not Assigned(arr) then
@@ -89,7 +109,9 @@ begin
     m_data[i].name    := JString( row, 'name');
     m_data[i].vorname := JString( row, 'vorname');
     m_data[i].dept    := JString( row, 'dept');
-    m_data[i].status  := 'Unbekannt';
+    m_data[i].status  := '';
+
+    m_map.AddOrSetValue( m_data[i].id, @m_data[i]);
   end;
 end;
 
@@ -100,19 +122,25 @@ end;
 
 procedure TOnlineUser.updateData(obj: TJSONObject);
 var
-  list : TList<integer>;
-  i    : integer;
+  ptr   : pREntry;
+  i, id : integer;
+  arr   : TJSONArray;
+  row   : TJSONObject;
 begin
-  list := getIntNumbers( obj, 'user' );
-
-  for i := low(m_data) to High(m_data) do
+  arr := JArray( obj, 'user');
+  if not Assigned(arr) then
+    exit;
+  for i := 0 to pred(arr.Count) do
   begin
-    m_data[i].status := '';
-    if list.IndexOf(m_data[i].id) <> -1 then
-      m_data[i].status := 'Online';
-  end;
+    row := getRow(arr, i);
+    id  := JInt( row, 'id');
 
-  list.Free;
+    if m_map.ContainsKey(id) then
+    begin
+      ptr := m_map[id];
+      ptr^.status := JString( row, 'state');
+    end;
+  end;
 
   if Assigned(m_evt) then
     m_evt(self);

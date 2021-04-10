@@ -121,6 +121,8 @@ type
 
     function getGremiumMA( id : integer ) : IPersonenListe;
     function getGremium( id : integer ) : TGremium;
+
+    procedure changeStatus( text : string );
   end;
 
   TMyCallback = class(TDBXCallback)
@@ -152,6 +154,22 @@ uses
 function TGM.autoInc(name: string): integer;
 begin
   Result := m_misc.AutoInc(name);
+end;
+
+procedure TGM.changeStatus(text: string);
+var
+  req : TJSONObject;
+begin
+  try
+
+    req := TJSONObject.Create;
+    JReplace( req, 'online', true);
+    JReplace( req, 'status', text );
+
+    m_misc.changeOnlineStatus(req);
+  except
+
+  end;
 end;
 
 procedure TGM.checkCache;
@@ -370,8 +388,9 @@ begin
   begin
     PostMessage(Application.MainFormHandle, msgNewMeeting, 0, JInt(Arg, 'id'));
   end else if cmd = 'onlineuser' then
-    OnlineUser.updateData(arg);
-
+    OnlineUser.updateData(arg)
+  else if cmd = 'userchangestate' then
+    OnlineUser.changeState( arg );
 end;
 
 procedure TGM.FillGremien(arr :TJSONArray );
@@ -566,10 +585,7 @@ begin
     res := m_misc.getUserList;
     OnlineUser.fillUserList(res);
 
-    req := TJSONObject.Create;
-    JReplace( req, 'online', true);
-
-    m_misc.changeOnlineStatus(req);
+    changeStatus('online');
   except
 
   end;

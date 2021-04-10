@@ -6,7 +6,8 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.Menus, System.Actions,
   Vcl.ActnList, Vcl.AppEvnts, fr_gremiumTree, Vcl.ExtCtrls, Vcl.StdCtrls,
-  fr_taskList, Vcl.StdActns, u_bookmark, fr_bookmark, fr_epub, fr_meeting;
+  fr_taskList, Vcl.StdActns, u_bookmark, fr_bookmark, fr_epub, fr_meeting,
+  JvExStdCtrls, JvCombobox, JvColorCombo;
 
 type
   TStatusInx = (stStatus = 0, stLogin, stUser );
@@ -131,6 +132,8 @@ type
     N15: TMenuItem;
     TabSheet6: TTabSheet;
     UserView: TListView;
+    Panel1: TPanel;
+    JvColorComboBox1: TJvColorComboBox;
     procedure ac_prg_closeExecute(Sender: TObject);
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure ac_prg_disconExecute(Sender: TObject);
@@ -163,7 +166,10 @@ type
     procedure ac_me_updateExecute(Sender: TObject);
     procedure ac_me_executeExecute(Sender: TObject);
     procedure ac_pr_abschnittExecute(Sender: TObject);
+    procedure JvColorComboBox1Change(Sender: TObject);
   private
+    m_noStatChange : boolean;
+
     procedure ApplicationSetMenu( flag : boolean );
     procedure setPanel( id : integer ; text : string );
     procedure loadLogo;
@@ -643,7 +649,15 @@ begin
 
   PostMessage( Application.MainFormHandle, msgLogin, 0, 0 );
 
+  m_noStatChange := true;
+
   OnlineUser.OnChangeData := UpdateUserView;
+
+  JvColorComboBox1.AddColor( clGreen, 'Online');
+  JvColorComboBox1.AddColor( clGray,  'Offline');
+  JvColorComboBox1.AddColor( clRed,   'Beschäftigt');
+
+  m_noStatChange := false;
 end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
@@ -652,6 +666,16 @@ begin
   GremiumTreeFrame1.clear;
   TaskListFrame1.shutdown;
   MeetingFrame1.release;
+end;
+
+procedure TMainForm.JvColorComboBox1Change(Sender: TObject);
+var
+  inx : integer;
+begin
+  inx := JvColorComboBox1.ItemIndex;
+  if (inx < 0) or ( m_noStatChange) then
+    exit;
+  GM.changeStatus(JvColorComboBox1.Items.Strings[inx]);
 end;
 
 procedure TMainForm.loadLogo;
@@ -734,6 +758,13 @@ begin
         item := UserView.Items.Add;
         item.Caption := OnlineUser.Data[i].name;
         item.SubItems.Add(OnlineUser.Data[i].vorname);
+        item.SubItems.Add(OnlineUser.Data[i].status );
+      end;
+      if OnlineUser.Data[i].id = GM.UserID then
+      begin
+        m_noStatChange := true;
+        JvColorComboBox1.Text := OnlineUser.Data[i].status;
+        m_noStatChange := false
       end;
     end;
 end;

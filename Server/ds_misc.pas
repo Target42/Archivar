@@ -74,21 +74,27 @@ end;
 
 function TdsMisc.changeOnlineStatus(req: TJSONObject) : TJSONObject;
 var
-  online : Boolean;
+  online  : Boolean;
   s       : string;
+  id      : integer;
+  status  : string;
 begin
   Result := TJSONObject.create;
 
   online := JBool( req, 'online');
+  status := JString( req, 'status');
 
   try
     if online then
     begin
-      s := m_Session.GetData('ID');
-      ous.addUser( StrToInt( s ),
+      s  := m_Session.GetData('ID');
+      id := StrToInt( s );
+      ous.addUser( id,
         m_Session.GetData('name'),
         m_Session.GetData('vorname'),
         m_Session.Id );
+
+      ous.changeStatus( id, JString(req, 'status'));
     end
     else
       ous.removeSessionID(m_Session.Id);

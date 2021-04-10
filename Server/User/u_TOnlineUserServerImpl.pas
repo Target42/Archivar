@@ -18,6 +18,7 @@ type
     procedure SetItems(inx : integer; const Value: IServerUser);
 
     procedure SendUserList;
+    procedure sendUserStatus( us : IServerUser );
   public
     constructor create;
     Destructor Destroy; override;
@@ -26,6 +27,7 @@ type
     property Items[inx : integer ]: IServerUser read GetItems write SetItems;
 
     function addUser( id : integer; name, vorname : string; sessionID : NativeInt ) :IServerUser;
+    procedure changeStatus( id : integer;  text : string );
     procedure removeSessionID( id : NativeInt );
 
     procedure lockServer;
@@ -37,7 +39,8 @@ type
 implementation
 
 uses
-  u_TServerUserImpl, System.JSON, u_json, m_glob_server, ServerContainerUnit1;
+  u_TServerUserImpl, System.JSON, u_json, m_glob_server, ServerContainerUnit1,
+  System.SysUtils;
 
 { TOnlineUserServerImpl }
 
@@ -64,6 +67,32 @@ begin
     Result.addSessionID(sessionID);
 
     SendUserList;
+  except
+
+  end;
+  m_mutex.Release;
+
+end;
+
+procedure TOnlineUserServerImpl.changeStatus(id: integer; text: string);
+var
+  fi : IServerUser;
+begin
+  m_mutex.Acquire;
+  try
+  if m_map.ContainsKey(id) then
+  begin
+    fi := m_map[id];
+    if Assigned(fi) then
+    begin
+      if SameText( text, 'offline') then
+        fi.Status := ''
+      else
+        fi.Status := text;
+    end;
+    sendUserStatus( fi );
+  end;
+
   except
 
   end;
@@ -149,6 +178,7 @@ var
   data : TJSONObject;
   arr  : TJSONArray;
   user : IServerUser;
+  obj  : TJSONObject;
 begin
   data := TJSONObject.Create;
   arr  := TJSONArray.Create;
@@ -156,13 +186,29 @@ begin
   JReplace(data, 'action', 'onlineuser');
 
   for user in m_list do
-    arr.AddElement( TJSONNumber.Create(user.ID ));
-
+  begin
+    obj := TJSONObject.Create;
+    JReplace( obj, 'id',      user.ID);
+    JReplace( obj, 'status',  user.Status);
+    arr.Add(obj);
+  end;
   JReplace( data, 'user', arr);
 
   ServerContainer1.BroadcastMessage('storage', data);
 end;
 
+procedure TOnlineUserServerImpl.sendUserStatus(us: IServerUser);
+var
+  data : TJSONObject;
+begin
+  data := TJSONObject.Create;
+
+  JReplace(data, 'action', 'userchangestate');
+  JReplace( data, 'id', us.ID);
+  JReplace( data, 'state', us.Status );
+
+  ServerContainer1.BroadcastMessage('storage', data);
+end;
 
 procedure TOnlineUserServerImpl.SetItems(inx : integer; const Value: IServerUser);
 begin

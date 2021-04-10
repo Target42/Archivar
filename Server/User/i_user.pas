@@ -15,11 +15,14 @@ type
     procedure SetName(const Value: string);
     function GetVorname: string;
     procedure SetVorname(const Value: string);
+    function GetStatus: string;
+    procedure SetStatus(const Value: string);
 
     // public
     property ID         : integer     read GetID          write SetID;
     property Name       : string      read GetName        write SetName;
     property Vorname    : string      read GetVorname     write SetVorname;
+    property Status     : string      read GetStatus      write SetStatus;
 
     procedure addSessionID( id : NativeInt );
     procedure removeSessionID( id : NativeInt );
@@ -43,6 +46,8 @@ type
 
     function addUser( id : integer; name, vorname : string; sessionID : NativeInt ) :IServerUser;
     procedure removeSessionID( id : NativeInt );
+
+    procedure changeStatus( id : integer;  text : string );
 
     procedure lockServer;
     procedure unlockServer;

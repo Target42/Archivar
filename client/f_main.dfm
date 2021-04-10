@@ -150,7 +150,7 @@
         Left = 0
         Top = 0
         Width = 221
-        Height = 461
+        Height = 420
         Align = alClient
         Columns = <
           item
@@ -160,9 +160,33 @@
           item
             Caption = 'Vorname'
             Width = 75
+          end
+          item
+            Caption = 'Status'
           end>
         TabOrder = 0
         ViewStyle = vsReport
+      end
+      object Panel1: TPanel
+        Left = 0
+        Top = 420
+        Width = 221
+        Height = 41
+        Align = alBottom
+        Caption = 'Panel1'
+        TabOrder = 1
+        object JvColorComboBox1: TJvColorComboBox
+          Left = 9
+          Top = 6
+          Width = 121
+          Height = 20
+          ColorDialogText = 'Custom...'
+          DroppedDownWidth = 121
+          NewColorText = 'Custom'
+          Options = [coText]
+          TabOrder = 0
+          OnChange = JvColorComboBox1Change
+        end
       end
     end
   end
