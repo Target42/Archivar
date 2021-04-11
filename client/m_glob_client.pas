@@ -164,7 +164,7 @@ begin
 
     req := TJSONObject.Create;
     JReplace( req, 'online', true);
-    JReplace( req, 'status', text );
+    JReplace( req, 'state',  text );
 
     m_misc.changeOnlineStatus(req);
   except
@@ -579,7 +579,6 @@ end;
 procedure TGM.requestUser;
 var
   res : TJSONObject;
-  req : TJSONObject;
 begin
   try
     res := m_misc.getUserList;

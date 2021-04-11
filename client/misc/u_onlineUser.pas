@@ -3,7 +3,7 @@ unit u_onlineUser;
 interface
 
 uses
-  System.JSON, System.Classes, System.Generics.Collections;
+  System.JSON, System.Classes, System.Generics.Collections, Vcl.ComCtrls;
 
 type
 
@@ -45,10 +45,48 @@ type
 var
   OnlineUser : TOnlineUser;
 
+procedure createGroups( lv : TListView );
+function getOnlineGroupID( text : string ) : integer;
+
 implementation
 
 uses
-  u_json;
+  u_json, System.SysUtils;
+
+var
+  OnlineGrps : array[0..3] of string;
+
+procedure createGroups( lv : TListView );
+var
+  i : integer;
+  grp : TListGroup;
+begin
+  LV.Groups.Clear;
+  for i := Low(OnlineGrps) to High(OnlineGrps) do
+  begin
+    grp := lv.Groups.Add;
+    grp.Header  := OnlineGrps[i];
+    grp.GroupID := i;
+  end;
+end;
+
+
+function getOnlineGroupID( text : string ) : integer;
+var
+  i : integer;
+begin
+  Result := 0;
+  for i := Low(OnlineGrps) to High(OnlineGrps) do
+  begin
+    if SameText( text, OnlineGrps[i]) then
+    begin
+      Result := i;
+      break;
+    end;
+
+  end;
+
+end;
 
 { TOnlineUser }
 
@@ -148,6 +186,12 @@ end;
 
 initialization
   OnlineUser := TOnlineUser.create;
+
+  OnlineGrps[0] := 'Unbekannt';
+  OnlineGrps[1] := 'Online';
+  OnlineGrps[2] := 'Beschäftigt';
+  OnlineGrps[3] := 'Offline;';
+
 finalization
   OnlineUser.Free;
 

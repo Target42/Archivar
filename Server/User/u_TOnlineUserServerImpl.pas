@@ -61,12 +61,14 @@ begin
 
       m_list.Add(Result);
       m_map.AddOrSetValue(id, Result);
+
+      SendUserList;
     end;
 
-    m_sessions.AddOrSetValue(sessionID, Result);
-    Result.addSessionID(sessionID);
+    if not m_sessions.ContainsKey(sessionID) then
+      m_sessions.AddOrSetValue(sessionID, Result);
 
-    SendUserList;
+    Result.addSessionID(sessionID);
   except
 
   end;
@@ -97,7 +99,6 @@ begin
 
   end;
   m_mutex.Release;
-
 end;
 
 constructor TOnlineUserServerImpl.create;
@@ -189,7 +190,7 @@ begin
   begin
     obj := TJSONObject.Create;
     JReplace( obj, 'id',      user.ID);
-    JReplace( obj, 'status',  user.Status);
+    JReplace( obj, 'state',   user.Status);
     arr.Add(obj);
   end;
   JReplace( data, 'user', arr);
@@ -203,9 +204,9 @@ var
 begin
   data := TJSONObject.Create;
 
-  JReplace(data, 'action', 'userchangestate');
-  JReplace( data, 'id', us.ID);
-  JReplace( data, 'state', us.Status );
+  JReplace( data, 'action', 'userchangestate');
+  JReplace( data, 'id',     us.ID);
+  JReplace( data, 'state',  us.Status );
 
   ServerContainer1.BroadcastMessage('storage', data);
 end;

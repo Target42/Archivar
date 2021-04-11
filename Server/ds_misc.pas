@@ -82,7 +82,7 @@ begin
   Result := TJSONObject.create;
 
   online := JBool( req, 'online');
-  status := JString( req, 'status');
+  status := JString( req, 'state');
 
   try
     if online then
@@ -94,7 +94,7 @@ begin
         m_Session.GetData('vorname'),
         m_Session.Id );
 
-      ous.changeStatus( id, JString(req, 'status'));
+      ous.changeStatus( id, JString(req, 'state'));
     end
     else
       ous.removeSessionID(m_Session.Id);

@@ -164,6 +164,7 @@
           item
             Caption = 'Status'
           end>
+        GroupView = True
         TabOrder = 0
         ViewStyle = vsReport
       end

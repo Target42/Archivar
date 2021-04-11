@@ -748,14 +748,17 @@ procedure TMainForm.UpdateUserView(sender: TObject);
 var
   i     : integer;
   item  : TListItem;
+
 begin
   UserView.Clear;
+  createGroups(UserView);
 
   for i := 0 to pred(OnlineUser.Count) do
     begin
       if OnlineUser.Data[i].status <> '' then
       begin
         item := UserView.Items.Add;
+        item.GroupID := getOnlineGroupID(OnlineUser.Data[i].status);
         item.Caption := OnlineUser.Data[i].name;
         item.SubItems.Add(OnlineUser.Data[i].vorname);
         item.SubItems.Add(OnlineUser.Data[i].status );
