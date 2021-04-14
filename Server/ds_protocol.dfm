@@ -222,24 +222,6 @@ object dsProtocol: TdsProtocol
         ParamType = ptInput
       end>
   end
-  object deletePrTaQry: TIBQuery
-    Database = DBMod.IBDatabase1
-    Transaction = DeleteTrans
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
-    SQL.Strings = (
-      'delete from PR_TA'
-      'where PR_ID = :PR_ID')
-    Left = 560
-    Top = 168
-    ParamData = <
-      item
-        DataType = ftInteger
-        Name = 'PR_ID'
-        ParamType = ptInput
-      end>
-  end
   object deletePR: TIBQuery
     Database = DBMod.IBDatabase1
     Transaction = DeleteTrans
@@ -250,7 +232,7 @@ object dsProtocol: TdsProtocol
       'delete from PR_PROTOKOL'
       'where PR_ID = :PR_ID')
     Left = 560
-    Top = 224
+    Top = 168
     ParamData = <
       item
         DataType = ftInteger
@@ -323,8 +305,8 @@ object dsProtocol: TdsProtocol
     SQL.Strings = (
       'delete from CP_CHAPTER'
       'where PR_ID = :PR_ID')
-    Left = 552
-    Top = 280
+    Left = 576
+    Top = 256
     ParamData = <
       item
         DataType = ftInteger
@@ -441,5 +423,77 @@ object dsProtocol: TdsProtocol
     DataSet = BE
     Left = 360
     Top = 424
+  end
+  object SelectChapterQry: TIBQuery
+    Database = DBMod.IBDatabase1
+    Transaction = DeleteTrans
+    BufferChunks = 1000
+    CachedUpdates = False
+    ParamCheck = True
+    SQL.Strings = (
+      'select * from CP_CHAPTER'
+      'where PR_ID = :PR_ID')
+    Left = 668
+    Top = 256
+    ParamData = <
+      item
+        DataType = ftInteger
+        Name = 'PR_ID'
+        ParamType = ptInput
+      end>
+  end
+  object SelectChapterTextQry: TIBQuery
+    Database = DBMod.IBDatabase1
+    Transaction = DeleteTrans
+    BufferChunks = 1000
+    CachedUpdates = False
+    ParamCheck = True
+    SQL.Strings = (
+      'select * from CT_CHAPTER_TEXT'
+      'where CP_ID = :CP_ID')
+    Left = 672
+    Top = 312
+    ParamData = <
+      item
+        DataType = ftInteger
+        Name = 'CP_ID'
+        ParamType = ptInput
+      end>
+  end
+  object deleteBEQry: TIBQuery
+    Database = DBMod.IBDatabase1
+    Transaction = DeleteTrans
+    BufferChunks = 1000
+    CachedUpdates = False
+    ParamCheck = True
+    SQL.Strings = (
+      'delete from BE_BESCHLUS'
+      'where BE_ID = :BE_ID')
+    Left = 680
+    Top = 376
+    ParamData = <
+      item
+        DataType = ftInteger
+        Name = 'BE_ID'
+        ParamType = ptInput
+      end>
+  end
+  object deleteCT: TIBQuery
+    Database = DBMod.IBDatabase1
+    Transaction = DeleteTrans
+    BufferChunks = 1000
+    CachedUpdates = False
+    ParamCheck = True
+    SQL.Strings = (
+      'delete from CT_CHAPTER_TEXT'
+      'where CP_ID = :CP_ID')
+    Left = 576
+    Top = 392
+    ParamData = <
+      item
+        DataType = ftInteger
+        Name = 'CP_ID'
+        ParamType = ptInput
+      end>
   end
 end

@@ -21,7 +21,6 @@ type
     DeleteTrans: TIBTransaction;
     deleteTNQry: TIBQuery;
     deleteTGQry: TIBQuery;
-    deletePrTaQry: TIBQuery;
     deletePR: TIBQuery;
     ListPr: TIBQuery;
     ListPrQry: TDataSetProvider;
@@ -48,6 +47,10 @@ type
     TNTabTN_GRUND: TIBStringField;
     BE: TIBTable;
     BETab: TDataSetProvider;
+    SelectChapterQry: TIBQuery;
+    SelectChapterTextQry: TIBQuery;
+    deleteBEQry: TIBQuery;
+    deleteCT: TIBQuery;
   private
     { Private-Deklarationen }
   public
@@ -100,7 +103,8 @@ end;
 
 function TdsProtocol.deleteProtocol(data: TJSONObject): TJSONObject;
 var
-  id : integer;
+  id  : integer;
+  be  : integer;
 begin
   Result := TJSONObject.create;
   id := JInt( data, 'id', -1);
@@ -111,18 +115,46 @@ begin
   end;
   DeleteTrans.StartTransaction;
   try
+    // teilnehmer
     deleteTNQry.ParamByName('PR_ID').AsInteger := id;
     deleteTNQry.ExecSQL;
 
+    // gäste ...
     deleteTGQry.ParamByName('PR_ID').AsInteger := id;
     deleteTGQry.ExecSQL;
 
-    deletePrTaQry.ParamByName('PR_ID').AsInteger := id;
-    deletePrTaQry.ExecSQL;
+    // schleife über alle Chapter ..
+    SelectChapterQry.ParamByName('PR_ID').AsInteger := id;
+    SelectChapterQry.Open;
+    while not SelectChapterQry.Eof do
+    begin
+      SelectChapterTextQry.ParamByName('CP_ID').AsInteger := SelectChapterQry.FieldByName('CP_ID').AsInteger;
+      SelectChapterTextQry.Open;
+      while not SelectChapterTextQry.Eof do
+      begin
+        // beschlüsse
+        be := SelectChapterTextQry.FieldByName('BE_ID').AsInteger;
+        if be <> 0 then
+        begin
+          deleteBEQry.ParamByName('BE_ID').AsInteger := be;
+          deleteBEQry.ExecSQL;
+        end;
+        // chapter content
+        deleteCT.ParamByName('CP_ID').AsInteger := SelectChapterTextQry.FieldByName('CP_ID').AsInteger;
+        deleteCT.ExecSQL;
 
+        SelectChapterTextQry.Next;
+      end;
+      SelectChapterTextQry.Close;
+      SelectChapterQry.Next;
+    end;
+    SelectChapterQry.close;
+
+    // chapter
     DeleteChapter.ParamByName('PR_ID').AsInteger := id;
     DeleteChapter.ExecSQL;
 
+    // das protokoll
     deletePR.ParamByName('PR_ID').AsInteger := id;
     deletePR.ExecSQL;
 
