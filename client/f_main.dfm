@@ -160,11 +160,11 @@
           item
             Caption = 'Vorname'
             Width = 75
-          end
-          item
-            Caption = 'Status'
           end>
+        GridLines = True
         GroupView = True
+        ReadOnly = True
+        RowSelect = True
         TabOrder = 0
         ViewStyle = vsReport
       end
@@ -196,7 +196,7 @@
     Top = 472
     Width = 1126
     Height = 187
-    ActivePage = TabSheet4
+    ActivePage = TabSheet5
     Align = alBottom
     TabOrder = 2
     Visible = False
@@ -610,6 +610,7 @@
       Category = 'Protokoll'
       Caption = '&L'#246'schen'
       Enabled = False
+      OnExecute = ac_pr_deleteExecute
     end
     object ac_me_edit: TAction
       Category = 'Meeting'

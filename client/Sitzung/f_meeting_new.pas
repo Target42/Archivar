@@ -332,9 +332,7 @@ begin
   client := TdsMeeingClient.Create(GM.SQLConnection1.DBXConnection);
   try
     res := client.changeStatus(req);
-    Result := JBool(res, 'result');
-    if not  Result then
-      ShowMessage( JString( res, 'text'));
+    ShowResult( res );
   finally
     client.Free;
   end;

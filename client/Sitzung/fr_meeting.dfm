@@ -1,8 +1,8 @@
 object MeetingFrame: TMeetingFrame
   Left = 0
   Top = 0
-  Width = 744
-  Height = 340
+  Width = 709
+  Height = 329
   Align = alClient
   TabOrder = 0
   ExplicitWidth = 451
@@ -10,8 +10,8 @@ object MeetingFrame: TMeetingFrame
   object Lv: TListView
     Left = 0
     Top = 0
-    Width = 744
-    Height = 340
+    Width = 709
+    Height = 329
     Align = alClient
     Columns = <
       item
@@ -24,14 +24,21 @@ object MeetingFrame: TMeetingFrame
       end
       item
         Caption = 'Titel'
-        Width = 200
+        Width = 150
       end
       item
         Caption = 'Ende'
-        Width = 75
       end
       item
         Caption = 'Letzte '#196'nderung'
+        Width = 150
+      end
+      item
+        Caption = 'Status'
+        Width = 100
+      end
+      item
+        Caption = 'Gelesen'
         Width = 150
       end>
     ReadOnly = True

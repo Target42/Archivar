@@ -30,7 +30,8 @@ type
         FTitle: string;
         FChanged: TDateTime;
         FEnde: TDateTime;
-        FRead: boolean;
+        FRead: TDateTime;
+        FStatus: string;
         public
           constructor create;
           Destructor Destroy; override;
@@ -41,7 +42,8 @@ type
           property Title  : string      read FTitle     write FTitle;
           property Changed: TDateTime   read FChanged   write FChanged;
           property Ende   : TDateTime   read FEnde      write FEnde;
-          property Read   : boolean     read FRead      write FRead;
+          property Read   : TDateTime   read FRead      write FRead;
+          property Status : string      read FStatus    write FStatus;
       end;
   private
     m_list : TList<DataRec>;
@@ -99,7 +101,7 @@ var
   da : DataRec;
 begin
   da := item.Data;
-  if not da.Read then
+  if da.Read = 0.0 then
     LV.Canvas.Font.Color := clBlue
   else
     LV.Canvas.Font.Color := clWindowText;
@@ -112,7 +114,7 @@ var
   da : DataRec;
 begin
   da := item.Data;
-  if not da.Read then
+  if da.Read = 0.0 then
     LV.Canvas.Font.Color := clBlue
   else
     LV.Canvas.Font.Color := clWindowText;
@@ -127,7 +129,10 @@ begin
 
   da := LV.Selected.Data;
   PostMessage(Application.MainFormHandle, msgEditMeeting, 0, da.ID );
-  da.Read := true;
+  if da.read = 0.0 then
+  begin
+    da.Read := Now;
+  end;
   Lv.Invalidate;
 end;
 
@@ -153,7 +158,8 @@ begin
     da.Title  := MeetingQry.FieldByName('EL_TITEL').AsString;
     da.Changed:= MeetingQry.FieldByName('EL_DATA_STAMP').AsDateTime;
     da.Ende   := MeetingQry.FieldByName('EL_ENDE').AsDateTime;
-    da.Read   := not MeetingQry.FieldByName('EP_READ').IsNull;
+    da.Read   := MeetingQry.FieldByName('EP_READ').AsDateTime;
+    da.Status := MeetingQry.FieldByName('EP_STATUS').AsString;
     MeetingQry.Next;
   end;
   MeetingQry.Close;
@@ -211,6 +217,11 @@ begin
     item.SubItems.Add(da.Title);
     item.SubItems.Add(FormatDateTime('hh:nn', da.Ende));
     item.SubItems.Add(DateTimeToStr(da.Changed));
+    item.SubItems.Add(da.Status);
+    if da.Read <> 0.0 then
+      item.SubItems.Add(DateTimeToStr(da.Read))
+    else
+      item.SubItems.Add('');
   end;
   LV.Items.EndUpdate;
 end;

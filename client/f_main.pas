@@ -167,6 +167,7 @@ type
     procedure ac_me_executeExecute(Sender: TObject);
     procedure ac_pr_abschnittExecute(Sender: TObject);
     procedure JvColorComboBox1Change(Sender: TObject);
+    procedure ac_pr_deleteExecute(Sender: TObject);
   private
     m_noStatChange : boolean;
 
@@ -326,6 +327,7 @@ end;
 procedure TMainForm.ac_me_executeExecute(Sender: TObject);
 begin
   Application.CreateForm(TSelectMeetingForm, SelectMeetingForm);
+  SelectMeetingForm.Filter := 'O';
   if SelectMeetingForm.ShowModal = mrok then
   begin
     if SelectMeetingForm.ME_ID > 0 then
@@ -432,6 +434,25 @@ begin
     Application.CreateForm(TProtocolSectionForm, ProtocolSectionForm);
     ProtocolSectionForm.PRID := ProtocollListForm.PR_ID;
     ProtocolSectionForm.Show;
+  end;
+  ProtocollListForm.Free;
+end;
+
+procedure TMainForm.ac_pr_deleteExecute(Sender: TObject);
+var
+  s : string;
+begin
+  Application.CreateForm(TProtocollListForm, ProtocollListForm);
+  if ProtocollListForm.ShowModal = mrOk then
+  begin
+    s := 'Soll das Protokol:'+sLineBreak+
+    '"%s"'+sLineBreak+
+    'wirklich gelöscht werden?';
+    if (MessageDlg(Format(s, [ProtocollListForm.Title]),
+      mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
+    begin
+      deleteProtocol(ProtocollListForm.pr_id);
+    end;
   end;
   ProtocollListForm.Free;
 end;

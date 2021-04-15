@@ -27,19 +27,43 @@ type
     m_gr_id : integer;
     procedure setGRID( value : integer );
     function getPRID : integer;
+    function getTitle : string;
   public
     property PR_ID : integer read getPRID;
+    property Title : string read getTitle;
   end;
 
 var
   ProtocollListForm: TProtocollListForm;
 
+
+function deleteProtocol( id : integer ) : boolean;
+
 implementation
 
 uses
-  m_glob_client;
+  m_glob_client, u_stub, System.JSON, u_json;
 
 {$R *.dfm}
+
+function deleteProtocol( id : integer ) : boolean;
+var
+  client : TdsProtocolClient;
+  res, req : TJSONObject;
+begin
+  try
+    req := TJSONObject.Create;
+    JReplace( req, 'id', id);
+    client := TdsProtocolClient.Create(GM.SQLConnection1.DBXConnection);
+
+    Res := client.deleteProtocol(req);
+
+    Result := ShowResult( res );
+  except
+    Result := false;
+  end;
+  client.Free;
+end;
 
 { TProtocollListForm }
 
@@ -64,7 +88,16 @@ end;
 
 function TProtocollListForm.getPRID: integer;
 begin
-  Result := ListPrQry.FieldByName('PR_ID').AsInteger;
+  Result := -1;
+  if not ListPrQry.IsEmpty then
+    Result := ListPrQry.FieldByName('PR_ID').AsInteger;
+end;
+
+function TProtocollListForm.getTitle: string;
+begin
+  Result := 'Fehler in der Auswahl!';
+  if not ListPrQry.IsEmpty then
+    Result := ListPrQry.FieldByName('PR_NAME').AsString;
 end;
 
 procedure TProtocollListForm.GremiumFrame1TVChange(Sender: TObject;

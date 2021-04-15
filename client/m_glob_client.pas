@@ -136,6 +136,8 @@ var
 var
   arrRolls : TArray<String> = ['', 'Vorsitz', 'Stellvertretung', 'Schriftführung', 'Ersatz', 'Berater'];
 
+function ShowResult( res : TJSONObject; positiv : Boolean = false ) : boolean;
+
 implementation
 
 uses
@@ -149,6 +151,14 @@ uses
 
 {$R *.dfm}
 
+function ShowResult( res : TJSONObject; positiv : Boolean ) : boolean;
+begin
+  Result := JBool( res, 'result', false);
+  if not Result then
+    ShowMessage( JString( res, 'text'))
+  else if positiv then
+    ShowMessage( JString( res, 'text'))
+end;
 { TGM }
 
 function TGM.autoInc(name: string): integer;
