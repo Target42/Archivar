@@ -1,8 +1,8 @@
 object MeetingFrame: TMeetingFrame
   Left = 0
   Top = 0
-  Width = 709
-  Height = 329
+  Width = 735
+  Height = 372
   Align = alClient
   TabOrder = 0
   ExplicitWidth = 451
@@ -10,8 +10,8 @@ object MeetingFrame: TMeetingFrame
   object Lv: TListView
     Left = 0
     Top = 0
-    Width = 709
-    Height = 329
+    Width = 735
+    Height = 372
     Align = alClient
     Columns = <
       item

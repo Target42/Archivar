@@ -53,7 +53,8 @@ type
 implementation
 
 uses
-  m_db, u_json, System.Generics.Collections, u_tree, ServerContainerUnit1, u_teilnehmer;
+  m_db, u_json, System.Generics.Collections, u_tree, ServerContainerUnit1, u_teilnehmer,
+  Datasnap.DSSession;
 
 {%CLASSGROUP 'System.Classes.TPersistent'}
 
@@ -134,26 +135,50 @@ end;
 
 function TdsMeeing.deleteMeeting(req: TJSONObject): TJSONObject;
 var
-  id : integer;
-  prid : integer;
-begin
-  id     := JInt( req, 'id');
-  Result := TJSONObject.Create;
-
-  prid := -1;
-
-  FrindELQry.ParamByName('el_id').AsInteger;
-  FrindELQry.Open;
-  if not FrindELQry.IsEmpty then
-    prid := FrindELQry.FieldByName('PR_ID').AsInteger;
-  FrindELQry.Close;
-
-  if prid = -1 then
+  id        : integer;
+  prid      : integer;
+  peid      : integer;
+  Session   : TDSSession;
+  canDelete : boolean;
+  procedure Cancel(text : string );
   begin
     if FrindELQry.Transaction.InTransaction then
       FrindELQry.Transaction.Commit;
 
-    JResult( Result, false, 'Die Sitzung wurde nicht gefunden!');
+    JResult( Result, false, text);
+  end;
+begin
+  Result    := TJSONObject.Create;
+  id        := JInt( req, 'id');
+  prid      := -1;
+  canDelete := false;
+  Session   := TDSSessionManager.GetThreadSession;
+  peid      := StrToIntDef( Session.GetData('ID'), -1);
+
+  if peid = 0 then
+  begin
+    Cancel('Der Benutzer kann nicht eindeutig identifiziert werden!');
+    exit;
+  end;
+
+  FrindELQry.ParamByName('el_id').AsInteger;
+  FrindELQry.Open;
+  if not FrindELQry.IsEmpty then
+  begin
+    prid      := FrindELQry.FieldByName('PR_ID').AsInteger;
+    canDelete := FrindELQry.FieldByName('PE_ID').AsInteger = peid;
+  end;
+  FrindELQry.Close;
+
+  if not canDelete then
+  begin
+    Cancel('Es fehlen die Berechtigungen diese Sitzung zu löschen.');
+    exit;
+  end;
+
+  if prid = -1 then
+  begin
+    Cancel('Die Sitzung wurde nicht gefunden!');
     exit;
   end;
 
@@ -328,14 +353,24 @@ end;
 
 function TdsMeeing.newMeeting(req: TJSONObject): TJSONObject;
 var
-  grid  : integer;
-  id    : integer;
-  prid  : integer;
-
+  grid    : integer;
+  id      : integer;
+  prid    : integer;
+  Session : TDSSession;
+  peid    : integeR;
 begin
+
   Result  := TJSONObject.Create;
   grid    := JInt( req, 'grid');
   prid    := JInt( req, 'prid');
+
+  Session := TDSSessionManager.GetThreadSession;
+  peid := StrToIntDef( Session.GetData('ID'), -1);
+  if peid = 0 then
+  begin
+    JResponse(Result, false, 'Der Benutzer kann nicht eindeutig identifiziert werden!');
+    exit;
+  end;
 
   id    := AutoInc('gen_el_id');
   try
@@ -349,6 +384,7 @@ begin
     ElTable.FieldByName('EL_ENDE').AsDateTime   := EncodeTime( 12, 0, 0, 0);
     ElTable.FieldByName('EL_STATUS').AsString   := 'O';
     ElTable.FieldByName('PR_ID').AsInteger      := prid;
+    ElTable.FieldByName('PE_ID').AsInteger      := peid;
     ElTable.Post;
 
     ELPETab.Open;

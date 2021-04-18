@@ -1,7 +1,7 @@
 /* ============================================================ */
 /*   Database name:  MODEL_2                                    */
 /*   DBMS name:      InterBase                                  */
-/*   Created on:     06.03.2021  12:31                          */
+/*   Created on:     16.04.2021  19:59                          */
 /* ============================================================ */
 
 create generator gen_be_id;
@@ -150,7 +150,7 @@ create table PE_PERSON
     PE_DEPARTMENT                   VARCHAR(25)                    ,
     PE_NET                          VARCHAR(25)                    ,
     PE_MAIL                         VARCHAR(200)                   ,
-    PE_PWD                          VARCHAR(32)                    ,
+    PE_PWD                          VARCHAR(64)                    ,
     constraint PK_PE_PERSON primary key (PE_ID)
 );
 
@@ -258,6 +258,7 @@ create table EL_EINLADUNG
     PR_ID                           INTEGER                        ,
     EL_ID                           INTEGER                not null,
     GR_ID                           INTEGER                        ,
+    PE_ID                           INTEGER                        ,
     EL_DATUM                        DATE                           ,
     EL_ZEIT                         TIME                           ,
     EL_TITEL                        VARCHAR(200)                   ,
@@ -316,6 +317,8 @@ create table TA_TASK
     TA_STATUS                       VARCHAR(50)                    ,
     TA_STYLE                        VARCHAR(200)                   ,
     TA_STYLE_CLID                   VARCHAR(38)                    ,
+    TA_REM                          VARCHAR(256)                   ,
+    TA_COLOR                        INTEGER                        ,
     constraint PK_TA_TASK primary key (TA_ID)
 );
 
@@ -452,6 +455,10 @@ alter table EL_EINLADUNG
     add constraint FK_REF_6727 foreign key  (PR_ID)
        references PR_PROTOKOL;
 
+alter table EL_EINLADUNG
+    add constraint FK_REF_7035 foreign key  (PE_ID)
+       references PE_PERSON;
+
 alter table TE_TEMPLATE
     add constraint FK_REF_3353 foreign key  (TY_ID)
        references TY_TASKTYPE;
@@ -546,7 +553,7 @@ commit;
 INSERT INTO PE_PERSON (PE_ID, PE_NAME, PE_VORNAME, PE_DEPARTMENT, PE_NET,
     PE_MAIL, PE_PWD)
 VALUES (
-    gen_id(GEN_PE_ID, 1), 
+    1, 
     'Doe', 
     'John', 
     'Admin', 

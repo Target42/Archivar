@@ -37,8 +37,6 @@ type
     EditFrame1: TEditFrame;
     Splitter1: TSplitter;
     TNQry: TClientDataSet;
-    DBGrid1: TDBGrid;
-    TNSrc: TDataSource;
     TNQryEL_ID: TIntegerField;
     TNQryPE_ID: TIntegerField;
     TNQryEP_STATUS: TWideStringField;
@@ -63,6 +61,12 @@ type
     RadioButton1: TRadioButton;
     RadioButton2: TRadioButton;
     ComboBox3: TComboBox;
+    LV: TListView;
+    Panel1: TPanel;
+    LabeledEdit2: TLabeledEdit;
+    LabeledEdit3: TLabeledEdit;
+    LabeledEdit4: TLabeledEdit;
+    LabeledEdit5: TLabeledEdit;
     procedure FormCreate(Sender: TObject);
     procedure ElTabBeforePost(DataSet: TDataSet);
     procedure ComboBox1Change(Sender: TObject);
@@ -70,8 +74,6 @@ type
     procedure ProtoQryAfterScroll(DataSet: TDataSet);
     procedure BaseFrame1AbortBtnClick(Sender: TObject);
     procedure BaseFrame1OKBtnClick(Sender: TObject);
-    procedure DBGrid1DrawColumnCell(Sender: TObject; const Rect: TRect;
-      DataCol: Integer; Column: TColumn; State: TGridDrawState);
     procedure TNQryTN_STATUS_STRGetText(Sender: TField; var Text: string;
       DisplayText: Boolean);
     procedure BitBtn1Click(Sender: TObject);
@@ -222,6 +224,7 @@ begin
     ElTab.ApplyUpdates(0);
 
   SendUpdate( id );
+  PostMessage( Application.MainFormHandle, msgUpdateMeetings, 0, 0);
 end;
 
 procedure TMeetingForm.BitBtn1Click(Sender: TObject);
@@ -262,7 +265,9 @@ begin
     execStatus( req );
     ShowMessage('Telnahemstatus geändert!');
 
-    TNQry.Refresh;
+    updateTo;
+
+    PostMessage( Application.MainFormHandle, msgUpdateMeetings, 0, 0);
   end
   else
     ShowMessage('Sie sind kein Teilnehmer dieser Sitzung!');
@@ -293,23 +298,6 @@ begin
     ComboBox2.ItemIndex := 1
   else if ComboBox2.Items.Count >0 then
     ComboBox2.ItemIndex := 0;
-end;
-
-procedure TMeetingForm.DBGrid1DrawColumnCell(Sender: TObject; const Rect: TRect;
-  DataCol: Integer; Column: TColumn; State: TGridDrawState);
-var
-  col : TColor;
-begin
-  case TTeilnehmerStatus(TNQryTN_STATUS.Value) of
-    tsZugesagt      : col := clGreen;
-    tsEntschuldigt  : col := clBlue;
-    tsUnentschuldigt: col := clRed;
-    else
-      col := clWindowText;
-  end;
-  DBGrid1.Canvas.Font.Color:= col;
-
-  DBGrid1.DefaultDrawColumnCell(Rect, DataCol, Column, State);
 end;
 
 procedure TMeetingForm.ElTabBeforePost(DataSet: TDataSet);
@@ -461,8 +449,8 @@ begin
 
     if ElTab.Locate('EL_ID', VarArrayOf([m_el_id]), []) then
     begin
-      self.ReadOnly := SameText( ElTab.FieldByName('EL_STATUS').AsString, 'c');
-
+      self.ReadOnly := SameText( ElTab.FieldByName('EL_STATUS').AsString, 'c') or
+          (ElTab.FieldByName('PE_ID').AsInteger <> GM.UserID);
       if not ElTab.ReadOnly then
       begin
         ELTab.Edit;
@@ -516,6 +504,9 @@ end;
 
 procedure TMeetingForm.setReadOnly(flag: Boolean);
 begin
+  if ElTab.FieldByName('PE_ID').AsInteger <> GM.UserID then
+    flag := true;
+
   if flag then
   begin
     if ElTab.State <> dsBrowse then
@@ -542,6 +533,16 @@ begin
 end;
 
 procedure TMeetingForm.updateTo;
+var
+  item    : TListItem;
+  counter : array[0..3] of integer;
+  i       : integer;
+
+  procedure setGrp( id : integer );
+  begin
+    item.GroupID := id;
+    counter[id] := counter[id] +1;
+  end;
 begin
   TOFrame1.PR_ID := ProtoQry.FieldByName('PR_ID').AsInteger;
   TOFrame1.updateContent;
@@ -550,6 +551,41 @@ begin
   TNQry.ParamByName('EL_ID').AsInteger  := m_el_id;
   TNQry.ParamByName('PR_ID').AsInteger  := ElTab.FieldByName('PR_ID').AsInteger;
   TNQry.Open;
+
+  LV.Items.BeginUpdate;
+  LV.Items.Clear;
+
+  for i := low(counter) to high(counter) do
+    counter[i] := 0;
+
+  while not TNQry.Eof do
+  begin
+    item := LV.Items.Add;
+    case TTeilnehmerStatus(TNQryTN_STATUS.Value) of
+      tsZugesagt      : setGrp(0);
+      tsEntschuldigt  : setGrp(1);
+      tsUnentschuldigt: setGrp(2);
+      else
+        setGrp(3);
+    end;
+    item.Caption := TNQryTN_NAME.Value;
+    item.SubItems.Add(TNQryTN_VORNAME.Value);
+    item.SubItems.Add(TNQryTN_ROLLE.Value );
+    item.SubItems.Add(TNQryTN_STATUS_STR.Value );
+    item.SubItems.Add(TNQryTN_DEPARTMENT.Value);
+    item.SubItems.Add(TNQryTN_GRUND.Value );
+    item.SubItems.Add(TNQryEP_READ.AsString );
+    TNQry.Next;
+  end;
+  for i := low(counter) to high(counter) do
+    LV.Groups.Items[i].Footer := LV.Groups.Items[i].Header +': '+IntToStr(Counter[i]);
+  LV.Items.EndUpdate;
+
+  LabeledEdit2.Text := IntToStr( counter[0]);
+  LabeledEdit3.Text := IntToStr( counter[1]);
+  LabeledEdit4.Text := IntToStr( counter[2]);
+  LabeledEdit5.Text := IntToStr( counter[3]);
+
 
   TGQry.Close;
   TGQry.ParamByName('PR_ID').AsInteger := ElTab.FieldByName('PR_ID').AsInteger;

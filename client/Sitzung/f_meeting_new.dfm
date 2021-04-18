@@ -139,7 +139,7 @@ object MeetingForm: TMeetingForm
     Top = 81
     Width = 677
     Height = 431
-    ActivePage = TabSheet1
+    ActivePage = TabSheet2
     Align = alClient
     TabOrder = 2
     object TabSheet1: TTabSheet
@@ -223,84 +223,160 @@ object MeetingForm: TMeetingForm
     object TabSheet2: TTabSheet
       Caption = 'Teilnehmer'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
-      object DBGrid1: TDBGrid
+      object LV: TListView
         Left = 0
         Top = 0
         Width = 669
-        Height = 403
+        Height = 362
         Align = alClient
-        DataSource = TNSrc
-        Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
-        ReadOnly = True
-        TabOrder = 0
-        TitleFont.Charset = DEFAULT_CHARSET
-        TitleFont.Color = clWindowText
-        TitleFont.Height = -11
-        TitleFont.Name = 'Tahoma'
-        TitleFont.Style = []
-        OnDrawColumnCell = DBGrid1DrawColumnCell
         Columns = <
           item
-            Expanded = False
-            FieldName = 'TN_NAME'
-            Title.Caption = 'Name'
-            Width = 80
-            Visible = True
-          end
-          item
-            Expanded = False
-            FieldName = 'TN_VORNAME'
-            Title.Caption = 'Vorname'
-            Width = 90
-            Visible = True
-          end
-          item
-            Expanded = False
-            FieldName = 'TN_ROLLE'
-            Title.Caption = 'Rolle'
-            Width = 90
-            Visible = True
-          end
-          item
-            Expanded = False
-            FieldName = 'TN_STATUS_STR'
-            Title.Caption = 'Status'
+            Caption = 'Name'
             Width = 100
-            Visible = True
           end
           item
-            Expanded = False
-            FieldName = 'TN_DEPARTMENT'
-            Title.Caption = 'Abteilung'
-            Width = 65
-            Visible = True
+            Caption = 'Vorname'
+            Width = 90
           end
           item
-            Expanded = False
-            FieldName = 'TN_GRUND'
-            Title.Caption = 'Grund'
+            Caption = 'Rolle'
+            Width = 90
+          end
+          item
+            Caption = 'Status'
+            Width = 90
+          end
+          item
+            Caption = 'Abteilung'
             Width = 75
-            Visible = True
           end
           item
-            Expanded = False
-            FieldName = 'EP_READ'
-            Title.Caption = 'Gelesen'
-            Visible = True
+            Caption = 'Grund'
+            Width = 75
+          end
+          item
+            Caption = 'Gelesen'
+            Width = 100
           end>
+        GridLines = True
+        Groups = <
+          item
+            Header = 'Zugesagt'
+            GroupID = 0
+            State = [lgsNormal, lgsCollapsible]
+            HeaderAlign = taCenter
+            FooterAlign = taRightJustify
+            TitleImage = -1
+          end
+          item
+            Header = 'Entschuldigt'
+            GroupID = 1
+            State = [lgsNormal, lgsCollapsible]
+            HeaderAlign = taCenter
+            FooterAlign = taRightJustify
+            TitleImage = -1
+          end
+          item
+            Header = 'Unentschuldigt'
+            GroupID = 2
+            State = [lgsNormal, lgsCollapsible]
+            HeaderAlign = taCenter
+            FooterAlign = taRightJustify
+            TitleImage = -1
+          end
+          item
+            Header = 'Informiert'
+            GroupID = 3
+            State = [lgsNormal, lgsCollapsible]
+            HeaderAlign = taCenter
+            FooterAlign = taRightJustify
+            TitleImage = -1
+          end>
+        GroupView = True
+        ReadOnly = True
+        RowSelect = True
+        TabOrder = 0
+        ViewStyle = vsReport
+        ExplicitTop = -2
+        ExplicitHeight = 347
+      end
+      object Panel1: TPanel
+        Left = 0
+        Top = 362
+        Width = 669
+        Height = 41
+        Align = alBottom
+        BevelOuter = bvNone
+        Caption = 'Panel1'
+        ShowCaption = False
+        TabOrder = 1
+        ExplicitLeft = -3
+        ExplicitTop = 360
+        object LabeledEdit2: TLabeledEdit
+          Left = 68
+          Top = 18
+          Width = 33
+          Height = 21
+          BevelInner = bvNone
+          BevelOuter = bvNone
+          BorderStyle = bsNone
+          Color = clBtnFace
+          EditLabel.Width = 49
+          EditLabel.Height = 13
+          EditLabel.Caption = 'Zugesagt:'
+          LabelPosition = lpLeft
+          TabOrder = 0
+        end
+        object LabeledEdit3: TLabeledEdit
+          Left = 179
+          Top = 18
+          Width = 33
+          Height = 21
+          BevelInner = bvNone
+          BevelOuter = bvNone
+          BorderStyle = bsNone
+          Color = clBtnFace
+          EditLabel.Width = 62
+          EditLabel.Height = 13
+          EditLabel.Caption = 'Entschuldigt:'
+          LabelPosition = lpLeft
+          TabOrder = 1
+        end
+        object LabeledEdit4: TLabeledEdit
+          Left = 307
+          Top = 18
+          Width = 33
+          Height = 21
+          BevelInner = bvNone
+          BevelOuter = bvNone
+          BorderStyle = bsNone
+          Color = clBtnFace
+          EditLabel.Width = 75
+          EditLabel.Height = 13
+          EditLabel.Caption = 'Unentschuldigt:'
+          LabelPosition = lpLeft
+          TabOrder = 2
+        end
+        object LabeledEdit5: TLabeledEdit
+          Left = 414
+          Top = 18
+          Width = 33
+          Height = 21
+          BevelInner = bvNone
+          BevelOuter = bvNone
+          BorderStyle = bsNone
+          Color = clBtnFace
+          EditLabel.Width = 55
+          EditLabel.Height = 13
+          EditLabel.Caption = 'Informiert :'
+          LabelPosition = lpLeft
+          TabOrder = 3
+        end
       end
     end
     object TabSheet3: TTabSheet
       Caption = 'G'#228'ste'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object DBGrid2: TDBGrid
         Left = 0
         Top = 0
@@ -542,11 +618,6 @@ object MeetingForm: TMeetingForm
       Size = 100
       Calculated = True
     end
-  end
-  object TNSrc: TDataSource
-    DataSet = TNQry
-    Left = 132
-    Top = 289
   end
   object TGQry: TClientDataSet
     Aggregates = <>

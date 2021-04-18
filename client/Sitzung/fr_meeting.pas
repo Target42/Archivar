@@ -129,10 +129,6 @@ begin
 
   da := LV.Selected.Data;
   PostMessage(Application.MainFormHandle, msgEditMeeting, 0, da.ID );
-  if da.read = 0.0 then
-  begin
-    da.Read := Now;
-  end;
   Lv.Invalidate;
 end;
 

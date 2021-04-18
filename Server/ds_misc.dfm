@@ -109,7 +109,7 @@ object dsMisc: TdsMisc
     SQL.Strings = (
       'SELECT * FROM EL_EINLADUNG a, el_pe b'
       'where a.el_id = b.el_id'
-      'and pe_id = :pe_id'
+      'and b.pe_id = :pe_id'
       'and EL_STATUS = :status')
     Left = 464
     Top = 48

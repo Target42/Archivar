@@ -223,7 +223,7 @@ object dsMeeing: TdsMeeing
     CachedUpdates = False
     ParamCheck = True
     SQL.Strings = (
-      'select * from PR_PROTOKOL'
+      'select * from EL_EINLADUNG'
       'where EL_ID = :el_id')
     Left = 72
     Top = 192
