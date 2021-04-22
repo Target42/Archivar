@@ -60,7 +60,7 @@ type
 implementation
 
 uses
-  m_glob_client, System.Notification;
+  m_glob_client, System.Notification, u_teilnehmer;
 
 {$R *.dfm}
 
@@ -128,6 +128,9 @@ begin
     exit;
 
   da := LV.Selected.Data;
+  if da.Read = 0.0 then
+    da.Read := now;
+
   PostMessage(Application.MainFormHandle, msgEditMeeting, 0, da.ID );
   Lv.Invalidate;
 end;
@@ -154,8 +157,8 @@ begin
     da.Title  := MeetingQry.FieldByName('EL_TITEL').AsString;
     da.Changed:= MeetingQry.FieldByName('EL_DATA_STAMP').AsDateTime;
     da.Ende   := MeetingQry.FieldByName('EL_ENDE').AsDateTime;
-    da.Read   := MeetingQry.FieldByName('EP_READ').AsDateTime;
-    da.Status := MeetingQry.FieldByName('EP_STATUS').AsString;
+    da.Read   := MeetingQry.FieldByName('TN_READ').AsDateTime;
+    da.Status := TeilnehmerStatusToString(TTeilnehmerStatus(MeetingQry.FieldByName('TN_STATUS').AsInteger), false);
     MeetingQry.Next;
   end;
   MeetingQry.Close;

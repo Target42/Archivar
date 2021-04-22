@@ -16,11 +16,14 @@ type
 
     procedure setRO( value : boolean );
     function  getRO : boolean;
+
+    function getchanged : boolean;
+    procedure setChanged( value : boolean );
   public
     property Text     : string  read getText  write setText;
     property ReadOnly : boolean read getRO    write setRO;
 
-    function changed : boolean;
+    property Modified : boolean read getChanged write setChanged;
 
     procedure saveToStream( st : TStream );
     procedure loadFromStream( st : TStream );
@@ -32,7 +35,7 @@ implementation
 
 { TEditFrame }
 
-function TEditFrame.changed: boolean;
+function TEditFrame.getchanged: boolean;
 begin
   Result := RE.Modified;
 end;
@@ -50,11 +53,18 @@ end;
 procedure TEditFrame.loadFromStream(st: TStream);
 begin
   RE.Lines.LoadFromStream(st);
+  setChanged( false );
 end;
 
 procedure TEditFrame.saveToStream(st: TStream);
 begin
   RE.Lines.SaveToStream(st);
+  setChanged( false );
+end;
+
+procedure TEditFrame.setChanged(value: boolean);
+begin
+  RE.Modified := value;
 end;
 
 procedure TEditFrame.setRO(value: boolean);

@@ -170,7 +170,8 @@ uses
   u_teilnehmer in '..\misc\u_teilnehmer.pas',
   f_protocol_sec in 'Protokoll\f_protocol_sec.pas' {ProtocolSectionForm},
   u_kategorie in 'Task\u_kategorie.pas',
-  u_onlineUser in 'misc\u_onlineUser.pas';
+  u_onlineUser in 'misc\u_onlineUser.pas',
+  f_meeting_person in 'Sitzung\f_meeting_person.pas' {MeetingPersonForm};
 
 {$R *.res}
 

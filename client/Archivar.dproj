@@ -554,6 +554,10 @@
         </DCCReference>
         <DCCReference Include="Task\u_kategorie.pas"/>
         <DCCReference Include="misc\u_onlineUser.pas"/>
+        <DCCReference Include="Sitzung\f_meeting_person.pas">
+            <Form>MeetingPersonForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <None Include="Datafields\ERA-NS.txt"/>
         <RcItem Include="dws\dws.html">
             <ContainerId>ResourceItem</ContainerId>

@@ -19,15 +19,13 @@ object dsMeeing: TdsMeeing
     ParamCheck = True
     SQL.Strings = (
       'SELECT * FROM PR_PROTOKOL'
-      'where gr_id = :gr_id'
-      'and PR_STATUS <> '#39'C'#39
-      'order by pr_id desc')
+      'where pr_id= :id')
     Left = 112
     Top = 16
     ParamData = <
       item
         DataType = ftInteger
-        Name = 'gr_id'
+        Name = 'id'
         ParamType = ptInput
       end>
   end
@@ -180,24 +178,6 @@ object dsMeeing: TdsMeeing
         ParamType = ptInput
       end>
   end
-  object DelPEQry: TIBQuery
-    Database = DBMod.IBDatabase1
-    Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
-    SQL.Strings = (
-      'delete from EL_PE'
-      'where EL_ID = :EL_ID')
-    Left = 16
-    Top = 384
-    ParamData = <
-      item
-        DataType = ftInteger
-        Name = 'EL_ID'
-        ParamType = ptInput
-      end>
-  end
   object DelELQry: TIBQuery
     Database = DBMod.IBDatabase1
     Transaction = IBTransaction1
@@ -241,19 +221,12 @@ object dsMeeing: TdsMeeing
     CachedUpdates = False
     ParamCheck = True
     SQL.Strings = (
-      'SELECT * FROM el_pe a, TN_TEILNEHMER b'
-      'where a.el_id = :el_id'
-      'and b.pr_id = :pr_id'
-      'and a.PE_ID = b.PE_ID'
+      'SELECT * FROM TN_TEILNEHMER b'
+      'where b.pr_id = :pr_id'
       'order by tn_name, tn_vorname')
     Left = 304
     Top = 16
     ParamData = <
-      item
-        DataType = ftInteger
-        Name = 'el_id'
-        ParamType = ptInput
-      end
       item
         DataType = ftInteger
         Name = 'pr_id'
@@ -272,17 +245,17 @@ object dsMeeing: TdsMeeing
     CachedUpdates = False
     ParamCheck = True
     SQL.Strings = (
-      'update el_pe'
-      'set ep_read = current_timestamp'
-      'where el_id = :el_id'
+      'update TN_TEILNEHMER'
+      'set TN_READ = current_timestamp'
+      'where pr_id = :pr_id'
       'and pe_id = :pe_id'
-      'and ep_read is NULL')
+      'and TN_READ is NULL')
     Left = 200
     Top = 192
     ParamData = <
       item
         DataType = ftInteger
-        Name = 'el_id'
+        Name = 'pr_id'
         ParamType = ptInput
       end
       item
@@ -344,30 +317,6 @@ object dsMeeing: TdsMeeing
     Left = 360
     Top = 64
   end
-  object ChangeELStatusQry: TIBQuery
-    Database = DBMod.IBDatabase1
-    Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
-    SQL.Strings = (
-      'update EL_EINLADUNG'
-      'set EL_STATUS = :status'
-      'where EL_ID = :el_id')
-    Left = 288
-    Top = 192
-    ParamData = <
-      item
-        DataType = ftString
-        Name = 'status'
-        ParamType = ptInput
-      end
-      item
-        DataType = ftInteger
-        Name = 'el_id'
-        ParamType = ptInput
-      end>
-  end
   object ResetReadQry: TIBQuery
     Database = DBMod.IBDatabase1
     Transaction = IBTransaction1
@@ -375,15 +324,15 @@ object dsMeeing: TdsMeeing
     CachedUpdates = False
     ParamCheck = True
     SQL.Strings = (
-      'update EL_PE'
-      'set  EP_READ = NULL'
-      'where EL_ID = :el_id')
+      'update TN_TEILNEHMER'
+      'set  TN_READ= NULL'
+      'where PR_ID = :pr_id')
     Left = 288
     Top = 248
     ParamData = <
       item
         DataType = ftInteger
-        Name = 'el_id'
+        Name = 'pr_id'
         ParamType = ptInput
       end>
   end
@@ -394,27 +343,56 @@ object dsMeeing: TdsMeeing
     CachedUpdates = False
     ParamCheck = True
     SQL.Strings = (
-      'update EL_PE'
-      'set EP_STATUS = :status'
-      'where el_id = :EL_ID'
-      'and pe_id = :pe_id')
-    Left = 240
-    Top = 304
+      'update TN_TEILNEHMER'
+      'set tn_status = :stat'
+      'where pe_id = :pe_id'
+      'and pr_id = :pr_id')
+    Left = 352
+    Top = 336
     ParamData = <
       item
-        DataType = ftString
-        Name = 'status'
-        ParamType = ptInput
-      end
-      item
         DataType = ftInteger
-        Name = 'EL_ID'
+        Name = 'stat'
         ParamType = ptInput
       end
       item
         DataType = ftInteger
         Name = 'pe_id'
         ParamType = ptInput
+      end
+      item
+        DataType = ftUnknown
+        Name = 'pr_id'
+        ParamType = ptInput
       end>
+  end
+  object OptTn: TIBQuery
+    Database = DBMod.IBDatabase1
+    Transaction = IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    ParamCheck = True
+    SQL.Strings = (
+      'select * from PE_PERSON a'
+      'where not a.PE_ID  in'
+      '('
+      '  select PE_ID from'
+      '    TN_TEILNEHMER'
+      '  where pr_id = :pr_id'
+      ')'
+      'and a.PE_ID > 10')
+    Left = 376
+    Top = 128
+    ParamData = <
+      item
+        DataType = ftInteger
+        Name = 'pr_id'
+        ParamType = ptInput
+      end>
+  end
+  object OptTnQry: TDataSetProvider
+    DataSet = OptTn
+    Left = 376
+    Top = 184
   end
 end

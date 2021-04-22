@@ -37,18 +37,6 @@ type
     EditFrame1: TEditFrame;
     Splitter1: TSplitter;
     TNQry: TClientDataSet;
-    TNQryEL_ID: TIntegerField;
-    TNQryPE_ID: TIntegerField;
-    TNQryEP_STATUS: TWideStringField;
-    TNQryEP_READ: TDateTimeField;
-    TNQryPR_ID: TIntegerField;
-    TNQryTN_ID: TIntegerField;
-    TNQryTN_NAME: TWideStringField;
-    TNQryTN_VORNAME: TWideStringField;
-    TNQryTN_DEPARTMENT: TWideStringField;
-    TNQryTN_ROLLE: TWideStringField;
-    TNQryTN_STATUS: TIntegerField;
-    TNQryTN_GRUND: TWideStringField;
     TNQryTN_STATUS_STR: TStringField;
     TabSheet3: TTabSheet;
     DBGrid2: TDBGrid;
@@ -67,11 +55,21 @@ type
     LabeledEdit3: TLabeledEdit;
     LabeledEdit4: TLabeledEdit;
     LabeledEdit5: TLabeledEdit;
+    BitBtn2: TBitBtn;
+    TNQryPR_ID: TIntegerField;
+    TNQryTN_ID: TIntegerField;
+    TNQryTN_NAME: TWideStringField;
+    TNQryTN_VORNAME: TWideStringField;
+    TNQryTN_DEPARTMENT: TWideStringField;
+    TNQryTN_ROLLE: TWideStringField;
+    TNQryTN_STATUS: TIntegerField;
+    TNQryPE_ID: TIntegerField;
+    TNQryTN_GRUND: TWideStringField;
+    TNQryTN_READ: TDateTimeField;
     procedure FormCreate(Sender: TObject);
     procedure ElTabBeforePost(DataSet: TDataSet);
     procedure ComboBox1Change(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
-    procedure ProtoQryAfterScroll(DataSet: TDataSet);
     procedure BaseFrame1AbortBtnClick(Sender: TObject);
     procedure BaseFrame1OKBtnClick(Sender: TObject);
     procedure TNQryTN_STATUS_STRGetText(Sender: TField; var Text: string;
@@ -82,17 +80,18 @@ type
     procedure ElTabReconcileError(DataSet: TCustomClientDataSet;
       E: EReconcileError; UpdateKind: TUpdateKind;
       var Action: TReconcileAction);
+    procedure BitBtn2Click(Sender: TObject);
   private
     { Private-Deklarationen }
     m_el_id     : integer;
+    m_pr_id     : integer;
     m_gr        : TGremium;
     m_proto     : IProtocol;
     m_readOnly  : boolean;
 
-    function GetGremiumID: TGremium;
     procedure SetGremiumID(const Value: TGremium);
 
-    procedure SendUpdate( id : integer );
+    procedure SendUpdate;
     procedure setELID( value : integer );
     procedure updateTo;
     procedure changeStatus;
@@ -102,9 +101,8 @@ type
     procedure setReadOnly( flag :Boolean );
     function GetReadOnly: boolean;
   public
-    property Gremium  : TGremium read GetGremiumID write SetGremiumID;
-    property EL_ID    : integer read m_el_id write setELID;
-    property ReadOnly: boolean read GetReadOnly write SetReadOnly;
+    property EL_ID    : integer   read m_el_id        write setELID;
+    property ReadOnly : boolean   read GetReadOnly    write SetReadOnly;
 
   end;
 
@@ -119,7 +117,7 @@ implementation
 
 uses
   m_glob_client, system.DateUtils, u_stub, u_json, System.Generics.Collections,
-  f_abwesenheit, u_teilnehmer;
+  f_abwesenheit, u_teilnehmer, f_meeting_person;
 
 {$R *.dfm}
 
@@ -206,24 +204,24 @@ end;
 
 procedure TMeetingForm.BaseFrame1OKBtnClick(Sender: TObject);
 var
-  id  : integer;
   st  : TStream;
+  changed : boolean;
 begin
-
-  if EditFrame1.changed and not ElTab.ReadOnly then
+  if EditFrame1.Modified and not ElTab.ReadOnly then
   begin
     st := ElTab.CreateBlobStream(ElTab.FieldByName('EL_DATA'),bmWrite);
     EditFrame1.saveToStream(st);
     st.Free;
   end;
+  changed := ElTab.Modified;
   ELtab.Post;
-
-  id := ELtab.FieldByName('EL_ID').AsInteger;
 
   if ELtab.UpdatesPending then
     ElTab.ApplyUpdates(0);
 
-  SendUpdate( id );
+  if changed then
+    SendUpdate;
+
   PostMessage( Application.MainFormHandle, msgUpdateMeetings, 0, 0);
 end;
 
@@ -245,6 +243,7 @@ begin
     grund := '';
     Req := TJSONObject.Create;
 
+    JReplace( req, 'prid', m_pr_id );
     JReplace( req, 'tnid', TNQryTN_ID.Value );
     JReplace( req, 'elid', m_el_id);
     JReplace( req, 'peid', GM.UserID);
@@ -273,6 +272,13 @@ begin
     ShowMessage('Sie sind kein Teilnehmer dieser Sitzung!');
 end;
 
+procedure TMeetingForm.BitBtn2Click(Sender: TObject);
+begin
+  Application.CreateForm(TMeetingPersonForm, MeetingPersonForm);
+  MeetingPersonForm.showModal;
+  MeetingPersonForm.free;
+end;
+
 procedure TMeetingForm.changeStatus;
 var
   req     : TJSONObject;
@@ -281,7 +287,7 @@ begin
     exit;
 
   req := TJSONObject.Create;
-  JReplace( req, 'elid', m_el_id);
+  JReplace( req, 'prid', m_pr_id );
   JReplace( req, 'peid', GM.UserID );
 
   execStatus(req);
@@ -292,8 +298,10 @@ var
   i : integer;
 begin
   ComboBox2.Items.Clear;
+
   for i := ComboBox1.ItemIndex to pred(ComboBox1.Items.Count) do
     ComboBox2.Items.Add(ComboBox1.Items.Strings[i]);
+
   if ComboBox2.Items.Count >= 2 then
     ComboBox2.ItemIndex := 1
   else if ComboBox2.Items.Count >0 then
@@ -320,7 +328,7 @@ begin
   client := TdsMeeingClient.Create(GM.SQLConnection1.DBXConnection);
   try
     res := client.changeStatus(req);
-    ShowResult( res );
+    Result := ShowResult( res );
   finally
     client.Free;
   end;
@@ -359,10 +367,13 @@ begin
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
   DSProviderConnection1.Open;
 
+  PageControl1.ActivePage := TabSheet1;
+
   TOFrame1.init;
   TOFrame1.Connection := GM.SQLConnection1.DBXConnection;
 
   m_el_id     := 0;
+  m_pr_id     := 0;
   m_readOnly  := false;
   m_gr        := NIL;
   m_proto     := NIL;
@@ -383,19 +394,9 @@ begin
   TOFrame1.release;
 end;
 
-function TMeetingForm.GetGremiumID: TGremium;
-begin
-  Result := m_gr;
-end;
-
 function TMeetingForm.GetReadOnly: boolean;
 begin
   Result := m_readOnly;
-end;
-
-procedure TMeetingForm.ProtoQryAfterScroll(DataSet: TDataSet);
-begin
-  updateTo;
 end;
 
 procedure TMeetingForm.RadioButton1Click(Sender: TObject);
@@ -414,15 +415,16 @@ begin
   ComboBox3.Items.AddObject('Unbekannt', TObject(1));
 end;
 
-procedure TMeetingForm.SendUpdate(id: integer);
+procedure TMeetingForm.SendUpdate;
 var
   client : TdsMeeingClient;
   req    : TJSONObject;
   res    : TJSONObject;
 begin
   req    := TJSONObject.Create;
-  JReplace( req, 'id', id);
-  JReplace( Req, 'grid', m_gr.ID);
+
+  JReplace( req, 'elid',  ELtab.FieldByName('EL_ID').AsInteger);
+  JReplace( Req, 'prid',  m_pr_id);
 
   client := TdsMeeingClient.Create(GM.SQLConnection1.DBXConnection);
   try
@@ -454,25 +456,24 @@ begin
       if not ElTab.ReadOnly then
       begin
         ELTab.Edit;
+
       end;
+      m_pr_id := ElTab.FieldByName('PR_ID').AsInteger;
 
       st := ElTab.CreateBlobStream(ElTab.FieldByName('EL_DATA'), bmRead);
       EditFrame1.loadFromStream(st);
       st.Free;
 
-
       gr := GM.getGremium(ElTab.FieldByName('GR_ID').AsInteger);
       if Assigned(gr) then
         self.SetGremiumID( gr );
 
-      updateTo;
 
+      updateTo;
       changeStatus;
 
       GroupBox4.Visible := SameText( ElTab.FieldByName('EL_STATUS').AsString, 'O');
-      GroupBox4.Enabled := not ElTab.ReadOnly;
-
-      BaseFrame1.OKBtn.Enabled := ( ElTab.FieldByName('PR_ID').AsInteger > 0 );
+      BaseFrame1.OKBtn.Enabled := ( m_pr_id > 0 );
     end;
   end;
 end;
@@ -483,23 +484,15 @@ begin
 
   LabeledEdit1.Text := m_gr.Name;
 
-  ProtoQry.ParamByName('GR_ID').AsInteger := m_gr.ID;
+  ProtoQry.Close;
+  ProtoQry.ParamByName('ID').AsInteger := m_pr_id;
   ProtoQry.Open;
-
-  if ElTab.FieldByName('PR_ID').AsInteger = 0 then
-  begin
-    if ProtoQry.RecordCount > 0 then
-    begin
-      TOFrame1.PR_ID                        := ProtoQry.FieldByName('PR_ID').AsInteger;
-      ElTab.FieldByName('PR_ID').AsInteger  := ProtoQry.FieldByName('PR_ID').AsInteger;
-    end;
-  end
-  else
-    ProtoQry.Locate('PR_ID', VarArrayOf([ElTab.FieldByName('PR_ID').AsInteger]), []);
+  if ProtoQry.IsEmpty then
+    ShowMessage('Das Protokoll wurde nicht gefunden!');
 
   setReadOnly( m_readOnly );
 
-  BaseFrame1.OKBtn.Enabled := ( ElTab.FieldByName('PR_ID').AsInteger > 0 );
+  BaseFrame1.OKBtn.Enabled := ( m_pr_id > 0 );
 end;
 
 procedure TMeetingForm.setReadOnly(flag: Boolean);
@@ -524,6 +517,7 @@ begin
       elTab.Edit;
   end;
   EditFrame1.ReadOnly := flag;
+  BitBtn2.Visible := not flag;
 end;
 
 procedure TMeetingForm.TNQryTN_STATUS_STRGetText(Sender: TField;
@@ -544,12 +538,11 @@ var
     counter[id] := counter[id] +1;
   end;
 begin
-  TOFrame1.PR_ID := ProtoQry.FieldByName('PR_ID').AsInteger;
+  TOFrame1.PR_ID := m_pr_id;
   TOFrame1.updateContent;
 
   TNQry.Close;
-  TNQry.ParamByName('EL_ID').AsInteger  := m_el_id;
-  TNQry.ParamByName('PR_ID').AsInteger  := ElTab.FieldByName('PR_ID').AsInteger;
+  TNQry.ParamByName('PR_ID').AsInteger  := m_pr_id;
   TNQry.Open;
 
   LV.Items.BeginUpdate;
@@ -571,10 +564,9 @@ begin
     item.Caption := TNQryTN_NAME.Value;
     item.SubItems.Add(TNQryTN_VORNAME.Value);
     item.SubItems.Add(TNQryTN_ROLLE.Value );
-    item.SubItems.Add(TNQryTN_STATUS_STR.Value );
     item.SubItems.Add(TNQryTN_DEPARTMENT.Value);
     item.SubItems.Add(TNQryTN_GRUND.Value );
-    item.SubItems.Add(TNQryEP_READ.AsString );
+    item.SubItems.Add(TNQryTN_READ.AsString );
     TNQry.Next;
   end;
   for i := low(counter) to high(counter) do
@@ -588,7 +580,7 @@ begin
 
 
   TGQry.Close;
-  TGQry.ParamByName('PR_ID').AsInteger := ElTab.FieldByName('PR_ID').AsInteger;
+  TGQry.ParamByName('PR_ID').AsInteger := m_pr_id;
   TGQry.Open;
 
 end;

@@ -139,7 +139,7 @@ object MeetingForm: TMeetingForm
     Top = 81
     Width = 677
     Height = 431
-    ActivePage = TabSheet2
+    ActivePage = TabSheet1
     Align = alClient
     TabOrder = 2
     object TabSheet1: TTabSheet
@@ -243,10 +243,6 @@ object MeetingForm: TMeetingForm
             Width = 90
           end
           item
-            Caption = 'Status'
-            Width = 90
-          end
-          item
             Caption = 'Abteilung'
             Width = 75
           end
@@ -297,8 +293,6 @@ object MeetingForm: TMeetingForm
         RowSelect = True
         TabOrder = 0
         ViewStyle = vsReport
-        ExplicitTop = -2
-        ExplicitHeight = 347
       end
       object Panel1: TPanel
         Left = 0
@@ -310,8 +304,6 @@ object MeetingForm: TMeetingForm
         Caption = 'Panel1'
         ShowCaption = False
         TabOrder = 1
-        ExplicitLeft = -3
-        ExplicitTop = 360
         object LabeledEdit2: TLabeledEdit
           Left = 68
           Top = 18
@@ -484,9 +476,19 @@ object MeetingForm: TMeetingForm
       TabOrder = 3
       Text = 'ComboBox3'
     end
+    object BitBtn2: TBitBtn
+      Left = 475
+      Top = 16
+      Width = 127
+      Height = 25
+      Caption = 'Teilnehmer hinzuf'#252'gen'
+      TabOrder = 4
+      OnClick = BitBtn2Click
+    end
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsMeeing'
+    SQLConnection = GM.SQLConnection1
     Left = 48
     Top = 176
   end
@@ -506,16 +508,16 @@ object MeetingForm: TMeetingForm
     Top = 284
   end
   object ProtoQry: TClientDataSet
+    Active = True
     Aggregates = <>
     Params = <
       item
         DataType = ftInteger
-        Name = 'gr_id'
+        Name = 'id'
         ParamType = ptInput
       end>
     ProviderName = 'ListProtocolQry'
     RemoteServer = DSProviderConnection1
-    AfterScroll = ProtoQryAfterScroll
     Left = 80
     Top = 232
   end
@@ -537,11 +539,6 @@ object MeetingForm: TMeetingForm
     Params = <
       item
         DataType = ftInteger
-        Name = 'el_id'
-        ParamType = ptInput
-      end
-      item
-        DataType = ftInteger
         Name = 'pr_id'
         ParamType = ptInput
       end>
@@ -549,74 +546,49 @@ object MeetingForm: TMeetingForm
     RemoteServer = DSProviderConnection1
     Left = 132
     Top = 233
-    object TNQryEL_ID: TIntegerField
-      FieldName = 'EL_ID'
-      Origin = '"EL_PE"."EL_ID"'
-      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
-      Required = True
-    end
-    object TNQryPE_ID: TIntegerField
-      FieldName = 'PE_ID'
-      Origin = '"EL_PE"."PE_ID"'
-      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
-      Required = True
-    end
-    object TNQryEP_STATUS: TWideStringField
-      FieldName = 'EP_STATUS'
-      Origin = '"EL_PE"."EP_STATUS"'
-      Size = 100
-    end
-    object TNQryEP_READ: TDateTimeField
-      FieldName = 'EP_READ'
-      Origin = '"EL_PE"."EP_READ"'
-    end
-    object TNQryPR_ID: TIntegerField
-      FieldName = 'PR_ID'
-      Origin = '"TN_TEILNEHMER"."PR_ID"'
-      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
-      Required = True
-    end
-    object TNQryTN_ID: TIntegerField
-      FieldName = 'TN_ID'
-      Origin = '"TN_TEILNEHMER"."TN_ID"'
-      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
-      Required = True
-    end
-    object TNQryTN_NAME: TWideStringField
-      FieldName = 'TN_NAME'
-      Origin = '"TN_TEILNEHMER"."TN_NAME"'
-      Size = 100
-    end
-    object TNQryTN_VORNAME: TWideStringField
-      FieldName = 'TN_VORNAME'
-      Origin = '"TN_TEILNEHMER"."TN_VORNAME"'
-      Size = 100
-    end
-    object TNQryTN_DEPARTMENT: TWideStringField
-      FieldName = 'TN_DEPARTMENT'
-      Origin = '"TN_TEILNEHMER"."TN_DEPARTMENT"'
-      Size = 25
-    end
-    object TNQryTN_ROLLE: TWideStringField
-      FieldName = 'TN_ROLLE'
-      Origin = '"TN_TEILNEHMER"."TN_ROLLE"'
-      Size = 50
-    end
-    object TNQryTN_STATUS: TIntegerField
-      FieldName = 'TN_STATUS'
-      Origin = '"TN_TEILNEHMER"."TN_STATUS"'
-    end
-    object TNQryTN_GRUND: TWideStringField
-      FieldName = 'TN_GRUND'
-      Origin = '"TN_TEILNEHMER"."TN_GRUND"'
-      Size = 100
-    end
     object TNQryTN_STATUS_STR: TStringField
       FieldKind = fkCalculated
       FieldName = 'TN_STATUS_STR'
       OnGetText = TNQryTN_STATUS_STRGetText
       Size = 100
       Calculated = True
+    end
+    object TNQryPR_ID: TIntegerField
+      FieldName = 'PR_ID'
+      Required = True
+    end
+    object TNQryTN_ID: TIntegerField
+      FieldName = 'TN_ID'
+      Required = True
+    end
+    object TNQryTN_NAME: TWideStringField
+      FieldName = 'TN_NAME'
+      Size = 100
+    end
+    object TNQryTN_VORNAME: TWideStringField
+      FieldName = 'TN_VORNAME'
+      Size = 100
+    end
+    object TNQryTN_DEPARTMENT: TWideStringField
+      FieldName = 'TN_DEPARTMENT'
+      Size = 25
+    end
+    object TNQryTN_ROLLE: TWideStringField
+      FieldName = 'TN_ROLLE'
+      Size = 50
+    end
+    object TNQryTN_STATUS: TIntegerField
+      FieldName = 'TN_STATUS'
+    end
+    object TNQryPE_ID: TIntegerField
+      FieldName = 'PE_ID'
+    end
+    object TNQryTN_GRUND: TWideStringField
+      FieldName = 'TN_GRUND'
+      Size = 100
+    end
+    object TNQryTN_READ: TDateTimeField
+      FieldName = 'TN_READ'
     end
   end
   object TGQry: TClientDataSet

@@ -107,8 +107,8 @@ object dsMisc: TdsMisc
     CachedUpdates = False
     ParamCheck = True
     SQL.Strings = (
-      'SELECT * FROM EL_EINLADUNG a, el_pe b'
-      'where a.el_id = b.el_id'
+      'SELECT * FROM EL_EINLADUNG a, TN_TEILNEHMER b'
+      'where a.pr_id = b.pr_id'
       'and b.pe_id = :pe_id'
       'and EL_STATUS = :status')
     Left = 464

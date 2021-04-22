@@ -24,7 +24,6 @@ type
     GrPeQry: TIBQuery;
     AutoIncQry: TIBQuery;
     LastDocQry: TIBQuery;
-    DelPEQry: TIBQuery;
     DelELQry: TIBQuery;
     FrindELQry: TIBQuery;
     Teilnehmer: TIBQuery;
@@ -33,11 +32,12 @@ type
     UpdateTnQry: TIBQuery;
     Gaeste: TIBQuery;
     TGQry: TDataSetProvider;
-    ChangeELStatusQry: TIBQuery;
     ResetReadQry: TIBQuery;
     ChangeELPEStatusQry: TIBQuery;
+    OptTn: TIBQuery;
+    OptTnQry: TDataSetProvider;
   private
-    { Private-Deklarationen }
+    procedure updateMeeting( el_id : integer );
   public
     function AutoInc( gen : string ) : integer;
     function newMeeting(    req : TJSONObject ) : TJSONObject;
@@ -76,7 +76,7 @@ end;
 
 function TdsMeeing.changeStatus(req: TJSONObject): TJSONObject;
 var
-  el_id     : integer;
+  pr_id     : integer;
   pe_id     : integer;
   tn_id     : integer;
   newState  : integer;
@@ -84,7 +84,7 @@ var
 begin
   Result := TJSONObject.Create;
 
-  el_id     := JInt(    req, 'elid' );
+  pr_id     := JInt(    req, 'prid' );
   pe_id     := JInt(    req, 'peid' );
   tn_id     := JInt(    req, 'tnid' );
   newState  := JInt(    req, 'state', -1);
@@ -92,10 +92,11 @@ begin
 
   if newState = -1 then
   begin
-    SetReadQry.ParamByName('EL_ID').AsInteger := el_id;
+    SetReadQry.ParamByName('PR_ID').AsInteger := pr_id;
     SetReadQry.ParamByName('PE_ID').AsInteger := pe_id;
     try
       SetReadQry.ExecSQL;
+
       if SetReadQry.Transaction.InTransaction then
         SetReadQry.Transaction.Commit;
       JResult(Result, true, '');
@@ -114,12 +115,6 @@ begin
       UpdateTnQry.ParamByName('TN_ID').AsInteger  := tn_id;
 
       UpdateTnQry.ExecSQL;
-
-      ChangeELPEStatusQry.ParamByName('EL_ID').AsInteger  := el_id;
-      ChangeELPEStatusQry.ParamByName('PE_ID').AsInteger  := pe_id;
-      ChangeELPEStatusQry.ParamByName('status').AsString  := TeilnehmerStatusToString( TTeilnehmerStatus(newState));
-
-      ChangeELPEStatusQry.ExecSQL;
 
       if UpdateTnQry.Transaction.InTransaction then
         UpdateTnQry.Transaction.Commit;
@@ -183,10 +178,6 @@ begin
   end;
 
   try
-    // delete the people from the meeting
-    DelPEQry.ParamByName('EL_ID').AsInteger := id;
-    DelPEQry.ExecSQL;
-
     // delete the meeting ifself
     DelELQry.ParamByName('EL_ID').AsInteger := id;
     DelELQry.ExecSQL;
@@ -316,16 +307,11 @@ end;
 function TdsMeeing.invite(req: TJSONObject): TJSONObject;
 var
   el_id : integer;
-  msg   : TJSONObject;
 begin
   Result := TJSONObject.Create;
   el_id  := JInt( req, 'id');
 
   try
-    ChangeELStatusQry.ParamByName('status').AsString  := 'O';
-    ChangeELStatusQry.ParamByName('el_id').AsInteger  := el_id;
-    ChangeELStatusQry.ExecSQL;
-
     ResetReadQry.ParamByName('el_id').AsInteger       := el_id;
     ResetReadQry.ExecSQL;
 
@@ -333,11 +319,7 @@ begin
       IBTransaction1.Commit;
     JResult(Result, true, 'ok');
 
-    msg := TJSONObject.Create;
-    JReplace(msg, 'action', 'newmeeting');
-    JReplace( msg, 'id', el_id);
-    ServerContainer1.BroadcastMessage('storage', msg);
-
+    updateMeeting( el_id );
   except
     on e : exception do
     begin
@@ -346,8 +328,6 @@ begin
   end;
   if IBTransaction1.InTransaction then
     IBTransaction1.Rollback;
-
-
 
 end;
 
@@ -422,7 +402,30 @@ end;
 function TdsMeeing.Sendmail(req: TJSONObject): TJSONObject;
 begin
   Result := TJSONObject.Create;
-  JResult( Result, true, '');
+  try
+    ResetReadQry.ParamByName('PR_ID').AsInteger := JInt( req, 'prid');
+    ResetReadQry.ExecSQL;
+
+    JResult( Result, true, IntToStr( ResetReadQry.RowsAffected));
+
+    if ResetReadQry.Transaction.InTransaction then
+      ResetReadQry.Transaction.Commit;
+
+    updateMeeting(JInt(req, 'elid'));
+  except
+    on e : exception do
+      JResult( Result, false, e.ToString);
+  end;
+end;
+
+procedure TdsMeeing.updateMeeting(el_id: integer);
+var
+  msg : TJSONObject;
+begin
+  msg := TJSONObject.Create;
+  JReplace(msg, 'action', 'newmeeting');
+  JReplace( msg, 'id', el_id);
+  ServerContainer1.BroadcastMessage('storage', msg);
 end;
 
 end.

@@ -19,7 +19,7 @@ type
 
     tsLast);
 
-function TeilnehmerStatusToString( st : TTeilnehmerStatus) : string;
+function TeilnehmerStatusToString( st : TTeilnehmerStatus; ShowAll : boolean = false) : string;
 function StringToTTeilnehmerStatus( value : string ) : TTeilnehmerStatus;
 procedure FillTeilnehmerStatusList( list : TStrings );
 
@@ -28,7 +28,7 @@ implementation
 uses
   System.SysUtils;
 
-function TeilnehmerStatusToString( st : TTeilnehmerStatus) : string;
+function TeilnehmerStatusToString( st : TTeilnehmerStatus; ShowAll : boolean) : string;
 begin
   case st of
     tsUnbekannt:      Result := 'Unbekannt';
@@ -43,6 +43,9 @@ begin
     else
       Result := '??';
   end;
+
+  if not ShowAll and ( (st = tsUnbekannt) or (st = tsLast)) then
+    Result := '';
 end;
 
 function StringToTTeilnehmerStatus( value : string ) : TTeilnehmerStatus;

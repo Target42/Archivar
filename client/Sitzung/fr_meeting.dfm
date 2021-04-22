@@ -1,17 +1,15 @@
 object MeetingFrame: TMeetingFrame
   Left = 0
   Top = 0
-  Width = 735
-  Height = 372
+  Width = 451
+  Height = 305
   Align = alClient
   TabOrder = 0
-  ExplicitWidth = 451
-  ExplicitHeight = 305
   object Lv: TListView
     Left = 0
     Top = 0
-    Width = 735
-    Height = 372
+    Width = 451
+    Height = 305
     Align = alClient
     Columns = <
       item
@@ -48,11 +46,10 @@ object MeetingFrame: TMeetingFrame
     OnCustomDrawItem = LvCustomDrawItem
     OnCustomDrawSubItem = LvCustomDrawSubItem
     OnDblClick = LvDblClick
-    ExplicitWidth = 451
-    ExplicitHeight = 305
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsMisc'
+    SQLConnection = GM.SQLConnection1
     Left = 72
     Top = 16
   end
