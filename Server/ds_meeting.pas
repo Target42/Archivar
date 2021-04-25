@@ -36,6 +36,8 @@ type
     ChangeELPEStatusQry: TIBQuery;
     OptTn: TIBQuery;
     OptTnQry: TDataSetProvider;
+    DeleteTN: TIBQuery;
+    AddTN: TIBQuery;
   private
     procedure updateMeeting( el_id : integer );
   public
@@ -48,6 +50,8 @@ type
     function GetTree(       req : TJSONObject ) : TJSONObject;
 
     function changeStatus(  req : TJSONObject ) : TJSONObject ;
+
+    function changeUser(    req : TJSONObject ) : TJSONObject;
   end;
 
 implementation
@@ -126,6 +130,84 @@ begin
       end;
     end;
   end;
+end;
+
+function TdsMeeing.changeUser(req: TJSONObject): TJSONObject;
+var
+  cmd   : string;
+  sql   : string;
+  prid  : integer;
+  list  : TList<integer>;
+
+  procedure addUser;
+  var
+    id    : integer;
+  begin
+    sql :=  'insert into TN_TEILNEHMER '+
+            '( PR_ID, TN_ID, TN_NAME, TN_VORNAME, TN_DEPARTMENT, TN_STATUS, PE_ID) '+
+            'select ''%d'' as "pr_id", gen_id( GEN_TN_ID, 1), PE_NAME, PE_VORNAME, PE_DEPARTMENT, ''0'' as "tn_status", pe_id '+
+            'from PE_PERSON '+
+            'where pe_id = :pe_id';
+
+    AddTN.SQL.Text := Format(sql, [prid]);
+
+    AddTN.Prepare;
+    try
+    if AddTN.Prepared then
+    begin
+      for id in list do
+      begin
+        AddTN.ParamByName('pe_id').AsInteger  := id;
+        AddTN.ExecSQL;
+      end;
+    end;
+    except
+
+    end;
+    AddTN.UnPrepare;
+  end;
+  procedure removeUser;
+  var
+    id    : integer;
+  begin
+    DeleteTN.Prepare;
+    try
+      if DeleteTN.Prepared then
+      begin
+        for id in list do
+        begin
+          DeleteTN.ParamByName('TN_id').AsInteger := id;
+          DeleteTN.ExecSQL;
+        end;
+      end;
+    except
+
+    end;
+    DeleteTN.UnPrepare;
+  end;
+
+begin
+  Result  := TJSONObject.Create;
+  cmd     := JString(       req, 'cmd');
+  prid    := JInt(          req, 'prid');
+  list    := getIntNumbers( req, 'idlist');
+
+  JResult(Result, false, 'Keine Personen angegeben!');
+  if not Assigned(list) then
+    exit;
+
+  if cmd = 'add' then
+    addUser
+  else if cmd = 'remove' then
+    removeUser;
+
+  if Assigned(list) then
+    list.Free;
+
+  if IBTransaction1.InTransaction then
+    IBTransaction1.Commit;
+
+  JResult( Result, true, 'ok');
 end;
 
 function TdsMeeing.deleteMeeting(req: TJSONObject): TJSONObject;

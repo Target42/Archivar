@@ -66,6 +66,9 @@ type
     TNQryPE_ID: TIntegerField;
     TNQryTN_GRUND: TWideStringField;
     TNQryTN_READ: TDateTimeField;
+    Panel2: TPanel;
+    DBNavigator1: TDBNavigator;
+    OptTnQry: TClientDataSet;
     procedure FormCreate(Sender: TObject);
     procedure ElTabBeforePost(DataSet: TDataSet);
     procedure ComboBox1Change(Sender: TObject);
@@ -81,6 +84,7 @@ type
       E: EReconcileError; UpdateKind: TUpdateKind;
       var Action: TReconcileAction);
     procedure BitBtn2Click(Sender: TObject);
+    procedure TGQryBeforePost(DataSet: TDataSet);
   private
     { Private-Deklarationen }
     m_el_id     : integer;
@@ -275,6 +279,10 @@ end;
 procedure TMeetingForm.BitBtn2Click(Sender: TObject);
 begin
   Application.CreateForm(TMeetingPersonForm, MeetingPersonForm);
+  MeetingPersonForm.PR_ID := m_pr_id;
+
+  MeetingPersonForm.open(TNQry, OptTnQry);
+
   MeetingPersonForm.showModal;
   MeetingPersonForm.free;
 end;
@@ -516,8 +524,19 @@ begin
     if ElTab.State = dsBrowse then
       elTab.Edit;
   end;
+
+  Panel2.Visible      := not flag;
   EditFrame1.ReadOnly := flag;
-  BitBtn2.Visible := not flag;
+  BitBtn2.Visible     := not flag;
+end;
+
+procedure TMeetingForm.TGQryBeforePost(DataSet: TDataSet);
+begin
+  if DataSet.FieldByName('TG_ID').IsNull then
+  begin
+    DataSet.FieldByName('TG_ID').AsInteger := GM.autoInc('gen_tg_id');
+    DataSet.FieldByName('PR_ID').AsInteger := m_pr_id;
+  end;
 end;
 
 procedure TMeetingForm.TNQryTN_STATUS_STRGetText(Sender: TField;
@@ -540,6 +559,10 @@ var
 begin
   TOFrame1.PR_ID := m_pr_id;
   TOFrame1.updateContent;
+
+  OptTnQry.Close;
+  OptTnQry.ParamByName('PR_ID').AsInteger := m_pr_id;
+  OptTnQry.Open;
 
   TNQry.Close;
   TNQry.ParamByName('PR_ID').AsInteger  := m_pr_id;
@@ -578,11 +601,9 @@ begin
   LabeledEdit4.Text := IntToStr( counter[2]);
   LabeledEdit5.Text := IntToStr( counter[3]);
 
-
   TGQry.Close;
   TGQry.ParamByName('PR_ID').AsInteger := m_pr_id;
   TGQry.Open;
-
 end;
 
 end.

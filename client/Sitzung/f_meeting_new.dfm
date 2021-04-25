@@ -34,7 +34,9 @@ object MeetingForm: TMeetingForm
       Width = 677
       ExplicitWidth = 677
       inherited AbortBtn: TBitBtn
+        Top = 6
         OnClick = BaseFrame1AbortBtnClick
+        ExplicitTop = 6
       end
       inherited OKBtn: TBitBtn
         Left = 578
@@ -139,7 +141,7 @@ object MeetingForm: TMeetingForm
     Top = 81
     Width = 677
     Height = 431
-    ActivePage = TabSheet1
+    ActivePage = TabSheet3
     Align = alClient
     TabOrder = 2
     object TabSheet1: TTabSheet
@@ -373,9 +375,10 @@ object MeetingForm: TMeetingForm
         Left = 0
         Top = 0
         Width = 669
-        Height = 403
+        Height = 362
         Align = alClient
         DataSource = TGSrc
+        Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
         ReadOnly = True
         TabOrder = 0
         TitleFont.Charset = DEFAULT_CHARSET
@@ -423,6 +426,25 @@ object MeetingForm: TMeetingForm
             Width = 150
             Visible = True
           end>
+      end
+      object Panel2: TPanel
+        Left = 0
+        Top = 362
+        Width = 669
+        Height = 41
+        Align = alBottom
+        BevelOuter = bvNone
+        Caption = 'Panel2'
+        ShowCaption = False
+        TabOrder = 1
+        object DBNavigator1: TDBNavigator
+          Left = 12
+          Top = 6
+          Width = 240
+          Height = 25
+          DataSource = TGSrc
+          TabOrder = 0
+        end
       end
     end
   end
@@ -488,7 +510,6 @@ object MeetingForm: TMeetingForm
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsMeeing'
-    SQLConnection = GM.SQLConnection1
     Left = 48
     Top = 176
   end
@@ -508,7 +529,6 @@ object MeetingForm: TMeetingForm
     Top = 284
   end
   object ProtoQry: TClientDataSet
-    Active = True
     Aggregates = <>
     Params = <
       item
@@ -600,8 +620,8 @@ object MeetingForm: TMeetingForm
         ParamType = ptInput
       end>
     ProviderName = 'TGQry'
-    ReadOnly = True
     RemoteServer = DSProviderConnection1
+    BeforePost = TGQryBeforePost
     Left = 188
     Top = 233
   end
@@ -609,5 +629,18 @@ object MeetingForm: TMeetingForm
     DataSet = TGQry
     Left = 188
     Top = 289
+  end
+  object OptTnQry: TClientDataSet
+    Aggregates = <>
+    Params = <
+      item
+        DataType = ftInteger
+        Name = 'pr_id'
+        ParamType = ptInput
+      end>
+    ProviderName = 'OptTnQry'
+    RemoteServer = DSProviderConnection1
+    Left = 276
+    Top = 241
   end
 end

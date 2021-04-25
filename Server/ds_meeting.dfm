@@ -1,7 +1,7 @@
 object dsMeeing: TdsMeeing
   OldCreateOrder = False
   Height = 447
-  Width = 475
+  Width = 658
   object IBTransaction1: TIBTransaction
     DefaultDatabase = DBMod.IBDatabase1
     Params.Strings = (
@@ -303,7 +303,7 @@ object dsMeeing: TdsMeeing
       'select * from TG_GAESTE'
       'where pr_id = :pr_id'
       'order by tg_grund, tg_name, tg_vorname')
-    Left = 360
+    Left = 464
     Top = 16
     ParamData = <
       item
@@ -314,7 +314,7 @@ object dsMeeing: TdsMeeing
   end
   object TGQry: TDataSetProvider
     DataSet = Gaeste
-    Left = 360
+    Left = 464
     Top = 64
   end
   object ResetReadQry: TIBQuery
@@ -380,9 +380,11 @@ object dsMeeing: TdsMeeing
       '    TN_TEILNEHMER'
       '  where pr_id = :pr_id'
       ')'
-      'and a.PE_ID > 10')
-    Left = 376
-    Top = 128
+      'and a.PE_ID > 9'
+      'order by pe_name, pe_vorname'
+      '')
+    Left = 352
+    Top = 16
     ParamData = <
       item
         DataType = ftInteger
@@ -392,7 +394,34 @@ object dsMeeing: TdsMeeing
   end
   object OptTnQry: TDataSetProvider
     DataSet = OptTn
-    Left = 376
-    Top = 184
+    Left = 352
+    Top = 72
+  end
+  object DeleteTN: TIBQuery
+    Database = DBMod.IBDatabase1
+    Transaction = IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    ParamCheck = True
+    SQL.Strings = (
+      'delete from TN_TEILNEHMER'
+      'where tn_id = :tn_id')
+    Left = 416
+    Top = 176
+    ParamData = <
+      item
+        DataType = ftInteger
+        Name = 'tn_id'
+        ParamType = ptInput
+      end>
+  end
+  object AddTN: TIBQuery
+    Database = DBMod.IBDatabase1
+    Transaction = IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    ParamCheck = True
+    Left = 512
+    Top = 176
   end
 end

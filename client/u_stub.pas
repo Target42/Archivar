@@ -1,6 +1,6 @@
 //
 // Erzeugt vom DataSnap-Proxy-Generator.
-// 07.04.2021 19:33:10
+// 25.04.2021 12:49:16
 //
 
 unit u_stub;
@@ -225,6 +225,7 @@ type
     FinviteCommand: TDBXCommand;
     FGetTreeCommand: TDBXCommand;
     FchangeStatusCommand: TDBXCommand;
+    FchangeUserCommand: TDBXCommand;
   public
     constructor Create(ADBXConnection: TDBXConnection); overload;
     constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
@@ -236,6 +237,7 @@ type
     function invite(req: TJSONObject): TJSONObject;
     function GetTree(req: TJSONObject): TJSONObject;
     function changeStatus(req: TJSONObject): TJSONObject;
+    function changeUser(req: TJSONObject): TJSONObject;
   end;
 
 implementation
@@ -1241,6 +1243,20 @@ begin
   Result := TJSONObject(FchangeStatusCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
 end;
 
+function TdsMeeingClient.changeUser(req: TJSONObject): TJSONObject;
+begin
+  if FchangeUserCommand = nil then
+  begin
+    FchangeUserCommand := FDBXConnection.CreateCommand;
+    FchangeUserCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FchangeUserCommand.Text := 'TdsMeeing.changeUser';
+    FchangeUserCommand.Prepare;
+  end;
+  FchangeUserCommand.Parameters[0].Value.SetJSONValue(req, FInstanceOwner);
+  FchangeUserCommand.ExecuteUpdate;
+  Result := TJSONObject(FchangeUserCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
+end;
+
 constructor TdsMeeingClient.Create(ADBXConnection: TDBXConnection);
 begin
   inherited Create(ADBXConnection);
@@ -1260,6 +1276,7 @@ begin
   FinviteCommand.DisposeOf;
   FGetTreeCommand.DisposeOf;
   FchangeStatusCommand.DisposeOf;
+  FchangeUserCommand.DisposeOf;
   inherited;
 end;
 
