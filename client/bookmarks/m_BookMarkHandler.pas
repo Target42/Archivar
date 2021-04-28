@@ -13,6 +13,8 @@ type
     m_bookmarks : TBookmarkList;
   public
     property Bookmarks : TBookmarkList read m_bookmarks;
+
+    procedure load;
   end;
 
 var
@@ -30,13 +32,17 @@ uses
 procedure TBookMarkHandler.DataModuleCreate(Sender: TObject);
 begin
   m_bookmarks := TBookmarkList.create;
-  m_bookmarks.load(GM.Home);
 end;
 
 procedure TBookMarkHandler.DataModuleDestroy(Sender: TObject);
 begin
   m_bookmarks.save(GM.Home);
   FreeAndNil(m_bookmarks);
+end;
+
+procedure TBookMarkHandler.load;
+begin
+  m_bookmarks.load(GM.Home);
 end;
 
 end.

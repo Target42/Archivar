@@ -78,6 +78,7 @@ type
     procedure requestUser;
 
     function downloadimage( name : string;client : TdsImageClient) :  boolean;
+    procedure CreateDirs;
   public
 
     function Connect : boolean;
@@ -278,6 +279,21 @@ begin
   end;
 end;
 
+procedure TGM.CreateDirs;
+begin
+  m_home      := TPath.Combine(TPath.GetHomePath, 'Archivar\'+FUserName );
+  m_images    := TPath.Combine(m_home, 'Images' );
+  m_httpHome  := TPath.Combine(m_home, 'wwwroot');
+  m_export    := TPath.Combine(m_home, 'export');
+  m_epubHome  := TPath.Combine(m_home, 'epubs');
+
+  ForceDirectories(m_home);
+  ForceDirectories(m_images);
+  ForceDirectories(m_httpHome);
+  ForceDirectories(m_export);
+  ForceDirectories(m_epubHome);
+end;
+
 function GetUsername: String;
 var
   Buffer: array[0..256] of Char; // UNLEN (= 256) +1 (definiert in Lmcons.h)
@@ -297,7 +313,8 @@ begin
   m_misc := NIL;
   m_gremien := TList<TGremium>.create;
 
-  m_home      := TPath.Combine(TPath.GetHomePath, 'Archivar' );
+ {
+  m_home      := TPath.Combine(TPath.GetHomePath, 'Archivar\'+FUserName );
   m_images    := TPath.Combine(m_home, 'Images' );
   m_httpHome  := TPath.Combine(m_home, 'wwwroot');
   m_export    := TPath.Combine(m_home, 'export');
@@ -308,7 +325,7 @@ begin
   ForceDirectories(m_httpHome);
   ForceDirectories(m_export);
   ForceDirectories(m_epubHome);
-
+}
   FUserName := GetUsername;
 {$ifndef RELEASE}
   if ParamStr(1) <> '' then
@@ -679,6 +696,9 @@ begin
   finally
 
   end;
+  CreateDirs;
+
+  BookMarkHandler.load;
 
   checkimages;
   checkCache;
