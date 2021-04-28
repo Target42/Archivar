@@ -108,6 +108,9 @@ begin
       on e : exception do
       begin
         JResult( Result, false, e.ToString);
+
+        if SetReadQry.Transaction.InTransaction then
+          SetReadQry.Transaction.Rollback;
       end;
     end;
   end
@@ -127,6 +130,8 @@ begin
       on e : exception do
       begin
         JResult( Result, false, e.ToString);
+        if UpdateTnQry.Transaction.InTransaction then
+          UpdateTnQry.Transaction.Rollback;
       end;
     end;
   end;
@@ -384,6 +389,8 @@ begin
   else
     JResult( Result, false, 'Das Protokoll wurde nicht gefunden!');
   ProtoQry.Close;
+  if ProtoQry.Transaction.InTransaction then
+    ProtoQry.Transaction.Commit;
 end;
 
 function TdsMeeing.invite(req: TJSONObject): TJSONObject;
@@ -496,7 +503,12 @@ begin
     updateMeeting(JInt(req, 'elid'));
   except
     on e : exception do
+    begin
       JResult( Result, false, e.ToString);
+      if ResetReadQry.Transaction.InTransaction then
+        ResetReadQry.Transaction.Rollback;
+
+    end;
   end;
 end;
 

@@ -4,7 +4,7 @@ interface
 
 uses
   System.SysUtils, System.Classes, IdBaseComponent, IdComponent,
-  IdCustomTCPServer, IdCustomHTTPServer, IdHTTPServer, IdContext;
+  IdCustomTCPServer, IdCustomHTTPServer, IdHTTPServer, IdContext, IdTCPServer;
 
 type
   THttpMod = class(TDataModule)
@@ -17,10 +17,13 @@ type
     procedure IdHTTPServer1ParseAuthentication(AContext: TIdContext;
       const AAuthType, AAuthData: string; var VUsername, VPassword: string;
       var VHandled: Boolean);
+    procedure IdTCPServer1Execute(AContext: TIdContext);
   private
     m_home  : string;
+    function getport: integer;
+    function IsTCPPortAvailable(const APort: Word): Boolean;
   public
-    { Public-Deklarationen }
+    property Port : integer read getport;
   end;
 
 var
@@ -29,7 +32,7 @@ var
 implementation
 
 uses
-  m_glob_client, System.StrUtils, Vcl.Dialogs;
+  m_glob_client, System.StrUtils, Vcl.Dialogs, IdSocketHandle, IdException;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -37,10 +40,24 @@ uses
 
 
 procedure THttpMod.DataModuleCreate(Sender: TObject);
+var
+  i : integer;
 begin
-  IdHTTPServer1.Active := true;
+  for i := IdHTTPServer1.DefaultPort to IdHTTPServer1.DefaultPort + 10 do
+  begin
+    if IsTCPPortAvailable(i) then
+    begin
+      IdHTTPServer1.DefaultPort := i;
+      IdHTTPServer1.Active := true;
+      break;
+    end;
+  end;
   m_home := ReplaceText(GM.wwwHome, '\', '/');
+end;
 
+function THttpMod.getport: integer;
+begin
+  result := IdHTTPServer1.Defaultport;
 end;
 
 procedure THttpMod.IdHTTPServer1CommandGet(AContext: TIdContext;
@@ -78,6 +95,34 @@ procedure THttpMod.IdHTTPServer1ParseAuthentication(AContext: TIdContext;
   var VHandled: Boolean);
 begin
   VHandled := true;
+end;
+
+procedure THttpMod.IdTCPServer1Execute(AContext: TIdContext);
+begin
+  //
+end;
+
+function THttpMod.IsTCPPortAvailable(const APort: Word): Boolean;
+var
+  LTCPServer: TIdTCPServer;
+begin
+  Result := True;
+  LTCPServer := TIdTCPServer.Create;
+  try
+    try
+
+      with LTCPServer do
+      begin
+        DefaultPort   := APort;
+        OnExecute     := IdTCPServer1Execute;
+        Active        := True;
+      end;
+    finally
+      LTCPServer.Free;
+    end;
+  except on EIdCouldNotBindSocket do
+    Result := False;
+  end;
 end;
 
 end.

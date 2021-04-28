@@ -82,7 +82,7 @@ implementation
 
 uses
   System.StrUtils, m_dws, Vcl.Forms, System.IOUtils, m_glob_client,
-  Winapi.ActiveX, m_taskLoader, System.Types, vcl.Clipbrd;
+  Winapi.ActiveX, m_taskLoader, System.Types, vcl.Clipbrd, m_http;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -497,7 +497,7 @@ begin
   else
     SaveToFile(TPath.combine(Result, 'index.html'));
 
-  web.Navigate('http://localhost:42424/'+m_tc.CLID+'/index.html');
+  web.Navigate('http://localhost:'+IntToStr(HttpMod.Port)+'/'+m_tc.CLID+'/index.html');
   list.Free;
 end;
 
@@ -518,7 +518,7 @@ begin
   finally
     list.Free;
   end;
-  url := 'http://localhost:42424/'+m_clid+'/index.html';
+  url := 'http://localhost:'+IntToStr(HttpMod.Port)+'/'+m_clid+'/index.html';
   web.Navigate(url);
   Clipboard.AsText := url;
 

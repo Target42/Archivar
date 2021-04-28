@@ -92,6 +92,7 @@ type
     m_gr        : TGremium;
     m_proto     : IProtocol;
     m_readOnly  : boolean;
+    m_needUpdate: boolean;
 
     procedure SetGremiumID(const Value: TGremium);
 
@@ -223,10 +224,11 @@ begin
   if ELtab.UpdatesPending then
     ElTab.ApplyUpdates(0);
 
-  if changed then
+  if changed or m_needUpdate then
     SendUpdate;
 
   PostMessage( Application.MainFormHandle, msgUpdateMeetings, 0, 0);
+  m_needUpdate := false;
 end;
 
 procedure TMeetingForm.BitBtn1Click(Sender: TObject);
@@ -278,6 +280,7 @@ end;
 
 procedure TMeetingForm.BitBtn2Click(Sender: TObject);
 begin
+  m_needUpdate := true;
   Application.CreateForm(TMeetingPersonForm, MeetingPersonForm);
   MeetingPersonForm.PR_ID := m_pr_id;
 
@@ -285,6 +288,8 @@ begin
 
   MeetingPersonForm.showModal;
   MeetingPersonForm.free;
+
+  updateTo;
 end;
 
 procedure TMeetingForm.changeStatus;
@@ -385,6 +390,7 @@ begin
   m_readOnly  := false;
   m_gr        := NIL;
   m_proto     := NIL;
+  m_needUpdate:= false;
 
   setup;
 
@@ -394,6 +400,9 @@ end;
 
 procedure TMeetingForm.FormDestroy(Sender: TObject);
 begin
+  if m_needUpdate then
+    SendUpdate;
+
   if ElTab.UpdatesPending then
     ElTab.CancelUpdates;
 
