@@ -72,8 +72,8 @@ end;
 
 procedure TProtokollViewForm.FormCreate(Sender: TObject);
 begin
-  m_renderer := TProtocolRenderer.create;
-  m_loader      := TTaskLoaderMod.Create(self);
+  m_renderer        := TProtocolRenderer.create;
+  m_loader          := TTaskLoaderMod.Create(self);
   m_renderer.Loader := m_loader;
   m_id := -1;
 end;

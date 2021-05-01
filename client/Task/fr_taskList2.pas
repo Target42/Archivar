@@ -19,6 +19,7 @@ type
     ChapterTextTab: TClientDataSet;
     procedure SpeedButton2Click(Sender: TObject);
     procedure SpeedButton1Click(Sender: TObject);
+    procedure LVDblClick(Sender: TObject);
   private
     m_id     : integer;
     m_filter : integer;
@@ -59,7 +60,7 @@ type
 implementation
 
 uses
-  m_glob_client, u_Konst, f_task_filter;
+  m_glob_client, u_Konst, f_task_filter, m_WindowHandler;
 
 {$R *.dfm}
 
@@ -88,6 +89,17 @@ end;
 function TTaskList2Frame.GetReadOnly: boolean;
 begin
   Result := m_ro;
+end;
+
+procedure TTaskList2Frame.LVDblClick(Sender: TObject);
+var
+  en : TTaskEntry;
+begin
+  if not Assigned(LV.Selected) then
+    exit;
+  en := TTaskEntry(LV.Selected.Data);
+
+  WindowHandler.openTaskWindow(en.TaskID, -1, true, true);
 end;
 
 procedure TTaskList2Frame.prepare;

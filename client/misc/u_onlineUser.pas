@@ -168,6 +168,9 @@ begin
   arr := JArray( obj, 'user');
   if not Assigned(arr) then
     exit;
+  for i := low(m_data) to High(m_data) do
+    m_data[i].status := '';
+
   for i := 0 to pred(arr.Count) do
   begin
     row := getRow(arr, i);

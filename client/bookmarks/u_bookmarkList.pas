@@ -146,6 +146,9 @@ var
   obj : TJSONObject;
   fname : string;
 begin
+  if m_list.Count = 0 then
+    exit;
+
   fname := TPath.Combine( path, 'bookmarks.json');
   obj   := TJSONObject.Create;
   JReplace( obj, 'items', getJSON);

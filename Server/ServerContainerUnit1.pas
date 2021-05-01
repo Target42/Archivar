@@ -8,7 +8,7 @@ uses System.SysUtils, System.Classes,
   IPPeerServer, IPPeerAPI, Datasnap.DSAuth, DbxSocketChannelNative,
   DbxCompressionFilter, Vcl.SvcMgr, m_glob_server, IBX.IBDatabase, Data.DB,
   IBX.IBCustomDataSet, IBX.IBQuery, m_lockMod, Datasnap.DSSession, i_user,
-  System.JSON;
+  System.JSON, IdBaseComponent, IdComponent, IdCustomTCPServer, IdTCPServer;
 
 type
   TServerContainer1 = class(TService)
@@ -76,9 +76,13 @@ type
       var PersistentClass: TPersistentClass);
     procedure dsMeeingGetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
+    procedure DSTCPServerTransport1Connect(Event: TDSTCPConnectEventObject);
+    procedure DSTCPServerTransport1Disconnect(
+      Event: TDSTCPDisconnectEventObject);
   private
     const
       MaxUserNameLength = 25;
+  procedure removeUser( id : NativeInt );
   protected
     function DoStop: Boolean; override;
     function DoPause: Boolean; override;
@@ -136,9 +140,7 @@ begin
   Session := TDSSessionManager.GetThreadSession;
   if Assigned(session) then
   begin
-    LockMod.removeLocks(session.Id);
-    DebugMsg('Disconnect::session id : ' + intToStr( session.Id ));
-    ous.removeSessionID( session.Id );
+    removeUser(session.Id);
   end;
   DebugMsg(  'Disconnect::disconnect : ' + IntToStr(DSConnectEventObject.ChannelInfo.Id));
   DebugMsg('');
@@ -175,6 +177,19 @@ begin
   PersistentClass := ds_taskView.TdsTaskView;
 end;
 
+procedure TServerContainer1.DSTCPServerTransport1Connect(
+  Event: TDSTCPConnectEventObject);
+begin
+  Event.Channel.EnableKeepAlive(1000);
+  DebugMsg('connect '+Event.Channel.SessionId);
+end;
+
+procedure TServerContainer1.DSTCPServerTransport1Disconnect(
+  Event: TDSTCPDisconnectEventObject);
+begin
+  DebugMsg('disconnect ');
+end;
+
 procedure TServerContainer1.dsTemplateGetClass(DSServerClass: TDSServerClass;
   var PersistentClass: TPersistentClass);
 begin
@@ -189,6 +204,13 @@ end;
 function TServerContainer1.GetServiceController: TServiceController;
 begin
   Result := ServiceController;
+end;
+
+procedure TServerContainer1.removeUser(id: NativeInt);
+begin
+  LockMod.removeLocks(Id);
+  DebugMsg('removeUser::session id : ' + intToStr( Id ));
+  ous.removeSessionID( Id );
 end;
 
 procedure TServerContainer1.BroadcastMessage(id: string; data: TJSONObject);
@@ -390,10 +412,8 @@ begin
               const Session: TDSSession)
     begin
       case EventType of
-        SessionCreate: ;
-          {The provided Session was just created.}
-        SessionClose: ;
-          {The provided Session has just been closed, either intentionally or it has expired.}
+        SessionCreate :;// DebugMsg('session create '+IntToStr(Session.Id));
+        SessionClose  : removeUser(Session.Id); //  DebugMsg('session closed '+IntToStr(Session.Id));
       end;
     end);
 end;

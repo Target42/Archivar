@@ -146,7 +146,7 @@ uses
   System.UITypes, system.IOUtils, FireDAC.Stan.Storagebin,
   System.Win.ComObj, m_WindowHandler, m_BookMarkHandler, IdHashMessageDigest,
   Vcl.Graphics, u_PersonenListeImpl, u_PersonImpl, m_cache, f_login, u_kategorie,
-  u_onlineUser;
+  u_onlineUser, m_http;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -313,19 +313,6 @@ begin
   m_misc := NIL;
   m_gremien := TList<TGremium>.create;
 
- {
-  m_home      := TPath.Combine(TPath.GetHomePath, 'Archivar\'+FUserName );
-  m_images    := TPath.Combine(m_home, 'Images' );
-  m_httpHome  := TPath.Combine(m_home, 'wwwroot');
-  m_export    := TPath.Combine(m_home, 'export');
-  m_epubHome  := TPath.Combine(m_home, 'epubs');
-
-  ForceDirectories(m_home);
-  ForceDirectories(m_images);
-  ForceDirectories(m_httpHome);
-  ForceDirectories(m_export);
-  ForceDirectories(m_epubHome);
-}
   FUserName := GetUsername;
 {$ifndef RELEASE}
   if ParamStr(1) <> '' then
@@ -438,8 +425,9 @@ end;
 
 procedure TGM.FillTimes(arr: TJSONArray);
 var
-  i : Integer;
-  row : TJSONObject;
+  i     : Integer;
+  row   : TJSONObject;
+  fname : string;
 begin
   if not Assigned(arr) then
     exit;
@@ -455,7 +443,8 @@ begin
     DeleteTimesTab.FieldByName('FD_MONATE').AsInteger := JInt( row, 'monate');
     DeleteTimesTab.Post;
   end;
-  DeleteTimesTab.SaveToFile( TPath.Combine(m_home, 'deltimes.adb'), sfBinary );
+  fname := TPath.Combine(m_home, 'deltimes.adb');
+  DeleteTimesTab.SaveToFile( fname, sfBinary );
   DeleteTimesTab.Close;
 end;
 
@@ -685,6 +674,8 @@ begin
       Self.UserID   := JInt(    data, 'id' );
     end;
 
+    CreateDirs;
+
     data := client.getDeleteTimes;
     FillTimes( JArray( data, 'items'));
   finally
@@ -696,7 +687,7 @@ begin
   finally
 
   end;
-  CreateDirs;
+  HttpMod.Home := self.wwwHome;
 
   BookMarkHandler.load;
 

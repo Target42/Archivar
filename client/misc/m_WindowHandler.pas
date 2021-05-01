@@ -16,7 +16,7 @@ type
     m_protoView   : TDictionary<integer,TProtokollViewForm>;
 
   public
-    procedure openTaskWindow( id, typeID : integer; ro : boolean );
+    procedure openTaskWindow( id, typeID : integer; ro : boolean; modal : boolean = false );
     procedure closeTaskWindow( id : integer );
     function isTaskOpen( id : integer ) : Boolean;
     procedure closeTaksWindowMsg( id : integer; text : string );
@@ -160,26 +160,42 @@ begin
   frm.Show;
 end;
 
-procedure TWindowHandler.openTaskWindow(id, typeID: integer; ro : boolean);
+procedure TWindowHandler.openTaskWindow(id, typeID: integer; ro : boolean ; modal : boolean);
 var
   TaskEditForm : TTaskEditForm;
 begin
-  if m_taskMap.ContainsKey(id) then
+  if modal then
   begin
-    TaskEditForm := m_taskMap[id];
-    TaskEditForm.BringToFront;
-    TaskEditForm.WindowState := wsMaximized;
-  end
-  else
-  begin
-    Application.CreateForm(TTaskEditForm, TaskEditForm);
-    m_taskMap.Add(id, TaskEditForm);
-    TaskEditForm.setID( id, typeID );
-  end;
-  TaskEditForm.RO := ro;
-  TaskEditForm.Show;
-  TaskEditForm.LockCheck;
+      Application.CreateForm(TTaskEditForm, TaskEditForm);
+      TaskEditForm.FormStyle := fsNormal;
+      TaskEditForm.Hide;
 
+      TaskEditForm.setID( id, typeID );
+      TaskEditForm.RO := ro;
+      TaskEditForm.LockCheck;
+      TaskEditForm.resizeForm;
+      TaskEditForm.ShowModal;
+      TaskEditForm.Free;
+  end
+  else begin
+
+    if m_taskMap.ContainsKey(id) then
+    begin
+      TaskEditForm := m_taskMap[id];
+      TaskEditForm.BringToFront;
+      TaskEditForm.WindowState := wsMaximized;
+    end
+    else
+    begin
+      Application.CreateForm(TTaskEditForm, TaskEditForm);
+      TaskEditForm.FormStyle := fsStayOnTop;
+      m_taskMap.Add(id, TaskEditForm);
+      TaskEditForm.setID( id, typeID );
+    end;
+    TaskEditForm.RO := ro;
+    TaskEditForm.Show;
+    TaskEditForm.LockCheck;
+  end;
 end;
 
 end.

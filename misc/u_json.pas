@@ -715,6 +715,10 @@ function formatJSON( obj : TJSONObject; indend : integer ) : string;
 var
   i : integer;
 begin
+  Result := '';
+  if not  Assigned(obj) then
+    exit;
+
   if indend <> -1 then
   begin
     AddSpc := '';

@@ -13,6 +13,7 @@ object TaskEditForm: TTaskEditForm
   FormStyle = fsMDIChild
   Menu = MainMenu1
   OldCreateOrder = False
+  Position = poOwnerFormCenter
   Visible = True
   WindowState = wsMaximized
   OnClose = FormClose
@@ -225,16 +226,12 @@ object TaskEditForm: TTaskEditForm
         Top = 113
         Width = 717
         Height = 279
-        ActivePage = TabSheet4
+        ActivePage = TabSheet3
         Align = alClient
         TabOrder = 1
         OnChange = PageControl2Change
         object TabSheet3: TTabSheet
           Caption = 'Details'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 283
           object ScrollBox1: TScrollBox
             Left = 0
             Top = 0
@@ -243,7 +240,6 @@ object TaskEditForm: TTaskEditForm
             HorzScrollBar.Visible = False
             Align = alClient
             TabOrder = 0
-            ExplicitHeight = 283
           end
         end
         object TabSheet4: TTabSheet

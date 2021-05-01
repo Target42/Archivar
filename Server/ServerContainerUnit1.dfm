@@ -35,6 +35,10 @@ object ServerContainer1: TServerContainer1
           'CompressMoreThan=1024')
       end>
     AuthenticationManager = DSAuthenticationManager1
+    OnConnect = DSTCPServerTransport1Connect
+    OnDisconnect = DSTCPServerTransport1Disconnect
+    KeepAliveEnablement = kaEnabled
+    KeepAliveTime = 10000
     Left = 56
     Top = 65
   end

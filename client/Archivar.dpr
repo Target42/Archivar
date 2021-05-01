@@ -181,7 +181,6 @@ begin
 {$else}
   ReportMemoryLeaksOnShutdown := true;
 {$endif}
-  ReportMemoryLeaksOnShutdown := true;
 
   Application.Initialize;
   Application.MainFormOnTaskbar := True;

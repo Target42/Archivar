@@ -129,6 +129,8 @@ type
     property RO : Boolean read getRO write setRO;
 
     procedure LockCheck;
+
+    procedure resizeForm;
   end;
 
 var
@@ -513,6 +515,28 @@ begin
   finally
     HtmlMod.Free;
   end;
+
+end;
+
+procedure TTaskEditForm.resizeForm;
+var
+  i : integer;
+  max : integer;
+  m   : integeR;
+  ctrl : TControl;
+  dif   : integer;
+begin
+  max := 0;
+  for i := 0 to pred(ScrollBox1.ComponentCount) do
+  begin
+    ctrl := ScrollBox1.Components[i] as TControl;
+    m := ctrl.Top + ctrl.Height;
+    if m > max then
+      max := m;
+  end;
+  dif := max - ScrollBox1.ClientHeight;
+  if dif > 0 then
+    self.ClientHeight := self.ClientHeight + dif;
 
 end;
 

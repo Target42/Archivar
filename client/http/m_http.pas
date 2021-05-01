@@ -23,6 +23,7 @@ type
     function getport: integer;
     function IsTCPPortAvailable(const APort: Word): Boolean;
   public
+    property Home : string  read m_home write m_home;
     property Port : integer read getport;
   end;
 
