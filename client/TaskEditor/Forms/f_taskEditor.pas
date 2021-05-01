@@ -95,8 +95,18 @@ uses
 {$R *.dfm}
 
 procedure TTaksEditorForm.ac_exportExecute(Sender: TObject);
+var
+  path : string;
 begin
-  SaveDialog1.FileName := m_tc.Task.Name+'.task';
+  path := TPath.Combine(Gm.ExportDir, 'tasks');
+  try
+    ForceDirectories(path)
+  except
+
+  end;
+  SaveDialog1.InitialDir  := path;
+  SaveDialog1.FileName    := m_tc.Task.Name+'.task';
+
   if SaveDialog1.Execute then
     m_tc.exportTask(SaveDialog1.FileName);
 end;

@@ -113,6 +113,11 @@ var
 begin
   DBGrid1.Enabled := false;
   path := TPath.Combine(GM.ExportDir, 'datafields');
+  try
+    ForceDirectories(path);
+  except
+
+  end;
   JvBrowseForFolderDialog1.Directory := path;
   if not JvBrowseForFolderDialog1.Execute then
     exit;

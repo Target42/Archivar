@@ -284,8 +284,9 @@ begin
   m_home      := TPath.Combine(TPath.GetHomePath, 'Archivar\'+FUserName );
   m_images    := TPath.Combine(m_home, 'Images' );
   m_httpHome  := TPath.Combine(m_home, 'wwwroot');
-  m_export    := TPath.Combine(m_home, 'export');
   m_epubHome  := TPath.Combine(m_home, 'epubs');
+  m_export    := TPath.Combine(TPath.GetDocumentsPath, 'Archivar\export');
+
 
   ForceDirectories(m_home);
   ForceDirectories(m_images);
