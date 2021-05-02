@@ -46,6 +46,7 @@ type
 
     function addUser( id : integer; name, vorname : string; sessionID : NativeInt ) :IServerUser;
     procedure removeSessionID( id : NativeInt );
+    function isSessionOnline( id : NativeInt ) : boolean;
 
     procedure changeStatus( id : integer;  text : string );
 

@@ -55,7 +55,6 @@ type
     TaskTabTA_FLAGS: TIntegerField;
     TaskTabTA_STATUS: TWideStringField;
     TaskTabTA_REST: TStringField;
-    Label6: TLabel;
     Label7: TLabel;
     ComboBox1: TComboBox;
     Label8: TLabel;
@@ -100,6 +99,8 @@ type
     procedure ac_bookmarkExecute(Sender: TObject);
     procedure ac_saveExecute(Sender: TObject);
     procedure ac_refreshExecute(Sender: TObject);
+    procedure StatusBar1DrawPanel(StatusBar: TStatusBar; Panel: TStatusPanel;
+      const Rect: TRect);
   private
     m_ta_id : integer;
     m_ty_id : integeR;
@@ -537,7 +538,7 @@ begin
   dif := max - ScrollBox1.ClientHeight;
   if dif > 0 then
     self.ClientHeight := self.ClientHeight + dif;
-
+  Self.Position := poOwnerFormCenter;
 end;
 
 procedure TTaskEditForm.save;
@@ -607,14 +608,41 @@ begin
   ac_refresh.Enabled          := m_ro;
 
   GroupBox1.Enabled           := not m_ro;
-  Label6.Visible              := m_ro;
-
 
   TaskTab.ReadOnly  := m_ro;
 
   if Assigned(m_form) then
     m_form.ReadOnly := m_ro;
   FileFrame1.RO := m_ro;
+
+  if m_ro then
+    StatusBar1.Panels.Items[0].Text := 'Schreibgeschützt'
+  else
+    StatusBar1.Panels.Items[0].Text := 'Bearbeitbar';
+  StatusBar1.Invalidate;
+end;
+
+procedure TTaskEditForm.StatusBar1DrawPanel(StatusBar: TStatusBar;
+  Panel: TStatusPanel; const Rect: TRect);
+var
+  RectForText: TRect;
+begin
+  StatusBar1.Canvas.Font.Style := [];
+  if Panel.ID = 0 then begin
+    if m_ro then begin
+      StatusBar1.Canvas.Font.Color := clRed;
+      StatusBar1.Canvas.Font.Style := [fsBold ];
+    end
+    else
+      StatusBar1.Canvas.Font.Color := clGreen;
+  end
+  else begin
+    StatusBar.Canvas.Font.Color := clBlack;
+  end;
+
+  RectForText := Rect;
+  StatusBar1.Canvas.FillRect(RectForText);
+  DrawText(StatusBar1.Canvas.Handle, PChar(Panel.Text), -1, RectForText, DT_SINGLELINE or DT_VCENTER or DT_LEFT);
 end;
 
 procedure TTaskEditForm.TaskTabPostError(DataSet: TDataSet; E: EDatabaseError;

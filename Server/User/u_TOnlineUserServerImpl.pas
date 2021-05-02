@@ -29,6 +29,7 @@ type
     function addUser( id : integer; name, vorname : string; sessionID : NativeInt ) :IServerUser;
     procedure changeStatus( id : integer;  text : string );
     procedure removeSessionID( id : NativeInt );
+    function isSessionOnline( id : NativeInt ) : boolean;
 
     procedure lockServer;
     procedure unlockServer;
@@ -135,6 +136,16 @@ end;
 function TOnlineUserServerImpl.GetItems(inx : integer) : IServerUser;
 begin
   Result := m_list[inx];
+end;
+
+function TOnlineUserServerImpl.isSessionOnline(id: NativeInt): boolean;
+begin
+  m_mutex.Acquire;
+  try
+    Result := m_sessions.ContainsKey(id);
+  finally
+    m_mutex.Release;
+  end;
 end;
 
 procedure TOnlineUserServerImpl.lockServer;

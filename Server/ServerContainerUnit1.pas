@@ -211,6 +211,17 @@ begin
   LockMod.removeLocks(Id);
   DebugMsg('removeUser::session id : ' + intToStr( Id ));
   ous.removeSessionID( Id );
+
+  if not ous.isSessionOnline(id) then
+  begin
+    TDSSessionManager.Instance.ForEachSession(
+      procedure(const Session: TDSSession)
+      begin
+        if Session.Id = id  then begin
+          Session.Close;
+        end;
+      end);
+  end;
 end;
 
 procedure TServerContainer1.BroadcastMessage(id: string; data: TJSONObject);

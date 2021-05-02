@@ -188,8 +188,8 @@ begin
     else
     begin
       Application.CreateForm(TTaskEditForm, TaskEditForm);
-      TaskEditForm.FormStyle := fsStayOnTop;
       m_taskMap.Add(id, TaskEditForm);
+
       TaskEditForm.setID( id, typeID );
     end;
     TaskEditForm.RO := ro;

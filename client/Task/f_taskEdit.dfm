@@ -13,7 +13,7 @@ object TaskEditForm: TTaskEditForm
   FormStyle = fsMDIChild
   Menu = MainMenu1
   OldCreateOrder = False
-  Position = poOwnerFormCenter
+  Position = poDefault
   Visible = True
   WindowState = wsMaximized
   OnClose = FormClose
@@ -27,7 +27,18 @@ object TaskEditForm: TTaskEditForm
     Top = 420
     Width = 725
     Height = 19
-    Panels = <>
+    Panels = <
+      item
+        Style = psOwnerDraw
+        Width = 150
+      end
+      item
+        Width = 50
+      end
+      item
+        Width = 50
+      end>
+    OnDrawPanel = StatusBar1DrawPanel
   end
   object PageControl1: TPageControl
     Left = 0
@@ -47,9 +58,6 @@ object TaskEditForm: TTaskEditForm
         Align = alTop
         Caption = 'Allgemeines'
         TabOrder = 0
-        DesignSize = (
-          717
-          113)
         object Label1: TLabel
           Left = 16
           Top = 27
@@ -84,21 +92,6 @@ object TaskEditForm: TTaskEditForm
           Width = 22
           Height = 13
           Caption = 'Rest'
-        end
-        object Label6: TLabel
-          Left = 589
-          Top = 56
-          Width = 98
-          Height = 13
-          Anchors = [akTop, akRight]
-          Caption = 'Schreibgesch'#252'tzt'
-          Font.Charset = DEFAULT_CHARSET
-          Font.Color = clRed
-          Font.Height = -11
-          Font.Name = 'Tahoma'
-          Font.Style = [fsBold]
-          ParentFont = False
-          ExplicitLeft = 530
         end
         object Label7: TLabel
           Left = 176

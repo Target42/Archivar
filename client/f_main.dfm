@@ -542,7 +542,7 @@
     end
     object ac_ta_load: TAction
       Category = 'Task'
-      Caption = 'Laden'
+      Caption = 'Bearbeiten'
       Enabled = False
       OnExecute = ac_ta_loadExecute
     end

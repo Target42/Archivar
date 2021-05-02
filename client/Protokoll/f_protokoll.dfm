@@ -26,7 +26,15 @@ object ProtokollForm: TProtokollForm
     Top = 449
     Width = 888
     Height = 19
-    Panels = <>
+    Panels = <
+      item
+        Style = psOwnerDraw
+        Width = 150
+      end
+      item
+        Width = 50
+      end>
+    OnDrawPanel = StatusBar1DrawPanel
   end
   object PageControl1: TPageControl
     Left = 0
@@ -66,6 +74,7 @@ object ProtokollForm: TProtokollForm
           ReadOnly = True
           TabOrder = 0
           OnChange = TVChange
+          OnDblClick = TVDblClick
         end
         object PageControl2: TPageControl
           Left = 2
@@ -740,7 +749,7 @@ object ProtokollForm: TProtokollForm
     Left = 212
     Top = 305
     Bitmap = {
-      494C0101060010010C0110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010106001001100110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

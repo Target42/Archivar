@@ -299,6 +299,10 @@ begin
   EditFrame2.Text := m_be.Text;
 
   updateInfo;
+
+  UpdateList( LVGremium, m_gremium);
+  UpdateList( LVanthalten, m_enthalten);
+  UpdateList( LVAbwesend, m_abwesende);
 end;
 
 procedure TBeschlusform.setGremium(id: integer);
@@ -399,3 +403,4 @@ end;
 
 
 end.
+

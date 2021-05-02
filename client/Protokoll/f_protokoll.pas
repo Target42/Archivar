@@ -113,6 +113,9 @@ type
     procedure ac_be_deleteExecute(Sender: TObject);
     procedure TGDblClick(Sender: TObject);
     procedure Aktualisieren1Click(Sender: TObject);
+    procedure TVDblClick(Sender: TObject);
+    procedure StatusBar1DrawPanel(StatusBar: TStatusBar; Panel: TStatusPanel;
+      const Rect: TRect);
   private type
     TEntryType = (etNothing, etChapterText, etTask, etBeschluss, etTitle);
 
@@ -249,6 +252,7 @@ begin
     exit;
 
   be := IBeschluss(en.Ptr);
+
   Application.CreateForm(TBeschlusform, Beschlusform);
   Beschlusform.setGremium(m_proto.GRID);
   Beschlusform.Beschluss := be;
@@ -872,6 +876,11 @@ begin
     m_proto.cancel
   else
     m_proto.edit;
+  if m_ro then
+    StatusBar1.Panels.Items[0].Text := 'Schreibgeschützt'
+  else
+    StatusBar1.Panels.Items[0].Text := 'Bearbeitbar';
+  StatusBar1.Invalidate;
 end;
 
 procedure TProtokollForm.setStatus(ts: TTeilnehmerStatus; grund: string);
@@ -925,6 +934,29 @@ begin
   m_proto.edit;
 end;
 
+procedure TProtokollForm.StatusBar1DrawPanel(StatusBar: TStatusBar;
+  Panel: TStatusPanel; const Rect: TRect);
+var
+  RectForText: TRect;
+begin
+  StatusBar1.Canvas.Font.Style := [];
+  if Panel.ID = 0 then begin
+    if m_ro then begin
+      StatusBar1.Canvas.Font.Color := clRed;
+      StatusBar1.Canvas.Font.Style := [fsBold ];
+    end
+    else
+      StatusBar1.Canvas.Font.Color := clGreen;
+  end
+  else begin
+    StatusBar.Canvas.Font.Color := clBlack;
+  end;
+
+  RectForText := Rect;
+  StatusBar1.Canvas.FillRect(RectForText);
+  DrawText(StatusBar1.Canvas.Handle, PChar(Panel.Text), -1, RectForText, DT_SINGLELINE or DT_VCENTER or DT_LEFT);
+end;
+
 procedure TProtokollForm.TGDblClick(Sender: TObject);
 begin
   btnEdit.Click;
@@ -933,6 +965,22 @@ end;
 procedure TProtokollForm.TVChange(Sender: TObject; Node: TTreeNode);
 begin
   showContent;
+end;
+
+procedure TProtokollForm.TVDblClick(Sender: TObject);
+var
+  en : TEntry;
+begin
+  if m_ro  or not Assigned(tv.Selected) then
+    exit;
+
+  en := TEntry(TV.Selected.Data);
+  case en.Typ of
+    etChapterText : ;
+    etTask        : ;
+    etBeschluss   : ac_be_bearbeiten.Execute;
+    etTitle       : ac_edit.Execute;
+  end;
 end;
 
 procedure TProtokollForm.updateCpList;
