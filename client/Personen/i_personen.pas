@@ -27,6 +27,7 @@ type
     function  newPerson : IPerson;
 
     function  clone : IPersonenListe;
+    procedure Assign( list : IPersonenListe );
 
     procedure release;
   end;

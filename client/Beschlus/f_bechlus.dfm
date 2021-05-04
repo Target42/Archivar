@@ -35,12 +35,20 @@ object Beschlusform: TBeschlusform
     inherited Panel1: TPanel
       Width = 726
       ExplicitWidth = 726
+      inherited AbortBtn: TBitBtn
+        Left = 9
+        Top = 6
+        ExplicitLeft = 9
+        ExplicitTop = 6
+      end
       inherited OKBtn: TBitBtn
-        Left = 638
+        Left = 631
+        Top = 6
         Default = False
         Kind = bkCustom
         OnClick = BaseFrame1OKBtnClick
-        ExplicitLeft = 638
+        ExplicitLeft = 631
+        ExplicitTop = 6
       end
     end
   end
@@ -521,7 +529,7 @@ object Beschlusform: TBeschlusform
           Align = alBottom
           Caption = 'Nicht mit Abgestimt'
           TabOrder = 1
-          object LVanthalten: TListView
+          object LVNichtabgestimmt: TListView
             AlignWithMargins = True
             Left = 44
             Top = 18
@@ -551,7 +559,7 @@ object Beschlusform: TBeschlusform
             SortType = stText
             TabOrder = 0
             ViewStyle = vsReport
-            OnDblClick = LVanthaltenDblClick
+            OnDblClick = LVNichtabgestimmtDblClick
             OnDragOver = LVGremiumDragOver
           end
           object Panel2: TPanel
@@ -657,7 +665,7 @@ object Beschlusform: TBeschlusform
     Left = 559
     Top = 208
     Bitmap = {
-      494C0101010008005C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010101000800680010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       000000000000000000000000000000000000000000FF000000FF000000FF0000
       00FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF0000

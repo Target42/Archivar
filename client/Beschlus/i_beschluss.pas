@@ -64,6 +64,9 @@ type
     procedure loadFromDataSet( data : TDataSet );
     procedure save( data : TDataSet );
 
+    procedure setGremium( gremium : IPersonenListe );
+
+
     procedure Release;
   end;
 

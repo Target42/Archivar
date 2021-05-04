@@ -156,7 +156,6 @@ begin
 
 
   Application.CreateForm(TBeschlusform, Beschlusform);
-  Beschlusform.setGremium(m_ct.Protocol.GRID);
   Beschlusform.Beschluss := be;
   if Beschlusform.ShowModal = mrOk then
   begin
@@ -183,13 +182,17 @@ begin
     exit;
   be := IBeschluss(en.Ptr);
 
+  if be.Abstimmung.Gremium.count = 0 then
+  begin
+    be.setGremium(GM.getGremiumMA(m_ct.Protocol.GRID));
+  end;
+
   en := TEntry(TV.Selected.Parent.Data);
   if not (en.Typ in [etTask, etChapterText]) then
     exit;
   cp := IChapter( en.Ptr);
 
   Application.CreateForm(TBeschlusform, Beschlusform);
-  Beschlusform.setGremium(m_ct.Protocol.GRID);
   Beschlusform.Beschluss := be;
   if Beschlusform.ShowModal = mrOk then
   begin

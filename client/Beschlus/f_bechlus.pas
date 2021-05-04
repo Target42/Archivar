@@ -22,7 +22,7 @@ type
     GroupBox6: TGroupBox;
     Splitter5: TSplitter;
     LVAbwesend: TListView;
-    LVanthalten: TListView;
+    LVNichtabgestimmt: TListView;
     TabSheet2: TTabSheet;
     GroupBox3: TGroupBox;
     GroupBox1: TGroupBox;
@@ -67,7 +67,7 @@ type
       State: TDragState; var Accept: Boolean);
     procedure EditFrame2REDragDrop(Sender, Source: TObject; X, Y: Integer);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure LVanthaltenDblClick(Sender: TObject);
+    procedure LVNichtabgestimmtDblClick(Sender: TObject);
     procedure extbeusteine1Click(Sender: TObject);
     procedure LabeledEdit1Exit(Sender: TObject);
     procedure LabeledEdit2Exit(Sender: TObject);
@@ -77,7 +77,7 @@ type
     m_data      : IXMLList;
     m_gremium   : IPersonenListe;
     m_abwesende : IPersonenListe;
-    m_enthalten : IPersonenListe;
+    m_nichtAbgestimmt : IPersonenListe;
 
     m_zustimmung  : integer;
     m_ablehnung   : integer;
@@ -91,8 +91,6 @@ type
 
   public
     property Beschluss: IBeschluss read GetBeschluss write SetBeschluss;
-
-    procedure setGremium( id : integer );
   end;
 
 var
@@ -101,7 +99,7 @@ var
 implementation
 
 uses
-  u_PersonenListeImpl, m_glob_client, f_textblock_param, xsd_TextBlock;
+  m_glob_client, f_textblock_param, xsd_TextBlock;
 
 {$R *.dfm}
 
@@ -113,6 +111,10 @@ begin
   m_be.Abstimmung.Abgelehnt   := m_ablehnung;
   m_be.Abstimmung.Enthalten   := m_enthaltung;
   m_be.Abstimmung.Zeitpunkt   := now;
+
+  m_be.Abstimmung.Abwesend.Assign(        m_abwesende );
+  m_be.Abstimmung.NichtAbgestimmt.Assign( m_nichtAbgestimmt );
+  m_be.Abstimmung.Gremium.Assign(         m_gremium );
 
   m_be.Modified := true;
 end;
@@ -208,12 +210,9 @@ begin
 
   m_data        := NewList;
 
-  m_abwesende   := TPersonenListeImpl.create;
-  m_enthalten   := TPersonenListeImpl.create;
-
-
-  UpdateList( LVAbwesend,   m_abwesende );
-  UpdateList( LVanthalten,  m_enthalten );
+  m_abwesende       := NIL;
+  m_nichtAbgestimmt := NIL;
+  m_gremium         := NIL;
 
   TextBlockFrame1.init(true);
 end;
@@ -226,8 +225,8 @@ begin
   if Assigned(m_abwesende) then
     m_abwesende.release;
 
-  if Assigned(m_enthalten) then
-    m_enthalten.release;
+  if Assigned(m_nichtAbgestimmt) then
+    m_nichtAbgestimmt.release;
 
   TextBlockFrame1.release;
 end;
@@ -276,7 +275,7 @@ begin
   SpeedButton1.Click;
 end;
 
-procedure TBeschlusform.LVanthaltenDblClick(Sender: TObject);
+procedure TBeschlusform.LVNichtabgestimmtDblClick(Sender: TObject);
 begin
   SpeedButton3.Click;
 end;
@@ -298,17 +297,15 @@ begin
 
   EditFrame2.Text := m_be.Text;
 
+  m_gremium         := m_be.Abstimmung.Gremium.clone;
+  m_abwesende       := m_be.Abstimmung.Abwesend.clone;
+  m_nichtAbgestimmt := m_be.Abstimmung.NichtAbgestimmt.clone;
+
+  UpdateList( LVGremium,    m_gremium   );
+  UpdateList( LVNichtabgestimmt,  m_nichtAbgestimmt );
+  UpdateList( LVAbwesend,   m_abwesende );
+
   updateInfo;
-
-  UpdateList( LVGremium, m_gremium);
-  UpdateList( LVanthalten, m_enthalten);
-  UpdateList( LVAbwesend, m_abwesende);
-end;
-
-procedure TBeschlusform.setGremium(id: integer);
-begin
-  m_gremium     := GM.getGremiumMA(id);
-  UpdateList( LVGremium,    m_gremium);
 end;
 
 procedure TBeschlusform.SpeedButton1Click(Sender: TObject);
@@ -343,14 +340,14 @@ procedure TBeschlusform.SpeedButton3Click(Sender: TObject);
 var
   p : IPerson;
 begin
-  if not Assigned(LVanthalten.Selected) then
+  if not Assigned(LVNichtabgestimmt.Selected) then
     exit;
 
-  p := IPerson(LVanthalten.Selected.Data);
+  p := IPerson(LVNichtabgestimmt.Selected.Data);
   m_gremium.add(p);
 
   UpdateList( LVGremium, m_gremium);
-  UpdateList( LVanthalten, m_enthalten);
+  UpdateList( LVNichtabgestimmt, m_nichtAbgestimmt);
 end;
 
 procedure TBeschlusform.SpeedButton4Click(Sender: TObject);
@@ -361,17 +358,17 @@ begin
     exit;
 
   p := IPerson(LVGremium.Selected.Data);
-  m_enthalten.add(p);
+  m_nichtAbgestimmt.add(p);
 
   UpdateList( LVGremium, m_gremium);
-  UpdateList( LVanthalten, m_enthalten);
+  UpdateList( LVNichtabgestimmt, m_nichtAbgestimmt);
 end;
 
 procedure TBeschlusform.updateInfo;
 begin
   LabeledEdit4.Text := IntToStr(m_gremium.count);
   LabeledEdit5.Text := IntToStr(m_abwesende.count);
-  LabeledEdit6.Text := IntToStr(m_enthalten.count);
+  LabeledEdit6.Text := IntToStr(m_nichtAbgestimmt.count);
 
   LabeledEdit1.Text := IntToStr(m_zustimmung);
   LabeledEdit2.Text := IntToStr(m_ablehnung );

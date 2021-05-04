@@ -43,6 +43,8 @@ type
       procedure loadFromDataSet( data : TDataSet );
       procedure save( data : TDataSet );
 
+      procedure setGremium( gremium : IPersonenListe );
+
       procedure Release;
   end;
 
@@ -92,6 +94,7 @@ begin
   for i := 0 to pred(list.count) do
     addRow(xTab.Rows.Add, list.Items[i]);
 end;
+
 
 constructor TBeschlussImpl.create;
 begin
@@ -153,7 +156,9 @@ function TBeschlussImpl.getData: IXMLList;
 begin
   m_xList := NewList;
 
-  AddTable( 'TAB_TEILNEHMER',   m_vote.Gremium );
+  AddTable( 'TAB_TEILNEHMER',       m_vote.Gremium );
+  AddTable( 'TAB_NICHT_ABGESTIMMT', m_vote.NichtAbgestimmt);
+  AddTable( 'TAB_ABWESENDE',        m_vote.Abwesend );
 
   addVal('VOTE_ZUSTIMMUNG',     m_vote.Zustimmung);
   addVal('VOTE_ABLEHNUNG',      m_vote.Abgelehnt);
@@ -360,6 +365,13 @@ begin
   ReadTable('TAB_ABWESENDE',        m_vote.Abwesend );
   ReadTable('TAB_NICHT_ABGESTIMMT', m_vote.NichtAbgestimmt );
 
+end;
+
+procedure TBeschlussImpl.setGremium(gremium: IPersonenListe);
+begin
+  if Assigned(m_vote.Gremium) then
+    m_vote.Gremium.release;
+  m_vote.Gremium := gremium;
 end;
 
 procedure TBeschlussImpl.SetID(const Value: integer);

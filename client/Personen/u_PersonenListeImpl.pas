@@ -16,6 +16,8 @@ type
     function  getCount : integer;
     procedure setItems( inx : integer; const value : IPerson );
     function  getItems( inx : integer ) :  IPerson;
+
+    procedure clear;
   public
     constructor create;
     Destructor Destroy; override;
@@ -25,6 +27,7 @@ type
     function  newPerson : IPerson;
 
     function clone : IPersonenListe;
+    procedure Assign( list : IPersonenListe );
 
     procedure release;
 
@@ -46,6 +49,26 @@ begin
 
   if not m_list.Contains( value ) then
     m_list.Add(value);
+
+end;
+
+procedure TPersonenListeImpl.Assign(list: IPersonenListe);
+var
+  i : integer;
+begin
+  clear;
+  for i := 0 to pred(list.count) do begin
+    m_list.Add( list.Items[i].clone);
+  end;
+end;
+
+procedure TPersonenListeImpl.clear;
+var
+  i : integer;
+begin
+  for i := 0 to pred(m_list.Count) do
+    m_list[i].release;
+  m_list.Clear;
 
 end;
 
@@ -93,12 +116,8 @@ begin
 end;
 
 procedure TPersonenListeImpl.release;
-var
-  i : integer;
 begin
-  for i := 0 to pred(m_list.Count) do
-    m_list[i].release;
-  m_list.Clear;
+  clear;
 end;
 
 function TPersonenListeImpl.remove(value: IPerson): boolean;

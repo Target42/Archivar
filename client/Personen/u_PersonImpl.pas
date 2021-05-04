@@ -48,6 +48,7 @@ begin
   Result.Vorname    := m_vorname;
   Result.Abteilung  := m_dept;
   Result.ID         := m_id;
+  Result.Rolle      := m_rolle;
 end;
 
 constructor TPersonImpl.create;

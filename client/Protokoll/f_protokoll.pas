@@ -225,10 +225,11 @@ begin
   cp := IChapter(en.Ptr);
   be := cp.Votes.newBeschluss;
   be.CTID := cp.ID;
+  be.setGremium( GM.getGremiumMA(m_proto.GRID));
 
   Application.CreateForm(TBeschlusform, Beschlusform);
-  Beschlusform.setGremium(m_proto.GRID);
   Beschlusform.Beschluss := be;
+
   if Beschlusform.ShowModal = mrOk then
   begin
     cp.Votes.saveModified;
@@ -242,22 +243,31 @@ end;
 
 procedure TProtokollForm.ac_be_bearbeitenExecute(Sender: TObject);
 var
-  be: IBeschluss;
-  en: TEntry;
+  be  : IBeschluss;
+  en  : TEntry;
+  cp  : IChapter;
 begin
   if m_proto.ReadOnly or not Assigned(TV.Selected) then
     exit;
   en := TEntry(TV.Selected.Data);
   if not(en.Typ = etBeschluss) then
     exit;
-
   be := IBeschluss(en.Ptr);
 
+  en := TEntry(TV.Selected.Parent.Data);
+  if not (en.Typ in [etTask, etChapterText]) then
+    exit;
+  cp := IChapter( en.Ptr);
+
+  if be.Abstimmung.Gremium.count = 0 then
+    be.setGremium(GM.getGremiumMA(m_proto.GRID));
+
   Application.CreateForm(TBeschlusform, Beschlusform);
-  Beschlusform.setGremium(m_proto.GRID);
   Beschlusform.Beschluss := be;
+
   if Beschlusform.ShowModal = mrOk then
   begin
+    cp.Votes.saveModified;
     updateCpList;
   end;
   Beschlusform.Free;

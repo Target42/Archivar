@@ -44,6 +44,9 @@ type
   end;
 implementation
 
+uses
+  u_PersonenListeImpl;
+
 { TAbstimmungImpl }
 
 constructor TAbstimmungImpl.create;
@@ -51,6 +54,10 @@ begin
   m_ja        := 0;
   m_nein      := 0;
   m_enthalten := 0;
+
+  m_gremium   := TPersonenListeImpl.create;
+  m_abwesend  := TPersonenListeImpl.create;
+  m_na        := TPersonenListeImpl.create;
 end;
 
 destructor TAbstimmungImpl.Destroy;
