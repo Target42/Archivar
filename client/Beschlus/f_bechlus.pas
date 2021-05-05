@@ -72,6 +72,10 @@ type
     procedure LabeledEdit1Exit(Sender: TObject);
     procedure LabeledEdit2Exit(Sender: TObject);
     procedure BaseFrame1OKBtnClick(Sender: TObject);
+    procedure LVGremiumCustomDraw(Sender: TCustomListView; const ARect: TRect;
+      var DefaultDraw: Boolean);
+    procedure LVGremiumCustomDrawItem(Sender: TCustomListView; Item: TListItem;
+      State: TCustomDrawState; var DefaultDraw: Boolean);
   private
     m_be        : IBeschluss;
     m_data      : IXMLList;
@@ -278,6 +282,21 @@ end;
 procedure TBeschlusform.LVNichtabgestimmtDblClick(Sender: TObject);
 begin
   SpeedButton3.Click;
+end;
+
+procedure TBeschlusform.LVGremiumCustomDraw(Sender: TCustomListView;
+  const ARect: TRect; var DefaultDraw: Boolean);
+begin
+  //
+end;
+
+procedure TBeschlusform.LVGremiumCustomDrawItem(Sender: TCustomListView;
+  Item: TListItem; State: TCustomDrawState; var DefaultDraw: Boolean);
+begin
+  if item.Index mod 2 = 0 then
+    Sender.Canvas.Brush.Color := TColor(RGB( 200, 255, 200 ))
+  else
+    Sender.Canvas.Brush.Color := clWindow;
 end;
 
 procedure TBeschlusform.LVGremiumDblClick(Sender: TObject);

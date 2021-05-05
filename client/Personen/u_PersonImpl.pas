@@ -33,11 +33,16 @@ type
 
     function clone : IPerson;
 
+    function compare( p : IPerson ) :Boolean;
+
     procedure release;
 
   end;
 
 implementation
+
+uses
+  System.SysUtils;
 
 { TPersonImpl }
 
@@ -49,6 +54,16 @@ begin
   Result.Abteilung  := m_dept;
   Result.ID         := m_id;
   Result.Rolle      := m_rolle;
+end;
+
+function TPersonImpl.compare(p: IPerson): Boolean;
+begin
+  Result :=
+  SameText(p.Name,      m_name ) and
+  SameText(p.Vorname,   m_vorname) and
+  SameText(p.Abteilung, m_dept );
+  if p.ID > -1 then
+    Result := Result and (p.ID = m_id);
 end;
 
 constructor TPersonImpl.create;

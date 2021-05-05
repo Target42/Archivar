@@ -225,7 +225,8 @@ begin
   cp := IChapter(en.Ptr);
   be := cp.Votes.newBeschluss;
   be.CTID := cp.ID;
-  be.setGremium( GM.getGremiumMA(m_proto.GRID));
+
+  m_proto.SyncUser( be );
 
   Application.CreateForm(TBeschlusform, Beschlusform);
   Beschlusform.Beschluss := be;
@@ -259,8 +260,7 @@ begin
     exit;
   cp := IChapter( en.Ptr);
 
-  if be.Abstimmung.Gremium.count = 0 then
-    be.setGremium(GM.getGremiumMA(m_proto.GRID));
+  m_proto.SyncUser( be );
 
   Application.CreateForm(TBeschlusform, Beschlusform);
   Beschlusform.Beschluss := be;

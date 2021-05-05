@@ -4,7 +4,7 @@ interface
 
 uses
   i_chapter, xsd_protocol, System.Classes, m_protocol, Data.DB,
-  Datasnap.DBClient;
+  Datasnap.DBClient, i_beschluss;
 
 type
   TProtocolImpl = class( TInterfacedObject, IProtocol )
@@ -72,6 +72,8 @@ type
     function save : boolean;
     function saveTree : boolean;
 
+    procedure SyncUser( be : IBeschluss );
+
     procedure release;
   end;
 
@@ -79,8 +81,8 @@ implementation
 
 uses
   u_ChapterTitleListImpl, Xml.XMLIntf, Xml.XMLDoc, System.SysUtils, m_glob_client,
-  u_TTeilnehmerListeImpl, u_BesucherlisteImpl, i_beschluss, Vcl.Forms,
-  Vcl.Controls;
+  u_TTeilnehmerListeImpl, u_BesucherlisteImpl, Vcl.Forms,
+  Vcl.Controls, u_teilnehmer, i_personen;
 
 { TProtocolImpl }
 
@@ -400,4 +402,46 @@ begin
   m_modified := true;
 end;
 
+procedure TProtocolImpl.SyncUser(be: IBeschluss);
+  procedure add( liste : IPersonenListe; te :ITeilnehmer );
+  var
+    p : IPerson;
+  begin
+    p           := liste.newPerson;
+    p.ID        := te.ID;
+    p.Name      := te.Name;
+    p.Vorname   := te.Vorname;
+    p.Abteilung := te.Abteilung;
+    p.Rolle     := te.Rolle;
+  end;
+
+var
+  i : integer;
+  t : ITeilnehmer;
+  p : IPerson;
+begin
+  be.Abstimmung.Gremium.clear;
+  be.Abstimmung.Abwesend.clear;
+
+  for i := 0 to pred(m_teilnehmer.Count) do begin
+    t := m_teilnehmer.Item[i];
+
+    if t.Status in [tsEntschuldigt, tsUnentschuldigt, tsAbgelehnt] then
+      add(be.Abstimmung.Abwesend, t)
+    else
+      add(be.Abstimmung.Gremium, t)
+  end;
+
+  for i := pred(be.Abstimmung.NichtAbgestimmt.count) downto 0 do
+  begin
+    p := be.Abstimmung.NichtAbgestimmt.Items[i];
+
+    if be.Abstimmung.Gremium.hasSamePerson(p)  then begin
+      be.Abstimmung.Gremium.removeSamePerson(p);
+      p.release;
+    end;
+  end;
+end;
+
 end.
+

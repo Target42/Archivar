@@ -355,11 +355,14 @@ object Beschlusform: TBeschlusform
               Width = 75
             end>
           DragMode = dmAutomatic
+          GridLines = True
           ReadOnly = True
           RowSelect = True
           SortType = stText
           TabOrder = 0
           ViewStyle = vsReport
+          OnCustomDraw = LVGremiumCustomDraw
+          OnCustomDrawItem = LVGremiumCustomDrawItem
           OnDblClick = LVGremiumDblClick
           OnDragOver = LVGremiumDragOver
         end
@@ -417,11 +420,14 @@ object Beschlusform: TBeschlusform
                 Width = 75
               end>
             DragMode = dmAutomatic
+            GridLines = True
             ReadOnly = True
             RowSelect = True
             SortType = stText
             TabOrder = 0
             ViewStyle = vsReport
+            OnCustomDraw = LVGremiumCustomDraw
+            OnCustomDrawItem = LVGremiumCustomDrawItem
             OnDblClick = LVAbwesendDblClick
             OnDragOver = LVGremiumDragOver
           end
@@ -554,11 +560,14 @@ object Beschlusform: TBeschlusform
                 Width = 75
               end>
             DragMode = dmAutomatic
+            GridLines = True
             ReadOnly = True
             RowSelect = True
             SortType = stText
             TabOrder = 0
             ViewStyle = vsReport
+            OnCustomDraw = LVGremiumCustomDraw
+            OnCustomDrawItem = LVGremiumCustomDrawItem
             OnDblClick = LVNichtabgestimmtDblClick
             OnDragOver = LVGremiumDragOver
           end
@@ -665,7 +674,7 @@ object Beschlusform: TBeschlusform
     Left = 559
     Top = 208
     Bitmap = {
-      494C010101000800680010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010101000800700010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       000000000000000000000000000000000000000000FF000000FF000000FF0000
       00FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF0000

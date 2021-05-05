@@ -29,6 +29,11 @@ type
     function  clone : IPersonenListe;
     procedure Assign( list : IPersonenListe );
 
+    procedure clear;
+
+    function hasSamePerson( p : IPerson ) : boolean;
+    procedure removeSamePerson( p : IPerson );
+
     procedure release;
   end;
 
@@ -57,6 +62,8 @@ type
     property Rolle      : string          read getRolle     write setRolle;
 
     function clone : IPerson;
+
+    function compare( p : IPerson ) :Boolean;
 
     procedure release;
   end;

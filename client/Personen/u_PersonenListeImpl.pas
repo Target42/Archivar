@@ -17,7 +17,7 @@ type
     procedure setItems( inx : integer; const value : IPerson );
     function  getItems( inx : integer ) :  IPerson;
 
-    procedure clear;
+
   public
     constructor create;
     Destructor Destroy; override;
@@ -28,6 +28,10 @@ type
 
     function clone : IPersonenListe;
     procedure Assign( list : IPersonenListe );
+    procedure clear;
+
+    function hasSamePerson( p : IPerson ) : boolean;
+     procedure removeSamePerson( p : IPerson );
 
     procedure release;
 
@@ -109,6 +113,18 @@ begin
   Result := m_name;
 end;
 
+function TPersonenListeImpl.hasSamePerson(p: IPerson): boolean;
+var
+  i : integer;
+begin
+  Result := false;
+  for I := 0 to pred(m_list.Count) do begin
+    Result := m_list[i].compare(p);
+    if Result then
+      break;
+  end;
+end;
+
 function TPersonenListeImpl.newPerson: IPerson;
 begin
   Result := TPersonImpl.create;
@@ -125,6 +141,21 @@ begin
   value.Owner := NIL;
   Result := m_list.Contains(value);
   m_list.Remove(value);
+end;
+
+procedure TPersonenListeImpl.removeSamePerson(p: IPerson);
+var
+  i     : integer;
+  pers  : IPerson;
+begin
+  for i := 0 to pred(m_list.Count) do begin
+    pers := m_list[i];
+    if pers.compare(p) then begin
+      m_list.Remove(pers);
+      pers.release;
+      break;
+    end;
+  end;
 end;
 
 procedure TPersonenListeImpl.setItems(inx: integer; const value: IPerson);
