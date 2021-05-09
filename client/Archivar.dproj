@@ -558,6 +558,15 @@
             <Form>MeetingPersonForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="Sitzung2\f_doMeeting.pas">
+            <Form>DoMeetingform</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Sitzung\fr_teilnehmer.pas">
+            <Form>TNFrame</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
         <None Include="Datafields\ERA-NS.txt"/>
         <RcItem Include="dws\dws.html">
             <ContainerId>ResourceItem</ContainerId>

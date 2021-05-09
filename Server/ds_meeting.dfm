@@ -1,7 +1,7 @@
 object dsMeeing: TdsMeeing
   OldCreateOrder = False
-  Height = 447
-  Width = 658
+  Height = 502
+  Width = 809
   object IBTransaction1: TIBTransaction
     DefaultDatabase = DBMod.IBDatabase1
     Params.Strings = (

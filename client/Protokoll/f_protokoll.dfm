@@ -81,7 +81,7 @@ object ProtokollForm: TProtokollForm
           Top = 304
           Width = 221
           Height = 66
-          ActivePage = TabSheet5
+          ActivePage = TabSheet4
           Align = alBottom
           TabOrder = 1
           object TabSheet4: TTabSheet
@@ -601,19 +601,6 @@ object ProtokollForm: TProtokollForm
       Height = 13
       Caption = 'Datum'
     end
-    object Label4: TLabel
-      Left = 496
-      Top = 15
-      Width = 98
-      Height = 13
-      Caption = 'Schreibgesch'#252'tzt'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clRed
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = [fsBold]
-      ParentFont = False
-    end
     object DBEdit1: TEdit
       Left = 42
       Top = 12
@@ -749,7 +736,7 @@ object ProtokollForm: TProtokollForm
     Left = 212
     Top = 305
     Bitmap = {
-      494C010106001001280110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010106001001300110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

@@ -196,7 +196,7 @@ uses
   f_template_new, f_taskEditor, f_select_templateForm, f_bechlus, f_set,
   f_textblock_edit, f_testblock_list, f_webserver_files, f_epub_mngr,
   f_meeting_new, f_meeting_select, f_meeting_proto, f_login,
-  system.UITypes, f_protocol_sec, u_onlineUser;
+  system.UITypes, f_protocol_sec, u_onlineUser, f_doMeeting;
 
 {$R *.dfm}
 
@@ -326,13 +326,20 @@ end;
 
 procedure TMainForm.ac_me_executeExecute(Sender: TObject);
 begin
+  if Assigned( DoMeetingform ) then begin
+    ShowMessage('Es ist noch eine Sitzung aktiv.'+sLineBreak+'Bitte diese Beenden, bevor eine neue begonnen wird!');
+    exit;
+  end;
+
   Application.CreateForm(TSelectMeetingForm, SelectMeetingForm);
   SelectMeetingForm.Filter := 'O';
   if SelectMeetingForm.ShowModal = mrok then
   begin
     if SelectMeetingForm.ME_ID > 0 then
     begin
-
+      Application.CreateForm(TDoMeetingform, DoMeetingform);
+      DoMeetingform.MeetingID := SelectMeetingForm.ME_ID;
+      DoMeetingform.Show;
     end;
   end;
   SelectMeetingForm.free;

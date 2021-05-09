@@ -36,7 +36,6 @@ type
     Label3: TLabel;
     TV: TTreeView;
     Button2: TBitBtn;
-    Label4: TLabel;
     ActionList1: TActionList;
     ImageList1: TImageList;
     ac_add: TAction;
@@ -855,7 +854,6 @@ procedure TProtokollForm.setRO(value: Boolean);
 begin
   m_ro := value;
 
-  Label4.Visible        := m_ro;
   Sperren1.Enabled      := m_ro;
   Freigeben1.Enabled    := not m_ro;
   Aktualisieren1.Enabled:= m_ro;

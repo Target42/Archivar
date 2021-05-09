@@ -212,17 +212,21 @@ var
   st  : TStream;
   changed : boolean;
 begin
-  if EditFrame1.Modified and not ElTab.ReadOnly then
-  begin
-    st := ElTab.CreateBlobStream(ElTab.FieldByName('EL_DATA'),bmWrite);
-    EditFrame1.saveToStream(st);
-    st.Free;
-  end;
-  changed := ElTab.Modified;
-  ELtab.Post;
+  changed := false;
 
-  if ELtab.UpdatesPending then
-    ElTab.ApplyUpdates(0);
+  if ElTab.State = dsEdit then begin
+    if EditFrame1.Modified and not ElTab.ReadOnly then
+    begin
+      st := ElTab.CreateBlobStream(ElTab.FieldByName('EL_DATA'),bmWrite);
+      EditFrame1.saveToStream(st);
+      st.Free;
+    end;
+    changed := ElTab.Modified;
+    ELtab.Post;
+
+    if ELtab.UpdatesPending then
+      ElTab.ApplyUpdates(0);
+  end;
 
   if changed or m_needUpdate then
     SendUpdate;
