@@ -46,6 +46,8 @@ object ProtokollForm: TProtokollForm
     TabOrder = 1
     object TabSheet1: TTabSheet
       Caption = 'Allgemines'
+      ExplicitLeft = 28
+      ExplicitTop = 22
       object Splitter1: TSplitter
         Left = 225
         Top = 0
@@ -185,6 +187,8 @@ object ProtokollForm: TProtokollForm
         Align = alClient
         Caption = 'Inhalt'
         TabOrder = 1
+        ExplicitLeft = 231
+        ExplicitTop = 15
         object WebBrowser1: TWebBrowser
           Left = 2
           Top = 15
@@ -675,8 +679,8 @@ object ProtokollForm: TProtokollForm
   end
   object ActionList1: TActionList
     Images = ImageList1
-    Left = 300
-    Top = 297
+    Left = 36
+    Top = 217
     object ac_add: TAction
       Caption = 'Abschnitt hinzuf'#252'gen'
       Hint = 'Abschnitt hinzuf'#252'gen'
@@ -733,10 +737,10 @@ object ProtokollForm: TProtokollForm
     end
   end
   object ImageList1: TImageList
-    Left = 212
-    Top = 305
+    Left = 36
+    Top = 265
     Bitmap = {
-      494C010106001001300110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010106001001340110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -1009,8 +1013,8 @@ object ProtokollForm: TProtokollForm
   end
   object PopupMenu1: TPopupMenu
     Images = ImageList1
-    Left = 460
-    Top = 297
+    Left = 116
+    Top = 225
     object Hinzufgen1: TMenuItem
       Action = ac_add
     end
