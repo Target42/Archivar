@@ -1,14 +1,16 @@
 object TNFrame: TTNFrame
   Left = 0
   Top = 0
-  Width = 816
-  Height = 316
+  Width = 866
+  Height = 541
   Align = alClient
   TabOrder = 0
+  ExplicitWidth = 451
+  ExplicitHeight = 305
   object Splitter4: TSplitter
     Left = 337
     Top = 0
-    Height = 316
+    Height = 541
     ExplicitTop = -62
     ExplicitHeight = 378
   end
@@ -16,18 +18,17 @@ object TNFrame: TTNFrame
     Left = 0
     Top = 0
     Width = 337
-    Height = 316
+    Height = 541
     Align = alLeft
     Caption = 'Gremium'
     TabOrder = 0
-    ExplicitTop = -62
-    ExplicitHeight = 378
+    ExplicitHeight = 305
     object LVGremium: TListView
       AlignWithMargins = True
       Left = 5
       Top = 18
       Width = 327
-      Height = 293
+      Height = 518
       Align = alClient
       Columns = <
         item
@@ -54,26 +55,25 @@ object TNFrame: TTNFrame
       TabOrder = 0
       ViewStyle = vsReport
       OnClick = LVGremiumClick
-      ExplicitHeight = 355
+      ExplicitHeight = 282
     end
   end
   object Panel4: TPanel
     Left = 340
     Top = 0
-    Width = 476
-    Height = 316
+    Width = 526
+    Height = 541
     Align = alClient
     BevelOuter = bvNone
     Caption = 'Panel4'
     ShowCaption = False
     TabOrder = 1
-    ExplicitTop = -62
-    ExplicitWidth = 378
-    ExplicitHeight = 378
+    ExplicitWidth = 111
+    ExplicitHeight = 305
     object Splitter5: TSplitter
       Left = 0
-      Top = 124
-      Width = 476
+      Top = 349
+      Width = 526
       Height = 3
       Cursor = crVSplit
       Align = alBottom
@@ -83,19 +83,19 @@ object TNFrame: TTNFrame
     object GroupBox5: TGroupBox
       Left = 0
       Top = 0
-      Width = 476
-      Height = 124
+      Width = 526
+      Height = 349
       Align = alClient
       Caption = 'Abwesend'
       TabOrder = 0
-      ExplicitWidth = 378
-      ExplicitHeight = 186
+      ExplicitWidth = 111
+      ExplicitHeight = 113
       object LVAbwesend: TListView
         AlignWithMargins = True
         Left = 44
         Top = 18
-        Width = 427
-        Height = 101
+        Width = 477
+        Height = 326
         Align = alClient
         Columns = <
           item
@@ -122,20 +122,20 @@ object TNFrame: TTNFrame
         TabOrder = 0
         ViewStyle = vsReport
         OnClick = LVAbwesendClick
-        ExplicitWidth = 329
-        ExplicitHeight = 163
+        ExplicitWidth = 62
+        ExplicitHeight = 90
       end
       object Panel1: TPanel
         Left = 2
         Top = 15
         Width = 39
-        Height = 107
+        Height = 332
         Align = alLeft
         BevelOuter = bvNone
         Caption = 'Panel1'
         ShowCaption = False
         TabOrder = 1
-        ExplicitHeight = 169
+        ExplicitHeight = 96
         object SpeedButton1: TSpeedButton
           Left = 4
           Top = 40
@@ -224,19 +224,19 @@ object TNFrame: TTNFrame
     end
     object GroupBox6: TGroupBox
       Left = 0
-      Top = 127
-      Width = 476
+      Top = 352
+      Width = 526
       Height = 189
       Align = alBottom
       Caption = 'Nicht mit Abgestimt'
       TabOrder = 1
-      ExplicitTop = 189
-      ExplicitWidth = 378
+      ExplicitTop = 116
+      ExplicitWidth = 111
       object LVNichtabgestimmt: TListView
         AlignWithMargins = True
         Left = 44
         Top = 18
-        Width = 427
+        Width = 477
         Height = 166
         Align = alClient
         Columns = <
@@ -264,7 +264,7 @@ object TNFrame: TTNFrame
         TabOrder = 0
         ViewStyle = vsReport
         OnClick = LVNichtabgestimmtClick
-        ExplicitWidth = 329
+        ExplicitWidth = 62
       end
       object Panel2: TPanel
         Left = 2

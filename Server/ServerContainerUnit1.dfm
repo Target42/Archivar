@@ -183,4 +183,10 @@ object ServerContainer1: TServerContainer1
     Left = 256
     Top = 400
   end
+  object dsSitzung: TDSServerClass
+    OnGetClass = dsSitzungGetClass
+    Server = DSServer1
+    Left = 320
+    Top = 456
+  end
 end

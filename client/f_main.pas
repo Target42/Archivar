@@ -298,12 +298,12 @@ begin
   Application.CreateForm(TSelectMeetingForm, SelectMeetingForm);
   if SelectMeetingForm.ShowModal = mrok then
   begin
-    if SelectMeetingForm.ME_ID > 0 then
+    if SelectMeetingForm.EL_ID > 0 then
     begin
       if (MessageDlg('Soll die Sitzungseinladung:'+ sLineBreak+
           SelectMeetingForm.Title+sLineBreak+
           'wirklich gelöscht werden?', mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
-        DeleteMeeting( SelectMeetingForm.ME_ID )
+        DeleteMeeting( SelectMeetingForm.EL_ID )
     end;
   end;
   SelectMeetingForm.free;
@@ -316,9 +316,9 @@ begin
   SelectMeetingForm.Filter := 'E';
   if SelectMeetingForm.ShowModal = mrok then
   begin
-    if SelectMeetingForm.ME_ID > 0 then
+    if SelectMeetingForm.EL_ID > 0 then
     begin
-      showMeeting( SelectMeetingForm.ME_ID );
+      showMeeting( SelectMeetingForm.EL_ID );
     end;
   end;
   SelectMeetingForm.free;
@@ -335,10 +335,10 @@ begin
   SelectMeetingForm.Filter := 'O';
   if SelectMeetingForm.ShowModal = mrok then
   begin
-    if SelectMeetingForm.ME_ID > 0 then
+    if SelectMeetingForm.EL_ID > 0 then
     begin
       Application.CreateForm(TDoMeetingform, DoMeetingform);
-      DoMeetingform.MeetingID := SelectMeetingForm.ME_ID;
+      DoMeetingform.ELID := SelectMeetingForm.EL_ID;
       DoMeetingform.Show;
     end;
   end;
@@ -351,10 +351,10 @@ begin
   SelectMeetingForm.Filter := 'E';
   if SelectMeetingForm.ShowModal = mrok then
   begin
-    if SelectMeetingForm.ME_ID > 0 then
+    if SelectMeetingForm.EL_ID > 0 then
     begin
       Application.CreateForm(TMeetingForm, MeetingForm);
-      MeetingForm.EL_ID   := SelectMeetingForm.ME_ID;
+      MeetingForm.EL_ID   := SelectMeetingForm.EL_ID;
       if MeetingForm.ShowModal = mrOk then
         invite( MeetingForm.EL_ID );
       MeetingForm.Free;
@@ -392,10 +392,10 @@ begin
   SelectMeetingForm.Filter := 'O';
   if SelectMeetingForm.ShowModal = mrok then
   begin
-    if SelectMeetingForm.ME_ID > 0 then
+    if SelectMeetingForm.EL_ID > 0 then
     begin
       Application.CreateForm(TMeetingForm, MeetingForm);
-      MeetingForm.EL_ID   := SelectMeetingForm.ME_ID;
+      MeetingForm.EL_ID   := SelectMeetingForm.EL_ID;
       MeetingForm.ReadOnly:= false;
       MeetingForm.GroupBox4.Visible := false;
 

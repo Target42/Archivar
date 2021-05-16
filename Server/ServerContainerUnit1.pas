@@ -33,6 +33,7 @@ type
     dsFileCache: TDSServerClass;
     dsEpub: TDSServerClass;
     dsMeeing: TDSServerClass;
+    dsSitzung: TDSServerClass;
     procedure dsAdminGetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
     procedure ServiceStart(Sender: TService; var Started: Boolean);
@@ -79,6 +80,8 @@ type
     procedure DSTCPServerTransport1Connect(Event: TDSTCPConnectEventObject);
     procedure DSTCPServerTransport1Disconnect(
       Event: TDSTCPDisconnectEventObject);
+    procedure dsSitzungGetClass(DSServerClass: TDSServerClass;
+      var PersistentClass: TPersistentClass);
   private
     const
       MaxUserNameLength = 25;
@@ -110,7 +113,7 @@ uses
   Winapi.Windows, m_db, ds_gremium, ds_admin, ds_person, IOUtils,
   ds_taks, ds_file, ds_misc, ds_protocol, ds_image, ds_chapter,
   ds_taskEdit, ds_template, ds_taskView, ds_textblock, ds_fileCache, ds_epub,
-  ds_meeting, System.Hash, u_json;
+  ds_meeting, System.Hash, u_json, ds_sitzung;
 
 procedure TServerContainer1.dsAdminGetClass(
   DSServerClass: TDSServerClass; var PersistentClass: TPersistentClass);
@@ -157,6 +160,12 @@ procedure TServerContainer1.DSServerClass1GetClass(
   DSServerClass: TDSServerClass; var PersistentClass: TPersistentClass);
 begin
   PersistentClass := ds_textblock.TdsTextBlock;
+end;
+
+procedure TServerContainer1.dsSitzungGetClass(DSServerClass: TDSServerClass;
+  var PersistentClass: TPersistentClass);
+begin
+  PersistentClass := ds_sitzung.TdsSitzung;
 end;
 
 procedure TServerContainer1.dsTaskEditGetClass(DSServerClass: TDSServerClass;

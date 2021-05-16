@@ -32,7 +32,6 @@ type
     Abschnittrunter1: TMenuItem;
     ImageList1: TImageList;
     GroupBox1: TGroupBox;
-    TV: TTreeView;
     PageControl2: TPageControl;
     TabSheet4: TTabSheet;
     SpeedButton1: TSpeedButton;
@@ -45,6 +44,7 @@ type
     SpeedButton7: TSpeedButton;
     SpeedButton8: TSpeedButton;
     SpeedButton9: TSpeedButton;
+    TV: TTreeView;
     procedure TVChange(Sender: TObject; Node: TTreeNode);
     procedure TVDblClick(Sender: TObject);
     procedure ac_addExecute(Sender: TObject);
@@ -91,6 +91,7 @@ type
     procedure SetReadOnly(const Value: boolean);
 
     procedure updateCpList;
+
     procedure buildTree(root: TTreeNode; ct: IChapterTitle);
 
     procedure clearTree;
@@ -103,13 +104,14 @@ type
     property Browser: TWebBrowser read FBrowser write FBrowser;
     property ReadOnly: boolean read GetReadOnly write SetReadOnly;
 
+
   end;
 
 implementation
 
 
 uses
-  f_chapter_content, f_bechlus, system.UITypes;
+  f_chapter_content, f_bechlus, system.UITypes, m_glob_client, u_speedbutton;
 {$R *.dfm}
 
 { TProtocolFrame }
@@ -460,29 +462,49 @@ begin
   m_proto     := NIL;
   m_renderer  := TProtocolRenderer.create;
   m_loader    := TTaskLoaderMod.create(self);
+  TV.Images   := GM.ImageList2;
 
   m_renderer.Loader := m_loader;
 
   Application.CreateForm(TTitelEditform, m_TitelEditform);
 
   SetReadOnly( true );
+  updateSeedBtn(self, 1);
 end;
 
 procedure TProtocolFrame.release;
 begin
   m_proto := NIL;
   m_renderer.Free;
-  m_TitelEditform.Free;
+  cleartree;
 end;
 
 procedure TProtocolFrame.SetProtocol(const Value: IProtocol);
 begin
   m_proto := value;
+
+  updateCpList;
 end;
 
 procedure TProtocolFrame.SetReadOnly(const Value: boolean);
 begin
   m_ro := value;
+
+  PageControl2.Enabled  := not m_ro;
+  PageControl2.Visible  := not m_ro;
+
+  ac_add.Enabled        := not m_ro;
+  ac_edit.Enabled       := not m_ro;
+  ac_edit_content.Enabled := not m_ro;
+  ac_delete.Enabled     := not m_ro;
+  ac_up.Enabled         := not m_ro;
+  ac_down.Enabled       := not m_ro;
+  ac_beschluss.Enabled  := not m_ro;
+  ac_be_bearbeiten.Enabled := not m_ro;
+  ac_be_delete.Enabled  := not m_ro;
+
+  SpeedButton6.Enabled  := not m_ro;
+
 end;
 
 procedure TProtocolFrame.showContent;

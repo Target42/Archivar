@@ -2,24 +2,22 @@ object ProtocolFrame: TProtocolFrame
   Left = 0
   Top = 0
   Width = 451
-  Height = 471
+  Height = 305
   Align = alClient
   TabOrder = 0
-  ExplicitHeight = 305
   object GroupBox1: TGroupBox
     Left = 0
     Top = 0
     Width = 451
-    Height = 471
+    Height = 239
     Align = alClient
     Caption = 'Abschnitte'
     TabOrder = 0
-    ExplicitHeight = 305
     object TV: TTreeView
       Left = 2
       Top = 15
       Width = 447
-      Height = 388
+      Height = 222
       Align = alClient
       Images = ImageList1
       Indent = 19
@@ -28,107 +26,109 @@ object ProtocolFrame: TProtocolFrame
       TabOrder = 0
       OnChange = TVChange
       OnDblClick = TVDblClick
-      ExplicitHeight = 222
     end
-    object PageControl2: TPageControl
-      Left = 2
-      Top = 403
-      Width = 447
-      Height = 66
-      ActivePage = TabSheet4
-      Align = alBottom
-      TabOrder = 1
-      ExplicitTop = 237
-      object TabSheet4: TTabSheet
-        Caption = 'Struktur'
-        object SpeedButton1: TSpeedButton
-          Tag = 1
-          Left = 4
-          Top = 6
-          Width = 22
-          Height = 22
-          Action = ac_add
-          ParentShowHint = False
-          ShowHint = True
-        end
-        object SpeedButton2: TSpeedButton
-          Tag = 1
-          Left = 32
-          Top = 6
-          Width = 22
-          Height = 22
-          Action = ac_edit
-          ParentShowHint = False
-          ShowHint = True
-        end
-        object SpeedButton6: TSpeedButton
-          Tag = 1
-          Left = 60
-          Top = 6
-          Width = 22
-          Height = 22
-          Action = ac_edit_content
-          ParentShowHint = False
-          ShowHint = True
-        end
-        object SpeedButton3: TSpeedButton
-          Tag = 1
-          Left = 98
-          Top = 6
-          Width = 22
-          Height = 22
-          Action = ac_delete
-          ParentShowHint = False
-          ShowHint = True
-        end
-        object SpeedButton4: TSpeedButton
-          Tag = 1
-          Left = 158
-          Top = 6
-          Width = 22
-          Height = 22
-          Action = ac_up
-          ParentShowHint = False
-          ShowHint = True
-        end
-        object SpeedButton5: TSpeedButton
-          Tag = 1
-          Left = 186
-          Top = 6
-          Width = 22
-          Height = 22
-          Action = ac_down
-          ParentShowHint = False
-          ShowHint = True
-        end
+  end
+  object PageControl2: TPageControl
+    Left = 0
+    Top = 239
+    Width = 451
+    Height = 66
+    ActivePage = TabSheet5
+    Align = alBottom
+    TabOrder = 1
+    object TabSheet4: TTabSheet
+      Caption = 'Struktur'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 439
+      ExplicitHeight = 0
+      object SpeedButton1: TSpeedButton
+        Tag = 1
+        Left = 4
+        Top = 6
+        Width = 22
+        Height = 22
+        Action = ac_add
+        ParentShowHint = False
+        ShowHint = True
       end
-      object TabSheet5: TTabSheet
-        Caption = 'Beschluss'
-        ImageIndex = 1
-        object SpeedButton7: TSpeedButton
-          Tag = 1
-          Left = 4
-          Top = 6
-          Width = 23
-          Height = 22
-          Action = ac_beschluss
-        end
-        object SpeedButton8: TSpeedButton
-          Tag = 1
-          Left = 32
-          Top = 6
-          Width = 23
-          Height = 22
-          Action = ac_be_bearbeiten
-        end
-        object SpeedButton9: TSpeedButton
-          Tag = 1
-          Left = 60
-          Top = 6
-          Width = 23
-          Height = 22
-          Action = ac_be_delete
-        end
+      object SpeedButton2: TSpeedButton
+        Tag = 1
+        Left = 32
+        Top = 6
+        Width = 22
+        Height = 22
+        Action = ac_edit
+        ParentShowHint = False
+        ShowHint = True
+      end
+      object SpeedButton6: TSpeedButton
+        Tag = 1
+        Left = 60
+        Top = 6
+        Width = 22
+        Height = 22
+        Action = ac_edit_content
+        ParentShowHint = False
+        ShowHint = True
+      end
+      object SpeedButton3: TSpeedButton
+        Tag = 1
+        Left = 98
+        Top = 6
+        Width = 22
+        Height = 22
+        Action = ac_delete
+        ParentShowHint = False
+        ShowHint = True
+      end
+      object SpeedButton4: TSpeedButton
+        Tag = 1
+        Left = 158
+        Top = 6
+        Width = 22
+        Height = 22
+        Action = ac_up
+        ParentShowHint = False
+        ShowHint = True
+      end
+      object SpeedButton5: TSpeedButton
+        Tag = 1
+        Left = 186
+        Top = 6
+        Width = 22
+        Height = 22
+        Action = ac_down
+        ParentShowHint = False
+        ShowHint = True
+      end
+    end
+    object TabSheet5: TTabSheet
+      Caption = 'Beschluss'
+      ImageIndex = 1
+      object SpeedButton7: TSpeedButton
+        Tag = 1
+        Left = 4
+        Top = 6
+        Width = 23
+        Height = 22
+        Action = ac_beschluss
+      end
+      object SpeedButton8: TSpeedButton
+        Tag = 1
+        Left = 32
+        Top = 6
+        Width = 23
+        Height = 22
+        Action = ac_be_bearbeiten
+      end
+      object SpeedButton9: TSpeedButton
+        Tag = 1
+        Left = 60
+        Top = 6
+        Width = 23
+        Height = 22
+        Action = ac_be_delete
       end
     end
   end
@@ -224,7 +224,7 @@ object ProtocolFrame: TProtocolFrame
     Left = 100
     Top = 25
     Bitmap = {
-      494C0101060010013C0110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010106001001440110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

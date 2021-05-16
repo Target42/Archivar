@@ -174,7 +174,8 @@ uses
   f_meeting_person in 'Sitzung\f_meeting_person.pas' {MeetingPersonForm},
   f_doMeeting in 'Sitzung2\f_doMeeting.pas' {DoMeetingform},
   fr_teilnehmer in 'Sitzung\fr_teilnehmer.pas' {TNFrame: TFrame},
-  fr_protocol in 'Protokoll\fr_protocol.pas' {ProtocolFrame: TFrame};
+  fr_protocol in 'Protokoll\fr_protocol.pas' {ProtocolFrame: TFrame},
+  fr_MeetingTN in 'Sitzung2\fr_MeetingTN.pas' {MeetingTNFrame: TFrame};
 
 {$R *.res}
 

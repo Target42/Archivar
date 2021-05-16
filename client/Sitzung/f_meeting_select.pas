@@ -39,7 +39,7 @@ type
     function getTitle : string;
     procedure setFilter( value : string );
   public
-    property ME_ID  : integer read getMEID;
+    property EL_ID  : integer read getMEID;
     property Title  : string  read getTitle;
     property Filter : string  read m_filter write setFilter;
   end;

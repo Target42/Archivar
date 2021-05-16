@@ -572,6 +572,11 @@
             <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
+        <DCCReference Include="Sitzung2\fr_MeetingTN.pas">
+            <Form>MeetingTNFrame</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
         <None Include="Datafields\ERA-NS.txt"/>
         <RcItem Include="dws\dws.html">
             <ContainerId>ResourceItem</ContainerId>

@@ -38,7 +38,8 @@ uses
   u_teilnehmer in '..\misc\u_teilnehmer.pas',
   i_user in 'User\i_user.pas',
   u_TServerUserImpl in 'User\u_TServerUserImpl.pas',
-  u_TOnlineUserServerImpl in 'User\u_TOnlineUserServerImpl.pas';
+  u_TOnlineUserServerImpl in 'User\u_TOnlineUserServerImpl.pas',
+  ds_sitzung in 'ds_sitzung.pas' {dsSitzung: TDSServerModule};
 
 var
   MyDummyBoolean : Boolean;
