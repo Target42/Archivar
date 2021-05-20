@@ -113,7 +113,7 @@ uses
   Winapi.Windows, m_db, ds_gremium, ds_admin, ds_person, IOUtils,
   ds_taks, ds_file, ds_misc, ds_protocol, ds_image, ds_chapter,
   ds_taskEdit, ds_template, ds_taskView, ds_textblock, ds_fileCache, ds_epub,
-  ds_meeting, System.Hash, u_json, ds_sitzung;
+  ds_meeting, System.Hash, u_json, ds_sitzung, m_hell;
 
 procedure TServerContainer1.dsAdminGetClass(
   DSServerClass: TDSServerClass; var PersistentClass: TPersistentClass);
@@ -423,6 +423,7 @@ begin
   LockMod := TLockMod.create(self);
   GM      := TGM.Create(self);
   DBMod   := TDBMod.Create(self);
+  HellMod := THellMod.create(self );
 
   DSTCPServerTransport1.Port := GM.DSPort;
 

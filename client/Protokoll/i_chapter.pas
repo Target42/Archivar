@@ -301,6 +301,7 @@ type
       property Item[inx : integer ] : ITeilnehmer read GetItem write SetItem;
 
       function newTeilnehmer : ITeilnehmer;
+      procedure loadFromSrc( data : TDataSet );
       procedure load;
       procedure init( list : IPersonenListe );
 

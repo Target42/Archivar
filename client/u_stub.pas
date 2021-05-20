@@ -1,6 +1,6 @@
 //
 // Erzeugt vom DataSnap-Proxy-Generator.
-// 25.04.2021 12:49:16
+// 19.05.2021 19:41:52
 //
 
 unit u_stub;
@@ -238,6 +238,24 @@ type
     function GetTree(req: TJSONObject): TJSONObject;
     function changeStatus(req: TJSONObject): TJSONObject;
     function changeUser(req: TJSONObject): TJSONObject;
+  end;
+
+  TdsSitzungClient = class(TDSAdminClient)
+  private
+    FenterCommand: TDBXCommand;
+    FleaveCommand: TDBXCommand;
+    FstartVoteCommand: TDBXCommand;
+    FVoteCommand: TDBXCommand;
+    FendVoteCommand: TDBXCommand;
+  public
+    constructor Create(ADBXConnection: TDBXConnection); overload;
+    constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
+    destructor Destroy; override;
+    function enter(obj: TJSONObject): TJSONObject;
+    function leave(obj: TJSONObject): TJSONObject;
+    function startVote(obj: TJSONObject): TJSONObject;
+    function Vote(obj: TJSONObject): TJSONObject;
+    function endVote(obj: TJSONObject): TJSONObject;
   end;
 
 implementation
@@ -1277,6 +1295,96 @@ begin
   FGetTreeCommand.DisposeOf;
   FchangeStatusCommand.DisposeOf;
   FchangeUserCommand.DisposeOf;
+  inherited;
+end;
+
+function TdsSitzungClient.enter(obj: TJSONObject): TJSONObject;
+begin
+  if FenterCommand = nil then
+  begin
+    FenterCommand := FDBXConnection.CreateCommand;
+    FenterCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FenterCommand.Text := 'TdsSitzung.enter';
+    FenterCommand.Prepare;
+  end;
+  FenterCommand.Parameters[0].Value.SetJSONValue(obj, FInstanceOwner);
+  FenterCommand.ExecuteUpdate;
+  Result := TJSONObject(FenterCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
+end;
+
+function TdsSitzungClient.leave(obj: TJSONObject): TJSONObject;
+begin
+  if FleaveCommand = nil then
+  begin
+    FleaveCommand := FDBXConnection.CreateCommand;
+    FleaveCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FleaveCommand.Text := 'TdsSitzung.leave';
+    FleaveCommand.Prepare;
+  end;
+  FleaveCommand.Parameters[0].Value.SetJSONValue(obj, FInstanceOwner);
+  FleaveCommand.ExecuteUpdate;
+  Result := TJSONObject(FleaveCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
+end;
+
+function TdsSitzungClient.startVote(obj: TJSONObject): TJSONObject;
+begin
+  if FstartVoteCommand = nil then
+  begin
+    FstartVoteCommand := FDBXConnection.CreateCommand;
+    FstartVoteCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FstartVoteCommand.Text := 'TdsSitzung.startVote';
+    FstartVoteCommand.Prepare;
+  end;
+  FstartVoteCommand.Parameters[0].Value.SetJSONValue(obj, FInstanceOwner);
+  FstartVoteCommand.ExecuteUpdate;
+  Result := TJSONObject(FstartVoteCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
+end;
+
+function TdsSitzungClient.Vote(obj: TJSONObject): TJSONObject;
+begin
+  if FVoteCommand = nil then
+  begin
+    FVoteCommand := FDBXConnection.CreateCommand;
+    FVoteCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FVoteCommand.Text := 'TdsSitzung.Vote';
+    FVoteCommand.Prepare;
+  end;
+  FVoteCommand.Parameters[0].Value.SetJSONValue(obj, FInstanceOwner);
+  FVoteCommand.ExecuteUpdate;
+  Result := TJSONObject(FVoteCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
+end;
+
+function TdsSitzungClient.endVote(obj: TJSONObject): TJSONObject;
+begin
+  if FendVoteCommand = nil then
+  begin
+    FendVoteCommand := FDBXConnection.CreateCommand;
+    FendVoteCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FendVoteCommand.Text := 'TdsSitzung.endVote';
+    FendVoteCommand.Prepare;
+  end;
+  FendVoteCommand.Parameters[0].Value.SetJSONValue(obj, FInstanceOwner);
+  FendVoteCommand.ExecuteUpdate;
+  Result := TJSONObject(FendVoteCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
+end;
+
+constructor TdsSitzungClient.Create(ADBXConnection: TDBXConnection);
+begin
+  inherited Create(ADBXConnection);
+end;
+
+constructor TdsSitzungClient.Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean);
+begin
+  inherited Create(ADBXConnection, AInstanceOwner);
+end;
+
+destructor TdsSitzungClient.Destroy;
+begin
+  FenterCommand.DisposeOf;
+  FleaveCommand.DisposeOf;
+  FstartVoteCommand.DisposeOf;
+  FVoteCommand.DisposeOf;
+  FendVoteCommand.DisposeOf;
   inherited;
 end;
 

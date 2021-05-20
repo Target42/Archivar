@@ -146,7 +146,7 @@ uses
   System.UITypes, system.IOUtils, FireDAC.Stan.Storagebin,
   System.Win.ComObj, m_WindowHandler, m_BookMarkHandler, IdHashMessageDigest,
   Vcl.Graphics, u_PersonenListeImpl, u_PersonImpl, m_cache, f_login, u_kategorie,
-  u_onlineUser, m_http;
+  u_onlineUser, m_http, f_doMeeting;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -405,7 +405,12 @@ begin
   end else if cmd = 'onlineuser' then
     OnlineUser.updateData(arg)
   else if cmd = 'userchangestate' then
-    OnlineUser.changeState( arg );
+    OnlineUser.changeState( arg )
+  else if cmd = 'meeting' then begin
+      if Assigned( DoMeetingform ) then
+    DoMeetingform.Exec( arg );
+  end;
+
 end;
 
 procedure TGM.FillGremien(arr :TJSONArray );

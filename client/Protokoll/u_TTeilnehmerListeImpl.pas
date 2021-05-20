@@ -3,7 +3,7 @@ unit u_TTeilnehmerListeImpl;
 interface
 
 uses
-  i_chapter, i_personen, System.Generics.Collections, m_protocol;
+  i_chapter, i_personen, System.Generics.Collections, m_protocol, Data.DB;
 
 type
   TTeilnehmerListeImpl = class(TInterfacedObject, ITeilnehmerListe )
@@ -20,11 +20,14 @@ type
 
       function getByID( id : integer ) : ITeilnehmer;
       function getByPEID( id : integer ) : ITeilnehmer;
+
+      procedure clear;
     public
       constructor create(loader : TProtocolMod; proto : IProtocol );
       Destructor Destroy; override;
 
       procedure init( list : IPersonenListe );
+      procedure loadFromSrc( data : TDataSet );
       procedure load;
       procedure saveChanged;
 
@@ -37,9 +40,18 @@ type
 implementation
 
 uses
-  u_teilnehmerImpl, m_glob_client, System.Variants, Data.DB, u_teilnehmer;
+  u_teilnehmerImpl, m_glob_client, System.Variants, u_teilnehmer;
 
 { TTeilnehmerListeImpl }
+
+procedure TTeilnehmerListeImpl.clear;
+var
+  t : ITeilnehmer;
+begin
+  for t in m_list do
+    t.release;
+  m_list.Clear;
+end;
 
 constructor TTeilnehmerListeImpl.create(loader : TProtocolMod; proto : IProtocol );
 begin
@@ -116,6 +128,7 @@ procedure TTeilnehmerListeImpl.load;
 var
   t : ITeilnehmer;
 begin
+  clear;
   with m_loader do
   begin
     TNTab.First;
@@ -137,6 +150,29 @@ begin
   end;
 end;
 
+procedure TTeilnehmerListeImpl.loadFromSrc(data: TDataSet);
+var
+  t : ITeilnehmer;
+begin
+  clear;
+  data.First;
+  while not data.Eof do
+  begin
+    t           := newTeilnehmer;
+    t.ID        := data.FieldByName('TN_ID').AsInteger;
+    t.Name      := data.FieldByName('TN_NAME').AsString;
+    t.Vorname   := data.FieldByName('TN_VORNAME').AsString;
+    t.Abteilung := data.FieldByName('TN_DEPARTMENT').AsString;
+    t.Rolle     := data.FieldByName('TN_ROLLE').AsString;
+    t.Status    := TTeilnehmerStatus(data.FieldByName('TN_STATUS').AsInteger);
+    t.PEID      := data.FieldByName('PE_ID').Asinteger;
+    t.Grund     := data.FieldByName('TN_GRUND').AsString;
+    t.Modified  := false;
+
+    data.Next;
+  end;
+end;
+
 function TTeilnehmerListeImpl.newTeilnehmer: ITeilnehmer;
 begin
   Result := TTeilnehmerImpl.create;
@@ -144,12 +180,8 @@ begin
 end;
 
 procedure TTeilnehmerListeImpl.release;
-var
-  t : ITeilnehmer;
 begin
-  for t in m_list do
-    t.release;
-  m_list.Clear;
+  clear;
   m_proto := NIL;
 end;
 

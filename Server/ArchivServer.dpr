@@ -39,7 +39,9 @@ uses
   i_user in 'User\i_user.pas',
   u_TServerUserImpl in 'User\u_TServerUserImpl.pas',
   u_TOnlineUserServerImpl in 'User\u_TOnlineUserServerImpl.pas',
-  ds_sitzung in 'ds_sitzung.pas' {dsSitzung: TDSServerModule};
+  ds_sitzung in 'ds_sitzung.pas' {dsSitzung: TDSServerModule},
+  m_hell in 'hell\m_hell.pas' {HellMod: TDataModule},
+  u_meeting in 'hell\u_meeting.pas';
 
 var
   MyDummyBoolean : Boolean;

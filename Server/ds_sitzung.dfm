@@ -18,12 +18,36 @@ object dsSitzung: TdsSitzung
     CachedUpdates = False
     TableName = 'EL_EINLADUNG'
     UniDirectional = False
-    Left = 120
-    Top = 24
+    Left = 24
+    Top = 80
   end
   object ELSrc: TDataSetProvider
     DataSet = ELTab
-    Left = 120
+    Left = 24
+    Top = 136
+  end
+  object TNQry: TIBQuery
+    Database = DBMod.IBDatabase1
+    Transaction = IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    ParamCheck = True
+    SQL.Strings = (
+      'select  * from TN_TEILNEHMER'
+      'where PR_ID = :pr_id')
+    UniDirectional = True
+    Left = 80
     Top = 80
+    ParamData = <
+      item
+        DataType = ftInteger
+        Name = 'pr_id'
+        ParamType = ptInput
+      end>
+  end
+  object TNSrc: TDataSetProvider
+    DataSet = TNQry
+    Left = 80
+    Top = 140
   end
 end

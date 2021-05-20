@@ -1,8 +1,8 @@
 object MeetingTNFrame: TMeetingTNFrame
   Left = 0
   Top = 0
-  Width = 972
-  Height = 649
+  Width = 832
+  Height = 383
   Align = alClient
   TabOrder = 0
   ExplicitWidth = 451
@@ -11,7 +11,7 @@ object MeetingTNFrame: TMeetingTNFrame
     Left = 0
     Top = 0
     Width = 305
-    Height = 649
+    Height = 383
     Align = alLeft
     Caption = 'Anwesend'
     TabOrder = 0
@@ -20,7 +20,7 @@ object MeetingTNFrame: TMeetingTNFrame
       Left = 2
       Top = 15
       Width = 301
-      Height = 632
+      Height = 366
       Align = alClient
       Columns = <
         item
@@ -50,7 +50,7 @@ object MeetingTNFrame: TMeetingTNFrame
     Left = 305
     Top = 0
     Width = 32
-    Height = 649
+    Height = 383
     Align = alLeft
     Caption = 'Panel1'
     ShowCaption = False
@@ -60,8 +60,8 @@ object MeetingTNFrame: TMeetingTNFrame
   object Panel2: TPanel
     Left = 337
     Top = 0
-    Width = 635
-    Height = 649
+    Width = 495
+    Height = 383
     Align = alClient
     BevelOuter = bvNone
     Caption = 'Panel2'
@@ -71,8 +71,8 @@ object MeetingTNFrame: TMeetingTNFrame
     ExplicitHeight = 305
     object Splitter1: TSplitter
       Left = 0
-      Top = 529
-      Width = 635
+      Top = 263
+      Width = 495
       Height = 3
       Cursor = crVSplit
       Align = alBottom
@@ -81,8 +81,8 @@ object MeetingTNFrame: TMeetingTNFrame
     end
     object Splitter2: TSplitter
       Left = 0
-      Top = 421
-      Width = 635
+      Top = 155
+      Width = 495
       Height = 3
       Cursor = crVSplit
       Align = alBottom
@@ -91,8 +91,8 @@ object MeetingTNFrame: TMeetingTNFrame
     end
     object GroupBox2: TGroupBox
       Left = 0
-      Top = 532
-      Width = 635
+      Top = 266
+      Width = 495
       Height = 117
       Align = alBottom
       Caption = 'Unentschuldigt'
@@ -102,7 +102,7 @@ object MeetingTNFrame: TMeetingTNFrame
       object Unentschuldigt: TListView
         Left = 2
         Top = 15
-        Width = 631
+        Width = 491
         Height = 100
         Align = alClient
         Columns = <
@@ -131,8 +131,8 @@ object MeetingTNFrame: TMeetingTNFrame
     end
     object GroupBox3: TGroupBox
       Left = 0
-      Top = 424
-      Width = 635
+      Top = 158
+      Width = 495
       Height = 105
       Align = alBottom
       Caption = 'Entschuldigt'
@@ -142,7 +142,7 @@ object MeetingTNFrame: TMeetingTNFrame
       object Entschuldigt: TListView
         Left = 2
         Top = 15
-        Width = 631
+        Width = 491
         Height = 88
         Align = alClient
         Columns = <
@@ -172,8 +172,8 @@ object MeetingTNFrame: TMeetingTNFrame
     object GroupBox4: TGroupBox
       Left = 0
       Top = 0
-      Width = 635
-      Height = 421
+      Width = 495
+      Height = 155
       Align = alClient
       Caption = 'Gremium'
       TabOrder = 2
@@ -182,8 +182,8 @@ object MeetingTNFrame: TMeetingTNFrame
       object Gremium: TListView
         Left = 2
         Top = 15
-        Width = 631
-        Height = 404
+        Width = 491
+        Height = 138
         Align = alClient
         Columns = <
           item

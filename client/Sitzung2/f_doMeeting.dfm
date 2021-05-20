@@ -14,6 +14,7 @@
   OldCreateOrder = False
   Visible = True
   WindowState = wsMaximized
+  OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   PixelsPerInch = 96
@@ -114,7 +115,7 @@
           end
           inherited ImageList1: TImageList
             Bitmap = {
-              494C0101060010014C0110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+              494C0101060010015C0110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
               0000000000003600000028000000400000002000000001002000000000000020
               0000000000000000000000000000000000000000000000000000000000000000
               0000000000000000000000000000000000000000000000000000000000000000
@@ -400,7 +401,7 @@
         Top = 0
         Width = 894
         Height = 515
-        ActivePage = TabSheet4
+        ActivePage = TabSheet5
         Align = alClient
         TabOrder = 0
         object TabSheet4: TTabSheet
@@ -416,66 +417,69 @@
             Height = 487
             Align = alClient
             TabOrder = 0
-            ExplicitWidth = 726
-            ExplicitHeight = 523
+            ExplicitWidth = 886
+            ExplicitHeight = 487
             inherited GroupBox1: TGroupBox
               Height = 487
-              ExplicitHeight = 523
+              ExplicitHeight = 487
               inherited Anwesend: TListView
                 Height = 470
-                ExplicitLeft = 2
-                ExplicitTop = 15
+                ExplicitHeight = 470
               end
             end
             inherited Panel1: TPanel
               Height = 487
-              ExplicitHeight = 523
+              ExplicitHeight = 487
             end
             inherited Panel2: TPanel
               Width = 549
               Height = 487
-              ExplicitWidth = 389
-              ExplicitHeight = 523
+              ExplicitWidth = 549
+              ExplicitHeight = 487
               inherited Splitter1: TSplitter
                 Top = 367
                 Width = 549
+                ExplicitTop = 367
+                ExplicitWidth = 549
               end
               inherited Splitter2: TSplitter
                 Top = 259
                 Width = 549
+                ExplicitTop = 259
+                ExplicitWidth = 549
               end
               inherited GroupBox2: TGroupBox
                 Top = 370
                 Width = 549
-                ExplicitLeft = 0
-                ExplicitTop = 406
+                ExplicitTop = 370
+                ExplicitWidth = 549
                 inherited Unentschuldigt: TListView
                   Width = 545
-                  ExplicitLeft = 2
-                  ExplicitTop = 15
+                  ExplicitWidth = 545
                 end
               end
               inherited GroupBox3: TGroupBox
                 Top = 262
                 Width = 549
-                ExplicitTop = 298
-                ExplicitWidth = 389
+                ExplicitTop = 262
+                ExplicitWidth = 549
                 inherited Entschuldigt: TListView
                   Width = 545
-                  ExplicitLeft = 2
-                  ExplicitTop = 15
+                  ExplicitWidth = 545
                 end
               end
               inherited GroupBox4: TGroupBox
                 Width = 549
                 Height = 259
-                ExplicitWidth = 389
-                ExplicitHeight = 295
+                ExplicitWidth = 549
+                ExplicitHeight = 259
                 inherited Gremium: TListView
                   Width = 545
                   Height = 242
-                  ExplicitLeft = 2
-                  ExplicitTop = 15
+                  ExplicitLeft = 6
+                  ExplicitTop = 14
+                  ExplicitWidth = 545
+                  ExplicitHeight = 242
                 end
               end
             end
@@ -490,6 +494,8 @@
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsSitzung'
+    Connected = True
+    SQLConnection = GM.SQLConnection1
     Left = 448
     Top = 168
   end
@@ -500,5 +506,18 @@
     RemoteServer = DSProviderConnection1
     Left = 540
     Top = 144
+  end
+  object TNQry: TClientDataSet
+    Aggregates = <>
+    Params = <
+      item
+        DataType = ftInteger
+        Name = 'pr_id'
+        ParamType = ptInput
+      end>
+    ProviderName = 'TNSrc'
+    RemoteServer = DSProviderConnection1
+    Left = 208
+    Top = 184
   end
 end
