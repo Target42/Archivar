@@ -20,6 +20,8 @@ type
 
     function saveStatus(pr_id, pe_id : integer; status : TTeilnehmerStatus) : boolean;
     function setStatus( el_id, pe_id : integer;  var prid : integer; status : TTeilnehmerStatus ) : boolean;
+
+    procedure removeEmpty( var list : TList<TMeeting> );
   public
     function enter( elid, peid : integer; sessionID : NativeInt ) : boolean;
     function leave( elid, peid : integer) : boolean;
@@ -33,7 +35,7 @@ var
 implementation
 
 uses
-  m_db, System.JSON, u_json, ServerContainerUnit1;
+  m_db, System.JSON, u_json, ServerContainerUnit1, m_glob_server;
 
 {%CLASSGROUP 'System.Classes.TPersistent'}
 
@@ -69,6 +71,7 @@ var
   me    : TMeeting;
   prid  : integer;
 begin
+  DebugMsg(format('HellMod::enter : el:%d pe:%d session:%d', [elid, peid, sessionID]));
   list    := m_list.LockList;
   try
     Result  := setStatus(elid, peid, prid, tsAnwesend);
@@ -79,6 +82,7 @@ begin
         me      := TMeeting.create;
         me.ID   := elid;
         me.PRID := prid;
+        list.Add(me);
       end;
       me.addUser( peid, sessionID);
     end;
@@ -104,6 +108,7 @@ function THellMod.leave(elid, peid: integer) : boolean;
 var
   list    : TList<TMeeting>;
   me      : TMeeting;
+  us      : TMeetingUser;
   unused  : integer;
 begin
   list := m_list.LockList;
@@ -111,9 +116,13 @@ begin
     Result := setStatus(elid, peid, unused, tsUnbekannt);
     if Result then begin
       for me in list do begin
-        me.removeUser(peid);
+        us := me.removeUser(peid);
+        if Assigned(us) then
+          us.Free;
       end;
     end;
+    removeEmpty(list);
+
   finally
      m_list.UnlockList;
   end;
@@ -127,10 +136,12 @@ var
   msgList : TList<TJSONObject>;
   obj     : TJSONObject;
 begin
-  msgList := TList<TJSONObject>.create;
+  DebugMsg('hellmod::remove :'+IntToStr(sessionID));
   list := m_list.LockList;
+  msgList := TList<TJSONObject>.create;
   try
     for me in list do begin
+      DebugMsg(format('meeting : el:%d count:%d', [me.ID, me.count]));
       id := me.getUserIDBySession(sessionID);
       if id > 0 then begin
         saveStatus(me.PRId, id, tsUnbekannt);
@@ -143,17 +154,30 @@ begin
         msgList.Add(obj)
       end;
     end;
+    removeEmpty(list);
+
+    if IBTransaction1.InTransaction then
+      IBTransaction1.Commit;
+
+    for obj in msgList do begin
+      ServerContainer1.BroadcastMessage('storage', obj);
+    end;
+    msglist.Free;
   finally
     m_list.UnlockList;
   end;
-  if IBTransaction1.InTransaction then
-    IBTransaction1.Commit;
+end;
 
-  for obj in msgList do begin
-    ServerContainer1.BroadcastMessage('storage', obj);
+procedure THellMod.removeEmpty(var list: TList<TMeeting>);
+var
+  i : integer;
+begin
+  for i := pred(list.Count) downto 0 do begin
+    if list[i].count = 0 then begin
+      list[i].Free;
+      list.Delete(i);
+    end;
   end;
-
-  list.Free;
 end;
 
 function THellMod.saveStatus(pr_id, pe_id: integer;

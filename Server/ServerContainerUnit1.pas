@@ -220,6 +220,7 @@ begin
   LockMod.removeLocks(Id);
   DebugMsg('removeUser::session id : ' + intToStr( Id ));
   ous.removeSessionID( Id );
+  HellMod.remove(id);
 
   if not ous.isSessionOnline(id) then
   begin

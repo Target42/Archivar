@@ -13,12 +13,16 @@ type
       FPRId: integer;
 
       m_list : TList<TMeetingUser>;
+
+      function getCount : integer;
+
     public
       constructor create;
       Destructor Destroy; override;
 
       property ID: integer read FID write FID;
       property PRId: integer read FPRId write FPRId;
+      property count : integer read getCount;
 
       function addUser(     id : integer; sessionID : NativeInt ) : TMeetingUser;
       function findUser(    id : integer ) : TMeetingUser;
@@ -87,6 +91,11 @@ begin
   end;
 end;
 
+function TMeeting.getCount: integer;
+begin
+  Result := m_list.Count;
+end;
+
 function TMeeting.getUserIDBySession(id: NativeInt): integer;
 var
   us : TMeetingUser;
@@ -111,10 +120,11 @@ function TMeeting.removeUser(id: integer): TMeetingUser;
 var
   us : TMeetingUser;
 begin
+  Result := NIL;
   for us in m_list do begin
     if us.ID = id  then begin
       m_list.Remove(us);
-      us.Free;
+      Result := us;
       break;
     end;
   end;
