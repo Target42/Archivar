@@ -11,6 +11,7 @@ type
     IBTransaction1: TIBTransaction;
     MeetingQry: TIBQuery;
     UpdateStateQry: TIBQuery;
+    UpdateMeetingStatQry: TIBQuery;
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
   private
@@ -22,6 +23,8 @@ type
     function setStatus( el_id, pe_id : integer;  var prid : integer; status : TTeilnehmerStatus ) : boolean;
 
     procedure removeEmpty( var list : TList<TMeeting> );
+
+    procedure SendMeetingInfo(elid: integer ; running : boolean);
   public
     function enter( elid, peid : integer; sessionID : NativeInt ) : boolean;
     function leave( elid, peid : integer) : boolean;
@@ -85,6 +88,10 @@ begin
         list.Add(me);
       end;
       me.addUser( peid, sessionID);
+
+      if me.count = 1 then
+        SendMeetingInfo( elid, true );
+
     end;
   finally
     m_list.UnlockList;
@@ -119,10 +126,11 @@ begin
         us := me.removeUser(peid);
         if Assigned(us) then
           us.Free;
+        if me.count = 0 then
+          SendMeetingInfo(elid, false);
       end;
     end;
     removeEmpty(list);
-
   finally
      m_list.UnlockList;
   end;
@@ -130,15 +138,19 @@ end;
 
 procedure THellMod.remove(sessionID: NativeInt);
 var
-  list    : TList<TMeeting>;
-  me      : TMeeting;
-  id      : integer;
-  msgList : TList<TJSONObject>;
-  obj     : TJSONObject;
+  list      : TList<TMeeting>;
+  me        : TMeeting;
+  id        : integer;
+  msgList   : TList<TJSONObject>;
+  emptyList : TList<integer>;
+  obj       : TJSONObject;
+  us        : TMeetingUser;
 begin
-  DebugMsg('hellmod::remove :'+IntToStr(sessionID));
-  list := m_list.LockList;
-  msgList := TList<TJSONObject>.create;
+  DebugMsg('hellmod::remove session:'+IntToStr(sessionID));
+
+  list      := m_list.LockList;
+  emptyList := TList<integer>.create;
+  msgList   := TList<TJSONObject>.create;
   try
     for me in list do begin
       DebugMsg(format('meeting : el:%d count:%d', [me.ID, me.count]));
@@ -151,6 +163,14 @@ begin
         JReplace( obj, 'id',      me.ID);
         JReplace( obj, 'peid',    id);
         JReplace( obj, 'online',  false);
+
+        us := me.removeUser(id);
+        if Assigned(us) then
+          us.Free;
+
+        if me.count = 0 then
+          emptyList.Add(me.ID);
+
         msgList.Add(obj)
       end;
     end;
@@ -162,7 +182,15 @@ begin
     for obj in msgList do begin
       ServerContainer1.BroadcastMessage('storage', obj);
     end;
+
+    for id in emptyList do begin
+      DebugMsg('hellmod::send new meeting info');
+
+      SendMeetingInfo( id, false);
+    end;
+
     msglist.Free;
+    emptyList.Free;
   finally
     m_list.UnlockList;
   end;
@@ -190,6 +218,28 @@ begin
 
   Result := UpdateStateQry.RowsAffected > 0 ;
 
+end;
+
+procedure THellMod.SendMeetingInfo(elid: integer ; running : boolean);
+var
+  msg : TJSONObject;
+begin
+  UpdateMeetingStatQry.ParamByName('EL_ID').AsInteger := elid;
+  if running then
+    UpdateMeetingStatQry.ParamByName('status').AsString := 'R'
+  else
+    UpdateMeetingStatQry.ParamByName('status').AsString := 'O';
+  UpdateMeetingStatQry.ExecSQL;
+
+  if IBTransaction1.InTransaction then
+    IBTransaction1.Commit;
+
+  msg := TJSONObject.Create;
+  JReplace( msg, 'action',  'updatemeeting');
+  JReplace( msg, 'id',      elid);
+  JReplace( msg, 'running', running);
+
+  ServerContainer1.BroadcastMessage('storage', msg);
 end;
 
 function THellMod.setStatus(el_id, pe_id: integer; var prid : integer;

@@ -61,4 +61,28 @@ object HellMod: THellMod
         ParamType = ptInput
       end>
   end
+  object UpdateMeetingStatQry: TIBQuery
+    Database = DBMod.IBDatabase1
+    Transaction = IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    ParamCheck = True
+    SQL.Strings = (
+      'update EL_EINLADUNG'
+      'set EL_STATUS = :status'
+      'where el_id = :EL_ID')
+    Left = 224
+    Top = 112
+    ParamData = <
+      item
+        DataType = ftString
+        Name = 'status'
+        ParamType = ptInput
+      end
+      item
+        DataType = ftInteger
+        Name = 'EL_ID'
+        ParamType = ptInput
+      end>
+  end
 end

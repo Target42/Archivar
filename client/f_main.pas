@@ -313,7 +313,7 @@ end;
 procedure TMainForm.ac_me_editExecute(Sender: TObject);
 begin
   Application.CreateForm(TSelectMeetingForm, SelectMeetingForm);
-  SelectMeetingForm.Filter := 'E';
+  SelectMeetingForm.Filter := '''E''';
   if SelectMeetingForm.ShowModal = mrok then
   begin
     if SelectMeetingForm.EL_ID > 0 then
@@ -332,7 +332,7 @@ begin
   end;
 
   Application.CreateForm(TSelectMeetingForm, SelectMeetingForm);
-  SelectMeetingForm.Filter := 'O';
+  SelectMeetingForm.Filter := '''O'', ''R''';
   if SelectMeetingForm.ShowModal = mrok then
   begin
     if SelectMeetingForm.EL_ID > 0 then
@@ -348,7 +348,7 @@ end;
 procedure TMainForm.ac_me_inviteExecute(Sender: TObject);
 begin
   Application.CreateForm(TSelectMeetingForm, SelectMeetingForm);
-  SelectMeetingForm.Filter := 'E';
+  SelectMeetingForm.Filter := '''E''';
   if SelectMeetingForm.ShowModal = mrok then
   begin
     if SelectMeetingForm.EL_ID > 0 then
@@ -389,7 +389,7 @@ end;
 procedure TMainForm.ac_me_updateExecute(Sender: TObject);
 begin
   Application.CreateForm(TSelectMeetingForm, SelectMeetingForm);
-  SelectMeetingForm.Filter := 'O';
+  SelectMeetingForm.Filter := '''O''';
   if SelectMeetingForm.ShowModal = mrok then
   begin
     if SelectMeetingForm.EL_ID > 0 then

@@ -24,14 +24,15 @@ type
     type
       DataRec = class
         private
-        FID: integer;
-        FDatum: TDateTime;
-        FZeit: TDateTime;
-        FTitle: string;
-        FChanged: TDateTime;
-        FEnde: TDateTime;
-        FRead: TDateTime;
-        FStatus: string;
+          FID: integer;
+          FDatum: TDateTime;
+          FZeit: TDateTime;
+          FTitle: string;
+          FChanged: TDateTime;
+          FEnde: TDateTime;
+          FRead: TDateTime;
+          FStatus: string;
+        FRunning: boolean;
         public
           constructor create;
           Destructor Destroy; override;
@@ -44,6 +45,7 @@ type
           property Ende   : TDateTime   read FEnde      write FEnde;
           property Read   : TDateTime   read FRead      write FRead;
           property Status : string      read FStatus    write FStatus;
+          property Running: boolean     read FRunning   write FRunning;
       end;
   private
     m_list : TList<DataRec>;
@@ -138,30 +140,41 @@ end;
 procedure TMeetingFrame.readData;
 var
   da : DataRec;
+
+  procedure readValues( data : TDataSet; flag : Boolean );
+  begin
+    while not data.Eof do
+    begin
+      da := DataRec.create;
+      m_list.Add(da);
+
+      da.ID       := data.FieldByName('EL_ID').AsInteger;
+      da.Datum    := data.FieldByName('EL_DATUM').AsDateTime;
+      da.Zeit     := data.FieldByName('EL_ZEIT').AsDateTime;
+      da.Title    := data.FieldByName('EL_TITEL').AsString;
+      da.Changed  := data.FieldByName('EL_DATA_STAMP').AsDateTime;
+      da.Ende     := data.FieldByName('EL_ENDE').AsDateTime;
+      da.Read     := data.FieldByName('TN_READ').AsDateTime;
+      da.Status   := TeilnehmerStatusToString(TTeilnehmerStatus(data.FieldByName('TN_STATUS').AsInteger), false);
+      da.Running  := flag;
+      data.Next;
+    end;
+  end;
 begin
   clear;
 
   MeetingQry.ParamByName('PE_ID').AsInteger := GM.UserID;
+
   MeetingQry.ParamByName('STATUS').AsString := 'O';
-
   MeetingQry.Open;
-
-  while not MeetingQry.Eof do
-  begin
-    da := DataRec.create;
-    m_list.Add(da);
-
-    da.ID     := MeetingQry.FieldByName('EL_ID').AsInteger;
-    da.Datum  := MeetingQry.FieldByName('EL_DATUM').AsDateTime;
-    da.Zeit   := MeetingQry.FieldByName('EL_ZEIT').AsDateTime;
-    da.Title  := MeetingQry.FieldByName('EL_TITEL').AsString;
-    da.Changed:= MeetingQry.FieldByName('EL_DATA_STAMP').AsDateTime;
-    da.Ende   := MeetingQry.FieldByName('EL_ENDE').AsDateTime;
-    da.Read   := MeetingQry.FieldByName('TN_READ').AsDateTime;
-    da.Status := TeilnehmerStatusToString(TTeilnehmerStatus(MeetingQry.FieldByName('TN_STATUS').AsInteger), false);
-    MeetingQry.Next;
-  end;
+  readValues( MeetingQry, false );
   MeetingQry.Close;
+
+  MeetingQry.ParamByName('STATUS').AsString := 'R';
+  MeetingQry.Open;
+  readValues( MeetingQry, true );
+  MeetingQry.Close;
+
   updateView;
 end;
 
@@ -210,6 +223,11 @@ begin
   for da in m_list do
   begin
     item := Lv.Items.Add;
+    if da.Running then
+      item.GroupID := 0
+    else
+      item.GroupID  := 1;
+
     item.Data     := da;
     item.Caption  := FormatDateTime('dd.mm.yyyy', da.Datum);
     item.SubItems.Add(FormatDateTime('hh:nn', da.Zeit));

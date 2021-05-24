@@ -104,9 +104,10 @@ begin
   if not ELTab.Active then
     exit;
 
-  grid := GremiumFrame1.GremiumID;
-  ELTab.Filter   := Format('GR_ID=%d and EL_STATUS=''%s''', [grid, m_filter]);
-  ELTab.Filtered := true;
+  grid                      := GremiumFrame1.GremiumID;
+  ELTab.Filter              := Format('GR_ID=%d and EL_STATUS in (%s)', [grid, m_filter]);
+  //ELTab.Filter              := Format('GR_ID=%d and EL_STATUS in (''R'')', [grid]);
+  ELTab.Filtered            := true;
 
   DBGrid1.Enabled           := not ELTab.IsEmpty;
   BaseFrame1.OKBtn.Enabled  := not ELTab.IsEmpty;

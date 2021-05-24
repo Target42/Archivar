@@ -249,6 +249,23 @@
         inherited Lv: TListView
           Width = 1118
           Height = 159
+          Groups = <
+            item
+              Header = 'Laufend'
+              GroupID = 0
+              State = [lgsNormal, lgsCollapsible]
+              HeaderAlign = taLeftJustify
+              FooterAlign = taLeftJustify
+              TitleImage = -1
+            end
+            item
+              Header = 'Geplant'
+              GroupID = 1
+              State = [lgsNormal, lgsCollapsible]
+              HeaderAlign = taLeftJustify
+              FooterAlign = taLeftJustify
+              TitleImage = -1
+            end>
           ExplicitWidth = 1118
           ExplicitHeight = 159
         end

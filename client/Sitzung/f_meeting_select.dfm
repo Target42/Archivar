@@ -56,7 +56,6 @@ object SelectMeetingForm: TSelectMeetingForm
     Align = alTop
     Caption = 'Gremien'
     TabOrder = 1
-    ExplicitWidth = 304
     inline GremiumFrame1: TGremiumFrame
       Left = 2
       Top = 15
@@ -66,7 +65,7 @@ object SelectMeetingForm: TSelectMeetingForm
       TabOrder = 0
       ExplicitLeft = 2
       ExplicitTop = 15
-      ExplicitWidth = 300
+      ExplicitWidth = 495
       ExplicitHeight = 232
       inherited TV: TTreeView
         Width = 495
@@ -74,7 +73,7 @@ object SelectMeetingForm: TSelectMeetingForm
         OnChange = GremiumFrame1TVChange
         ExplicitLeft = 0
         ExplicitTop = 0
-        ExplicitWidth = 300
+        ExplicitWidth = 495
         ExplicitHeight = 232
       end
     end

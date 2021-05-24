@@ -409,8 +409,9 @@ begin
   else if cmd = 'meeting' then begin
       if Assigned( DoMeetingform ) then
     DoMeetingform.Exec( arg );
+  end else if cmd = 'updatemeeting' then begin
+    PostMessage(Application.MainFormHandle, msgUpdateMeetings, 0, 0 );
   end;
-
 end;
 
 procedure TGM.FillGremien(arr :TJSONArray );
