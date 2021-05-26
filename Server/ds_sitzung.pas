@@ -17,12 +17,22 @@ type
     TNSrc: TDataSetProvider;
   private
   public
+    // enter & leave the meeting
     function enter( obj : TJSONobject ) : TJSONObject;
     function leave( obj : TJSONobject ) : TJSONObject;
 
+    // change user status
+    function changeState( obj : TJSONobject ) : TJSONObject;
+
+    // vote
     function startVote( obj : TJSONobject ) : TJSONObject;
     function Vote( obj : TJSONobject ) : TJSONObject;
     function endVote( obj : TJSONobject ) : TJSONObject;
+
+    // meeting lead ...
+    function requestLead( obj : TJSONObject ) : TJSONObject;
+    function changeLead( obj : TJSONObject ) : TJSONObject;
+
   end;
 
 implementation
@@ -38,6 +48,16 @@ uses
 
 
 { TdsSitzung }
+
+function TdsSitzung.changeLead(obj: TJSONObject): TJSONObject;
+begin
+  Result := HellMod.changeLead( obj );
+end;
+
+function TdsSitzung.changeState(obj: TJSONobject): TJSONObject;
+begin
+  Result := HellMod.changeStatus( obj );
+end;
 
 function TdsSitzung.endVote(obj: TJSONobject): TJSONObject;
 begin
@@ -76,6 +96,11 @@ begin
     JResult( Result, false, 'Es gibt die Sitzung nicht oder sie sind kein Teilnehmer');
 end;
 
+
+function TdsSitzung.requestLead(obj: TJSONObject): TJSONObject;
+begin
+  Result := HellMod.requestLead( obj );
+end;
 
 function TdsSitzung.startVote(obj: TJSONobject): TJSONObject;
 begin

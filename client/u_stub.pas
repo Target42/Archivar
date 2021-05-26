@@ -1,6 +1,6 @@
 //
 // Erzeugt vom DataSnap-Proxy-Generator.
-// 19.05.2021 19:41:52
+// 26.05.2021 11:12:29
 //
 
 unit u_stub;
@@ -244,18 +244,24 @@ type
   private
     FenterCommand: TDBXCommand;
     FleaveCommand: TDBXCommand;
+    FchangeStateCommand: TDBXCommand;
     FstartVoteCommand: TDBXCommand;
     FVoteCommand: TDBXCommand;
     FendVoteCommand: TDBXCommand;
+    FrequestLeadCommand: TDBXCommand;
+    FchangeLeadCommand: TDBXCommand;
   public
     constructor Create(ADBXConnection: TDBXConnection); overload;
     constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
     destructor Destroy; override;
     function enter(obj: TJSONObject): TJSONObject;
     function leave(obj: TJSONObject): TJSONObject;
+    function changeState(obj: TJSONObject): TJSONObject;
     function startVote(obj: TJSONObject): TJSONObject;
     function Vote(obj: TJSONObject): TJSONObject;
     function endVote(obj: TJSONObject): TJSONObject;
+    function requestLead(obj: TJSONObject): TJSONObject;
+    function changeLead(obj: TJSONObject): TJSONObject;
   end;
 
 implementation
@@ -1326,6 +1332,20 @@ begin
   Result := TJSONObject(FleaveCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
 end;
 
+function TdsSitzungClient.changeState(obj: TJSONObject): TJSONObject;
+begin
+  if FchangeStateCommand = nil then
+  begin
+    FchangeStateCommand := FDBXConnection.CreateCommand;
+    FchangeStateCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FchangeStateCommand.Text := 'TdsSitzung.changeState';
+    FchangeStateCommand.Prepare;
+  end;
+  FchangeStateCommand.Parameters[0].Value.SetJSONValue(obj, FInstanceOwner);
+  FchangeStateCommand.ExecuteUpdate;
+  Result := TJSONObject(FchangeStateCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
+end;
+
 function TdsSitzungClient.startVote(obj: TJSONObject): TJSONObject;
 begin
   if FstartVoteCommand = nil then
@@ -1368,6 +1388,34 @@ begin
   Result := TJSONObject(FendVoteCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
 end;
 
+function TdsSitzungClient.requestLead(obj: TJSONObject): TJSONObject;
+begin
+  if FrequestLeadCommand = nil then
+  begin
+    FrequestLeadCommand := FDBXConnection.CreateCommand;
+    FrequestLeadCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FrequestLeadCommand.Text := 'TdsSitzung.requestLead';
+    FrequestLeadCommand.Prepare;
+  end;
+  FrequestLeadCommand.Parameters[0].Value.SetJSONValue(obj, FInstanceOwner);
+  FrequestLeadCommand.ExecuteUpdate;
+  Result := TJSONObject(FrequestLeadCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
+end;
+
+function TdsSitzungClient.changeLead(obj: TJSONObject): TJSONObject;
+begin
+  if FchangeLeadCommand = nil then
+  begin
+    FchangeLeadCommand := FDBXConnection.CreateCommand;
+    FchangeLeadCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FchangeLeadCommand.Text := 'TdsSitzung.changeLead';
+    FchangeLeadCommand.Prepare;
+  end;
+  FchangeLeadCommand.Parameters[0].Value.SetJSONValue(obj, FInstanceOwner);
+  FchangeLeadCommand.ExecuteUpdate;
+  Result := TJSONObject(FchangeLeadCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
+end;
+
 constructor TdsSitzungClient.Create(ADBXConnection: TDBXConnection);
 begin
   inherited Create(ADBXConnection);
@@ -1382,9 +1430,12 @@ destructor TdsSitzungClient.Destroy;
 begin
   FenterCommand.DisposeOf;
   FleaveCommand.DisposeOf;
+  FchangeStateCommand.DisposeOf;
   FstartVoteCommand.DisposeOf;
   FVoteCommand.DisposeOf;
   FendVoteCommand.DisposeOf;
+  FrequestLeadCommand.DisposeOf;
+  FchangeLeadCommand.DisposeOf;
   inherited;
 end;
 

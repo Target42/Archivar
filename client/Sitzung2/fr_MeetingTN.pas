@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ExtCtrls, Vcl.StdCtrls,
-  Vcl.ComCtrls, i_chapter, Vcl.Menus;
+  Vcl.ComCtrls, i_chapter, Vcl.Menus, u_stub;
 
 type
   TMeetingTNFrame = class(TFrame)
@@ -32,12 +32,17 @@ type
   private
     m_tn  : ITeilnehmerListe;
     m_src : TListView;
+    FClient: TdsSitzungClient;
+    FELID: integer;
     function GetTeilnehmer: ITeilnehmerListe;
     procedure SetTeilnehmer(const Value: ITeilnehmerListe);
 
     procedure updateList;
   public
     property Teilnehmer: ITeilnehmerListe read GetTeilnehmer write SetTeilnehmer;
+
+    property ELID: integer read FELID write FELID;
+    property Client: TdsSitzungClient read FClient write FClient;
 
     procedure init;
     procedure release;
@@ -46,7 +51,7 @@ type
 implementation
 
 uses
-  u_teilnehmer;
+  u_teilnehmer, System.JSON, u_json;
 
 {$R *.dfm}
 
@@ -58,24 +63,40 @@ var
   i     : integer;
   t     : ITeilnehmer;
   ts    : TTeilnehmerStatus;
+  req   : TJSONObject;
+  arr   : TJSONArray;
 begin
-  item := sender as TMenuItem;
+  req   := TJSONObject.Create;
+  item  := sender as TMenuItem;
+  arr   := TJSONArray.Create;
 
   case item.Tag of
    1 : ts := tsAnwesend;
    2 : ts := tsEntschuldigt;
    3 : ts := tsUnentschuldigt;
    4 : ts := tsUnbekannt;
+   else
+     ts := tsUnbekannt;
   end;
+  JReplace(req, 'elid', FELID);
+  JReplace(req, 'status', integer(ts));
 
   for i := 0 to pred(m_src.Items.Count) do
     begin
       if m_src.Items.Item[i].Selected then begin
         t := ITeilnehmer(m_src.Items.Item[i].Data);
         t.Status := ts;
+        arr.AddElement(TJSONNumber.Create(t.PEID));
       end;
     end;
   updateList;
+  JReplace(req, 'list', arr);
+
+  if Assigned(FClient) then begin
+    FClient.changeState(req);
+  end
+  else
+    req.Free;
 end;
 
 function TMeetingTNFrame.GetTeilnehmer: ITeilnehmerListe;
@@ -91,7 +112,7 @@ end;
 
 procedure TMeetingTNFrame.init;
 begin
-
+  FClient := NIL;
 end;
 
 procedure TMeetingTNFrame.PopupMenu1Popup(Sender: TObject);

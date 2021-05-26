@@ -85,4 +85,22 @@ object HellMod: THellMod
         ParamType = ptInput
       end>
   end
+  object PEqry: TIBQuery
+    Database = DBMod.IBDatabase1
+    Transaction = IBTransaction1
+    BufferChunks = 1000
+    CachedUpdates = False
+    ParamCheck = True
+    SQL.Strings = (
+      'select * from PE_PERSON'
+      'where pe_id = :pe_id')
+    Left = 384
+    Top = 144
+    ParamData = <
+      item
+        DataType = ftInteger
+        Name = 'pe_id'
+        ParamType = ptInput
+      end>
+  end
 end

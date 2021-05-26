@@ -133,7 +133,10 @@ begin
   if da.Read = 0.0 then
     da.Read := now;
 
-  PostMessage(Application.MainFormHandle, msgEditMeeting, 0, da.ID );
+  if not da.Running then
+    PostMessage(Application.MainFormHandle, msgEditMeeting, 0, da.ID )
+  else
+    PostMessage(Application.MainFormHandle, msgDoMeeting, 0, da.ID );
   Lv.Invalidate;
 end;
 

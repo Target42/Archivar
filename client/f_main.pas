@@ -178,6 +178,7 @@ type
     procedure templateEdit( sys : boolean );
     procedure setGremiumName( id : integer );
     procedure showMeeting( id : integer );
+    procedure doMeeting( id : integer );
 
     procedure UpdateUserView( sender : TObject );
   public
@@ -337,9 +338,7 @@ begin
   begin
     if SelectMeetingForm.EL_ID > 0 then
     begin
-      Application.CreateForm(TDoMeetingform, DoMeetingform);
-      DoMeetingform.ELID := SelectMeetingForm.EL_ID;
-      DoMeetingform.Show;
+      doMeeting(SelectMeetingForm.EL_ID);
     end;
   end;
   SelectMeetingForm.free;
@@ -622,6 +621,7 @@ begin
     msgUpdateGremium  : setGremiumName( msg.lParam );
     msgEditMeeting    : showMeeting(msg.lParam);
     msgLogin          : ac_prg_connect.Execute;
+    msgDoMeeting      : doMeeting(msg.lParam);
     else
       Handled := false;
   end;
@@ -659,6 +659,18 @@ begin
   PageControl2.Visible    := flag;
   Splitter2.Visible       := false;
 
+end;
+
+procedure TMainForm.doMeeting(id: integer);
+begin
+  if Assigned( DoMeetingform ) then begin
+    ShowMessage('Es ist noch eine Sitzung aktiv.'+sLineBreak+'Bitte diese Beenden, bevor eine neue begonnen wird!');
+    exit;
+  end;
+
+  Application.CreateForm(TDoMeetingform, DoMeetingform);
+  DoMeetingform.ELID := id;
+  DoMeetingform.Show;
 end;
 
 procedure TMainForm.est1Click(Sender: TObject);

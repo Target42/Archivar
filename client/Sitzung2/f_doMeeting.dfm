@@ -115,7 +115,7 @@
           end
           inherited ImageList1: TImageList
             Bitmap = {
-              494C0101060010015C0110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+              494C010106001001680110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
               0000000000003600000028000000400000002000000001002000000000000020
               0000000000000000000000000000000000000000000000000000000000000000
               0000000000000000000000000000000000000000000000000000000000000000
@@ -401,11 +401,43 @@
         Top = 0
         Width = 894
         Height = 515
-        ActivePage = TabSheet5
+        ActivePage = TabSheet4
         Align = alClient
         TabOrder = 0
         object TabSheet4: TTabSheet
           Caption = 'Allgemeines'
+          object GroupBox1: TGroupBox
+            Left = 0
+            Top = 0
+            Width = 886
+            Height = 49
+            Align = alTop
+            Caption = 'Leitung'
+            TabOrder = 0
+            DesignSize = (
+              886
+              49)
+            object Button1: TButton
+              Left = 800
+              Top = 16
+              Width = 75
+              Height = 25
+              Anchors = [akTop, akRight]
+              Caption = #220'bernehmen'
+              TabOrder = 0
+              OnClick = Button1Click
+            end
+            object Panel1: TPanel
+              Left = 2
+              Top = 15
+              Width = 303
+              Height = 32
+              Align = alLeft
+              Alignment = taLeftJustify
+              BevelOuter = bvNone
+              TabOrder = 1
+            end
+          end
         end
         object TabSheet5: TTabSheet
           Caption = 'Teilnehmer'
@@ -476,8 +508,6 @@
                 inherited Gremium: TListView
                   Width = 545
                   Height = 242
-                  ExplicitLeft = 6
-                  ExplicitTop = 14
                   ExplicitWidth = 545
                   ExplicitHeight = 242
                 end
@@ -494,8 +524,6 @@
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsSitzung'
-    Connected = True
-    SQLConnection = GM.SQLConnection1
     Left = 448
     Top = 168
   end

@@ -30,6 +30,7 @@ const
   msgEditMeeting    = WMUSER + 11;
   msgLogin          = WMUSER + 12;
   msgNewMeeting     = WMUSER + 13;
+  msgDoMeeting      = WMUSER + 14;
 
 type
   TGM = class(TDataModule)
@@ -398,19 +399,14 @@ begin
     WindowHandler.closeTaksWindowMsg( JInt(Arg, 'taid'), 'Die Aufgabe wurde gelöscht!');
     BookMarkHandler.Bookmarks.remove( JString( ARg, 'clid'));
 
-    PostMessage( Application.MainFormHandle, msgFilterTasks, 1, 0 );
-  end else if cmd = 'newmeeting' then
-  begin
-    PostMessage(Application.MainFormHandle, msgNewMeeting, 0, JInt(Arg, 'id'));
-  end else if cmd = 'onlineuser' then
-    OnlineUser.updateData(arg)
-  else if cmd = 'userchangestate' then
-    OnlineUser.changeState( arg )
-  else if cmd = 'meeting' then begin
-      if Assigned( DoMeetingform ) then
-    DoMeetingform.Exec( arg );
-  end else if cmd = 'updatemeeting' then begin
-    PostMessage(Application.MainFormHandle, msgUpdateMeetings, 0, 0 );
+    PostMessage( Application.MainFormHandle, msgFilterTasks, 1, 0 );  end
+  else if cmd = 'newmeeting' then       PostMessage(Application.MainFormHandle, msgNewMeeting, 0, JInt(Arg, 'id'))
+  else if cmd = 'onlineuser' then           OnlineUser.updateData(arg)
+  else if cmd = 'userchangestate' then      OnlineUser.changeState( arg )
+  else if cmd = 'updatemeeting' then        PostMessage(Application.MainFormHandle, msgUpdateMeetings, 0, 0 )
+  else if (cmd= 'meeting') or ( cmd = 'requestlead') or ( cmd = 'changelead') then begin
+    if Assigned( DoMeetingform ) then
+      DoMeetingform.Exec( arg );
   end;
 end;
 

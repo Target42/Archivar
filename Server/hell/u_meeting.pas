@@ -13,6 +13,7 @@ type
       FPRId: integer;
 
       m_list : TList<TMeetingUser>;
+    FLeadID: integer;
 
       function getCount : integer;
 
@@ -23,6 +24,7 @@ type
       property ID: integer read FID write FID;
       property PRId: integer read FPRId write FPRId;
       property count : integer read getCount;
+      property LeadID: integer read FLeadID write FLeadID;
 
       function addUser(     id : integer; sessionID : NativeInt ) : TMeetingUser;
       function findUser(    id : integer ) : TMeetingUser;
@@ -65,6 +67,7 @@ end;
 constructor TMeeting.create;
 begin
   m_list := TList<TMeetingUser>.create;
+  FLeadID:= -1;
 end;
 
 destructor TMeeting.Destroy;

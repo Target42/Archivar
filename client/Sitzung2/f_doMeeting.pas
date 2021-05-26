@@ -28,13 +28,18 @@ type
     ProtocolFrame1: TProtocolFrame;
     MeetingTNFrame1: TMeetingTNFrame;
     TNQry: TClientDataSet;
+    GroupBox1: TGroupBox;
+    Button1: TButton;
+    Panel1: TPanel;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure Button1Click(Sender: TObject);
   private
     m_meid  : integer;
     m_prid  : integer;
     m_proto : IProtocol;
+
     m_hell  : TdsSitzungClient;
 
     procedure reload;
@@ -53,18 +58,69 @@ var
 implementation
 
 uses
-  m_glob_client, u_ProtocolImpl, u_json;
+  m_glob_client, u_ProtocolImpl, u_json, system.UITypes;
 
 {$R *.dfm}
 
-procedure TDoMeetingform.exec(arg: TJSONObject);
+procedure TDoMeetingform.Button1Click(Sender: TObject);
+var
+  req : TJSONObject;
 begin
-  TNQry.ParamByName('pr_id').AsInteger := m_prid;
-  TNQry.Open;
-  m_proto.Teilnehmer.loadFromSrc(TNQry);
-  TNQry.Close;
+  req := TJSONObject.Create;
 
-  MeetingTNFrame1.Teilnehmer  := m_proto.Teilnehmer;
+  JReplace( req, 'id',  m_meid);
+  JReplace( req, 'peid',  GM.UserID);
+
+  m_hell.requestLead( req);
+
+end;
+
+procedure TDoMeetingform.exec(arg: TJSONObject);
+var
+  cmd   : string;
+  lead  : integer;
+  req   : TJSONObject;
+  name  : string;
+begin
+  cmd := lowerCase(Jstring( arg, 'action'));
+  if cmd = 'meeting' then begin
+    TNQry.ParamByName('pr_id').AsInteger := m_prid;
+    TNQry.Open;
+    m_proto.Teilnehmer.loadFromSrc(TNQry);
+    TNQry.Close;
+
+    MeetingTNFrame1.Teilnehmer  := m_proto.Teilnehmer;
+  end else if cmd = 'requestlead' then begin
+    lead := JInt( arg, 'lead');
+    if lead = GM.UserID then begin
+      name := Format('%s %s (%s) möchte die Sitzungsleitung übernehmen.',
+        [
+          JString(arg, 'name'),
+          JString(arg, 'vorname'),
+          JString(arg, 'dept')]);
+
+      if (MessageDlg(name, mtConfirmation, [mbYes, mbNo], 0) = mrYes) then begin
+        Req := TJSONObject.Create;
+
+        JReplace( req, 'id',  m_meid);
+        JReplace( req, 'newid', JInt( arg, 'newid'));
+
+        m_hell.changeLead(req);
+      end;
+    end;
+  end else if cmd = 'changelead' then begin
+    lead := JInt( arg, 'lead');
+    if lead = -1 then
+      Panel1.Caption := ''
+    else begin
+        name := Format('%s %s (%s)',
+        [
+          JString(arg, 'name'),
+          JString(arg, 'vorname'),
+          JString(arg, 'dept')]);
+        Panel1.Caption := name;
+    end;
+  end;
 end;
 
 procedure TDoMeetingform.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -91,6 +147,7 @@ begin
   MeetingTNFrame1.init;
 
   m_hell := TdsSitzungClient.Create(DSProviderConnection1.SQLConnection.DBXConnection);
+  MeetingTNFrame1.Client := m_hell;
 
 end;
 
@@ -147,6 +204,7 @@ begin
   end else
     ELTab.Close;
 
+  MeetingTNFrame1.ELID := m_meid;
 
   req := TJSONObject.Create;
   JReplace( req, 'id', m_meid);
