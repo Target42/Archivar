@@ -19,9 +19,13 @@ type
     procedure setItem( inx : integer; const value : IBeschluss);
     function  getCount : integer;
 
+    procedure setOwner( value : pointer);
+    function  getOwner : pointer;
+
     //public
     property Item[ inx : integer ]  : IBeschluss  read getItem    write setItem;
     property Count                  : integer     read getCount;
+    property Owner                  : pointer     read getOwner   write setOwner;
 
     function  newBeschluss : IBeschluss;
     procedure delete( inx : integer ) ; overload;
@@ -50,6 +54,8 @@ type
     procedure SetCTID(const Value: integer);
     procedure setData( value : IXMLList );
     function  getData : IXMLList;
+    procedure setOwner( value : IBeschlussListe );
+    function  getOwner : IBeschlussListe;
 
     // public
     property ID           : integer           read GetID            write SetID;
@@ -60,6 +66,8 @@ type
     property Abstimmung   : IAbstimmung       read getAbstimmung ;
     property Modified     : boolean           read GetModified      write SetModified;
     property Data         : IXMLList          read getData          write setData;
+
+    property Owner        : IBeschlussListe   read getOwner         write setOwner;
 
     procedure loadFromDataSet( data : TDataSet );
     procedure save( data : TDataSet );

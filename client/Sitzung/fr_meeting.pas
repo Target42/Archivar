@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB,
   Datasnap.DBClient, Datasnap.DSConnect, Vcl.ComCtrls,
-  System.Generics.Collections, Vcl.AppEvnts;
+  System.Generics.Collections, Vcl.AppEvnts, Vcl.Menus;
 
 type
   TMeetingFrame = class(TFrame)
@@ -14,12 +14,18 @@ type
     MeetingQry: TClientDataSet;
     Lv: TListView;
     ApplicationEvents1: TApplicationEvents;
+    PopupMenu1: TPopupMenu;
+    Bearbeiten1: TMenuItem;
+    N1: TMenuItem;
+    Ausfhren1: TMenuItem;
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure LvDblClick(Sender: TObject);
     procedure LvCustomDrawItem(Sender: TCustomListView; Item: TListItem;
       State: TCustomDrawState; var DefaultDraw: Boolean);
     procedure LvCustomDrawSubItem(Sender: TCustomListView; Item: TListItem;
       SubItem: Integer; State: TCustomDrawState; var DefaultDraw: Boolean);
+    procedure Bearbeiten1Click(Sender: TObject);
+    procedure Ausfhren1Click(Sender: TObject);
   private
     type
       DataRec = class
@@ -81,6 +87,39 @@ begin
   end;
 
 end;
+
+procedure TMeetingFrame.Ausfhren1Click(Sender: TObject);
+var
+  da    : DataRec;
+begin
+  if not Assigned(LV.Selected) then
+    exit;
+
+  da := LV.Selected.Data;
+  if da.Read = 0.0 then
+    da.Read := now;
+
+  PostMessage(Application.MainFormHandle, msgDoMeeting, 0, da.ID );
+  Lv.Invalidate;
+end;
+
+procedure TMeetingFrame.Bearbeiten1Click(Sender: TObject);
+var
+  da    : DataRec;
+begin
+  if not Assigned(LV.Selected) then
+    exit;
+
+  da := LV.Selected.Data;
+  if da.Read = 0.0 then
+    da.Read := now;
+
+  if not da.Running then
+    PostMessage(Application.MainFormHandle, msgEditMeeting, 0, da.ID )
+  else
+    ShowMessage('Die Sitzung läuft schon.');
+end;
+
 
 procedure TMeetingFrame.clear;
 var

@@ -113,9 +113,9 @@ begin
   m_abwesende       := m_be.Abstimmung.Abwesend.clone;
   m_nichtAbgestimmt := m_be.Abstimmung.NichtAbgestimmt.clone;
 
-  UpdateList( LVGremium,    m_gremium   );
+  UpdateList( LVGremium,          m_gremium   );
   UpdateList( LVNichtabgestimmt,  m_nichtAbgestimmt );
-  UpdateList( LVAbwesend,   m_abwesende );
+  UpdateList( LVAbwesend,         m_abwesende );
 
 end;
 
@@ -136,7 +136,7 @@ begin
   p := IPerson(LVAbwesend.Selected.Data);
   m_gremium.add(p);
 
-  UpdateList( LVGremium, m_gremium);
+  UpdateList( LVGremium,  m_gremium);
   UpdateList( LVAbwesend, m_abwesende);
 
   if Assigned(FOnUserChange) then
@@ -154,8 +154,9 @@ begin
   p := IPerson(LVGremium.Selected.Data);
   m_abwesende.add(p);
 
-  UpdateList( LVGremium, m_gremium);
+  UpdateList( LVGremium,  m_gremium);
   UpdateList( LVAbwesend, m_abwesende);
+
   if Assigned(FOnUserChange) then
     FOnUserChange( self );
 end;
@@ -170,8 +171,9 @@ begin
   p := IPerson(LVNichtabgestimmt.Selected.Data);
   m_gremium.add(p);
 
-  UpdateList( LVGremium, m_gremium);
-  UpdateList( LVNichtabgestimmt, m_nichtAbgestimmt);
+  UpdateList( LVGremium,          m_gremium);
+  UpdateList( LVNichtabgestimmt,  m_nichtAbgestimmt);
+
   if Assigned(FOnUserChange) then
     FOnUserChange( self );
 end;
@@ -186,8 +188,9 @@ begin
   p := IPerson(LVGremium.Selected.Data);
   m_nichtAbgestimmt.add(p);
 
-  UpdateList( LVGremium, m_gremium);
-  UpdateList( LVNichtabgestimmt, m_nichtAbgestimmt);
+  UpdateList( LVGremium,          m_gremium);
+  UpdateList( LVNichtabgestimmt,  m_nichtAbgestimmt);
+
   if Assigned(FOnUserChange) then
     FOnUserChange( self );
 end;
@@ -212,6 +215,13 @@ begin
     item.SubItems.Add(p.Rolle);
   end;
   LV.Items.EndUpdate;
+
+  if LV = LVGremium then
+    GroupBox4.Caption := 'Gremium '+IntToStr(LV.Items.Count)
+  else if lv = LVAbwesend then
+    GroupBox5.Caption := 'Abwesend '+IntToStr(LV.Items.Count)
+  else if lv = LVNichtabgestimmt then
+    GroupBox6.Caption := 'Nicht mit Abgestimt '+IntToStr(LV.Items.Count);
 end;
 
 end.

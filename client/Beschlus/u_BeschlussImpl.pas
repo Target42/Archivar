@@ -8,6 +8,7 @@ uses
 type
   TBeschlussImpl = class(TInterfacedObject, IBeschluss )
     private
+      m_owner     : IBeschlussListe;
       m_id        : integer;
       m_ctid      : integer;
       m_text      : string;
@@ -30,6 +31,8 @@ type
       procedure SetCTID(const Value: integer);
       procedure setData( value : IXMLList );
       function  getData : IXMLList;
+      procedure setOwner( value : IBeschlussListe );
+      function  getOwner : IBeschlussListe;
 
       procedure addHeader( tab :IXMLTable );
       procedure addTable( name : string ;  list : IPersonenListe );
@@ -37,7 +40,7 @@ type
       procedure ReadTable( name : string ;  list : IPersonenListe );
 
     public
-      constructor create;
+      constructor create(owner : IBeschlussListe);
       destructor Destroy; override;
 
       procedure loadFromDataSet( data : TDataSet );
@@ -96,8 +99,9 @@ begin
 end;
 
 
-constructor TBeschlussImpl.create;
+constructor TBeschlussImpl.create(owner : IBeschlussListe);
 begin
+  m_owner   := owner;
   m_vote    := TAbstimmungImpl.create;
   m_status  := bsGeplant;
   m_ID      := 0;
@@ -181,6 +185,11 @@ end;
 function TBeschlussImpl.GetModified: boolean;
 begin
   Result := m_modified or m_vote.Modified;
+end;
+
+function TBeschlussImpl.getOwner: IBeschlussListe;
+begin
+  Result := m_owner;
 end;
 
 function TBeschlussImpl.GetStatus: TBeschlussStatus;
@@ -267,6 +276,7 @@ end;
 
 procedure TBeschlussImpl.Release;
 begin
+  m_owner := NIL;
   m_vote.Release;
 end;
 
@@ -384,6 +394,11 @@ procedure TBeschlussImpl.SetModified(const Value: boolean);
 begin
   m_modified      := value;
   m_vote.Modified := value;
+end;
+
+procedure TBeschlussImpl.setOwner(value: IBeschlussListe);
+begin
+  m_owner := value;
 end;
 
 procedure TBeschlussImpl.SetStatus(const Value: TBeschlussStatus);

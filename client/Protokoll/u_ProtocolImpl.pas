@@ -72,7 +72,7 @@ type
     function save : boolean;
     function saveTree : boolean;
 
-    procedure SyncUser( be : IBeschluss );
+    procedure SyncUser( be : IBeschluss; plan : boolean );
 
     procedure release;
   end;
@@ -402,7 +402,7 @@ begin
   m_modified := true;
 end;
 
-procedure TProtocolImpl.SyncUser(be: IBeschluss);
+procedure TProtocolImpl.SyncUser(be: IBeschluss; plan : boolean );
   procedure add( liste : IPersonenListe; te :ITeilnehmer );
   var
     p : IPerson;
@@ -419,16 +419,22 @@ var
   i : integer;
   t : ITeilnehmer;
   p : IPerson;
+  menge : TTeilnehmerStatusSet;
 begin
   be.Abstimmung.Gremium.clear;
   be.Abstimmung.Abwesend.clear;
+
+  if plan then
+    menge := [tsUnbekannt, tsVerfuegbar, tsAnwesend, tsEingeladen, tsZugesagt]
+  else
+    menge := [tsAnwesend];
 
   for i := 0 to pred(m_teilnehmer.Count) do begin
     t := m_teilnehmer.Item[i];
 
     if t.Status in [tsEntschuldigt, tsUnentschuldigt, tsAbgelehnt] then
       add(be.Abstimmung.Abwesend, t)
-    else
+    else if t.Status in menge then
       add(be.Abstimmung.Gremium, t)
   end;
 

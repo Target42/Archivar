@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, fr_teilnehmer,
   Vcl.ExtCtrls, i_chapter, Data.DB, Datasnap.DBClient, Datasnap.DSConnect,
   fr_protocol, Vcl.StdCtrls, Vcl.OleCtrls, SHDocVw, fr_MeetingTN, u_stub,
-  System.JSON;
+  System.JSON, Vcl.Buttons, fr_editForm, fr_beschluss;
 
 type
   TDoMeetingform = class(TForm)
@@ -23,7 +23,6 @@ type
     Splitter1: TSplitter;
     DSProviderConnection1: TDSProviderConnection;
     ELTab: TClientDataSet;
-    WebBrowser1: TWebBrowser;
     Übersicht: TGroupBox;
     ProtocolFrame1: TProtocolFrame;
     MeetingTNFrame1: TMeetingTNFrame;
@@ -31,13 +30,34 @@ type
     GroupBox1: TGroupBox;
     Button1: TButton;
     Panel1: TPanel;
+    BitBtn1: TBitBtn;
+    Panel2: TPanel;
+    WebBrowser1: TWebBrowser;
+    Panel4: TPanel;
+    GroupBox3: TGroupBox;
+    Splitter2: TSplitter;
+    GroupBox2: TGroupBox;
+    BitBtn2: TBitBtn;
+    BitBtn3: TBitBtn;
+    BitBtn4: TBitBtn;
+    BitBtn5: TBitBtn;
+    BitBtn6: TBitBtn;
+    BitBtn7: TBitBtn;
+    BeschlussFrame1: TBeschlussFrame;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure Button1Click(Sender: TObject);
+    procedure BitBtn1Click(Sender: TObject);
+    procedure BitBtn2Click(Sender: TObject);
+    procedure BitBtn3Click(Sender: TObject);
+    procedure BitBtn4Click(Sender: TObject);
+    procedure BitBtn5Click(Sender: TObject);
+    procedure ProtocolFrame1ac_beschlussExecute(Sender: TObject);
   private
     m_meid  : integer;
     m_prid  : integer;
+    m_lead  : integer;
     m_proto : IProtocol;
 
     m_hell  : TdsSitzungClient;
@@ -46,6 +66,8 @@ type
 
     function GetMeetingID: integer;
     procedure SetMeetingID(const Value: integer);
+
+    procedure doVote( value : integer );
   public
     property ELID: integer read GetMeetingID write SetMeetingID;
 
@@ -62,10 +84,53 @@ uses
 
 {$R *.dfm}
 
+procedure TDoMeetingform.BitBtn1Click(Sender: TObject);
+var
+  req : TJSONObject;
+begin
+  if m_lead <> GM.UserID then begin
+    ShowMessage('Du hast nicht die Sitzungleitung!');
+    exit;
+  end;
+
+  req := TJSONObject.Create;
+
+  JReplace( req, 'id',  m_meid);
+  JReplace( req, 'newid', -1);
+
+  m_hell.changeLead( req );
+
+end;
+
+procedure TDoMeetingform.BitBtn2Click(Sender: TObject);
+begin
+  doVote(+1);
+end;
+
+procedure TDoMeetingform.BitBtn3Click(Sender: TObject);
+begin
+  doVote(0);
+end;
+
+procedure TDoMeetingform.BitBtn4Click(Sender: TObject);
+begin
+  doVote(-1);
+end;
+
+procedure TDoMeetingform.BitBtn5Click(Sender: TObject);
+begin
+  doVote(-2);
+end;
+
 procedure TDoMeetingform.Button1Click(Sender: TObject);
 var
   req : TJSONObject;
 begin
+  if m_lead = GM.UserID then begin
+    ShowMessage('Du hast schon die Sitzungleitung!');
+    exit;
+  end;
+
   req := TJSONObject.Create;
 
   JReplace( req, 'id',  m_meid);
@@ -73,6 +138,17 @@ begin
 
   m_hell.requestLead( req);
 
+end;
+
+procedure TDoMeetingform.doVote(value: integer);
+var
+  req, res : TJSONObject;
+begin
+  req := TJSONObject.Create;
+  JReplace( req, 'vote',  value);
+
+  res := m_hell.Vote(req);
+  ShowResult( res );
 end;
 
 procedure TDoMeetingform.exec(arg: TJSONObject);
@@ -90,6 +166,7 @@ begin
     TNQry.Close;
 
     MeetingTNFrame1.Teilnehmer  := m_proto.Teilnehmer;
+
   end else if cmd = 'requestlead' then begin
     lead := JInt( arg, 'lead');
     if lead = GM.UserID then begin
@@ -100,6 +177,7 @@ begin
           JString(arg, 'dept')]);
 
       if (MessageDlg(name, mtConfirmation, [mbYes, mbNo], 0) = mrYes) then begin
+        ProtocolFrame1.ReadOnly := true;
         Req := TJSONObject.Create;
 
         JReplace( req, 'id',  m_meid);
@@ -110,6 +188,7 @@ begin
     end;
   end else if cmd = 'changelead' then begin
     lead := JInt( arg, 'lead');
+    m_lead := lead;
     if lead = -1 then
       Panel1.Caption := ''
     else begin
@@ -120,6 +199,13 @@ begin
           JString(arg, 'dept')]);
         Panel1.Caption := name;
     end;
+    TabSheet5.Enabled := m_lead = GM.UserID;
+    TabSheet6.Enabled := m_lead = GM.UserID;
+    BitBtn6.Visible   := m_lead = GM.UserID;
+    BitBtn7.Visible   := m_lead = GM.UserID;
+    m_proto.ReadOnly  := m_lead <> GM.UserID;
+
+    ProtocolFrame1.ReadOnly := m_lead <> GM.UserID;
   end;
 end;
 
@@ -139,15 +225,20 @@ begin
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
   m_meid  := 0;
   m_proto := NIL;
+  m_lead  := -1;
 
   PageControl1.ActivePage := TabSheet1;
   ProtocolFrame1.init;
   ProtocolFrame1.Browser := WebBrowser1;
+  BeschlussFrame1.init;
 
   MeetingTNFrame1.init;
 
   m_hell := TdsSitzungClient.Create(DSProviderConnection1.SQLConnection.DBXConnection);
   MeetingTNFrame1.Client := m_hell;
+
+  TabSheet5.Enabled := false;
+  TabSheet6.Enabled := false;
 
 end;
 
@@ -166,11 +257,18 @@ begin
   m_proto := NIL;
 
   DoMeetingform := NIL;
+  PostMessage( Application.MainFormHandle, msgMeetingEnd, 0, 0 );
 end;
 
 function TDoMeetingform.GetMeetingID: integer;
 begin
   Result := m_meid;
+end;
+
+procedure TDoMeetingform.ProtocolFrame1ac_beschlussExecute(Sender: TObject);
+begin
+  ProtocolFrame1.ac_beschlussExecute(Sender);
+
 end;
 
 procedure TDoMeetingform.reload;

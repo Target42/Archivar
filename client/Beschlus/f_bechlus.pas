@@ -80,7 +80,7 @@ var
 implementation
 
 uses
-  m_glob_client, f_textblock_param, xsd_TextBlock;
+  m_glob_client;
 
 {$R *.dfm}
 
@@ -145,26 +145,15 @@ end;
 procedure TBeschlusform.EditFrame2REDragDrop(Sender, Source: TObject; X,
   Y: Integer);
 var
-  blk : IXMLBlock;
+  text : string;
 begin
   if sender = Source then
     exit;
+
   if (source = TextBlockFrame1.LV)  and( Sender = EditFrame2.RE) then
   begin
-    blk := TextBlockFrame1.getBlock;
-
-    if blk.Fields.Count = 0 then
-      EditFrame2.RE.Lines.Add(blk.Content)
-    else
-    begin
-      Application.CreateForm(TTextBlockParameterForm, TextBlockParameterForm);
-      TextBlockParameterForm.Xblock := blk;
-      if TextBlockParameterForm.ShowModal = mrOk then
-      begin
-        EditFrame2.RE.Lines.Add( TextBlockParameterForm.getContext );
-      end;
-      TextBlockParameterForm.free;
-    end;
+    if TextBlockFrame1.getContent(text) then
+      EditFrame2.Add(text);
   end;
 end;
 

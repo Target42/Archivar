@@ -1,8 +1,8 @@
 object MeetingFrame: TMeetingFrame
   Left = 0
   Top = 0
-  Width = 753
-  Height = 373
+  Width = 832
+  Height = 309
   Align = alClient
   TabOrder = 0
   ExplicitWidth = 451
@@ -10,8 +10,8 @@ object MeetingFrame: TMeetingFrame
   object Lv: TListView
     Left = 0
     Top = 0
-    Width = 753
-    Height = 373
+    Width = 832
+    Height = 309
     Align = alClient
     Columns = <
       item
@@ -61,6 +61,7 @@ object MeetingFrame: TMeetingFrame
     GroupView = True
     ReadOnly = True
     RowSelect = True
+    PopupMenu = PopupMenu1
     TabOrder = 0
     ViewStyle = vsReport
     OnCustomDrawItem = LvCustomDrawItem
@@ -96,5 +97,20 @@ object MeetingFrame: TMeetingFrame
     OnMessage = ApplicationEvents1Message
     Left = 224
     Top = 64
+  end
+  object PopupMenu1: TPopupMenu
+    Left = 384
+    Top = 104
+    object Bearbeiten1: TMenuItem
+      Caption = 'Bearbeiten'
+      OnClick = Bearbeiten1Click
+    end
+    object N1: TMenuItem
+      Caption = '-'
+    end
+    object Ausfhren1: TMenuItem
+      Caption = 'Ausf'#252'hren'
+      OnClick = Ausfhren1Click
+    end
   end
 end

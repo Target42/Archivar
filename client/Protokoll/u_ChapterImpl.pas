@@ -117,7 +117,7 @@ constructor TChapterImpl.create(parent : IChapter; loader: TProtocolMod; owner :
 begin
   m_loader  := loader;
   m_childs  := TChapterListImpl.create;
-  m_votes   := TBeschlussListeImpl.create(m_loader);
+  m_votes   := TBeschlussListeImpl.create(m_loader, self);
   m_parent  := parent;
   m_owner   := owner;
   FID       := 0;

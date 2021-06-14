@@ -49,7 +49,7 @@ end;
 procedure TTextBlockParameterForm.FormCreate(Sender: TObject);
 begin
   SG.Cells[0, 0] := 'Variable';
-  SG.Cells[0, 1] := 'Wert';
+  SG.Cells[1, 0] := 'Wert';
 
   x_block := NIL;
   SG.ColWidths[1] := 100;
@@ -77,8 +77,13 @@ begin
   begin
     SG.Cells[0, i+1]:= x_block.Fields[i].Name;
    end;
+
    SG.Row   := 1;
    SG.Col   := 1;
+
+   SG.FixedRows := 1;
+   SG.FixedCols := 1;
+
 end;
 
 end.

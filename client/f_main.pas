@@ -134,6 +134,11 @@ type
     UserView: TListView;
     Panel1: TPanel;
     JvColorComboBox1: TJvColorComboBox;
+    Ansicht1: TMenuItem;
+    ac_view_task: TAction;
+    ac_view_admin: TAction;
+    Verwaltung1: TMenuItem;
+    Aufgaben1: TMenuItem;
     procedure ac_prg_closeExecute(Sender: TObject);
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure ac_prg_disconExecute(Sender: TObject);
@@ -168,6 +173,8 @@ type
     procedure ac_pr_abschnittExecute(Sender: TObject);
     procedure JvColorComboBox1Change(Sender: TObject);
     procedure ac_pr_deleteExecute(Sender: TObject);
+    procedure ac_view_taskExecute(Sender: TObject);
+    procedure ac_view_adminExecute(Sender: TObject);
   private
     m_noStatChange : boolean;
 
@@ -580,8 +587,32 @@ begin
   TextBlockEditForm.free;
 end;
 
+procedure TMainForm.ac_view_adminExecute(Sender: TObject);
+begin
+  ac_view_admin.Checked := not ac_view_admin.Checked;
+
+  Splitter1.Visible     := ac_view_admin.Checked;
+  PageControl1.Visible  := ac_view_admin.Checked;
+
+end;
+
+procedure TMainForm.ac_view_taskExecute(Sender: TObject);
+begin
+  ac_view_task.Checked  := not ac_view_task.Checked;
+  PageControl2.Visible  := ac_view_task.Checked;
+  Splitter2.Visible     := ac_view_task.Checked;
+end;
+
 procedure TMainForm.ApplicationEvents1Message(var Msg: tagMSG;
   var Handled: Boolean);
+  procedure showAdmin;
+  begin
+    ac_view_admin.Checked := false;
+    ac_view_task.Checked  := false;
+
+    ac_view_admin.Execute;
+    ac_view_task.Execute;
+  end;
 begin
   Handled := true;
   case Msg.message of
@@ -622,6 +653,7 @@ begin
     msgEditMeeting    : showMeeting(msg.lParam);
     msgLogin          : ac_prg_connect.Execute;
     msgDoMeeting      : doMeeting(msg.lParam);
+    msgMeetingEnd     : showAdmin;
     else
       Handled := false;
   end;
@@ -630,6 +662,7 @@ end;
 procedure TMainForm.ApplicationSetMenu(flag: boolean);
 begin
   Aufgabe1.Visible        := flag;
+  Ansicht1.Visible        := flag;
 
   ac_prg_connect.Enabled  := not flag;
   ac_prg_discon.Enabled   := flag;
@@ -657,7 +690,8 @@ begin
 
   PageControl1.Visible    := flag;
   PageControl2.Visible    := flag;
-  Splitter2.Visible       := false;
+  Splitter2.Visible       := flag;
+  Splitter1.Visible       := flag;
 
 end;
 
@@ -667,6 +701,10 @@ begin
     ShowMessage('Es ist noch eine Sitzung aktiv.'+sLineBreak+'Bitte diese Beenden, bevor eine neue begonnen wird!');
     exit;
   end;
+  ac_view_admin.Checked := true;
+  ac_view_admin.Execute;
+  ac_view_task.Checked  := true;
+  ac_view_task.Execute;
 
   Application.CreateForm(TDoMeetingform, DoMeetingform);
   DoMeetingform.ELID := id;

@@ -45,6 +45,7 @@ type
     SpeedButton8: TSpeedButton;
     SpeedButton9: TSpeedButton;
     TV: TTreeView;
+    ac_edit_task: TAction;
     procedure TVChange(Sender: TObject; Node: TTreeNode);
     procedure TVDblClick(Sender: TObject);
     procedure ac_addExecute(Sender: TObject);
@@ -56,6 +57,9 @@ type
     procedure ac_beschlussExecute(Sender: TObject);
     procedure ac_be_bearbeitenExecute(Sender: TObject);
     procedure ac_be_deleteExecute(Sender: TObject);
+    procedure TVCollapsing(Sender: TObject; Node: TTreeNode;
+      var AllowCollapse: Boolean);
+    procedure ac_edit_taskExecute(Sender: TObject);
   private type
     TEntryType = (etNothing, etChapterText, etTask, etBeschluss, etTitle);
 
@@ -111,7 +115,8 @@ implementation
 
 
 uses
-  f_chapter_content, f_bechlus, system.UITypes, m_glob_client, u_speedbutton;
+  f_chapter_content, f_bechlus, system.UITypes, m_glob_client, u_speedbutton,
+  f_chapterEdit, f_chapterTask;
 {$R *.dfm}
 
 { TProtocolFrame }
@@ -151,7 +156,7 @@ begin
   be := cp.Votes.newBeschluss;
   be.CTID := cp.ID;
 
-  m_proto.SyncUser( be );
+  m_proto.SyncUser( be, false );
 
   Application.CreateForm(TBeschlusform, Beschlusform);
   Beschlusform.Beschluss := be;
@@ -185,7 +190,7 @@ begin
     exit;
   cp := IChapter( en.Ptr);
 
-  m_proto.SyncUser( be );
+  m_proto.SyncUser( be, false );
 
   Application.CreateForm(TBeschlusform, Beschlusform);
   Beschlusform.Beschluss := be;
@@ -330,6 +335,42 @@ begin
   ChapterContentForm.Free;
 end;
 
+procedure TProtocolFrame.ac_edit_taskExecute(Sender: TObject);
+var
+  cp : IChapter;
+  en : TEntry;
+  ChapterEditForm : TChapterEditForm;
+  upd : boolean;
+begin
+  if not Assigned(TV.Selected) then
+    exit;
+
+  en := TEntry( TV.Selected.Data );
+  cp := IChapter(en.ptr);
+
+  if  en.Typ =  etChapterText then begin
+    Application.CreateForm(TChapterEditForm, ChapterEditForm);
+    ChapterEditForm.CP := cp;
+    upd := (ChapterEditForm.ShowModal = mrOk);
+    ChapterEditForm.Free;
+  end
+  else
+  begin
+    Application.CreateForm(TChapterTaskForm, ChapterTaskForm);
+    ChapterTaskForm.CP := cp;
+    upd :=  (ChapterTaskForm.ShowModal = mrok);
+    ChapterTaskForm.Free;
+  end;
+
+  TVChange( self, TV.Selected);
+  if upd then
+  begin
+    updateCpList
+  end;
+
+
+end;
+
 procedure TProtocolFrame.ac_upExecute(Sender: TObject);
 var
   cp: IChapterTitle;
@@ -356,9 +397,10 @@ end;
 procedure TProtocolFrame.buildTree(root: TTreeNode; ct: IChapterTitle);
   procedure setInx(Node: TTreeNode; inx: integer);
   begin
-    Node.SelectedIndex := inx;
-    Node.ImageIndex := inx;
+    Node.SelectedIndex  := inx;
+    Node.ImageIndex     := inx;
   end;
+
   procedure addVotes(root: TTreeNode; cp: IChapter);
   var
     j: integer;
@@ -370,6 +412,7 @@ procedure TProtocolFrame.buildTree(root: TTreeNode; ct: IChapterTitle);
     begin
       be := cp.Votes.Item[j];
       en := TEntry.create(be);
+
       sub := TV.Items.AddChildObject(root, 'Beschluss: ' + be.Titel, en);
       case be.Status of
         bsGeplant:
@@ -490,28 +533,36 @@ procedure TProtocolFrame.SetReadOnly(const Value: boolean);
 begin
   m_ro := value;
 
-  PageControl2.Enabled  := not m_ro;
-  PageControl2.Visible  := not m_ro;
+  PageControl2.Enabled      := not m_ro;
+  PageControl2.Visible      := not m_ro;
 
-  ac_add.Enabled        := not m_ro;
-  ac_edit.Enabled       := not m_ro;
-  ac_edit_content.Enabled := not m_ro;
-  ac_delete.Enabled     := not m_ro;
-  ac_up.Enabled         := not m_ro;
-  ac_down.Enabled       := not m_ro;
-  ac_beschluss.Enabled  := not m_ro;
-  ac_be_bearbeiten.Enabled := not m_ro;
-  ac_be_delete.Enabled  := not m_ro;
+  ac_add.Enabled            := not m_ro;
+  ac_edit.Enabled           := not m_ro;
+  ac_edit_content.Enabled   := not m_ro;
+  ac_delete.Enabled         := not m_ro;
+  ac_up.Enabled             := not m_ro;
+  ac_down.Enabled           := not m_ro;
+  ac_beschluss.Enabled      := not m_ro;
+  ac_be_bearbeiten.Enabled  := not m_ro;
+  ac_be_delete.Enabled      := not m_ro;
 
-  SpeedButton6.Enabled  := not m_ro;
+  SpeedButton6.Enabled      := not m_ro;
 
 end;
 
 procedure TProtocolFrame.showContent;
 var
   en: TEntry;
+  procedure showBeschluss( be : IBeschluss );
+  var
+    cp : IChapter;
+  begin
+    cp := IChapter(be.Owner.Owner);
+    m_renderer.renderChapter( cp );
+    m_renderer.renderBeschluss(be);
+  end;
 begin
-  if not Assigned(TV.Selected.Data) then
+  if not Assigned(TV.Selected) or not Assigned(TV.Selected.Data) then
     exit;
   en := TEntry(TV.Selected.Data);
 
@@ -520,7 +571,7 @@ begin
     etNothing:      m_renderer.renderProtocol(m_proto);
     etChapterText:  m_renderer.renderChapter(IChapter(en.Ptr));
     etTask:         m_renderer.renderChapter(IChapter(en.Ptr));
-    etBeschluss:    m_renderer.renderBeschluss(IBeschluss(en.Ptr));
+    etBeschluss:    showBeschluss(IBeschluss(en.Ptr)); //m_renderer.renderBeschluss(IBeschluss(en.Ptr));
     etTitle:        m_renderer.renderChapterTitle(IChapterTitle(en.Ptr));
   end;
   m_renderer.Show(FBrowser);
@@ -529,6 +580,12 @@ end;
 procedure TProtocolFrame.TVChange(Sender: TObject; Node: TTreeNode);
 begin
   showContent;
+end;
+
+procedure TProtocolFrame.TVCollapsing(Sender: TObject; Node: TTreeNode;
+  var AllowCollapse: Boolean);
+begin
+  AllowCollapse := false;
 end;
 
 procedure TProtocolFrame.TVDblClick(Sender: TObject);
@@ -540,8 +597,8 @@ begin
 
   en := TEntry(TV.Selected.Data);
   case en.Typ of
-    etChapterText : ;
-    etTask        : ;
+    etChapterText : ac_edit_task.Execute;
+    etTask        : ac_edit_task.Execute;
     etBeschluss   : ac_be_bearbeiten.Execute;
     etTitle       : ac_edit.Execute;
   end;
@@ -619,7 +676,6 @@ constructor TProtocolFrame.TEntry.create(be: IBeschluss);
 begin
   FPtr := pointer(be);
   FTyp := etBeschluss;
-
 end;
 
 constructor TProtocolFrame.TEntry.create(cp: IChapter);

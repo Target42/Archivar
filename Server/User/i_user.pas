@@ -31,6 +31,8 @@ type
     function isOffline : boolean;
 
     procedure release;
+
+    function toText : string;
   end;
 
   IOnlineUserServer = interface

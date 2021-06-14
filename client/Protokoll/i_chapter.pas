@@ -74,7 +74,7 @@ type
     function edit : boolean;
     function cancel : boolean;
 
-    procedure SyncUser( be : IBeschluss );
+    procedure SyncUser( be : IBeschluss; plan : boolean = true );
 
     procedure release;
   end;

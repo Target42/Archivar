@@ -154,6 +154,7 @@ end;
 function  TProtocolRenderer.Show(web: TWebBrowser) : string;
 begin
   Result := m_html.showStack(web);
+  m_html.clearFrameData;
 end;
 
 end.

@@ -2,7 +2,7 @@ object TextBlockParameterForm: TTextBlockParameterForm
   Left = 0
   Top = 0
   ActiveControl = SG
-  Caption = 'TextBlockParameterForm'
+  Caption = 'Textblockparameter'
   ClientHeight = 299
   ClientWidth = 359
   Color = clBtnFace

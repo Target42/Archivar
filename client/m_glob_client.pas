@@ -31,6 +31,7 @@ const
   msgLogin          = WMUSER + 12;
   msgNewMeeting     = WMUSER + 13;
   msgDoMeeting      = WMUSER + 14;
+  msgMeetingEnd     = WMUSER + 15;
 
 type
   TGM = class(TDataModule)

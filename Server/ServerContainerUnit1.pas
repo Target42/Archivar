@@ -8,7 +8,8 @@ uses System.SysUtils, System.Classes,
   IPPeerServer, IPPeerAPI, Datasnap.DSAuth, DbxSocketChannelNative,
   DbxCompressionFilter, Vcl.SvcMgr, m_glob_server, IBX.IBDatabase, Data.DB,
   IBX.IBCustomDataSet, IBX.IBQuery, m_lockMod, Datasnap.DSSession, i_user,
-  System.JSON, IdBaseComponent, IdComponent, IdCustomTCPServer, IdTCPServer;
+  System.JSON, IdBaseComponent, IdComponent, IdCustomTCPServer, IdTCPServer,
+  System.SyncObjs;
 
 type
   TServerContainer1 = class(TService)
@@ -82,10 +83,13 @@ type
       Event: TDSTCPDisconnectEventObject);
     procedure dsSitzungGetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
+    procedure ServiceDestroy(Sender: TObject);
   private
     const
       MaxUserNameLength = 25;
-  procedure removeUser( id : NativeInt );
+  private
+    m_Lock : TCriticalSection;
+    procedure removeUser( Session: TDSSession );
   protected
     function DoStop: Boolean; override;
     function DoPause: Boolean; override;
@@ -95,6 +99,9 @@ type
     function GetServiceController: TServiceController; override;
 
     procedure BroadcastMessage( id : string ; data : TJSONObject );
+
+    procedure dumpOnlineUser;
+    procedure dumpSessions;
   end;
 
 var
@@ -113,7 +120,8 @@ uses
   Winapi.Windows, m_db, ds_gremium, ds_admin, ds_person, IOUtils,
   ds_taks, ds_file, ds_misc, ds_protocol, ds_image, ds_chapter,
   ds_taskEdit, ds_template, ds_taskView, ds_textblock, ds_fileCache, ds_epub,
-  ds_meeting, System.Hash, u_json, ds_sitzung, m_hell;
+  ds_meeting, System.Hash, u_json, ds_sitzung, m_hell,
+  System.Generics.Collections;
 
 procedure TServerContainer1.dsAdminGetClass(
   DSServerClass: TDSServerClass; var PersistentClass: TPersistentClass);
@@ -141,19 +149,23 @@ var
   session : TDSSession;
 begin
   Session := TDSSessionManager.GetThreadSession;
-  if Assigned(session) then
-  begin
-    removeUser(session.Id);
-  end;
+  //removeUser(session);
+  session.Close;
+
   DebugMsg(  'Disconnect::disconnect : ' + IntToStr(DSConnectEventObject.ChannelInfo.Id));
   DebugMsg('');
 end;
 
 procedure TServerContainer1.DSServer1Error(
   DSErrorEventObject: TDSErrorEventObject);
+var
+  session : TDSSession;
 begin
+  Session := TDSSessionManager.GetThreadSession;
+  DebugMsg('Error::DS server Error: Session id:'+IntToStr(session.Id));
   DebugMsg('Error::DS Server Error: '+DSErrorEventObject.Error.ToString);
-  DebugMsg('');
+  session.Close;
+  //removeUser(session);
 end;
 
 procedure TServerContainer1.DSServerClass1GetClass(
@@ -205,6 +217,30 @@ begin
   PersistentClass := ds_template.TdsTemplate;
 end;
 
+procedure TServerContainer1.dumpOnlineUser;
+var
+  i : integer;
+  us : IServerUser;
+begin
+  DebugMsg('online user');
+  for i := 0 to pred(ous.Count) do begin
+    us  := ous.Items[i];
+    DebugMsg( us.toText);
+  end;
+  DebugMsg('online user end');
+end;
+
+procedure TServerContainer1.dumpSessions;
+begin
+  DebugMsg('Dump sessions');
+  TDSSessionManager.Instance.ForEachSession(
+    procedure(const Session: TDSSession)
+    begin
+      DebugMsg(IntToStr(Session.Id));
+    end);
+  DebugMsg('end dump sessions');
+end;
+
 procedure ServiceController(CtrlCode: DWord); stdcall;
 begin
   ServerContainer1.Controller(CtrlCode);
@@ -215,22 +251,43 @@ begin
   Result := ServiceController;
 end;
 
-procedure TServerContainer1.removeUser(id: NativeInt);
+procedure TServerContainer1.removeUser(Session: TDSSession);
+var
+  list  : TList<TDSSession>;
+  ds    : TDSSession;
 begin
-  LockMod.removeLocks(Id);
-  DebugMsg('removeUser::session id : ' + intToStr( Id ));
-  ous.removeSessionID( Id );
-  HellMod.remove(id);
+  if not Assigned(session) then
+    exit;
 
-  if not ous.isSessionOnline(id) then
-  begin
-    TDSSessionManager.Instance.ForEachSession(
-      procedure(const Session: TDSSession)
-      begin
-        if Session.Id = id  then begin
-          Session.Close;
-        end;
-      end);
+  m_Lock.Enter;
+  try
+
+    DebugMsg('removeUser::Session name : '  + Session.UserName);
+    LockMod.removeLocks(Session.Id);
+    DebugMsg('removeUser::session id : ' + intToStr( Session.Id ));
+    ous.removeSessionID( Session.Id );
+    HellMod.remove(Session.id);
+{
+    if not ous.isSessionOnline(Session.id) then
+    begin
+      list := TList<TDSSession>.create;
+
+      TDSSessionManager.Instance.ForEachSession(
+        procedure(const ASession: TDSSession)
+        begin
+          if ASession.Id = Session.id  then begin
+            list.Add(ASession)
+          end;
+        end);
+
+        for ds in list do
+          ds.Close;
+
+        list.Free;
+    end;
+ }
+  finally
+    m_Lock.Leave;
   end;
 end;
 
@@ -289,6 +346,7 @@ var
       Result := SameText( ph, QueryUser.FieldByName('pe_pwd').AsString);
     end;
   end;
+
 begin
   valid   := false;
   userName:= LowerCase(User);
@@ -425,6 +483,7 @@ begin
   GM      := TGM.Create(self);
   DBMod   := TDBMod.Create(self);
   HellMod := THellMod.create(self );
+  m_lock  := TCriticalSection.Create;
 
   DSTCPServerTransport1.Port := GM.DSPort;
 
@@ -435,9 +494,14 @@ begin
     begin
       case EventType of
         SessionCreate :;// DebugMsg('session create '+IntToStr(Session.Id));
-        SessionClose  : removeUser(Session.Id); //  DebugMsg('session closed '+IntToStr(Session.Id));
+        SessionClose  : removeUser(Session); //  DebugMsg('session closed '+IntToStr(Session.Id));
       end;
     end);
+end;
+
+procedure TServerContainer1.ServiceDestroy(Sender: TObject);
+begin
+//  m_Lock.
 end;
 
 procedure TServerContainer1.ServiceStart(Sender: TService; var Started: Boolean);

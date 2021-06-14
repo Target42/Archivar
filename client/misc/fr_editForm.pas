@@ -27,6 +27,8 @@ type
 
     procedure saveToStream( st : TStream );
     procedure loadFromStream( st : TStream );
+
+    procedure add( text : string );
   end;
 
 implementation
@@ -34,6 +36,11 @@ implementation
 {$R *.dfm}
 
 { TEditFrame }
+
+procedure TEditFrame.add(text: string);
+begin
+  RE.Lines.Add(text);
+end;
 
 function TEditFrame.getchanged: boolean;
 begin

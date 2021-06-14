@@ -1,8 +1,8 @@
 object ChapterFrame: TChapterFrame
   Left = 0
   Top = 0
-  Width = 752
-  Height = 442
+  Width = 873
+  Height = 550
   Align = alClient
   TabOrder = 0
   ExplicitWidth = 451
@@ -10,7 +10,7 @@ object ChapterFrame: TChapterFrame
   object Splitter1: TSplitter
     Left = 251
     Top = 0
-    Height = 442
+    Height = 550
     ExplicitLeft = 368
     ExplicitTop = 72
     ExplicitHeight = 100
@@ -19,7 +19,7 @@ object ChapterFrame: TChapterFrame
     Left = 0
     Top = 0
     Width = 251
-    Height = 442
+    Height = 550
     Align = alLeft
     Caption = 'Struktur'
     TabOrder = 0
@@ -43,7 +43,7 @@ object ChapterFrame: TChapterFrame
       Left = 2
       Top = 31
       Width = 247
-      Height = 339
+      Height = 447
       Align = alClient
       DragMode = dmAutomatic
       Indent = 19
@@ -52,11 +52,12 @@ object ChapterFrame: TChapterFrame
       OnDblClick = TVDblClick
       OnDragDrop = TVDragDrop
       OnDragOver = TVDragOver
-      ExplicitHeight = 202
+      ExplicitLeft = 3
+      ExplicitTop = 25
     end
     object PageControl1: TPageControl
       Left = 2
-      Top = 370
+      Top = 478
       Width = 247
       Height = 70
       ActivePage = TabSheet3
@@ -183,8 +184,8 @@ object ChapterFrame: TChapterFrame
   object GroupBox2: TGroupBox
     Left = 254
     Top = 0
-    Width = 498
-    Height = 442
+    Width = 619
+    Height = 550
     Align = alClient
     Caption = 'Aufgaben'
     TabOrder = 1
@@ -193,7 +194,7 @@ object ChapterFrame: TChapterFrame
     object Panel2: TPanel
       Left = 2
       Top = 15
-      Width = 494
+      Width = 615
       Height = 41
       Align = alTop
       BevelOuter = bvNone
@@ -230,8 +231,8 @@ object ChapterFrame: TChapterFrame
     inline TaskList2Frame1: TTaskList2Frame
       Left = 2
       Top = 56
-      Width = 494
-      Height = 384
+      Width = 615
+      Height = 492
       Align = alClient
       TabOrder = 1
       ExplicitLeft = 2
@@ -239,13 +240,13 @@ object ChapterFrame: TChapterFrame
       ExplicitWidth = 193
       ExplicitHeight = 247
       inherited LV: TListView
-        Width = 453
-        Height = 384
-        ExplicitWidth = 453
-        ExplicitHeight = 384
+        Width = 574
+        Height = 492
+        ExplicitWidth = 574
+        ExplicitHeight = 492
       end
       inherited Panel2: TPanel
-        Height = 384
+        Height = 492
         ExplicitHeight = 247
       end
     end
@@ -339,7 +340,7 @@ object ChapterFrame: TChapterFrame
     Left = 208
     Top = 144
     Bitmap = {
-      494C0101080028007C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010108002800800010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000003000000001002000000000000030
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

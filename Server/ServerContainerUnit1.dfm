@@ -1,6 +1,7 @@
 object ServerContainer1: TServerContainer1
   OldCreateOrder = False
   OnCreate = ServiceCreate
+  OnDestroy = ServiceDestroy
   DisplayName = 'ServerContainer1'
   OnStart = ServiceStart
   OnStop = ServiceStop

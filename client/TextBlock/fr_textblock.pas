@@ -22,9 +22,11 @@ type
     m_noTags : boolean;
     procedure FilterContent;
   public
-    procedure init( noTags : boolean);
+    procedure init( noTags : boolean = true);
 
     function getBlock : IXMLblock;
+
+    function getContent( var text : string ) : boolean;
 
     procedure release;
   end;
@@ -32,7 +34,7 @@ type
 implementation
 
 uses
-  m_glob_client, Xml.XMLIntf, Xml.XMLDoc;
+  m_glob_client, Xml.XMLIntf, Xml.XMLDoc, f_textblock_param;
 
 {$R *.dfm}
 
@@ -105,6 +107,30 @@ begin
   xml.LoadFromStream(st);
   Result := xml.GetDocBinding('Block', TXMLBlock, TargetNamespace) as IXMLBlock;
   st.Free;
+end;
+
+function TTextBlockFrame.getContent(var text: string): boolean;
+var
+  blk : IXMLBlock;
+begin
+  Result := false;
+  blk := self.getBlock;
+
+  if blk.Fields.Count = 0 then begin
+    text:= blk.Content;
+    Result := true;
+  end
+  else
+  begin
+    Application.CreateForm(TTextBlockParameterForm, TextBlockParameterForm);
+    TextBlockParameterForm.Xblock := blk;
+    if TextBlockParameterForm.ShowModal = mrOk then
+    begin
+      text := TextBlockParameterForm.getContext;
+      Result := true;
+    end;
+    TextBlockParameterForm.free;
+  end;
 end;
 
 procedure TTextBlockFrame.init( noTags : boolean);

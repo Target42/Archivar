@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_base, Vcl.StdCtrls,
-  Vcl.ExtCtrls, fr_editForm, i_chapter, fr_textblock;
+  Vcl.ExtCtrls, fr_editForm, i_chapter, fr_textblock, Vcl.Buttons;
 
 type
   TChapterEditForm = class(TForm)
@@ -19,6 +19,7 @@ type
     GroupBox1: TGroupBox;
     Splitter1: TSplitter;
     TextBlockFrame1: TTextBlockFrame;
+    SpeedButton1: TSpeedButton;
     procedure CheckBox1Click(Sender: TObject);
     procedure BaseFrame1OKBtnClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -26,6 +27,7 @@ type
     procedure EditFrame1REDragOver(Sender, Source: TObject; X, Y: Integer;
       State: TDragState; var Accept: Boolean);
     procedure EditFrame1REDragDrop(Sender, Source: TObject; X, Y: Integer);
+    procedure SpeedButton1Click(Sender: TObject);
   private
     { Private-Deklarationen }
     m_cp : IChapter;
@@ -39,8 +41,7 @@ var
 
 implementation
 
-uses
-  xsd_TextBlock, f_textblock_param;
+
 
 {$R *.dfm}
 
@@ -68,27 +69,14 @@ end;
 procedure TChapterEditForm.EditFrame1REDragDrop(Sender, Source: TObject; X,
   Y: Integer);
 var
-  blk : IXMLBlock;
+  text : string;
 begin
   if sender = Source then
     exit;
   if (source = TextBlockFrame1.LV)  and( Sender = EditFrame1.RE) then
   begin
-    blk := TextBlockFrame1.getBlock;
-
-    if blk.Fields.Count = 0 then
-      EditFrame1.RE.Lines.Add(blk.Content)
-    else
-    begin
-      Application.CreateForm(TTextBlockParameterForm, TextBlockParameterForm);
-      TextBlockParameterForm.Xblock := blk;
-      if TextBlockParameterForm.ShowModal = mrOk then
-      begin
-        EditFrame1.RE.Lines.Add( TextBlockParameterForm.getContext );
-      end;
-      TextBlockParameterForm.free;
-
-    end;
+    if TextBlockFrame1.getContent(text) then
+      EditFrame1.Add(text);
   end;
 end;
 
@@ -111,9 +99,15 @@ end;
 procedure TChapterEditForm.setCP(value: IChapter);
 begin
   m_cp := value;
-  CheckBox1.Checked := m_cp.Numbering;
-  LabeledEdit1.Text := m_cp.Name;
-  EditFrame1.Text   := m_cp.Rem;
+  CheckBox1.Checked   := m_cp.Numbering;
+  LabeledEdit1.Text   := m_cp.Name;
+  EditFrame1.Text     := m_cp.Rem;
+  EditFrame1.ReadOnly := false;
+end;
+
+procedure TChapterEditForm.SpeedButton1Click(Sender: TObject);
+begin
+  GroupBox1.Visible := not GroupBox1.Visible;
 end;
 
 end.

@@ -44,7 +44,8 @@ uses
   u_meeting in 'hell\u_meeting.pas';
 
 var
-  MyDummyBoolean : Boolean;
+  MyDummyBoolean  : Boolean;
+  s               : string;
 
 begin
 {$ifdef DEBUG}
@@ -52,7 +53,10 @@ begin
   try
     ReportMemoryLeaksOnShutdown := true;
     // In debug mode the server acts as a console application.
-    WriteLn('MyServiceApp DEBUG mode. Press enter to exit.');
+    WriteLn('Archivserver DEBUG mode');
+    Writeln('q = quit');
+    writeln('o = user online');
+    writeln('s = sessions');
 
     // Create the TService descendant manually.
     ServerContainer1 := TServerContainer1.Create(nil);
@@ -61,7 +65,14 @@ begin
     ServerContainer1.ServiceStart(ServerContainer1, MyDummyBoolean);
 
     // Keep the console box running (ServerContainer1 code runs in the background)
-    ReadLn;
+    repeat
+      ReadLn(s);
+      s := trim(s);
+
+      if s = 'o' then ServerContainer1.dumpOnlineUser;
+      if s = 's' then ServerContainer1.dumpSessions;
+
+    until s = 'q';
 
     // On exit, destroy the service object.
     FreeAndNil(ServerContainer1);

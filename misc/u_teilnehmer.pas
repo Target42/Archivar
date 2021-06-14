@@ -18,6 +18,7 @@ type
     tsAbgelehnt,
 
     tsLast);
+  TTeilnehmerStatusSet = set of TTeilnehmerStatus;
 
 function TeilnehmerStatusToString( st : TTeilnehmerStatus; ShowAll : boolean = false) : string;
 function StringToTTeilnehmerStatus( value : string ) : TTeilnehmerStatus;

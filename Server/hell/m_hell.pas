@@ -30,6 +30,7 @@ type
 
     procedure fillUser( peid : integer ; var obj : TJSONObject );
     procedure sendStopLead( id : integer );
+    procedure sendStartLead( id, peid : integer );
   public
     function enter( elid, peid : integer; sessionID : NativeInt ) : boolean;
     function leave( elid, peid : integer) : boolean;
@@ -75,7 +76,7 @@ begin
         msg := TJSONObject.Create;
         JReplace( msg, 'action',  'changelead');
         JReplace( msg, 'id',      el);
-        JReplace( msg, 'newid',   me.LeadID);
+        JReplace( msg, 'lead',   me.LeadID);
 
         fillUser( me.LeadID, msg );
 
@@ -182,6 +183,8 @@ begin
 
       if me.count = 1 then
         SendMeetingInfo( elid, true, me.LeadID );
+      if me.LeadID = -1 then
+        sendStartLead( elid, peid );
 
     end;
   finally
@@ -258,9 +261,8 @@ var
   obj       : TJSONObject;
   us        : TMeetingUser;
 begin
-  DebugMsg('hellmod::remove session:'+IntToStr(sessionID));
-
   list      := m_list.LockList;
+  DebugMsg('hellmod::remove session:'+IntToStr(sessionID));
   emptyList := TList<integer>.create;
   msgList   := TList<TJSONObject>.create;
   try
@@ -401,6 +403,21 @@ begin
   JReplace( msg, 'leadid',  leadID );
 
   ServerContainer1.BroadcastMessage('storage', msg);
+end;
+
+procedure THellMod.sendStartLead(id, peid: integer);
+var
+  msg : TJSONObject;
+begin
+  msg := TJSONObject.Create;
+  JReplace( msg, 'action',  'changelead');
+  JReplace( msg, 'id',      id);
+  JReplace( msg, 'lead',   peid);
+
+  fillUser( peid, msg );
+
+  ServerContainer1.BroadcastMessage('storage', msg);
+
 end;
 
 procedure THellMod.sendStopLead(id: integer);

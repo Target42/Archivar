@@ -2,7 +2,7 @@ object Beschlusform: TBeschlusform
   Left = 0
   Top = 0
   Caption = 'Beschluss'
-  ClientHeight = 466
+  ClientHeight = 424
   ClientWidth = 726
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -20,7 +20,7 @@ object Beschlusform: TBeschlusform
   TextHeight = 13
   inline BaseFrame1: TBaseFrame
     Left = 0
-    Top = 406
+    Top = 364
     Width = 726
     Height = 60
     Align = alBottom
@@ -56,17 +56,19 @@ object Beschlusform: TBeschlusform
     Left = 0
     Top = 0
     Width = 726
-    Height = 406
-    ActivePage = TabSheet1
+    Height = 364
+    ActivePage = TabSheet2
     Align = alClient
     TabOrder = 1
+    ExplicitHeight = 406
     object TabSheet2: TTabSheet
       Caption = 'Beschlustext'
       ImageIndex = 1
+      ExplicitHeight = 378
       object Splitter1: TSplitter
         Left = 448
         Top = 0
-        Height = 295
+        Height = 253
         Align = alRight
         ExplicitLeft = 288
         ExplicitTop = 64
@@ -74,12 +76,13 @@ object Beschlusform: TBeschlusform
       end
       object GroupBox3: TGroupBox
         Left = 0
-        Top = 295
+        Top = 253
         Width = 718
         Height = 83
         Align = alBottom
         Caption = 'Abstimmung'
         TabOrder = 0
+        ExplicitTop = 295
         object Button1: TBitBtn
           Left = 9
           Top = 24
@@ -248,16 +251,17 @@ object Beschlusform: TBeschlusform
         Left = 451
         Top = 0
         Width = 267
-        Height = 295
+        Height = 253
         Align = alRight
         Caption = 'Textbausteine'
         TabOrder = 1
         Visible = False
+        ExplicitHeight = 295
         inline TextBlockFrame1: TTextBlockFrame
           Left = 2
           Top = 15
           Width = 263
-          Height = 278
+          Height = 236
           Align = alClient
           TabOrder = 0
           ExplicitLeft = 2
@@ -265,7 +269,7 @@ object Beschlusform: TBeschlusform
           ExplicitWidth = 263
           ExplicitHeight = 278
           inherited Panel1: TPanel
-            Top = 222
+            Top = 180
             Width = 263
             ExplicitTop = 222
             ExplicitWidth = 263
@@ -276,7 +280,7 @@ object Beschlusform: TBeschlusform
           end
           inherited LV: TListView
             Width = 263
-            Height = 222
+            Height = 180
             ExplicitWidth = 263
             ExplicitHeight = 222
           end
@@ -286,15 +290,16 @@ object Beschlusform: TBeschlusform
         Left = 0
         Top = 0
         Width = 448
-        Height = 295
+        Height = 253
         Align = alClient
         Caption = 'Erweiterter Text'
         TabOrder = 2
+        ExplicitHeight = 295
         inline EditFrame2: TEditFrame
           Left = 2
           Top = 15
           Width = 444
-          Height = 278
+          Height = 236
           Align = alClient
           TabOrder = 0
           ExplicitLeft = 2
@@ -303,7 +308,7 @@ object Beschlusform: TBeschlusform
           ExplicitHeight = 278
           inherited RE: TRichEdit
             Width = 444
-            Height = 278
+            Height = 236
             OnDragDrop = EditFrame2REDragDrop
             OnDragOver = EditFrame2REDragOver
             ExplicitWidth = 444
@@ -314,73 +319,62 @@ object Beschlusform: TBeschlusform
     end
     object TabSheet1: TTabSheet
       Caption = 'Teilnehmer'
-      ExplicitLeft = 8
-      ExplicitTop = 22
+      ExplicitHeight = 378
       inline TNFrame1: TTNFrame
         Left = 0
         Top = 0
         Width = 718
-        Height = 378
+        Height = 336
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 718
+        ExplicitHeight = 378
         inherited Splitter4: TSplitter
-          Height = 378
+          Height = 336
         end
         inherited GroupBox4: TGroupBox
-          Height = 378
-          ExplicitTop = 0
-          ExplicitHeight = 316
+          Height = 336
+          ExplicitHeight = 378
           inherited LVGremium: TListView
-            Height = 355
-            OnCustomDraw = nil
-            OnCustomDrawItem = nil
-            OnDblClick = nil
-            OnDragOver = nil
-            ExplicitHeight = 293
+            Height = 313
+            ExplicitHeight = 355
           end
         end
         inherited Panel4: TPanel
           Width = 378
-          Height = 378
-          ExplicitTop = 0
-          ExplicitWidth = 476
-          ExplicitHeight = 316
+          Height = 336
+          ExplicitWidth = 378
+          ExplicitHeight = 378
           inherited Splitter5: TSplitter
-            Top = 186
+            Top = 144
             Width = 378
+            ExplicitTop = 186
+            ExplicitWidth = 378
           end
           inherited GroupBox5: TGroupBox
             Width = 378
-            Height = 186
-            ExplicitWidth = 476
-            ExplicitHeight = 124
+            Height = 144
+            ExplicitWidth = 378
+            ExplicitHeight = 186
             inherited LVAbwesend: TListView
               Width = 329
-              Height = 163
-              OnCustomDraw = nil
-              OnCustomDrawItem = nil
-              OnDblClick = nil
-              OnDragOver = nil
-              ExplicitWidth = 427
-              ExplicitHeight = 101
+              Height = 121
+              ExplicitWidth = 329
+              ExplicitHeight = 163
             end
             inherited Panel1: TPanel
-              Height = 169
-              ExplicitHeight = 107
+              Height = 127
+              ExplicitHeight = 169
             end
           end
           inherited GroupBox6: TGroupBox
-            Top = 189
+            Top = 147
             Width = 378
-            ExplicitTop = 127
-            ExplicitWidth = 476
+            ExplicitTop = 189
+            ExplicitWidth = 378
             inherited LVNichtabgestimmt: TListView
               Width = 329
-              OnCustomDraw = nil
-              OnCustomDrawItem = nil
-              OnDblClick = nil
-              OnDragOver = nil
-              ExplicitWidth = 427
+              ExplicitWidth = 329
             end
           end
         end
@@ -391,7 +385,7 @@ object Beschlusform: TBeschlusform
     Left = 559
     Top = 208
     Bitmap = {
-      494C010101000800740010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010101000800840010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       000000000000000000000000000000000000000000FF000000FF000000FF0000
       00FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF0000
@@ -546,7 +540,7 @@ object Beschlusform: TBeschlusform
     object Erweitert1: TMenuItem
       Caption = 'Erweitert'
       object extbeusteine1: TMenuItem
-        Caption = 'Textbeusteine'
+        Caption = 'Textbausteine'
         OnClick = extbeusteine1Click
       end
     end

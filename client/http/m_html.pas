@@ -54,6 +54,7 @@ type
     property Title          : string          read m_title  write m_title;
 
     procedure setFrameData( tc : ITaskContainer; style : ITaskStyle; data :IXMLList );
+    procedure clearFrameData;
 
     function Content : string;
     procedure SaveToFile( fname : string );
@@ -188,6 +189,20 @@ begin
     for i := 0 to pred(Length(arr)) do
       DeleteFile(arr[i]);
   end;
+end;
+
+procedure THtmlMod.clearFrameData;
+begin
+  Frame.HTMLDoc.Text :=
+  '<!DOCTYPE html>'+
+  '<html>'+
+  '  <head>'+
+  '    <link rel="stylesheet" type="text/css" href="/css/archivar.css">'+
+  '  </head>'+
+  '<body>'+
+  '<#data>'+
+  '</body>'+
+  '</html>';
 end;
 
 function THtmlMod.Content: string;

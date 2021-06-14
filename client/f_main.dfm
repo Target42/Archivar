@@ -22,34 +22,34 @@
   object Splitter1: TSplitter
     Left = 249
     Top = 0
-    Height = 469
-    ExplicitLeft = 568
-    ExplicitTop = 96
-    ExplicitHeight = 100
+    Width = 5
+    Height = 467
+    Color = clYellow
+    ParentColor = False
+    Visible = False
+    ExplicitHeight = 469
   end
   object Splitter2: TSplitter
     Left = 0
-    Top = 469
+    Top = 467
     Width = 1126
-    Height = 3
+    Height = 5
     Cursor = crVSplit
     Align = alBottom
+    Color = clYellow
+    ParentColor = False
     Visible = False
-    ExplicitLeft = 284
-    ExplicitTop = 0
-    ExplicitWidth = 301
+    ExplicitTop = 469
   end
   object Image1: TImage
-    Left = 252
+    Left = 254
     Top = 0
-    Width = 874
-    Height = 469
+    Width = 872
+    Height = 467
     Align = alClient
     Center = True
-    ExplicitLeft = 392
-    ExplicitTop = 48
-    ExplicitWidth = 105
-    ExplicitHeight = 105
+    ExplicitLeft = 255
+    ExplicitTop = -1
   end
   object StatusBar1: TStatusBar
     Left = 0
@@ -71,27 +71,29 @@
     Left = 0
     Top = 0
     Width = 249
-    Height = 469
+    Height = 467
     ActivePage = TabSheet6
     Align = alLeft
     MultiLine = True
     TabOrder = 1
     TabPosition = tpLeft
     Visible = False
+    ExplicitHeight = 469
     object TabSheet1: TTabSheet
       Caption = 'Gremien'
+      ExplicitHeight = 461
       inline GremiumTreeFrame1: TGremiumTreeFrame
         Left = 0
         Top = 0
         Width = 221
-        Height = 461
+        Height = 459
         Align = alClient
         TabOrder = 0
         ExplicitWidth = 221
         ExplicitHeight = 461
         inherited TV: TTreeView
           Width = 221
-          Height = 461
+          Height = 459
           ExplicitWidth = 221
           ExplicitHeight = 461
         end
@@ -104,34 +106,35 @@
         Left = 0
         Top = 0
         Width = 221
-        Height = 461
+        Height = 459
         Align = alClient
         TabOrder = 0
         ExplicitWidth = 221
-        ExplicitHeight = 461
+        ExplicitHeight = 459
         inherited LV: TListView
           Width = 221
-          Height = 461
+          Height = 459
           ExplicitWidth = 221
-          ExplicitHeight = 461
+          ExplicitHeight = 459
         end
       end
     end
     object TabSheet3: TTabSheet
       Caption = 'B'#252'cher'
       ImageIndex = 2
+      ExplicitHeight = 461
       inline ePupFrame1: TePupFrame
         Left = 0
         Top = 0
         Width = 221
-        Height = 461
+        Height = 459
         Align = alClient
         TabOrder = 0
         ExplicitWidth = 221
         ExplicitHeight = 461
         inherited DBGrid1: TDBGrid
           Width = 221
-          Height = 461
+          Height = 459
         end
         inherited EpubTab: TFDMemTable
           Left = 16
@@ -146,11 +149,12 @@
     object TabSheet6: TTabSheet
       Caption = 'Online'
       ImageIndex = 3
+      ExplicitHeight = 461
       object UserView: TListView
         Left = 0
         Top = 0
         Width = 221
-        Height = 420
+        Height = 418
         Align = alClient
         Columns = <
           item
@@ -167,15 +171,17 @@
         RowSelect = True
         TabOrder = 0
         ViewStyle = vsReport
+        ExplicitHeight = 420
       end
       object Panel1: TPanel
         Left = 0
-        Top = 420
+        Top = 418
         Width = 221
         Height = 41
         Align = alBottom
         Caption = 'Panel1'
         TabOrder = 1
+        ExplicitTop = 420
         object JvColorComboBox1: TJvColorComboBox
           Left = 9
           Top = 6
@@ -440,6 +446,16 @@
         Action = ac_ad_epub
       end
     end
+    object Ansicht1: TMenuItem
+      Caption = 'Ansicht'
+      GroupIndex = 200
+      object Verwaltung1: TMenuItem
+        Action = ac_view_admin
+      end
+      object Aufgaben1: TMenuItem
+        Action = ac_view_task
+      end
+    end
     object Fenster1: TMenuItem
       Caption = 'Fenster'
       GroupIndex = 200
@@ -669,6 +685,18 @@
       Caption = 'Abschnitt bearbeiten'
       Enabled = False
       OnExecute = ac_pr_abschnittExecute
+    end
+    object ac_view_task: TAction
+      Category = 'Ansicht'
+      Caption = 'Aufgaben'
+      Checked = True
+      OnExecute = ac_view_taskExecute
+    end
+    object ac_view_admin: TAction
+      Category = 'Ansicht'
+      Caption = 'Verwaltung'
+      Checked = True
+      OnExecute = ac_view_adminExecute
     end
   end
   object ApplicationEvents1: TApplicationEvents

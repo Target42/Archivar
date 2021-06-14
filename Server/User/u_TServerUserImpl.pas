@@ -37,9 +37,14 @@ type
     function isOffline : boolean;
 
     procedure release;
+
+    function toText : string;
   end;
 
 implementation
+
+uses
+  System.SysUtils;
 
 { TServerUserImpl }
 
@@ -124,6 +129,27 @@ end;
 procedure TServerUserImpl.SetVorname(const Value: string);
 begin
   m_vorname := value;
+end;
+
+function TServerUserImpl.toText : string;
+var
+  i : integer;
+  s : string;
+begin
+  s := '';
+  for i := 0 to pred(m_list.Count) do
+    s := s + IntToStr(m_list[i])+', ';
+  if s <> '' then
+    SetLength(s, length(s)-2);
+
+  Result := Format('%3d %20s %20s %10s sessions: %s',
+  [
+    m_id,
+    m_name,
+    m_vorname,
+    m_status,
+    s
+  ]);
 end;
 
 end.
