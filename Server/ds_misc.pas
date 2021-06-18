@@ -49,7 +49,7 @@ type
 implementation
 
 uses
-  m_db, m_glob_server, m_lockMod, System.Generics.Collections,
+  Grijjy.CloudLogging, m_db, m_glob_server, m_lockMod, System.Generics.Collections,
   u_berTypes, i_user;
 
 {%CLASSGROUP 'System.Classes.TPersistent'}
@@ -159,9 +159,9 @@ function TdsMisc.validTask(id, dt: integer): boolean;
 var
   t : TDocType;
 begin
+  GrijjyLog.EnterMethod(self, 'validTask');
   t := tDocType(dt);
-
-  DebugMsg(format('valid task: %d %d', [id, dt]));
+  GrijjyLog.Send(format('valid task: %d %d', [id, dt]));
 
   if LockTrans.InTransaction then
     LockTrans.Rollback;
@@ -186,12 +186,10 @@ begin
   else
     Result := false;
   end;
-  if Result then
-    DebugMsg('is valid')
-  else
-    DebugMsg('is invalid');
+  GrijjyLog.Send('valid', Result);
 
   LockTrans.Commit;
+  GrijjyLog.ExitMethod(self, 'validTask');
 end;
 
 end.

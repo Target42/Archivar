@@ -35,7 +35,7 @@ var
 implementation
 
 uses
-  u_json, Datasnap.DSSession, m_glob_server;
+  Grijjy.CloudLogging, u_json, Datasnap.DSSession, m_glob_server;
 
 {%CLASSGROUP 'System.Classes.TPersistent'}
 
@@ -87,13 +87,13 @@ var
     Result  := info.getJSON;
     JResponse( Result, true, 'Das Dokument ist von '+info.User+' gesperrt');
     JReplace(  Result, 'self', TDSSessionManager.GetThreadSession.Id = info.SessionID);
-    DebugMsg(  Format('%s %d %d', ['TLockMod.isLocked: is locked', id, typ]));
+    GrijjyLog.Send(Format('%s %d %d', ['TLockMod.isLocked: is locked', id, typ]), TgoLogLevel.Error);
   end;
   procedure sendOk;
   begin
     Result := TJSONObject.Create;
     JResult( Result, false, 'Das Dokument ist nicht gesperrt');
-    DebugMsg(Format('%s %d %d', ['TLockMod.isLocked: is NOT locked', id, typ]));
+    GrijjyLog.Send(Format('%s %d %d', ['TLockMod.isLocked: is NOT locked', id, typ]));
   end;
 begin
   id  := JInt( req, 'id');
@@ -170,13 +170,13 @@ var
   procedure sendOk;
   begin
     Result := info.getJSON;
-    DebugMsg(Format('%s %d %d', ['TLockMod.LockDocument: is NOW locked', id, typ]));
+    GrijjyLog.Send(Format('%s %d %d', ['TLockMod.LockDocument: is NOW locked', id, typ]));
     JResult( Result, true, 'Das Dokument wurde gesperrt');
   end;
   procedure sendFail;
   begin
     Result := info.getJSON;
-    DebugMsg(Format('%s %d %d', ['TLockMod.LockDocument: is locked', id, typ]));
+    GrijjyLog.Send(Format('%s %d %d', ['TLockMod.LockDocument: is locked', id, typ]), TgoLogLevel.Error);
     JResult( Result, false, 'Das Dokument ist bereits gesperrt');
   end;
 
@@ -257,7 +257,7 @@ begin
         for info in keys do
         begin
           elements.Remove( info.Sub );
-          DebugMsg( 'removeLocks : '+info.CLID+' session id : '+IntToStr(id ));
+          GrijjyLog.Send(format('remove locks %s session id: %d', [info.CLID, id]));
           info.Free;
         end;
       end;
@@ -297,8 +297,7 @@ begin
         begin
           Result := info.getJSON;
           JResponse( Result, true, 'Das Dokument wurde freigegeben.');
-          DebugMsg(Format('%s %d %d', ['TLockMod.UnLockDocument: is unlocked', id, typ]));
-
+          GrijjyLog.Send(Format('%s %d %d', ['TLockMod.UnLockDocument: is unlocked', id, typ]));
           elements.Remove(sub);
           info.Free;
         end
@@ -306,20 +305,20 @@ begin
         begin
           Result := info.getJSON;
           JResponse( Result, false, 'Das Dokument ist in einer anderen Sitzung gesperrt');
-          DebugMsg(Format('%s %d %d', ['TLockMod.UnLockDocument: locked in differend session', id, typ]));
+          GrijjyLog.Send(Format('%s %d %d', ['TLockMod.UnLockDocument: locked in differend session', id, typ]), TgoLogLevel.Error);
         end;
       end
       else
       begin
         Result := TJSONObject.Create;
-        DebugMsg(Format('%s %d %d', ['TLockMod.UnLockDocument: is not locked', id, typ]));
+        GrijjyLog.Send(Format('%s %d %d', ['TLockMod.UnLockDocument: is not locked', id, typ]));
         JResult( Result, false, 'Das Dokument ist nicht gesperrt');
       end;
     end
     else
     begin
       Result := TJSONObject.Create;
-      DebugMsg(Format('%s %d %d', ['TLockMod.UnLockDocument: is not locked', id, typ]));
+      GrijjyLog.Send(Format('%s %d %d', ['TLockMod.UnLockDocument: is not locked', id, typ]), TgoLogLevel.Error);
       JResult( Result, false, 'Das Dokument ist nicht gesperrt');
     end;
 

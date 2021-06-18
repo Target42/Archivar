@@ -36,7 +36,6 @@ type
 var
   GM: TGM;
 
-procedure DebugMsg( text : string );
 
 implementation
 

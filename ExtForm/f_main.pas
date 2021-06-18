@@ -30,7 +30,7 @@ implementation
 {$R *.dfm}
 
 uses
-  vcl.grids;
+  vcl.grids, Grijjy.CloudLogging;
 
 procedure TForm1.Button1Click(Sender: TObject);
 var
@@ -91,6 +91,9 @@ end;
 
 procedure TForm1.FormCreate(Sender: TObject);
 begin
+//  GrijjyLog.Connect(GrijjyLog.Broker, GrijjyLog.DEFAULT_SERVICE );
+  GrijjyLog.EnterMethod(self, 'create');
+
   RegisterClass(TPanel);
   RegisterClass(TSPlitter);
   RegisterClass(TGroupBox);
@@ -99,6 +102,7 @@ begin
   RegisterClass(TComboBox);
   RegisterClass(TMemo);
   RegisterClass(TStringGrid);
+  GrijjyLog.ExitMethod(self, 'Create');
 end;
 
 end.

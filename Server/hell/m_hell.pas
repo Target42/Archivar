@@ -50,7 +50,7 @@ var
 implementation
 
 uses
-  m_db, u_json, ServerContainerUnit1, m_glob_server;
+  Grijjy.CloudLogging, m_db, u_json, ServerContainerUnit1, m_glob_server;
 
 {%CLASSGROUP 'System.Classes.TPersistent'}
 
@@ -166,7 +166,7 @@ var
   me    : TMeeting;
   prid  : integer;
 begin
-  DebugMsg(format('HellMod::enter : el:%d pe:%d session:%d', [elid, peid, sessionID]));
+  GrijjyLog.Send(format('HellMod::enter : el:%d pe:%d session:%d', [elid, peid, sessionID]));
   list    := m_list.LockList;
   try
     Result  := setStatus(elid, peid, prid, tsAnwesend);
@@ -262,18 +262,18 @@ var
   us        : TMeetingUser;
 begin
   list      := m_list.LockList;
-  DebugMsg('hellmod::remove session:'+IntToStr(sessionID));
+  GrijjyLog.Send('hellmod::remove session id', sessionID);
   emptyList := TList<integer>.create;
   msgList   := TList<TJSONObject>.create;
   try
     for me in list do begin
-      DebugMsg(format('meeting : el:%d count:%d', [me.ID, me.count]));
+      GrijjyLog.Send(format('meeting : el:%d count:%d', [me.ID, me.count]));
       id := me.getUserIDBySession(sessionID);
       if id > 0 then begin
         saveStatus(me.PRId, id, tsUnbekannt);
 
         if me.LeadID = id  then begin
-          DebugMsg('hellmod::remove stop lead: '+IntToStr(me.LeadID));
+          GrijjyLog.Send('hellmod::remove stop lead', me.LeadID);
           me.LeadID := -1;
           sendStopLead(me.ID);
         end;
@@ -304,7 +304,7 @@ begin
     end;
 
     for id in emptyList do begin
-      DebugMsg('hellmod::send new meeting info');
+      GrijjyLog.Send('hellmod::send new meeting info');
 
       SendMeetingInfo( id, false, -1);
     end;

@@ -62,7 +62,7 @@ type
 implementation
 
 uses
-  m_db, u_json, Variants, u_Konst, m_lockMod, ServerContainerUnit1, m_glob_server,
+  Grijjy.CloudLogging, m_db, u_json, Variants, u_Konst, m_lockMod, ServerContainerUnit1, m_glob_server,
   u_berTypes;
 
 {%CLASSGROUP 'System.Classes.TPersistent'}
@@ -75,11 +75,13 @@ function TdsTask.AssignGremium(grid, taid: integer; status: string) : TJSONObjec
 var
   opts : TLocateOptions;
 begin
+  GrijjyLog.EnterMethod(self, 'AssignGremium');
   Result := LockMod.isLockedByID( taid, integer(ltTask));
   if Jbool( Result, 'result') then
   begin
-    DebugMsg('TdsTask.AssignGremium document is locked!');
     JReplace( Result, 'result', false);
+    GrijjyLog.Send('Document is locked', TgoLogLevel.Error);
+    GrijjyLog.ExitMethod(self, 'AssignGremium');
     exit;
   end;
 
@@ -93,12 +95,12 @@ begin
     begin
       TATab.Append;
       TATab.FieldByName('TA_ID').AsInteger := taid;
-      DebugMsg('TdsTask.AssignGremium new task created!');
+      GrijjyLog.Send('new task created!', taid);
     end
     else
     begin
       TATab.Edit;
-      DebugMsg('TdsTask.AssignGremium edit');
+      GrijjyLog.Send('task edit', taid);
     end;
     TATab.FieldByName('gr_id').AsInteger := grid;
     TATab.Post;
@@ -116,6 +118,7 @@ begin
     end;
   end;
   TATab.Close;
+  GrijjyLog.ExitMethod(self, 'AssignGremium');
 end;
 
 function TdsTask.AutoInc(gen: string): integer;
@@ -169,10 +172,13 @@ var
   msg : TJSONObject;
   clid: string;
 begin
+  GrijjyLog.EnterMethod(self, 'deleteTask');
   Result := LockMod.isLockedByID( ta_id, integer(ltTask ));
   if Jbool( Result, 'result') then
   begin
     JReplace( Result, 'result', false);
+    GrijjyLog.Send('task is locked');
+    GrijjyLog.ExitMethod(self, 'deleteTask');
     exit;
   end;
 
@@ -213,19 +219,19 @@ begin
     except
       on e : exception do
       begin
-        DebugMsg('deleteTask: ' + e.ToString);
+        GrijjyLog.Send('error', e.ToString, TgoLogLevel.Error);
       end;
     end;
 
   except
     on e : exception do
      begin
-       DebugMsg('deleteTask: ' + e.ToString);
+     GrijjyLog.Send('error', e.ToString, TgoLogLevel.Error);
       JResult(Result, false, 'Die Aufgabe konnte nicht gelöscht werde!');
       DeleteTrans.Rollback;
     end;
   end;
-
+  GrijjyLog.ExitMethod(self, 'deleteTask');
 end;
 
 function TdsTask.moveTask(grid, taid: integer) : TJSONObject;
@@ -286,7 +292,8 @@ end;
 function TdsTask.newTask(data: TJSONObject): TJSONObject;
 begin
   Result := NIL;
-  DebugMsg('TdsTask.newTask not supported!');
+  GrijjyLog.Send('not supported: newTask', TgoLogLevel.Error);
+
 end;
 
 procedure TdsTask.setFlags(taid, flags: integer);
@@ -305,7 +312,7 @@ end;
 function TdsTask.TaskInfo(data: TJSONObject): TJSONObject;
 begin
   Result := NIL;
-  DebugMsg('TdsTask.TaskInfo not supported!');
+  GrijjyLog.Send('not supported: TaskInfo', TgoLogLevel.Error);
 end;
 
 end.

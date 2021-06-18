@@ -63,7 +63,7 @@ type
 implementation
 
 uses
-  m_db, u_json, System.SysUtils, m_glob_server, System.Win.ComObj;
+  Grijjy.CloudLogging, m_db, u_json, System.SysUtils, m_glob_server, System.Win.ComObj;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -94,7 +94,7 @@ begin
   except
     on e : exception do
     begin
-      DebugMsg('deleteCP : ' + e.toString);
+      GrijjyLog.Send('delete cp', e.ToString, TgoLogLevel.Error);
       DeleteTrans.Rollback;
       JResult(Result, false, e.toString);
     end;
@@ -216,11 +216,11 @@ begin
     TNTab.Close;
     IBTransaction1.commit;
     JResult( Result, true, 'Das Protokoll wurde erfolgreich angelegt.');
-    DebugMsg('newProtocol :'+IntToStr(id));
+    GrijjyLog.Send('new protocol', id);
   except
     on e : exception do
     begin
-      DebugMsg('newProtocol :' + e.toString);
+      GrijjyLog.Send('new protocol', e.ToString, TgoLogLevel.Error);
       IBTransaction1.RollBack;
       JResult( Result, false, 'Fehler bei dem Anlegen des Protokolls');
     end;

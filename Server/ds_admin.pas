@@ -29,7 +29,8 @@ implementation
 {$R *.dfm}
 
 
-uses System.StrUtils, u_json, m_db, m_glob_server;
+uses
+  Grijjy.CloudLogging, System.StrUtils, u_json, m_db, m_glob_server;
 
 { TAdminMod }
 
@@ -95,6 +96,7 @@ end;
 
 function TAdminMod.getUserInfo( data : TJSONObject): TJSONObject;
 begin
+  GrijjyLog.EnterMethod(self, 'getUserInfo');
   Result := TJSONObject.Create;
   JReplace( Result, 'user',     m_session.GetData('user'));
   JReplace( Result, 'admin',    (m_session.GetData('admin') = 'true'));
@@ -102,11 +104,12 @@ begin
   JReplace( Result, 'vorname',  m_session.GetData('vorname'));
   JReplace( Result, 'id',       StrToInt(m_session.GetData('ID')));
 
-  DebugMsg('getUserInfo::session : '+IntToStr(m_session.Id));
-  DebugMsg('');
+  GrijjyLog.Send('session id', m_session.Id);
 
   m_session.PutData('host', JString(data, 'host'));
   m_session.PutData('hostuser', JString( data, 'hostuser'));
+
+  GrijjyLog.ExitMethod(self, 'getUserInfo');
 
 end;
 

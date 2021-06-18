@@ -60,8 +60,6 @@ begin
     JvCsvDataSet1.Open;
     while not JvCsvDataSet1.Eof do
     begin
-      DebugMsg(JvCsvDataSet1.FieldByName('id').AsString);
-
       PETable.Append;
       PETable.FieldByName('PE_ID').AsInteger        := AutoInc('gen_PE_ID');
       PETable.FieldByName('PE_NET').AsString        := JvCsvDataSet1.FieldByName('id').AsString;

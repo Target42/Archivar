@@ -24,7 +24,7 @@ var
 implementation
 
 uses
-  m_glob_server;
+  Grijjy.CloudLogging, m_glob_server;
 
 {%CLASSGROUP 'System.Classes.TPersistent'}
 
@@ -44,8 +44,10 @@ function TDBMod.startDB: boolean;
 var
   db : string;
 begin
+  GrijjyLog.EnterMethod(self, 'startDB');
+
   db := GM.DBHost+':'+GM.DBName;
-  DebugMsg('Database:name : '+db);
+  GrijjyLog.Send('db name', db);
   try
     IBDatabase1.DatabaseName := db;
     IBDatabase1.Params.Clear;
@@ -54,15 +56,15 @@ begin
 
     IBDatabase1.Open;
     Result := IBDatabase1.Connected;
-    DebugMsg('Database:connected');
+    GrijjyLog.Send('database connected');
   except
     on e : Exception do
     begin
-      DebugMsg('Database:'+ e.ToString);
+      GrijjyLog.Send('error', e.ToString, TgoLogLevel.Error);
       Result := false;
     end;
   end;
-  DebugMsg('');
+  GrijjyLog.ExitMethod(self, 'startDB');
 end;
 
 procedure TDBMod.stopDB;

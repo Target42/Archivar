@@ -2,7 +2,8 @@ unit ServerContainerUnit1;
 
 interface
 
-uses System.SysUtils, System.Classes,
+uses
+  Grijjy.CloudLogging, System.SysUtils, System.Classes,
   Datasnap.DSTCPServerTransport,
   Datasnap.DSServer, Datasnap.DSCommonServer,
   IPPeerServer, IPPeerAPI, Datasnap.DSAuth, DbxSocketChannelNative,
@@ -101,7 +102,6 @@ type
     procedure BroadcastMessage( id : string ; data : TJSONObject );
 
     procedure dumpOnlineUser;
-    procedure dumpSessions;
   end;
 
 var
@@ -134,13 +134,15 @@ procedure TServerContainer1.DSServer1Connect(
 var
   Session : TDSSession;
 begin
+  GrijjyLog.EnterMethod(self, 'DSServer1Connect');
   Session := TDSSessionManager.GetThreadSession;
 
-  DebugMsg('Connect::connect      : ' + IntToStr(DSConnectEventObject.ChannelInfo.Id));
-  DebugMsg('Connect::session id   : ' + intToStr(Session.Id));
-  DebugMsg('Connect::Session name : ' + Session.UserName);
-  DebugMsg('Connect::remote host  : ' + DSConnectEventObject.ChannelInfo.ClientInfo.IpAddress);
-  DebugMsg('');
+  GrijjyLog.Send('DSConnectEventObject.ChannelInfo.Id', DSConnectEventObject.ChannelInfo.Id);
+  GrijjyLog.Send('session id',                          session.id);
+  GrijjyLog.Send('session name',                        session.UserName);
+  GrijjyLog.Send('remote host',                         DSConnectEventObject.ChannelInfo.ClientInfo.IpAddress);
+
+  GrijjyLog.ExitMethod(self, 'DSServer1Connect');
 end;
 
 procedure TServerContainer1.DSServer1Disconnect(
@@ -148,12 +150,16 @@ procedure TServerContainer1.DSServer1Disconnect(
 var
   session : TDSSession;
 begin
-  Session := TDSSessionManager.GetThreadSession;
-  //removeUser(session);
-  session.Close;
+  GrijjyLog.EnterMethod(self, 'DSServer1Disconnect' );
 
-  DebugMsg(  'Disconnect::disconnect : ' + IntToStr(DSConnectEventObject.ChannelInfo.Id));
-  DebugMsg('');
+  Session := TDSSessionManager.GetThreadSession;
+
+  session.Close;
+  GrijjyLog.Send('DSConnectEventObject.ChannelInfo.Id', DSConnectEventObject.ChannelInfo.Id);
+  GrijjyLog.Send('session id',                          session.id);
+  GrijjyLog.Send('session name',                        session.UserName);
+
+  GrijjyLog.ExitMethod(self, 'DSServer1Disconnect');
 end;
 
 procedure TServerContainer1.DSServer1Error(
@@ -161,11 +167,15 @@ procedure TServerContainer1.DSServer1Error(
 var
   session : TDSSession;
 begin
+  GrijjyLog.EnterMethod(self, 'DSServer1Error');
+
   Session := TDSSessionManager.GetThreadSession;
-  DebugMsg('Error::DS server Error: Session id:'+IntToStr(session.Id));
-  DebugMsg('Error::DS Server Error: '+DSErrorEventObject.Error.ToString);
+  GrijjyLog.Send('session id',                          session.id);
+  GrijjyLog.Send('session name',                        session.UserName);
+  GrijjyLog.Send('Error',                               DSErrorEventObject.Error.ToString, TgoLogLevel.Error);
   session.Close;
-  //removeUser(session);
+
+  GrijjyLog.ExitMethod(self, 'DSServer1Error');
 end;
 
 procedure TServerContainer1.DSServerClass1GetClass(
@@ -201,14 +211,18 @@ end;
 procedure TServerContainer1.DSTCPServerTransport1Connect(
   Event: TDSTCPConnectEventObject);
 begin
+  GrijjyLog.EnterMethod(self, 'DSTCPServerTransport1Connect');
   Event.Channel.EnableKeepAlive(1000);
-  DebugMsg('connect '+Event.Channel.SessionId);
+
+  GrijjyLog.Send('session', Event.Channel.SessionId);
+  GrijjyLog.ExitMethod(self, 'DSTCPServerTransport1Connect');
 end;
 
 procedure TServerContainer1.DSTCPServerTransport1Disconnect(
   Event: TDSTCPDisconnectEventObject);
 begin
-  DebugMsg('disconnect ');
+  GrijjyLog.EnterMethod(self, 'DSTCPServerTransport1Disconnect');
+  GrijjyLog.ExitMethod(self, 'DSTCPServerTransport1Disconnect');
 end;
 
 procedure TServerContainer1.dsTemplateGetClass(DSServerClass: TDSServerClass;
@@ -222,23 +236,12 @@ var
   i : integer;
   us : IServerUser;
 begin
-  DebugMsg('online user');
+  GrijjyLog.EnterMethod(self, 'dumpOnlineUser');
   for i := 0 to pred(ous.Count) do begin
     us  := ous.Items[i];
-    DebugMsg( us.toText);
+    GrijjyLog.Send('user info', us.toText);
   end;
-  DebugMsg('online user end');
-end;
-
-procedure TServerContainer1.dumpSessions;
-begin
-  DebugMsg('Dump sessions');
-  TDSSessionManager.Instance.ForEachSession(
-    procedure(const Session: TDSSession)
-    begin
-      DebugMsg(IntToStr(Session.Id));
-    end);
-  DebugMsg('end dump sessions');
+  GrijjyLog.ExitMethod(self, 'dumpOnlineUser');
 end;
 
 procedure ServiceController(CtrlCode: DWord); stdcall;
@@ -252,51 +255,37 @@ begin
 end;
 
 procedure TServerContainer1.removeUser(Session: TDSSession);
-var
-  list  : TList<TDSSession>;
-  ds    : TDSSession;
 begin
-  if not Assigned(session) then
+  GrijjyLog.EnterMethod(self, 'removeUser');
+  if not Assigned(session) then begin
+    GrijjyLog.send('no session!');
+    GrijjyLog.ExitMethod(self, 'removeUser');
     exit;
+  end;
 
   m_Lock.Enter;
   try
+    GrijjyLog.send('session name', Session.UserName );
+    GrijjyLog.send('session id', Session.Id );
 
-    DebugMsg('removeUser::Session name : '  + Session.UserName);
     LockMod.removeLocks(Session.Id);
-    DebugMsg('removeUser::session id : ' + intToStr( Session.Id ));
     ous.removeSessionID( Session.Id );
     HellMod.remove(Session.id);
-{
-    if not ous.isSessionOnline(Session.id) then
-    begin
-      list := TList<TDSSession>.create;
 
-      TDSSessionManager.Instance.ForEachSession(
-        procedure(const ASession: TDSSession)
-        begin
-          if ASession.Id = Session.id  then begin
-            list.Add(ASession)
-          end;
-        end);
-
-        for ds in list do
-          ds.Close;
-
-        list.Free;
-    end;
- }
   finally
     m_Lock.Leave;
   end;
+  GrijjyLog.ExitMethod(self, 'removeUser');
 end;
 
 procedure TServerContainer1.BroadcastMessage(id: string; data: TJSONObject);
 begin
-  DebugMsg('Broadcast : '+id);
-  DebugMsg(formatJSON(data));
+  GrijjyLog.EnterMethod(self, 'BroadcastMessage');
+  GrijjyLog.Send('Broadcast', id);
+  GrijjyLog.Send('data', formatJSON(data) );
 
   DSServer1.BroadcastMessage(id, data);
+  GrijjyLog.ExitMethod(self, 'BroadcastMessage');
 end;
 
 function TServerContainer1.DoContinue: Boolean;
@@ -338,6 +327,7 @@ var
   function checkUser : Boolean;
   begin
     Result := false;
+    GrijjyLog.EnterMethod(self, 'DSAuthenticationManager1UserAuthenticate.CheckUser');
 
     QueryUser.ParamByName('net').AsString := userName;
     QueryUser.Open;
@@ -345,13 +335,20 @@ var
     begin
       Result := SameText( ph, QueryUser.FieldByName('pe_pwd').AsString);
     end;
+    GrijjyLog.send('result', Result);
+    GrijjyLog.ExitMethod(self, 'DSAuthenticationManager1UserAuthenticate.CheckUser');
   end;
 
 begin
+  GrijjyLog.EnterMethod(self, 'DSAuthenticationManager1UserAuthenticate');
   valid   := false;
   userName:= LowerCase(User);
 
-  if Length(userName) > MaxUserNameLength then exit;
+  if Length(userName) > MaxUserNameLength then begin
+    GrijjyLog.Send('Exceed MaxUserNameLength', Length(userName));
+    GrijjyLog.ExitMethod(self, 'DSAuthenticationManager1UserAuthenticate');
+    exit;
+  end;
 
   ph      := THashSHA2.GetHashString(Password);
 
@@ -360,8 +357,8 @@ begin
 
   Session := TDSSessionManager.GetThreadSession;
 
-  DebugMsg('UserAuthenticate::user thread id  :'+IntToStr(GetCurrentThreadID));
-  DebugMsg('UserAuthenticate::user :' +userName);
+  GrijjyLog.send('thread id', GetCurrentThreadID );
+  GrijjyLog.Send('user name', userName );
   // callback channel ...
   if pos('*', userName) > 0 then
   begin
@@ -377,8 +374,8 @@ begin
   else
   begin
     // normal user
-    DebugMsg('UserAuthenticate::session id   : '  + intToStr(Session.Id));
-    DebugMsg('UserAuthenticate::Session name : '  + Session.UserName);
+    GrijjyLog.send('session id', Session.Id );
+    GrijjyLog.Send('session name', Session.UserName );
 
     valid := checkUser;
     if valid then
@@ -401,13 +398,14 @@ begin
     end;
   end;
 
-  if valid then
-    debugMsg( 'UserAuthenticate::Login ok');
+  GrijjyLog.Send('user authenticate', valid);
 
   QueryUser.Close;
   IBTransaction1.Commit;
 
-  DebugMsg('');
+  GrijjyLog.Send('user rols', UserRoles);
+
+  GrijjyLog.ExitMethod(self, 'DSAuthenticationManager1UserAuthenticate');
 end;
 
 procedure TServerContainer1.DSAuthenticationManager1UserAuthorize(
@@ -479,6 +477,9 @@ end;
 
 procedure TServerContainer1.ServiceCreate(Sender: TObject);
 begin
+  GrijjyLog.Service := 'Archivar';
+  GrijjyLog.SetLogLevel(TgoLogLevel.Info);
+
   LockMod := TLockMod.create(self);
   GM      := TGM.Create(self);
   DBMod   := TDBMod.Create(self);
@@ -506,20 +507,28 @@ end;
 
 procedure TServerContainer1.ServiceStart(Sender: TService; var Started: Boolean);
 begin
+  GrijjyLog.EnterMethod(self, 'ServiceStart');
   try
     DBMod.startDB;
     DSServer1.Start;
     Started := true;
   except
-    Started := false;
+    on e : exception do begin
+      GrijjyLog.Send('exception:', e.ToString, TgoLogLevel.Error);
+      Started := false;
+    end;
   end;
+  GrijjyLog.Send('started:', Started);
+  GrijjyLog.ExitMethod(self, 'ServiceStart');
 end;
 
 procedure TServerContainer1.ServiceStop(Sender: TService; var Stopped: Boolean);
 begin
-  DSServer1.Start;
-  DBMod.startDB;
+  GrijjyLog.EnterMethod(self, 'ServiceStop');
+  DSServer1.Stop;
+  DBMod.stopDB;
   Stopped := true;
+  GrijjyLog.ExitMethod( self, 'ServiceStop');
 end;
 
 end.
