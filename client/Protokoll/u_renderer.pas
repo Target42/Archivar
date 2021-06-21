@@ -26,7 +26,7 @@ type
       procedure renderStart;
       procedure renderProtocol( proto : IProtocol );
       procedure renderChapterTitle( ct : IChapterTitle );
-      procedure renderChapter( cp : IChapter );
+      procedure renderChapter( cp : IChapter; renderBe : boolean = true );
       procedure renderBeschluss( be : IBeschluss );
 
       function  Show( web : TWebBrowser ) : string;
@@ -76,7 +76,7 @@ begin
   end;
 end;
 
-procedure TProtocolRenderer.renderChapter(cp: IChapter);
+procedure TProtocolRenderer.renderChapter(cp: IChapter; renderBe : boolean);
 var
   i     : integer;
 begin
@@ -103,11 +103,14 @@ begin
 
       m_html.AddToStack;
       FLoader.clearData;
-
-      for i := 0 to pred( cp.Votes.Count ) do
-        renderBeschluss( cp.Votes.Item[i] );
     end;
   end;
+  // Beschlüsse
+  if renderBe then begin
+  for i := 0 to pred( cp.Votes.Count ) do
+    renderBeschluss( cp.Votes.Item[i] );
+  end;
+  // childs
   for i := 0 to pred(cp.Childs.Count) do
       renderChapter(cp.Childs.Items[i]);
 end;

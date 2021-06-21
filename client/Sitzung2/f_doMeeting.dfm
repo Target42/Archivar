@@ -25,8 +25,6 @@
     Width = 1009
     Height = 19
     Panels = <>
-    ExplicitTop = 543
-    ExplicitWidth = 902
   end
   object PageControl1: TPageControl
     Left = 0
@@ -36,12 +34,8 @@
     ActivePage = TabSheet1
     Align = alClient
     TabOrder = 1
-    ExplicitWidth = 902
-    ExplicitHeight = 543
     object TabSheet1: TTabSheet
       Caption = 'Tagesordnung'
-      ExplicitWidth = 894
-      ExplicitHeight = 515
       object Splitter1: TSplitter
         Left = 249
         Top = 0
@@ -61,7 +55,6 @@
         Color = clBtnFace
         ParentColor = False
         TabOrder = 0
-        ExplicitHeight = 515
         inline ProtocolFrame1: TProtocolFrame
           Left = 2
           Top = 15
@@ -72,35 +65,26 @@
           ExplicitLeft = 2
           ExplicitTop = 15
           ExplicitWidth = 245
-          ExplicitHeight = 498
+          ExplicitHeight = 686
           inherited GroupBox1: TGroupBox
             Width = 245
             Height = 620
             ExplicitWidth = 245
-            ExplicitHeight = 432
+            ExplicitHeight = 620
             inherited TV: TTreeView
               Width = 241
               Height = 603
               ExplicitWidth = 241
-              ExplicitHeight = 415
+              ExplicitHeight = 603
             end
           end
           inherited PageControl2: TPageControl
             Top = 620
             Width = 245
-            ExplicitTop = 432
+            ExplicitTop = 620
             ExplicitWidth = 245
             inherited TabSheet4: TTabSheet
-              ExplicitLeft = 4
-              ExplicitTop = 24
               ExplicitWidth = 237
-              ExplicitHeight = 38
-            end
-            inherited TabSheet5: TTabSheet
-              ExplicitLeft = 4
-              ExplicitTop = 24
-              ExplicitWidth = 443
-              ExplicitHeight = 38
             end
           end
           inherited ActionList1: TActionList
@@ -110,7 +94,7 @@
           end
           inherited ImageList1: TImageList
             Bitmap = {
-              494C010106001001880110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+              494C0101060010018C0110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
               0000000000003600000028000000400000002000000001002000000000000020
               0000000000000000000000000000000000000000000000000000000000000000
               0000000000000000000000000000000000000000000000000000000000000000
@@ -392,8 +376,6 @@
         Caption = 'Panel2'
         ShowCaption = False
         TabOrder = 1
-        ExplicitWidth = 640
-        ExplicitHeight = 515
         object Splitter2: TSplitter
           Left = 1
           Top = 427
@@ -440,7 +422,6 @@
             Align = alClient
             Caption = 'Beschluss'
             TabOrder = 0
-            ExplicitHeight = 202
             inline BeschlussFrame1: TBeschlussFrame
               Left = 2
               Top = 15
@@ -448,45 +429,52 @@
               Height = 253
               Align = alClient
               TabOrder = 0
-              ExplicitLeft = 4
-              ExplicitTop = 17
-              ExplicitWidth = 699
-              ExplicitHeight = 185
+              ExplicitLeft = 2
+              ExplicitTop = 15
+              ExplicitWidth = 741
+              ExplicitHeight = 253
               inherited Splitter1: TSplitter
                 Left = 484
                 Height = 170
+                ExplicitLeft = 484
+                ExplicitHeight = 170
               end
               inherited GroupBox3: TGroupBox
                 Top = 170
                 Width = 741
+                ExplicitTop = 170
+                ExplicitWidth = 741
               end
               inherited GroupBox1: TGroupBox
                 Width = 484
                 Height = 170
-                ExplicitTop = 0
-                ExplicitHeight = 222
+                ExplicitWidth = 484
+                ExplicitHeight = 170
                 inherited EditFrame1: TEditFrame
                   Width = 480
                   Height = 153
-                  ExplicitHeight = 205
+                  ExplicitWidth = 480
+                  ExplicitHeight = 153
                   inherited RE: TRichEdit
                     Width = 480
                     Height = 153
-                    ExplicitHeight = 205
+                    PopupMenu = BeschlussFrame1.PopupMenu1
+                    ExplicitWidth = 480
+                    ExplicitHeight = 153
                   end
                 end
               end
               inherited GroupBox2: TGroupBox
                 Left = 487
                 Height = 170
-                ExplicitTop = 0
-                ExplicitHeight = 222
+                ExplicitLeft = 487
+                ExplicitHeight = 170
                 inherited TextBlockFrame1: TTextBlockFrame
                   Height = 153
-                  ExplicitHeight = 205
+                  ExplicitHeight = 153
                   inherited Panel1: TPanel
                     Top = 97
-                    ExplicitTop = 149
+                    ExplicitTop = 97
                     inherited LabeledEdit1: TLabeledEdit
                       Width = 235
                       ExplicitWidth = 235
@@ -494,7 +482,7 @@
                   end
                   inherited LV: TListView
                     Height = 97
-                    ExplicitHeight = 149
+                    ExplicitHeight = 97
                   end
                 end
               end
@@ -506,8 +494,6 @@
     object TabSheet2: TTabSheet
       Caption = 'Abstimung'
       ImageIndex = 1
-      ExplicitWidth = 894
-      ExplicitHeight = 515
       object GroupBox2: TGroupBox
         Left = 0
         Top = 612
@@ -516,8 +502,6 @@
         Align = alBottom
         Caption = 'Abstimmung'
         TabOrder = 0
-        ExplicitTop = 424
-        ExplicitWidth = 894
         object BitBtn2: TBitBtn
           Left = 24
           Top = 40
@@ -577,8 +561,6 @@
     object TabSheet3: TTabSheet
       Caption = 'Sitzungsleitung'
       ImageIndex = 2
-      ExplicitWidth = 894
-      ExplicitHeight = 515
       object PageControl2: TPageControl
         Left = 0
         Top = 0
@@ -587,12 +569,8 @@
         ActivePage = TabSheet4
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 894
-        ExplicitHeight = 515
         object TabSheet4: TTabSheet
           Caption = 'Allgemeines'
-          ExplicitWidth = 886
-          ExplicitHeight = 487
           object GroupBox1: TGroupBox
             Left = 0
             Top = 0
@@ -601,7 +579,6 @@
             Align = alTop
             Caption = 'Leitung'
             TabOrder = 0
-            ExplicitWidth = 886
             DesignSize = (
               993
               49)
@@ -614,7 +591,6 @@
               Caption = #220'bernehmen'
               TabOrder = 0
               OnClick = Button1Click
-              ExplicitLeft = 800
             end
             object Panel1: TPanel
               AlignWithMargins = True
@@ -637,15 +613,12 @@
               Caption = 'Abgeben'
               TabOrder = 2
               OnClick = BitBtn1Click
-              ExplicitLeft = 719
             end
           end
         end
         object TabSheet5: TTabSheet
           Caption = 'Teilnehmer'
           ImageIndex = 1
-          ExplicitWidth = 886
-          ExplicitHeight = 487
           inline MeetingTNFrame1: TMeetingTNFrame
             Left = 0
             Top = 0
@@ -653,25 +626,25 @@
             Height = 675
             Align = alClient
             TabOrder = 0
-            ExplicitWidth = 886
-            ExplicitHeight = 487
+            ExplicitWidth = 993
+            ExplicitHeight = 675
             inherited GroupBox1: TGroupBox
               Height = 675
-              ExplicitHeight = 487
+              ExplicitHeight = 675
               inherited Anwesend: TListView
                 Height = 658
-                ExplicitHeight = 470
+                ExplicitHeight = 658
               end
             end
             inherited Panel1: TPanel
               Height = 675
-              ExplicitHeight = 487
+              ExplicitHeight = 675
             end
             inherited Panel2: TPanel
               Width = 656
               Height = 675
-              ExplicitWidth = 549
-              ExplicitHeight = 487
+              ExplicitWidth = 656
+              ExplicitHeight = 675
               inherited Splitter1: TSplitter
                 Top = 555
                 Width = 656
@@ -687,33 +660,33 @@
               inherited GroupBox2: TGroupBox
                 Top = 558
                 Width = 656
-                ExplicitTop = 370
-                ExplicitWidth = 549
+                ExplicitTop = 558
+                ExplicitWidth = 656
                 inherited Unentschuldigt: TListView
                   Width = 652
-                  ExplicitWidth = 545
+                  ExplicitWidth = 652
                 end
               end
               inherited GroupBox3: TGroupBox
                 Top = 450
                 Width = 656
-                ExplicitTop = 262
-                ExplicitWidth = 549
+                ExplicitTop = 450
+                ExplicitWidth = 656
                 inherited Entschuldigt: TListView
                   Width = 652
-                  ExplicitWidth = 545
+                  ExplicitWidth = 652
                 end
               end
               inherited GroupBox4: TGroupBox
                 Width = 656
                 Height = 447
-                ExplicitWidth = 549
-                ExplicitHeight = 259
+                ExplicitWidth = 656
+                ExplicitHeight = 447
                 inherited Gremium: TListView
                   Width = 652
                   Height = 430
-                  ExplicitWidth = 545
-                  ExplicitHeight = 242
+                  ExplicitWidth = 652
+                  ExplicitHeight = 430
                 end
               end
             end
@@ -722,8 +695,6 @@
         object TabSheet6: TTabSheet
           Caption = 'G'#228'ste'
           ImageIndex = 2
-          ExplicitWidth = 886
-          ExplicitHeight = 487
         end
       end
     end

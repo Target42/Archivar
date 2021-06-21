@@ -6,11 +6,15 @@ uses
   i_personen, Data.DB, System.Classes, xsd_TaskData;
 
 type
+
+
   IBeschluss      = interface;
   IBeschlussListe = interface;
   IAbstimmung     = interface;
 
   TBeschlussStatus= (bsGeplant, bsZugestimmt, bsAbgelehnt, bsWarten);
+
+  TBeschlusChange = procedure (Sender: IBeschluss) of object;
 
   IBeschlussListe = interface
     ['{C23CDA08-059A-4E90-86B4-917B3DE58AAF}']

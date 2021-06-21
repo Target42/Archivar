@@ -1,14 +1,16 @@
 object BeschlussFrame: TBeschlussFrame
   Left = 0
   Top = 0
-  Width = 451
-  Height = 305
+  Width = 757
+  Height = 315
   Align = alClient
   TabOrder = 0
+  ExplicitWidth = 451
+  ExplicitHeight = 305
   object Splitter1: TSplitter
-    Left = 194
+    Left = 500
     Top = 0
-    Height = 222
+    Height = 232
     Align = alRight
     ExplicitLeft = 344
     ExplicitTop = 64
@@ -16,12 +18,14 @@ object BeschlussFrame: TBeschlussFrame
   end
   object GroupBox3: TGroupBox
     Left = 0
-    Top = 222
-    Width = 451
+    Top = 232
+    Width = 757
     Height = 83
     Align = alBottom
     Caption = 'Abstimmung'
     TabOrder = 0
+    ExplicitTop = 222
+    ExplicitWidth = 451
     object Button1: TBitBtn
       Left = 9
       Top = 24
@@ -185,61 +189,61 @@ object BeschlussFrame: TBeschlussFrame
   object GroupBox1: TGroupBox
     Left = 0
     Top = 0
-    Width = 194
-    Height = 222
+    Width = 500
+    Height = 232
     Align = alClient
     Caption = 'Text'
     TabOrder = 1
-    ExplicitTop = 49
-    ExplicitHeight = 173
+    ExplicitWidth = 194
+    ExplicitHeight = 222
     inline EditFrame1: TEditFrame
       Left = 2
       Top = 15
-      Width = 190
-      Height = 205
+      Width = 496
+      Height = 215
       Align = alClient
       TabOrder = 0
       ExplicitLeft = 2
       ExplicitTop = 15
       ExplicitWidth = 190
-      ExplicitHeight = 156
+      ExplicitHeight = 205
       inherited RE: TRichEdit
-        Width = 190
-        Height = 205
+        Width = 496
+        Height = 215
         PopupMenu = PopupMenu1
         OnDragDrop = EditFrame1REDragDrop
         OnDragOver = EditFrame1REDragOver
         ExplicitWidth = 190
-        ExplicitHeight = 156
+        ExplicitHeight = 205
       end
     end
   end
   object GroupBox2: TGroupBox
-    Left = 197
+    Left = 503
     Top = 0
     Width = 254
-    Height = 222
+    Height = 232
     Align = alRight
     Caption = 'Textbausteine'
     TabOrder = 2
     Visible = False
-    ExplicitTop = 49
-    ExplicitHeight = 173
+    ExplicitLeft = 197
+    ExplicitHeight = 222
     inline TextBlockFrame1: TTextBlockFrame
       Left = 2
       Top = 15
       Width = 250
-      Height = 205
+      Height = 215
       Align = alClient
       TabOrder = 0
       ExplicitLeft = 2
       ExplicitTop = 15
       ExplicitWidth = 250
-      ExplicitHeight = 156
+      ExplicitHeight = 205
       inherited Panel1: TPanel
-        Top = 149
+        Top = 159
         Width = 250
-        ExplicitTop = 100
+        ExplicitTop = 149
         ExplicitWidth = 250
         inherited LabeledEdit1: TLabeledEdit
           Width = 232
@@ -251,9 +255,9 @@ object BeschlussFrame: TBeschlussFrame
       end
       inherited LV: TListView
         Width = 250
-        Height = 149
+        Height = 159
         ExplicitWidth = 250
-        ExplicitHeight = 100
+        ExplicitHeight = 149
       end
     end
   end

@@ -70,6 +70,7 @@ begin
       s := trim(s);
 
       if s = 'o' then ServerContainer1.dumpOnlineUser;
+      if s = 's' then ServerContainer1.dumpSessions;
 
     until s = 'q';
 

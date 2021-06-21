@@ -231,6 +231,8 @@ begin
   ProtocolFrame1.init;
   ProtocolFrame1.Browser := WebBrowser1;
   BeschlussFrame1.init;
+  ProtocolFrame1.onBeschlusChange := BeschlussFrame1.setBeschluss;
+  ProtocolFrame1.MeetingMode := true;
 
   MeetingTNFrame1.init;
 
@@ -244,13 +246,14 @@ end;
 
 procedure TDoMeetingform.FormDestroy(Sender: TObject);
 begin
-
+  ProtocolFrame1.onBeschlusChange := NIL;
   m_hell.Free;
 
+  BeschlussFrame1.release;
   ProtocolFrame1.release;
-  DoMeetingform := NIL;
-
   MeetingTNFrame1.release;
+
+  DoMeetingform := NIL;
 
   if Assigned(m_proto) then
     m_proto.release;

@@ -10,7 +10,7 @@ uses
   DbxCompressionFilter, Vcl.SvcMgr, m_glob_server, IBX.IBDatabase, Data.DB,
   IBX.IBCustomDataSet, IBX.IBQuery, m_lockMod, Datasnap.DSSession, i_user,
   System.JSON, IdBaseComponent, IdComponent, IdCustomTCPServer, IdTCPServer,
-  System.SyncObjs;
+  System.SyncObjs, System.Generics.Collections;
 
 type
   TServerContainer1 = class(TService)
@@ -90,6 +90,8 @@ type
       MaxUserNameLength = 25;
   private
     m_Lock : TCriticalSection;
+    m_sessions : TThreadList<String>;
+
     procedure removeUser( Session: TDSSession );
   protected
     function DoStop: Boolean; override;
@@ -102,6 +104,7 @@ type
     procedure BroadcastMessage( id : string ; data : TJSONObject );
 
     procedure dumpOnlineUser;
+    procedure dumpSessions;
   end;
 
 var
@@ -120,8 +123,7 @@ uses
   Winapi.Windows, m_db, ds_gremium, ds_admin, ds_person, IOUtils,
   ds_taks, ds_file, ds_misc, ds_protocol, ds_image, ds_chapter,
   ds_taskEdit, ds_template, ds_taskView, ds_textblock, ds_fileCache, ds_epub,
-  ds_meeting, System.Hash, u_json, ds_sitzung, m_hell,
-  System.Generics.Collections;
+  ds_meeting, System.Hash, u_json, ds_sitzung, m_hell, Grijjy.sysUtils;
 
 procedure TServerContainer1.dsAdminGetClass(
   DSServerClass: TDSServerClass; var PersistentClass: TPersistentClass);
@@ -242,6 +244,35 @@ begin
     GrijjyLog.Send('user info', us.toText);
   end;
   GrijjyLog.ExitMethod(self, 'dumpOnlineUser');
+end;
+
+procedure TServerContainer1.dumpSessions;
+var
+  list    : TList<String>;
+  s       : string;
+  mngr    : TDSSessionManager;
+  session : TDSSession;
+  text    : TStringList;
+begin
+  list := m_sessions.LockList;
+  try
+    text := TStringList.Create;
+    mngr := TDSSessionManager.Instance;
+    for s in list do begin
+      session := mngr.Session[ s ];
+      if Assigned(session) then begin
+        text.Add('user name :' +session.UserName);
+        text.Add('id :'+intToStr(session.Id));
+        text.Add('session name :'+session.SessionName);
+        text.AddStrings(session.UserRoles);
+        text.Add('#########################');
+      end;
+    end;
+    GrijjyLog.Send('dump sessions', text);
+  finally
+    text.Free;
+    m_sessions.UnlockList;
+  end;
 end;
 
 procedure ServiceController(CtrlCode: DWord); stdcall;
@@ -480,11 +511,12 @@ begin
   GrijjyLog.Service := 'Archivar';
   GrijjyLog.SetLogLevel(TgoLogLevel.Info);
 
-  LockMod := TLockMod.create(self);
-  GM      := TGM.Create(self);
-  DBMod   := TDBMod.Create(self);
-  HellMod := THellMod.create(self );
-  m_lock  := TCriticalSection.Create;
+  LockMod     := TLockMod.create(self);
+  GM          := TGM.Create(self);
+  DBMod       := TDBMod.Create(self);
+  HellMod     := THellMod.create(self );
+  m_lock      := TCriticalSection.Create;
+  m_sessions  := TThreadList<String>.create;
 
   DSTCPServerTransport1.Port := GM.DSPort;
 
@@ -492,10 +524,33 @@ begin
     procedure(Sender: TObject;
               const EventType: TDSSessionEventType;
               const Session: TDSSession)
+    var
+      list  : TList<String>;
+      inx   : integer;
     begin
-      case EventType of
-        SessionCreate :;// DebugMsg('session create '+IntToStr(Session.Id));
-        SessionClose  : removeUser(Session); //  DebugMsg('session closed '+IntToStr(Session.Id));
+
+      list := m_sessions.LockList;
+      try
+        case EventType of
+          SessionCreate :
+            begin
+              grijjyLog.Send('new session', session.SessionName);
+              if list.IndexOf(session.SessionName) = -1 then
+                list.Add(session.SessionName);
+
+            end;
+
+          SessionClose  :
+            begin
+              grijjyLog.Send('delete session', session.SessionName);
+              inx := list.IndexOf(session.SessionName);
+              if  inx <> -1 then
+                list.Delete(inx);
+              removeUser(Session);
+            end;
+        end;
+      finally
+        m_sessions.UnlockList;
       end;
     end);
 end;
@@ -503,6 +558,7 @@ end;
 procedure TServerContainer1.ServiceDestroy(Sender: TObject);
 begin
 //  m_Lock.
+  m_sessions.Free;
 end;
 
 procedure TServerContainer1.ServiceStart(Sender: TService; var Started: Boolean);

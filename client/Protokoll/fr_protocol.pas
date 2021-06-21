@@ -77,6 +77,8 @@ type
 
       property Ptr: pointer read FPtr write FPtr;
       property Typ: TEntryType read FTyp write FTyp;
+
+
     end;
 
   private
@@ -87,6 +89,8 @@ type
     m_TitelEditform : TTitelEditform;
 
     FBrowser: TWebBrowser;
+    FonBeschlusChange: TBeschlusChange;
+    FMeetingMode: boolean;
     function GetProtocol: IProtocol;
     procedure SetProtocol(const Value: IProtocol);
 
@@ -108,6 +112,8 @@ type
     property Browser: TWebBrowser read FBrowser write FBrowser;
     property ReadOnly: boolean read GetReadOnly write SetReadOnly;
 
+    property onBeschlusChange: TBeschlusChange read FonBeschlusChange write FonBeschlusChange;
+    property MeetingMode: boolean read FMeetingMode write FMeetingMode;
 
   end;
 
@@ -506,6 +512,8 @@ begin
   m_renderer  := TProtocolRenderer.create;
   m_loader    := TTaskLoaderMod.create(self);
   TV.Images   := GM.ImageList2;
+  FonBeschlusChange := NIL;
+  FMeetingMode:= false;
 
   m_renderer.Loader := m_loader;
 
@@ -558,20 +566,33 @@ var
     cp : IChapter;
   begin
     cp := IChapter(be.Owner.Owner);
-    m_renderer.renderChapter( cp );
+    m_renderer.renderChapter( cp, false );
     m_renderer.renderBeschluss(be);
+
+    if Assigned(FonBeschlusChange) and FMeetingMode then
+      FonBeschlusChange(be);
+  end;
+  procedure showChapter ( cp : IChapter );
+  begin
+    m_renderer.renderChapter( cp );
+
+    if Assigned(FonBeschlusChange) and FMeetingMode and (cp.Votes.Count = 1) then
+      FonBeschlusChange(cp.Votes.Item[0]);
   end;
 begin
   if not Assigned(TV.Selected) or not Assigned(TV.Selected.Data) then
     exit;
   en := TEntry(TV.Selected.Data);
 
+  if Assigned(FonBeschlusChange) and FMeetingMode then
+    FonBeschlusChange(nil);
+
   m_renderer.renderStart;
   case en.Typ of
     etNothing:      m_renderer.renderProtocol(m_proto);
-    etChapterText:  m_renderer.renderChapter(IChapter(en.Ptr));
-    etTask:         m_renderer.renderChapter(IChapter(en.Ptr));
-    etBeschluss:    showBeschluss(IBeschluss(en.Ptr)); //m_renderer.renderBeschluss(IBeschluss(en.Ptr));
+    etChapterText:  showChapter(IChapter(en.Ptr));
+    etTask:         showChapter(IChapter(en.Ptr));
+    etBeschluss:    showBeschluss(IBeschluss(en.Ptr));
     etTitle:        m_renderer.renderChapterTitle(IChapterTitle(en.Ptr));
   end;
   m_renderer.Show(FBrowser);

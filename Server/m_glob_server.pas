@@ -145,7 +145,7 @@ begin
   ini := TIniFile.Create(fname);
 
   FDBHost := ini.ReadString('DB', 'host', FDBHost);
-  FDBName := ini.ReadString('DB', 'db', FDBName);
+  FDBName := ini.ReadString('DB', 'db',   FDBName);
   FDBUser := ini.ReadString('DB', 'user', FDBUser);
   FDBKey  := ini.ReadString('DB', 'pwd', FDBKey);
 
@@ -159,7 +159,7 @@ var
   FName : string;
   ini   : TIniFile;
 begin
-  fname := TPath.Combine(ExtractFilePath(ParamStr(0)), 'server.dat');
+  fname := ParamStr(0) +'.ini';
 
   ini := TIniFile.Create(fname);
 
