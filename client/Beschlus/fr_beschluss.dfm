@@ -1,16 +1,16 @@
 object BeschlussFrame: TBeschlussFrame
   Left = 0
   Top = 0
-  Width = 757
-  Height = 315
+  Width = 920
+  Height = 365
   Align = alClient
   TabOrder = 0
   ExplicitWidth = 451
   ExplicitHeight = 305
   object Splitter1: TSplitter
-    Left = 500
+    Left = 663
     Top = 0
-    Height = 232
+    Height = 282
     Align = alRight
     ExplicitLeft = 344
     ExplicitTop = 64
@@ -18,14 +18,13 @@ object BeschlussFrame: TBeschlussFrame
   end
   object GroupBox3: TGroupBox
     Left = 0
-    Top = 232
-    Width = 757
+    Top = 282
+    Width = 920
     Height = 83
     Align = alBottom
     Caption = 'Abstimmung'
     TabOrder = 0
-    ExplicitTop = 222
-    ExplicitWidth = 451
+    ExplicitTop = 286
     object Button1: TBitBtn
       Left = 9
       Top = 24
@@ -70,6 +69,7 @@ object BeschlussFrame: TBeschlussFrame
       ParentDoubleBuffered = True
       TabOrder = 0
       WordWrap = True
+      OnClick = Button1Click
     end
     object LabeledEdit1: TLabeledEdit
       Left = 120
@@ -81,6 +81,8 @@ object BeschlussFrame: TBeschlussFrame
       EditLabel.Caption = 'Zustimmung'
       NumbersOnly = True
       TabOrder = 1
+      OnExit = LabeledEdit1Exit
+      OnKeyPress = LabeledEdit1KeyPress
     end
     object LabeledEdit2: TLabeledEdit
       Left = 191
@@ -92,6 +94,8 @@ object BeschlussFrame: TBeschlussFrame
       EditLabel.Caption = 'Ablehnung'
       NumbersOnly = True
       TabOrder = 2
+      OnExit = LabeledEdit1Exit
+      OnKeyPress = LabeledEdit1KeyPress
     end
     object LabeledEdit3: TLabeledEdit
       Left = 255
@@ -103,6 +107,8 @@ object BeschlussFrame: TBeschlussFrame
       EditLabel.Caption = 'Enhaltungen'
       NumbersOnly = True
       TabOrder = 3
+      OnExit = LabeledEdit1Exit
+      OnKeyPress = LabeledEdit1KeyPress
     end
     object Button2: TBitBtn
       Left = 327
@@ -148,6 +154,7 @@ object BeschlussFrame: TBeschlussFrame
       ParentDoubleBuffered = True
       TabOrder = 4
       WordWrap = True
+      OnClick = Button2Click
     end
     object LabeledEdit4: TLabeledEdit
       Left = 477
@@ -160,6 +167,8 @@ object BeschlussFrame: TBeschlussFrame
       NumbersOnly = True
       ReadOnly = True
       TabOrder = 5
+      OnExit = LabeledEdit1Exit
+      OnKeyPress = LabeledEdit1KeyPress
     end
     object LabeledEdit5: TLabeledEdit
       Left = 536
@@ -172,6 +181,8 @@ object BeschlussFrame: TBeschlussFrame
       NumbersOnly = True
       ReadOnly = True
       TabOrder = 6
+      OnExit = LabeledEdit1Exit
+      OnKeyPress = LabeledEdit1KeyPress
     end
     object LabeledEdit6: TLabeledEdit
       Left = 600
@@ -184,13 +195,24 @@ object BeschlussFrame: TBeschlussFrame
       NumbersOnly = True
       ReadOnly = True
       TabOrder = 7
+      OnExit = LabeledEdit1Exit
+      OnKeyPress = LabeledEdit1KeyPress
+    end
+    object BitBtn1: TBitBtn
+      Left = 704
+      Top = 24
+      Width = 75
+      Height = 41
+      Caption = 'Teilnehmer'
+      TabOrder = 8
+      OnClick = BitBtn1Click
     end
   end
   object GroupBox1: TGroupBox
     Left = 0
     Top = 0
-    Width = 500
-    Height = 232
+    Width = 663
+    Height = 282
     Align = alClient
     Caption = 'Text'
     TabOrder = 1
@@ -199,8 +221,8 @@ object BeschlussFrame: TBeschlussFrame
     inline EditFrame1: TEditFrame
       Left = 2
       Top = 15
-      Width = 496
-      Height = 215
+      Width = 659
+      Height = 265
       Align = alClient
       TabOrder = 0
       ExplicitLeft = 2
@@ -208,8 +230,8 @@ object BeschlussFrame: TBeschlussFrame
       ExplicitWidth = 190
       ExplicitHeight = 205
       inherited RE: TRichEdit
-        Width = 496
-        Height = 215
+        Width = 659
+        Height = 265
         PopupMenu = PopupMenu1
         OnDragDrop = EditFrame1REDragDrop
         OnDragOver = EditFrame1REDragOver
@@ -219,10 +241,10 @@ object BeschlussFrame: TBeschlussFrame
     end
   end
   object GroupBox2: TGroupBox
-    Left = 503
+    Left = 666
     Top = 0
     Width = 254
-    Height = 232
+    Height = 282
     Align = alRight
     Caption = 'Textbausteine'
     TabOrder = 2
@@ -233,7 +255,7 @@ object BeschlussFrame: TBeschlussFrame
       Left = 2
       Top = 15
       Width = 250
-      Height = 215
+      Height = 265
       Align = alClient
       TabOrder = 0
       ExplicitLeft = 2
@@ -241,7 +263,7 @@ object BeschlussFrame: TBeschlussFrame
       ExplicitWidth = 250
       ExplicitHeight = 205
       inherited Panel1: TPanel
-        Top = 159
+        Top = 209
         Width = 250
         ExplicitTop = 149
         ExplicitWidth = 250
@@ -255,7 +277,7 @@ object BeschlussFrame: TBeschlussFrame
       end
       inherited LV: TListView
         Width = 250
-        Height = 159
+        Height = 209
         ExplicitWidth = 250
         ExplicitHeight = 149
       end

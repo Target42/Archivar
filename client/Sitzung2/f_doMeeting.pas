@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, fr_teilnehmer,
   Vcl.ExtCtrls, i_chapter, Data.DB, Datasnap.DBClient, Datasnap.DSConnect,
   fr_protocol, Vcl.StdCtrls, Vcl.OleCtrls, SHDocVw, fr_MeetingTN, u_stub,
-  System.JSON, Vcl.Buttons, fr_editForm, fr_beschluss;
+  System.JSON, Vcl.Buttons, fr_editForm, fr_beschluss, i_beschluss;
 
 type
   TDoMeetingform = class(TForm)
@@ -68,6 +68,7 @@ type
     procedure SetMeetingID(const Value: integer);
 
     procedure doVote( value : integer );
+    procedure saveBeschlus( be : IBeschluss);
   public
     property ELID: integer read GetMeetingID write SetMeetingID;
 
@@ -230,7 +231,10 @@ begin
   PageControl1.ActivePage := TabSheet1;
   ProtocolFrame1.init;
   ProtocolFrame1.Browser := WebBrowser1;
+
   BeschlussFrame1.init;
+  BeschlussFrame1.SaveBeschluss := self.saveBeschlus;
+
   ProtocolFrame1.onBeschlusChange := BeschlussFrame1.setBeschluss;
   ProtocolFrame1.MeetingMode := true;
 
@@ -290,6 +294,14 @@ begin
     WebBrowser1.Navigate('about:blank');
   end;
   m_proto.Modified := false;
+end;
+
+procedure TDoMeetingform.saveBeschlus(be: IBeschluss);
+begin
+  if not Assigned(be) then
+    exit;
+
+  be.Owner.saveModified;
 end;
 
 procedure TDoMeetingform.SetMeetingID(const Value: integer);

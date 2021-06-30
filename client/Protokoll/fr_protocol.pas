@@ -207,6 +207,9 @@ begin
     updateCpList;
   end;
   Beschlusform.Free;
+
+  if FMeetingMode then
+    onBeschlusChange( be );
 end;
 
 procedure TProtocolFrame.ac_be_deleteExecute(Sender: TObject);
@@ -565,16 +568,20 @@ var
   var
     cp : IChapter;
   begin
+
+    m_proto.SyncUser( be, not FMeetingMode );
+
     cp := IChapter(be.Owner.Owner);
     m_renderer.renderChapter( cp, false );
-    m_renderer.renderBeschluss(be);
+    if not FMeetingMode then
+      m_renderer.renderBeschluss(be);
 
     if Assigned(FonBeschlusChange) and FMeetingMode then
       FonBeschlusChange(be);
   end;
   procedure showChapter ( cp : IChapter );
   begin
-    m_renderer.renderChapter( cp );
+    m_renderer.renderChapter( cp, FMeetingMode = false );
 
     if Assigned(FonBeschlusChange) and FMeetingMode and (cp.Votes.Count = 1) then
       FonBeschlusChange(cp.Votes.Item[0]);

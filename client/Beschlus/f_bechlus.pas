@@ -72,6 +72,8 @@ type
 
   public
     property Beschluss: IBeschluss read GetBeschluss write SetBeschluss;
+
+    procedure setPage( nr : integer );
   end;
 
 var
@@ -264,6 +266,16 @@ begin
   TNFrame1.Beschluss := m_be;
   TNFrame1.OnUserChange := self.changeTB;
 
+end;
+
+procedure TBeschlusform.setPage(nr: integer);
+begin
+  case nr of
+    1 : PageControl1.ActivePage := TabSheet2;
+    2 : PageControl1.ActivePage := TabSheet1;
+  else
+    PageControl1.ActivePage := TabSheet2;
+  end;
 end;
 
 procedure TBeschlusform.updateInfo;

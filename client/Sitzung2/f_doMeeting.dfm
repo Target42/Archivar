@@ -94,7 +94,7 @@
           end
           inherited ImageList1: TImageList
             Bitmap = {
-              494C0101060010018C0110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+              494C010106001001940110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
               0000000000003600000028000000400000002000000001002000000000000020
               0000000000000000000000000000000000000000000000000000000000000000
               0000000000000000000000000000000000000000000000000000000000000000
@@ -494,6 +494,10 @@
     object TabSheet2: TTabSheet
       Caption = 'Abstimung'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GroupBox2: TGroupBox
         Left = 0
         Top = 612
@@ -695,6 +699,10 @@
         object TabSheet6: TTabSheet
           Caption = 'G'#228'ste'
           ImageIndex = 2
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
         end
       end
     end

@@ -446,6 +446,11 @@ begin
       be.Abstimmung.Gremium.removeSamePerson(p);
       p.release;
     end;
+
+    if be.Abstimmung.Abwesend.hasSamePerson(p) then begin
+      be.Abstimmung.Abwesend.removeSamePerson(p);
+      p.release;
+    end;
   end;
 end;
 

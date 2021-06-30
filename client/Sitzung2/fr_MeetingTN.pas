@@ -171,6 +171,10 @@ begin
     item.SubItems.Add(t.Rolle);
     item.Data := t;
   end;
+  GroupBox1.Caption := Format('Anwesend (%d)',        [Anwesend.Items.Count]);
+  GroupBox2.Caption := Format('Unentschuldigt (%d)',  [Unentschuldigt.Items.Count]);
+  GroupBox3.Caption := Format('Anwesend (%d)',        [Entschuldigt.Items.Count]);
+  GroupBox4.Caption := Format('Gremium (%d)',         [Gremium.Items.Count]);
 end;
 
 end.
