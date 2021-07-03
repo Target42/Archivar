@@ -5,7 +5,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_textblock,
-  Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Buttons, fr_editForm, Vcl.Menus, i_beschluss;
+  Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Buttons, fr_editForm, Vcl.Menus, i_beschluss,
+  Vcl.OleCtrls, SHDocVw;
 
 type
   TBeschlussFrame = class(TFrame)
@@ -26,6 +27,9 @@ type
     PopupMenu1: TPopupMenu;
     extbausteine1: TMenuItem;
     BitBtn1: TBitBtn;
+    Splitter2: TSplitter;
+    Groupbox4: TGroupBox;
+    Memo1: TMemo;
     procedure EditFrame1REDragDrop(Sender, Source: TObject; X, Y: Integer);
     procedure EditFrame1REDragOver(Sender, Source: TObject; X, Y: Integer;
       State: TDragState; var Accept: Boolean);
@@ -54,7 +58,7 @@ type
 implementation
 
 uses
-  f_bechlus;
+  f_bechlus, i_personen;
 
 {$R *.dfm}
 
@@ -65,15 +69,16 @@ begin
   Beschlusform.setPage( 2 );
   Beschlusform.ShowModal;
   Beschlusform.Free;
+
+  m_be.Abstimmung.clear;
+
   updateBeView;
 end;
 
 procedure TBeschlussFrame.Button1Click(Sender: TObject);
 begin
-  m_be.Abstimmung.Zustimmung  := m_be.Abstimmung.Gremium.count;
-  m_be.Abstimmung.Abgelehnt   := 0;
-  m_be.Abstimmung.Enthalten   := 0;
-
+   m_be.Abstimmung.Einstimmig(true);
+  
   updateBeView;
 
   m_changed := true;
@@ -81,9 +86,7 @@ end;
 
 procedure TBeschlussFrame.Button2Click(Sender: TObject);
 begin
-  m_be.Abstimmung.Zustimmung  := 0;
-  m_be.Abstimmung.Abgelehnt   := m_be.Abstimmung.Gremium.count;
-  m_be.Abstimmung.Enthalten   := 0;
+  m_be.Abstimmung.Einstimmig(false);
 
   updateBeView;
 
@@ -188,7 +191,29 @@ begin
 end;
 
 procedure TBeschlussFrame.updateBeView;
+  function getList( list : IPersonenListe ) : string;
+  var
+    i : integer;
+    p : IPerson;
+  begin
+    Result := '';
+    for i := 0 to pred(list.count) do begin
+      p := list.Items[i];
+      Result := Result + p.Vorname+' '+p.Name;
+
+      if p.Abteilung <> '' then
+        Result := Result + '('+p.Abteilung+')';
+      Result := Result + ', ';
+    end;
+
+    if Result <> '' then
+      SetLength( Result, Length(Result)-2);
+  end;
+
+var
+  s : string;
 begin
+  s := '';
   if Assigned(m_be ) then begin
     EditFrame1.Text := m_be.Text;
 
@@ -199,6 +224,17 @@ begin
     LabeledEdit4.Text := IntToStr( m_be.Abstimmung.Gremium.count);
     LabeledEdit5.Text := IntToStr( m_be.Abstimmung.Abwesend.count);
     LabeledEdit6.Text := IntToStr( m_be.Abstimmung.NichtAbgestimmt.count);
+
+    s := '';
+    if m_be.Abstimmung.NichtAbgestimmt.count > 0 then begin
+//      s := s + '<b>Nicht mit abgestimmt:</b>';
+      s := s + getList(m_be.Abstimmung.NichtAbgestimmt);
+    end;
+{    if m_be.Abstimmung.Abwesend.count > 0 then begin
+      s := s + '<b>Abwesend:</b>';
+      s := s + getList(m_be.Abstimmung.Abwesend)+'<br>';
+    end;}
+
   end else begin
     EditFrame1.Text := '';
     LabeledEdit1.Text := '';
@@ -209,6 +245,8 @@ begin
     LabeledEdit5.Text := '';
     LabeledEdit6.Text := '';
   end;
+  Groupbox4.Visible := s <> '';
+  Memo1.Lines.Text  := s;
 
 end;
 

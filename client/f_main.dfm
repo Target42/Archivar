@@ -14,6 +14,7 @@
   Menu = MainMenu1
   OldCreateOrder = False
   Position = poScreenCenter
+  WindowState = wsMaximized
   WindowMenu = Fenster1
   OnCreate = FormCreate
   OnDestroy = FormDestroy
@@ -78,10 +79,8 @@
     TabOrder = 1
     TabPosition = tpLeft
     Visible = False
-    ExplicitHeight = 469
     object TabSheet1: TTabSheet
       Caption = 'Gremien'
-      ExplicitHeight = 461
       inline GremiumTreeFrame1: TGremiumTreeFrame
         Left = 0
         Top = 0
@@ -90,18 +89,22 @@
         Align = alClient
         TabOrder = 0
         ExplicitWidth = 221
-        ExplicitHeight = 461
+        ExplicitHeight = 459
         inherited TV: TTreeView
           Width = 221
           Height = 459
           ExplicitWidth = 221
-          ExplicitHeight = 461
+          ExplicitHeight = 459
         end
       end
     end
     object TabSheet2: TTabSheet
       Caption = 'Lesezeichen'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       inline BookmarkFrame1: TBookmarkFrame
         Left = 0
         Top = 0
@@ -122,7 +125,6 @@
     object TabSheet3: TTabSheet
       Caption = 'B'#252'cher'
       ImageIndex = 2
-      ExplicitHeight = 461
       inline ePupFrame1: TePupFrame
         Left = 0
         Top = 0
@@ -131,7 +133,7 @@
         Align = alClient
         TabOrder = 0
         ExplicitWidth = 221
-        ExplicitHeight = 461
+        ExplicitHeight = 459
         inherited DBGrid1: TDBGrid
           Width = 221
           Height = 459
@@ -149,7 +151,6 @@
     object TabSheet6: TTabSheet
       Caption = 'Online'
       ImageIndex = 3
-      ExplicitHeight = 461
       object UserView: TListView
         Left = 0
         Top = 0
@@ -171,7 +172,6 @@
         RowSelect = True
         TabOrder = 0
         ViewStyle = vsReport
-        ExplicitHeight = 420
       end
       object Panel1: TPanel
         Left = 0
@@ -181,7 +181,6 @@
         Align = alBottom
         Caption = 'Panel1'
         TabOrder = 1
-        ExplicitTop = 420
         object JvColorComboBox1: TJvColorComboBox
           Left = 9
           Top = 6

@@ -41,7 +41,7 @@ object ProtokollForm: TProtokollForm
     Top = 49
     Width = 888
     Height = 400
-    ActivePage = TabSheet2
+    ActivePage = TabSheet1
     Align = alClient
     TabOrder = 1
     object TabSheet1: TTabSheet
@@ -119,16 +119,19 @@ object ProtokollForm: TProtokollForm
             inherited TabSheet4: TTabSheet
               ExplicitLeft = 4
               ExplicitTop = 24
-              ExplicitWidth = 443
+              ExplicitWidth = 209
               ExplicitHeight = 38
             end
             inherited TabSheet5: TTabSheet
-              ExplicitWidth = 209
+              ExplicitLeft = 4
+              ExplicitTop = 24
+              ExplicitWidth = 443
+              ExplicitHeight = 38
             end
           end
           inherited ImageList1: TImageList
             Bitmap = {
-              494C0101060010014C0110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+              494C010106001001540110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
               0000000000003600000028000000400000002000000001002000000000000020
               0000000000000000000000000000000000000000000000000000000000000000
               0000000000000000000000000000000000000000000000000000000000000000

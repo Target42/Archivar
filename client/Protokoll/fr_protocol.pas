@@ -581,6 +581,7 @@ var
   end;
   procedure showChapter ( cp : IChapter );
   begin
+    m_proto.SyncUser( cp.Votes.Item[0], not FMeetingMode );
     m_renderer.renderChapter( cp, FMeetingMode = false );
 
     if Assigned(FonBeschlusChange) and FMeetingMode and (cp.Votes.Count = 1) then

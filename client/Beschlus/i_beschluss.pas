@@ -115,6 +115,9 @@ type
 
     property Modified     : boolean           read GetModified        write SetModified;
 
+    procedure clear;
+    procedure Einstimmig( zustimmung : boolean );
+
     procedure Release;
   end;
 

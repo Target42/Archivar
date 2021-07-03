@@ -40,6 +40,9 @@ type
     constructor create;
     Destructor Destroy; override;
 
+    procedure clear;
+    procedure Einstimmig( zustimmung : boolean );
+
     procedure Release;
   end;
 implementation
@@ -49,21 +52,35 @@ uses
 
 { TAbstimmungImpl }
 
-constructor TAbstimmungImpl.create;
+procedure TAbstimmungImpl.clear;
 begin
   m_ja        := 0;
   m_nein      := 0;
   m_enthalten := 0;
 
+end;
+
+constructor TAbstimmungImpl.create;
+begin
   m_gremium   := TPersonenListeImpl.create;
   m_abwesend  := TPersonenListeImpl.create;
   m_na        := TPersonenListeImpl.create;
+
+  clear;
 end;
 
 destructor TAbstimmungImpl.Destroy;
 begin
-
   inherited;
+end;
+
+procedure TAbstimmungImpl.Einstimmig(zustimmung: boolean);
+begin
+  clear;
+  if zustimmung then
+    m_ja    := m_gremium.count
+  else
+    m_nein  := m_gremium.count;
 end;
 
 function TAbstimmungImpl.getAbgelehnt: integer;

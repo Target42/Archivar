@@ -68,7 +68,8 @@ type
 
     function show(web : TWebBrowser ) : string;
 
-    class procedure SetHTML(st : TStream; WebBrowser: TWebBrowser);
+    class procedure SetHTML(st : TStream; WebBrowser: TWebBrowser); overload;
+    class procedure SetHTML(text : string; WebBrowser: TWebBrowser); overload;
     class function  Text2HTML( text : string ) : TStream;
 
     function loadByID(taid : integer ) : boolean;
@@ -438,6 +439,20 @@ begin
   end
   else
     Frame.HTMLDoc.Text := defHTML;
+end;
+
+class procedure THtmlMod.SetHTML(text: string; WebBrowser: TWebBrowser);
+var
+  list : TStringList;
+  st : TStream;
+begin
+  st := TMemoryStream.Create;
+  list := TStringList.Create;
+  list.Text := text;
+  list.SaveToStream(st);
+  st.Position := 0;
+  list.Free;
+  setHTML( st, WebBrowser);
 end;
 
 class procedure THtmlMod.SetHTML(st: TStream; WebBrowser: TWebBrowser);
