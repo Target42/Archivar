@@ -9,7 +9,7 @@ uses
   System.JSON, JvCsvData;
 
 type
-  [TRoleAuth('user,admin')]
+  [TRoleAuth('user,admin', 'download')]
   TdsPerson = class(TDSServerModule)
     PETable: TIBTable;
     IBTransaction1: TIBTransaction;

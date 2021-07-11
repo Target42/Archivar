@@ -8,6 +8,7 @@ uses
   Data.DB, IBX.IBCustomDataSet, IBX.IBTable, IBX.IBDatabase, IBX.IBQuery;
 
 type
+  [TRoleAuth('user,admin', 'download')]
   TdsTextBlock = class(TDSServerModule)
     IBTransaction1: TIBTransaction;
     TB: TIBTable;

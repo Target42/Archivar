@@ -1,6 +1,6 @@
 //
 // Erzeugt vom DataSnap-Proxy-Generator.
-// 26.05.2021 11:12:29
+// 08.07.2021 13:47:03
 //
 
 unit u_stub;
@@ -262,6 +262,18 @@ type
     function endVote(obj: TJSONObject): TJSONObject;
     function requestLead(obj: TJSONObject): TJSONObject;
     function changeLead(obj: TJSONObject): TJSONObject;
+  end;
+
+  TdsUpdaterClient = class(TDSAdminClient)
+  private
+    FdownloadCommand: TDBXCommand;
+    FgetFileListCommand: TDBXCommand;
+  public
+    constructor Create(ADBXConnection: TDBXConnection); overload;
+    constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
+    destructor Destroy; override;
+    function download(obj: TJSONObject): TStream;
+    function getFileList: TJSONObject;
   end;
 
 implementation
@@ -1436,6 +1448,50 @@ begin
   FendVoteCommand.DisposeOf;
   FrequestLeadCommand.DisposeOf;
   FchangeLeadCommand.DisposeOf;
+  inherited;
+end;
+
+function TdsUpdaterClient.download(obj: TJSONObject): TStream;
+begin
+  if FdownloadCommand = nil then
+  begin
+    FdownloadCommand := FDBXConnection.CreateCommand;
+    FdownloadCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FdownloadCommand.Text := 'TdsUpdater.download';
+    FdownloadCommand.Prepare;
+  end;
+  FdownloadCommand.Parameters[0].Value.SetJSONValue(obj, FInstanceOwner);
+  FdownloadCommand.ExecuteUpdate;
+  Result := FdownloadCommand.Parameters[1].Value.GetStream(FInstanceOwner);
+end;
+
+function TdsUpdaterClient.getFileList: TJSONObject;
+begin
+  if FgetFileListCommand = nil then
+  begin
+    FgetFileListCommand := FDBXConnection.CreateCommand;
+    FgetFileListCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FgetFileListCommand.Text := 'TdsUpdater.getFileList';
+    FgetFileListCommand.Prepare;
+  end;
+  FgetFileListCommand.ExecuteUpdate;
+  Result := TJSONObject(FgetFileListCommand.Parameters[0].Value.GetJSONValue(FInstanceOwner));
+end;
+
+constructor TdsUpdaterClient.Create(ADBXConnection: TDBXConnection);
+begin
+  inherited Create(ADBXConnection);
+end;
+
+constructor TdsUpdaterClient.Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean);
+begin
+  inherited Create(ADBXConnection, AInstanceOwner);
+end;
+
+destructor TdsUpdaterClient.Destroy;
+begin
+  FdownloadCommand.DisposeOf;
+  FgetFileListCommand.DisposeOf;
   inherited;
 end;
 

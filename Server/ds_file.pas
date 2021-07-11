@@ -9,7 +9,7 @@ uses
   System.JSON;
 
 type
-  [TRoleAuth('user,admin')]
+  [TRoleAuth('user,admin', 'download')]
   TdsFile = class(TDSServerModule)
     FITA: TIBTable;
     IBTransaction1: TIBTransaction;

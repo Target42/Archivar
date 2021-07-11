@@ -8,6 +8,7 @@ uses
   IBX.IBDatabase, Data.DB, IBX.IBCustomDataSet, IBX.IBTable;
 
 type
+  [TRoleAuth('user,admin', 'download')]
   TdsEpub = class(TDSServerModule)
     ePub: TIBTable;
     IBTransaction1: TIBTransaction;

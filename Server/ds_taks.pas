@@ -9,7 +9,7 @@ uses
   IBX.IBTable, IBX.IBUpdateSQL;
 
 type
-  [TRoleAuth('user,admin')]
+  [TRoleAuth('user,admin', 'download')]
   TdsTask = class(TDSServerModule)
     TaskTypesQry: TIBQuery;
     IBTransaction1: TIBTransaction;

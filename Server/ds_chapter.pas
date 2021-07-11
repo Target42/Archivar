@@ -8,6 +8,7 @@ uses
   IBX.IBDatabase, Data.DB, IBX.IBCustomDataSet, IBX.IBTable, IBX.IBQuery;
 
 type
+  [TRoleAuth('user,admin', 'download')]
   TdsChapter = class(TDSServerModule)
     Chapter: TIBTable;
     IBTransaction1: TIBTransaction;

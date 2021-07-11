@@ -59,7 +59,6 @@ object dsGremium: TdsGremium
     Top = 32
   end
   object IBTransaction1: TIBTransaction
-    Active = True
     DefaultDatabase = DBMod.IBDatabase1
     Params.Strings = (
       'read_committed'

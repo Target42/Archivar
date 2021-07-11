@@ -17,6 +17,9 @@ type
       m_modified  : boolean;
       m_xList     : IXMLList;
 
+      m_readOnly  : boolean;
+      m_timeStamp : TDateTime;
+
       procedure setText( value : string );
       function  getText : string;
       function  getAbstimmung : IAbstimmung;
@@ -33,6 +36,9 @@ type
       function  getData : IXMLList;
       procedure setOwner( value : IBeschlussListe );
       function  getOwner : IBeschlussListe;
+      function GetReadOnly: boolean;
+      procedure SetReadOnly(const Value: boolean);
+
 
       procedure addHeader( tab :IXMLTable );
       procedure addTable( name : string ;  list : IPersonenListe );
@@ -42,6 +48,7 @@ type
     public
       constructor create(owner : IBeschlussListe);
       destructor Destroy; override;
+
 
       procedure loadFromDataSet( data : TDataSet );
       procedure save( data : TDataSet );
@@ -190,6 +197,11 @@ end;
 function TBeschlussImpl.getOwner: IBeschlussListe;
 begin
   Result := m_owner;
+end;
+
+function TBeschlussImpl.GetReadOnly: boolean;
+begin
+  Result := m_readOnly;
 end;
 
 function TBeschlussImpl.GetStatus: TBeschlussStatus;
@@ -399,6 +411,11 @@ end;
 procedure TBeschlussImpl.setOwner(value: IBeschlussListe);
 begin
   m_owner := value;
+end;
+
+procedure TBeschlussImpl.SetReadOnly(const Value: boolean);
+begin
+  m_readOnly := value;
 end;
 
 procedure TBeschlussImpl.SetStatus(const Value: TBeschlussStatus);

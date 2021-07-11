@@ -78,6 +78,7 @@ end;
 procedure TBeschlussFrame.Button1Click(Sender: TObject);
 begin
    m_be.Abstimmung.Einstimmig(true);
+   m_be.Abstimmung.Zeitpunkt := now;
   
   updateBeView;
 
@@ -87,6 +88,7 @@ end;
 procedure TBeschlussFrame.Button2Click(Sender: TObject);
 begin
   m_be.Abstimmung.Einstimmig(false);
+  m_be.Abstimmung.Zeitpunkt := now;
 
   updateBeView;
 

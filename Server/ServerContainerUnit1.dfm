@@ -190,4 +190,10 @@ object ServerContainer1: TServerContainer1
     Left = 336
     Top = 456
   end
+  object dsUpdater: TDSServerClass
+    OnGetClass = dsUpdaterGetClass
+    Server = DSServer1
+    Left = 48
+    Top = 432
+  end
 end

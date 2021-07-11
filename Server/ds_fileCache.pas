@@ -8,6 +8,7 @@ uses
   IBX.IBDatabase, Data.DB, IBX.IBCustomDataSet, IBX.IBTable;
 
 type
+  [TRoleAuth('user,admin,broadcast', 'download')]
   TdsFileCache = class(TDSServerModule)
     HC: TIBTable;
     IBTransaction1: TIBTransaction;

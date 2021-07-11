@@ -8,6 +8,7 @@ uses
   Data.DB, IBX.IBCustomDataSet, IBX.IBQuery, Datasnap.Provider, IBX.IBTable;
 
 type
+  [TRoleAuth('user,admin', 'download')]
   TdsTaskView = class(TDSServerModule)
     GetTA: TIBQuery;
     GetTE: TIBQuery;

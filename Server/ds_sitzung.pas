@@ -9,6 +9,7 @@ uses
   IBX.IBQuery, u_teilnehmer;
 
 type
+  [TRoleAuth('user,admin', 'download')]
   TdsSitzung = class(TDSServerModule)
     IBTransaction1: TIBTransaction;
     ELTab: TIBTable;

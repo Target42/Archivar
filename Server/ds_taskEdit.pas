@@ -8,6 +8,7 @@ uses
   Data.DB, IBX.IBCustomDataSet, IBX.IBTable, IBX.IBDatabase;
 
 type
+  [TRoleAuth('user,admin', 'download')]
   TdsTaskEdit = class(TDSServerModule)
     IBTransaction1: TIBTransaction;
     DataField: TIBTable;

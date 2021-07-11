@@ -9,7 +9,7 @@ uses
   IBX.IBTable, System.JSON, IBX.IBQuery;
 
 type
-  [TRoleAuth('admin')]
+  [TRoleAuth('admin,user')]
   TdsImage = class(TDSServerModule)
     IBTransaction1: TIBTransaction;
     PicTab: TIBTable;

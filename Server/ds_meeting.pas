@@ -9,6 +9,7 @@ uses
   System.JSON;
 
 type
+  [TRoleAuth('user,admin', 'download')]
   TdsMeeing = class(TDSServerModule)
     IBTransaction1: TIBTransaction;
     ListProtocol: TIBQuery;

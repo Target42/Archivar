@@ -9,7 +9,7 @@ uses
   Datasnap.DSSession, u_lockInfo, u_json;
 
 type
-  [TRoleAuth('user,admin')]
+  [TRoleAuth('user,admin', 'download')]
   TdsMisc = class(TDSServerModule)
     openTasks: TIBQuery;
     IBTransaction1: TIBTransaction;

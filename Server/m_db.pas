@@ -24,7 +24,7 @@ var
 implementation
 
 uses
-  Grijjy.CloudLogging, m_glob_server;
+  Grijjy.CloudLogging, m_glob_server, u_ini;
 
 {%CLASSGROUP 'System.Classes.TPersistent'}
 
@@ -46,13 +46,13 @@ var
 begin
   GrijjyLog.EnterMethod(self, 'startDB');
 
-  db := GM.DBHost+':'+GM.DBName;
+  db := IniOptions.DBhost+':'+IniOptions.DBdb;
   GrijjyLog.Send('db name', db);
   try
     IBDatabase1.DatabaseName := db;
     IBDatabase1.Params.Clear;
-    IBDatabase1.Params.Values['user_name'] := GM.DBUser;
-    IBDatabase1.Params.Values['password']  := GM.DBKey;
+    IBDatabase1.Params.Values['user_name'] := IniOptions.DBuser;
+    IBDatabase1.Params.Values['password']  := IniOptions.DBpwd;
 
     IBDatabase1.Open;
     Result := IBDatabase1.Connected;

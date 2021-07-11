@@ -61,6 +61,9 @@ type
     procedure setOwner( value : IBeschlussListe );
     function  getOwner : IBeschlussListe;
 
+    function GetReadOnly: boolean;
+    procedure SetReadOnly(const Value: boolean);
+
     // public
     property ID           : integer           read GetID            write SetID;
     property CTID         : integer           read GetCTID          write SetCTID;
@@ -70,6 +73,7 @@ type
     property Abstimmung   : IAbstimmung       read getAbstimmung ;
     property Modified     : boolean           read GetModified      write SetModified;
     property Data         : IXMLList          read getData          write setData;
+    property ReadOnly     : boolean           read GetReadOnly      write SetReadOnly;
 
     property Owner        : IBeschlussListe   read getOwner         write setOwner;
 

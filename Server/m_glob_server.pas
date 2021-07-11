@@ -10,27 +10,19 @@ type
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
   private
-    FDBHost: string;
-    FDBName: string;
-    FDBUser: string;
-    FDBKey: string;
-    FDSPort: integer;
     { Private declarations }
   public
     procedure LoadIni;
     procedure SaveIni;
 
-    property DBHost: string read FDBHost write FDBHost;
-    property DBName: string read FDBName write FDBName;
-    property DBUser: string read FDBUser write FDBUser;
-    property DBKey: string read FDBKey write FDBKey;
-
-    property DSPort: integer read FDSPort write FDSPort;
-
     function download( fname : string ; st : TStream ) : boolean;
     function downloadMem( st : TStream ) : TMemoryStream;
     function CopyStream( fromSt, toSt : TStream ) : integer;
     function saveToTempFile(st : TStream ) : string;
+
+    function md5( fname : string  ) : string; overload;
+    function md5( st    : TStream ) : string; overload;
+
   end;
 
 var
@@ -44,7 +36,7 @@ implementation
 {$R *.dfm}
 
 uses
-  IOUtils, m_db, IniFiles;
+  IOUtils, m_db, IniFiles, u_ini, IdHashMessageDigest;
 
 procedure DebugMsg( text : string );
 begin
@@ -74,12 +66,6 @@ end;
 
 procedure TGM.DataModuleCreate(Sender: TObject);
 begin
-  FDBHost := 'localhost';
-  FDBName := 'd:\db\archivar.gdb';
-  FDBUser := 'sysdba';
-  FDBKey  := 'masterkey';
-  FDSPort := 211;
-
   LoadIni;
 end;
 
@@ -138,39 +124,48 @@ end;
 procedure TGM.LoadIni;
 var
   FName : string;
-  ini   : TIniFile;
 begin
   fname := ParamStr(0)+'.ini';
+  IniOptions.LoadFromFile(fname);
+end;
 
-  ini := TIniFile.Create(fname);
+function TGM.md5(st: TStream): string;
+var
+  IdMD5: TIdHashMessageDigest5;
+begin
+  IdMD5 := TIdHashMessageDigest5.Create;
+  try
+    Result := LowerCase( IdMD5.HashStreamAsHex(st));
+  finally
+    IdMD5.Free;
+  end;
 
-  FDBHost := ini.ReadString('DB', 'host', FDBHost);
-  FDBName := ini.ReadString('DB', 'db',   FDBName);
-  FDBUser := ini.ReadString('DB', 'user', FDBUser);
-  FDBKey  := ini.ReadString('DB', 'pwd', FDBKey);
+end;
 
-  FDSPort := ini.ReadInteger('DS', 'port', FDSPort);
+function TGM.md5(fname: string): string;
+var
+  fs   : TFileStream;
+begin
+  Result := '';
 
-  ini.Free;
+  fs := NIL;
+  if not FileExists(fname) then
+    exit;
+
+  try
+    fs    := TFileStream.Create(fname, fmOpenRead + fmShareDenyWrite);
+    Result := md5(fs);
+  finally
+    fs.Free;
+  end;
 end;
 
 procedure TGM.SaveIni;
 var
   FName : string;
-  ini   : TIniFile;
 begin
   fname := ParamStr(0) +'.ini';
-
-  ini := TIniFile.Create(fname);
-
-  ini.WriteString('DB', 'host', FDBHost);
-  ini.WriteString('DB', 'db', FDBName);
-  ini.WriteString('DB', 'user', FDBUser);
-  ini.WriteString('DB', 'pwd', FDBKey);
-
-  ini.WriteInteger('DS', 'port', FDSPort);
-
-  ini.Free;
+  IniOptions.SaveToFile(fname);
 end;
 
 function TGM.saveToTempFile(st: TStream): string;

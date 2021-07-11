@@ -41,7 +41,10 @@ uses
   u_TOnlineUserServerImpl in 'User\u_TOnlineUserServerImpl.pas',
   ds_sitzung in 'ds_sitzung.pas' {dsSitzung: TDSServerModule},
   m_hell in 'hell\m_hell.pas' {HellMod: TDataModule},
-  u_meeting in 'hell\u_meeting.pas';
+  u_meeting in 'hell\u_meeting.pas',
+  m_fileServer in 'fileServer\m_fileServer.pas' {FileServer: TDataModule},
+  ds_updater in 'ds_updater.pas' {dsUpdater: TDSServerModule},
+  u_ini in 'u_ini.pas';
 
 var
   MyDummyBoolean  : Boolean;

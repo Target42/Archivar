@@ -9,7 +9,7 @@ uses
   IBX.IBQuery;
 
 type
-  [TRoleAuth('user,admin')]
+  [TRoleAuth('user,admin', 'download')]
   TdsGremium = class(TDSServerModule)
     GremiumTab: TIBTable;
     IBTransaction1: TIBTransaction;

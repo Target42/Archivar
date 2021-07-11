@@ -36,6 +36,7 @@ type
     dsEpub: TDSServerClass;
     dsMeeing: TDSServerClass;
     dsSitzung: TDSServerClass;
+    dsUpdater: TDSServerClass;
     procedure dsAdminGetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
     procedure ServiceStart(Sender: TService; var Started: Boolean);
@@ -85,6 +86,8 @@ type
     procedure dsSitzungGetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
     procedure ServiceDestroy(Sender: TObject);
+    procedure dsUpdaterGetClass(DSServerClass: TDSServerClass;
+      var PersistentClass: TPersistentClass);
   private
     const
       MaxUserNameLength = 25;
@@ -123,7 +126,8 @@ uses
   Winapi.Windows, m_db, ds_gremium, ds_admin, ds_person, IOUtils,
   ds_taks, ds_file, ds_misc, ds_protocol, ds_image, ds_chapter,
   ds_taskEdit, ds_template, ds_taskView, ds_textblock, ds_fileCache, ds_epub,
-  ds_meeting, System.Hash, u_json, ds_sitzung, m_hell, Grijjy.sysUtils;
+  ds_meeting, System.Hash, u_json, ds_sitzung, m_hell, Grijjy.sysUtils, u_ini,
+  m_fileServer, ds_updater;
 
 procedure TServerContainer1.dsAdminGetClass(
   DSServerClass: TDSServerClass; var PersistentClass: TPersistentClass);
@@ -175,7 +179,6 @@ begin
   GrijjyLog.Send('session id',                          session.id);
   GrijjyLog.Send('session name',                        session.UserName);
   GrijjyLog.Send('Error',                               DSErrorEventObject.Error.ToString, TgoLogLevel.Error);
-  session.Close;
 
   GrijjyLog.ExitMethod(self, 'DSServer1Error');
 end;
@@ -184,6 +187,12 @@ procedure TServerContainer1.DSServerClass1GetClass(
   DSServerClass: TDSServerClass; var PersistentClass: TPersistentClass);
 begin
   PersistentClass := ds_textblock.TdsTextBlock;
+end;
+
+procedure TServerContainer1.dsUpdaterGetClass(
+  DSServerClass: TDSServerClass; var PersistentClass: TPersistentClass);
+begin
+  PersistentClass := ds_updater.TdsUpdater;
 end;
 
 procedure TServerContainer1.dsSitzungGetClass(DSServerClass: TDSServerClass;
@@ -255,8 +264,8 @@ var
   text    : TStringList;
 begin
   list := m_sessions.LockList;
+  text := TStringList.Create;
   try
-    text := TStringList.Create;
     mngr := TDSSessionManager.Instance;
     for s in list do begin
       session := mngr.Session[ s ];
@@ -288,6 +297,16 @@ end;
 procedure TServerContainer1.removeUser(Session: TDSSession);
 begin
   GrijjyLog.EnterMethod(self, 'removeUser');
+
+  if Session.HasObject('ID') then begin
+    if StrToIntDef(Session.GetData('ID'), -1) < 0 then
+    begin
+      GrijjyLog.send('no user id !');
+      GrijjyLog.ExitMethod(self, 'removeUser');
+      exit;
+    end;
+  end;
+
   if not Assigned(session) then begin
     GrijjyLog.send('no session!');
     GrijjyLog.ExitMethod(self, 'removeUser');
@@ -355,7 +374,7 @@ var
   userName  : string;
   ph        : string;
 
-  function checkUser : Boolean;
+  function checkUser(userName : string ) : Boolean;
   begin
     Result := false;
     GrijjyLog.EnterMethod(self, 'DSAuthenticationManager1UserAuthenticate.CheckUser');
@@ -368,6 +387,25 @@ var
     end;
     GrijjyLog.send('result', Result);
     GrijjyLog.ExitMethod(self, 'DSAuthenticationManager1UserAuthenticate.CheckUser');
+  end;
+
+  procedure broadcastUser(userName : string );
+  begin
+    userName := trim(StringReplace(userName, '*', '',[rfReplaceAll, rfIgnoreCase]));
+
+    valid := checkUser( userName );
+    if valid then
+    begin
+      Session.PutData('ID',       '-1' );
+      UserRoles.Add('broadcast');
+    end;
+  end;
+
+  procedure downloadUser;
+  begin
+    Session.PutData('ID',       '-2' );
+    UserRoles.Add('download');
+    valid := true;
   end;
 
 begin
@@ -390,25 +428,20 @@ begin
 
   GrijjyLog.send('thread id', GetCurrentThreadID );
   GrijjyLog.Send('user name', userName );
-  // callback channel ...
-  if pos('*', userName) > 0 then
-  begin
-    userName := trim(StringReplace(userName, '*', '',[rfReplaceAll, rfIgnoreCase]));
 
-    valid := checkUser;
-    if valid then
-    begin
-      Session.PutData('ID',       '-1' );
-      UserRoles.Add('broadcast');
-    end;
-  end
-  else
-  begin
+  if (userName = 'qwertzuiopmnbvcxy1234') and
+     ( ph = '912f5ed6722678ad07c807a443f54982b11bdc0b43993c50411422c8a6c0bcda') then begin
+    // download user ..
+    downloadUser;
+  end else if pos('*', userName) > 0 then begin
+    // callback channel ...
+    broadcastUser( userName);
+  end else begin
     // normal user
     GrijjyLog.send('session id', Session.Id );
     GrijjyLog.Send('session name', Session.UserName );
 
-    valid := checkUser;
+    valid := checkUser(userName);
     if valid then
     begin
       Session.PutData('user',     userName);
@@ -442,8 +475,42 @@ end;
 procedure TServerContainer1.DSAuthenticationManager1UserAuthorize(
   Sender: TObject; AuthorizeEventObject: TDSAuthorizeEventObject;
   var valid: Boolean);
+var
+  i : integer;
 begin
-  valid := true;
+  valid := false;
+  GrijjyLog.Send('Authorise user rols', AuthorizeEventObject.UserRoles );
+
+  // system action
+  if not Assigned(AuthorizeEventObject.AuthorizedRoles) and
+     not Assigned(AuthorizeEventObject.DeniedRoles) then
+  begin
+    valid := true;
+  end;
+
+  if Assigned(AuthorizeEventObject.AuthorizedRoles)  then begin
+    GrijjyLog.Send('Authorise auth rols', AuthorizeEventObject.AuthorizedRoles );
+    for i := 0 to pred( AuthorizeEventObject.UserRoles.Count) do begin
+      if AuthorizeEventObject.AuthorizedRoles.IndexOf(AuthorizeEventObject.UserRoles.Strings[i]) > -1 then begin
+        valid := true;
+        break;
+      end;
+    end;
+  end;
+
+  if Assigned(AuthorizeEventObject.DeniedRoles) then begin
+    GrijjyLog.Send('Authorise deny rols', AuthorizeEventObject.DeniedRoles );
+    for i := 0 to pred( AuthorizeEventObject.UserRoles.Count) do begin
+      if AuthorizeEventObject.DeniedRoles.IndexOf(AuthorizeEventObject.UserRoles.Strings[i]) > -1 then begin
+        valid := false;
+        break;
+      end;
+    end;
+  end;
+  if not valid then
+    GrijjyLog.Send('Authorisation method', AuthorizeEventObject.MethodAlias, TgoLogLevel.Error );
+
+  GrijjyLog.Send('Authorisation', valid );
 end;
 
 procedure TServerContainer1.dsChapterGetClass(DSServerClass: TDSServerClass;
@@ -513,12 +580,15 @@ begin
 
   LockMod     := TLockMod.create(self);
   GM          := TGM.Create(self);
+  FileServer  := TFileServer.create(self);
   DBMod       := TDBMod.Create(self);
   HellMod     := THellMod.create(self );
   m_lock      := TCriticalSection.Create;
   m_sessions  := TThreadList<String>.create;
 
-  DSTCPServerTransport1.Port := GM.DSPort;
+
+  FileServer.createUpdaterZIP;
+  DSTCPServerTransport1.Port := IniOptions.DSport;
 
   TDSSessionManager.Instance.AddSessionEvent(
     procedure(Sender: TObject;
@@ -566,6 +636,7 @@ begin
   GrijjyLog.EnterMethod(self, 'ServiceStart');
   try
     DBMod.startDB;
+    FileServer.start;
     DSServer1.Start;
     Started := true;
   except
@@ -582,6 +653,7 @@ procedure TServerContainer1.ServiceStop(Sender: TService; var Stopped: Boolean);
 begin
   GrijjyLog.EnterMethod(self, 'ServiceStop');
   DSServer1.Stop;
+  FileServer.stop;
   DBMod.stopDB;
   Stopped := true;
   GrijjyLog.ExitMethod( self, 'ServiceStop');

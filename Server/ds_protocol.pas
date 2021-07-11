@@ -9,6 +9,7 @@ uses
   Datasnap.Provider, IBX.IBUpdateSQL;
 
 type
+  [TRoleAuth('user,admin', 'download')]
   TdsProtocol = class(TDSServerModule)
     PRTab: TIBTable;
     IBTransaction1: TIBTransaction;
