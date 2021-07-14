@@ -478,15 +478,11 @@ procedure TServerContainer1.DSAuthenticationManager1UserAuthorize(
 var
   i : integer;
 begin
-  valid := false;
   GrijjyLog.Send('Authorise user rols', AuthorizeEventObject.UserRoles );
 
   // system action
-  if not Assigned(AuthorizeEventObject.AuthorizedRoles) and
-     not Assigned(AuthorizeEventObject.DeniedRoles) then
-  begin
-    valid := true;
-  end;
+  valid := not Assigned(AuthorizeEventObject.AuthorizedRoles) or
+           not Assigned(AuthorizeEventObject.DeniedRoles);
 
   if Assigned(AuthorizeEventObject.AuthorizedRoles)  then begin
     GrijjyLog.Send('Authorise auth rols', AuthorizeEventObject.AuthorizedRoles );

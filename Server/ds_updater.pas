@@ -19,7 +19,7 @@ type
 implementation
 
 uses
-  u_ini, System.IOUtils, System.Types, u_json, m_glob_server;
+  u_ini, System.IOUtils, System.Types, u_json, m_glob_server, IdGlobalProtocols;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -28,8 +28,17 @@ uses
 { TdsUpdater }
 
 function TdsUpdater.download(obj: TJSONObject): TStream;
+var
+  path : string;
+  fname : string;
 begin
   Result := NIL;
+  path    := TPath.Combine( ExtractFilePath(paramStr(0)), IniOptions.clientdir );
+  fname   := TPath.Combine( path, JString(obj, 'name'));
+  if FileExists(fname) then begin
+    Result := TFileStream.Create(fname, fmOpenRead + fmShareDenyNone);
+
+  end;
 end;
 
 function TdsUpdater.getFileList: TJSONObject;
@@ -44,7 +53,7 @@ begin
   list    := TJSONArray.Create;
 
   path    := TPath.Combine( ExtractFilePath(paramStr(0)), IniOptions.clientdir );
-  len     := Length( path );
+  len     := Length( path ) + 1;
   arr     := TDirectory.GetFiles( path );
 
   for i := low(arr) to high(arr) do begin
@@ -52,6 +61,7 @@ begin
 
     JReplace(row, 'name', Copy(arr[i], len));
     JReplace(row, 'md5', GM.md5(arr[i]));
+    JReplace(row, 'size', FileSizeByName( arr[i] ));
 
     list.Add(row)
   end;

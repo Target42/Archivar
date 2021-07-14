@@ -7,10 +7,19 @@ uses
 
 const
   csIniserverSection = 'server';
+  csInirunSection = 'run';
+  csInilauncherSection = 'launcher';
 
   {Section: server}
   csIniserverhost = 'host';
   csIniserverport = 'port';
+
+  {Section: run}
+  csInirunprg = 'prg';
+
+  {Section: launcher}
+  csInilauncherimage = 'image';
+  csInilauncherterminate = 'terminate';
 
 type
   TIniOptions = class(TObject)
@@ -18,6 +27,13 @@ type
     {Section: server}
     Fserverhost: string;
     Fserverport: Integer;
+
+    {Section: run}
+    Frunprg: string;
+
+    {Section: launcher}
+    Flauncherimage: string;
+    Flauncherterminate: string;
   public
     procedure LoadSettings(Ini: TIniFile);
     procedure SaveSettings(Ini: TIniFile);
@@ -28,6 +44,13 @@ type
     {Section: server}
     property serverhost: string read Fserverhost write Fserverhost;
     property serverport: Integer read Fserverport write Fserverport;
+
+    {Section: run}
+    property runprg: string read Frunprg write Frunprg;
+
+    {Section: launcher}
+    property launcherimage: string read Flauncherimage write Flauncherimage;
+    property launcherterminate: string read Flauncherterminate write Flauncherterminate;
   end;
 
 var
@@ -42,6 +65,13 @@ begin
     {Section: server}
     Fserverhost := Ini.ReadString(csIniserverSection, csIniserverhost, 'localhost');
     Fserverport := Ini.ReadInteger(csIniserverSection, csIniserverport, 211);
+
+    {Section: run}
+    Frunprg := Ini.ReadString(csInirunSection, csInirunprg, 'Archivar.exe');
+
+    {Section: launcher}
+    Flauncherimage := Ini.ReadString(csInilauncherSection, csInilauncherimage, '');
+    Flauncherterminate := Ini.ReadString(csInilauncherSection, csInilauncherterminate, 'true');
   end;
 end;
 
@@ -52,6 +82,13 @@ begin
     {Section: server}
     Ini.WriteString(csIniserverSection, csIniserverhost, Fserverhost);
     Ini.WriteInteger(csIniserverSection, csIniserverport, Fserverport);
+
+    {Section: run}
+    Ini.WriteString(csInirunSection, csInirunprg, Frunprg);
+
+    {Section: launcher}
+    Ini.WriteString(csInilauncherSection, csInilauncherimage, Flauncherimage);
+    Ini.WriteString(csInilauncherSection, csInilauncherterminate, Flauncherterminate);
   end;
 end;
 

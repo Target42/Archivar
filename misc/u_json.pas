@@ -19,6 +19,7 @@ procedure JRemove( obj : TJSONObject ; name : string );
 
 function JString( obj : TJSONObject; name : string ; default : string = '' ) : string;
 function JInt   ( obj : TJSONObject; name : string ; default : integer = 0 ) : integer;
+function JInt64 ( obj : TJSONObject; name : string ; default : int64 = 0 ) : int64;
 function JDouble( obj : TJSONObject; name : string ; default : double = 0.0 ) : Double;
 function JBool  ( obj : TJSONObject; name : string ; default : boolean = false ) : boolean;
 function JObject( obj : TJSONObject; name : string ) : TJSONObject;
@@ -152,8 +153,16 @@ begin
 end;
 
 procedure JReplace( obj : TJSONObject ; name : string ; value : Int64 ); overload;
+var
+  p :  TJSONPair;
 begin
-  JReplace( obj, name, integer(value));
+  if not Assigned(obj) then
+    exit;
+
+  p := obj.RemovePair(name);
+  if Assigned(p) then
+    p.Free;
+  obj.AddPair( TJSONPair.Create( name, TJSONNumber.Create(value)));
 end;
 
 {*******************************************************************************
@@ -274,6 +283,22 @@ begin
 
   if Assigned(v) then
     Result := v.AsInt;
+end;
+{*******************************************************************************
+*                   JInt64
+*******************************************************************************}
+function JInt64 ( obj : TJSONObject; name : string ; default : int64 = 0 ) : int64;
+var
+  v : TJSONNumber;
+begin
+  Result := default;
+
+  if not Assigned(obj) then
+    exit;
+  v := obj.Values[ name ] as TJSONNumber;
+
+  if Assigned(v) then
+    Result := v.AsInt64;
 end;
 
 {*******************************************************************************
