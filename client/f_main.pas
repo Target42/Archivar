@@ -736,6 +736,8 @@ begin
   JvColorComboBox1.AddColor( clRed,   'Beschäftigt');
 
   m_noStatChange := false;
+
+  loadLogo;
 end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
@@ -761,9 +763,15 @@ var
   fname : string;
 begin
   fname := TPath.combine( GM.Images, 'logo.png');
-  if FileExists( fname ) then
+  if FileExists( fname ) then begin
     Image1.Picture.LoadFromFile(fname);
-
+    fname := TPath.Combine( ExtractFilePath(ParamStr(0)), 'logo.png');
+    Image1.Picture.SaveToFile(fname);
+  end else begin
+    fname := TPath.Combine( ExtractFilePath(ParamStr(0)), 'logo.png');
+    if FileExists( fname ) then
+      Image1.Picture.LoadFromFile(fname);
+  end;
 end;
 
 procedure TMainForm.setGremiumName(id: integer);

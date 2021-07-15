@@ -6,7 +6,8 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Data.DBXDataSnap,
   Data.DBXCommon, IPPeerClient, Vcl.StdCtrls, Vcl.Buttons, Data.DB, Data.SqlExpr,
-  u_stub, System.JSON, u_ini, JvComponentBase, JvCreateProcess;
+  u_stub, System.JSON, u_ini, JvComponentBase, JvCreateProcess, JvBaseDlg,
+  JvBrowseFolder, Vcl.ExtCtrls, pngimage;
 
 type
   TMainForm = class(TForm)
@@ -15,11 +16,17 @@ type
     BitBtn1: TBitBtn;
     ProgressBar1: TProgressBar;
     JvCreateProcess1: TJvCreateProcess;
+    Panel1: TPanel;
+    LabeledEdit1: TLabeledEdit;
+    SpeedButton1: TSpeedButton;
+    JvBrowseForFolderDialog1: TJvBrowseForFolderDialog;
+    Image1: TImage;
     procedure FormCreate(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
     procedure SQLConnection1AfterConnect(Sender: TObject);
     procedure SQLConnection1AfterDisconnect(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure SpeedButton1Click(Sender: TObject);
   private
     type rFile = record
       name        : string;
@@ -31,6 +38,7 @@ type
   private
     m_client : TdsUpdaterClient;
     m_files  : array of rFile;
+    m_root   : string;
 
     function CheckFiles : boolean;
 
@@ -40,8 +48,10 @@ type
     function download(fname: string; st: TStream; size : int64): boolean;
     function DownloadFiles : Boolean;
     procedure startProgram;
+
+    procedure setRoot( value : string );
   public
-    { Public-Deklarationen }
+    property Root : string read m_root write setRoot;
   end;
 
 var
@@ -206,11 +216,27 @@ begin
   if FileExists(fname) then
     IniOptions.LoadFromFile(fname);
 
+  self.Root := ExtractFilePath(ParamStr(0));
+
+  if IniOptions.launcherimage <> '' then begin
+    fname := TPath.Combine( ExtractFilePath(paramStr(0)), IniOptions.launcherimage);
+
+    if FileExists(fname) then
+      Image1.Picture.LoadFromFile(fname);
+  end;
 end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
   SetLength( m_files, 0 );
+end;
+
+procedure TMainForm.setRoot(value: string);
+begin
+  m_root := value;
+  LabeledEdit1.Text := m_root;
+  if not DirectoryExists(m_root) then
+    ShowMessage('Das Verzeichniss'+sLineBreak+m_root+sLineBreak+'ungültig');
 end;
 
 function TMainForm.CalcMd5(st: TStream): string;
@@ -243,6 +269,14 @@ begin
   end;
 end;
 
+procedure TMainForm.SpeedButton1Click(Sender: TObject);
+begin
+  JvBrowseForFolderDialog1.Directory := self.Root;
+
+  if JvBrowseForFolderDialog1.Execute then
+    self.Root := JvBrowseForFolderDialog1.Directory;
+end;
+
 procedure TMainForm.SQLConnection1AfterConnect(Sender: TObject);
 begin
   m_client := TdsUpdaterClient.Create(SQLConnection1.DBXConnection);
@@ -252,7 +286,6 @@ procedure TMainForm.SQLConnection1AfterDisconnect(Sender: TObject);
 begin
   if Assigned(m_client) then
     FreeAndNil(m_client);
-
 end;
 
 procedure TMainForm.startProgram;
