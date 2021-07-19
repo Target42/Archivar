@@ -298,7 +298,7 @@ end;
 
 procedure TDoMeetingform.saveBeschlus(be: IBeschluss);
 begin
-  if not Assigned(be) then
+  if not Assigned(be) or not Assigned( be.Owner)  then
     exit;
 
   be.Owner.saveModified;

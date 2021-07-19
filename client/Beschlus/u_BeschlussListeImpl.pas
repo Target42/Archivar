@@ -29,6 +29,8 @@ type
     procedure delete( inx : integer ) ; overload;
     procedure delete( be : IBeschluss); overload;
 
+    function replace( old, new : IBeschluss ) : boolean;
+
     procedure saveModified;
 
     procedure Release;
@@ -104,6 +106,19 @@ begin
   for b in m_list do
     b.Release;
   m_list.Clear;
+end;
+
+function TBeschlussListeImpl.replace(old, new: IBeschluss): boolean;
+var
+  inx : integer;
+begin
+  inx := m_list.IndexOf( old );
+  if inx > -1 then begin
+    m_list[inx] := new;
+    new.Owner   := self;
+    old.Release;
+  end;
+  Result := ( inx <> -1 );
 end;
 
 procedure TBeschlussListeImpl.saveModified;

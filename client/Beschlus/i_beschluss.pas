@@ -35,9 +35,12 @@ type
     procedure delete( inx : integer ) ; overload;
     procedure delete( be : IBeschluss); overload;
 
+    function replace( olf, new : IBeschluss ) : boolean;
+
     procedure saveModified;
 
     procedure Release;
+
   end;
 
 
@@ -82,8 +85,10 @@ type
 
     procedure setGremium( gremium : IPersonenListe );
 
-
     procedure Release;
+
+    function clone : IBeschluss;
+    procedure Assign( org : IBeschluss );
   end;
 
   IAbstimmung = interface
@@ -123,6 +128,8 @@ type
     procedure Einstimmig( zustimmung : boolean );
 
     procedure Release;
+
+    function clone : IAbstimmung;
   end;
 
 function BeschlussStatusToStr( bs :TBeschlussStatus ) : string;

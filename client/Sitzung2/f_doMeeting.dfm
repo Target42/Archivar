@@ -36,6 +36,8 @@
     TabOrder = 1
     object TabSheet1: TTabSheet
       Caption = 'Tagesordnung'
+      ExplicitWidth = 296
+      ExplicitHeight = 154
       object Splitter1: TSplitter
         Left = 249
         Top = 0
@@ -55,6 +57,7 @@
         Color = clBtnFace
         ParentColor = False
         TabOrder = 0
+        ExplicitHeight = 154
         inline ProtocolFrame1: TProtocolFrame
           Left = 2
           Top = 15
@@ -65,17 +68,17 @@
           ExplicitLeft = 2
           ExplicitTop = 15
           ExplicitWidth = 245
-          ExplicitHeight = 686
+          ExplicitHeight = 137
           inherited GroupBox1: TGroupBox
             Width = 245
             Height = 620
             ExplicitWidth = 245
-            ExplicitHeight = 620
+            ExplicitHeight = 71
             inherited TV: TTreeView
               Width = 241
               Height = 603
               ExplicitWidth = 241
-              ExplicitHeight = 603
+              ExplicitHeight = 54
             end
           end
           inherited PageControl2: TPageControl
@@ -103,7 +106,7 @@
           end
           inherited ImageList1: TImageList
             Bitmap = {
-              494C0101060010019C0110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+              494C010106001001A00110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
               0000000000003600000028000000400000002000000001002000000000000020
               0000000000000000000000000000000000000000000000000000000000000000
               0000000000000000000000000000000000000000000000000000000000000000
@@ -385,6 +388,8 @@
         Caption = 'Panel2'
         ShowCaption = False
         TabOrder = 1
+        ExplicitWidth = 42
+        ExplicitHeight = 154
         object Splitter2: TSplitter
           Left = 1
           Top = 363
@@ -423,6 +428,8 @@
           Caption = 'Panel4'
           ShowCaption = False
           TabOrder = 1
+          ExplicitTop = -181
+          ExplicitWidth = 40
           object GroupBox3: TGroupBox
             Left = 0
             Top = 0
@@ -431,6 +438,7 @@
             Align = alClient
             Caption = 'Beschluss'
             TabOrder = 0
+            ExplicitWidth = 40
             inline BeschlussFrame1: TBeschlussFrame
               Left = 2
               Top = 15
@@ -440,7 +448,7 @@
               TabOrder = 0
               ExplicitLeft = 2
               ExplicitTop = 15
-              ExplicitWidth = 801
+              ExplicitWidth = 36
               ExplicitHeight = 317
               inherited Splitter1: TSplitter
                 Left = 544
@@ -519,6 +527,10 @@
     object TabSheet2: TTabSheet
       Caption = 'Abstimung'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GroupBox2: TGroupBox
         Left = 0
         Top = 612
@@ -586,6 +598,10 @@
     object TabSheet3: TTabSheet
       Caption = 'Sitzungsleitung'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object PageControl2: TPageControl
         Left = 0
         Top = 0
@@ -596,6 +612,10 @@
         TabOrder = 0
         object TabSheet4: TTabSheet
           Caption = 'Allgemeines'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object GroupBox1: TGroupBox
             Left = 0
             Top = 0
@@ -720,6 +740,10 @@
         object TabSheet6: TTabSheet
           Caption = 'G'#228'ste'
           ImageIndex = 2
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
         end
       end
     end

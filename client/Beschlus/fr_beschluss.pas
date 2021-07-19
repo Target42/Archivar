@@ -40,11 +40,12 @@ type
     procedure Button2Click(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
   private
-    m_be : IBeschluss;
-    m_changed : boolean;
+    m_org         : IBeschluss;
+    m_be          : IBeschluss;
+    m_changed     : boolean;
     FSAveBeschluss: TBeschlusChange;
 
-    procedure save;
+    procedure save( be : IBeschluss );
     procedure updateBeView;
   public
     procedure init;
@@ -58,7 +59,7 @@ type
 implementation
 
 uses
-  f_bechlus, i_personen;
+  f_bechlus, i_personen, system.UITypes;
 
 {$R *.dfm}
 
@@ -71,6 +72,7 @@ begin
   Beschlusform.Free;
 
   m_be.Abstimmung.clear;
+  m_changed := true;
 
   updateBeView;
 end;
@@ -93,7 +95,6 @@ begin
   updateBeView;
 
   m_changed := true;
-
 end;
 
 procedure TBeschlussFrame.EditFrame1REDragDrop(Sender, Source: TObject; X,
@@ -119,8 +120,10 @@ end;
 
 procedure TBeschlussFrame.extbausteine1Click(Sender: TObject);
 begin
-  GroupBox2.Visible := not GroupBox2.Visible;
-  extbausteine1.Checked := GroupBox2.Visible;
+  extbausteine1.Checked := not extbausteine1.Checked;
+
+  GroupBox2.Visible := extbausteine1.Checked;
+  Splitter1.Visible := extbausteine1.Checked;
 end;
 
 procedure TBeschlussFrame.init;
@@ -153,11 +156,15 @@ end;
 
 procedure TBeschlussFrame.release;
 begin
+  if Assigned(m_be) then
+    m_be.release;
   m_be := NIL;
+
   TextBlockFrame1.release;
 end;
 
-procedure TBeschlussFrame.save;
+procedure TBeschlussFrame.save( be : IBeschluss );
+
   function getValue( lab : TLabeledEdit; def : integer ) : integer;
   begin
     Result := def;
@@ -166,30 +173,46 @@ procedure TBeschlussFrame.save;
     except
     end;
   end;
+
 begin
-  if not Assigned(m_be) then
+  if not Assigned(be) then
     exit;
 
-  m_be.Abstimmung.Zustimmung := getValue( LabeledEdit1, m_be.Abstimmung.Zustimmung );
-  m_be.Abstimmung.Abgelehnt  := getValue( LabeledEdit2, m_be.Abstimmung.Abgelehnt);
-  m_be.Abstimmung.Enthalten  := getValue( LabeledEdit3, m_be.Abstimmung.Enthalten);
-
-  m_be.Text := EditFrame1.Text;
+  be.Abstimmung.Zustimmung  := getValue( LabeledEdit1, be.Abstimmung.Zustimmung );
+  be.Abstimmung.Abgelehnt   := getValue( LabeledEdit2, be.Abstimmung.Abgelehnt);
+  be.Abstimmung.Enthalten   := getValue( LabeledEdit3, be.Abstimmung.Enthalten);
+  be.Abstimmung.Zeitpunkt   := now;
+  be.Text                   := EditFrame1.Text;
 
   if Assigned(FSAveBeschluss) then
-    FSAveBeschluss(m_be);
+    FSAveBeschluss(be);
 end;
 
 procedure TBeschlussFrame.setBeschluss(be: IBeschluss);
 begin
-  if m_changed or EditFrame1.Modified then
-    Save;
+  if m_changed or EditFrame1.Modified then begin
+    if (MessageDlg('Der Beschluss wurde geändert.'+#13+#10+
+                   'Soll er gespeichert werden?', mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
+    m_org.Assign(m_be);
+    m_be.Release;
+    Save(m_org);
+  end;
 
-  m_be := be;
+  if Assigned(m_be) then begin
+    m_be.Release;
+    m_be := NIL;
+  end;
 
-  self.Enabled := Assigned(m_be);
+  m_org := be;
+
+  if Assigned(m_org) then
+    m_be := m_org.clone
+  else
+    m_be := NIL;
+
+  self.Enabled  := Assigned(m_be);
   updateBeView;
-  m_changed := false;
+  m_changed     := false;
 end;
 
 procedure TBeschlussFrame.updateBeView;

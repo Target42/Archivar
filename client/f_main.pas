@@ -688,6 +688,10 @@ begin
   ac_tb_edit.Enabled      := flag;
   ac_tb_löschen.Enabled   := flag;
 
+  ac_view_task.Visible    := flag;
+  ac_view_admin.Visible   := flag;
+
+
   PageControl1.Visible    := flag;
   PageControl2.Visible    := flag;
   Splitter2.Visible       := flag;
@@ -738,6 +742,8 @@ begin
   m_noStatChange := false;
 
   loadLogo;
+
+  ApplicationSetMenu( false );
 end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
@@ -761,12 +767,27 @@ end;
 procedure TMainForm.loadLogo;
 var
   fname : string;
+
+  function getMd5 : string;
+  var
+    mem : TMemoryStream;
+  begin
+    mem := TMemoryStream.Create;
+    Image1.Picture.SaveToStream(mem);
+    mem.Position := 0;
+    Result := GM.md5(mem);
+    mem.Free;
+  end;
+
 begin
   fname := TPath.combine( GM.Images, 'logo.png');
   if FileExists( fname ) then begin
     Image1.Picture.LoadFromFile(fname);
+
     fname := TPath.Combine( ExtractFilePath(ParamStr(0)), 'logo.png');
-    Image1.Picture.SaveToFile(fname);
+
+    if not FileExists( fname) or (gm.md5(fname) <> getmd5 ) then
+      Image1.Picture.SaveToFile(fname);
   end else begin
     fname := TPath.Combine( ExtractFilePath(ParamStr(0)), 'logo.png');
     if FileExists( fname ) then

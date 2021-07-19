@@ -44,6 +44,7 @@ type
     procedure Einstimmig( zustimmung : boolean );
 
     procedure Release;
+    function clone : IAbstimmung;
   end;
 implementation
 
@@ -58,6 +59,22 @@ begin
   m_nein      := 0;
   m_enthalten := 0;
 
+end;
+
+function TAbstimmungImpl.clone: IAbstimmung;
+
+begin
+  Result := TAbstimmungImpl.create;
+  Result.Gremium.release;
+  Result.Abwesend.release;
+  Result.NichtAbgestimmt.release;
+
+  Result.Gremium          := m_gremium.clone;
+  Result.Abwesend         := m_abwesend.clone;
+  Result.NichtAbgestimmt  := m_na.clone;
+  Result.Zustimmung       := m_ja;
+  Result.Abgelehnt        := m_nein;
+  Result.Enthalten        := m_enthalten;
 end;
 
 constructor TAbstimmungImpl.create;
