@@ -6,19 +6,10 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_textblock,
   Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Buttons, fr_editForm, Vcl.Menus, i_beschluss,
-  Vcl.OleCtrls, SHDocVw;
+  Vcl.OleCtrls, SHDocVw, Vcl.ComCtrls;
 
 type
   TBeschlussFrame = class(TFrame)
-    GroupBox3: TGroupBox;
-    Button1: TBitBtn;
-    LabeledEdit1: TLabeledEdit;
-    LabeledEdit2: TLabeledEdit;
-    LabeledEdit3: TLabeledEdit;
-    Button2: TBitBtn;
-    LabeledEdit4: TLabeledEdit;
-    LabeledEdit5: TLabeledEdit;
-    LabeledEdit6: TLabeledEdit;
     GroupBox1: TGroupBox;
     GroupBox2: TGroupBox;
     Splitter1: TSplitter;
@@ -26,10 +17,27 @@ type
     EditFrame1: TEditFrame;
     PopupMenu1: TPopupMenu;
     extbausteine1: TMenuItem;
-    BitBtn1: TBitBtn;
     Splitter2: TSplitter;
     Groupbox4: TGroupBox;
     Memo1: TMemo;
+    Panel1: TPanel;
+    GroupBox5: TGroupBox;
+    LabeledEdit1: TLabeledEdit;
+    LabeledEdit3: TLabeledEdit;
+    LabeledEdit2: TLabeledEdit;
+    Button2: TBitBtn;
+    Button1: TBitBtn;
+    Label1: TLabel;
+    DateTimePicker1: TDateTimePicker;
+    GroupBox6: TGroupBox;
+    LabeledEdit4: TLabeledEdit;
+    LabeledEdit5: TLabeledEdit;
+    LabeledEdit6: TLabeledEdit;
+    BitBtn1: TBitBtn;
+    Panel2: TPanel;
+    BitBtn3: TBitBtn;
+    BitBtn2: TBitBtn;
+    SpeedButton1: TSpeedButton;
     procedure EditFrame1REDragDrop(Sender, Source: TObject; X, Y: Integer);
     procedure EditFrame1REDragOver(Sender, Source: TObject; X, Y: Integer;
       State: TDragState; var Accept: Boolean);
@@ -39,13 +47,16 @@ type
     procedure LabeledEdit1Exit(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
+    procedure BitBtn3Click(Sender: TObject);
+    procedure BitBtn2Click(Sender: TObject);
+    procedure SpeedButton1Click(Sender: TObject);
   private
     m_org         : IBeschluss;
     m_be          : IBeschluss;
     m_changed     : boolean;
     FSAveBeschluss: TBeschlusChange;
 
-    procedure save( be : IBeschluss );
+    procedure save;
     procedure updateBeView;
   public
     procedure init;
@@ -75,6 +86,23 @@ begin
   m_changed := true;
 
   updateBeView;
+end;
+
+procedure TBeschlussFrame.BitBtn2Click(Sender: TObject);
+begin
+  if not Assigned(m_org) or not Assigned(m_be) then
+    exit;
+
+  m_be.Release;
+  m_be := m_org.clone;
+
+  updateBeView;
+  m_changed     := false;
+end;
+
+procedure TBeschlussFrame.BitBtn3Click(Sender: TObject);
+begin
+  save;
 end;
 
 procedure TBeschlussFrame.Button1Click(Sender: TObject);
@@ -163,7 +191,7 @@ begin
   TextBlockFrame1.release;
 end;
 
-procedure TBeschlussFrame.save( be : IBeschluss );
+procedure TBeschlussFrame.save;
 
   function getValue( lab : TLabeledEdit; def : integer ) : integer;
   begin
@@ -175,17 +203,27 @@ procedure TBeschlussFrame.save( be : IBeschluss );
   end;
 
 begin
-  if not Assigned(be) then
+  if not Assigned(m_be) or not Assigned(m_org) then
     exit;
 
-  be.Abstimmung.Zustimmung  := getValue( LabeledEdit1, be.Abstimmung.Zustimmung );
-  be.Abstimmung.Abgelehnt   := getValue( LabeledEdit2, be.Abstimmung.Abgelehnt);
-  be.Abstimmung.Enthalten   := getValue( LabeledEdit3, be.Abstimmung.Enthalten);
-  be.Abstimmung.Zeitpunkt   := now;
-  be.Text                   := EditFrame1.Text;
+  m_org.Assign(m_be);
+  m_be.Release;
+
+  m_org.Abstimmung.Zustimmung  := getValue( LabeledEdit1, m_org.Abstimmung.Zustimmung );
+  m_org.Abstimmung.Abgelehnt   := getValue( LabeledEdit2, m_org.Abstimmung.Abgelehnt);
+  m_org.Abstimmung.Enthalten   := getValue( LabeledEdit3, m_org.Abstimmung.Enthalten);
+
+  if m_org.Abstimmung.Zeitpunkt = 0.0 then
+    m_org.Abstimmung.Zeitpunkt   := now;
+
+  m_org.Text                   := EditFrame1.Text;
 
   if Assigned(FSAveBeschluss) then
-    FSAveBeschluss(be);
+    FSAveBeschluss(m_org);
+
+  m_be := m_org.clone;
+
+  m_changed := false;
 end;
 
 procedure TBeschlussFrame.setBeschluss(be: IBeschluss);
@@ -193,9 +231,7 @@ begin
   if m_changed or EditFrame1.Modified then begin
     if (MessageDlg('Der Beschluss wurde geändert.'+#13+#10+
                    'Soll er gespeichert werden?', mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
-    m_org.Assign(m_be);
-    m_be.Release;
-    Save(m_org);
+    Save;
   end;
 
   if Assigned(m_be) then begin
@@ -213,6 +249,12 @@ begin
   self.Enabled  := Assigned(m_be);
   updateBeView;
   m_changed     := false;
+end;
+
+procedure TBeschlussFrame.SpeedButton1Click(Sender: TObject);
+begin
+  m_be.Abstimmung.Zeitpunkt := now;
+  DateTimePicker1.Time      := m_be.Abstimmung.Zeitpunkt;
 end;
 
 procedure TBeschlussFrame.updateBeView;
@@ -252,13 +294,8 @@ begin
 
     s := '';
     if m_be.Abstimmung.NichtAbgestimmt.count > 0 then begin
-//      s := s + '<b>Nicht mit abgestimmt:</b>';
       s := s + getList(m_be.Abstimmung.NichtAbgestimmt);
     end;
-{    if m_be.Abstimmung.Abwesend.count > 0 then begin
-      s := s + '<b>Abwesend:</b>';
-      s := s + getList(m_be.Abstimmung.Abwesend)+'<br>';
-    end;}
 
   end else begin
     EditFrame1.Text := '';

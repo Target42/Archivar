@@ -36,8 +36,6 @@
     TabOrder = 1
     object TabSheet1: TTabSheet
       Caption = 'Tagesordnung'
-      ExplicitWidth = 296
-      ExplicitHeight = 154
       object Splitter1: TSplitter
         Left = 249
         Top = 0
@@ -57,7 +55,6 @@
         Color = clBtnFace
         ParentColor = False
         TabOrder = 0
-        ExplicitHeight = 154
         inline ProtocolFrame1: TProtocolFrame
           Left = 2
           Top = 15
@@ -68,17 +65,17 @@
           ExplicitLeft = 2
           ExplicitTop = 15
           ExplicitWidth = 245
-          ExplicitHeight = 137
+          ExplicitHeight = 686
           inherited GroupBox1: TGroupBox
             Width = 245
             Height = 620
             ExplicitWidth = 245
-            ExplicitHeight = 71
+            ExplicitHeight = 620
             inherited TV: TTreeView
               Width = 241
               Height = 603
               ExplicitWidth = 241
-              ExplicitHeight = 54
+              ExplicitHeight = 603
             end
           end
           inherited PageControl2: TPageControl
@@ -106,7 +103,7 @@
           end
           inherited ImageList1: TImageList
             Bitmap = {
-              494C010106001001A00110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+              494C010106001001A40110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
               0000000000003600000028000000400000002000000001002000000000000020
               0000000000000000000000000000000000000000000000000000000000000000
               0000000000000000000000000000000000000000000000000000000000000000
@@ -388,8 +385,6 @@
         Caption = 'Panel2'
         ShowCaption = False
         TabOrder = 1
-        ExplicitWidth = 42
-        ExplicitHeight = 154
         object Splitter2: TSplitter
           Left = 1
           Top = 363
@@ -428,8 +423,6 @@
           Caption = 'Panel4'
           ShowCaption = False
           TabOrder = 1
-          ExplicitTop = -181
-          ExplicitWidth = 40
           object GroupBox3: TGroupBox
             Left = 0
             Top = 0
@@ -438,7 +431,6 @@
             Align = alClient
             Caption = 'Beschluss'
             TabOrder = 0
-            ExplicitWidth = 40
             inline BeschlussFrame1: TBeschlussFrame
               Left = 2
               Top = 15
@@ -448,48 +440,42 @@
               TabOrder = 0
               ExplicitLeft = 2
               ExplicitTop = 15
-              ExplicitWidth = 36
+              ExplicitWidth = 801
               ExplicitHeight = 317
               inherited Splitter1: TSplitter
                 Left = 544
-                Height = 234
+                Height = 217
                 ExplicitLeft = 484
                 ExplicitHeight = 170
               end
-              inherited GroupBox3: TGroupBox
-                Top = 234
-                Width = 801
-                ExplicitTop = 234
-                ExplicitWidth = 801
-              end
               inherited GroupBox1: TGroupBox
                 Width = 544
-                Height = 234
+                Height = 217
                 ExplicitWidth = 544
-                ExplicitHeight = 234
+                ExplicitHeight = 217
                 inherited Splitter2: TSplitter
-                  Top = 150
+                  Top = 133
                   Width = 540
                   ExplicitTop = 150
                   ExplicitWidth = 540
                 end
                 inherited EditFrame1: TEditFrame
                   Width = 540
-                  Height = 135
+                  Height = 118
                   ExplicitWidth = 540
-                  ExplicitHeight = 135
+                  ExplicitHeight = 118
                   inherited RE: TRichEdit
                     Width = 540
-                    Height = 135
+                    Height = 118
                     PopupMenu = BeschlussFrame1.PopupMenu1
                     ExplicitWidth = 540
-                    ExplicitHeight = 135
+                    ExplicitHeight = 118
                   end
                 end
                 inherited Groupbox4: TGroupBox
-                  Top = 153
+                  Top = 136
                   Width = 540
-                  ExplicitTop = 153
+                  ExplicitTop = 136
                   ExplicitWidth = 540
                   inherited Memo1: TMemo
                     Width = 536
@@ -499,23 +485,62 @@
               end
               inherited GroupBox2: TGroupBox
                 Left = 547
-                Height = 234
+                Height = 217
                 ExplicitLeft = 547
-                ExplicitHeight = 234
+                ExplicitHeight = 217
                 inherited TextBlockFrame1: TTextBlockFrame
-                  Height = 217
-                  ExplicitHeight = 217
+                  Height = 200
+                  ExplicitHeight = 200
                   inherited Panel1: TPanel
-                    Top = 161
-                    ExplicitTop = 161
+                    Top = 144
+                    ExplicitTop = 144
                     inherited LabeledEdit1: TLabeledEdit
                       Width = 235
                       ExplicitWidth = 235
                     end
                   end
                   inherited LV: TListView
-                    Height = 161
-                    ExplicitHeight = 161
+                    Height = 144
+                    ExplicitHeight = 144
+                  end
+                end
+              end
+              inherited Panel1: TPanel
+                Top = 217
+                Width = 801
+                ExplicitTop = 217
+                ExplicitWidth = 801
+                inherited GroupBox5: TGroupBox
+                  ExplicitLeft = 0
+                  ExplicitTop = 0
+                  inherited LabeledEdit3: TLabeledEdit
+                    EditLabel.ExplicitLeft = 0
+                    EditLabel.ExplicitTop = -16
+                    EditLabel.ExplicitWidth = 61
+                  end
+                  inherited LabeledEdit2: TLabeledEdit
+                    EditLabel.ExplicitLeft = 0
+                    EditLabel.ExplicitTop = -16
+                    EditLabel.ExplicitWidth = 61
+                  end
+                end
+                inherited GroupBox6: TGroupBox
+                  ExplicitLeft = 530
+                  ExplicitHeight = 100
+                  inherited LabeledEdit4: TLabeledEdit
+                    EditLabel.ExplicitLeft = 0
+                    EditLabel.ExplicitTop = -16
+                    EditLabel.ExplicitWidth = 61
+                  end
+                  inherited LabeledEdit5: TLabeledEdit
+                    EditLabel.ExplicitLeft = 0
+                    EditLabel.ExplicitTop = -16
+                    EditLabel.ExplicitWidth = 61
+                  end
+                  inherited LabeledEdit6: TLabeledEdit
+                    EditLabel.ExplicitLeft = 0
+                    EditLabel.ExplicitTop = -16
+                    EditLabel.ExplicitWidth = 61
                   end
                 end
               end
@@ -598,10 +623,6 @@
     object TabSheet3: TTabSheet
       Caption = 'Sitzungsleitung'
       ImageIndex = 2
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object PageControl2: TPageControl
         Left = 0
         Top = 0
