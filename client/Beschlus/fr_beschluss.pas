@@ -157,6 +157,8 @@ end;
 procedure TBeschlussFrame.init;
 begin
   FSAveBeschluss := NIL;
+  m_org := NIL;
+  m_be  := NIL;
 
   TextBlockFrame1.init();
   setBeschluss(NIL);
@@ -186,7 +188,9 @@ procedure TBeschlussFrame.release;
 begin
   if Assigned(m_be) then
     m_be.release;
-  m_be := NIL;
+
+  m_be  := NIL;
+  m_org := NIL;
 
   TextBlockFrame1.release;
 end;
@@ -296,7 +300,6 @@ begin
     if m_be.Abstimmung.NichtAbgestimmt.count > 0 then begin
       s := s + getList(m_be.Abstimmung.NichtAbgestimmt);
     end;
-
   end else begin
     EditFrame1.Text := '';
     LabeledEdit1.Text := '';

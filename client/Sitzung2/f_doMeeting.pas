@@ -17,7 +17,6 @@ type
     TabSheet2: TTabSheet;
     TabSheet3: TTabSheet;
     PageControl2: TPageControl;
-    TabSheet4: TTabSheet;
     TabSheet5: TTabSheet;
     TabSheet6: TTabSheet;
     Splitter1: TSplitter;
@@ -69,6 +68,8 @@ type
 
     procedure doVote( value : integer );
     procedure saveBeschlus( be : IBeschluss);
+
+    procedure QuerySave;
   public
     property ELID: integer read GetMeetingID write SetMeetingID;
 
@@ -178,6 +179,8 @@ begin
           JString(arg, 'dept')]);
 
       if (MessageDlg(name, mtConfirmation, [mbYes, mbNo], 0) = mrYes) then begin
+        m_proto.save;
+
         ProtocolFrame1.ReadOnly := true;
         Req := TJSONObject.Create;
 
@@ -215,6 +218,8 @@ var
   req : TJSONObject;
 begin
   Action := caFree;
+
+  QuerySave;
 
   req := TJSONObject.Create;
   JReplace( req, 'id', m_meid);
@@ -278,6 +283,15 @@ begin
 
 end;
 
+procedure TDoMeetingform.QuerySave;
+begin
+  if m_proto.Modified then begin
+    if (MessageDlg('Sollen die Änderungen gespeichert werden?', mtConfirmation, [mbYes, mbNo], 0) = mrYes) then begin
+      m_proto.save;
+    end;
+  end;
+end;
+
 procedure TDoMeetingform.reload;
 begin
   if Assigned(m_proto) then
@@ -314,8 +328,9 @@ begin
 
   if ELTab.Locate('EL_ID', VarArrayOf([m_meid]), []) then begin
     m_prid := ELTab.FieldByName('PR_ID').AsInteger;
-  end else
-    ELTab.Close;
+  end;
+
+  ELTab.Close;
 
   MeetingTNFrame1.ELID := m_meid;
 

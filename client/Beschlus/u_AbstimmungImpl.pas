@@ -36,6 +36,7 @@ type
     function  GetModified: boolean;
     procedure SetModified(const Value: boolean);
 
+
   public
     constructor create;
     Destructor Destroy; override;
@@ -144,10 +145,15 @@ procedure TAbstimmungImpl.Release;
 begin
   if Assigned(m_gremium) then
     m_gremium.release;
+  m_gremium := NIL;
+
   if Assigned(m_abwesend) then
     m_abwesend.release;
+  m_abwesend := NIL;
+
   if Assigned(m_na) then
     m_na.release;
+  m_na := NIL;
 end;
 
 procedure TAbstimmungImpl.setAbgelehnt(value: integer);

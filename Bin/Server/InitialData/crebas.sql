@@ -1,7 +1,7 @@
 /* ============================================================ */
 /*   Database name:  MODEL_2                                    */
 /*   DBMS name:      InterBase                                  */
-/*   Created on:     07.06.2021  15:56                          */
+/*   Created on:     22.07.2021  10:53                          */
 /* ============================================================ */
 
 create generator gen_be_id;
@@ -13,6 +13,7 @@ create generator gen_fi_id;
 create generator gen_fd_id;
 create generator gen_gr_id;
 create generator gen_hc_id;
+create generator gen_ln_id;
 create generator gen_ma_id;
 create generator gen_pi_id;
 create generator gen_pe_id;
@@ -138,6 +139,26 @@ create table EP_EPUB
     EP_DATA                         BLOB                           ,
     constraint PK_EP_EPUB primary key (EP_ID)
 );
+
+/* ============================================================ */
+/*   Table: LN_LINK                                             */
+/* ============================================================ */
+create table LN_LINK
+(
+    LN_ID                           INTEGER                not null,
+    LN_SHORT                        VARCHAR(200)                   ,
+    LN_DEST                         BLOB                           ,
+    LN_INTERVAL                     INTEGER                        ,
+    LN_CREATED                      DATE                           ,
+    LN_USER                         VARCHAR(200)                   ,
+    LN_TAGS                         VARCHAR(256)                   ,
+    constraint PK_LN_LINK primary key (LN_ID)
+);
+
+/* ============================================================ */
+/*   Index: LN_LINK_SEC                                         */
+/* ============================================================ */
+create ASC index LN_LINK_SEC on LN_LINK (LN_SHORT);
 
 /* ============================================================ */
 /*   Table: PE_PERSON                                           */

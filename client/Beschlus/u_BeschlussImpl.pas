@@ -59,6 +59,8 @@ type
 
       function clone : IBeschluss;
       procedure Assign( org : IBeschluss );
+
+      procedure calcStatus;
   end;
 
 implementation
@@ -112,17 +114,26 @@ procedure TBeschlussImpl.Assign(org: IBeschluss);
 var
   src : TBeschlussImpl;
 begin
+  if not (org is TBeschlussImpl) then
+    exit;
+
   src := org as TBeschlussImpl;
 
   m_status    := src.m_status;
   m_id        := src.m_id;
   m_ctid      := src.m_ctid;
   m_xList     := src.m_xList;
+
   m_vote.Release;
   m_vote      := src.m_vote.clone;
   m_text      := src.m_text;
   m_readOnly  := src.m_readOnly;
   m_timeStamp := src.m_timeStamp;
+end;
+
+procedure TBeschlussImpl.calcStatus;
+begin
+
 end;
 
 function TBeschlussImpl.clone: IBeschluss;
@@ -140,6 +151,7 @@ begin
   dest.m_text       := m_text;
   dest. m_readOnly  := m_readOnly;
   dest.m_timeStamp  := m_timeStamp;
+
 
   Result            := dest;
 end;
@@ -328,6 +340,7 @@ procedure TBeschlussImpl.Release;
 begin
   m_owner := NIL;
   m_vote.Release;
+  m_vote := NIL;
 end;
 
 procedure TBeschlussImpl.save(data: TDataSet);

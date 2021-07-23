@@ -89,6 +89,8 @@ type
 
     function clone : IBeschluss;
     procedure Assign( org : IBeschluss );
+
+    procedure calcStatus;
   end;
 
   IAbstimmung = interface
@@ -130,6 +132,7 @@ type
     procedure Release;
 
     function clone : IAbstimmung;
+
   end;
 
 function BeschlussStatusToStr( bs :TBeschlussStatus ) : string;

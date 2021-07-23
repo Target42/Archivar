@@ -155,7 +155,7 @@ begin
     exit;
 
   en := TEntry(TV.Selected.Data);
-  if not(en.Typ in [etTask, etTitle]) then
+  if not(en.Typ in [etTask, etChapterText]) then
     exit;
 
   cp := IChapter(en.Ptr);
