@@ -117,6 +117,7 @@
         <DelphiCompile Include="$(MainSource)">
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
+        <DCCReference Include="Events\u_eventHandler.pas"/>
         <DCCReference Include="f_main.pas">
             <Form>MainForm</Form>
         </DCCReference>
@@ -130,7 +131,6 @@
         </DCCReference>
         <DCCReference Include="..\misc\fr_base.pas">
             <Form>BaseFrame</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="u_misc.pas"/>
@@ -151,12 +151,10 @@
         </DCCReference>
         <DCCReference Include="File\fr_file.pas">
             <Form>FileFrame</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="Task\fr_task_head.pas">
             <Form>TaskHeaderFrame</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="Task\f_taskEdit.pas">
@@ -164,13 +162,11 @@
         </DCCReference>
         <DCCReference Include="misc\fr_gremiumTree.pas">
             <Form>GremiumTreeFrame</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="Gremium\u_gremium.pas"/>
         <DCCReference Include="Task\fr_taskList.pas">
             <Form>TaskListFrame</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="misc\m_WindowHandler.pas">
@@ -179,7 +175,6 @@
         </DCCReference>
         <DCCReference Include="misc\fr_editForm.pas">
             <Form>EditFrame</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="..\misc\u_json.pas"/>
@@ -195,69 +190,55 @@
         <DCCReference Include="..\misc\u_lockInfo.pas"/>
         <DCCReference Include="Beschlus\f_bechlus.pas">
             <Form>Beschlusform</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Protokoll\f_protokoll.pas">
             <Form>ProtokollForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Protokoll\f_protokoll_list.pas">
             <Form>ProtocollListForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="bookmarks\u_bookmarkList.pas"/>
         <DCCReference Include="bookmarks\u_bookmark.pas"/>
         <DCCReference Include="bookmarks\m_BookMarkHandler.pas">
             <Form>BookMarkHandler</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
         <DCCReference Include="images\f_images.pas">
             <Form>ImagesForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="bookmarks\fr_bookmark.pas">
             <Form>BookmarkFrame</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="..\misc\u_berTypes.pas"/>
         <DCCReference Include="Task\f_taksListForm.pas">
             <Form>TaskListForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\misc\xsd_protocol.pas"/>
         <DCCReference Include="Protokoll\f_titel_edit.pas">
             <Form>TitelEditform</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Protokoll\fr_chapter.pas">
             <Form>ChapterFrame</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="..\misc\xsd_chapter.pas"/>
         <DCCReference Include="Protokoll\f_chapterEdit.pas">
             <Form>ChapterEditForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Task\fr_taskList2.pas">
             <Form>TaskList2Frame</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="Task\u_taskEntry.pas"/>
         <DCCReference Include="Protokoll\f_chapter_content.pas">
             <Form>ChapterContentForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Datafields\f_datafields.pas">
             <Form>DataFieldForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Datafields\f_datafield_edit.pas">
             <Form>DatafieldEditform</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Datafields\i_datafields.pas"/>
         <DCCReference Include="Datafields\u_PropertyImpl.pas"/>
@@ -265,20 +246,17 @@
         <DCCReference Include="Datafields\u_DataFieldLislImpl.pas"/>
         <DCCReference Include="TaskEditor\Forms\f_taskEditor.pas">
             <Form>TaksEditorForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="TaskEditor\i_taskEdit.pas"/>
         <DCCReference Include="TaskEditor\u_TaskImpl.pas"/>
         <DCCReference Include="TaskEditor\Forms\f_tableField_editor.pas">
             <Form>TableFieldEditorForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Datafields\u_DataField2XML.pas"/>
         <DCCReference Include="TaskEditor\Writer\u_TaskDataField2XML.pas"/>
         <DCCReference Include="TaskEditor\Writer\u_Task2XML.pas"/>
         <DCCReference Include="TaskEditor\Forms\fr_Formeditor.pas">
             <Form>EditorFrame</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="TaskEditor\u_TaskFormImpl.pas"/>
@@ -286,7 +264,6 @@
         <DCCReference Include="TaskEditor\u_TaskCtrlPropImpl.pas"/>
         <DCCReference Include="TaskEditor\Forms\fr_propertyEditor.pas">
             <Form>PropertyFrame</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="..\misc\xsd_Task.pas"/>
@@ -300,31 +277,25 @@
         <DCCReference Include="misc\u_typeHelper.pas"/>
         <DCCReference Include="TaskEditor\PropEdits\f_itemsEditor.pas">
             <Form>ItemsEditorForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="TaskEditor\Forms\f_tableColumns.pas">
             <Form>TableColumnsForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="TaskEditor\Forms\f_table_Column.pas">
             <Form>TableCloumnForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="TaskEditor\controls\u_TaskCtrlTableField.pas"/>
         <DCCReference Include="TaskEditor\Writer\u_taskForm2XML.pas"/>
         <DCCReference Include="TaskEditor\Forms\f_testform.pas">
             <Form>TestForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\misc\u_helper.pas"/>
         <DCCReference Include="TaskEditor\Forms\fr_report.pas">
             <Form>ReportFrame</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="TaskEditor\Forms\f_form_props.pas">
             <Form>FormProperties</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="TaskEditor\controls\u_TaskCtrlPanel.pas"/>
         <DCCReference Include="TaskEditor\controls\u_TaskCtrlMemo.pas"/>
@@ -332,16 +303,13 @@
         <DCCReference Include="TaskEditor\controls\u_TaskCtrlSpliter.pas"/>
         <DCCReference Include="TaskEditor\PropEdits\f_itemsTStringsEditor.pas">
             <Form>StringEditorForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="http\m_http.pas">
             <Form>HttpMod</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
         <DCCReference Include="http\m_html.pas">
             <Form>HtmlMod</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
         <DCCReference Include="TaskEditor\u_TTaskFileImpl.pas"/>
@@ -351,37 +319,29 @@
         <DCCReference Include="TaskEditor\u_TTaskFilesImpl.pas"/>
         <DCCReference Include="misc\f_InputBox.pas">
             <Form>InputBoxForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="misc\f_selectList.pas">
             <Form>SelectListform</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="dws\m_dws.pas">
             <Form>DwsMod</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
         <DCCReference Include="misc\u_zipHelper.pas"/>
         <DCCReference Include="Templates\f_template_new.pas">
             <Form>TemplateNewForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Templates\f_select_templateForm.pas">
             <Form>SelectTemplateForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="TaskEditor\f_task_datafields.pas">
             <Form>TaskDatafieldsForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Datafields\Editor\f_df_EnumList.pas">
             <Form>DFEnumListForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Datafields\Editor\f_df_listbox.pas">
             <Form>ListBoxForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Personen\i_personen.pas"/>
         <DCCReference Include="Personen\u_PersonImpl.pas"/>
@@ -392,42 +352,34 @@
         <DCCReference Include="..\misc\xsd_DataField.pas"/>
         <DCCReference Include="misc\f_set.pas">
             <Form>MySettingsForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="TextBlock\f_textblock_edit.pas">
             <Form>TextBlockEditForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\misc\xsd_TextBlock.pas"/>
         <DCCReference Include="TaskEditor\fr_form.pas">
             <Form>FormFrame</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="Protokoll\f_chapterTask.pas">
             <Form>ChapterTaskForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\misc\xsd_Styles.pas"/>
         <DCCReference Include="..\misc\xsd_TaskData.pas"/>
         <DCCReference Include="TaskEditor\Forms\fr_ReportEditor.pas">
             <Form>ReportFrameEditor</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="TaskEditor\Forms\fr_ReportEditor_html.pas">
             <Form>ReportFrameEditorHtml</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="TaskEditor\Forms\fr_ReportEditor_pas.pas">
             <Form>ReportFrameEditorPas</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="TaskEditor\Forms\fr_ReportEditor_img.pas">
             <Form>ReportFrameEditorImg</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="Protokoll\i_chapter.pas"/>
@@ -439,157 +391,125 @@
         <DCCReference Include="misc\u_speedbutton.pas"/>
         <DCCReference Include="TextBlock\fr_textblock.pas">
             <Form>TextBlockFrame</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="TextBlock\f_testblock_list.pas">
             <Form>TestBlockListForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="TextBlock\f_textblock_param.pas">
             <Form>TextBlockParameterForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Task\m_taskLoader.pas">
             <Form>TaskLoaderMod</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
         <DCCReference Include="File\m_cache.pas">
             <Form>CacheMod</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
         <DCCReference Include="http\f_webserver_files.pas">
             <Form>WebServerFilesForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="http\f_web_file.pas">
             <Form>WebFileForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Beschlus\u_BeschlussListeImpl.pas"/>
         <DCCReference Include="Protokoll\m_protocol.pas">
             <Form>ProtocolMod</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
         <DCCReference Include="Protokoll\u_teilnehmerImpl.pas"/>
         <DCCReference Include="Protokoll\u_TTeilnehmerListeImpl.pas"/>
         <DCCReference Include="Protokoll\f_abwesenheit.pas">
             <Form>AbwesenForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Protokoll\u_BesucherImpl.pas"/>
         <DCCReference Include="Protokoll\u_BesucherlisteImpl.pas"/>
         <DCCReference Include="Protokoll\f_besucher.pas">
             <Form>BesucherForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\misc\xsd_beschlus.pas"/>
         <DCCReference Include="Task\u_templateCache.pas">
             <Form>TemplateCacheMod</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
         <DCCReference Include="Protokoll\u_renderer.pas"/>
         <DCCReference Include="Protokoll\f_protokoll_view.pas">
             <Form>ProtokollViewForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Protokoll\u_protocoll2XML.pas"/>
         <DCCReference Include="http\f_web_editor.pas">
             <Form>WebEditorForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="ePub\u_ePub.pas"/>
         <DCCReference Include="ePub\u_navpoint.pas"/>
         <DCCReference Include="ePub\u_xml.pas"/>
         <DCCReference Include="ePub\f_epub.pas">
             <Form>epubform</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="ePub\f_epub_mngr.pas">
             <Form>epubMngrForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="ePub\fr_epub.pas">
             <Form>ePupFrame</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="ePub\f_downloadEpub.pas">
             <Form>DownloadEpubform</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Sitzung\f_meeting_new.pas">
             <Form>MeetingForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Task\f_task_filter.pas">
             <Form>TaskFilterForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Sitzung\fr_to.pas">
             <Form>TOFrame</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="Sitzung\f_meeting_select.pas">
             <Form>SelectMeetingForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Gremium\fr_gremium.pas">
             <Form>GremiumFrame</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="Sitzung\f_meeting_proto.pas">
             <Form>MeetingProtoForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="misc\f_login.pas">
             <Form>LoginForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Sitzung\fr_meeting.pas">
             <Form>MeetingFrame</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="..\misc\u_teilnehmer.pas"/>
         <DCCReference Include="Protokoll\f_protocol_sec.pas">
             <Form>ProtocolSectionForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Task\u_kategorie.pas"/>
         <DCCReference Include="misc\u_onlineUser.pas"/>
         <DCCReference Include="Sitzung\f_meeting_person.pas">
             <Form>MeetingPersonForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Sitzung2\f_doMeeting.pas">
             <Form>DoMeetingform</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Sitzung\fr_teilnehmer.pas">
             <Form>TNFrame</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="Protokoll\fr_protocol.pas">
             <Form>ProtocolFrame</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="Sitzung2\fr_MeetingTN.pas">
             <Form>MeetingTNFrame</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="Beschlus\fr_beschluss.pas">
             <Form>BeschlussFrame</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <None Include="Datafields\ERA-NS.txt"/>

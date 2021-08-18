@@ -31,7 +31,7 @@
     Top = 0
     Width = 1190
     Height = 788
-    ActivePage = TabSheet1
+    ActivePage = TabSheet3
     Align = alClient
     TabOrder = 1
     object TabSheet1: TTabSheet
@@ -84,7 +84,10 @@
             ExplicitTop = 677
             ExplicitWidth = 245
             inherited TabSheet4: TTabSheet
-              ExplicitWidth = 237
+              ExplicitLeft = 4
+              ExplicitTop = 24
+              ExplicitWidth = 443
+              ExplicitHeight = 38
             end
             inherited TabSheet5: TTabSheet
               ExplicitLeft = 4
@@ -100,7 +103,7 @@
           end
           inherited ImageList1: TImageList
             Bitmap = {
-              494C010106001001AC0110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+              494C010106001001C00110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
               0000000000003600000028000000400000002000000001002000000000000020
               0000000000000000000000000000000000000000000000000000000000000000
               0000000000000000000000000000000000000000000000000000000000000000
@@ -516,10 +519,6 @@
     object TabSheet2: TTabSheet
       Caption = 'Onlineabstimung'
       ImageIndex = 1
-      ExplicitLeft = 8
-      ExplicitTop = 22
-      ExplicitWidth = 1061
-      ExplicitHeight = 703
       object GroupBox2: TGroupBox
         Left = 0
         Top = 669
@@ -528,8 +527,6 @@
         Align = alBottom
         Caption = 'Abstimmung'
         TabOrder = 0
-        ExplicitTop = 612
-        ExplicitWidth = 1061
         object BitBtn2: TBitBtn
           Left = 24
           Top = 40
@@ -612,21 +609,21 @@
             ExplicitHeight = 683
             inherited GroupBox1: TGroupBox
               Height = 683
-              ExplicitHeight = 675
+              ExplicitHeight = 683
               inherited Anwesend: TListView
                 Height = 666
-                ExplicitHeight = 658
+                ExplicitHeight = 666
               end
             end
             inherited Panel1: TPanel
               Height = 683
-              ExplicitHeight = 675
+              ExplicitHeight = 683
             end
             inherited Panel2: TPanel
               Width = 837
               Height = 683
-              ExplicitWidth = 716
-              ExplicitHeight = 675
+              ExplicitWidth = 837
+              ExplicitHeight = 683
               inherited Splitter1: TSplitter
                 Top = 563
                 Width = 837
@@ -642,33 +639,33 @@
               inherited GroupBox2: TGroupBox
                 Top = 566
                 Width = 837
-                ExplicitTop = 558
-                ExplicitWidth = 716
+                ExplicitTop = 566
+                ExplicitWidth = 837
                 inherited Unentschuldigt: TListView
                   Width = 833
-                  ExplicitWidth = 712
+                  ExplicitWidth = 833
                 end
               end
               inherited GroupBox3: TGroupBox
                 Top = 458
                 Width = 837
-                ExplicitTop = 450
-                ExplicitWidth = 716
+                ExplicitTop = 458
+                ExplicitWidth = 837
                 inherited Entschuldigt: TListView
                   Width = 833
-                  ExplicitWidth = 712
+                  ExplicitWidth = 833
                 end
               end
               inherited GroupBox4: TGroupBox
                 Width = 837
                 Height = 455
-                ExplicitWidth = 716
-                ExplicitHeight = 447
+                ExplicitWidth = 837
+                ExplicitHeight = 455
                 inherited Gremium: TListView
                   Width = 833
                   Height = 438
-                  ExplicitWidth = 712
-                  ExplicitHeight = 430
+                  ExplicitWidth = 833
+                  ExplicitHeight = 438
                 end
               end
             end
@@ -693,7 +690,6 @@
               Caption = #220'bernehmen'
               TabOrder = 0
               OnClick = Button1Click
-              ExplicitLeft = 967
             end
             object Panel1: TPanel
               AlignWithMargins = True
@@ -716,17 +712,12 @@
               Caption = 'Abgeben'
               TabOrder = 2
               OnClick = BitBtn1Click
-              ExplicitLeft = 886
             end
           end
         end
         object TabSheet6: TTabSheet
           Caption = 'G'#228'ste'
           ImageIndex = 2
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 1053
-          ExplicitHeight = 675
         end
       end
     end

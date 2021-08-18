@@ -25,6 +25,8 @@ type
        m_map  : TDictionary<integer, pREntry>;
 
        function getCount : integer;
+       function handle_onlineUser( const arg : TJSONObject ): boolean;
+       function handle_stateChange( const arg : TJSONObject ): boolean;
     public
 
       constructor create;
@@ -51,7 +53,7 @@ function getOnlineGroupID( text : string ) : integer;
 implementation
 
 uses
-  u_json, System.SysUtils;
+  u_json, System.SysUtils, u_eventHandler;
 
 var
   OnlineGrps : array[0..3] of string;
@@ -115,10 +117,16 @@ begin
   inherited;
   m_evt := NIL;
   m_map := TDictionary<integer, pREntry>.create;
+
+  EventHandler.Register( self, handle_onlineUser,   'onlineuser' );
+  EventHandler.Register( self, handle_stateChange,  'userchangestate' );
 end;
 
 destructor TOnlineUser.Destroy;
 begin
+  if Assigned(EventHandler) then
+    EventHandler.Unregister(self);
+
   m_evt := NIL;
   m_map.free;
   inherited;
@@ -156,6 +164,18 @@ end;
 function TOnlineUser.getCount: integer;
 begin
   Result := Length(m_data);
+end;
+
+function TOnlineUser.handle_onlineUser(const arg: TJSONObject): boolean;
+begin
+  updateData(arg);
+  Result := true;
+end;
+
+function TOnlineUser.handle_stateChange(const arg: TJSONObject): boolean;
+begin
+  changeState(arg);
+  Result := true;
 end;
 
 procedure TOnlineUser.updateData(obj: TJSONObject);

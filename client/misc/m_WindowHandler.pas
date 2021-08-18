@@ -31,8 +31,6 @@ type
 
     procedure openMeetingView( id : integer );
     procedure closeMeetingView( id : integer );
-
-
   end;
 
 var
@@ -41,7 +39,7 @@ var
 implementation
 
 uses
-  Vcl.Dialogs;
+  Vcl.Dialogs, u_json, m_glob_client;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 

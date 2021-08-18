@@ -5,6 +5,7 @@ program Archivar;
 uses
   Vcl.Forms,
   JclAppInst,
+  u_eventHandler in 'Events\u_eventHandler.pas',
   f_main in 'f_main.pas' {MainForm},
   m_glob_client in 'm_glob_client.pas' {GM: TDataModule},
   u_stub in 'u_stub.pas',
@@ -177,6 +178,7 @@ uses
   fr_protocol in 'Protokoll\fr_protocol.pas' {ProtocolFrame: TFrame},
   fr_MeetingTN in 'Sitzung2\fr_MeetingTN.pas' {MeetingTNFrame: TFrame},
   fr_beschluss in 'Beschlus\fr_beschluss.pas' {BeschlussFrame: TFrame};
+
 
 {$R *.res}
 

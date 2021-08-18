@@ -34,6 +34,8 @@ type
     function requestLead( obj : TJSONObject ) : TJSONObject;
     function changeLead( obj : TJSONObject ) : TJSONObject;
 
+    procedure updateDocument( obj : TJSONObject );
+
   end;
 
 implementation
@@ -44,9 +46,6 @@ uses
 {%CLASSGROUP 'System.Classes.TPersistent'}
 
 {$R *.dfm}
-
-{ TdsSitzung }
-
 
 { TdsSitzung }
 
@@ -106,6 +105,15 @@ end;
 function TdsSitzung.startVote(obj: TJSONobject): TJSONObject;
 begin
   Result := NIL;
+end;
+
+procedure TdsSitzung.updateDocument(obj: TJSONObject);
+var
+  msg : TJSONObject;
+begin
+  msg := obj.Clone as TJSONObject;
+
+  ServerContainer1.BroadcastMessage('storage', msg);
 end;
 
 function TdsSitzung.Vote(obj: TJSONobject): TJSONObject;

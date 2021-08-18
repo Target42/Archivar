@@ -1,6 +1,6 @@
 //
 // Erzeugt vom DataSnap-Proxy-Generator.
-// 08.07.2021 13:47:03
+// 23.07.2021 20:12:14
 //
 
 unit u_stub;
@@ -250,6 +250,7 @@ type
     FendVoteCommand: TDBXCommand;
     FrequestLeadCommand: TDBXCommand;
     FchangeLeadCommand: TDBXCommand;
+    FupdateDocumentCommand: TDBXCommand;
   public
     constructor Create(ADBXConnection: TDBXConnection); overload;
     constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
@@ -262,6 +263,7 @@ type
     function endVote(obj: TJSONObject): TJSONObject;
     function requestLead(obj: TJSONObject): TJSONObject;
     function changeLead(obj: TJSONObject): TJSONObject;
+    procedure updateDocument(obj: TJSONObject);
   end;
 
   TdsUpdaterClient = class(TDSAdminClient)
@@ -1428,6 +1430,19 @@ begin
   Result := TJSONObject(FchangeLeadCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
 end;
 
+procedure TdsSitzungClient.updateDocument(obj: TJSONObject);
+begin
+  if FupdateDocumentCommand = nil then
+  begin
+    FupdateDocumentCommand := FDBXConnection.CreateCommand;
+    FupdateDocumentCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FupdateDocumentCommand.Text := 'TdsSitzung.updateDocument';
+    FupdateDocumentCommand.Prepare;
+  end;
+  FupdateDocumentCommand.Parameters[0].Value.SetJSONValue(obj, FInstanceOwner);
+  FupdateDocumentCommand.ExecuteUpdate;
+end;
+
 constructor TdsSitzungClient.Create(ADBXConnection: TDBXConnection);
 begin
   inherited Create(ADBXConnection);
@@ -1448,6 +1463,7 @@ begin
   FendVoteCommand.DisposeOf;
   FrequestLeadCommand.DisposeOf;
   FchangeLeadCommand.DisposeOf;
+  FupdateDocumentCommand.DisposeOf;
   inherited;
 end;
 

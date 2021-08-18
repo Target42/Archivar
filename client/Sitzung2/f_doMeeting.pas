@@ -70,10 +70,13 @@ type
     procedure saveBeschlus( be : IBeschluss);
 
     procedure QuerySave;
+
+    function handle_meeting(const arg : TJSONObject ) : boolean;
+    function handle_requestLead(const arg : TJSONObject ) : boolean;
+    function handle_changeLead(const arg : TJSONObject ) : boolean;
+    function handle_docUpdate(const arg : TJSONObject ) : boolean;
   public
     property ELID: integer read GetMeetingID write SetMeetingID;
-
-    procedure exec( arg : TJSONObject );
   end;
 
 var
@@ -82,7 +85,7 @@ var
 implementation
 
 uses
-  m_glob_client, u_ProtocolImpl, u_json, system.UITypes;
+  m_glob_client, u_ProtocolImpl, u_json, system.UITypes, u_eventHandler;
 
 {$R *.dfm}
 
@@ -135,11 +138,10 @@ begin
 
   req := TJSONObject.Create;
 
-  JReplace( req, 'id',  m_meid);
+  JReplace( req, 'id',    m_meid);
   JReplace( req, 'peid',  GM.UserID);
 
   m_hell.requestLead( req);
-
 end;
 
 procedure TDoMeetingform.doVote(value: integer);
@@ -151,66 +153,6 @@ begin
 
   res := m_hell.Vote(req);
   ShowResult( res );
-end;
-
-procedure TDoMeetingform.exec(arg: TJSONObject);
-var
-  cmd   : string;
-  lead  : integer;
-  req   : TJSONObject;
-  name  : string;
-begin
-  cmd := lowerCase(Jstring( arg, 'action'));
-  if cmd = 'meeting' then begin
-    TNQry.ParamByName('pr_id').AsInteger := m_prid;
-    TNQry.Open;
-    m_proto.Teilnehmer.loadFromSrc(TNQry);
-    TNQry.Close;
-
-    MeetingTNFrame1.Teilnehmer  := m_proto.Teilnehmer;
-
-  end else if cmd = 'requestlead' then begin
-    lead := JInt( arg, 'lead');
-    if lead = GM.UserID then begin
-      name := Format('%s %s (%s) möchte die Sitzungsleitung übernehmen.',
-        [
-          JString(arg, 'name'),
-          JString(arg, 'vorname'),
-          JString(arg, 'dept')]);
-
-      if (MessageDlg(name, mtConfirmation, [mbYes, mbNo], 0) = mrYes) then begin
-        m_proto.save;
-
-        ProtocolFrame1.ReadOnly := true;
-        Req := TJSONObject.Create;
-
-        JReplace( req, 'id',  m_meid);
-        JReplace( req, 'newid', JInt( arg, 'newid'));
-
-        m_hell.changeLead(req);
-      end;
-    end;
-  end else if cmd = 'changelead' then begin
-    lead := JInt( arg, 'lead');
-    m_lead := lead;
-    if lead = -1 then
-      Panel1.Caption := ''
-    else begin
-        name := Format('%s %s (%s)',
-        [
-          JString(arg, 'name'),
-          JString(arg, 'vorname'),
-          JString(arg, 'dept')]);
-        Panel1.Caption := name;
-    end;
-    TabSheet5.Enabled := m_lead = GM.UserID;
-    TabSheet6.Enabled := m_lead = GM.UserID;
-    BitBtn6.Visible   := m_lead = GM.UserID;
-    BitBtn7.Visible   := m_lead = GM.UserID;
-    m_proto.ReadOnly  := m_lead <> GM.UserID;
-
-    ProtocolFrame1.ReadOnly := m_lead <> GM.UserID;
-  end;
 end;
 
 procedure TDoMeetingform.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -246,11 +188,15 @@ begin
   MeetingTNFrame1.init;
 
   m_hell := TdsSitzungClient.Create(DSProviderConnection1.SQLConnection.DBXConnection);
-  MeetingTNFrame1.Client := m_hell;
+  MeetingTNFrame1.Client  := m_hell;
 
-  TabSheet5.Enabled := false;
-  TabSheet6.Enabled := false;
+  MeetingTNFrame1.Enabled := false;
+  TabSheet6.Enabled       := false;
 
+  EventHandler.Register( self, handle_meeting,      'meeting');
+  EventHandler.Register( self, handle_requestLead,  'requestlead');
+  EventHandler.Register( self, handle_changeLead,   'changelead' );
+  EventHandler.Register( self, handle_docUpdate,    'docupdate' );
 end;
 
 procedure TDoMeetingform.FormDestroy(Sender: TObject);
@@ -270,11 +216,104 @@ begin
 
   DoMeetingform := NIL;
   PostMessage( Application.MainFormHandle, msgMeetingEnd, 0, 0 );
+
+  if Assigned(EventHandler) then
+    EventHandler.Unregister(self)
+
 end;
 
 function TDoMeetingform.GetMeetingID: integer;
 begin
   Result := m_meid;
+end;
+
+function TDoMeetingform.handle_changeLead(const arg: TJSONObject): boolean;
+var
+  lead  : integer;
+  req   : TJSONObject;
+  name  : string;
+  id    : integer;
+begin
+  Result  := false;
+  id      := JInt( arg, 'id');
+  if id <> m_meid then
+    exit;
+
+  lead := JInt( arg, 'lead');
+  m_lead := lead;
+  if lead = -1 then
+    Panel1.Caption := ''
+  else begin
+      name := Format('%s %s (%s)',
+      [
+        JString(arg, 'name'),
+        JString(arg, 'vorname'),
+        JString(arg, 'dept')]);
+      Panel1.Caption := name;
+  end;
+  MeetingTNFrame1.Enabled := m_lead = GM.UserID;
+  TabSheet6.Enabled := m_lead = GM.UserID;
+  BitBtn6.Visible   := m_lead = GM.UserID;
+  BitBtn7.Visible   := m_lead = GM.UserID;
+  m_proto.ReadOnly  := m_lead <>GM.UserID;
+
+  ProtocolFrame1.ReadOnly := m_lead <> GM.UserID;
+
+  Result := true;
+end;
+
+function TDoMeetingform.handle_docUpdate(const arg: TJSONObject): boolean;
+begin
+  reload;
+
+  Result := true;
+end;
+
+function TDoMeetingform.handle_meeting(const arg: TJSONObject): boolean;
+begin
+  TNQry.ParamByName('pr_id').AsInteger := m_prid;
+  TNQry.Open;
+  m_proto.Teilnehmer.loadFromSrc(TNQry);
+  TNQry.Close;
+
+  MeetingTNFrame1.Teilnehmer  := m_proto.Teilnehmer;
+
+  Result := true;
+end;
+
+function TDoMeetingform.handle_requestLead(const arg: TJSONObject): boolean;
+var
+  lead  : integer;
+  req   : TJSONObject;
+  name  : string;
+  id    : Integer;
+begin
+  Result  := false;
+  id      := JInt( arg, 'id');
+  if id <> m_meid then
+    exit;
+
+  lead    := JInt( arg, 'lead');
+  if lead = GM.UserID then begin
+    name := Format('%s %s (%s) möchte die Sitzungsleitung übernehmen.',
+      [
+        JString(arg, 'name'),
+        JString(arg, 'vorname'),
+        JString(arg, 'dept')]);
+
+    if (MessageDlg(name, mtConfirmation, [mbYes, mbNo], 0) = mrYes) then begin
+      m_proto.save;
+
+      ProtocolFrame1.ReadOnly := true;
+      Req := TJSONObject.Create;
+
+      JReplace( req, 'id',  m_meid);
+      JReplace( req, 'newid', JInt( arg, 'newid'));
+
+      m_hell.changeLead(req);
+    end;
+  end;
+  Result := true;
 end;
 
 procedure TDoMeetingform.ProtocolFrame1ac_beschlussExecute(Sender: TObject);
@@ -311,11 +350,23 @@ begin
 end;
 
 procedure TDoMeetingform.saveBeschlus(be: IBeschluss);
+var
+  req : TJSONObject;
 begin
   if not Assigned(be) or not Assigned( be.Owner)  then
     exit;
 
   be.Owner.saveModified;
+
+  req := TJSONObject.Create;
+
+  JReplace( req, 'meeting', 'docupdate' );
+  JReplace( req, 'type',    'beschluss' );
+  JReplace( req, 'prid',    m_proto.ID);
+  JReplace( req, 'beid',    be.ID );
+  JReplace( req, 'sender',  GM.UserID );
+
+  m_hell.updateDocument( req );
 end;
 
 procedure TDoMeetingform.SetMeetingID(const Value: integer);

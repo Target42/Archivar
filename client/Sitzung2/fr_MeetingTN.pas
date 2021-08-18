@@ -173,7 +173,7 @@ begin
   end;
   GroupBox1.Caption := Format('Anwesend (%d)',        [Anwesend.Items.Count]);
   GroupBox2.Caption := Format('Unentschuldigt (%d)',  [Unentschuldigt.Items.Count]);
-  GroupBox3.Caption := Format('Anwesend (%d)',        [Entschuldigt.Items.Count]);
+  GroupBox3.Caption := Format('Entschuldigt (%d)',        [Entschuldigt.Items.Count]);
   GroupBox4.Caption := Format('Gremium (%d)',         [Gremium.Items.Count]);
 end;
 

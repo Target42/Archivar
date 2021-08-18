@@ -81,6 +81,11 @@ type
 
     function downloadimage( name : string;client : TdsImageClient) :  boolean;
     procedure CreateDirs;
+
+    function handle_taskmove( const Arg: TJSONObject ) : boolean;
+    function handle_taskdelete( const Arg: TJSONObject ) : boolean;
+    function handle_newmeeting( const Arg: TJSONObject ) : boolean;
+    function handle_updatemeeting( const Arg: TJSONObject ) : boolean;
   public
 
     function Connect : boolean;
@@ -148,7 +153,7 @@ uses
   System.UITypes, system.IOUtils, FireDAC.Stan.Storagebin,
   System.Win.ComObj, m_WindowHandler, m_BookMarkHandler, IdHashMessageDigest,
   Vcl.Graphics, u_PersonenListeImpl, u_PersonImpl, m_cache, f_login, u_kategorie,
-  u_onlineUser, m_http, f_doMeeting;
+  u_onlineUser, m_http, f_doMeeting, u_eventHandler;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -321,6 +326,11 @@ begin
   if ParamStr(1) <> '' then
     FUserName := ParamStr(1);
 {$endif}
+
+  EventHandler.Register( self, handle_taskmove,     'taskmove');
+  EventHandler.Register( self, handle_taskdelete,   'taskdelete');
+  EventHandler.Register( self, handle_newmeeting,   'newmeeting' );
+  EventHandler.Register( self, handle_updatemeeting,'updatemeeting' );
 end;
 
 procedure TGM.DataModuleDestroy(Sender: TObject);
@@ -335,6 +345,9 @@ begin
     m_misc.Free;
   m_misc := NIL;
   m_imageNames.Free;
+
+  if Assigned(EventHandler) then
+    EventHandler.Unregister(Self);
 end;
 
 procedure TGM.Disconnect;
@@ -384,15 +397,14 @@ begin
 end;
 
 procedure TGM.Execute(const Arg: TJSONObject);
-var
-  cmd : string;
-
+//var
+//  cmd : string;
 begin
-  cmd := lowerCase(Jstring( arg, 'action'));
+  EventHandler.execute(arg);
+{  cmd := lowerCase(Jstring( arg, 'action'));
   if cmd = 'taskmove' then
   begin
     WindowHandler.closeTaksWindowMsg( JInt(Arg, 'taid'), 'Die Aufgabe wurde verschoben!');
-
     PostMessage( Application.MainFormHandle, msgFilterTasks, 1, 0 );
   end
   else if cmd = 'taskdelete' then
@@ -400,15 +412,17 @@ begin
     WindowHandler.closeTaksWindowMsg( JInt(Arg, 'taid'), 'Die Aufgabe wurde gelöscht!');
     BookMarkHandler.Bookmarks.remove( JString( ARg, 'clid'));
 
-    PostMessage( Application.MainFormHandle, msgFilterTasks, 1, 0 );  end
-  else if cmd = 'newmeeting' then       PostMessage(Application.MainFormHandle, msgNewMeeting, 0, JInt(Arg, 'id'))
+    PostMessage( Application.MainFormHandle, msgFilterTasks, 1, 0 );
+  end
+  else if cmd = 'newmeeting' then           PostMessage(Application.MainFormHandle, msgNewMeeting, 0, JInt(Arg, 'id'))
   else if cmd = 'onlineuser' then           OnlineUser.updateData(arg)
   else if cmd = 'userchangestate' then      OnlineUser.changeState( arg )
   else if cmd = 'updatemeeting' then        PostMessage(Application.MainFormHandle, msgUpdateMeetings, 0, 0 )
-  else if (cmd= 'meeting') or ( cmd = 'requestlead') or ( cmd = 'changelead') then begin
+  else if (cmd= 'meeting') or ( cmd = 'requestlead') or ( cmd = 'changelead') or ( cmd = 'docupdate') then begin
     if Assigned( DoMeetingform ) then
       DoMeetingform.Exec( arg );
   end;
+  }
 end;
 
 procedure TGM.FillGremien(arr :TJSONArray );
@@ -527,6 +541,38 @@ begin
       break;
     end;
   end;
+end;
+
+function TGM.handle_newmeeting(const Arg: TJSONObject): boolean;
+begin
+  PostMessage(Application.MainFormHandle, msgNewMeeting, 0, JInt(Arg, 'id'));
+
+  Result := true;
+end;
+
+function TGM.handle_taskdelete(const Arg: TJSONObject): boolean;
+begin
+  WindowHandler.closeTaksWindowMsg( JInt(Arg, 'taid'), 'Die Aufgabe wurde gelöscht!');
+  BookMarkHandler.Bookmarks.remove( JString( ARg, 'clid'));
+
+  PostMessage( Application.MainFormHandle, msgFilterTasks, 1, 0 );
+
+  Result := true;
+end;
+
+function TGM.handle_taskmove(const Arg: TJSONObject): boolean;
+begin
+  WindowHandler.closeTaksWindowMsg( JInt(Arg, 'taid'), 'Die Aufgabe wurde verschoben!');
+  PostMessage( Application.MainFormHandle, msgFilterTasks, 1, 0 );
+
+  Result := true;
+end;
+
+function TGM.handle_updatemeeting(const Arg: TJSONObject): boolean;
+begin
+  PostMessage(Application.MainFormHandle, msgUpdateMeetings, 0, 0 );
+
+  Result := true;
 end;
 
 function TGM.isLocked(id, typ: integer; subid : integer): TJSONObject;

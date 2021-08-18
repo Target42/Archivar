@@ -1,14 +1,16 @@
 object BeschlussFrame: TBeschlussFrame
   Left = 0
   Top = 0
-  Width = 451
-  Height = 305
+  Width = 1017
+  Height = 348
   Align = alClient
   TabOrder = 0
+  ExplicitWidth = 451
+  ExplicitHeight = 305
   object Splitter1: TSplitter
-    Left = 194
+    Left = 760
     Top = 0
-    Height = 205
+    Height = 248
     Align = alRight
     Color = clYellow
     ParentColor = False
@@ -20,15 +22,17 @@ object BeschlussFrame: TBeschlussFrame
   object GroupBox1: TGroupBox
     Left = 0
     Top = 0
-    Width = 194
-    Height = 205
+    Width = 760
+    Height = 248
     Align = alClient
     Caption = 'Text'
     TabOrder = 0
+    ExplicitWidth = 194
+    ExplicitHeight = 205
     object Splitter2: TSplitter
       Left = 2
-      Top = 121
-      Width = 190
+      Top = 164
+      Width = 756
       Height = 3
       Cursor = crVSplit
       Align = alBottom
@@ -40,8 +44,8 @@ object BeschlussFrame: TBeschlussFrame
     inline EditFrame1: TEditFrame
       Left = 2
       Top = 15
-      Width = 190
-      Height = 106
+      Width = 756
+      Height = 149
       Align = alClient
       TabOrder = 0
       ExplicitLeft = 2
@@ -49,8 +53,8 @@ object BeschlussFrame: TBeschlussFrame
       ExplicitWidth = 190
       ExplicitHeight = 106
       inherited RE: TRichEdit
-        Width = 190
-        Height = 106
+        Width = 756
+        Height = 149
         PopupMenu = PopupMenu1
         OnDragDrop = EditFrame1REDragDrop
         OnDragOver = EditFrame1REDragOver
@@ -60,18 +64,20 @@ object BeschlussFrame: TBeschlussFrame
     end
     object Groupbox4: TGroupBox
       Left = 2
-      Top = 124
-      Width = 190
+      Top = 167
+      Width = 756
       Height = 79
       Align = alBottom
       Caption = 'Nicht mit Abgestimmt'
       TabOrder = 1
       TabStop = True
       Visible = False
+      ExplicitTop = 124
+      ExplicitWidth = 190
       object Memo1: TMemo
         Left = 2
         Top = 15
-        Width = 186
+        Width = 752
         Height = 62
         Align = alClient
         Lines.Strings = (
@@ -79,23 +85,26 @@ object BeschlussFrame: TBeschlussFrame
         ReadOnly = True
         ScrollBars = ssVertical
         TabOrder = 0
+        ExplicitWidth = 186
       end
     end
   end
   object GroupBox2: TGroupBox
-    Left = 197
+    Left = 763
     Top = 0
     Width = 254
-    Height = 205
+    Height = 248
     Align = alRight
     Caption = 'Textbausteine'
     TabOrder = 1
     Visible = False
+    ExplicitLeft = 197
+    ExplicitHeight = 205
     inline TextBlockFrame1: TTextBlockFrame
       Left = 2
       Top = 15
       Width = 250
-      Height = 188
+      Height = 231
       Align = alClient
       TabOrder = 0
       ExplicitLeft = 2
@@ -103,7 +112,7 @@ object BeschlussFrame: TBeschlussFrame
       ExplicitWidth = 250
       ExplicitHeight = 188
       inherited Panel1: TPanel
-        Top = 132
+        Top = 175
         Width = 250
         ExplicitTop = 132
         ExplicitWidth = 250
@@ -117,7 +126,7 @@ object BeschlussFrame: TBeschlussFrame
       end
       inherited LV: TListView
         Width = 250
-        Height = 132
+        Height = 175
         ExplicitWidth = 250
         ExplicitHeight = 132
       end
@@ -125,14 +134,16 @@ object BeschlussFrame: TBeschlussFrame
   end
   object Panel1: TPanel
     Left = 0
-    Top = 205
-    Width = 451
+    Top = 248
+    Width = 1017
     Height = 100
     Align = alBottom
     BevelOuter = bvNone
     Caption = 'Panel1'
     ShowCaption = False
     TabOrder = 2
+    ExplicitTop = 205
+    ExplicitWidth = 451
     object GroupBox5: TGroupBox
       Left = 0
       Top = 0
@@ -512,7 +523,7 @@ object BeschlussFrame: TBeschlussFrame
         OnClick = BitBtn3Click
       end
       object BitBtn2: TBitBtn
-        Left = 12
+        Left = 6
         Top = 55
         Width = 85
         Height = 30
