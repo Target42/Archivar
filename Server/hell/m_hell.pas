@@ -50,7 +50,7 @@ var
 implementation
 
 uses
-  Grijjy.CloudLogging, m_db, u_json, ServerContainerUnit1, m_glob_server;
+  Grijjy.CloudLogging, m_db, u_json, ServerContainerUnit1, m_glob_server, u_Konst;
 
 {%CLASSGROUP 'System.Classes.TPersistent'}
 
@@ -74,13 +74,13 @@ begin
         me.LeadID := JInt( obj, 'newid');
 
         msg := TJSONObject.Create;
-        JReplace( msg, 'action',  'changelead');
+        JAction(  msg, BRD_LEAD_CHG);
         JReplace( msg, 'id',      el);
         JReplace( msg, 'lead',    me.LeadID);
 
         fillUser( me.LeadID, msg );
 
-        ServerContainer1.BroadcastMessage('storage', msg);
+        ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg);
 
         break;
       end;
@@ -126,11 +126,11 @@ begin
     IBTransaction1.Commit;
 
   msg := TJSONObject.Create;
-  JReplace( msg, 'action',  'meeting');
+  JAction(  msg, BRD_MEETING);
   JReplace( msg, 'id',      elid);
   JReplace( msg, 'status',  integer(ts));
   JReplace( msg, 'list',    arr);
-  ServerContainer1.BroadcastMessage('storage', msg);
+  ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg);
 
   list.Free;
 
@@ -279,7 +279,7 @@ begin
         end;
 
         obj := TJSONObject.Create;
-        JReplace( obj, 'action',  'meeting');
+        JAction(  obj, BRD_MEETING);
         JReplace( obj, 'id',      me.ID);
         JReplace( obj, 'peid',    id);
         JReplace( obj, 'online',  false);
@@ -300,7 +300,7 @@ begin
       IBTransaction1.Commit;
 
     for obj in msgList do begin
-      ServerContainer1.BroadcastMessage('storage', obj);
+      ServerContainer1.BroadcastMessage(BRD_CHANNEL, obj);
     end;
 
     for id in emptyList do begin
@@ -348,7 +348,7 @@ begin
         JReplace( msg, 'id',      el);
         fillUser( peid, msg);
         if me.LeadID <> -1 then begin
-          JReplace( msg, 'action',  'requestlead');
+          JAction(  msg, BRD_LEAD_REQ);
           JReplace( msg, 'newid',   peid);
           JReplace( msg, 'lead',    me.LeadID);
         end
@@ -356,10 +356,10 @@ begin
         begin
           me.LeadID := peid;
 
-          JReplace( msg, 'action',  'changelead');
+          JAction(  msg, BRD_LEAD_CHG);
           JReplace( msg, 'lead',    me.LeadID);
         end;
-        ServerContainer1.BroadcastMessage('storage', msg);
+        ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg);
 
         break;
       end;
@@ -397,12 +397,12 @@ begin
     IBTransaction1.Commit;
 
   msg := TJSONObject.Create;
-  JReplace( msg, 'action',  'updatemeeting');
+  JAction(  msg, BRD_MEETING_UPDATE);
   JReplace( msg, 'id',      elid);
   JReplace( msg, 'running', running);
   JReplace( msg, 'leadid',  leadID );
 
-  ServerContainer1.BroadcastMessage('storage', msg);
+  ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg);
 end;
 
 procedure THellMod.sendStartLead(id, peid: integer);
@@ -410,13 +410,13 @@ var
   msg : TJSONObject;
 begin
   msg := TJSONObject.Create;
-  JReplace( msg, 'action',  'changelead');
+  JAction(  msg, BRD_LEAD_CHG);
   JReplace( msg, 'id',      id);
   JReplace( msg, 'lead',   peid);
 
   fillUser( peid, msg );
 
-  ServerContainer1.BroadcastMessage('storage', msg);
+  ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg);
 
 end;
 
@@ -425,11 +425,11 @@ var
   msg : TJSONObject;
 begin
   msg := TJSONObject.Create;
-  JReplace( msg, 'action',  'changelead');
+  JAction(  msg, BRD_LEAD_CHG);
   JReplace( msg, 'id',      id);
   JReplace( msg, 'lead',   -1);
 
-  ServerContainer1.BroadcastMessage('storage', msg);
+  ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg);
 end;
 
 function THellMod.setStatus(el_id, pe_id: integer; var prid : integer;
@@ -454,7 +454,7 @@ begin
       Result := true;
 
       msg := TJSONObject.Create;
-      JReplace( msg, 'action',  'meeting');
+      JAction(  msg, BRD_MEETING);
       JReplace( msg, 'id',      el_id);
       JReplace( msg, 'peid',    pe_id);
       JReplace( msg, 'online',  status = tsAnwesend);
@@ -466,7 +466,7 @@ begin
     IBTransaction1.Commit;
 
   if Assigned(msg) then
-    ServerContainer1.BroadcastMessage('storage', msg);
+    ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg);
 end;
 
 end.

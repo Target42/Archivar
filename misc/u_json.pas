@@ -53,6 +53,8 @@ procedure JResponse( data : TJSONObject ; state : boolean ; text : string );
 
 function formatJSON( obj : TJSONObject; indend : integer = -1 ) : string;
 
+procedure JAction( data : TJSONObject; action : string );
+
 implementation
 
 uses
@@ -752,6 +754,11 @@ begin
   end;
 
   Result := ParseObject( obj, '' );
+end;
+
+procedure JAction( data : TJSONObject; action : string );
+begin
+  JReplace( data, 'action', action);
 end;
 
 initialization

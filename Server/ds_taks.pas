@@ -212,10 +212,10 @@ begin
     DeleteTrans.Commit;
     try
       msg := TJSONObject.Create;
-      JReplace(msg, 'action', 'taskdelete');
+      JAction(  msg, BRD_TASK_DELETE);
       JReplace( msg, 'taid', ta_id);
       JReplace( msg, 'clid', clid);
-      ServerContainer1.BroadcastMessage('storage', msg);
+      ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg);
     except
       on e : exception do
       begin
@@ -274,10 +274,10 @@ begin
     JResult( Result, true, 'Die Aufgabe wurde verschoben');
     try
       msg := TJSONObject.Create;
-      JReplace(msg, 'action', 'taskmove');
+      JAction(  msg, BRD_TASK_MOVE);
       JReplace( msg, 'taid', taid);
       JReplace( msg, 'grid', grid);
-      ServerContainer1.BroadcastMessage('storage', msg);
+      ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg);
     except
 
     end;

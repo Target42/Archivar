@@ -113,7 +113,6 @@ type
     function  isLocked(       id, typ : integer; subid : integer = 0 ) : TJSONObject;
     procedure ShowLockInfo(   data    : TJSONObject);
 
-    procedure Execute(const Arg: TJSONObject);
     function  GremiumName( id : integer ) : string;
 
     function isValidTask( id : integer; dt : tDocType ) : Boolean;
@@ -153,7 +152,7 @@ uses
   System.UITypes, system.IOUtils, FireDAC.Stan.Storagebin,
   System.Win.ComObj, m_WindowHandler, m_BookMarkHandler, IdHashMessageDigest,
   Vcl.Graphics, u_PersonenListeImpl, u_PersonImpl, m_cache, f_login, u_kategorie,
-  u_onlineUser, m_http, f_doMeeting, u_eventHandler;
+  u_onlineUser, m_http, f_doMeeting, u_eventHandler, u_Konst;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -315,7 +314,8 @@ end;
 
 procedure TGM.DataModuleCreate(Sender: TObject);
 begin
-  DSClientCallbackChannelManager1.ManagerId := createClassID;
+  DSClientCallbackChannelManager1.ChannelName := BRD_CHANNEL;
+  DSClientCallbackChannelManager1.ManagerId   := createClassID;
 
   m_imageNames := TDictionary<string,integer>.create;
   m_misc := NIL;
@@ -327,10 +327,10 @@ begin
     FUserName := ParamStr(1);
 {$endif}
 
-  EventHandler.Register( self, handle_taskmove,     'taskmove');
-  EventHandler.Register( self, handle_taskdelete,   'taskdelete');
-  EventHandler.Register( self, handle_newmeeting,   'newmeeting' );
-  EventHandler.Register( self, handle_updatemeeting,'updatemeeting' );
+  EventHandler.Register( self, handle_taskmove,     BRD_TASK_MOVE);
+  EventHandler.Register( self, handle_taskdelete,   BRD_TASK_DELETE);
+  EventHandler.Register( self, handle_newmeeting,   BRD_MEETING_NEW );
+  EventHandler.Register( self, handle_updatemeeting,BRD_MEETING_UPDATE );
 end;
 
 procedure TGM.DataModuleDestroy(Sender: TObject);
@@ -394,35 +394,6 @@ begin
   except
     Result := false;
   end;
-end;
-
-procedure TGM.Execute(const Arg: TJSONObject);
-//var
-//  cmd : string;
-begin
-  EventHandler.execute(arg);
-{  cmd := lowerCase(Jstring( arg, 'action'));
-  if cmd = 'taskmove' then
-  begin
-    WindowHandler.closeTaksWindowMsg( JInt(Arg, 'taid'), 'Die Aufgabe wurde verschoben!');
-    PostMessage( Application.MainFormHandle, msgFilterTasks, 1, 0 );
-  end
-  else if cmd = 'taskdelete' then
-  begin
-    WindowHandler.closeTaksWindowMsg( JInt(Arg, 'taid'), 'Die Aufgabe wurde gelöscht!');
-    BookMarkHandler.Bookmarks.remove( JString( ARg, 'clid'));
-
-    PostMessage( Application.MainFormHandle, msgFilterTasks, 1, 0 );
-  end
-  else if cmd = 'newmeeting' then           PostMessage(Application.MainFormHandle, msgNewMeeting, 0, JInt(Arg, 'id'))
-  else if cmd = 'onlineuser' then           OnlineUser.updateData(arg)
-  else if cmd = 'userchangestate' then      OnlineUser.changeState( arg )
-  else if cmd = 'updatemeeting' then        PostMessage(Application.MainFormHandle, msgUpdateMeetings, 0, 0 )
-  else if (cmd= 'meeting') or ( cmd = 'requestlead') or ( cmd = 'changelead') or ( cmd = 'docupdate') then begin
-    if Assigned( DoMeetingform ) then
-      DoMeetingform.Exec( arg );
-  end;
-  }
 end;
 
 procedure TGM.FillGremien(arr :TJSONArray );
@@ -710,7 +681,7 @@ begin
 
   DSClientCallbackChannelManager1.DSHostname  := SQLConnection1.ConnectionData.Properties.Values['HostName'];
   DSClientCallbackChannelManager1.DSPort      := SQLConnection1.ConnectionData.Properties.Values['Port'];
-  DSClientCallbackChannelManager1.RegisterCallback('storage', TMyCallback.Create);
+  DSClientCallbackChannelManager1.RegisterCallback(BRD_CHANNEL, TMyCallback.Create);
 
   try
     Client := TAdminModClient.Create(SQLConnection1.DBXConnection);
@@ -763,7 +734,8 @@ end;
 
 procedure TGM.SQLConnection1BeforeDisconnect(Sender: TObject);
 begin
-  DSClientCallbackChannelManager1.UnregisterCallback('storage');
+  DSClientCallbackChannelManager1.UnregisterCallback(BRD_CHANNEL);
+
   if Assigned(m_misc) then
     m_misc.Free;
   m_misc := NIL;
@@ -792,7 +764,7 @@ begin
   TThread.Queue(nil,
     procedure
     begin
-        GM.Execute(msg);
+        EventHandler.execute(msg);
         msg.Free;
     end
   );

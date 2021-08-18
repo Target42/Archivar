@@ -41,7 +41,7 @@ implementation
 
 uses
   u_TServerUserImpl, System.JSON, u_json, m_glob_server, ServerContainerUnit1,
-  System.SysUtils;
+  System.SysUtils, u_Konst;
 
 { TOnlineUserServerImpl }
 
@@ -195,7 +195,7 @@ begin
   data := TJSONObject.Create;
   arr  := TJSONArray.Create;
 
-  JReplace(data, 'action', 'onlineuser');
+  JAction(data, BRD_ONLINE_USER);
 
   for user in m_list do
   begin
@@ -206,7 +206,7 @@ begin
   end;
   JReplace( data, 'user', arr);
 
-  ServerContainer1.BroadcastMessage('storage', data);
+  ServerContainer1.BroadcastMessage(BRD_CHANNEL, data);
 end;
 
 procedure TOnlineUserServerImpl.sendUserStatus(us: IServerUser);
@@ -215,11 +215,11 @@ var
 begin
   data := TJSONObject.Create;
 
-  JReplace( data, 'action', 'userchangestate');
+  JAction(  data, BRD_ONLINE_STATE);
   JReplace( data, 'id',     us.ID);
   JReplace( data, 'state',  us.Status );
 
-  ServerContainer1.BroadcastMessage('storage', data);
+  ServerContainer1.BroadcastMessage(BRD_CHANNEL, data);
 end;
 
 procedure TOnlineUserServerImpl.SetItems(inx : integer; const Value: IServerUser);

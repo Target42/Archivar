@@ -53,7 +53,7 @@ function getOnlineGroupID( text : string ) : integer;
 implementation
 
 uses
-  u_json, System.SysUtils, u_eventHandler;
+  u_json, System.SysUtils, u_eventHandler, u_Konst;
 
 var
   OnlineGrps : array[0..3] of string;
@@ -118,8 +118,8 @@ begin
   m_evt := NIL;
   m_map := TDictionary<integer, pREntry>.create;
 
-  EventHandler.Register( self, handle_onlineUser,   'onlineuser' );
-  EventHandler.Register( self, handle_stateChange,  'userchangestate' );
+  EventHandler.Register( self, handle_onlineUser,   BRD_ONLINE_USER );
+  EventHandler.Register( self, handle_stateChange,  BRD_ONLINE_STATE );
 end;
 
 destructor TOnlineUser.Destroy;

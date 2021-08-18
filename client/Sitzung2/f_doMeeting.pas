@@ -85,7 +85,7 @@ var
 implementation
 
 uses
-  m_glob_client, u_ProtocolImpl, u_json, system.UITypes, u_eventHandler;
+  m_glob_client, u_ProtocolImpl, u_json, system.UITypes, u_eventHandler, u_Konst;
 
 {$R *.dfm}
 
@@ -193,10 +193,10 @@ begin
   MeetingTNFrame1.Enabled := false;
   TabSheet6.Enabled       := false;
 
-  EventHandler.Register( self, handle_meeting,      'meeting');
-  EventHandler.Register( self, handle_requestLead,  'requestlead');
-  EventHandler.Register( self, handle_changeLead,   'changelead' );
-  EventHandler.Register( self, handle_docUpdate,    'docupdate' );
+  EventHandler.Register( self, handle_meeting,      BRD_MEETING);
+  EventHandler.Register( self, handle_requestLead,  BRD_LEAD_REQ);
+  EventHandler.Register( self, handle_changeLead,   BRD_LEAD_CHG );
+  EventHandler.Register( self, handle_docUpdate,    BRD_DOC_UPDATE );
 end;
 
 procedure TDoMeetingform.FormDestroy(Sender: TObject);
@@ -230,7 +230,6 @@ end;
 function TDoMeetingform.handle_changeLead(const arg: TJSONObject): boolean;
 var
   lead  : integer;
-  req   : TJSONObject;
   name  : string;
   id    : integer;
 begin
@@ -251,6 +250,7 @@ begin
         JString(arg, 'dept')]);
       Panel1.Caption := name;
   end;
+
   MeetingTNFrame1.Enabled := m_lead = GM.UserID;
   TabSheet6.Enabled := m_lead = GM.UserID;
   BitBtn6.Visible   := m_lead = GM.UserID;
@@ -360,7 +360,6 @@ begin
 
   req := TJSONObject.Create;
 
-  JReplace( req, 'meeting', 'docupdate' );
   JReplace( req, 'type',    'beschluss' );
   JReplace( req, 'prid',    m_proto.ID);
   JReplace( req, 'beid',    be.ID );

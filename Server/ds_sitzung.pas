@@ -41,7 +41,8 @@ type
 implementation
 
 uses
-  m_glob_server, m_db, Datasnap.DSSession, ServerContainerUnit1, u_json, m_hell;
+  m_glob_server, m_db, Datasnap.DSSession, ServerContainerUnit1, u_json, m_hell,
+  Grijjy.CloudLogging, u_Konst;
 
 {%CLASSGROUP 'System.Classes.TPersistent'}
 
@@ -111,9 +112,17 @@ procedure TdsSitzung.updateDocument(obj: TJSONObject);
 var
   msg : TJSONObject;
 begin
+  GrijjyLog.EnterMethod(self, 'updateDocument');
+
+  GrijjyLog.Send('data in', obj.ToJSON);
   msg := obj.Clone as TJSONObject;
 
-  ServerContainer1.BroadcastMessage('storage', msg);
+  JReplace( msg, 'cmd', BRD_DOC_UPDATE);
+  GrijjyLog.Send('data out', msg.ToJSON);
+
+  ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg);
+
+  GrijjyLog.ExitMethod(self, 'updateDocument');
 end;
 
 function TdsSitzung.Vote(obj: TJSONobject): TJSONObject;

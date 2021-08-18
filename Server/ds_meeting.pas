@@ -59,7 +59,7 @@ implementation
 
 uses
   m_db, u_json, System.Generics.Collections, u_tree, ServerContainerUnit1, u_teilnehmer,
-  Datasnap.DSSession;
+  Datasnap.DSSession, u_Konst;
 
 {%CLASSGROUP 'System.Classes.TPersistent'}
 
@@ -518,9 +518,9 @@ var
   msg : TJSONObject;
 begin
   msg := TJSONObject.Create;
-  JReplace(msg, 'action', 'newmeeting');
+  JAction(  msg, BRD_MEETING_NEW);
   JReplace( msg, 'id', el_id);
-  ServerContainer1.BroadcastMessage('storage', msg);
+  ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg);
 end;
 
 end.

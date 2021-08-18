@@ -117,9 +117,7 @@ end;
 function TTemplateCacheMod.loadTemplate(dataset: TClientDataset): boolean;
 var
   te  : Template;
-
   st  : TStream;
-  tc  : ITaskContainer;
 begin
   te := NIL;
 
