@@ -77,6 +77,7 @@ var
 begin
   Result := false;
   cmd := lowerCase(Jstring( arg, 'action'));
+
   for en in m_list do begin
     if SameText( cmd, en.Cmd) then
       Result := en.execute(arg);

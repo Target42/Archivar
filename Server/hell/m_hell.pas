@@ -32,7 +32,7 @@ type
     procedure sendStopLead( id : integer );
     procedure sendStartLead( id, peid : integer );
   public
-    function enter( elid, peid : integer; sessionID : NativeInt ) : boolean;
+    function enter( elid, peid : integer; sessionID : NativeInt; var data : TJSONObject ) : boolean;
     function leave( elid, peid : integer) : boolean;
 
     procedure remove( sessionID : NativeInt );
@@ -160,13 +160,14 @@ begin
   m_list.Free;
 end;
 
-function THellMod.enter(elid, peid: integer; sessionID: NativeInt) : boolean;
+function THellMod.enter(elid, peid: integer; sessionID: NativeInt; var data : TJSONObject) : boolean;
 var
   list  : TList<TMeeting>;
   me    : TMeeting;
   prid  : integer;
 begin
-  GrijjyLog.Send(format('HellMod::enter : el:%d pe:%d session:%d', [elid, peid, sessionID]));
+  GrijjyLog.EnterMethod(self, 'enter');
+  GrijjyLog.Send('data', format('el:%d pe:%d session:%d', [elid, peid, sessionID]));
   list    := m_list.LockList;
   try
     Result  := setStatus(elid, peid, prid, tsAnwesend);
@@ -181,15 +182,21 @@ begin
       end;
       me.addUser( peid, sessionID);
 
-      if me.count = 1 then
+      if me.count =1  then
         SendMeetingInfo( elid, true, me.LeadID );
-      if me.LeadID = -1 then
-        sendStartLead( elid, peid );
 
+      if me.LeadID = -1 then begin
+        me.LeadID := peid;
+        sendStartLead( elid, peid );
+      end;
+
+      JReplace( data, 'lead', me.LeadID);
+      fillUser(me.LeadID, data);
     end;
   finally
     m_list.UnlockList;
   end;
+  GrijjyLog.ExitMethod(self, 'enter');
 end;
 
 procedure THellMod.fillUser(peid: integer; var obj: TJSONObject);
@@ -400,7 +407,7 @@ begin
   JAction(  msg, BRD_MEETING_UPDATE);
   JReplace( msg, 'id',      elid);
   JReplace( msg, 'running', running);
-  JReplace( msg, 'leadid',  leadID );
+  JReplace( msg, 'lead',    leadID );
 
   ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg);
 end;

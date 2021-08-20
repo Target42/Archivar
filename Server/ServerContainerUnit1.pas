@@ -478,14 +478,15 @@ procedure TServerContainer1.DSAuthenticationManager1UserAuthorize(
 var
   i : integer;
 begin
-  GrijjyLog.Send('Authorise user rols', AuthorizeEventObject.UserRoles );
+//  GrijjyLog.EnterMethod(self, 'UserAuthorize');
+//  GrijjyLog.Send('Authorise user rols', AuthorizeEventObject.UserRoles );
 
   // system action
   valid := not Assigned(AuthorizeEventObject.AuthorizedRoles) or
            not Assigned(AuthorizeEventObject.DeniedRoles);
 
   if Assigned(AuthorizeEventObject.AuthorizedRoles)  then begin
-    GrijjyLog.Send('Authorise auth rols', AuthorizeEventObject.AuthorizedRoles );
+//    GrijjyLog.Send('Authorise auth rols', AuthorizeEventObject.AuthorizedRoles );
     for i := 0 to pred( AuthorizeEventObject.UserRoles.Count) do begin
       if AuthorizeEventObject.AuthorizedRoles.IndexOf(AuthorizeEventObject.UserRoles.Strings[i]) > -1 then begin
         valid := true;
@@ -495,7 +496,7 @@ begin
   end;
 
   if Assigned(AuthorizeEventObject.DeniedRoles) then begin
-    GrijjyLog.Send('Authorise deny rols', AuthorizeEventObject.DeniedRoles );
+//    GrijjyLog.Send('Authorise deny rols', AuthorizeEventObject.DeniedRoles );
     for i := 0 to pred( AuthorizeEventObject.UserRoles.Count) do begin
       if AuthorizeEventObject.DeniedRoles.IndexOf(AuthorizeEventObject.UserRoles.Strings[i]) > -1 then begin
         valid := false;
@@ -503,10 +504,12 @@ begin
       end;
     end;
   end;
+{
   if not valid then
     GrijjyLog.Send('Authorisation method', AuthorizeEventObject.MethodAlias, TgoLogLevel.Error );
 
   GrijjyLog.Send('Authorisation', valid );
+  GrijjyLog.ExitMethod(self, 'UserAuthorize');}
 end;
 
 procedure TServerContainer1.dsChapterGetClass(DSServerClass: TDSServerClass;

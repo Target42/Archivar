@@ -171,6 +171,7 @@ end;
 procedure TDoMeetingform.FormCreate(Sender: TObject);
 begin
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
+
   m_meid  := 0;
   m_proto := NIL;
   m_lead  := -1;
@@ -371,6 +372,8 @@ end;
 procedure TDoMeetingform.SetMeetingID(const Value: integer);
 var
   res, req : TJSONObject;
+  lead  : integer;
+  name  : string;
 begin
   m_meid := value;
 
@@ -388,6 +391,19 @@ begin
   JReplace( req, 'id', m_meid);
 
   res := m_hell.enter(req);
+
+  lead := JInt( res, 'lead');
+  if lead = -1 then
+    Panel1.Caption := ''
+  else begin
+      name := Format('%s %s (%s)',
+      [
+        JString(res, 'name'),
+        JString(res, 'vorname'),
+        JString(res, 'dept')]);
+      Panel1.Caption := name;
+  end;
+
   ShowResult( res );
 
   reload;

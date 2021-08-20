@@ -75,8 +75,9 @@ begin
   el_id   := JInt( obj, 'id');
   pe_id   := StrToInt(Session.GetData('id'));
 
-  if HellMod.enter(el_id, pe_id, Session.Id) then
-    JResult( Result, true, '')
+  if HellMod.enter(el_id, pe_id, Session.Id, Result) then begin
+    JResult( Result, true, '');
+  end
   else
     JResult( Result, false, 'Es gibt die Sitzung nicht oder sie sind kein Teilnehmer');
 end;
