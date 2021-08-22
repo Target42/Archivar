@@ -70,7 +70,7 @@
             Width = 245
             Height = 677
             ExplicitWidth = 245
-            ExplicitHeight = 71
+            ExplicitHeight = 677
             inherited TV: TTreeView
               Width = 241
               Height = 660
@@ -83,17 +83,8 @@
             Width = 245
             ExplicitTop = 677
             ExplicitWidth = 245
-            inherited TabSheet4: TTabSheet
-              ExplicitLeft = 4
-              ExplicitTop = 24
-              ExplicitWidth = 443
-              ExplicitHeight = 38
-            end
             inherited TabSheet5: TTabSheet
-              ExplicitLeft = 4
-              ExplicitTop = 24
               ExplicitWidth = 237
-              ExplicitHeight = 38
             end
           end
           inherited ActionList1: TActionList
@@ -103,7 +94,7 @@
           end
           inherited ImageList1: TImageList
             Bitmap = {
-              494C010106001001D00110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+              494C010106001001D80110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
               0000000000003600000028000000400000002000000001002000000000000020
               0000000000000000000000000000000000000000000000000000000000000000
               0000000000000000000000000000000000000000000000000000000000000000
@@ -519,10 +510,6 @@
     object TabSheet2: TTabSheet
       Caption = 'Onlineabstimung'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GroupBox2: TGroupBox
         Left = 0
         Top = 669
@@ -722,10 +709,6 @@
         object TabSheet6: TTabSheet
           Caption = 'G'#228'ste'
           ImageIndex = 2
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
         end
       end
     end

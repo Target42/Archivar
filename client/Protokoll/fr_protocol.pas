@@ -88,6 +88,10 @@ type
     m_ro            : boolean;
     m_TitelEditform : TTitelEditform;
 
+    // selected
+    m_sel_type  : TEntryType;
+    m_sel_id    : integer;
+
     FBrowser: TWebBrowser;
     FonBeschlusChange: TBeschlusChange;
     FMeetingMode: boolean;
@@ -104,6 +108,9 @@ type
 
     procedure clearTree;
     function findNode(Node: TTreeNode; Typ: TEntryType): TEntry;
+
+    procedure saveSelected;
+    procedure restoreSelected;
   public
     procedure init;
     procedure release;
@@ -533,11 +540,66 @@ begin
   cleartree;
 end;
 
+procedure TProtocolFrame.restoreSelected;
+var
+  i : integer;
+  en : TEntry;
+begin
+  if Assigned(TV.Selected) or ( ( m_sel_type <> etNothing) and (m_sel_id = 0) ) then
+    exit;
+
+  for i := 0 to pred(tv.Items.Count) do begin
+    en := TEntry( tv.Items.Item[i].Data);
+
+    if Assigned(en) then begin
+      if en.Typ = m_sel_type then begin
+        case en.Typ of
+          etNothing:      TV.Selected := tv.Items.Item[i];
+          etChapterText:  if IChapter(en.Ptr).ID = m_sel_id       then TV.Selected := tv.Items.Item[i];
+          etTask:         if IChapter(en.Ptr).ID = m_sel_id       then TV.Selected := tv.Items.Item[i];
+          etBeschluss:    if IBeschluss(en.Ptr).ID = m_sel_id     then TV.Selected := tv.Items.Item[i];
+          etTitle:        if IChapterTitle(en.Ptr).ID = m_sel_id  then TV.Selected := tv.Items.Item[i];
+        end;
+      end;
+    end;
+    if Assigned(tv.Selected) then
+      break;
+  end;
+  //showContent;
+end;
+
+procedure TProtocolFrame.saveSelected;
+var
+  en : TEntry;
+begin
+  m_sel_id    := 0;
+  m_sel_type  := etNothing;
+
+  if not Assigned(Tv.Selected) or not Assigned( TV.Selected.Data) then
+    exit;
+
+  en := TEntry(TV.Selected.Data);
+
+  m_sel_type := en.Typ;
+  case en.Typ of
+    etNothing     : m_sel_id  := 0;
+    etChapterText : m_sel_id  := IChapter(en.Ptr).ID;
+    etTask        : m_sel_id  := IChapter(en.Ptr).ID;
+    etBeschluss   : m_sel_id  := IBeschluss(en.Ptr).ID;
+    etTitle       : m_sel_id  := IChapterTitle(en.Ptr).ID;
+  end;
+
+end;
+
 procedure TProtocolFrame.SetProtocol(const Value: IProtocol);
 begin
-  m_proto := value;
+  saveSelected;
 
+  m_proto := value;
   updateCpList;
+
+  restoreSelected;
+
 end;
 
 procedure TProtocolFrame.SetReadOnly(const Value: boolean);
@@ -579,9 +641,12 @@ var
     if Assigned(FonBeschlusChange) and FMeetingMode then
       FonBeschlusChange(be);
   end;
+
   procedure showChapter ( cp : IChapter );
   begin
-    m_proto.SyncUser( cp.Votes.Item[0], not FMeetingMode );
+    if (cp.Votes.Count = 1) then
+      m_proto.SyncUser( cp.Votes.Item[0], not FMeetingMode );
+
     m_renderer.renderChapter( cp, FMeetingMode = false );
 
     if Assigned(FonBeschlusChange) and FMeetingMode and (cp.Votes.Count = 1) then
@@ -654,13 +719,13 @@ begin
   try
     if Assigned(TV.Selected) and not Assigned(TV.Selected.Parent) then
     begin
-      en := TV.Selected.Data;
+      en  := TV.Selected.Data;
       old := IChapterTitle(en.Ptr);
     end;
 
     clearTree;
 
-    en := TEntry.create;
+    en   := TEntry.create;
     root := TV.Items.AddChildObject(NIL, 'Dokument', en);
     setIndex(root, 7);
 
@@ -682,7 +747,6 @@ begin
     Screen.Cursor := crDefault;
   end;
   root.Expand(true);
-
 end;
 
 { TProtocolFrame.TEntry }

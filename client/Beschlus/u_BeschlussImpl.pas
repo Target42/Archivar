@@ -114,7 +114,7 @@ procedure TBeschlussImpl.Assign(org: IBeschluss);
 var
   src : TBeschlussImpl;
 begin
-  if not (org is TBeschlussImpl) then
+  if not Assigned(org) or not (org is TBeschlussImpl) then
     exit;
 
   src := org as TBeschlussImpl;
@@ -124,7 +124,9 @@ begin
   m_ctid      := src.m_ctid;
   m_xList     := src.m_xList;
 
-  m_vote.Release;
+  if Assigned(m_vote) then
+    m_vote.Release;
+
   m_vote      := src.m_vote.clone;
   m_text      := src.m_text;
   m_readOnly  := src.m_readOnly;

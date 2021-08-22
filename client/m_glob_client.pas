@@ -541,6 +541,7 @@ end;
 
 function TGM.handle_updatemeeting(const Arg: TJSONObject): boolean;
 begin
+
   PostMessage(Application.MainFormHandle, msgUpdateMeetings, 0, 0 );
 
   Result := true;

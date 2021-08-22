@@ -334,20 +334,28 @@ end;
 
 procedure TDoMeetingform.reload;
 begin
-  if Assigned(m_proto) then
-    m_proto.release;
+  Screen.Cursor := crHourGlass;
 
-  m_proto := TProtocolImpl.create;
+  WebBrowser1.Navigate('about:blank');
+  try
+    if Assigned(m_proto) then
+      m_proto.release;
+    m_proto := NIL;
 
-  if m_proto.load(m_prid) then
-  begin
-    Caption                     := m_proto.Title;
-    ProtocolFrame1.Protocol     := m_proto;
-    MeetingTNFrame1.Teilnehmer  := m_proto.Teilnehmer;
+    m_proto := TProtocolImpl.create;
 
-    WebBrowser1.Navigate('about:blank');
+    if m_proto.load(m_prid) then
+    begin
+      Caption                     := m_proto.Title;
+      ProtocolFrame1.Protocol     := m_proto;
+      MeetingTNFrame1.Teilnehmer  := m_proto.Teilnehmer;
+
+    end;
+    m_proto.Modified := false;
+  except
+
   end;
-  m_proto.Modified := false;
+  Screen.Cursor := crDefault;
 end;
 
 procedure TDoMeetingform.saveBeschlus(be: IBeschluss);
@@ -358,6 +366,7 @@ begin
     exit;
 
   be.Owner.saveModified;
+  m_proto.save;
 
   req := TJSONObject.Create;
 

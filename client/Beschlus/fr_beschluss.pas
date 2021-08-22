@@ -227,7 +227,8 @@ begin
 
   m_be := m_org.clone;
 
-  m_changed := false;
+  m_changed           := false;
+  EditFrame1.Modified := false;
 end;
 
 procedure TBeschlussFrame.setBeschluss(be: IBeschluss);
