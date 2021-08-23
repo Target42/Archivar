@@ -35,9 +35,10 @@ type
     LabeledEdit6: TLabeledEdit;
     BitBtn1: TBitBtn;
     Panel2: TPanel;
+    SpeedButton1: TSpeedButton;
+    GroupBox3: TGroupBox;
     BitBtn3: TBitBtn;
     BitBtn2: TBitBtn;
-    SpeedButton1: TSpeedButton;
     procedure EditFrame1REDragDrop(Sender, Source: TObject; X, Y: Integer);
     procedure EditFrame1REDragOver(Sender, Source: TObject; X, Y: Integer;
       State: TDragState; var Accept: Boolean);
@@ -107,9 +108,12 @@ end;
 
 procedure TBeschlussFrame.Button1Click(Sender: TObject);
 begin
+  if not Assigned(m_be) then
+    exit;
+
    m_be.Abstimmung.Einstimmig(true);
    m_be.Abstimmung.Zeitpunkt := now;
-  
+
   updateBeView;
 
   m_changed := true;
@@ -117,6 +121,9 @@ end;
 
 procedure TBeschlussFrame.Button2Click(Sender: TObject);
 begin
+  if not Assigned(m_be) then
+    exit;
+
   m_be.Abstimmung.Einstimmig(false);
   m_be.Abstimmung.Zeitpunkt := now;
 
