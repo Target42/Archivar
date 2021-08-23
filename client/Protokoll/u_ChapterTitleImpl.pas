@@ -158,15 +158,6 @@ begin
   begin
     cp            := TChapterImpl.create(NIL, m_loader, self);
     cp.load(data);
-{    cp.ID         := data.FieldByName('CT_ID').AsInteger;
-    cp.PID        := data.FieldByName('CT_PARENT').AsInteger;
-    cp.Name       := data.FieldByName('CT_TITLE').AsString;
-    cp.Nr         := data.FieldByName('CT_NUMBER').AsInteger;
-    cp.TAID       := data.FieldByName('TA_ID').AsInteger;
-    CP.Pos        := data.FieldByName('CT_POS').AsInteger;
-    cp.Rem        := data.FieldByName('CT_DATA').AsString;
-    cp.TimeStamp  := data.FieldByName('CT_CREATED').AsDateTime;
-    cp.Numbering  := (cp.Nr <> -1 );}
 
     loadBE( cp );
 
