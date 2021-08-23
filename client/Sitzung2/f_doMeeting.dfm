@@ -94,7 +94,7 @@
           end
           inherited ImageList1: TImageList
             Bitmap = {
-              494C010106001001D80110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+              494C010106001001DC0110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
               0000000000003600000028000000400000002000000001002000000000000020
               0000000000000000000000000000000000000000000000000000000000000000
               0000000000000000000000000000000000000000000000000000000000000000
@@ -501,6 +501,10 @@
                 Width = 922
                 ExplicitTop = 217
                 ExplicitWidth = 922
+                inherited GroupBox3: TGroupBox
+                  Left = 809
+                  ExplicitLeft = 809
+                end
               end
             end
           end
