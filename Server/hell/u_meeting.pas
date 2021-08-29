@@ -3,7 +3,7 @@ unit u_meeting;
 interface
 
 uses
-  System.Generics.Collections;
+  System.Generics.Collections, u_vote;
 
 type
   TMeetingUser = class;
@@ -13,7 +13,8 @@ type
       FPRId: integer;
 
       m_list : TList<TMeetingUser>;
-    FLeadID: integer;
+      FLeadID: integer;
+      FVote: TVote;
 
       function getCount : integer;
 
@@ -26,6 +27,8 @@ type
       property count : integer read getCount;
       property LeadID: integer read FLeadID write FLeadID;
 
+      property Vote: TVote read FVote write FVote;
+
       function addUser(     id : integer; sessionID : NativeInt ) : TMeetingUser;
       function findUser(    id : integer ) : TMeetingUser;
       function removeUser(  id : integer ) : TMeetingUser;
@@ -33,6 +36,9 @@ type
       function hasUser( id : integer ) : boolean;
 
       function getUserIDBySession( id : NativeInt ): integer;
+
+      function newVote : boolean;
+      procedure removeVote;
   end;
 
   TMeetingUser = class
@@ -48,6 +54,9 @@ type
   end;
 
 implementation
+
+uses
+  System.SysUtils;
 
 { TMeeting }
 
@@ -66,8 +75,9 @@ end;
 
 constructor TMeeting.create;
 begin
-  m_list := TList<TMeetingUser>.create;
-  FLeadID:= -1;
+  m_list  := TList<TMeetingUser>.create;
+  FLeadID := -1;
+  FVote   := NIL;
 end;
 
 destructor TMeeting.Destroy;
@@ -77,6 +87,9 @@ begin
   for me in  m_list do
     me.Free;
   m_list.Free;
+
+  if Assigned(FVote) then
+    FreeAndNil( Fvote );
 
   inherited;
 end;
@@ -119,6 +132,19 @@ begin
   Result := Assigned( findUser(id));
 end;
 
+function TMeeting.newVote: boolean;
+var
+  mu : TMeetingUser;
+begin
+  FVote := TVote.create;
+
+  for mu in m_list do begin
+    FVote.addUser( mu.ID );
+  end;
+
+  Result := Assigned(FVote);
+end;
+
 function TMeeting.removeUser(id: integer): TMeetingUser;
 var
   us : TMeetingUser;
@@ -131,6 +157,11 @@ begin
       break;
     end;
   end;
+end;
+
+procedure TMeeting.removeVote;
+begin
+  FreeAndNil(FVote);
 end;
 
 { TMeetingUser }

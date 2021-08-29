@@ -42,6 +42,11 @@ type
     function requestLead( obj : TJSONObject ) : TJSONObject;
     function changeLead( obj : TJSONObject ) : TJSONObject;
 
+    // vote
+    function startVote( obj : TJSONobject ) : TJSONObject;
+    function Vote( obj : TJSONobject ) : TJSONObject;
+    function endVote( obj : TJSONobject ) : TJSONObject;
+
   end;
 
 var
@@ -50,7 +55,8 @@ var
 implementation
 
 uses
-  Grijjy.CloudLogging, m_db, u_json, ServerContainerUnit1, m_glob_server, u_Konst;
+  Grijjy.CloudLogging, m_db, u_json, ServerContainerUnit1, m_glob_server, u_Konst,
+  u_vote;
 
 {%CLASSGROUP 'System.Classes.TPersistent'}
 
@@ -130,6 +136,7 @@ begin
   JReplace( msg, 'id',      elid);
   JReplace( msg, 'status',  integer(ts));
   JReplace( msg, 'list',    arr);
+
   ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg);
 
   list.Free;
@@ -158,6 +165,48 @@ begin
   end;
 
   m_list.Free;
+end;
+
+function THellMod.endVote(obj: TJSONobject): TJSONObject;
+var
+  list  : TList<TMeeting>;
+  me    : TMeeting;
+  id    : Integer;
+  beid  : integer;
+  msg   : TJSONObject;
+begin
+  Result := TJSONObject.Create;
+  JResult( Result, false, 'Es ist ein Fehler aufgetreten!');
+
+  id   := JInt( obj, 'meid' );
+  beid := JInt( obj, 'beid' );
+  if id = 0 then begin
+    JReplace(Result, 'text', 'Es wurde keine Sitzung angegeben.');
+    exit;
+  end;
+
+  list := m_list.LockList;
+  try
+    me := find(list, id);
+    if assigned(me) then begin
+      if me.ID = id  then begin
+        if Assigned(me.Vote) then begin
+
+          msg := TJSONObject.Create;
+          JAction(msg, BRD_VOTE_END);
+          JReplace(msg, 'data', me.Vote.getResult);
+          ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg );
+
+          me.removeVote;
+          JResult( Result, true, '');
+        end
+        else
+          JReplace( Result, 'text', 'Es ist keine Abstimmung aktiv.');
+      end;
+    end;
+  finally
+    m_list.UnlockList;
+  end;
 end;
 
 function THellMod.enter(elid, peid: integer; sessionID: NativeInt; var data : TJSONObject) : boolean;
@@ -474,6 +523,96 @@ begin
 
   if Assigned(msg) then
     ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg);
+end;
+
+function THellMod.startVote(obj: TJSONobject): TJSONObject;
+var
+  list  : TList<TMeeting>;
+  me    : TMeeting;
+  id    : Integer;
+  beid  : integer;
+  msg   : TJSONObject;
+begin
+  Result := TJSONObject.Create;
+  JResult( Result, false, 'Es ist ein Fehler aufgetreten!');
+
+  id   := JInt( obj, 'meid' );
+  beid := JInt( obj, 'beid' );
+  if id = 0 then begin
+    JReplace(Result, 'text', 'Es wurde keine Sitzung angegeben.');
+    exit;
+  end;
+
+  list := m_list.LockList;
+  try
+    me := find(list, id);
+    if assigned(me) then begin
+      if me.ID = id  then begin
+
+        if Assigned(me.Vote) then begin
+          msg := TJSONObject.Create;
+          JAction( msg, BRD_VOTE_END);
+          JReplace(msg, 'data', me.Vote.getResult );
+          ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg );
+          me.removeVote;
+        end;
+
+        if not Assigned(me.Vote) then begin
+
+          me.newVote;
+          me.Vote.MeetingID := id;
+          me.Vote.BEID      := beid;
+
+          msg := TJSONObject.Create;
+          JAction( msg, BRD_VOTE_START);
+          JReplace(msg, 'data', me.Vote.getUserList);
+
+          ServerContainer1.BroadcastMessage(BRD_CHANNEL,  msg);
+          JResult( Result, true, '');
+        end
+        else
+          JReplace( Result, 'text', 'Es ist eine Abstimmung aktiv.');
+      end;
+    end;
+  finally
+    m_list.UnlockList;
+  end;
+end;
+
+function THellMod.Vote(obj: TJSONobject): TJSONObject;
+var
+  list  : TList<TMeeting>;
+  me    : TMeeting;
+  id    : integer;
+  be    : integer;
+  msg   : TJSONObject;
+begin
+  Result := TJSONObject.Create;
+  JResult(Result, false, 'Es ist ein Fehler aufgetreten');
+  list := m_list.LockList;
+  try
+    id  := JInt( obj, 'meid');
+    be  := JInt( obj, 'beid');
+
+    me  := find(list, id);
+    if Assigned(me) then begin
+      if Assigned(me.Vote) then begin
+        if me.Vote.BEID = be then begin
+          me.Vote.vote( JInt(obj, 'usid' ), JInt( obj, 'vote'));
+
+          msg := TJSONObject.Create;
+          JAction(msg, BRD_VOTE);
+          JReplace(msg, 'vote', obj.Clone as TJSONObject);
+
+          ServerContainer1.BroadcastMessage( BRD_CHANNEL, msg);
+          JReplace(Result, 'result', true);
+        end;
+      end;
+    end;
+
+  finally
+    m_list.UnlockList;
+  end;
 end;
 
 end.

@@ -512,6 +512,10 @@
             <Form>BeschlussFrame</Form>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
+        <DCCReference Include="Online\f_abstimmung.pas">
+            <Form>AbstimmungsForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <None Include="Datafields\ERA-NS.txt"/>
         <RcItem Include="dws\dws.html">
             <ContainerId>ResourceItem</ContainerId>

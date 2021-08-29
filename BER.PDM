@@ -662,7 +662,7 @@ LN_LINK
 0
 0
 0
-
+LN_LINK
 
 
 
@@ -6043,7 +6043,7 @@ INTEGER
 1
 0
 0
-
+LN_ID
 
 1
 3
@@ -6077,7 +6077,7 @@ VARCHAR(200)
 1
 0
 0
-
+LN_SHORT
 
 2
 3
@@ -6111,7 +6111,7 @@ BLOB
 1
 0
 0
-
+LN_DEST
 
 3
 3
@@ -6145,7 +6145,7 @@ INTEGER
 1
 0
 0
-
+LN_INTERVAL
 
 4
 3
@@ -6179,7 +6179,7 @@ DATE
 1
 0
 0
-
+LN_CREATED
 
 5
 3
@@ -6213,7 +6213,7 @@ VARCHAR(200)
 1
 0
 0
-
+LN_USER
 
 6
 3
@@ -6247,7 +6247,7 @@ VARCHAR(256)
 1
 0
 0
-
+LN_TAGS
 
 7
 /END_TABLE AMCCOLN

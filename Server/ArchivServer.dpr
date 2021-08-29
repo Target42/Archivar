@@ -44,7 +44,8 @@ uses
   u_meeting in 'hell\u_meeting.pas',
   m_fileServer in 'fileServer\m_fileServer.pas' {FileServer: TDataModule},
   ds_updater in 'ds_updater.pas' {dsUpdater: TDSServerModule},
-  u_ini in 'u_ini.pas';
+  u_ini in 'u_ini.pas',
+  u_vote in 'hell\u_vote.pas';
 
 var
   MyDummyBoolean  : Boolean;

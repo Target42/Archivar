@@ -62,7 +62,7 @@ end;
 
 function TdsSitzung.endVote(obj: TJSONobject): TJSONObject;
 begin
-  Result := NIL;
+  Result := HellMod.endVote(obj);
 end;
 
 function TdsSitzung.enter(obj: TJSONobject): TJSONObject;
@@ -98,7 +98,6 @@ begin
     JResult( Result, false, 'Es gibt die Sitzung nicht oder sie sind kein Teilnehmer');
 end;
 
-
 function TdsSitzung.requestLead(obj: TJSONObject): TJSONObject;
 begin
   Result := HellMod.requestLead( obj );
@@ -106,7 +105,7 @@ end;
 
 function TdsSitzung.startVote(obj: TJSONobject): TJSONObject;
 begin
-  Result := NIL;
+  Result := HellMod.startVote(obj);
 end;
 
 procedure TdsSitzung.updateDocument(obj: TJSONObject);
@@ -128,7 +127,7 @@ end;
 
 function TdsSitzung.Vote(obj: TJSONobject): TJSONObject;
 begin
-  Result := NIL;
+  Result := HellMod.Vote(obj);
 end;
 
 end.

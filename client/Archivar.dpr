@@ -177,8 +177,8 @@ uses
   fr_teilnehmer in 'Sitzung\fr_teilnehmer.pas' {TNFrame: TFrame},
   fr_protocol in 'Protokoll\fr_protocol.pas' {ProtocolFrame: TFrame},
   fr_MeetingTN in 'Sitzung2\fr_MeetingTN.pas' {MeetingTNFrame: TFrame},
-  fr_beschluss in 'Beschlus\fr_beschluss.pas' {BeschlussFrame: TFrame};
-
+  fr_beschluss in 'Beschlus\fr_beschluss.pas' {BeschlussFrame: TFrame},
+  f_abstimmung in 'Online\f_abstimmung.pas' {AbstimmungsForm};
 
 {$R *.res}
 

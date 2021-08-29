@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_textblock,
   Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Buttons, fr_editForm, Vcl.Menus, i_beschluss,
-  Vcl.OleCtrls, SHDocVw, Vcl.ComCtrls;
+  Vcl.OleCtrls, SHDocVw, Vcl.ComCtrls, u_stub;
 
 type
   TBeschlussFrame = class(TFrame)
@@ -34,11 +34,12 @@ type
     LabeledEdit5: TLabeledEdit;
     LabeledEdit6: TLabeledEdit;
     BitBtn1: TBitBtn;
-    Panel2: TPanel;
     SpeedButton1: TSpeedButton;
     GroupBox3: TGroupBox;
     BitBtn3: TBitBtn;
     BitBtn2: TBitBtn;
+    GroupBox7: TGroupBox;
+    BitBtn4: TBitBtn;
     procedure EditFrame1REDragDrop(Sender, Source: TObject; X, Y: Integer);
     procedure EditFrame1REDragOver(Sender, Source: TObject; X, Y: Integer;
       State: TDragState; var Accept: Boolean);
@@ -56,22 +57,34 @@ type
     m_be          : IBeschluss;
     m_changed     : boolean;
     FSAveBeschluss: TBeschlusChange;
+    FhasLead: boolean;
+    FHell: TdsSitzungClient;
 
     procedure save;
     procedure updateBeView;
+
+    procedure setHasLead( value : boolean );
+
+
   public
     procedure init;
     procedure release;
 
+    property hasLead: boolean read FhasLead write setHasLead;
     property SaveBeschluss: TBeschlusChange read FSAveBeschluss write FSAveBeschluss;
 
+    property Hell: TdsSitzungClient read FHell write FHell;
+
     procedure setBeschluss( be : IBeschluss );
+    property Beschluss : IBeschluss read m_be write setBeschluss;
+
+
   end;
 
 implementation
 
 uses
-  f_bechlus, i_personen, system.UITypes;
+  f_bechlus, i_personen, system.UITypes, f_abstimmung, System.JSON, u_json, m_glob_client, u_Konst;
 
 {$R *.dfm}
 
@@ -163,9 +176,10 @@ end;
 
 procedure TBeschlussFrame.init;
 begin
-  FSAveBeschluss := NIL;
-  m_org := NIL;
-  m_be  := NIL;
+  FSAveBeschluss  := NIL;
+  m_org           := NIL;
+  m_be            := NIL;
+  FHell           := NIL;
 
   TextBlockFrame1.init();
   setBeschluss(NIL);
@@ -261,6 +275,17 @@ begin
   self.Enabled  := Assigned(m_be);
   updateBeView;
   m_changed     := false;
+end;
+
+procedure TBeschlussFrame.setHasLead(value: boolean);
+begin
+  FhasLead := value;
+  GroupBox5.Enabled     := FhasLead;
+  LabeledEdit4.Enabled  := FhasLead;
+  LabeledEdit5.Enabled  := FhasLead;
+  LabeledEdit6.Enabled  := FhasLead;
+  GroupBox3.Enabled     := FhasLead;
+  GroupBox7.Enabled     := FhasLead;
 end;
 
 procedure TBeschlussFrame.SpeedButton1Click(Sender: TObject);

@@ -122,6 +122,8 @@ type
     property onBeschlusChange: TBeschlusChange read FonBeschlusChange write FonBeschlusChange;
     property MeetingMode: boolean read FMeetingMode write FMeetingMode;
 
+    function SelectBeschlus( id : integer ) : boolean;
+
   end;
 
 implementation
@@ -589,6 +591,26 @@ begin
     etTitle       : m_sel_id  := IChapterTitle(en.Ptr).ID;
   end;
 
+end;
+
+function TProtocolFrame.SelectBeschlus(id: integer): boolean;
+var
+  i   : integer;
+  en  : TEntry;
+  be  : IBeschluss;
+begin
+  Result := false;
+  for i := 0 to pred(TV.Items.Count) do begin
+    en := TEntry( TV.Items.Item[i].Data );
+
+    if en.Typ = etBeschluss then begin
+      be := IBeschluss(en.Ptr);
+      if be.ID = id then begin
+        TV.Selected := TV.Items.Item[i];
+        break;
+      end;
+    end;
+  end;
 end;
 
 procedure TProtocolFrame.SetProtocol(const Value: IProtocol);

@@ -19,9 +19,11 @@ object ProtocolFrame: TProtocolFrame
       Width = 447
       Height = 222
       Align = alClient
+      DoubleBuffered = True
       HideSelection = False
       Images = ImageList1
       Indent = 19
+      ParentDoubleBuffered = False
       PopupMenu = PopupMenu1
       ReadOnly = True
       TabOrder = 0
@@ -40,6 +42,10 @@ object ProtocolFrame: TProtocolFrame
     TabOrder = 1
     object TabSheet4: TTabSheet
       Caption = 'Struktur'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object SpeedButton1: TSpeedButton
         Tag = 1
         Left = 4
@@ -104,6 +110,10 @@ object ProtocolFrame: TProtocolFrame
     object TabSheet5: TTabSheet
       Caption = 'Beschluss'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object SpeedButton7: TSpeedButton
         Tag = 1
         Left = 4
@@ -226,7 +236,7 @@ object ProtocolFrame: TProtocolFrame
     Left = 100
     Top = 25
     Bitmap = {
-      494C010106001001840110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C0101060010018C0110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

@@ -15,10 +15,17 @@ const
   taskWaitForOK   = $20;
   taskProtocol    = $40;
 
-  taskAll       =  taskNew or taskRead or taskInWork or taskWorkEnd or
-                   taskWaitForInfo or taskWaitForOK or taskProtocol;
+  taskAll         = taskNew or
+                    taskRead or
+                    taskInWork or
+                    taskWorkEnd or
+                    taskWaitForInfo or
+                    taskWaitForOK or
+                    taskProtocol;
 
-  taskReady     =  taskWaitForOK or taskWaitForInfo or taskProtocol;
+  taskReady       = taskWaitForOK or
+                    taskWaitForInfo or
+                    taskProtocol;
 
 // broadcast strings ..
 
@@ -34,8 +41,19 @@ const
   BRD_LEAD_REQ        : string = 'lead_req';        // requestlead
   BRD_LEAD_CHG        : string = 'lead_chg';        // changelead
   BRD_DOC_UPDATE      : string = 'doc_update';      // docupdate'
+  BRD_VOTE            : string = 'vote';
+  BRD_VOTE_START      : string = 'vote_start';
+  BRD_VOTE_END        : string = 'vote_end';
+  BRD_VOTE_LEAVE      : string = 'vote_leave';
 
-function flagsToStr( flags : integer ) : string;
+
+const
+  VOTE_YES      =  1;
+  VOTE_NO       = -1;
+  VOTE_CONTAIN  =  0;
+  VOTE_NOT_DONE = -2;
+
+function  flagsToStr( flags : integer ) : string;
 procedure FillFlagslist( list : TStrings; filter : integer = 0 );
 
 implementation

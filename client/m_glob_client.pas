@@ -128,6 +128,7 @@ type
 
     function getGremiumMA( id : integer ) : IPersonenListe;
     function getGremium( id : integer ) : TGremium;
+    function getUserList: TJSONobject;
 
     procedure changeStatus( text : string );
   end;
@@ -497,6 +498,20 @@ begin
       Result := m_imageNames[arr[i]];
       break;
     end;
+  end;
+end;
+
+function TGM.getUserList: TJSONobject;
+var
+  obj : TJSONObject;
+begin
+  Result := NIL;
+  if Assigned(m_misc) then begin
+    obj := m_misc.getUserList;
+
+    if Assigned(obj) then
+      Result := obj.Clone as TJSONObject;
+
   end;
 end;
 

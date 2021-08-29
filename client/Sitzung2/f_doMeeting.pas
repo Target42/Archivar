@@ -53,6 +53,7 @@ type
     procedure BitBtn4Click(Sender: TObject);
     procedure BitBtn5Click(Sender: TObject);
     procedure ProtocolFrame1ac_beschlussExecute(Sender: TObject);
+    procedure BeschlussFrame1BitBtn4Click(Sender: TObject);
   private
     m_meid  : integer;
     m_prid  : integer;
@@ -62,6 +63,8 @@ type
     m_hell  : TdsSitzungClient;
 
     procedure reload;
+
+    procedure Select( beid : integer );
 
     function GetMeetingID: integer;
     procedure SetMeetingID(const Value: integer);
@@ -75,6 +78,10 @@ type
     function handle_requestLead(const arg : TJSONObject ) : boolean;
     function handle_changeLead(const arg : TJSONObject ) : boolean;
     function handle_docUpdate(const arg : TJSONObject ) : boolean;
+
+    function handle_voteStart(const arg : TJSONObject ) : boolean;
+    function handle_voteStop(const arg : TJSONObject ) : boolean;
+    function handle_vote(const arg : TJSONObject ) : boolean;
   public
     property ELID: integer read GetMeetingID write SetMeetingID;
   end;
@@ -85,9 +92,31 @@ var
 implementation
 
 uses
-  m_glob_client, u_ProtocolImpl, u_json, system.UITypes, u_eventHandler, u_Konst;
+  m_glob_client, u_ProtocolImpl, u_json, system.UITypes, u_eventHandler, u_Konst,
+  f_abstimmung;
 
 {$R *.dfm}
+
+procedure TDoMeetingform.BeschlussFrame1BitBtn4Click(Sender: TObject);
+var
+  req, res : TJSONObject;
+begin
+  if not Assigned(BeschlussFrame1.Beschluss) then begin
+    ShowMessage('Es ist kein Beschluss ausgewählt!');
+    exit;
+  end;
+
+  req := TJSONObject.Create;
+
+  JReplace( req, 'sub', 'start');
+  JReplace( req, 'beid', BeschlussFrame1.Beschluss.ID);
+  JReplace( req, 'lead', m_lead );
+  JReplace( req, 'meid', m_meid);
+
+  res := Self.m_hell.startVote( req );
+
+  ShowResult( res );
+end;
 
 procedure TDoMeetingform.BitBtn1Click(Sender: TObject);
 var
@@ -148,7 +177,14 @@ procedure TDoMeetingform.doVote(value: integer);
 var
   req, res : TJSONObject;
 begin
+  if not Assigned(AbstimmungsForm) then
+    exit;
+
   req := TJSONObject.Create;
+
+  JReplace( req, 'meid', m_meid);
+  JReplace( req, 'beid', AbstimmungsForm.BEID );
+  JReplace( req, 'usid', GM.UserID);
   JReplace( req, 'vote',  value);
 
   res := m_hell.Vote(req);
@@ -182,6 +218,7 @@ begin
 
   BeschlussFrame1.init;
   BeschlussFrame1.SaveBeschluss := self.saveBeschlus;
+  BeschlussFrame1.hasLead       := false;
 
   ProtocolFrame1.onBeschlusChange := BeschlussFrame1.setBeschluss;
   ProtocolFrame1.MeetingMode := true;
@@ -190,6 +227,7 @@ begin
 
   m_hell := TdsSitzungClient.Create(DSProviderConnection1.SQLConnection.DBXConnection);
   MeetingTNFrame1.Client  := m_hell;
+  BeschlussFrame1.Hell    := m_hell;
 
   MeetingTNFrame1.Enabled := false;
   TabSheet6.Enabled       := false;
@@ -198,6 +236,10 @@ begin
   EventHandler.Register( self, handle_requestLead,  BRD_LEAD_REQ);
   EventHandler.Register( self, handle_changeLead,   BRD_LEAD_CHG );
   EventHandler.Register( self, handle_docUpdate,    BRD_DOC_UPDATE );
+  EventHandler.Register( self, handle_voteStart,    BRD_VOTE_START );
+  EventHandler.Register( self, handle_voteStop,     BRD_VOTE_END );
+  EventHandler.Register( self, handle_vote,         BRD_VOTE );
+
 end;
 
 procedure TDoMeetingform.FormDestroy(Sender: TObject);
@@ -219,8 +261,10 @@ begin
   PostMessage( Application.MainFormHandle, msgMeetingEnd, 0, 0 );
 
   if Assigned(EventHandler) then
-    EventHandler.Unregister(self)
+    EventHandler.Unregister(self);
 
+  if Assigned(AbstimmungsForm) then
+    FreeAndNil(AbstimmungsForm);
 end;
 
 function TDoMeetingform.GetMeetingID: integer;
@@ -257,6 +301,8 @@ begin
   BitBtn6.Visible   := m_lead = GM.UserID;
   BitBtn7.Visible   := m_lead = GM.UserID;
   m_proto.ReadOnly  := m_lead <>GM.UserID;
+
+  BeschlussFrame1.hasLead := m_lead = GM.UserID;
 
   ProtocolFrame1.ReadOnly := m_lead <> GM.UserID;
 
@@ -315,6 +361,43 @@ begin
     end;
   end;
   Result := true;
+end;
+
+function TDoMeetingform.handle_vote(const arg: TJSONObject): boolean;
+begin
+  Result := false;
+  if Assigned(AbstimmungsForm) then begin
+    AbstimmungsForm.handle_vote(arg);
+    Result := true;
+  end;
+end;
+
+function TDoMeetingform.handle_voteStart(const arg: TJSONObject): boolean;
+begin
+  if not  Assigned( AbstimmungsForm ) then begin
+    Application.CreateForm(TAbstimmungsForm, AbstimmungsForm);
+    AbstimmungsForm.doVote := doVote;
+    AbstimmungsForm.Show;
+  end
+  else
+    AbstimmungsForm.BringToFront;
+
+
+  Result := Assigned(AbstimmungsForm);
+  if Result then begin
+    AbstimmungsForm.handle_voteStart(arg);
+    Select( AbstimmungsForm.BEID );
+  end;
+end;
+
+function TDoMeetingform.handle_voteStop(const arg: TJSONObject): boolean;
+begin
+  Result := false;
+  if Assigned(AbstimmungsForm) then begin
+    AbstimmungsForm.handle_voteStop(arg);
+    Result := true;
+  end;
+
 end;
 
 procedure TDoMeetingform.ProtocolFrame1ac_beschlussExecute(Sender: TObject);
@@ -376,6 +459,11 @@ begin
   JReplace( req, 'sender',  GM.UserID );
 
   m_hell.updateDocument( req );
+end;
+
+procedure TDoMeetingform.Select(beid: integer);
+begin
+
 end;
 
 procedure TDoMeetingform.SetMeetingID(const Value: integer);
