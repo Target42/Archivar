@@ -25,19 +25,19 @@ object AbstimmungsForm: TAbstimmungsForm
   end
   object GroupBox1: TGroupBox
     Left = 0
-    Top = 57
+    Top = 66
     Width = 544
-    Height = 315
+    Height = 306
     Align = alClient
     Caption = 'Teilnehmer'
     TabOrder = 1
-    ExplicitTop = 56
-    ExplicitHeight = 316
+    ExplicitTop = 57
+    ExplicitHeight = 315
     object LV: TListView
       Left = 2
       Top = 15
       Width = 540
-      Height = 298
+      Height = 289
       Align = alClient
       Columns = <
         item
@@ -93,19 +93,20 @@ object AbstimmungsForm: TAbstimmungsForm
       ReadOnly = True
       TabOrder = 0
       ViewStyle = vsReport
-      ExplicitHeight = 355
+      ExplicitHeight = 298
     end
   end
   object GroupBox2: TGroupBox
     Left = 544
-    Top = 57
+    Top = 66
     Width = 222
-    Height = 315
+    Height = 306
     Align = alRight
     Caption = 'Aktionen'
     TabOrder = 2
-    ExplicitTop = 0
-    ExplicitHeight = 372
+    ExplicitLeft = 576
+    ExplicitTop = 51
+    ExplicitHeight = 315
     object BitBtn1: TBitBtn
       Left = 40
       Top = 32
@@ -282,21 +283,156 @@ object AbstimmungsForm: TAbstimmungsForm
       TabOrder = 3
       OnClick = BitBtn4Click
     end
+    object BitBtn5: TBitBtn
+      Left = 32
+      Top = 200
+      Width = 137
+      Height = 25
+      Caption = 'Abstimmung beenden'
+      Glyph.Data = {
+        36040000424D3604000000000000360000002800000010000000100000000100
+        20000000000000040000C40E0000C40E00000000000000000000FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00003EFF56003EFFAA003EFFAA003EFFAA003EFFAA003E
+        FFAA003EFFAA003DFF5CFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00003BFF0D003DFFE6003DFFFF003DFFFF003DFFFF003DFFFF003D
+        FFFF003DFFFF003DFFEC003CFF11FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00003DFF8A003DFFFF003DFFFF003DFFFF003DFFFF003DFFFF003D
+        FFFF003DFFFF003DFFFF003DFF93FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00003AFF23003DFFF8003DFFFF003DFFFF003DFFFF003DFFFF003DFFFF003D
+        FFFF003DFFFF003DFFFF003DFFFA003EFF29FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00003DFFB16A8EFFFF86A3FFFF0541FFFF7495FFFF003DFFFF6489FFFF8DA8
+        FFFF3162FFFF4A75FFFF003DFFFF003DFFB7FFFFFF00FFFFFF00FFFFFF00003E
+        FF42003DFFFF5B82FFFFB5C7FFFF1049FFFFAFC2FFFF023FFFFFADC1FFFF6288
+        FFFF7999FFFFB3C5FFFF4C77FFFF003DFFFF003CFF4DFFFFFF00FFFFFF00003D
+        FF76003DFFFFADC1FFFF5981FFFF0944FFFFAFC2FFFF023FFFFFACC0FFFF6388
+        FFFF7797FFFF7999FFFFBACBFFFF003DFFFF003EFF6FFFFFFF00FFFFFF000046
+        FF0B003DFFE36489FFFF86A3FFFF6187FFFFA2B8FFFF6086FFFF658AFFFF8DA8
+        FFFF3363FFFFA8BDFFFF6C8FFFFF003DFFDD0049FF07FFFFFF00FFFFFF00FFFF
+        FF00003DFF58003DFFFF003DFFFF003DFFFF003DFFFF003DFFFF003DFFFF003D
+        FFFF003DFFFF003DFFFF003DFFFF003EFF52FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF000000FF01003DFFC6003DFFFF003DFFFF003DFFFF003DFFFF003DFFFF003D
+        FFFF003DFFFF003DFFFF003DFFC0FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00003DFF36003DFFFD003DFFFF003DFFFF003DFFFF003DFFFF003D
+        FFFF003DFFFF003DFFFD003BFF34FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00003DFF9A003DFFFF003DFFFF003DFFFF003DFFFF003D
+        FFFF003DFFFF003CFF98FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
+      TabOrder = 4
+      Visible = False
+      OnClick = BitBtn5Click
+    end
+    object BitBtn6: TBitBtn
+      Left = 32
+      Top = 240
+      Width = 137
+      Height = 25
+      Caption = 'Abstimmung abbrechen'
+      TabOrder = 5
+      Visible = False
+      OnClick = BitBtn6Click
+    end
   end
   object GroupBox3: TGroupBox
     Left = 0
     Top = 0
     Width = 766
-    Height = 57
+    Height = 66
     Align = alTop
     Caption = 'Ergebnis'
     TabOrder = 3
+    ExplicitLeft = 2
+    ExplicitTop = -6
+    object LabZustimmung: TLabel
+      Left = 16
+      Top = 24
+      Width = 93
+      Height = 16
+      Caption = 'Zustimmung: 00'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clGreen
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
+    object LabAblehnung: TLabel
+      Left = 119
+      Top = 24
+      Width = 83
+      Height = 16
+      Caption = 'Ablehnung: 00'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clRed
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
+    object LabEnthaltung: TLabel
+      Left = 223
+      Top = 24
+      Width = 83
+      Height = 16
+      Caption = 'Enthaltung: 00'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlue
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
+    object LabNA: TLabel
+      Left = 328
+      Top = 24
+      Width = 122
+      Height = 16
+      Caption = 'Nicht abgestimmt: 00'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -13
+      Font.Name = 'Tahoma'
+      Font.Style = []
+      ParentFont = False
+    end
+    object LabErg: TLabel
+      Left = 477
+      Top = 22
+      Width = 47
+      Height = 18
+      Caption = 'Votum'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -15
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ParentFont = False
+    end
+    object Animate1: TAnimate
+      Left = 684
+      Top = 15
+      Width = 80
+      Height = 49
+      Align = alRight
+      CommonAVI = aviFindFolder
+      StopFrame = 27
+      Visible = False
+      ExplicitLeft = 568
+      ExplicitTop = 8
+      ExplicitHeight = 50
+    end
   end
   object ImageList1: TImageList
     Left = 232
     Top = 153
     Bitmap = {
-      494C010104000800100010001000FFFFFFFFFF00FFFFFFFFFFFFFFFF424D3600
+      494C010104000800140010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -564,6 +700,11 @@ object AbstimmungsForm: TAbstimmungsForm
       F00FF00FF007F00FE007E007E003E00FC003C003C003E00780018001C001C007
       800180018001C003800180018001C003800180018001C003800180018001C003
       80018001C001C003C003C003C003C003E007E0078003C003F00FF00F8007C003
-      F81FF81FFC1FC003FFFFFFFFFFFFF81F}
+      F81FF81FFC1FC003FFFFFFFFFFFFF81F00000000000000000000000000000000
+      000000000000}
+  end
+  object ShellResources1: TShellResources
+    Left = 472
+    Top = 201
   end
 end

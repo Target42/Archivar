@@ -70,6 +70,8 @@ type
     procedure SetMeetingID(const Value: integer);
 
     procedure doVote( value : integer );
+    procedure VoteStop( cancel : boolean );
+
     procedure saveBeschlus( be : IBeschluss);
 
     procedure QuerySave;
@@ -376,7 +378,9 @@ function TDoMeetingform.handle_voteStart(const arg: TJSONObject): boolean;
 begin
   if not  Assigned( AbstimmungsForm ) then begin
     Application.CreateForm(TAbstimmungsForm, AbstimmungsForm);
-    AbstimmungsForm.doVote := doVote;
+    AbstimmungsForm.doVote    := doVote;
+    AbstimmungsForm.VoteStop  := VoteStop;
+
     AbstimmungsForm.Show;
   end
   else
@@ -386,6 +390,7 @@ begin
   Result := Assigned(AbstimmungsForm);
   if Result then begin
     AbstimmungsForm.handle_voteStart(arg);
+    AbstimmungsForm.hasLead := m_lead = JInt( arg, 'lead');
     Select( AbstimmungsForm.BEID );
   end;
 end;
@@ -463,7 +468,7 @@ end;
 
 procedure TDoMeetingform.Select(beid: integer);
 begin
-
+  ProtocolFrame1.SelectBeschlus(beid);
 end;
 
 procedure TDoMeetingform.SetMeetingID(const Value: integer);
@@ -504,6 +509,20 @@ begin
   ShowResult( res );
 
   reload;
+end;
+
+procedure TDoMeetingform.VoteStop(cancel: boolean);
+var
+  req, res : TJSONObject;
+begin
+  req := TJSONObject.Create;
+  JReplace( req, 'meid', m_meid);
+  JReplace( req, 'beid', AbstimmungsForm.BEID );
+  JReplace( req, 'usid', GM.UserID);
+  JReplace( req, 'cancel', cancel );
+
+  res := m_hell.endVote(req);
+  ShowResult( res );
 end;
 
 initialization

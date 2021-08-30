@@ -174,12 +174,15 @@ var
   id    : Integer;
   beid  : integer;
   msg   : TJSONObject;
+  cancel: boolean;
 begin
   Result := TJSONObject.Create;
   JResult( Result, false, 'Es ist ein Fehler aufgetreten!');
 
-  id   := JInt( obj, 'meid' );
-  beid := JInt( obj, 'beid' );
+  id      := JInt( obj, 'meid' );
+  beid    := JInt( obj, 'beid' );
+  cancel  := Jbool(obj, 'cancel');
+
   if id = 0 then begin
     JReplace(Result, 'text', 'Es wurde keine Sitzung angegeben.');
     exit;
@@ -194,7 +197,11 @@ begin
 
           msg := TJSONObject.Create;
           JAction(msg, BRD_VOTE_END);
+          if cancel then
+            me.Vote.cancel;
+          JReplace( msg, 'cancel',cancel);
           JReplace(msg, 'data', me.Vote.getResult);
+
           ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg );
 
           me.removeVote;
@@ -564,8 +571,9 @@ begin
           me.Vote.BEID      := beid;
 
           msg := TJSONObject.Create;
-          JAction( msg, BRD_VOTE_START);
-          JReplace(msg, 'data', me.Vote.getUserList);
+          JAction(  msg, BRD_VOTE_START);
+          JReplace( msg, 'lead', me.LeadID );
+          JReplace( msg, 'data', me.Vote.getUserList);
 
           ServerContainer1.BroadcastMessage(BRD_CHANNEL,  msg);
           JResult( Result, true, '');

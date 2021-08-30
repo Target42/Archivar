@@ -6,10 +6,11 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.ExtCtrls, u_stub,
   System.JSON, Vcl.StdCtrls, System.Generics.Collections, System.ImageList,
-  Vcl.ImgList, Vcl.Buttons;
+  Vcl.ImgList, Vcl.Buttons, Vcl.ShellAnimations;
 
 type
   TVoteFunc = procedure( vote : integer ) of Object;
+  TVoteStop = procedure( cancel : boolean ) of Object;
 
   TAbstimmungsForm = class(TForm)
     StatusBar1: TStatusBar;
@@ -22,6 +23,15 @@ type
     BitBtn3: TBitBtn;
     BitBtn4: TBitBtn;
     ImageList1: TImageList;
+    BitBtn5: TBitBtn;
+    BitBtn6: TBitBtn;
+    Animate1: TAnimate;
+    ShellResources1: TShellResources;
+    LabZustimmung: TLabel;
+    LabAblehnung: TLabel;
+    LabEnthaltung: TLabel;
+    LabNA: TLabel;
+    LabErg: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormDestroy(Sender: TObject);
@@ -29,6 +39,8 @@ type
     procedure BitBtn2Click(Sender: TObject);
     procedure BitBtn3Click(Sender: TObject);
     procedure BitBtn4Click(Sender: TObject);
+    procedure BitBtn5Click(Sender: TObject);
+    procedure BitBtn6Click(Sender: TObject);
   private
     FCanClose: boolean;
 
@@ -37,14 +49,21 @@ type
     m_users : TDictionary<integer, TListItem>;
     FdoVote: TVoteFunc;
     FBEID: integer;
+    FhasLead: boolean;
+    FVoteStop: TVoteStop;
 
+    procedure sethasLead( value : boolean );
     procedure setGroup( id, code : integer );
+    procedure enableButtons( flag : boolean );
   public
     property CanClose   : boolean           read FCanClose    write FCanClose;
 
     property BEID: integer read FBEID write FBEID;
 
     property doVote: TVoteFunc read FdoVote write FdoVote;
+    property VoteStop: TVoteStop read FVoteStop write FVoteStop;
+
+    property hasLead: boolean read FhasLead write sethasLead;
 
     function handle_voteStart(const arg : TJSONObject ) : boolean;
     function handle_voteStop(const arg : TJSONObject ) : boolean;
@@ -85,6 +104,29 @@ begin
     FdoVote(VOTE_NOT_DONE );
 end;
 
+procedure TAbstimmungsForm.BitBtn5Click(Sender: TObject);
+begin
+  if Assigned(FVoteStop) then
+    FVoteStop( false );
+end;
+
+procedure TAbstimmungsForm.BitBtn6Click(Sender: TObject);
+begin
+  if Assigned(FVoteStop) then
+    FVoteStop( true );
+
+end;
+
+procedure TAbstimmungsForm.enableButtons(flag: boolean);
+begin
+  BitBtn1.Enabled := flag;
+  BitBtn2.Enabled := flag;
+  BitBtn3.Enabled := flag;
+  BitBtn4.Enabled := flag;
+  BitBtn5.Enabled := flag;
+  BitBtn6.Enabled := flag;
+end;
+
 procedure TAbstimmungsForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   Action := caNone;
@@ -99,6 +141,8 @@ procedure TAbstimmungsForm.FormCreate(Sender: TObject);
 begin
   FCanClose := false;
   FdoVote   := NIL;
+  FVoteStop := NIL;
+  FhasLead  := false;
 
   m_votes   := TDictionary<integer, integer>.create;
   m_user    := GM.getUserList;
@@ -178,6 +222,17 @@ begin
   end;
   ids.Free;
 
+  if Assigned(AbstimmungsForm) then
+    AbstimmungsForm.hasLead := FhasLead;
+
+  Animate1.Visible  := false;
+  Animate1.Active   := true;
+
+  enableButtons( true );
+
+  LabErg.Caption    := 'Votum';
+  LabErg.Font.Color := clBlack;
+
   Result := true;
 end;
 
@@ -195,25 +250,48 @@ var
     end;
     ids.Free;
   end;
-
+var
+  ja, nein, en : integer;
+  obj : TJSONObject;
 begin
-  Result    := true;
-  FCanClose := true;
+  FCanClose         := true;
+  Animate1.Active   := false;
+  Animate1.Visible  := false;
 
-  ids := getIntNumbers( arg, 'ja');
+  obj := JObject( arg, 'data');
+  ids := getIntNumbers( obj, 'ja');
+  ja  := ids.Count;
+  LabZustimmung.Caption := Format('Zustimmung : %d', [ja]);
   addValues( VOTE_YES);
 
-  ids := getIntNumbers( arg, 'nein');
+  ids   := getIntNumbers( obj, 'nein');
+  nein  := ids.Count;
+  LabAblehnung.Caption := Format('Ablehnung : %d', [nein]);
   addValues( VOTE_NO);
 
-  ids := getIntNumbers( arg, 'ja');
-  addValues( VOTE_YES);
+  ids := getIntNumbers( obj, 'en');
+  en  := ids.Count;
+  LabEnthaltung.Caption := Format('Enthaltung : %d', [en]);
+  addValues( VOTE_CONTAIN);
 
-  ids := getIntNumbers( arg, 'na');
+  ids := getIntNumbers( obj, 'na');
+  LabNA.Caption := Format('Nicht abgestimmt : %d', [ids.Count]);
   addValues( VOTE_NOT_DONE);
 
-  ids := getIntNumbers( arg, 'en');
-  addValues( VOTE_CONTAIN);
+  if not JBool(arg, 'cancel') then begin
+    if ja > nein + en then begin
+      LabErg.Caption    := 'Zustimmung';
+      LabErg.Font.Color := clGreen;
+    end else begin
+      LabErg.Caption    := 'Ablehnung';
+      LabErg.Font.Color := clRed;
+    end;
+  end else begin
+    LabErg.Caption := 'Abgebrochen';
+    LabErg.Font.Color := clBlack;
+  end;
+
+  enableButtons( false );
 
   Result := true;
  end;
@@ -228,6 +306,13 @@ begin
       VOTE_NOT_DONE : m_users[id].GroupID := 4;
     end;
   end;
+end;
+
+procedure TAbstimmungsForm.sethasLead(value: boolean);
+begin
+  FhasLead        := value;
+  BitBtn5.Visible := FhasLead;
+  BitBtn6.Visible := FhasLead;
 end;
 
 end.

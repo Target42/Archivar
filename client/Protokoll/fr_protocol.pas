@@ -618,6 +618,7 @@ begin
   saveSelected;
 
   m_proto := value;
+
   updateCpList;
 
   restoreSelected;

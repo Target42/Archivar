@@ -25,6 +25,8 @@ type
 
     procedure vote( id, value : integer );
 
+    procedure cancel;
+
     function getResult   : TJSONObject;
     function getUserList : TJSONObject;
   end;
@@ -40,6 +42,11 @@ procedure TVote.addUser(id: integer);
 begin
   if not m_votes.ContainsKey(id) then
     m_votes.Add(id, 0);
+end;
+
+procedure TVote.cancel;
+begin
+  clear;
 end;
 
 procedure TVote.clear;
