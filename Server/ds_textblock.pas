@@ -5,16 +5,19 @@ interface
 uses
   System.SysUtils, System.Classes, Datasnap.DSServer, 
   Datasnap.DSAuth, Datasnap.DSProviderDataModuleAdapter, Datasnap.Provider,
-  Data.DB, IBX.IBCustomDataSet, IBX.IBTable, IBX.IBDatabase, IBX.IBQuery;
+  Data.DB, IBX.IBCustomDataSet, IBX.IBTable, IBX.IBDatabase, IBX.IBQuery,
+  FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
+  FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
+  FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.Client, FireDAC.Comp.DataSet;
 
 type
   [TRoleAuth('user,admin', 'download')]
   TdsTextBlock = class(TDSServerModule)
-    IBTransaction1: TIBTransaction;
-    TB: TIBTable;
     TBTab: TDataSetProvider;
-    DelQry: TIBQuery;
     DelTB: TDataSetProvider;
+    IBTransaction1: TFDTransaction;
+    TB: TFDTable;
+    DelQry: TFDQuery;
   private
     { Private-Deklarationen }
   public

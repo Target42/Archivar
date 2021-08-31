@@ -1,7 +1,7 @@
 /* ============================================================ */
 /*   Database name:  MODEL_2                                    */
 /*   DBMS name:      InterBase                                  */
-/*   Created on:     22.07.2021  10:53                          */
+/*   Created on:     31.08.2021  16:34                          */
 /* ============================================================ */
 
 create generator gen_be_id;
@@ -524,7 +524,6 @@ alter table EL_EINLADUNG
     add constraint FK_REF_7035 foreign key  (PE_ID)
        references PE_PERSON;
 
-commit;
 
 set term /;
 CREATE TRIGGER SET_TA_TASK_NEW FOR TA_TASK
@@ -536,8 +535,6 @@ BEGIN
 END
 ;/
 set term ;/
-
-commit;
 
 
 SET TERM ^ ;
@@ -564,5 +561,3 @@ VALUES (
 );
 
 set generator gen_pe_id to 10;
-
-commit;

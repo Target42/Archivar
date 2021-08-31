@@ -5,28 +5,29 @@ interface
 uses
   System.SysUtils, System.Classes, Datasnap.DSServer,
   Datasnap.DSAuth, Datasnap.DSProviderDataModuleAdapter, System.JSON, m_glob_server, m_db,
-  Datasnap.Provider, IBX.IBDatabase, Data.DB, IBX.IBCustomDataSet, IBX.IBTable,
-  IBX.IBQuery;
+  Datasnap.Provider, Data.DB,
+  FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
+  FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
+  FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.Client, FireDAC.Comp.DataSet;
 
 type
   [TRoleAuth('user,admin', 'download')]
   TdsGremium = class(TDSServerModule)
-    GremiumTab: TIBTable;
-    IBTransaction1: TIBTransaction;
     GRTab: TDataSetProvider;
-    AutoIncQry: TIBQuery;
-    GRPE: TIBTable;
-    SelectAllUserQry: TIBQuery;
     AllUserQry: TDataSetProvider;
-    SelectGrUserQry: TIBQuery;
     GrUserQry: TDataSetProvider;
-    FindMAQry: TIBQuery;
-    AddMAQry: TIBQuery;
-    RemoveMAQry: TIBQuery;
-    changeRollQry: TIBQuery;
-    PicTab: TIBTable;
     Images: TDataSetProvider;
-    procedure DSServerModuleCreate(Sender: TObject);
+    GremiumTab: TFDTable;
+    FDTransaction1: TFDTransaction;
+    AutoIncQry: TFDQuery;
+    PicTab: TFDTable;
+    GRPE: TFDTable;
+    FindMAQry: TFDQuery;
+    AddMAQry: TFDQuery;
+    RemoveMAQry: TFDQuery;
+    changeRollQry: TFDQuery;
+    SelectAllUserQry: TFDQuery;
+    SelectGrUserQry: TFDQuery;
     procedure GremiumTabBeforePost(DataSet: TDataSet);
   private
 
@@ -70,7 +71,7 @@ begin
     AddMAQry.ExecSQL;
   end;
 
-  if AddMAQry.Transaction.InTransaction then
+  if AddMAQry.Transaction.Active then
     AddMAQry.Transaction.Commit;
 end;
 
@@ -90,13 +91,8 @@ begin
   changeRollQry.ParamByName('rolle').AsString   := roll;
   changeRollQry.ExecSQL;
 
-  if changeRollQry.Transaction.InTransaction then
+  if changeRollQry.Transaction.Active then
     changeRollQry.Transaction.Commit;
-end;
-
-procedure TdsGremium.DSServerModuleCreate(Sender: TObject);
-begin
-  GremiumTab.Database := DBMod.IBDatabase1;
 end;
 
 function TdsGremium.ExportGremiumCSV: TStream;
@@ -122,7 +118,7 @@ var
 begin
   Result := TJSONObject.Create;
 
-  if GremiumTab.Transaction.InTransaction then
+  if GremiumTab.Transaction.Active then
     GremiumTab.Transaction.Rollback;
 
   mem := GM.downloadMem(st);
@@ -166,7 +162,7 @@ begin
       end;
     end;
   end;
-  if GremiumTab.Transaction.InTransaction then
+  if GremiumTab.Transaction.Active then
     GremiumTab.Transaction.Commit;
   GremiumTab.Close;
 
@@ -192,7 +188,7 @@ begin
     RemoveMAQry.ExecSQL;
 
   end;
-  if RemoveMAQry.Transaction.InTransaction then
+  if RemoveMAQry.Transaction.Active then
     RemoveMAQry.Transaction.Commit;
 end;
 

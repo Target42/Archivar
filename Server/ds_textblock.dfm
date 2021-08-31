@@ -2,51 +2,44 @@ object dsTextBlock: TdsTextBlock
   OldCreateOrder = False
   Height = 482
   Width = 835
-  object IBTransaction1: TIBTransaction
-    DefaultDatabase = DBMod.IBDatabase1
-    Params.Strings = (
-      'read_committed'
-      'rec_version'
-      'nowait')
-    Left = 160
-    Top = 48
-  end
-  object TB: TIBTable
-    Database = DBMod.IBDatabase1
-    Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    TableName = 'TB_TEXT'
-    UniDirectional = False
-    Left = 80
-    Top = 48
-  end
   object TBTab: TDataSetProvider
     DataSet = TB
-    Left = 80
-    Top = 112
-  end
-  object DelQry: TIBQuery
-    Database = DBMod.IBDatabase1
-    Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
-    SQL.Strings = (
-      'delete from TB_TEXT'
-      'where TB_ID = :tb_id')
-    Left = 208
-    Top = 128
-    ParamData = <
-      item
-        DataType = ftInteger
-        Name = 'tb_id'
-        ParamType = ptInput
-      end>
+    Left = 64
+    Top = 144
   end
   object DelTB: TDataSetProvider
     DataSet = DelQry
-    Left = 208
-    Top = 192
+    Left = 120
+    Top = 144
+  end
+  object IBTransaction1: TFDTransaction
+    Connection = DBMod.ArchivarConnection
+    Left = 24
+    Top = 8
+  end
+  object TB: TFDTable
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
+    UpdateOptions.UpdateTableName = 'TB_TEXT'
+    TableName = 'TB_TEXT'
+    Left = 64
+    Top = 80
+  end
+  object DelQry: TFDQuery
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
+    SQL.Strings = (
+      'delete from TB_TEXT'
+      'where TB_ID = :tb_id')
+    Left = 120
+    Top = 80
+    ParamData = <
+      item
+        Name = 'TB_ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
   end
 end

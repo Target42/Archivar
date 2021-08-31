@@ -2,62 +2,15 @@ object dsMeeing: TdsMeeing
   OldCreateOrder = False
   Height = 502
   Width = 809
-  object IBTransaction1: TIBTransaction
-    DefaultDatabase = DBMod.IBDatabase1
-    Params.Strings = (
-      'read_committed'
-      'rec_version'
-      'nowait')
-    Left = 24
-    Top = 32
-  end
-  object ListProtocol: TIBQuery
-    Database = DBMod.IBDatabase1
-    Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
-    SQL.Strings = (
-      'SELECT * FROM PR_PROTOKOL'
-      'where pr_id= :id')
-    Left = 112
-    Top = 16
-    ParamData = <
-      item
-        DataType = ftInteger
-        Name = 'id'
-        ParamType = ptInput
-      end>
-  end
   object ListProtocolQry: TDataSetProvider
     DataSet = ListProtocol
     Left = 112
     Top = 64
   end
-  object PRTable: TIBTable
-    Database = DBMod.IBDatabase1
-    Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    TableName = 'PR_PROTOKOL'
-    UniDirectional = False
-    Left = 184
-    Top = 16
-  end
   object PRTab: TDataSetProvider
     DataSet = PRTable
     Left = 184
     Top = 64
-  end
-  object ElTable: TIBTable
-    Database = DBMod.IBDatabase1
-    Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    TableName = 'EL_EINLADUNG'
-    UniDirectional = False
-    Left = 240
-    Top = 16
   end
   object ElTab: TDataSetProvider
     DataSet = ElTable
@@ -65,12 +18,53 @@ object dsMeeing: TdsMeeing
     Left = 240
     Top = 64
   end
-  object ProtoQry: TIBQuery
-    Database = DBMod.IBDatabase1
+  object TNQry: TDataSetProvider
+    DataSet = Teilnehmer
+    Left = 304
+    Top = 64
+  end
+  object TGQry: TDataSetProvider
+    DataSet = Gaeste
+    Left = 464
+    Top = 64
+  end
+  object OptTnQry: TDataSetProvider
+    DataSet = OptTn
+    Left = 352
+    Top = 64
+  end
+  object IBTransaction1: TFDTransaction
+    Connection = DBMod.ArchivarConnection
+    Left = 24
+    Top = 32
+  end
+  object DeleteTN: TFDQuery
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
     Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
+    SQL.Strings = (
+      'delete from TN_TEILNEHMER'
+      'where tn_id = :tn_id')
+    Left = 416
+    Top = 176
+    ParamData = <
+      item
+        Name = 'TN_ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+  end
+  object AddTN: TFDQuery
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
+    Left = 512
+    Top = 176
+  end
+  object ProtoQry: TFDQuery
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
     SQL.Strings = (
       'select * from PR_PROTOKOL'
       'where PR_ID = :pr_id')
@@ -78,17 +72,15 @@ object dsMeeing: TdsMeeing
     Top = 192
     ParamData = <
       item
+        Name = 'PR_ID'
         DataType = ftInteger
-        Name = 'pr_id'
         ParamType = ptInput
       end>
   end
-  object CPTab: TIBQuery
-    Database = DBMod.IBDatabase1
+  object CPTab: TFDQuery
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
     Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
     SQL.Strings = (
       'select * from CP_CHAPTER'
       'where PR_ID = :pr_id'
@@ -97,17 +89,15 @@ object dsMeeing: TdsMeeing
     Top = 248
     ParamData = <
       item
+        Name = 'PR_ID'
         DataType = ftInteger
-        Name = 'pr_id'
         ParamType = ptInput
       end>
   end
-  object CTTab: TIBQuery
-    Database = DBMod.IBDatabase1
+  object CTTab: TFDQuery
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
     Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
     SQL.Strings = (
       'select * from CT_CHAPTER_TEXT'
       'where CP_ID = :cp_id'
@@ -116,27 +106,15 @@ object dsMeeing: TdsMeeing
     Top = 328
     ParamData = <
       item
-        DataType = ftUnknown
-        Name = 'cp_id'
-        ParamType = ptUnknown
+        Name = 'CP_ID'
+        DataType = ftInteger
+        ParamType = ptInput
       end>
   end
-  object ELPETab: TIBTable
-    Database = DBMod.IBDatabase1
+  object GrPeQry: TFDQuery
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
     Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    TableName = 'EL_PE'
-    UniDirectional = False
-    Left = 16
-    Top = 192
-  end
-  object GrPeQry: TIBQuery
-    Database = DBMod.IBDatabase1
-    Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
     SQL.Strings = (
       'SELECT * FROM TN_TEILNEHMER'
       'where PR_ID = :pr_id')
@@ -144,26 +122,15 @@ object dsMeeing: TdsMeeing
     Top = 248
     ParamData = <
       item
+        Name = 'PR_ID'
         DataType = ftInteger
-        Name = 'pr_id'
         ParamType = ptInput
       end>
   end
-  object AutoIncQry: TIBQuery
-    Database = DBMod.IBDatabase1
+  object LastDocQry: TFDQuery
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
     Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
-    Left = 24
-    Top = 104
-  end
-  object LastDocQry: TIBQuery
-    Database = DBMod.IBDatabase1
-    Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
     SQL.Strings = (
       'SELECT * FROM PR_PROTOKOL'
       'where gr_id = :gr_id'
@@ -173,17 +140,15 @@ object dsMeeing: TdsMeeing
     Top = 328
     ParamData = <
       item
+        Name = 'GR_ID'
         DataType = ftInteger
-        Name = 'gr_id'
         ParamType = ptInput
       end>
   end
-  object DelELQry: TIBQuery
-    Database = DBMod.IBDatabase1
+  object DelELQry: TFDQuery
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
     Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
     SQL.Strings = (
       'delete from EL_EINLADUNG'
       'where EL_ID = :EL_ID')
@@ -191,17 +156,15 @@ object dsMeeing: TdsMeeing
     Top = 320
     ParamData = <
       item
-        DataType = ftInteger
         Name = 'EL_ID'
+        DataType = ftInteger
         ParamType = ptInput
       end>
   end
-  object FrindELQry: TIBQuery
-    Database = DBMod.IBDatabase1
+  object FrindELQry: TFDQuery
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
     Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
     SQL.Strings = (
       'select * from EL_EINLADUNG'
       'where EL_ID = :el_id')
@@ -209,41 +172,15 @@ object dsMeeing: TdsMeeing
     Top = 192
     ParamData = <
       item
+        Name = 'EL_ID'
         DataType = ftInteger
-        Name = 'el_id'
         ParamType = ptInput
       end>
   end
-  object Teilnehmer: TIBQuery
-    Database = DBMod.IBDatabase1
+  object SetReadQry: TFDQuery
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
     Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
-    SQL.Strings = (
-      'SELECT * FROM TN_TEILNEHMER b'
-      'where b.pr_id = :pr_id'
-      'order by tn_name, tn_vorname')
-    Left = 304
-    Top = 16
-    ParamData = <
-      item
-        DataType = ftInteger
-        Name = 'pr_id'
-        ParamType = ptInput
-      end>
-  end
-  object TNQry: TDataSetProvider
-    DataSet = Teilnehmer
-    Left = 304
-    Top = 64
-  end
-  object SetReadQry: TIBQuery
-    Database = DBMod.IBDatabase1
-    Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
     SQL.Strings = (
       'update TN_TEILNEHMER'
       'set TN_READ = current_timestamp'
@@ -254,22 +191,20 @@ object dsMeeing: TdsMeeing
     Top = 192
     ParamData = <
       item
+        Name = 'PR_ID'
         DataType = ftInteger
-        Name = 'pr_id'
         ParamType = ptInput
       end
       item
+        Name = 'PE_ID'
         DataType = ftInteger
-        Name = 'pe_id'
         ParamType = ptInput
       end>
   end
-  object UpdateTnQry: TIBQuery
-    Database = DBMod.IBDatabase1
+  object UpdateTnQry: TFDQuery
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
     Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
     SQL.Strings = (
       'update TN_TEILNEHMER'
       'set TN_GRUND = :grund, TN_STATUS = :status'
@@ -278,51 +213,25 @@ object dsMeeing: TdsMeeing
     Top = 248
     ParamData = <
       item
+        Name = 'GRUND'
         DataType = ftString
-        Name = 'grund'
         ParamType = ptInput
       end
       item
+        Name = 'STATUS'
         DataType = ftInteger
-        Name = 'status'
         ParamType = ptInput
       end
       item
+        Name = 'TN_ID'
         DataType = ftInteger
-        Name = 'tn_ID'
         ParamType = ptInput
       end>
   end
-  object Gaeste: TIBQuery
-    Database = DBMod.IBDatabase1
+  object ResetReadQry: TFDQuery
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
     Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
-    SQL.Strings = (
-      'select * from TG_GAESTE'
-      'where pr_id = :pr_id'
-      'order by tg_grund, tg_name, tg_vorname')
-    Left = 464
-    Top = 16
-    ParamData = <
-      item
-        DataType = ftInteger
-        Name = 'pr_id'
-        ParamType = ptInput
-      end>
-  end
-  object TGQry: TDataSetProvider
-    DataSet = Gaeste
-    Left = 464
-    Top = 64
-  end
-  object ResetReadQry: TIBQuery
-    Database = DBMod.IBDatabase1
-    Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
     SQL.Strings = (
       'update TN_TEILNEHMER'
       'set  TN_READ= NULL'
@@ -331,17 +240,15 @@ object dsMeeing: TdsMeeing
     Top = 248
     ParamData = <
       item
+        Name = 'PR_ID'
         DataType = ftInteger
-        Name = 'pr_id'
         ParamType = ptInput
       end>
   end
-  object ChangeELPEStatusQry: TIBQuery
-    Database = DBMod.IBDatabase1
+  object ChangeELPEStatusQry: TFDQuery
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
     Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
     SQL.Strings = (
       'update TN_TEILNEHMER'
       'set tn_status = :stat'
@@ -351,27 +258,109 @@ object dsMeeing: TdsMeeing
     Top = 336
     ParamData = <
       item
+        Name = 'STAT'
         DataType = ftInteger
-        Name = 'stat'
         ParamType = ptInput
       end
       item
+        Name = 'PE_ID'
         DataType = ftInteger
-        Name = 'pe_id'
         ParamType = ptInput
       end
       item
-        DataType = ftUnknown
-        Name = 'pr_id'
+        Name = 'PR_ID'
+        DataType = ftInteger
         ParamType = ptInput
       end>
   end
-  object OptTn: TIBQuery
-    Database = DBMod.IBDatabase1
+  object PRTable: TFDTable
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
     Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
+    UpdateOptions.UpdateTableName = 'PR_PROTOKOL'
+    TableName = 'PR_PROTOKOL'
+    Left = 184
+    Top = 16
+  end
+  object ElTable: TFDTable
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
+    UpdateOptions.UpdateTableName = 'EL_EINLADUNG'
+    TableName = 'EL_EINLADUNG'
+    Left = 240
+    Top = 16
+  end
+  object ELPETab: TFDTable
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
+    UpdateOptions.UpdateTableName = 'EL_PE'
+    TableName = 'EL_PE'
+    Left = 16
+    Top = 192
+  end
+  object AutoIncQry: TFDQuery
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
+    Left = 24
+    Top = 104
+  end
+  object ListProtocol: TFDQuery
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
+    SQL.Strings = (
+      'SELECT * FROM PR_PROTOKOL'
+      'where pr_id= :id')
+    Left = 112
+    Top = 16
+    ParamData = <
+      item
+        Name = 'ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+  end
+  object Teilnehmer: TFDQuery
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
+    SQL.Strings = (
+      'SELECT * FROM TN_TEILNEHMER b'
+      'where b.pr_id = :pr_id'
+      'order by tn_name, tn_vorname')
+    Left = 304
+    Top = 16
+    ParamData = <
+      item
+        Name = 'PR_ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+  end
+  object Gaeste: TFDQuery
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
+    SQL.Strings = (
+      'select * from TG_GAESTE'
+      'where pr_id = :pr_id'
+      'order by tg_grund, tg_name, tg_vorname')
+    Left = 464
+    Top = 16
+    ParamData = <
+      item
+        Name = 'PR_ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+  end
+  object OptTn: TFDQuery
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
     SQL.Strings = (
       'select * from PE_PERSON a'
       'where not a.PE_ID  in'
@@ -387,41 +376,9 @@ object dsMeeing: TdsMeeing
     Top = 16
     ParamData = <
       item
+        Name = 'PR_ID'
         DataType = ftInteger
-        Name = 'pr_id'
         ParamType = ptInput
       end>
-  end
-  object OptTnQry: TDataSetProvider
-    DataSet = OptTn
-    Left = 352
-    Top = 72
-  end
-  object DeleteTN: TIBQuery
-    Database = DBMod.IBDatabase1
-    Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
-    SQL.Strings = (
-      'delete from TN_TEILNEHMER'
-      'where tn_id = :tn_id')
-    Left = 416
-    Top = 176
-    ParamData = <
-      item
-        DataType = ftInteger
-        Name = 'tn_id'
-        ParamType = ptInput
-      end>
-  end
-  object AddTN: TIBQuery
-    Database = DBMod.IBDatabase1
-    Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
-    Left = 512
-    Top = 176
   end
 end

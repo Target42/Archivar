@@ -1,253 +1,176 @@
 object dsGremium: TdsGremium
   OldCreateOrder = False
-  OnCreate = DSServerModuleCreate
   Height = 456
   Width = 983
-  object GremiumTab: TIBTable
-    Database = DBMod.IBDatabase1
-    Transaction = IBTransaction1
-    BeforePost = GremiumTabBeforePost
-    BufferChunks = 1000
-    CachedUpdates = False
-    FieldDefs = <
-      item
-        Name = 'GR_ID'
-        Attributes = [faRequired]
-        DataType = ftInteger
-      end
-      item
-        Name = 'GR_NAME'
-        DataType = ftWideString
-        Size = 100
-      end
-      item
-        Name = 'GR_SHORT'
-        DataType = ftWideString
-        Size = 20
-      end
-      item
-        Name = 'GR_PARENT_SHORT'
-        DataType = ftWideString
-        Size = 20
-      end
-      item
-        Name = 'GR_CHANGES'
-        DataType = ftBlob
-        Size = 8
-      end
-      item
-        Name = 'GR_PIC_NAME'
-        DataType = ftWideString
-        Size = 100
-      end>
-    IndexDefs = <
-      item
-        Name = 'PK_GR_GREMIUM'
-        Fields = 'GR_ID'
-        Options = [ixUnique]
-      end
-      item
-        Name = 'GR_GREMIUM_SHORT'
-        Fields = 'GR_SHORT'
-        Options = [ixUnique]
-      end>
-    IndexFieldNames = 'GR_SHORT'
-    StoreDefs = True
-    TableName = 'GR_GREMIUM'
-    UniDirectional = False
-    Left = 56
-    Top = 32
-  end
-  object IBTransaction1: TIBTransaction
-    DefaultDatabase = DBMod.IBDatabase1
-    Params.Strings = (
-      'read_committed'
-      'rec_version'
-      'nowait')
-    Left = 144
-    Top = 32
-  end
   object GRTab: TDataSetProvider
     DataSet = GremiumTab
-    Left = 56
-    Top = 88
-  end
-  object AutoIncQry: TIBQuery
-    Database = DBMod.IBDatabase1
-    Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
-    Left = 248
-    Top = 32
-  end
-  object GRPE: TIBTable
-    Database = DBMod.IBDatabase1
-    Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    TableName = 'GR_PA'
-    UniDirectional = False
-    Left = 240
-    Top = 112
-  end
-  object SelectAllUserQry: TIBQuery
-    Database = DBMod.IBDatabase1
-    Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
-    SQL.Strings = (
-      'select * from PE_PERSON'
-      'where PE_ID > 9'
-      'order by PE_NAME, PE_VORNAME')
-    Left = 120
-    Top = 240
+    Left = 24
+    Top = 128
   end
   object AllUserQry: TDataSetProvider
     DataSet = SelectAllUserQry
-    Left = 120
-    Top = 304
-  end
-  object SelectGrUserQry: TIBQuery
-    Database = DBMod.IBDatabase1
-    Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
-    SQL.Strings = (
-      'select  * from GR_PA a, PE_PERSON b'
-      'where a.GR_ID = :gr_id'
-      'and a.PE_ID = b.PE_ID'
-      'order by b.PE_NAME, b.PE_VORNAME')
-    Left = 240
-    Top = 232
-    ParamData = <
-      item
-        DataType = ftInteger
-        Name = 'gr_id'
-        ParamType = ptInput
-      end>
+    Left = 408
+    Top = 112
   end
   object GrUserQry: TDataSetProvider
     DataSet = SelectGrUserQry
-    Left = 240
-    Top = 304
+    Left = 400
+    Top = 177
   end
-  object FindMAQry: TIBQuery
-    Database = DBMod.IBDatabase1
-    Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
+  object Images: TDataSetProvider
+    DataSet = PicTab
+    Left = 104
+    Top = 128
+  end
+  object GremiumTab: TFDTable
+    IndexFieldNames = 'GR_SHORT'
+    Connection = DBMod.ArchivarConnection
+    Transaction = FDTransaction1
+    UpdateOptions.UpdateTableName = 'GR_GREMIUM'
+    TableName = 'GR_GREMIUM'
+    Left = 24
+    Top = 72
+  end
+  object FDTransaction1: TFDTransaction
+    Connection = DBMod.ArchivarConnection
+    Left = 24
+    Top = 24
+  end
+  object AutoIncQry: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Left = 104
+    Top = 24
+  end
+  object PicTab: TFDTable
+    Connection = DBMod.ArchivarConnection
+    Transaction = FDTransaction1
+    UpdateOptions.UpdateTableName = 'PI_PIC'
+    TableName = 'PI_PIC'
+    Left = 104
+    Top = 72
+  end
+  object GRPE: TFDTable
+    Connection = DBMod.ArchivarConnection
+    Transaction = FDTransaction1
+    UpdateOptions.UpdateTableName = 'GR_PA'
+    TableName = 'GR_PA'
+    Left = 176
+    Top = 72
+  end
+  object FindMAQry: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Transaction = FDTransaction1
     SQL.Strings = (
       'select * from GR_PA'
       'where GR_ID = :gr_id'
       'and PE_ID = :pe_id')
-    Left = 400
-    Top = 56
+    Left = 32
+    Top = 232
     ParamData = <
       item
+        Name = 'GR_ID'
         DataType = ftInteger
-        Name = 'gr_id'
         ParamType = ptInput
       end
       item
+        Name = 'PE_ID'
         DataType = ftInteger
-        Name = 'pe_id'
         ParamType = ptInput
       end>
   end
-  object AddMAQry: TIBQuery
-    Database = DBMod.IBDatabase1
-    Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
+  object AddMAQry: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Transaction = FDTransaction1
     SQL.Strings = (
       'insert into GR_PA( GR_ID, PE_ID)'
       'values( :gr_id, :pe_id);')
-    Left = 392
-    Top = 112
+    Left = 32
+    Top = 288
     ParamData = <
       item
+        Name = 'GR_ID'
         DataType = ftInteger
-        Name = 'gr_id'
         ParamType = ptInput
       end
       item
+        Name = 'PE_ID'
         DataType = ftInteger
-        Name = 'pe_id'
         ParamType = ptInput
       end>
   end
-  object RemoveMAQry: TIBQuery
-    Database = DBMod.IBDatabase1
-    Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
+  object RemoveMAQry: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Transaction = FDTransaction1
     SQL.Strings = (
       'delete from GR_PA'
       'where GR_ID = :gr_id'
       'and PE_ID = :pe_id')
-    Left = 472
-    Top = 112
+    Left = 104
+    Top = 288
     ParamData = <
       item
+        Name = 'GR_ID'
         DataType = ftInteger
-        Name = 'gr_id'
         ParamType = ptInput
       end
       item
+        Name = 'PE_ID'
         DataType = ftInteger
-        Name = 'pe_id'
         ParamType = ptInput
       end>
   end
-  object changeRollQry: TIBQuery
-    Database = DBMod.IBDatabase1
-    Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
+  object changeRollQry: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Transaction = FDTransaction1
     SQL.Strings = (
       'update GR_PA'
       'set GP_ROLLE = :rolle'
       'where GR_ID = :gr_id '
       'and PE_ID = :pe_id')
-    Left = 560
-    Top = 112
+    Left = 184
+    Top = 288
     ParamData = <
       item
+        Name = 'ROLLE'
         DataType = ftString
-        Name = 'rolle'
         ParamType = ptInput
       end
       item
+        Name = 'GR_ID'
         DataType = ftInteger
-        Name = 'gr_id'
         ParamType = ptInput
       end
       item
+        Name = 'PE_ID'
         DataType = ftInteger
-        Name = 'pe_id'
         ParamType = ptInput
       end>
   end
-  object PicTab: TIBTable
-    Database = DBMod.IBDatabase1
-    Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    TableName = 'PI_PIC'
-    UniDirectional = False
-    Left = 48
-    Top = 160
+  object SelectAllUserQry: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Transaction = FDTransaction1
+    SQL.Strings = (
+      'select * from PE_PERSON'
+      'where PE_ID > 9'
+      'order by PE_NAME, PE_VORNAME')
+    Left = 312
+    Top = 104
   end
-  object Images: TDataSetProvider
-    DataSet = PicTab
-    Left = 48
-    Top = 224
+  object SelectGrUserQry: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Transaction = FDTransaction1
+    SQL.Strings = (
+      'select  * from GR_PA a, PE_PERSON b'
+      'where a.GR_ID = :gr_id'
+      'and a.PE_ID = b.PE_ID'
+      'order by b.PE_NAME, b.PE_VORNAME')
+    Left = 312
+    Top = 160
+    ParamData = <
+      item
+        Name = 'GR_ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
   end
 end

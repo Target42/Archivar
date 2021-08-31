@@ -2,26 +2,23 @@ object DBMod: TDBMod
   OldCreateOrder = False
   OnCreate = DataModuleCreate
   OnDestroy = DataModuleDestroy
-  Height = 150
-  Width = 215
-  object IBDatabase1: TIBDatabase
-    DatabaseName = 'localhost:d:\db\archivar.gdb'
+  Height = 256
+  Width = 364
+  object ArchivarConnection: TFDConnection
     Params.Strings = (
-      'user_name=sysdba'
-      'password=masterkey')
+      'User_Name=sysdba'
+      'Password=masterkey'
+      'Database=D:\db\ARCHIVAR.FDB'
+      'DriverID=FB')
+    Connected = True
     LoginPrompt = False
-    DefaultTransaction = IBTransaction1
-    ServerType = 'IBServer'
-    Left = 40
-    Top = 24
+    Transaction = FDTransaction1
+    Left = 262
+    Top = 20
   end
-  object IBTransaction1: TIBTransaction
-    DefaultDatabase = IBDatabase1
-    Params.Strings = (
-      'read_committed'
-      'rec_version'
-      'nowait')
-    Left = 112
-    Top = 24
+  object FDTransaction1: TFDTransaction
+    Connection = ArchivarConnection
+    Left = 264
+    Top = 72
   end
 end

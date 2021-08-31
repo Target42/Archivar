@@ -4,16 +4,20 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, JvWizard, Data.DB, IBX.IBDatabase,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, JvWizard, Data.DB,
   JvExControls, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Buttons,
-  IBX.IBScript, IBX.IBCustomDataSet, IBX.IBTable, IBX.IBQuery, xsd_StoreLimits,
-  Inifiles;
+  xsd_StoreLimits,
+  Inifiles, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Error,
+  FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def, FireDAC.Stan.Pool,
+  FireDAC.Stan.Async, FireDAC.Phys, FireDAC.Phys.FB, FireDAC.Phys.FBDef,
+  FireDAC.VCLUI.Wait, FireDAC.Stan.Param, FireDAC.DatS, FireDAC.DApt.Intf,
+  FireDAC.DApt, FireDAC.Comp.ScriptCommands, FireDAC.Stan.Util,
+  FireDAC.Comp.Script, FireDAC.Comp.Client, FireDAC.Comp.DataSet;
 
 type
   TMainSetupForm = class(TForm)
     StatusBar1: TStatusBar;
     JvWizard1: TJvWizard;
-    IBDatabase1: TIBDatabase;
     WelcomePage: TJvWizardWelcomePage;
     SearchGDS: TJvWizardInteriorPage;
     ServerInfo: TJvWizardInteriorPage;
@@ -23,20 +27,22 @@ type
     edDBUser: TLabeledEdit;
     edDBPwd: TLabeledEdit;
     btnCreate: TBitBtn;
-    IBTransaction1: TIBTransaction;
-    IBScript1: TIBScript;
     InitData: TJvWizardInteriorPage;
     Panel1: TPanel;
     LV: TListView;
     BitBtn1: TBitBtn;
-    PITab: TIBTable;
-    AutoIncQry: TIBQuery;
-    TYTab: TIBTable;
-    FDTab: TIBTable;
-    GRTab: TIBTable;
-    DATab: TIBTable;
     esDSServer: TLabeledEdit;
-    TETab: TIBTable;
+    ArchivarConnection: TFDConnection;
+    TETab: TFDQuery;
+    PITab: TFDQuery;
+    IBTransaction1: TFDTransaction;
+    IBScript1: TFDScript;
+    AutoIncQry: TFDQuery;
+    FDTab: TFDQuery;
+    TYTab: TFDQuery;
+    GRTab: TFDQuery;
+    DATab: TFDQuery;
+    CreateDB: TFDScript;
     procedure SearchGDSEnterPage(Sender: TObject;
       const FromPage: TJvWizardCustomPage);
     procedure ServerInfoEnterPage(Sender: TObject;
@@ -72,7 +78,7 @@ implementation
 
 uses
   System.IOUtils, System.Types, IdHashMessageDigest, xsd_TaskType,
-  xsd_Betriebsrat, xsd_DataField;
+  xsd_Betriebsrat, xsd_DataField, FireDAC.Phys.IBWrapper;
 
 {$R *.dfm}
 
@@ -98,24 +104,42 @@ end;
 
 procedure TMainSetupForm.btnCreateClick(Sender: TObject);
 var
-  db    : TIBDatabase;
+  db    : TFDConnection;
   dbok  : boolean;
   fname : string;
 begin
-  db := TIBDatabase.Create(NIL);
+
+  db := TFDConnection.Create(NIL);
   dbok := false;
   try
-    db.DatabaseName := edHostname.Text+':'+edDatabase.Text;
-    db.ServerType   := 'IBServer';
-    db.SQLDialect   := 3;
-    db.Params.Clear;
-    db.Params.Add('USER "'+edDBUser.Text+'"');
-    db.Params.Add('PASSWORD "'+edDBPwd.Text+'"');
-    db.Params.Add('PAGE_SIZE 4096');
+    db.DriverName := 'FB';
     db.LoginPrompt := false;
+    with db.Params as TFDPhysFBConnectionDefParams do begin
+      Protocol  := ipTCPIP;
+      Server    := edHostname.Text;
+      Database  := edDatabase.Text;
+      UserName  := edDBUser.Text;
+      Password  := edDBPwd.Text;
+      SQLDialect:= 3;
+      PageSize  := ps4096;
+    end;
+
     Screen.Cursor := crSQLWait;
-    db.CreateDatabase;
+    with CreateDB do begin
+      SQLScripts.Clear;
+      SQLScripts.Add;
+      with SQLScripts[0].SQL do begin
+        add( format('CREATE DATABASE ''%s'' ',      [edDatabase.Text]));
+        add( format('USER ''%s'' PASSWORD ''%s'' ', [edDBUser.Text, edDBPwd.Text]));
+        add( format('PAGE_SIZE %d',                 [4096]));
+        add( 'DEFAULT CHARACTER SET NONE;');
+      end;
+      ValidateAll;
+      ExecuteAll;
+    end;
+
     Screen.Cursor := crDefault;
+
     dbok := true;
   except
     on e : exception do
@@ -127,22 +151,38 @@ begin
   db.Free;
   if not dbok then
     exit;
-  IBDatabase1.DatabaseName := edHostname.Text+':'+edDatabase.Text;
-  IBDatabase1.Params.Clear;
-  IBDatabase1.Params.Values['user_name'] := edDBUser.Text;
-  IBDatabase1.Params.Values['password']  := edDBPwd.Text;
+
+  ArchivarConnection.Params.Clear;
+  ArchivarConnection.DriverName := 'FB';
+  ArchivarConnection.LoginPrompt := false;
+  with ArchivarConnection.Params as TFDPhysFBConnectionDefParams do
+  begin
+
+    Protocol  := ipTCPIP;
+    Server    := edHostname.Text;
+    Database  := edDatabase.Text;
+    UserName  := edDBUser.Text;
+    Password  := edDBPwd.Text;
+    SQLDialect:= 3;
+    PageSize  := ps4096;
+  end;
   fname := TPath.Combine(m_home, 'crebas.sql');
 
   if not FileExists(fname) then begin
     ShowMessage('Das Datenbankscript wurde nicht gefunden');
     exit;
   end;
-  IBScript1.Script.LoadFromFile(fname);
+
   Screen.Cursor := crSQLWait;
   try
-    IBDatabase1.Open;
-    IBScript1.ExecuteScript;
-    if IBTransaction1.InTransaction then
+    ArchivarConnection.Open;
+
+    IBTransaction1.StartTransaction;
+
+    IBScript1.SQLScripts.Clear;
+    IBScript1.ExecuteFile(fname);
+
+    if IBTransaction1.Active then
       IBTransaction1.Commit;
 
     Screen.Cursor := crDefault;
@@ -151,7 +191,7 @@ begin
 
     m_ini.WriteString('DB', 'host', edHostname.Text);
     m_ini.WriteString('DB', 'db',   edDatabase.Text);
-    m_ini.WriteString('DB', 'user',  edDBUser.Text);
+    m_ini.WriteString('DB', 'user', edDBUser.Text);
     m_ini.WriteString('DB', 'pwd',  edDBPwd.Text);
 
     m_ini.WriteString('DS', 'port', esDSServer.Text);
@@ -162,14 +202,14 @@ begin
      ShowMessage(e.ToString);
     end;
   end;
-  IBDatabase1.Close;
+  ArchivarConnection.Close;
 end;
 
 procedure TMainSetupForm.FormCreate(Sender: TObject);
 begin
   m_home := TPath.Combine(ExtractFileDir(Application.ExeName), 'InitialData');
   DeleteFile('d:\db\ARCHIVAR.GDB');
-  m_ini   := TiniFile.Create(TPath.Combine(ExtractFileDir(Application.ExeName), 'server.dat'));
+  m_ini   := TiniFile.Create(TPath.Combine(ExtractFileDir(Application.ExeName), 'ArchivServer.exe.ini'));
 end;
 
 procedure TMainSetupForm.FormDestroy(Sender: TObject);
@@ -433,7 +473,7 @@ begin
     if trim(list[i]) = '' then
       Continue;
 
-    fname :=  TPath.Combine(list[i], 'gds32.dll');
+    fname :=  TPath.Combine(list[i], 'fbclient.dll');
     if FileExists(fname) then
     begin
       found := true;

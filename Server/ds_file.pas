@@ -5,19 +5,21 @@ interface
 uses
   System.SysUtils, System.Classes, Datasnap.DSServer,
   Datasnap.DSAuth, Datasnap.DSProviderDataModuleAdapter, Datasnap.Provider,
-  Data.DB, IBX.IBDatabase, IBX.IBCustomDataSet, IBX.IBTable, IBX.IBQuery,
-  System.JSON;
+  Data.DB,
+  System.JSON, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
+  FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
+  FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.Client, FireDAC.Comp.DataSet;
 
 type
   [TRoleAuth('user,admin', 'download')]
   TdsFile = class(TDSServerModule)
-    FITA: TIBTable;
-    IBTransaction1: TIBTransaction;
-    FileData: TIBTable;
-    AutoIncQry: TIBQuery;
-    ListFiles: TIBQuery;
     ListFilesQry: TDataSetProvider;
-    FindFileQry: TIBQuery;
+    FDTransaction1: TFDTransaction;
+    FITA: TFDTable;
+    ListFiles: TFDQuery;
+    FindFileQry: TFDQuery;
+    AutoIncQry: TFDQuery;
+    FileData: TFDTable;
   private
     { Private declarations }
     function findFile( ta_id : integer; fname : string) : integer;
@@ -55,10 +57,10 @@ begin
   Result := TJSONObject.Create;
   found := false;
 
-  if IBTransaction1.InTransaction then
-    IBTransaction1.Rollback;
+  if FDTransaction1.Active then
+    FDTransaction1.Rollback;
 
-  IBTransaction1.StartTransaction;
+  FDTransaction1.StartTransaction;
   FITA.Open;
 
   if FITA.Locate('TA_ID;FI_ID', VarArrayOf([ta_id, fi_id]), opts) then
@@ -75,7 +77,7 @@ begin
       FileData.Delete;
     FileData.Close;
   end;
-  IBTransaction1.Commit;
+  FDTransaction1.Commit;
   JResponse(Result, true, 'Datei gelöscht');
 end;
 
@@ -108,10 +110,10 @@ begin
   opts := [loCaseInsensitive];
   Result := TJSONObject.Create;
 
-  if IBTransaction1.InTransaction then
-    IBTransaction1.Rollback;
+  if FDTransaction1.Active then
+    FDTransaction1.Rollback;
 
-  IBTransaction1.StartTransaction;
+  FDTransaction1.StartTransaction;
   try
     taid  := JInt( data, 'taid' );
     fname := JString( data, 'fname');
@@ -154,7 +156,7 @@ begin
       end;
     end;
 
-    IBTransaction1.Commit;
+    FDTransaction1.Commit;
 
     FileData.Close;
     FITA.close;
@@ -163,7 +165,7 @@ begin
   except
     on e : exception do
     begin
-      IBTransaction1.Rollback;
+      FDTransaction1.Rollback;
       JResponse( Result, false, 'Der Upload ist fehlgeschlagen'+sLineBreak+e.ToString);
     end;
   end;

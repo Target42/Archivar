@@ -5,53 +5,47 @@ interface
 uses
   System.Classes, Datasnap.DSServer,
   Datasnap.DSAuth, Datasnap.DSProviderDataModuleAdapter, System.JSON,
-  IBX.IBQuery, IBX.IBDatabase, Data.DB, IBX.IBCustomDataSet, IBX.IBTable,
-  Datasnap.Provider, IBX.IBUpdateSQL;
+  Data.DB,
+  Datasnap.Provider, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
+  FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet,
+  FireDAC.Comp.Client;
 
 type
   [TRoleAuth('user,admin', 'download')]
   TdsProtocol = class(TDSServerModule)
-    PRTab: TIBTable;
-    IBTransaction1: TIBTransaction;
-    AutoIncQry: TIBQuery;
     PRTable: TDataSetProvider;
-    TNTab: TIBTable;
-    TGTab: TIBTable;
     TGTable: TDataSetProvider;
-    PEQry: TIBQuery;
-    DeleteTrans: TIBTransaction;
-    deleteTNQry: TIBQuery;
-    deleteTGQry: TIBQuery;
-    deletePR: TIBQuery;
-    ListPr: TIBQuery;
     ListPrQry: TDataSetProvider;
-    incQry: TIBQuery;
     AutoIncValue: TDataSetProvider;
-    CPTab: TIBTable;
     ChapterTab: TDataSetProvider;
-    DeleteChapter: TIBQuery;
-    UpdateCP: TIBQuery;
     UpdateCPQry: TDataSetProvider;
-    DeleteCPQry: TIBQuery;
-    TNTabPR_ID: TIntegerField;
-    TNTabTN_ID: TIntegerField;
-    TNTabTN_NAME: TIBStringField;
-    TNTabTN_VORNAME: TIBStringField;
-    TNTabTN_DEPARTMENT: TIBStringField;
-    TNTabTN_ROLLE: TIBStringField;
-    TNTabTN_STATUS: TIntegerField;
-    TNTabPE_ID: TIntegerField;
-    ListTasksQry: TIBQuery;
     ListTasks: TDataSetProvider;
-    CPText: TIBTable;
     CPTextTab: TDataSetProvider;
-    TNTabTN_GRUND: TIBStringField;
-    BE: TIBTable;
     BETab: TDataSetProvider;
-    SelectChapterQry: TIBQuery;
-    SelectChapterTextQry: TIBQuery;
-    deleteBEQry: TIBQuery;
-    deleteCT: TIBQuery;
+    DeleteTrans: TFDTransaction;
+    deleteTNQry: TFDQuery;
+    deleteTGQry: TFDQuery;
+    deletePR: TFDQuery;
+    DeleteChapter: TFDQuery;
+    SelectChapterQry: TFDQuery;
+    SelectChapterTextQry: TFDQuery;
+    deleteBEQry: TFDQuery;
+    deleteCT: TFDQuery;
+    BE: TFDTable;
+    PRTab: TFDTable;
+    TGTab: TFDTable;
+    CPTab: TFDTable;
+    IBTransaction1: TFDTransaction;
+    CPText: TFDTable;
+    ListPr: TFDQuery;
+    incQry: TFDQuery;
+    AutoIncQry: TFDQuery;
+    PEQry: TFDQuery;
+    UpdateCP: TFDQuery;
+    DeleteCPQry: TFDQuery;
+    ListTasksQry: TFDQuery;
+    TNTab: TFDTable;
   private
     { Private-Deklarationen }
   public
@@ -84,7 +78,7 @@ end;
 function TdsProtocol.deleteCP(id: integer): TJSONObject;
 begin
   Result := TJSONObject.create;
-  if DeleteTrans.InTransaction then
+  if DeleteTrans.Active then
     DeleteTrans.Rollback;
   DeleteTrans.StartTransaction;
   try
@@ -176,7 +170,7 @@ var
 begin
   Result := TJSONObject.create;
 
-  if IBTransaction1.InTransAction then
+  if IBTransaction1.Active then
     IBTransaction1.Rollback;
 
   IBTransaction1.StartTransaction;

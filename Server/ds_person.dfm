@@ -2,40 +2,10 @@ object dsPerson: TdsPerson
   OldCreateOrder = False
   Height = 362
   Width = 489
-  object PETable: TIBTable
-    Database = DBMod.IBDatabase1
-    Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    Filter = 'PE_ID >9'
-    Filtered = True
-    TableName = 'PE_PERSON'
-    UniDirectional = False
-    Left = 56
-    Top = 48
-  end
-  object IBTransaction1: TIBTransaction
-    DefaultDatabase = DBMod.IBDatabase1
-    Params.Strings = (
-      'read_committed'
-      'rec_version'
-      'nowait')
-    Left = 144
-    Top = 48
-  end
   object PETab: TDataSetProvider
     DataSet = PETable
     Left = 56
     Top = 104
-  end
-  object AutoIncQry: TIBQuery
-    Database = DBMod.IBDatabase1
-    Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
-    Left = 248
-    Top = 32
   end
   object JvCsvDataSet1: TJvCsvDataSet
     CaseInsensitive = True
@@ -44,5 +14,28 @@ object dsPerson: TdsPerson
     AutoBackupCount = 0
     Left = 368
     Top = 104
+  end
+  object IBTransaction1: TFDTransaction
+    Connection = DBMod.ArchivarConnection
+    Left = 144
+    Top = 48
+  end
+  object PETable: TFDTable
+    Filtered = True
+    Filter = 'PE_ID >9'
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
+    UpdateOptions.UpdateTableName = 'PE_PERSON'
+    TableName = 'PE_PERSON'
+    Left = 56
+    Top = 48
+  end
+  object AutoIncQry: TFDQuery
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
+    Left = 248
+    Top = 32
   end
 end

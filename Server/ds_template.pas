@@ -5,23 +5,25 @@ interface
 uses
   System.SysUtils, System.Classes, Datasnap.DSServer,
   Datasnap.DSAuth, Datasnap.DSProviderDataModuleAdapter, Datasnap.Provider,
-  IBX.IBDatabase, Data.DB, IBX.IBCustomDataSet, IBX.IBTable, IBX.IBQuery;
+  Data.DB, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
+  FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
+  FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.Client, FireDAC.Comp.DataSet;
 
 type
   [TRoleAuth('user,admin', 'download')]
   TdsTemplate = class(TDSServerModule)
-    TETab: TIBTable;
-    IBTransaction1: TIBTransaction;
     TemplateTab: TDataSetProvider;
-    TEQry: TIBQuery;
     ListTempatesQry: TDataSetProvider;
-    AutoIncQry: TIBQuery;
-    SearchTab: TIBTable;
-    DaTab: TIBTable;
-    IBTransaction2: TIBTransaction;
     DataFields: TDataSetProvider;
-    TaskType: TIBTable;
     TYTab: TDataSetProvider;
+    IBTransaction2: TFDTransaction;
+    DaTab: TFDTable;
+    IBTransaction1: TFDTransaction;
+    TETab: TFDTable;
+    SearchTab: TFDTable;
+    TaskType: TFDTable;
+    TEQry: TFDQuery;
+    AutoIncQry: TFDQuery;
   private
     { Private-Deklarationen }
   public

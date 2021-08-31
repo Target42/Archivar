@@ -4,18 +4,21 @@ interface
 
 uses
   System.SysUtils, System.Classes, Datasnap.DSServer, 
-  Datasnap.DSAuth, Datasnap.DSProviderDataModuleAdapter, m_db, IBX.IBQuery,
-  Datasnap.Provider, IBX.IBDatabase, Data.DB, IBX.IBCustomDataSet, IBX.IBTable,
-  System.JSON, JvCsvData;
+  Datasnap.DSAuth, Datasnap.DSProviderDataModuleAdapter, m_db,
+  Datasnap.Provider, Data.DB,
+  System.JSON, JvCsvData, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
+  FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.Client,
+  FireDAC.Comp.DataSet;
 
 type
   [TRoleAuth('user,admin', 'download')]
   TdsPerson = class(TDSServerModule)
-    PETable: TIBTable;
-    IBTransaction1: TIBTransaction;
     PETab: TDataSetProvider;
-    AutoIncQry: TIBQuery;
     JvCsvDataSet1: TJvCsvDataSet;
+    IBTransaction1: TFDTransaction;
+    PETable: TFDTable;
+    AutoIncQry: TFDQuery;
   private
     { Private declarations }
   public
@@ -75,11 +78,11 @@ begin
   except
     begin
       JResult(Result, false, 'Import fehlgeschlagen');
-      if PETable.Transaction.InTransaction then
+      if PETable.Transaction.Active then
         PETable.Transaction.Rollback;
     end;
   end;
-  if PETable.Transaction.InTransaction then
+  if PETable.Transaction.Active then
     PETable.Transaction.Commit;
   PETable.Close;
 

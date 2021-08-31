@@ -5,29 +5,30 @@ interface
 uses
   System.SysUtils, System.Classes, Datasnap.DSServer, 
   Datasnap.DSAuth, Datasnap.DSProviderDataModuleAdapter, Datasnap.Provider,
-  IBX.IBDatabase, Data.DB, IBX.IBCustomDataSet, IBX.IBQuery, System.JSON,
-  Datasnap.DSSession, u_lockInfo, u_json;
+  Data.DB, System.JSON,
+  Datasnap.DSSession, u_lockInfo, u_json, FireDAC.Stan.Intf,
+  FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
+  FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
+  FireDAC.Comp.Client, FireDAC.Comp.DataSet;
 
 type
   [TRoleAuth('user,admin', 'download')]
   TdsMisc = class(TDSServerModule)
-    openTasks: TIBQuery;
-    IBTransaction1: TIBTransaction;
     OpenTaskQry: TDataSetProvider;
-    LockTrans: TIBTransaction;
-    GetTaskinfo: TIBQuery;
-    GetProtoInfo: TIBQuery;
-    AutoIncQry: TIBQuery;
-    IncTrans: TIBTransaction;
-    Meetings: TIBQuery;
     MeetingQry: TDataSetProvider;
-    PEQry: TIBQuery;
+    GetTaskinfo: TFDQuery;
+    GetProtoInfo: TFDQuery;
+    LockTrans: TFDTransaction;
+    IBTransaction1: TFDTransaction;
+    openTasks: TFDQuery;
+    AutoIncQry: TFDQuery;
+    Meetings: TFDQuery;
+    IncTrans: TFDTransaction;
+    PEQry: TFDQuery;
     PEQryPE_ID: TIntegerField;
-    PEQryPE_NAME: TIBStringField;
-    PEQryPE_VORNAME: TIBStringField;
-    PEQryPE_DEPARTMENT: TIBStringField;
-    PEQryPE_NET: TIBStringField;
-    PEQryPE_MAIL: TIBStringField;
+    PEQryPE_NAME: TStringField;
+    PEQryPE_VORNAME: TStringField;
+    PEQryPE_DEPARTMENT: TStringField;
     procedure DSServerModuleCreate(Sender: TObject);
   private
   private
@@ -60,7 +61,7 @@ uses
 
 function TdsMisc.AutoInc(gen: string): integer;
 begin
-  if IncTrans.InTransaction then
+  if IncTrans.Active then
     IncTrans.Commit;
   IncTrans.StartTransaction;
 
@@ -133,7 +134,7 @@ begin
   end;
   PEQry.Close;
 
-  if PEQry.Transaction.InTransaction then
+  if PEQry.Transaction.Active then
     PEQry.Transaction.Commit;
 
   Result := TJSONObject.Create;
@@ -163,7 +164,7 @@ begin
   t := tDocType(dt);
   GrijjyLog.Send(format('valid task: %d %d', [id, dt]));
 
-  if LockTrans.InTransaction then
+  if LockTrans.Active then
     LockTrans.Rollback;
 
   LockTrans.StartTransaction;

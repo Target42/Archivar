@@ -65,7 +65,6 @@ create generator gen_tg_id;\
 create generator gen_tn_id;\
 create generator gen_ty_id;\
 create generator gen_ep_id;
-commit;\
 \
 set term /;\
 CREATE TRIGGER SET_TA_TASK_NEW FOR TA_TASK\
@@ -77,8 +76,6 @@ BEGIN\
 END\
 ;/\
 set term ;/\
-\
-commit;\
 \
 \
 SET TERM ^ ;\
@@ -104,16 +101,14 @@ VALUES (\
     ''\
 );\
 \
-set generator gen_pe_id to 10;\
-\
-commit;
+set generator gen_pe_id to 10;
 0
 
 
 
 
 1582717246
-1626943987
+1630420448
 0
 0
 2

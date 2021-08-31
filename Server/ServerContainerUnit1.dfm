@@ -78,33 +78,6 @@ object ServerContainer1: TServerContainer1
     Left = 328
     Top = 176
   end
-  object QueryUser: TIBQuery
-    Database = DBMod.IBDatabase1
-    Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
-    SQL.Strings = (
-      'select * from PE_PERSON'
-      'where PE_NET = :net')
-    Left = 40
-    Top = 328
-    ParamData = <
-      item
-        DataType = ftString
-        Name = 'net'
-        ParamType = ptInput
-      end>
-  end
-  object IBTransaction1: TIBTransaction
-    DefaultDatabase = DBMod.IBDatabase1
-    Params.Strings = (
-      'read_committed'
-      'rec_version'
-      'nowait')
-    Left = 120
-    Top = 328
-  end
   object dsFile: TDSServerClass
     OnGetClass = dsFileGetClass
     Server = DSServer1
@@ -195,5 +168,26 @@ object ServerContainer1: TServerContainer1
     Server = DSServer1
     Left = 48
     Top = 432
+  end
+  object IBTransaction1: TFDTransaction
+    Connection = DBMod.ArchivarConnection
+    Left = 120
+    Top = 328
+  end
+  object QueryUser: TFDQuery
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
+    SQL.Strings = (
+      'select * from PE_PERSON'
+      'where PE_NET = :net')
+    Left = 40
+    Top = 328
+    ParamData = <
+      item
+        Name = 'NET'
+        DataType = ftString
+        ParamType = ptInput
+      end>
   end
 end

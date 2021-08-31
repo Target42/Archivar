@@ -1,7 +1,7 @@
 object MainSetupForm: TMainSetupForm
   Left = 0
   Top = 0
-  ActiveControl = BitBtn1
+  ActiveControl = edHostname
   Caption = 'Setup'
   ClientHeight = 299
   ClientWidth = 558
@@ -29,7 +29,7 @@ object MainSetupForm: TMainSetupForm
     Top = 0
     Width = 558
     Height = 280
-    ActivePage = InitData
+    ActivePage = ServerInfo
     ButtonBarHeight = 42
     ButtonStart.Caption = 'To &Start Page'
     ButtonStart.NumGlyphs = 1
@@ -87,7 +87,7 @@ object MainSetupForm: TMainSetupForm
       Header.Title.Font.Name = 'Tahoma'
       Header.Title.Font.Style = [fsBold]
       Header.Subtitle.Color = clNone
-      Header.Subtitle.Text = 'Suche GDS32.dll'
+      Header.Subtitle.Text = 'Suche fbclient.dll'
       Header.Subtitle.Anchors = [akLeft, akTop, akRight, akBottom]
       Header.Subtitle.Font.Charset = DEFAULT_CHARSET
       Header.Subtitle.Font.Color = clWindowText
@@ -147,7 +147,7 @@ object MainSetupForm: TMainSetupForm
         EditLabel.Height = 13
         EditLabel.Caption = 'Datenbank'
         TabOrder = 1
-        Text = 'd:\db\archivar.gdb'
+        Text = 'd:\db\archivar.fdb'
       end
       object edDBUser: TLabeledEdit
         Left = 16
@@ -254,100 +254,91 @@ object MainSetupForm: TMainSetupForm
       end
     end
   end
-  object IBDatabase1: TIBDatabase
-    DatabaseName = 'D:\db\ARCHIVAR.GDB'
+  object ArchivarConnection: TFDConnection
     Params.Strings = (
-      'user_name=sysdba'
-      'password=masterkey')
+      'DriverID=FB'
+      'User_Name=sysdba'
+      'Password=masterkey')
     LoginPrompt = False
-    DefaultTransaction = IBTransaction1
-    ServerType = 'IBServer'
-    Left = 352
+    Transaction = IBTransaction1
+    Left = 46
+    Top = 20
+  end
+  object TETab: TFDQuery
+    Connection = ArchivarConnection
+    Transaction = IBTransaction1
+    SQL.Strings = (
+      'SELECT * FROM TE_TEMPLATE')
+    Left = 406
+    Top = 100
+  end
+  object PITab: TFDQuery
+    Connection = ArchivarConnection
+    Transaction = IBTransaction1
+    SQL.Strings = (
+      'SELECT * FROM PI_PIC')
+    Left = 483
+    Top = 99
+  end
+  object IBTransaction1: TFDTransaction
+    Connection = ArchivarConnection
+    Left = 48
     Top = 72
   end
-  object IBTransaction1: TIBTransaction
-    DefaultDatabase = IBDatabase1
-    Params.Strings = (
-      'read_committed'
-      'rec_version'
-      'nowait')
-    Left = 424
-    Top = 72
-  end
-  object IBScript1: TIBScript
-    Database = IBDatabase1
+  object IBScript1: TFDScript
+    SQLScripts = <>
+    Connection = ArchivarConnection
     Transaction = IBTransaction1
-    Terminator = ';'
-    Left = 432
-    Top = 128
+    Params = <>
+    Macros = <>
+    Left = 408
+    Top = 48
   end
-  object PITab: TIBTable
-    Database = IBDatabase1
+  object AutoIncQry: TFDQuery
+    Connection = ArchivarConnection
     Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    TableName = 'PI_PIC'
-    UniDirectional = False
-    Left = 344
-    Top = 136
-  end
-  object AutoIncQry: TIBQuery
-    Database = IBDatabase1
-    Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
-    Left = 232
-    Top = 152
-  end
-  object TYTab: TIBTable
-    Database = IBDatabase1
-    Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    TableName = 'TY_TASKTYPE'
-    UniDirectional = False
     Left = 496
-    Top = 136
+    Top = 48
   end
-  object FDTab: TIBTable
-    Database = IBDatabase1
+  object FDTab: TFDQuery
+    Connection = ArchivarConnection
     Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    TableName = 'FD_DELETE'
-    UniDirectional = False
-    Left = 488
-    Top = 80
+    SQL.Strings = (
+      'SELECT * FROM FD_DELETE')
+    Left = 402
+    Top = 159
   end
-  object GRTab: TIBTable
-    Database = IBDatabase1
+  object TYTab: TFDQuery
+    Connection = ArchivarConnection
     Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    TableName = 'GR_GREMIUM'
-    UniDirectional = False
-    Left = 344
-    Top = 189
+    SQL.Strings = (
+      'SELECT * FROM TY_TASKTYPE')
+    Left = 486
+    Top = 159
   end
-  object DATab: TIBTable
-    Database = IBDatabase1
+  object GRTab: TFDQuery
+    Connection = ArchivarConnection
     Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    TableName = 'DA_DATAFIELD'
-    UniDirectional = False
-    Left = 416
-    Top = 184
+    SQL.Strings = (
+      'SELECT * FROM GR_GREMIUM')
+    Left = 255
+    Top = 108
   end
-  object TETab: TIBTable
-    Database = IBDatabase1
+  object DATab: TFDQuery
+    Connection = ArchivarConnection
     Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    TableName = 'TE_TEMPLATE'
-    UniDirectional = False
-    Left = 288
-    Top = 128
+    SQL.Strings = (
+      'SELECT * FROM DA_DATAFIELD')
+    Left = 255
+    Top = 167
+  end
+  object CreateDB: TFDScript
+    SQLScripts = <>
+    Connection = ArchivarConnection
+    Transaction = IBTransaction1
+    Params = <>
+    Macros = <>
+    Left = 192
+    Top = 88
   end
 end

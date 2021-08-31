@@ -3,12 +3,16 @@ unit m_db;
 interface
 
 uses
-  System.SysUtils, System.Classes, IBX.IBDatabase, Data.DB;
+  System.SysUtils, System.Classes, FireDAC.Phys,
+  FireDAC.Phys.FB, FireDAC.Phys.FBDef, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def,
+  FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.VCLUI.Wait, FireDAC.Comp.Client,
+  Data.DB;
 
 type
   TDBMod = class(TDataModule)
-    IBDatabase1: TIBDatabase;
-    IBTransaction1: TIBTransaction;
+    ArchivarConnection: TFDConnection;
+    FDTransaction1: TFDTransaction;
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
   private
@@ -24,7 +28,7 @@ var
 implementation
 
 uses
-  Grijjy.CloudLogging, m_glob_server, u_ini;
+  Grijjy.CloudLogging, m_glob_server, u_ini, FireDAC.Phys.IBWrapper;
 
 {%CLASSGROUP 'System.Classes.TPersistent'}
 
@@ -48,14 +52,26 @@ begin
 
   db := IniOptions.DBhost+':'+IniOptions.DBdb;
   GrijjyLog.Send('db name', db);
-  try
-    IBDatabase1.DatabaseName := db;
-    IBDatabase1.Params.Clear;
-    IBDatabase1.Params.Values['user_name'] := IniOptions.DBuser;
-    IBDatabase1.Params.Values['password']  := IniOptions.DBpwd;
 
-    IBDatabase1.Open;
-    Result := IBDatabase1.Connected;
+  ArchivarConnection.Params.Clear;
+  ArchivarConnection.DriverName := 'FB';
+  ArchivarConnection.LoginPrompt := false;
+  with ArchivarConnection.Params as TFDPhysFBConnectionDefParams do
+  begin
+
+    Protocol  := ipTCPIP;
+    Server    := IniOptions.DBhost;
+    Database  := IniOptions.DBdb;
+    UserName  := IniOptions.DBuser;
+    Password  := IniOptions.DBpwd;
+    SQLDialect:= 3;
+    PageSize  := ps4096;
+  end;
+
+  try
+
+    ArchivarConnection.Open;
+    Result := ArchivarConnection.Connected;
     GrijjyLog.Send('database connected');
   except
     on e : Exception do
@@ -69,8 +85,8 @@ end;
 
 procedure TDBMod.stopDB;
 begin
-  if IBDatabase1.Connected then
-    IBDatabase1.Close;
+  if ArchivarConnection.Connected then
+    ArchivarConnection.Close;
 end;
 
 end.

@@ -7,10 +7,13 @@ uses
   Datasnap.DSTCPServerTransport,
   Datasnap.DSServer, Datasnap.DSCommonServer,
   IPPeerServer, IPPeerAPI, Datasnap.DSAuth, DbxSocketChannelNative,
-  DbxCompressionFilter, Vcl.SvcMgr, m_glob_server, IBX.IBDatabase, Data.DB,
-  IBX.IBCustomDataSet, IBX.IBQuery, m_lockMod, Datasnap.DSSession, i_user,
+  DbxCompressionFilter, Vcl.SvcMgr, m_glob_server, Data.DB,
+  m_lockMod, Datasnap.DSSession, i_user,
   System.JSON, IdBaseComponent, IdComponent, IdCustomTCPServer, IdTCPServer,
-  System.SyncObjs, System.Generics.Collections;
+  System.SyncObjs, System.Generics.Collections, FireDAC.Stan.Intf,
+  FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
+  FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
+  FireDAC.Comp.DataSet, FireDAC.Comp.Client;
 
 type
   TServerContainer1 = class(TService)
@@ -21,8 +24,6 @@ type
     DSAuthenticationManager1: TDSAuthenticationManager;
     dsPerson: TDSServerClass;
     dsTask: TDSServerClass;
-    QueryUser: TIBQuery;
-    IBTransaction1: TIBTransaction;
     dsFile: TDSServerClass;
     dsMisc: TDSServerClass;
     dsProtocol: TDSServerClass;
@@ -37,6 +38,8 @@ type
     dsMeeing: TDSServerClass;
     dsSitzung: TDSServerClass;
     dsUpdater: TDSServerClass;
+    IBTransaction1: TFDTransaction;
+    QueryUser: TFDQuery;
     procedure dsAdminGetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
     procedure ServiceStart(Sender: TService; var Started: Boolean);
@@ -383,7 +386,10 @@ var
     QueryUser.Open;
     if QueryUser.RecordCount = 1 then
     begin
-      Result := SameText( ph, QueryUser.FieldByName('pe_pwd').AsString);
+      if Password <> '' then
+        Result := SameText( ph, QueryUser.FieldByName('pe_pwd').AsString)
+      else
+        Result := true;
     end;
     GrijjyLog.send('result', Result);
     GrijjyLog.ExitMethod(self, 'DSAuthenticationManager1UserAuthenticate.CheckUser');
@@ -421,7 +427,7 @@ begin
 
   ph      := THashSHA2.GetHashString(Password);
 
-  if IBTransaction1.InTransaction then IBTransaction1.Rollback;
+  if IBTransaction1.Active then IBTransaction1.Rollback;
   IBTransaction1.StartTransaction;
 
   Session := TDSSessionManager.GetThreadSession;

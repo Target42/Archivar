@@ -5,40 +5,42 @@ interface
 uses
   System.SysUtils, System.Classes, Datasnap.DSServer, 
   Datasnap.DSAuth, Datasnap.DSProviderDataModuleAdapter, Datasnap.Provider,
-  Data.DB, IBX.IBCustomDataSet, IBX.IBQuery, IBX.IBDatabase, IBX.IBTable,
-  System.JSON;
+  Data.DB,
+  System.JSON, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
+  FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
+  FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.Client, FireDAC.Comp.DataSet;
 
 type
   [TRoleAuth('user,admin', 'download')]
   TdsMeeing = class(TDSServerModule)
-    IBTransaction1: TIBTransaction;
-    ListProtocol: TIBQuery;
     ListProtocolQry: TDataSetProvider;
-    PRTable: TIBTable;
     PRTab: TDataSetProvider;
-    ElTable: TIBTable;
     ElTab: TDataSetProvider;
-    ProtoQry: TIBQuery;
-    CPTab: TIBQuery;
-    CTTab: TIBQuery;
-    ELPETab: TIBTable;
-    GrPeQry: TIBQuery;
-    AutoIncQry: TIBQuery;
-    LastDocQry: TIBQuery;
-    DelELQry: TIBQuery;
-    FrindELQry: TIBQuery;
-    Teilnehmer: TIBQuery;
     TNQry: TDataSetProvider;
-    SetReadQry: TIBQuery;
-    UpdateTnQry: TIBQuery;
-    Gaeste: TIBQuery;
     TGQry: TDataSetProvider;
-    ResetReadQry: TIBQuery;
-    ChangeELPEStatusQry: TIBQuery;
-    OptTn: TIBQuery;
     OptTnQry: TDataSetProvider;
-    DeleteTN: TIBQuery;
-    AddTN: TIBQuery;
+    IBTransaction1: TFDTransaction;
+    DeleteTN: TFDQuery;
+    AddTN: TFDQuery;
+    ProtoQry: TFDQuery;
+    CPTab: TFDQuery;
+    CTTab: TFDQuery;
+    GrPeQry: TFDQuery;
+    LastDocQry: TFDQuery;
+    DelELQry: TFDQuery;
+    FrindELQry: TFDQuery;
+    SetReadQry: TFDQuery;
+    UpdateTnQry: TFDQuery;
+    ResetReadQry: TFDQuery;
+    ChangeELPEStatusQry: TFDQuery;
+    PRTable: TFDTable;
+    ElTable: TFDTable;
+    ELPETab: TFDTable;
+    AutoIncQry: TFDQuery;
+    ListProtocol: TFDQuery;
+    Teilnehmer: TFDQuery;
+    Gaeste: TFDQuery;
+    OptTn: TFDQuery;
   private
     procedure updateMeeting( el_id : integer );
   public
@@ -74,7 +76,7 @@ begin
   Result := AutoIncQry.FieldByName('GEN_ID').AsInteger;
   AutoIncQry.Close;
 
-  if AutoIncQry.Transaction.InTransaction then
+  if AutoIncQry.Transaction.Active then
     AutoIncQry.Transaction.Commit;
 
 end;
@@ -102,7 +104,7 @@ begin
     try
       SetReadQry.ExecSQL;
 
-      if SetReadQry.Transaction.InTransaction then
+      if SetReadQry.Transaction.Active then
         SetReadQry.Transaction.Commit;
       JResult(Result, true, '');
     except
@@ -110,7 +112,7 @@ begin
       begin
         JResult( Result, false, e.ToString);
 
-        if SetReadQry.Transaction.InTransaction then
+        if SetReadQry.Transaction.Active then
           SetReadQry.Transaction.Rollback;
       end;
     end;
@@ -124,14 +126,14 @@ begin
 
       UpdateTnQry.ExecSQL;
 
-      if UpdateTnQry.Transaction.InTransaction then
+      if UpdateTnQry.Transaction.Active then
         UpdateTnQry.Transaction.Commit;
       JResult(Result, true, '');
     except
       on e : exception do
       begin
         JResult( Result, false, e.ToString);
-        if UpdateTnQry.Transaction.InTransaction then
+        if UpdateTnQry.Transaction.Active then
           UpdateTnQry.Transaction.Rollback;
       end;
     end;
@@ -210,7 +212,7 @@ begin
   if Assigned(list) then
     list.Free;
 
-  if IBTransaction1.InTransaction then
+  if IBTransaction1.Active then
     IBTransaction1.Commit;
 
   JResult( Result, true, 'ok');
@@ -225,7 +227,7 @@ var
   canDelete : boolean;
   procedure Cancel(text : string );
   begin
-    if FrindELQry.Transaction.InTransaction then
+    if FrindELQry.Transaction.Active then
       FrindELQry.Transaction.Commit;
 
     JResult( Result, false, text);
@@ -270,7 +272,7 @@ begin
     DelELQry.ParamByName('EL_ID').AsInteger := id;
     DelELQry.ExecSQL;
 
-    if DelELQry.Transaction.InTransaction then
+    if DelELQry.Transaction.Active then
       DelELQry.Transaction.Commit;
 
     JResult( Result, true, 'Die Einladung wurde gelöscht');
@@ -279,7 +281,7 @@ begin
     begin
       JResult( Result, false, e.ToString);
 
-      if DelELQry.Transaction.InTransaction then
+      if DelELQry.Transaction.Active then
         DelELQry.Transaction.Rollback;
     end;
   end;
@@ -390,7 +392,7 @@ begin
   else
     JResult( Result, false, 'Das Protokoll wurde nicht gefunden!');
   ProtoQry.Close;
-  if ProtoQry.Transaction.InTransaction then
+  if ProtoQry.Transaction.Active then
     ProtoQry.Transaction.Commit;
 end;
 
@@ -405,7 +407,7 @@ begin
     ResetReadQry.ParamByName('el_id').AsInteger       := el_id;
     ResetReadQry.ExecSQL;
 
-    if IBTransaction1.InTransaction then
+    if IBTransaction1.Active then
       IBTransaction1.Commit;
     JResult(Result, true, 'ok');
 
@@ -416,7 +418,7 @@ begin
       JResult( Result, false, e.ToString);
     end;
   end;
-  if IBTransaction1.InTransaction then
+  if IBTransaction1.Active then
     IBTransaction1.Rollback;
 
 end;
@@ -475,14 +477,14 @@ begin
     JReplace( Result, 'id', id);
     JResult( Result, true, 'Eine neue Sitzung wurde angelegt.');
 
-    if ElTable.Transaction.InTransaction then
+    if ElTable.Transaction.Active then
       ElTable.Transaction.Commit;
   except
     on e : exception do
     begin
       JReplace( Result, 'id', -1);
       JResult( Result, false, e.ToString);
-      if ElTable.Transaction.InTransaction then
+      if ElTable.Transaction.Active then
         ElTable.Transaction.Rollback;
     end;
   end;
@@ -498,7 +500,7 @@ begin
 
     JResult( Result, true, IntToStr( ResetReadQry.RowsAffected));
 
-    if ResetReadQry.Transaction.InTransaction then
+    if ResetReadQry.Transaction.Active then
       ResetReadQry.Transaction.Commit;
 
     updateMeeting(JInt(req, 'elid'));
@@ -506,7 +508,7 @@ begin
     on e : exception do
     begin
       JResult( Result, false, e.ToString);
-      if ResetReadQry.Transaction.InTransaction then
+      if ResetReadQry.Transaction.Active then
         ResetReadQry.Transaction.Rollback;
 
     end;

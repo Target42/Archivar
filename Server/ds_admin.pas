@@ -5,14 +5,17 @@ interface
 uses System.SysUtils, System.Classes,
     DataSnap.DSProviderDataModuleAdapter,
     Datasnap.DSServer, Datasnap.DSAuth, System.JSON, Datasnap.DSSession,
-  IBX.IBDatabase, Data.DB, IBX.IBCustomDataSet, IBX.IBQuery, Datasnap.Provider;
+  IBX.IBDatabase, Data.DB, IBX.IBCustomDataSet, IBX.IBQuery, Datasnap.Provider,
+  FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
+  FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
+  FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet, FireDAC.Comp.Client;
 
 type
   [TRoleAuth('user,admin')]
   TAdminMod = class(TDSServerModule)
-    GremiumQry: TIBQuery;
-    IBTransaction1: TIBTransaction;
-    DeleteQry: TIBQuery;
+    FDTransaction1: TFDTransaction;
+    GremiumQry: TFDQuery;
+    DeleteQry: TFDQuery;
     procedure DSServerModuleCreate(Sender: TObject);
   private
     m_session : TDSSession;
@@ -60,7 +63,7 @@ begin
   DeleteQry.Close;
   JReplace( Result, 'items', arr);
 
-  if DeleteQry.Transaction.InTransaction then
+  if DeleteQry.Transaction.Active then
     DeleteQry.Transaction.Commit;
 end;
 
@@ -87,7 +90,7 @@ begin
   end;
   GremiumQry.Close;
 
-  if GremiumQry.Transaction.InTransaction then
+  if GremiumQry.Transaction.Active then
     GremiumQry.Transaction.Commit;
 
 

@@ -5,16 +5,18 @@ interface
 uses
   System.SysUtils, System.Classes, Datasnap.DSServer,
   Datasnap.DSAuth, Datasnap.DSProviderDataModuleAdapter, m_glob_server,
-  IBX.IBDatabase, m_db, Datasnap.Provider, Data.DB, IBX.IBCustomDataSet,
-  IBX.IBTable, System.JSON, IBX.IBQuery;
+  m_db, Datasnap.Provider, Data.DB,
+  System.JSON, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
+  FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
+  FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.Client, FireDAC.Comp.DataSet;
 
 type
   [TRoleAuth('admin,user')]
   TdsImage = class(TDSServerModule)
-    IBTransaction1: TIBTransaction;
-    PicTab: TIBTable;
     PicturesTab: TDataSetProvider;
-    AutoIncQry: TIBQuery;
+    AutoIncQry: TFDQuery;
+    PicTab: TFDTable;
+    IBTransaction1: TFDTransaction;
   private
     { Private-Deklarationen }
   public

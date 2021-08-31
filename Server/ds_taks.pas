@@ -5,43 +5,45 @@ interface
 uses
   System.SysUtils, System.Classes, Datasnap.DSServer, 
   Datasnap.DSAuth, Datasnap.DSProviderDataModuleAdapter, Datasnap.Provider,
-  IBX.IBDatabase, Data.DB, IBX.IBCustomDataSet, IBX.IBQuery, System.JSON,
-  IBX.IBTable, IBX.IBUpdateSQL;
+  Data.DB, System.JSON,
+  FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
+  FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet,
+  FireDAC.Comp.Client;
 
 type
   [TRoleAuth('user,admin', 'download')]
   TdsTask = class(TDSServerModule)
-    TaskTypesQry: TIBQuery;
-    IBTransaction1: TIBTransaction;
     TaskTypes: TDataSetProvider;
-    TaskTab: TIBTable;
     Task: TDataSetProvider;
-    AutoIncQry: TIBQuery;
-    GremiumQry: TIBQuery;
     GremiumList: TDataSetProvider;
-    OpenTasks: TIBTable;
-    ArchivQry: TIBQuery;
-    RemoveOpenTask: TIBQuery;
-    DeleteTrans: TIBTransaction;
-    RemoveTask: TIBQuery;
-    AddTask: TIBQuery;
-    SetFlagQry: TIBQuery;
-    DeleteOpenTA: TIBQuery;
-    DeleteFITA: TIBQuery;
-    DeleteFiles: TIBQuery;
-    DeleteTaskQry: TIBQuery;
-    TATab: TIBTable;
-    FindTask: TIBQuery;
-    SetStatusQry: TIBQuery;
-    TaskClidQry: TIBQuery;
-    Templates: TIBQuery;
     TemplatesQry: TDataSetProvider;
-    Template: TIBTable;
     TemplateTab: TDataSetProvider;
-    IBUpdateSQL1: TIBUpdateSQL;
-    TaskTable: TIBTable;
-    IBTransaction2: TIBTransaction;
     TaskTableSrc: TDataSetProvider;
+    IBTransaction2: TFDTransaction;
+    TaskTable: TFDTable;
+    DeleteTrans: TFDTransaction;
+    ArchivQry: TFDQuery;
+    RemoveOpenTask: TFDQuery;
+    RemoveTask: TFDQuery;
+    AddTask: TFDQuery;
+    SetFlagQry: TFDQuery;
+    DeleteOpenTA: TFDQuery;
+    DeleteFITA: TFDQuery;
+    DeleteFiles: TFDQuery;
+    DeleteTaskQry: TFDQuery;
+    FindTask: TFDQuery;
+    TaskClidQry: TFDQuery;
+    IBTransaction1: TFDTransaction;
+    TaskTab: TFDTable;
+    OpenTasks: TFDTable;
+    TATab: TFDTable;
+    Template: TFDTable;
+    TaskTypesQry: TFDQuery;
+    AutoIncQry: TFDQuery;
+    GremiumQry: TFDQuery;
+    SetStatusQry: TFDQuery;
+    Templates: TFDQuery;
   private
     { Private declarations }
 
@@ -85,7 +87,7 @@ begin
     exit;
   end;
 
-  if TATab.Transaction.InTransaction then
+  if TATab.Transaction.Active then
     TATab.Transaction.Rollback;
 
   IBTransaction1.StartTransaction;
@@ -135,7 +137,7 @@ var
 begin
   Result := TJSONObject.Create;
 
-  if DeleteTrans.InTransaction then
+  if DeleteTrans.Active then
     DeleteTrans.Rollback;
 
   DeleteTrans.StartTransaction;
@@ -163,7 +165,7 @@ begin
     end;
   except
   end;
-  if DeleteTrans.InTransaction then
+  if DeleteTrans.Active then
     DeleteTrans.Rollback
 end;
 
@@ -182,7 +184,7 @@ begin
     exit;
   end;
 
-  if DeleteTrans.InTransaction then
+  if DeleteTrans.Active then
     DeleteTrans.Rollback;
 
   DeleteTrans.StartTransaction;
@@ -247,7 +249,7 @@ begin
     exit;
   end;
 
-  if DeleteTrans.InTransaction then
+  if DeleteTrans.Active then
     DeleteTrans.Rollback;
 
   DeleteTrans.StartTransaction;
@@ -298,7 +300,7 @@ end;
 
 procedure TdsTask.setFlags(taid, flags: integer);
 begin
-  if IBTransaction1.InTransaction then
+  if IBTransaction1.Active then
     IBTransaction1.Rollback;
   IBTransaction1.StartTransaction;
 

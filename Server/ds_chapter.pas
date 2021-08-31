@@ -5,18 +5,20 @@ interface
 uses
   System.SysUtils, System.Classes, Datasnap.DSServer, 
   Datasnap.DSAuth, Datasnap.DSProviderDataModuleAdapter, Datasnap.Provider,
-  IBX.IBDatabase, Data.DB, IBX.IBCustomDataSet, IBX.IBTable, IBX.IBQuery;
+  Data.DB, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
+  FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
+  FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.Client, FireDAC.Comp.DataSet;
 
 type
   [TRoleAuth('user,admin', 'download')]
   TdsChapter = class(TDSServerModule)
-    Chapter: TIBTable;
-    IBTransaction1: TIBTransaction;
     ChapterTab: TDataSetProvider;
-    ListTasksQry: TIBQuery;
     ListTasks: TDataSetProvider;
-    ChapterText: TIBTable;
     ChapterTextTab: TDataSetProvider;
+    FDTransaction1: TFDTransaction;
+    Chapter: TFDTable;
+    ChapterText: TFDTable;
+    ListTasksQry: TFDQuery;
   private
     { Private-Deklarationen }
   public

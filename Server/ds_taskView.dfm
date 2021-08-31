@@ -2,51 +2,6 @@ object dsTaskView: TdsTaskView
   OldCreateOrder = False
   Height = 334
   Width = 623
-  object GetTA: TIBQuery
-    Database = DBMod.IBDatabase1
-    Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
-    SQL.Strings = (
-      'select * from TA_TASK'
-      'where TA_ID = :TA_ID')
-    Left = 40
-    Top = 48
-    ParamData = <
-      item
-        DataType = ftInteger
-        Name = 'TA_ID'
-        ParamType = ptInput
-      end>
-  end
-  object GetTE: TIBQuery
-    Database = DBMod.IBDatabase1
-    Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
-    SQL.Strings = (
-      'select * from TE_TEMPLATE'
-      'where TE_ID = :TE_ID')
-    Left = 40
-    Top = 120
-    ParamData = <
-      item
-        DataType = ftInteger
-        Name = 'TE_ID'
-        ParamType = ptInput
-      end>
-  end
-  object IBTransaction1: TIBTransaction
-    DefaultDatabase = DBMod.IBDatabase1
-    Params.Strings = (
-      'read_committed'
-      'rec_version'
-      'nowait')
-    Left = 272
-    Top = 48
-  end
   object GetTAQry: TDataSetProvider
     DataSet = GetTA
     Left = 40
@@ -57,41 +12,78 @@ object dsTaskView: TdsTaskView
     Left = 112
     Top = 192
   end
-  object Task: TIBTable
-    Database = DBMod.IBDatabase1
-    Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    UniDirectional = False
-    Left = 264
-    Top = 112
-  end
   object TaskTab: TDataSetProvider
     DataSet = Task
     Left = 264
     Top = 184
-  end
-  object BE: TIBTable
-    Database = DBMod.IBDatabase1
-    Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    TableName = 'BE_BESCHLUS'
-    UniDirectional = False
-    Left = 464
-    Top = 112
   end
   object BETab: TDataSetProvider
     DataSet = BE
     Left = 464
     Top = 176
   end
-  object GetSysTe: TIBQuery
-    Database = DBMod.IBDatabase1
+  object GetSysTeQry: TDataSetProvider
+    DataSet = GetSysTe
+    Left = 136
+    Top = 136
+  end
+  object IBTransaction1: TFDTransaction
+    Connection = DBMod.ArchivarConnection
+    Left = 272
+    Top = 48
+  end
+  object Task: TFDTable
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
     Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
+    Left = 264
+    Top = 112
+  end
+  object BE: TFDTable
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
+    UpdateOptions.UpdateTableName = 'BE_BESCHLUS'
+    TableName = 'BE_BESCHLUS'
+    Left = 464
+    Top = 112
+  end
+  object GetTA: TFDQuery
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
+    SQL.Strings = (
+      'select * from TA_TASK'
+      'where TA_ID = :TA_ID')
+    Left = 40
+    Top = 48
+    ParamData = <
+      item
+        Name = 'TA_ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+  end
+  object GetTE: TFDQuery
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
+    SQL.Strings = (
+      'select * from TE_TEMPLATE'
+      'where TE_ID = :TE_ID')
+    Left = 40
+    Top = 120
+    ParamData = <
+      item
+        Name = 'TE_ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+  end
+  object GetSysTe: TFDQuery
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
     SQL.Strings = (
       'select * from TE_TEMPLATE'
       'where TE_CLID = :clid')
@@ -99,14 +91,9 @@ object dsTaskView: TdsTaskView
     Top = 80
     ParamData = <
       item
+        Name = 'CLID'
         DataType = ftString
-        Name = 'clid'
         ParamType = ptInput
       end>
-  end
-  object GetSysTeQry: TDataSetProvider
-    DataSet = GetSysTe
-    Left = 136
-    Top = 136
   end
 end

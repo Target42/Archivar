@@ -1,152 +1,11 @@
 object dsProtocol: TdsProtocol
   OldCreateOrder = False
-  Height = 507
-  Width = 826
-  object PRTab: TIBTable
-    Database = DBMod.IBDatabase1
-    Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    TableName = 'PR_PROTOKOL'
-    UniDirectional = False
-    Left = 24
-    Top = 16
-  end
-  object IBTransaction1: TIBTransaction
-    DefaultDatabase = DBMod.IBDatabase1
-    Params.Strings = (
-      'read_committed'
-      'rec_version'
-      'nowait')
-    Left = 144
-    Top = 16
-  end
-  object AutoIncQry: TIBQuery
-    Database = DBMod.IBDatabase1
-    Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
-    Left = 80
-    Top = 16
-  end
+  Height = 553
+  Width = 978
   object PRTable: TDataSetProvider
     DataSet = PRTab
     Left = 24
     Top = 88
-  end
-  object TNTab: TIBTable
-    Database = DBMod.IBDatabase1
-    Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    FieldDefs = <
-      item
-        Name = 'PR_ID'
-        Attributes = [faRequired]
-        DataType = ftInteger
-      end
-      item
-        Name = 'TN_ID'
-        Attributes = [faRequired]
-        DataType = ftInteger
-      end
-      item
-        Name = 'TN_NAME'
-        DataType = ftWideString
-        Size = 100
-      end
-      item
-        Name = 'TN_VORNAME'
-        DataType = ftWideString
-        Size = 100
-      end
-      item
-        Name = 'TN_DEPARTMENT'
-        DataType = ftWideString
-        Size = 25
-      end
-      item
-        Name = 'TN_ROLLE'
-        DataType = ftWideString
-        Size = 50
-      end
-      item
-        Name = 'TN_STATUS'
-        DataType = ftInteger
-      end
-      item
-        Name = 'PE_ID'
-        DataType = ftInteger
-      end
-      item
-        Name = 'TN_GRUND'
-        DataType = ftWideString
-        Size = 100
-      end>
-    IndexDefs = <
-      item
-        Name = 'PK_TN_TEILNEHMER'
-        Fields = 'PR_ID;TN_ID'
-        Options = [ixUnique]
-      end
-      item
-        Name = 'FK_REF_1060'
-        Fields = 'PR_ID'
-      end
-      item
-        Name = 'TN_TELNEHMER_SEC'
-        Fields = 'TN_NAME;TN_VORNAME;TN_DEPARTMENT'
-      end>
-    StoreDefs = True
-    TableName = 'TN_TEILNEHMER'
-    UniDirectional = False
-    Left = 192
-    Top = 128
-    object TNTabPR_ID: TIntegerField
-      FieldName = 'PR_ID'
-      Required = True
-    end
-    object TNTabTN_ID: TIntegerField
-      FieldName = 'TN_ID'
-      Required = True
-    end
-    object TNTabTN_NAME: TIBStringField
-      FieldName = 'TN_NAME'
-      Size = 100
-    end
-    object TNTabTN_VORNAME: TIBStringField
-      FieldName = 'TN_VORNAME'
-      Size = 100
-    end
-    object TNTabTN_DEPARTMENT: TIBStringField
-      FieldName = 'TN_DEPARTMENT'
-      Size = 25
-    end
-    object TNTabTN_ROLLE: TIBStringField
-      FieldName = 'TN_ROLLE'
-      Size = 50
-    end
-    object TNTabTN_STATUS: TIntegerField
-      FieldName = 'TN_STATUS'
-    end
-    object TNTabPE_ID: TIntegerField
-      FieldName = 'PE_ID'
-    end
-    object TNTabTN_GRUND: TIBStringField
-      FieldName = 'TN_GRUND'
-      Size = 100
-    end
-  end
-  object TGTab: TIBTable
-    Database = DBMod.IBDatabase1
-    Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    TableName = 'TG_GAESTE'
-    UniDirectional = False
-    Left = 248
-    Top = 128
   end
   object Teilnehmer: TDataSetProvider
     DataSet = TNTab
@@ -158,94 +17,213 @@ object dsProtocol: TdsProtocol
     Left = 248
     Top = 184
   end
-  object PEQry: TIBQuery
-    Database = DBMod.IBDatabase1
-    Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
-    SQL.Strings = (
-      'select  * from GR_PA a,  PE_PERSON b'
-      'where GR_ID = :GR_ID'
-      'and a.PE_ID = b.PE_ID')
-    Left = 88
-    Top = 88
-    ParamData = <
-      item
-        DataType = ftInteger
-        Name = 'GR_ID'
-        ParamType = ptInput
-      end>
+  object ListPrQry: TDataSetProvider
+    DataSet = ListPr
+    Left = 400
+    Top = 80
   end
-  object DeleteTrans: TIBTransaction
-    DefaultDatabase = DBMod.IBDatabase1
-    Params.Strings = (
-      'read_committed'
-      'rec_version'
-      'nowait')
-    Left = 560
+  object AutoIncValue: TDataSetProvider
+    DataSet = incQry
+    Left = 408
+    Top = 216
+  end
+  object ChapterTab: TDataSetProvider
+    DataSet = CPTab
+    Left = 24
+    Top = 208
+  end
+  object UpdateCPQry: TDataSetProvider
+    DataSet = UpdateCP
+    Left = 88
+    Top = 216
+  end
+  object ListTasks: TDataSetProvider
+    DataSet = ListTasksQry
+    Left = 224
+    Top = 72
+  end
+  object CPTextTab: TDataSetProvider
+    DataSet = CPText
+    Left = 272
+    Top = 264
+  end
+  object BETab: TDataSetProvider
+    DataSet = BE
+    Left = 360
+    Top = 424
+  end
+  object DeleteTrans: TFDTransaction
+    Connection = DBMod.ArchivarConnection
+    Left = 752
     Top = 16
   end
-  object deleteTNQry: TIBQuery
-    Database = DBMod.IBDatabase1
-    Transaction = DeleteTrans
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
+  object deleteTNQry: TFDQuery
+    ObjectView = False
     SQL.Strings = (
       'delete from TN_TEILNEHMER'
       'where  PR_ID = :PR_ID')
-    Left = 560
+    Left = 752
     Top = 72
     ParamData = <
       item
-        DataType = ftInteger
         Name = 'PR_ID'
+        DataType = ftInteger
         ParamType = ptInput
       end>
   end
-  object deleteTGQry: TIBQuery
-    Database = DBMod.IBDatabase1
-    Transaction = DeleteTrans
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
+  object deleteTGQry: TFDQuery
+    ObjectView = False
     SQL.Strings = (
       'delete from TG_GAESTE'
       'where PR_ID = :PR_ID')
-    Left = 560
+    Left = 752
     Top = 120
     ParamData = <
       item
-        DataType = ftInteger
         Name = 'PR_ID'
+        DataType = ftInteger
         ParamType = ptInput
       end>
   end
-  object deletePR: TIBQuery
-    Database = DBMod.IBDatabase1
-    Transaction = DeleteTrans
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
+  object deletePR: TFDQuery
+    ObjectView = False
     SQL.Strings = (
       'delete from PR_PROTOKOL'
       'where PR_ID = :PR_ID')
-    Left = 560
+    Left = 752
     Top = 168
     ParamData = <
       item
-        DataType = ftInteger
         Name = 'PR_ID'
+        DataType = ftInteger
         ParamType = ptInput
       end>
   end
-  object ListPr: TIBQuery
-    Database = DBMod.IBDatabase1
+  object DeleteChapter: TFDQuery
+    ObjectView = False
+    SQL.Strings = (
+      'delete from CP_CHAPTER'
+      'where PR_ID = :PR_ID')
+    Left = 768
+    Top = 256
+    ParamData = <
+      item
+        Name = 'PR_ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+  end
+  object SelectChapterQry: TFDQuery
+    ObjectView = False
+    SQL.Strings = (
+      'select * from CP_CHAPTER'
+      'where PR_ID = :PR_ID')
+    Left = 860
+    Top = 256
+    ParamData = <
+      item
+        Name = 'PR_ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+  end
+  object SelectChapterTextQry: TFDQuery
+    ObjectView = False
+    SQL.Strings = (
+      'select * from CT_CHAPTER_TEXT'
+      'where CP_ID = :CP_ID')
+    Left = 864
+    Top = 312
+    ParamData = <
+      item
+        Name = 'CP_ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+  end
+  object deleteBEQry: TFDQuery
+    ObjectView = False
+    SQL.Strings = (
+      'delete from BE_BESCHLUS'
+      'where BE_ID = :BE_ID')
+    Left = 872
+    Top = 376
+    ParamData = <
+      item
+        Name = 'BE_ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+  end
+  object deleteCT: TFDQuery
+    ObjectView = False
+    SQL.Strings = (
+      'delete from CT_CHAPTER_TEXT'
+      'where CP_ID = :CP_ID')
+    Left = 768
+    Top = 392
+    ParamData = <
+      item
+        Name = 'CP_ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+  end
+  object BE: TFDTable
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
     Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
+    UpdateOptions.UpdateTableName = 'BE_BESCHLUS'
+    TableName = 'BE_BESCHLUS'
+    Left = 360
+    Top = 360
+  end
+  object PRTab: TFDTable
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
+    UpdateOptions.UpdateTableName = 'PR_PROTOKOL'
+    TableName = 'PR_PROTOKOL'
+    Left = 24
+    Top = 16
+  end
+  object TGTab: TFDTable
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
+    UpdateOptions.UpdateTableName = 'TG_GAESTE'
+    TableName = 'TG_GAESTE'
+    Left = 248
+    Top = 128
+  end
+  object CPTab: TFDTable
+    ObjectView = False
+    IndexName = 'CP_CHAPTER_SEC'
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
+    UpdateOptions.UpdateTableName = 'CP_CHAPTER'
+    TableName = 'CP_CHAPTER'
+    Left = 24
+    Top = 152
+  end
+  object IBTransaction1: TFDTransaction
+    Connection = DBMod.ArchivarConnection
+    Left = 56
+    Top = 368
+  end
+  object CPText: TFDTable
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
+    UpdateOptions.UpdateTableName = 'CT_CHAPTER_TEXT'
+    TableName = 'CT_CHAPTER_TEXT'
+    Left = 200
+    Top = 264
+  end
+  object ListPr: TFDQuery
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
     SQL.Strings = (
       'select  * from PR_PROTOKOL'
       'where GR_ID = :GR_ID'
@@ -254,72 +232,48 @@ object dsProtocol: TdsProtocol
     Top = 24
     ParamData = <
       item
-        DataType = ftInteger
         Name = 'GR_ID'
+        DataType = ftInteger
         ParamType = ptInput
       end>
   end
-  object ListPrQry: TDataSetProvider
-    DataSet = ListPr
-    Left = 400
-    Top = 80
-  end
-  object incQry: TIBQuery
-    Database = DBMod.IBDatabase1
-    Transaction = DBMod.IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
+  object incQry: TFDQuery
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
     SQL.Strings = (
       'SELECT GEN_ID(gen_tg_id, 1 ) FROM RDB$DATABASE;')
     Left = 408
     Top = 152
   end
-  object AutoIncValue: TDataSetProvider
-    DataSet = incQry
-    Left = 408
-    Top = 216
-  end
-  object CPTab: TIBTable
-    Database = DBMod.IBDatabase1
+  object AutoIncQry: TFDQuery
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
     Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    IndexName = 'CP_CHAPTER_SEC'
-    TableName = 'CP_CHAPTER'
-    UniDirectional = False
-    Left = 24
-    Top = 152
+    Left = 80
+    Top = 16
   end
-  object ChapterTab: TDataSetProvider
-    DataSet = CPTab
-    Left = 24
-    Top = 208
-  end
-  object DeleteChapter: TIBQuery
-    Database = DBMod.IBDatabase1
-    Transaction = DeleteTrans
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
+  object PEQry: TFDQuery
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
     SQL.Strings = (
-      'delete from CP_CHAPTER'
-      'where PR_ID = :PR_ID')
-    Left = 576
-    Top = 256
+      'select  * from GR_PA a,  PE_PERSON b'
+      'where GR_ID = :GR_ID'
+      'and a.PE_ID = b.PE_ID')
+    Left = 88
+    Top = 88
     ParamData = <
       item
+        Name = 'GR_ID'
         DataType = ftInteger
-        Name = 'PR_ID'
         ParamType = ptInput
       end>
   end
-  object UpdateCP: TIBQuery
-    Database = DBMod.IBDatabase1
+  object UpdateCP: TFDQuery
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
     Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
     SQL.Strings = (
       'update CP_CHAPTER'
       'set CP_NR = :CP_NR, CP_TITLE = :CP_TITLE'
@@ -328,32 +282,25 @@ object dsProtocol: TdsProtocol
     Top = 152
     ParamData = <
       item
-        DataType = ftInteger
         Name = 'CP_NR'
-        ParamType = ptInput
-      end
-      item
-        DataType = ftString
-        Name = 'CP_TITLE'
-        ParamType = ptInput
-      end
-      item
         DataType = ftInteger
+        ParamType = ptInput
+      end
+      item
+        Name = 'CP_TITLE'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
         Name = 'CP_ID'
+        DataType = ftInteger
         ParamType = ptInput
       end>
   end
-  object UpdateCPQry: TDataSetProvider
-    DataSet = UpdateCP
-    Left = 80
-    Top = 216
-  end
-  object DeleteCPQry: TIBQuery
-    Database = DBMod.IBDatabase1
-    Transaction = DeleteTrans
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
+  object DeleteCPQry: TFDQuery
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
     SQL.Strings = (
       'delete from CP_CHAPTER'
       'where CP_ID = :CP_ID')
@@ -361,17 +308,15 @@ object dsProtocol: TdsProtocol
     Top = 272
     ParamData = <
       item
-        DataType = ftInteger
         Name = 'CP_ID'
+        DataType = ftInteger
         ParamType = ptInput
       end>
   end
-  object ListTasksQry: TIBQuery
-    Database = DBMod.IBDatabase1
+  object ListTasksQry: TFDQuery
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
     Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
     SQL.Strings = (
       'select * from TO_OPEN a,  TA_TASK b,  TY_TASKTYPE c'
       'where '
@@ -384,116 +329,17 @@ object dsProtocol: TdsProtocol
     Top = 16
     ParamData = <
       item
-        DataType = ftInteger
         Name = 'GR_ID'
         ParamType = ptInput
       end>
   end
-  object ListTasks: TDataSetProvider
-    DataSet = ListTasksQry
-    Left = 224
-    Top = 72
-  end
-  object CPText: TIBTable
-    Database = DBMod.IBDatabase1
+  object TNTab: TFDTable
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
     Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    TableName = 'CT_CHAPTER_TEXT'
-    UniDirectional = False
-    Left = 200
-    Top = 264
-  end
-  object CPTextTab: TDataSetProvider
-    DataSet = CPText
-    Left = 272
-    Top = 264
-  end
-  object BE: TIBTable
-    Database = DBMod.IBDatabase1
-    Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    TableName = 'BE_BESCHLUS'
-    UniDirectional = False
-    Left = 360
-    Top = 360
-  end
-  object BETab: TDataSetProvider
-    DataSet = BE
-    Left = 360
-    Top = 424
-  end
-  object SelectChapterQry: TIBQuery
-    Database = DBMod.IBDatabase1
-    Transaction = DeleteTrans
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
-    SQL.Strings = (
-      'select * from CP_CHAPTER'
-      'where PR_ID = :PR_ID')
-    Left = 668
-    Top = 256
-    ParamData = <
-      item
-        DataType = ftInteger
-        Name = 'PR_ID'
-        ParamType = ptInput
-      end>
-  end
-  object SelectChapterTextQry: TIBQuery
-    Database = DBMod.IBDatabase1
-    Transaction = DeleteTrans
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
-    SQL.Strings = (
-      'select * from CT_CHAPTER_TEXT'
-      'where CP_ID = :CP_ID')
-    Left = 672
-    Top = 312
-    ParamData = <
-      item
-        DataType = ftInteger
-        Name = 'CP_ID'
-        ParamType = ptInput
-      end>
-  end
-  object deleteBEQry: TIBQuery
-    Database = DBMod.IBDatabase1
-    Transaction = DeleteTrans
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
-    SQL.Strings = (
-      'delete from BE_BESCHLUS'
-      'where BE_ID = :BE_ID')
-    Left = 680
-    Top = 376
-    ParamData = <
-      item
-        DataType = ftInteger
-        Name = 'BE_ID'
-        ParamType = ptInput
-      end>
-  end
-  object deleteCT: TIBQuery
-    Database = DBMod.IBDatabase1
-    Transaction = DeleteTrans
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
-    SQL.Strings = (
-      'delete from CT_CHAPTER_TEXT'
-      'where CP_ID = :CP_ID')
-    Left = 576
-    Top = 392
-    ParamData = <
-      item
-        DataType = ftInteger
-        Name = 'CP_ID'
-        ParamType = ptInput
-      end>
+    UpdateOptions.UpdateTableName = 'TN_TEILNEHMER'
+    TableName = 'TN_TEILNEHMER'
+    Left = 192
+    Top = 128
   end
 end

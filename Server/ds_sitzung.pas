@@ -4,18 +4,21 @@ interface
 
 uses
   System.SysUtils, System.Classes, Datasnap.DSServer, 
-  Datasnap.DSAuth, Datasnap.DSProviderDataModuleAdapter, IBX.IBDatabase,
-  Datasnap.Provider, Data.DB, IBX.IBCustomDataSet, IBX.IBTable, System.JSON,
-  IBX.IBQuery, u_teilnehmer;
+  Datasnap.DSAuth, Datasnap.DSProviderDataModuleAdapter,
+  Datasnap.Provider, Data.DB, System.JSON,
+  u_teilnehmer, FireDAC.Stan.Intf, FireDAC.Stan.Option,
+  FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf,
+  FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.Client,
+  FireDAC.Comp.DataSet;
 
 type
   [TRoleAuth('user,admin', 'download')]
   TdsSitzung = class(TDSServerModule)
-    IBTransaction1: TIBTransaction;
-    ELTab: TIBTable;
     ELSrc: TDataSetProvider;
-    TNQry: TIBQuery;
     TNSrc: TDataSetProvider;
+    IBTransaction1: TFDTransaction;
+    TNQry: TFDQuery;
+    ELTab: TFDTable;
   private
   public
     // enter & leave the meeting
