@@ -10,6 +10,7 @@ const
   csIniDSSection = 'DS';
   csIniclientSection = 'client';
   csIniDNLSection = 'DNL';
+  cdSecretSection = 'secret';
 
   {Section: DB}
   csIniDBhost = 'host';
@@ -29,6 +30,9 @@ const
   csIniDNLactive = 'active';
   csIniDNLport = 'port';
   csIniDNLwwwroot = 'wwwroot';
+
+  {Section: secret }
+  csIniSecretName = 'name';
 
 type
   TIniOptions = class(TObject)
@@ -51,6 +55,9 @@ type
     FDNLactive: string;
     FDNLport: Integer;
     FDNLwwwroot: string;
+
+    {section: secret}
+    FSecretName : string;
   public
     procedure LoadSettings(Ini: TIniFile);
     procedure SaveSettings(Ini: TIniFile);
@@ -76,6 +83,9 @@ type
     property DNLactive: string read FDNLactive write FDNLactive;
     property DNLport: Integer read FDNLport write FDNLport;
     property DNLwwwroot: string read FDNLwwwroot write FDNLwwwroot;
+
+    {Section: secret}
+    property SecretName : string read FSecretName write FSecretName;
   end;
 
 var
@@ -105,6 +115,9 @@ begin
     FDNLactive := Ini.ReadString(csIniDNLSection, csIniDNLactive, 'true');
     FDNLport := Ini.ReadInteger(csIniDNLSection, csIniDNLport, 42001);
     FDNLwwwroot := Ini.ReadString(csIniDNLSection, csIniDNLwwwroot, '.\www_dnl\');
+
+    {Section: secret}
+    FSecretName := ini.ReadString(cdSecretSection, csIniSecretName, '');
   end;
 end;
 
@@ -130,6 +143,9 @@ begin
     Ini.WriteString(csIniDNLSection, csIniDNLactive, FDNLactive);
     Ini.WriteInteger(csIniDNLSection, csIniDNLport, FDNLport);
     Ini.WriteString(csIniDNLSection, csIniDNLwwwroot, FDNLwwwroot);
+
+    {Section: secret}
+    ini.WriteString(cdSecretSection, csIniSecretName, FSecretName);
   end;
 end;
 

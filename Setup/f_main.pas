@@ -43,6 +43,10 @@ type
     GRTab: TFDQuery;
     DATab: TFDQuery;
     CreateDB: TFDScript;
+    Sicherheit: TJvWizardInteriorPage;
+    LabeledEdit1: TLabeledEdit;
+    LabeledEdit2: TLabeledEdit;
+    SetPwdQry: TFDQuery;
     procedure SearchGDSEnterPage(Sender: TObject;
       const FromPage: TJvWizardCustomPage);
     procedure ServerInfoEnterPage(Sender: TObject;
@@ -54,6 +58,10 @@ type
     procedure BitBtn1Click(Sender: TObject);
     procedure JvWizard1FinishButtonClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure SicherheitEnterPage(Sender: TObject;
+      const FromPage: TJvWizardCustomPage);
+    procedure SicherheitExitPage(Sender: TObject;
+      const FromPage: TJvWizardCustomPage);
   private
     m_home  : string;
     m_ini   : TiniFile;
@@ -78,7 +86,8 @@ implementation
 
 uses
   System.IOUtils, System.Types, IdHashMessageDigest, xsd_TaskType,
-  xsd_Betriebsrat, xsd_DataField, FireDAC.Phys.IBWrapper;
+  xsd_Betriebsrat, xsd_DataField, FireDAC.Phys.IBWrapper,
+  System.Win.ComObj, System.Hash;
 
 {$R *.dfm}
 
@@ -501,6 +510,38 @@ procedure TMainSetupForm.ServerInfoEnterPage(Sender: TObject;
   const FromPage: TJvWizardCustomPage);
 begin
   ServerInfo.VisibleButtons := [TJvWizardButtonKind.bkBack, TJvWizardButtonKind.bkCancel];
+end;
+
+procedure TMainSetupForm.SicherheitEnterPage(Sender: TObject;
+  const FromPage: TJvWizardCustomPage);
+var
+  s : string;
+  IdMD5: TIdHashMessageDigest5;
+begin
+  s := m_ini.ReadString('secret', 'name', '');
+  if s = '' then begin
+    IdMD5 := TIdHashMessageDigest5.Create;
+    LabeledEdit2.Text := IdMD5.HashStringAsHex(CreateClassID);
+    IdMD5.Free;
+  end
+  else
+    LabeledEdit2.Text := s;
+end;
+
+procedure TMainSetupForm.SicherheitExitPage(Sender: TObject;
+  const FromPage: TJvWizardCustomPage);
+var
+  s : string;
+begin
+  m_ini.WriteString('secret', 'name', LabeledEdit2.Text);
+
+  s  := THashSHA2.GetHashString( 'admin'+LabeledEdit2.Text+LabeledEdit1.Text);
+  SetPwdQry.ParamByName('pwd').AsString := s;
+  SetPwdQry.ExecSQL;
+
+  if IBTransaction1.Active then
+    IBTransaction1.Commit;
+
 end;
 
 end.

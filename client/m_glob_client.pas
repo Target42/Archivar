@@ -273,6 +273,7 @@ begin
 
   SQLConnection1.Params.Values['DSAuthenticationUser']      := LoginForm.UserName;
   SQLConnection1.Params.Values['DSAuthenticationPassword']  := LoginForm.Password;
+  SQLConnection1.Params.Values['HostName']                  := LoginForm.HostName;
 
   DSClientCallbackChannelManager1.UserName  := '*'+LoginForm.UserName;
   DSClientCallbackChannelManager1.Password  := LoginForm.Password;

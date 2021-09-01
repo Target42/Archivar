@@ -4,6 +4,7 @@
   <Title>Archivar</Title>
   <ModifyDate>2020-07-16T19:45:46.5050639+02:00</ModifyDate>
   <CreateDate>2020-07-16T19:45:46.5050639+02:00</CreateDate>
+  <ProjectFormat>Document</ProjectFormat>
   <ModifyUser>steph</ModifyUser>
   <CreateUser>steph</CreateUser>
   <Version>5.2</Version>
@@ -12,12 +13,4 @@
   <FormatStyleTitle>Titel</FormatStyleTitle>
   <SpellAsYouType>true</SpellAsYouType>
   <EnableLocking>false</EnableLocking>
-  <ReadOnly>false</ReadOnly>
-  <IsSystem>false</IsSystem>
-  <HideSystemWarning>false</HideSystemWarning>
-  <VersioningEnabled>false</VersioningEnabled>
-  <CreateMajorVersionsOnEdit>false</CreateMajorVersionsOnEdit>
-  <CreateMajorAndMinorVersionsOnEdit>false</CreateMajorAndMinorVersionsOnEdit>
-  <AllowDuplicateTitles>false</AllowDuplicateTitles>
-  <UseDatabase>false</UseDatabase>
 </Project>

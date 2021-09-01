@@ -95,6 +95,7 @@ type
     const
       MaxUserNameLength = 25;
   private
+    m_secret : string;
     m_Lock : TCriticalSection;
     m_sessions : TThreadList<String>;
 
@@ -386,10 +387,9 @@ var
     QueryUser.Open;
     if QueryUser.RecordCount = 1 then
     begin
-      if Password <> '' then
+      Result := (Password = '' ) and QueryUser.FieldByName('pe_pwd').AsString.IsEmpty;
+      if not Result then
         Result := SameText( ph, QueryUser.FieldByName('pe_pwd').AsString)
-      else
-        Result := true;
     end;
     GrijjyLog.send('result', Result);
     GrijjyLog.ExitMethod(self, 'DSAuthenticationManager1UserAuthenticate.CheckUser');
@@ -398,6 +398,7 @@ var
   procedure broadcastUser(userName : string );
   begin
     userName := trim(StringReplace(userName, '*', '',[rfReplaceAll, rfIgnoreCase]));
+    ph       := THashSHA2.GetHashString( LowerCase(userName)+m_secret+Password);
 
     valid := checkUser( userName );
     if valid then
@@ -443,6 +444,7 @@ begin
     // callback channel ...
     broadcastUser( userName);
   end else begin
+    ph      := THashSHA2.GetHashString( LowerCase(userName)+m_secret+Password);
     // normal user
     GrijjyLog.send('session id', Session.Id );
     GrijjyLog.Send('session name', Session.UserName );
@@ -590,6 +592,8 @@ begin
   HellMod     := THellMod.create(self );
   m_lock      := TCriticalSection.Create;
   m_sessions  := TThreadList<String>.create;
+
+  m_secret    := IniOptions.SecretName;
 
 
   FileServer.createUpdaterZIP;

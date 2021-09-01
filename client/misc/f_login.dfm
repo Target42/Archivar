@@ -3,7 +3,7 @@ object LoginForm: TLoginForm
   Top = 0
   BorderStyle = bsDialog
   Caption = 'Anmeldung'
-  ClientHeight = 183
+  ClientHeight = 224
   ClientWidth = 240
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,14 +19,14 @@ object LoginForm: TLoginForm
   TextHeight = 13
   object Label1: TLabel
     Left = 16
-    Top = 5
+    Top = 37
     Width = 43
     Height = 13
     Caption = 'Benutzer'
   end
   object LabeledEdit2: TLabeledEdit
     Left = 16
-    Top = 72
+    Top = 120
     Width = 193
     Height = 21
     EditLabel.Width = 46
@@ -38,7 +38,7 @@ object LoginForm: TLoginForm
   end
   inline BaseFrame1: TBaseFrame
     Left = 0
-    Top = 123
+    Top = 164
     Width = 240
     Height = 60
     Align = alBottom
@@ -61,7 +61,7 @@ object LoginForm: TLoginForm
   end
   object LabeledEdit1: TComboBox
     Left = 16
-    Top = 24
+    Top = 72
     Width = 193
     Height = 21
     TabOrder = 0
@@ -88,5 +88,16 @@ object LoginForm: TLoginForm
       'dln2hi'
       'mwe2hi'
       'chn2hi')
+  end
+  object LabeledEdit3: TLabeledEdit
+    Left = 16
+    Top = 32
+    Width = 193
+    Height = 21
+    EditLabel.Width = 22
+    EditLabel.Height = 13
+    EditLabel.Caption = 'Host'
+    TabOrder = 3
+    Text = 'localhost'
   end
 end

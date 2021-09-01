@@ -12,6 +12,7 @@ type
     BaseFrame1: TBaseFrame;
     LabeledEdit1: TComboBox;
     Label1: TLabel;
+    LabeledEdit3: TLabeledEdit;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
@@ -19,10 +20,13 @@ type
     procedure SetUserName(const Value: string);
     function GetPassword: string;
     procedure SetPassword(const Value: string);
+    function GetHostName: string;
+    procedure SetHostName(const Value: string);
     { Private-Deklarationen }
   public
     property UserName: string read GetUserName write SetUserName;
     property Password: string read GetPassword write SetPassword;
+    property HostName: string read GetHostName write SetHostName;
   end;
 
 var
@@ -48,6 +52,11 @@ begin
   LabeledEdit2.SetFocus;
 end;
 
+function TLoginForm.GetHostName: string;
+begin
+  Result := LabeledEdit3.Text;
+end;
+
 function TLoginForm.GetPassword: string;
 begin
   Result := LabeledEdit2.Text;
@@ -56,6 +65,11 @@ end;
 function TLoginForm.GetUserName: string;
 begin
   Result := Trim(LabeledEdit1.Text);
+end;
+
+procedure TLoginForm.SetHostName(const Value: string);
+begin
+  LabeledEdit3.Text := value;
 end;
 
 procedure TLoginForm.SetPassword(const Value: string);

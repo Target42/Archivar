@@ -10,15 +10,14 @@ object DBMod: TDBMod
       'Password=masterkey'
       'Database=D:\db\ARCHIVAR.FDB'
       'DriverID=FB')
-    Connected = True
     LoginPrompt = False
     Transaction = FDTransaction1
-    Left = 262
-    Top = 20
+    Left = 38
+    Top = 28
   end
   object FDTransaction1: TFDTransaction
     Connection = ArchivarConnection
-    Left = 264
-    Top = 72
+    Left = 40
+    Top = 80
   end
 end

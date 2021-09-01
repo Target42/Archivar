@@ -21,7 +21,7 @@ object ServerContainer1: TServerContainer1
       item
         FilterId = 'PC1'
         Properties.Strings = (
-          'Key=V4meLxEoz66rwsj7')
+          'Key=9gNyXoWzQdLN!9ST')
       end
       item
         FilterId = 'RSA'
