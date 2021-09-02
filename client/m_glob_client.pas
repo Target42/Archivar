@@ -55,6 +55,7 @@ type
     procedure SQLConnection1BeforeDisconnect(Sender: TObject);
   private
     FIsAdmin  : boolean;
+    FUserID   : integer;
     FUserName : string;
     FVorname  : string;
     FName     : string;
@@ -64,10 +65,15 @@ type
     m_images  : string;
     m_httpHome: string;
     m_epubHome: string;
+
     m_misc    : TdsMiscClient;
     m_gremien : TList<TGremium>;
+
     m_imageNames : TDictionary<string,integer>;
-    FUserID: integer;
+
+    m_hostList  : TStringList;
+    m_userList  : TStringList;
+
     procedure setIsAdmin( value : boolean );
 
     procedure FillTimes( arr :TJSONArray );
@@ -86,6 +92,7 @@ type
     function handle_taskdelete( const Arg: TJSONObject ) : boolean;
     function handle_newmeeting( const Arg: TJSONObject ) : boolean;
     function handle_updatemeeting( const Arg: TJSONObject ) : boolean;
+
   public
 
     function Connect : boolean;
@@ -105,6 +112,9 @@ type
     property Gremien    : TList<TGremium> read m_gremien;
     property wwwHome    : string          read m_httpHome;
     property ePubHome   : string          read m_epubHome;
+
+    property Hostlist   : TStringList     read m_hostList;
+    property UserList   : TStringList     read m_userList;
 
     procedure FillGremien( arr :TJSONArray );
 
@@ -131,6 +141,14 @@ type
     function getUserList: TJSONobject;
 
     procedure changeStatus( text : string );
+
+    procedure loadHostList;
+    procedure saveHostList;
+
+    procedure loadUserlist;
+    procedure saveUserList;
+
+    function getHostName : string;
   end;
 
   TMyCallback = class(TDBXCallback)
@@ -262,12 +280,17 @@ begin
 end;
 
 function TGM.Connect: boolean;
+var
+  inx : integer;
 begin
   Result := false;
   if not Assigned(LoginForm) then
   begin
     Application.CreateForm(TLoginForm, LoginForm);
   end;
+
+  LoginForm.setUserlist(m_userList );
+  LoginForm.setHostList(m_hostList);
   if LoginForm.ShowModal <> mrOk then
     exit;
 
@@ -281,6 +304,23 @@ begin
   try
     SQLConnection1.Open;
     Result := SQLConnection1.Connected;
+
+    if Result then begin
+      inx := m_hostList.IndexOf(LoginForm.HostName);
+      if inx <> -1 then
+        m_hostList.Delete(inx);
+
+      m_hostList.Insert(0, LoginForm.HostName);
+      saveHostList;
+
+      inx := m_userList.IndexOf(LoginForm.UserName);
+      if inx <> -1 then
+        m_userList.Delete(inx);
+
+      m_userList.Insert(0, LoginForm.UserName);
+      saveUserList;
+    end;
+
   except
     on e : Exception do
       ShowMessage( e.ToString );
@@ -319,11 +359,13 @@ begin
   DSClientCallbackChannelManager1.ChannelName := BRD_CHANNEL;
   DSClientCallbackChannelManager1.ManagerId   := createClassID;
 
-  m_imageNames := TDictionary<string,integer>.create;
-  m_misc := NIL;
-  m_gremien := TList<TGremium>.create;
+  m_imageNames  := TDictionary<string,integer>.create;
+  m_misc        := NIL;
+  m_gremien     := TList<TGremium>.create;
+  m_hostList    := TStringList.Create;
+  m_userList    := TStringList.Create;
+  FUserName     := GetUsername;
 
-  FUserName := GetUsername;
 {$ifndef RELEASE}
   if ParamStr(1) <> '' then
     FUserName := ParamStr(1);
@@ -333,6 +375,9 @@ begin
   EventHandler.Register( self, handle_taskdelete,   BRD_TASK_DELETE);
   EventHandler.Register( self, handle_newmeeting,   BRD_MEETING_NEW );
   EventHandler.Register( self, handle_updatemeeting,BRD_MEETING_UPDATE );
+
+  loadHostList;
+  loadUserlist;
 end;
 
 procedure TGM.DataModuleDestroy(Sender: TObject);
@@ -350,6 +395,9 @@ begin
 
   if Assigned(EventHandler) then
     EventHandler.Unregister(Self);
+
+  m_hostList.Free;
+  m_userList.Free;
 end;
 
 procedure TGM.Disconnect;
@@ -472,6 +520,11 @@ begin
   GremiumMA.Close;
 end;
 
+function TGM.getHostName: string;
+begin
+  Result := SQLConnection1.Params.Values['HostName'];
+end;
+
 function TGM.getImageID(name: string): Integer;
 begin
   Result := -1;
@@ -580,6 +633,28 @@ begin
   Result := m_misc.validTask(id, integer(dt));
 end;
 
+procedure TGM.loadHostList;
+var
+  fname : string;
+begin
+  fname := ExtractFilePath(paramStr(0))+'hosts.dat';
+  if FileExists(fname) then
+    m_hostList.LoadFromFile(fname)
+  else
+    m_hostList.Text := 'localhost';
+end;
+
+procedure TGM.loadUserlist;
+var
+  fname : string;
+begin
+  fname := ExtractFilePath(ParamStr(0))+'user.dat';
+  if FileExists(fname) then
+    m_userList.LoadFromFile(fname)
+  else
+    m_userList.Text := 'admin';
+end;
+
 function TGM.LockDocument(id, typ: integer; subid : integer): TJSONObject;
 var
   req : TJSONObject;
@@ -660,6 +735,22 @@ begin
   finally
     fs.Free;
   end;
+end;
+
+procedure TGM.saveHostList;
+var
+  fname : string;
+begin
+  fname := ExtractFilePath(paramStr(0))+'hosts.dat';
+  m_hostList.SaveToFile(fname);
+end;
+
+procedure TGM.saveUserList;
+var
+  fname : string;
+begin
+  fname := ExtractFilePath(ParamStr(0))+'user.dat';
+  m_userList.SaveToFile(fname);
 end;
 
 procedure TGM.setIsAdmin(value: boolean);

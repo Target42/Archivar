@@ -24,6 +24,22 @@ object LoginForm: TLoginForm
     Height = 13
     Caption = 'Benutzer'
   end
+  object Label2: TLabel
+    Left = 16
+    Top = 13
+    Width = 22
+    Height = 13
+    Caption = '&Host'
+    FocusControl = LabeledEdit3
+  end
+  object Label3: TLabel
+    Left = 16
+    Top = 56
+    Width = 22
+    Height = 13
+    Caption = '&User'
+    FocusControl = LabeledEdit1
+  end
   object LabeledEdit2: TLabeledEdit
     Left = 16
     Top = 120
@@ -31,7 +47,7 @@ object LoginForm: TLoginForm
     Height = 21
     EditLabel.Width = 46
     EditLabel.Height = 13
-    EditLabel.Caption = 'Password'
+    EditLabel.Caption = '&Password'
     PasswordChar = '*'
     TabOrder = 1
     Text = 'admin'
@@ -44,7 +60,7 @@ object LoginForm: TLoginForm
     Align = alBottom
     AutoSize = True
     TabOrder = 2
-    ExplicitTop = 123
+    ExplicitTop = 164
     ExplicitWidth = 240
     inherited StatusBar1: TStatusBar
       Width = 240
@@ -61,7 +77,7 @@ object LoginForm: TLoginForm
   end
   object LabeledEdit1: TComboBox
     Left = 16
-    Top = 72
+    Top = 75
     Width = 193
     Height = 21
     TabOrder = 0
@@ -89,14 +105,11 @@ object LoginForm: TLoginForm
       'mwe2hi'
       'chn2hi')
   end
-  object LabeledEdit3: TLabeledEdit
+  object LabeledEdit3: TComboBox
     Left = 16
     Top = 32
     Width = 193
     Height = 21
-    EditLabel.Width = 22
-    EditLabel.Height = 13
-    EditLabel.Caption = 'Host'
     TabOrder = 3
     Text = 'localhost'
   end

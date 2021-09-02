@@ -12,7 +12,9 @@ type
     BaseFrame1: TBaseFrame;
     LabeledEdit1: TComboBox;
     Label1: TLabel;
-    LabeledEdit3: TLabeledEdit;
+    LabeledEdit3: TComboBox;
+    Label2: TLabel;
+    Label3: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
   private
@@ -27,6 +29,9 @@ type
     property UserName: string read GetUserName write SetUserName;
     property Password: string read GetPassword write SetPassword;
     property HostName: string read GetHostName write SetHostName;
+
+    procedure setHostList( list : TStringList );
+    procedure setUserlist( list : TStringList );
   end;
 
 var
@@ -54,7 +59,9 @@ end;
 
 function TLoginForm.GetHostName: string;
 begin
-  Result := LabeledEdit3.Text;
+  Result := trim(LabeledEdit3.Text);
+  if Result = '' then
+    Result := 'localhost';
 end;
 
 function TLoginForm.GetPassword: string;
@@ -67,6 +74,13 @@ begin
   Result := Trim(LabeledEdit1.Text);
 end;
 
+procedure TLoginForm.setHostList( list : TStringList );
+begin
+  LabeledEdit3.Items.Assign(list);
+  if LabeledEdit3.Items.Count > 0 then
+    LabeledEdit3.ItemIndex := 0;
+end;
+
 procedure TLoginForm.SetHostName(const Value: string);
 begin
   LabeledEdit3.Text := value;
@@ -75,6 +89,13 @@ end;
 procedure TLoginForm.SetPassword(const Value: string);
 begin
   LabeledEdit2.Text := value;
+end;
+
+procedure TLoginForm.setUserlist(list: TStringList);
+begin
+  LabeledEdit1.Items.Assign(list);
+  if LabeledEdit1.Items.Count >0  then
+    LabeledEdit1.ItemIndex := 0;
 end;
 
 procedure TLoginForm.SetUserName(const Value: string);

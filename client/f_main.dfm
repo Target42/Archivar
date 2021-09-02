@@ -66,6 +66,9 @@
       end
       item
         Width = 50
+      end
+      item
+        Width = 50
       end>
   end
   object PageControl1: TPageControl
@@ -176,6 +179,7 @@
         Height = 41
         Align = alBottom
         Caption = 'Panel1'
+        ShowCaption = False
         TabOrder = 1
         object JvColorComboBox1: TJvColorComboBox
           Left = 9

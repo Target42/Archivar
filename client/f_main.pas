@@ -10,7 +10,7 @@ uses
   JvExStdCtrls, JvCombobox, JvColorCombo;
 
 type
-  TStatusInx = (stStatus = 0, stLogin, stUser );
+  TStatusInx = (stStatus = 0, stHost, stLogin, stUser );
 
 type
   TMainForm = class(TForm)
@@ -621,6 +621,7 @@ begin
         ApplicationSetMenu( true );
 
         setPanel(integer(stStatus), 'Verbunden');
+        setPanel(integer(stHost), GM.getHostName);
         setPanel(integer(stLogin), GM.UserName);
         setPanel(integer(stUser),  GM.Name+', '+GM.Vorname);
 
@@ -635,6 +636,7 @@ begin
         ApplicationSetMenu( false );
 
         setPanel(integer(stStatus), 'Getrennt');
+        setPanel(integer(stHost), '  ');
         setPanel(integer(stLogin), '  ');
         setPanel(integer(stUser), '  ');
 
