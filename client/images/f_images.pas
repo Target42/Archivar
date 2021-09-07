@@ -26,6 +26,7 @@ type
     procedure BaseFrame1AbortBtnClick(Sender: TObject);
     procedure BaseFrame1OKBtnClick(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
+    procedure DBGrid1DblClick(Sender: TObject);
   private
     function getID : integer;
   public
@@ -38,7 +39,7 @@ var
 implementation
 
 uses
- IdHashMessageDigest, IdHash, System.UITypes, u_stub;
+ IdHashMessageDigest, IdHash, System.UITypes, u_stub, f_image_preview;
 {$R *.dfm}
 
 procedure TImagesForm.BaseFrame1AbortBtnClick(Sender: TObject);
@@ -66,6 +67,20 @@ begin
     PicTab.Delete;
 end;
 
+procedure TImagesForm.DBGrid1DblClick(Sender: TObject);
+begin
+  if (DBImage1.Picture.Width > 32) or  (DBImage1.Picture.Height > 30) then begin
+    if not Assigned(ImagePreviewform) then
+      Application.CreateForm(TImagePreviewform, ImagePreviewform);
+
+    ImagePreviewform.ClientHeight := DBImage1.Picture.Height;
+    ImagePreviewform.ClientWidth  := DBImage1.Picture.Width;
+
+    ImagePreviewform.Image1.Picture.Assign(DBImage1.Picture);
+    ImagePreviewform.Show;
+  end;
+end;
+
 procedure TImagesForm.FormCreate(Sender: TObject);
 begin
   PicTab.Open;
@@ -74,6 +89,9 @@ end;
 procedure TImagesForm.FormDestroy(Sender: TObject);
 begin
   PicTab.Close;
+  if Assigned(ImagePreviewform) then
+    ImagePreviewform.Free;
+
 end;
 
 function TImagesForm.getID: integer;

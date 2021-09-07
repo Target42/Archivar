@@ -23,7 +23,7 @@ object MySettingsForm: TMySettingsForm
     Align = alBottom
     AutoSize = True
     TabOrder = 0
-    ExplicitTop = 163
+    ExplicitTop = 193
     inherited Panel1: TPanel
       inherited OKBtn: TBitBtn
         OnClick = BaseFrame1OKBtnClick
@@ -35,12 +35,11 @@ object MySettingsForm: TMySettingsForm
     Top = 0
     Width = 451
     Height = 193
-    ActivePage = TabSheet2
+    ActivePage = TabSheet1
     Align = alClient
     TabOrder = 1
     object TabSheet1: TTabSheet
       Caption = 'Server'
-      ExplicitHeight = 135
       object LB: TListBox
         Left = 0
         Top = 0
@@ -61,9 +60,6 @@ object MySettingsForm: TMySettingsForm
         Caption = 'Panel1'
         ShowCaption = False
         TabOrder = 1
-        ExplicitLeft = 200
-        ExplicitTop = 96
-        ExplicitWidth = 185
         object SpeedButton1: TSpeedButton
           Left = 203
           Top = 6
@@ -230,12 +226,9 @@ object MySettingsForm: TMySettingsForm
         Caption = 'Panel2'
         ShowCaption = False
         TabOrder = 1
-        ExplicitLeft = 24
-        ExplicitTop = 104
-        ExplicitWidth = 185
         object SpeedButton4: TSpeedButton
-          Left = 211
-          Top = 14
+          Left = 203
+          Top = 6
           Width = 23
           Height = 22
           Hint = 'Neuer Eintrag'
@@ -279,8 +272,8 @@ object MySettingsForm: TMySettingsForm
           OnClick = SpeedButton4Click
         end
         object SpeedButton5: TSpeedButton
-          Left = 240
-          Top = 14
+          Left = 232
+          Top = 6
           Width = 23
           Height = 22
           Hint = 'Eintrag speichern'
@@ -324,8 +317,8 @@ object MySettingsForm: TMySettingsForm
           OnClick = SpeedButton5Click
         end
         object SpeedButton6: TSpeedButton
-          Left = 288
-          Top = 14
+          Left = 280
+          Top = 6
           Width = 23
           Height = 22
           Hint = 'Eintrag l'#246'schen'
@@ -369,8 +362,8 @@ object MySettingsForm: TMySettingsForm
           OnClick = SpeedButton6Click
         end
         object Edit2: TEdit
-          Left = 20
-          Top = 14
+          Left = 12
+          Top = 6
           Width = 165
           Height = 21
           TabOrder = 0

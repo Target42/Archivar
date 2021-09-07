@@ -5,3 +5,4 @@
 *.stat
 *.res
 /Win32/
+/Doc/

@@ -142,7 +142,7 @@ object GremiumForm: TGremiumForm
     object BitBtn3: TBitBtn
       Left = 112
       Top = 24
-      Width = 75
+      Width = 81
       Height = 25
       Caption = 'Bearbeiten'
       Glyph.Data = {

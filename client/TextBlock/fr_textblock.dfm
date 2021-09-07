@@ -51,6 +51,7 @@ object TextBlockFrame: TTextBlockFrame
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsTextBlock'
+    SQLConnection = GM.SQLConnection1
     Left = 96
     Top = 40
   end

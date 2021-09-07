@@ -1,7 +1,7 @@
 object PersonEditForm: TPersonEditForm
   Left = 0
   Top = 0
-  Caption = 'PersonEditForm'
+  Caption = 'Personendetails'
   ClientHeight = 234
   ClientWidth = 367
   Color = clBtnFace
@@ -11,7 +11,7 @@ object PersonEditForm: TPersonEditForm
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
-  Position = poMainFormCenter
+  Position = poOwnerFormCenter
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   PixelsPerInch = 96
@@ -125,7 +125,6 @@ object PersonEditForm: TPersonEditForm
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsPerson'
-    SQLConnection = GM.SQLConnection1
     Left = 152
   end
   object PETab: TClientDataSet

@@ -190,4 +190,19 @@ object ServerContainer1: TServerContainer1
         ParamType = ptInput
       end>
   end
+  object GRPEQry: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
+    SQL.Strings = (
+      'select count(*) from gr_pa'
+      'where pe_id = :pe_id')
+    Left = 40
+    Top = 376
+    ParamData = <
+      item
+        Name = 'PE_ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+  end
 end

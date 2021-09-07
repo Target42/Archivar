@@ -85,7 +85,7 @@
         <AppEnableRuntimeThemes>true</AppEnableRuntimeThemes>
         <AppEnableHighDPI>true</AppEnableHighDPI>
         <DCC_BplOutput>.\$(Platform)\$(Config)</DCC_BplOutput>
-        <DCC_ExeOutput>D:\git\ber.git\Bin\client\</DCC_ExeOutput>
+        <DCC_ExeOutput>D:\git\ber.git\Bin\client</DCC_ExeOutput>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <Icon_MainIcon>icons8_Library.ico</Icon_MainIcon>
@@ -93,8 +93,8 @@
         <DCC_UNIT_PLATFORM>false</DCC_UNIT_PLATFORM>
         <DCC_DUPLICATE_CTOR_DTOR>false</DCC_DUPLICATE_CTOR_DTOR>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Build>12</VerInfo_Build>
-        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.12;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Build>5</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.5;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -132,6 +132,7 @@
         <DCCReference Include="..\misc\fr_base.pas">
             <Form>BaseFrame</Form>
             <DesignClass>TFrame</DesignClass>
+			 <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="u_misc.pas"/>
         <DCCReference Include="Gremium\f_gremium_edit.pas">
@@ -152,10 +153,12 @@
         <DCCReference Include="File\fr_file.pas">
             <Form>FileFrame</Form>
             <DesignClass>TFrame</DesignClass>
+			 <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Task\fr_task_head.pas">
             <Form>TaskHeaderFrame</Form>
             <DesignClass>TFrame</DesignClass>
+			 <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Task\f_taskEdit.pas">
             <Form>TaskEditForm</Form>
@@ -163,10 +166,12 @@
         <DCCReference Include="misc\fr_gremiumTree.pas">
             <Form>GremiumTreeFrame</Form>
             <DesignClass>TFrame</DesignClass>
+			 <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Gremium\u_gremium.pas"/>
         <DCCReference Include="Task\fr_taskList.pas">
             <Form>TaskListFrame</Form>
+			 <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="misc\m_WindowHandler.pas">
@@ -176,6 +181,7 @@
         <DCCReference Include="misc\fr_editForm.pas">
             <Form>EditFrame</Form>
             <DesignClass>TFrame</DesignClass>
+			 <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\misc\u_json.pas"/>
         <DCCReference Include="..\misc\xsd_data.pas"/>
@@ -209,6 +215,7 @@
         <DCCReference Include="bookmarks\fr_bookmark.pas">
             <Form>BookmarkFrame</Form>
             <DesignClass>TFrame</DesignClass>
+			 <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\misc\u_berTypes.pas"/>
         <DCCReference Include="Task\f_taksListForm.pas">
@@ -221,6 +228,7 @@
         <DCCReference Include="Protokoll\fr_chapter.pas">
             <Form>ChapterFrame</Form>
             <DesignClass>TFrame</DesignClass>
+			 <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\misc\xsd_chapter.pas"/>
         <DCCReference Include="Protokoll\f_chapterEdit.pas">
@@ -229,6 +237,7 @@
         <DCCReference Include="Task\fr_taskList2.pas">
             <Form>TaskList2Frame</Form>
             <DesignClass>TFrame</DesignClass>
+			 <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Task\u_taskEntry.pas"/>
         <DCCReference Include="Protokoll\f_chapter_content.pas">
@@ -258,6 +267,7 @@
         <DCCReference Include="TaskEditor\Forms\fr_Formeditor.pas">
             <Form>EditorFrame</Form>
             <DesignClass>TFrame</DesignClass>
+			 <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="TaskEditor\u_TaskFormImpl.pas"/>
         <DCCReference Include="TaskEditor\u_TaskCtrlImpl.pas"/>
@@ -265,6 +275,7 @@
         <DCCReference Include="TaskEditor\Forms\fr_propertyEditor.pas">
             <Form>PropertyFrame</Form>
             <DesignClass>TFrame</DesignClass>
+			 <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\misc\xsd_Task.pas"/>
         <DCCReference Include="TaskEditor\controls\u_TaskControlFactory.pas"/>
@@ -293,6 +304,7 @@
         <DCCReference Include="TaskEditor\Forms\fr_report.pas">
             <Form>ReportFrame</Form>
             <DesignClass>TFrame</DesignClass>
+			 <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="TaskEditor\Forms\f_form_props.pas">
             <Form>FormProperties</Form>
@@ -360,6 +372,7 @@
         <DCCReference Include="TaskEditor\fr_form.pas">
             <Form>FormFrame</Form>
             <DesignClass>TFrame</DesignClass>
+			 <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Protokoll\f_chapterTask.pas">
             <Form>ChapterTaskForm</Form>
@@ -368,19 +381,23 @@
         <DCCReference Include="..\misc\xsd_TaskData.pas"/>
         <DCCReference Include="TaskEditor\Forms\fr_ReportEditor.pas">
             <Form>ReportFrameEditor</Form>
+			 <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="TaskEditor\Forms\fr_ReportEditor_html.pas">
             <Form>ReportFrameEditorHtml</Form>
             <DesignClass>TFrame</DesignClass>
+			 <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="TaskEditor\Forms\fr_ReportEditor_pas.pas">
             <Form>ReportFrameEditorPas</Form>
             <DesignClass>TFrame</DesignClass>
+			 <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="TaskEditor\Forms\fr_ReportEditor_img.pas">
             <Form>ReportFrameEditorImg</Form>
             <DesignClass>TFrame</DesignClass>
+			 <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Protokoll\i_chapter.pas"/>
         <DCCReference Include="Protokoll\u_ChapterImpl.pas"/>
@@ -392,6 +409,7 @@
         <DCCReference Include="TextBlock\fr_textblock.pas">
             <Form>TextBlockFrame</Form>
             <DesignClass>TFrame</DesignClass>
+			 <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="TextBlock\f_testblock_list.pas">
             <Form>TestBlockListForm</Form>
@@ -453,6 +471,7 @@
         <DCCReference Include="ePub\fr_epub.pas">
             <Form>ePupFrame</Form>
             <DesignClass>TFrame</DesignClass>
+			 <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="ePub\f_downloadEpub.pas">
             <Form>DownloadEpubform</Form>
@@ -466,6 +485,7 @@
         <DCCReference Include="Sitzung\fr_to.pas">
             <Form>TOFrame</Form>
             <DesignClass>TFrame</DesignClass>
+			 <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Sitzung\f_meeting_select.pas">
             <Form>SelectMeetingForm</Form>
@@ -473,6 +493,7 @@
         <DCCReference Include="Gremium\fr_gremium.pas">
             <Form>GremiumFrame</Form>
             <DesignClass>TFrame</DesignClass>
+			 <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Sitzung\f_meeting_proto.pas">
             <Form>MeetingProtoForm</Form>
@@ -483,6 +504,7 @@
         <DCCReference Include="Sitzung\fr_meeting.pas">
             <Form>MeetingFrame</Form>
             <DesignClass>TFrame</DesignClass>
+			 <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\misc\u_teilnehmer.pas"/>
         <DCCReference Include="Protokoll\f_protocol_sec.pas">
@@ -499,22 +521,34 @@
         <DCCReference Include="Sitzung\fr_teilnehmer.pas">
             <Form>TNFrame</Form>
             <DesignClass>TFrame</DesignClass>
+			 <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Protokoll\fr_protocol.pas">
             <Form>ProtocolFrame</Form>
             <DesignClass>TFrame</DesignClass>
+			 <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Sitzung2\fr_MeetingTN.pas">
             <Form>MeetingTNFrame</Form>
             <DesignClass>TFrame</DesignClass>
+			 <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Beschlus\fr_beschluss.pas">
             <Form>BeschlussFrame</Form>
             <DesignClass>TFrame</DesignClass>
+			 <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Online\f_abstimmung.pas">
             <Form>AbstimmungsForm</Form>
-            <FormType>dfm</FormType>
+			<FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="images\f_image_preview.pas">
+            <Form>ImagePreviewform</Form>
+			<FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="TextBlock\f_textblock_preview.pas">
+            <Form>TextBlockPreviewForm</Form>
+			<FormType>dfm</FormType>
         </DCCReference>
         <None Include="Datafields\ERA-NS.txt"/>
         <RcItem Include="dws\dws.html">
@@ -556,7 +590,7 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="Win32\Debug\bin\Archivar.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="..\Bin\client\Archivar.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>Archivar.exe</RemoteName>
                         <Overwrite>true</Overwrite>

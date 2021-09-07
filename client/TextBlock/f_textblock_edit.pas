@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_editForm, Vcl.StdCtrls, Vcl.ExtCtrls,
   fr_base, Vcl.ComCtrls, xsd_TextBlock, Vcl.Buttons, Data.DB, Datasnap.DBClient,
-  Datasnap.DSConnect, Vcl.Mask, Vcl.DBCtrls, Xml.XMLIntf;
+  Datasnap.DSConnect, Vcl.Mask, Vcl.DBCtrls, Xml.XMLIntf, Vcl.Menus;
 
 type
   TTextBlockEditForm = class(TForm)
@@ -33,6 +33,9 @@ type
     Label3: TLabel;
     Label4: TLabel;
     TBSrc: TDataSource;
+    PopupMenu1: TPopupMenu;
+    GroupBox2: TGroupBox;
+    BitBtn1: TBitBtn;
     procedure btnNeuClick(Sender: TObject);
     procedure btnEditClick(Sender: TObject);
     procedure btnSaveClick(Sender: TObject);
@@ -44,6 +47,9 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure TBtabBeforePost(DataSet: TDataSet);
     procedure EditFrame1REKeyPress(Sender: TObject; var Key: Char);
+    procedure Variableeinfgen1Click(Sender: TObject);
+    procedure PopupMenu1Popup(Sender: TObject);
+    procedure BitBtn1Click(Sender: TObject);
   private
     m_id        : integeR;
     x_block     : IXMLBlock;
@@ -65,7 +71,8 @@ implementation
 {$R *.dfm}
 
 uses
-  ClipBrd, m_glob_client, Xml.XMLDoc, system.UITypes;
+  ClipBrd, m_glob_client, Xml.XMLDoc, system.UITypes, f_textblock_param,
+  f_textblock_preview;
 
 
 procedure TTextBlockEditForm.BaseFrame1AbortBtnClick(Sender: TObject);
@@ -93,6 +100,29 @@ begin
 
   if TBtab.UpdatesPending then
     TBtab.ApplyUpdates(-1);
+end;
+
+procedure TTextBlockEditForm.BitBtn1Click(Sender: TObject);
+var
+  text : string;
+begin
+  saveXML;
+
+  if x_block.Fields.Count = 0 then begin
+    text:= x_block.Content;
+  end
+  else
+  begin
+    Application.CreateForm(TTextBlockParameterForm, TextBlockParameterForm);
+    TextBlockParameterForm.Xblock := x_block;
+    if TextBlockParameterForm.ShowModal = mrOk then
+    begin
+      text := TextBlockParameterForm.getContext;
+    end;
+    TextBlockParameterForm.free;
+  end;
+  TextBlockPreviewForm.Text := text;
+  TextBlockPreviewForm.ShowModal;
 end;
 
 procedure TTextBlockEditForm.btnDeleteClick(Sender: TObject);
@@ -161,6 +191,7 @@ end;
 procedure TTextBlockEditForm.FormCreate(Sender: TObject);
 begin
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
+  Application.CreateForm(TTextBlockPreviewForm, TextBlockPreviewForm);
 end;
 
 procedure TTextBlockEditForm.FormDestroy(Sender: TObject);
@@ -172,6 +203,7 @@ begin
     if TBtab.UpdatesPending then
       TBtab.CancelUpdates;
   end;
+  TextBlockPreviewForm.free;
 end;
 
 procedure TTextBlockEditForm.loadXML;
@@ -219,6 +251,20 @@ begin
   brd.Close;
 
   EditFrame1.RE.PasteFromClipboard;
+end;
+
+procedure TTextBlockEditForm.PopupMenu1Popup(Sender: TObject);
+var
+  item : TMenuItem;
+  i    : integer;
+begin
+  PopupMenu1.Items.Clear;
+  for i := 0 to pred(LV.Items.Count) do begin
+    item := TMenuItem.Create(PopupMenu1);
+    PopupMenu1.Items.Add(item);
+    item.OnClick := Variableeinfgen1Click;
+    item.Caption := Lv.Items.Item[i].Caption;
+  end;
 end;
 
 procedure TTextBlockEditForm.saveXML;
@@ -276,4 +322,26 @@ begin
     DataSet.FieldByName('TB_ID').AsInteger := GM.autoInc('gen_tb_id');
 end;
 
+procedure TTextBlockEditForm.Variableeinfgen1Click(Sender: TObject);
+var
+  item : TMenuItem;
+  brd : TClipboard;
+  s   : string;
+begin
+  if not (sender is TMenuItem) then
+    exit;
+  item := sender as TMenuItem;
+  brd := Clipboard;
+  brd.Open;
+
+  s := stringreplace( item.Caption, '&', '', [rfReplaceAll, rfIgnoreCase]);
+  brd.AsText := '%%'+s+'%%';
+
+  brd.Close;
+
+  EditFrame1.RE.PasteFromClipboard;
+end;
+
 end.
+
+

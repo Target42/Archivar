@@ -178,7 +178,9 @@ uses
   fr_protocol in 'Protokoll\fr_protocol.pas' {ProtocolFrame: TFrame},
   fr_MeetingTN in 'Sitzung2\fr_MeetingTN.pas' {MeetingTNFrame: TFrame},
   fr_beschluss in 'Beschlus\fr_beschluss.pas' {BeschlussFrame: TFrame},
-  f_abstimmung in 'Online\f_abstimmung.pas' {AbstimmungsForm};
+  f_abstimmung in 'Online\f_abstimmung.pas' {AbstimmungsForm},
+  f_image_preview in 'images\f_image_preview.pas' {ImagePreviewform},
+  f_textblock_preview in 'TextBlock\f_textblock_preview.pas' {TextBlockPreviewForm};
 
 {$R *.res}
 

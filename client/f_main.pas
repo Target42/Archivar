@@ -656,6 +656,7 @@ begin
     msgLogin          : ac_prg_connect.Execute;
     msgDoMeeting      : doMeeting(msg.lParam);
     msgMeetingEnd     : showAdmin;
+    msgRetryLogin     : ac_prg_connect.Execute;
     else
       Handled := false;
   end;

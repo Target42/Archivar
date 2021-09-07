@@ -16,7 +16,6 @@ type
     Label2: TLabel;
     Label3: TLabel;
     procedure FormCreate(Sender: TObject);
-    procedure FormShow(Sender: TObject);
   private
     function GetUserName: string;
     procedure SetUserName(const Value: string);
@@ -50,11 +49,6 @@ procedure TLoginForm.FormCreate(Sender: TObject);
 begin
   LabeledEdit1.Text := GM.UserName;
   LabeledEdit2.Text := '';
-end;
-
-procedure TLoginForm.FormShow(Sender: TObject);
-begin
-  LabeledEdit2.SetFocus;
 end;
 
 function TLoginForm.GetHostName: string;

@@ -32,6 +32,7 @@ const
   msgNewMeeting     = WMUSER + 13;
   msgDoMeeting      = WMUSER + 14;
   msgMeetingEnd     = WMUSER + 15;
+  msgRetryLogin     = WMUSER + 16;
 
 type
   TGM = class(TDataModule)
@@ -74,6 +75,8 @@ type
     m_hostList  : TStringList;
     m_userList  : TStringList;
 
+    m_LoginFailCount  : integer;
+
     procedure setIsAdmin( value : boolean );
 
     procedure FillTimes( arr :TJSONArray );
@@ -98,7 +101,7 @@ type
     function Connect : boolean;
     procedure Disconnect;
 
-    function login( user : string ; pwd : string ) : boolean;
+
 
     property IsAdmin    : boolean         read FIsAdmin     write setIsAdmin;
     property UserName   : string          read FUserName    write FUserName;
@@ -171,7 +174,7 @@ uses
   System.UITypes, system.IOUtils, FireDAC.Stan.Storagebin,
   System.Win.ComObj, m_WindowHandler, m_BookMarkHandler, IdHashMessageDigest,
   Vcl.Graphics, u_PersonenListeImpl, u_PersonImpl, m_cache, f_login, u_kategorie,
-  u_onlineUser, m_http, f_doMeeting, u_eventHandler, u_Konst;
+  u_onlineUser, m_http, f_doMeeting, u_eventHandler, u_Konst, IdStack;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -282,6 +285,7 @@ end;
 function TGM.Connect: boolean;
 var
   inx : integer;
+  err : integer;
 begin
   Result := false;
   if not Assigned(LoginForm) then
@@ -306,6 +310,8 @@ begin
     Result := SQLConnection1.Connected;
 
     if Result then begin
+      m_LoginFailCount := 0;
+
       inx := m_hostList.IndexOf(LoginForm.HostName);
       if inx <> -1 then
         m_hostList.Delete(inx);
@@ -322,8 +328,31 @@ begin
     end;
 
   except
-    on e : Exception do
-      ShowMessage( e.ToString );
+    on e : Exception do begin
+      if e is TDBXError then begin
+        err := (e as TDBXError).ErrorCode;
+        case err of
+          0 : begin
+                ShowMessage('Benutzername oder Passwort ist falsch.');
+                inc(m_LoginFailCount);
+                if m_LoginFailCount < 3 then
+                  PostMessage(Application.MainFormHandle, msgRetryLogin, 0, 0 )
+                else
+                  m_LoginFailCount := 0;
+              end;
+        else
+          ShowMessage(e.ToString);
+        end;
+      end else if (e is EIdSocketError) then  begin
+        err := (e as EIdSocketError).LastError;
+        case err of
+          10061 : ShowMessage('Der Server konnte nicht erreicht werden. (10061)');
+        else
+          ShowMessage(e.ToString);
+        end;
+      end else
+        ShowMessage( e.ClassName );
+    end;
   end;
 end;
 
@@ -378,6 +407,8 @@ begin
 
   loadHostList;
   loadUserlist;
+
+  m_LoginFailCount := 0;
 end;
 
 procedure TGM.DataModuleDestroy(Sender: TObject);
@@ -666,30 +697,6 @@ begin
   JReplace( req, 'sub', subid );
 
   Result := m_misc.LockDocument(req);
-end;
-
-function TGM.login(user, pwd: string): boolean;
-var
-  dbxProps: TDBXDatasnapProperties;
-begin
-  Result := false;
-
-  dbxProps := SQLConnection1.ConnectionData.Properties as TDBXDatasnapProperties;
-  dbxProps.DSAuthUser     := user;
-  dbxProps.DSAuthPassword := pwd;
-//  dbxProps.HostName       := HostName;
-
-  try
-    Screen.Cursor := crHourglass;
-    SQLConnection1.Open;
-
-    Result := SQLConnection1.Connected;
-  except on E: Exception do
-    begin
-      ShowMessage( e.ToString );
-    end;
-  end;
-  Screen.Cursor := crDefault;
 end;
 
 function TGM.md5(st: TStream): string;

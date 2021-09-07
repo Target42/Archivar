@@ -2,7 +2,7 @@ object GremiumMAForm: TGremiumMAForm
   Left = 0
   Top = 0
   Caption = 'Gremium'
-  ClientHeight = 523
+  ClientHeight = 512
   ClientWidth = 919
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -17,16 +17,16 @@ object GremiumMAForm: TGremiumMAForm
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter
-    Left = 433
+    Left = 436
     Top = 41
-    Height = 422
+    Height = 411
     ExplicitLeft = 360
     ExplicitTop = 72
     ExplicitHeight = 100
   end
   inline BaseFrame1: TBaseFrame
     Left = 0
-    Top = 463
+    Top = 452
     Width = 919
     Height = 60
     Align = alBottom
@@ -59,19 +59,29 @@ object GremiumMAForm: TGremiumMAForm
   object Panel3: TPanel
     Left = 393
     Top = 41
-    Width = 40
-    Height = 422
+    Width = 43
+    Height = 411
     Align = alLeft
     BevelOuter = bvNone
     Caption = 'Panel3'
     ShowCaption = False
     TabOrder = 3
+    ExplicitHeight = 422
     object SpeedButton1: TSpeedButton
       Left = 11
       Top = 48
       Width = 23
       Height = 22
+      Hint = 'Alle '#220'bernehmen'
       Caption = '>>'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ParentFont = False
+      ParentShowHint = False
+      ShowHint = True
       OnClick = SpeedButton1Click
     end
     object SpeedButton2: TSpeedButton
@@ -79,7 +89,16 @@ object GremiumMAForm: TGremiumMAForm
       Top = 88
       Width = 23
       Height = 22
+      Hint = 'Ausgew'#228'hlte '#252'bernehmen'
       Caption = '>'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ParentFont = False
+      ParentShowHint = False
+      ShowHint = True
       OnDblClick = SpeedButton2DblClick
     end
     object SpeedButton3: TSpeedButton
@@ -87,7 +106,16 @@ object GremiumMAForm: TGremiumMAForm
       Top = 128
       Width = 23
       Height = 22
+      Hint = 'Ausgew'#228'hlte entfernen'
       Caption = '<'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ParentFont = False
+      ParentShowHint = False
+      ShowHint = True
       OnClick = SpeedButton3Click
     end
     object SpeedButton4: TSpeedButton
@@ -95,7 +123,16 @@ object GremiumMAForm: TGremiumMAForm
       Top = 168
       Width = 23
       Height = 22
+      Hint = 'Alle Entfernen'
       Caption = '<<'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      ParentFont = False
+      ParentShowHint = False
+      ShowHint = True
       OnClick = SpeedButton4Click
     end
   end
@@ -103,7 +140,7 @@ object GremiumMAForm: TGremiumMAForm
     Left = 0
     Top = 41
     Width = 393
-    Height = 422
+    Height = 411
     TabStop = False
     Align = alLeft
     BorderStyle = bsNone
@@ -149,10 +186,10 @@ object GremiumMAForm: TGremiumMAForm
       end>
   end
   object Panel4: TDBGrid
-    Left = 436
+    Left = 439
     Top = 41
-    Width = 483
-    Height = 422
+    Width = 480
+    Height = 411
     TabStop = False
     Align = alClient
     BorderStyle = bsNone

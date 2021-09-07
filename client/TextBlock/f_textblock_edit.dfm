@@ -2,7 +2,7 @@ object TextBlockEditForm: TTextBlockEditForm
   Left = 0
   Top = 0
   Caption = 'Textbausteineditor'
-  ClientHeight = 579
+  ClientHeight = 661
   ClientWidth = 635
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,13 +18,13 @@ object TextBlockEditForm: TTextBlockEditForm
   TextHeight = 13
   inline BaseFrame1: TBaseFrame
     Left = 0
-    Top = 519
+    Top = 601
     Width = 635
     Height = 60
     Align = alBottom
     AutoSize = True
     TabOrder = 0
-    ExplicitTop = 519
+    ExplicitTop = 601
     ExplicitWidth = 635
     inherited StatusBar1: TStatusBar
       Width = 635
@@ -101,23 +101,24 @@ object TextBlockEditForm: TTextBlockEditForm
     Left = 0
     Top = 113
     Width = 635
-    Height = 143
+    Height = 167
     Align = alClient
     TabOrder = 2
     ExplicitTop = 113
     ExplicitWidth = 635
-    ExplicitHeight = 143
+    ExplicitHeight = 167
     inherited RE: TRichEdit
       Width = 635
-      Height = 143
+      Height = 167
+      PopupMenu = PopupMenu1
       OnKeyPress = EditFrame1REKeyPress
       ExplicitWidth = 635
-      ExplicitHeight = 143
+      ExplicitHeight = 167
     end
   end
   object GroupBox1: TGroupBox
     Left = 0
-    Top = 256
+    Top = 338
     Width = 635
     Height = 263
     Align = alBottom
@@ -371,6 +372,7 @@ object TextBlockEditForm: TTextBlockEditForm
       Columns = <
         item
           Caption = 'Name'
+          Width = 100
         end
         item
           Caption = #220'berschrift'
@@ -392,6 +394,24 @@ object TextBlockEditForm: TTextBlockEditForm
       OnDblClick = LVDblClick
     end
   end
+  object GroupBox2: TGroupBox
+    Left = 0
+    Top = 280
+    Width = 635
+    Height = 58
+    Align = alBottom
+    Caption = 'Aktionen'
+    TabOrder = 4
+    object BitBtn1: TBitBtn
+      Left = 16
+      Top = 27
+      Width = 145
+      Height = 25
+      Caption = 'Testbaustein testen'
+      TabOrder = 0
+      OnClick = BitBtn1Click
+    end
+  end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsTextBlock'
     Left = 80
@@ -410,5 +430,10 @@ object TextBlockEditForm: TTextBlockEditForm
     DataSet = TBtab
     Left = 160
     Top = 168
+  end
+  object PopupMenu1: TPopupMenu
+    OnPopup = PopupMenu1Popup
+    Left = 304
+    Top = 160
   end
 end

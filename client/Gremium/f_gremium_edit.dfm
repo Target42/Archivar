@@ -12,7 +12,7 @@ object GremiumEditForm: TGremiumEditForm
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
-  Position = poMainFormCenter
+  Position = poOwnerFormCenter
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   PixelsPerInch = 96
@@ -53,7 +53,7 @@ object GremiumEditForm: TGremiumEditForm
     Align = alBottom
     AutoSize = True
     TabOrder = 3
-    ExplicitTop = 133
+    ExplicitTop = 153
     ExplicitWidth = 323
     inherited StatusBar1: TStatusBar
       Width = 323
@@ -123,7 +123,6 @@ object GremiumEditForm: TGremiumEditForm
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsGremium'
-    SQLConnection = GM.SQLConnection1
     Left = 56
     Top = 8
   end

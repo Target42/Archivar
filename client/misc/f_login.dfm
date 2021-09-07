@@ -1,6 +1,7 @@
 object LoginForm: TLoginForm
   Left = 0
   Top = 0
+  ActiveControl = LabeledEdit2
   BorderStyle = bsDialog
   Caption = 'Anmeldung'
   ClientHeight = 224
@@ -14,7 +15,6 @@ object LoginForm: TLoginForm
   OldCreateOrder = False
   Position = poMainFormCenter
   OnCreate = FormCreate
-  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel

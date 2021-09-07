@@ -40,6 +40,7 @@ type
     dsUpdater: TDSServerClass;
     IBTransaction1: TFDTransaction;
     QueryUser: TFDQuery;
+    GRPEQry: TFDQuery;
     procedure dsAdminGetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
     procedure ServiceStart(Sender: TService; var Started: Boolean);
@@ -449,24 +450,35 @@ begin
     GrijjyLog.send('session id', Session.Id );
     GrijjyLog.Send('session name', Session.UserName );
 
+    // user exists ....
     valid := checkUser(userName);
     if valid then
     begin
-      Session.PutData('user',     userName);
-      Session.PutData('ID',       QueryUser.FieldByName('PE_ID').AsString );
-      Session.PutData('name',     QueryUser.FieldByName('pe_name').AsString);
-      Session.PutData('vorname',  QueryUser.FieldByName('pe_vorname').AsString);
-      Session.PutData('dept',     QueryUser.FieldByName('PE_DEPARTMENT').AsString);
-
+      // is user admin?
       if QueryUser.FieldByName('PE_ID').AsInteger = 1 then
       begin
         Session.PutData('admin', 'true');
         UserRoles.Add('admin');
       end
-      else
-        Session.PutData('admin', 'false');
+      else begin
+        //is user in, at least, one concile?
+        GRPEQry.ParamByName('PE_ID').AsInteger := QueryUser.FieldByName('PE_ID').AsInteger;
+        GRPEQry.Open();
+        valid := GRPEQry.FieldByName('count').AsInteger > 0;
+        GRPEQry.Close;
 
-      UserRoles.Add('user');
+        Session.PutData('admin', 'false');
+      end;
+
+      if valid then begin
+        Session.PutData('user',     userName);
+        Session.PutData('ID',       QueryUser.FieldByName('PE_ID').AsString );
+        Session.PutData('name',     QueryUser.FieldByName('pe_name').AsString);
+        Session.PutData('vorname',  QueryUser.FieldByName('pe_vorname').AsString);
+        Session.PutData('dept',     QueryUser.FieldByName('PE_DEPARTMENT').AsString);
+
+        UserRoles.Add('user');
+      end;
     end;
   end;
 
