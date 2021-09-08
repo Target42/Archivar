@@ -116,7 +116,6 @@ uses
   xsd_DataField in '..\misc\xsd_DataField.pas',
   f_set in 'misc\f_set.pas' {MySettingsForm},
   f_textblock_edit in 'TextBlock\f_textblock_edit.pas' {TextBlockEditForm},
-  xsd_TextBlock in '..\misc\xsd_TextBlock.pas',
   fr_form in 'TaskEditor\fr_form.pas' {FormFrame: TFrame},
   f_chapterTask in 'Protokoll\f_chapterTask.pas' {ChapterTaskForm},
   xsd_Styles in '..\misc\xsd_Styles.pas',
@@ -180,7 +179,8 @@ uses
   fr_beschluss in 'Beschlus\fr_beschluss.pas' {BeschlussFrame: TFrame},
   f_abstimmung in 'Online\f_abstimmung.pas' {AbstimmungsForm},
   f_image_preview in 'images\f_image_preview.pas' {ImagePreviewform},
-  f_textblock_preview in 'TextBlock\f_textblock_preview.pas' {TextBlockPreviewForm};
+  f_textblock_preview in 'TextBlock\f_textblock_preview.pas' {TextBlockPreviewForm},
+  xsd_TextBlock in '..\misc\xsd_TextBlock.pas';
 
 {$R *.res}
 

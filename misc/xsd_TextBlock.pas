@@ -3,7 +3,7 @@
 {                                                          }
 {                     XML-Datenbindung                     }
 {                                                          }
-{         Generiert am: 13.09.2020 17:17:05                }
+{         Generiert am: 08.09.2021 09:59:34                }
 {       Generiert von: D:\git\ber.git\misc\TextBlock.xsd   }
 {                                                          }
 {**********************************************************}
@@ -25,7 +25,7 @@ type
 { IXMLBlock }
 
   IXMLBlock = interface(IXMLNode)
-    ['{915691DF-2FAD-4029-8264-73FF971EC411}']
+    ['{1C3BABF5-27BF-488B-A58B-9CCFAFA7ADD7}']
     { Eigenschaftszugriff }
     function Get_Id: UnicodeString;
     function Get_Name: UnicodeString;
@@ -50,7 +50,7 @@ type
 { IXMLFields }
 
   IXMLFields = interface(IXMLNodeCollection)
-    ['{36971FAD-D480-4327-99DE-CAF7CBD410B1}']
+    ['{925AC59A-7BA4-4C0B-8DE7-4993B1919D9E}']
     { Eigenschaftszugriff }
     function Get_Field(Index: Integer): IXMLField;
     { Methoden & Eigenschaften }
@@ -62,20 +62,23 @@ type
 { IXMLField }
 
   IXMLField = interface(IXMLNode)
-    ['{71A80642-C08B-4A37-9DF6-BF330216F6E8}']
+    ['{E74ACEA7-5E1B-49B1-8163-F176D1AE0286}']
     { Eigenschaftszugriff }
     function Get_Name: UnicodeString;
     function Get_Caption: UnicodeString;
     function Get_Fieldtype: UnicodeString;
+    function Get_DefaultValue: UnicodeString;
     function Get_Rem: UnicodeString;
     procedure Set_Name(Value: UnicodeString);
     procedure Set_Caption(Value: UnicodeString);
     procedure Set_Fieldtype(Value: UnicodeString);
+    procedure Set_DefaultValue(Value: UnicodeString);
     procedure Set_Rem(Value: UnicodeString);
     { Methoden & Eigenschaften }
     property Name: UnicodeString read Get_Name write Set_Name;
     property Caption: UnicodeString read Get_Caption write Set_Caption;
     property Fieldtype: UnicodeString read Get_Fieldtype write Set_Fieldtype;
+    property DefaultValue: UnicodeString read Get_DefaultValue write Set_DefaultValue;
     property Rem: UnicodeString read Get_Rem write Set_Rem;
   end;
 
@@ -125,10 +128,12 @@ type
     function Get_Name: UnicodeString;
     function Get_Caption: UnicodeString;
     function Get_Fieldtype: UnicodeString;
+    function Get_DefaultValue: UnicodeString;
     function Get_Rem: UnicodeString;
     procedure Set_Name(Value: UnicodeString);
     procedure Set_Caption(Value: UnicodeString);
     procedure Set_Fieldtype(Value: UnicodeString);
+    procedure Set_DefaultValue(Value: UnicodeString);
     procedure Set_Rem(Value: UnicodeString);
   end;
 
@@ -280,6 +285,16 @@ end;
 procedure TXMLField.Set_Fieldtype(Value: UnicodeString);
 begin
   SetAttribute('fieldtype', Value);
+end;
+
+function TXMLField.Get_DefaultValue: UnicodeString;
+begin
+  Result := AttributeNodes['defaultValue'].Text;
+end;
+
+procedure TXMLField.Set_DefaultValue(Value: UnicodeString);
+begin
+  SetAttribute('defaultValue', Value);
 end;
 
 function TXMLField.Get_Rem: UnicodeString;

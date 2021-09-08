@@ -36,6 +36,9 @@ object TextBlockParameterForm: TTextBlockParameterForm
       ExplicitWidth = 359
       inherited OKBtn: TBitBtn
         Left = 260
+        Default = False
+        Kind = bkCustom
+        ModalResult = 0
         OnClick = BaseFrame1OKBtnClick
         ExplicitLeft = 260
       end
@@ -47,8 +50,10 @@ object TextBlockParameterForm: TTextBlockParameterForm
     Width = 359
     Height = 239
     Align = alClient
-    ColCount = 2
+    ColCount = 3
     Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goEditing, goTabs, goAlwaysShowEditor]
     TabOrder = 1
+    OnKeyPress = SGKeyPress
+    OnSelectCell = SGSelectCell
   end
 end

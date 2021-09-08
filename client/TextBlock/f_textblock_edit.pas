@@ -36,6 +36,8 @@ type
     PopupMenu1: TPopupMenu;
     GroupBox2: TGroupBox;
     BitBtn1: TBitBtn;
+    LabeledEdit6: TComboBox;
+    Label5: TLabel;
     procedure btnNeuClick(Sender: TObject);
     procedure btnEditClick(Sender: TObject);
     procedure btnSaveClick(Sender: TObject);
@@ -103,13 +105,12 @@ begin
 end;
 
 procedure TTextBlockEditForm.BitBtn1Click(Sender: TObject);
-var
-  text : string;
 begin
   saveXML;
 
   if x_block.Fields.Count = 0 then begin
-    text:= x_block.Content;
+    TextBlockPreviewForm.Text := x_block.Content;
+    TextBlockPreviewForm.ShowModal;
   end
   else
   begin
@@ -117,12 +118,11 @@ begin
     TextBlockParameterForm.Xblock := x_block;
     if TextBlockParameterForm.ShowModal = mrOk then
     begin
-      text := TextBlockParameterForm.getContext;
+      TextBlockPreviewForm.Text := TextBlockParameterForm.getContext;
+      TextBlockPreviewForm.ShowModal;
     end;
     TextBlockParameterForm.free;
   end;
-  TextBlockPreviewForm.Text := text;
-  TextBlockPreviewForm.ShowModal;
 end;
 
 procedure TTextBlockEditForm.btnDeleteClick(Sender: TObject);
@@ -143,10 +143,11 @@ begin
 
   item := LV.Selected;
 
-  LabeledEdit3.Text := item.Caption;
-  LabeledEdit4.Text := item.SubItems.Strings[0];
+  LabeledEdit3.Text   := item.Caption;
+  LabeledEdit4.Text   := item.SubItems.Strings[0];
   ComboBox1.ItemIndex := ComboBox1.Items.IndexOf(item.SubItems.Strings[1]);
-  LabeledEdit5.Text := item.SubItems.Strings[2];
+  LabeledEdit6.Text   := item.SubItems.Strings[2];
+  LabeledEdit5.Text   := item.SubItems.Strings[3];
 end;
 
 procedure TTextBlockEditForm.btnNeuClick(Sender: TObject);
@@ -156,6 +157,7 @@ begin
   LabeledEdit3.Text := '';
   LabeledEdit4.Text := '';
   LabeledEdit5.Text := '';
+  LabeledEdit6.Text := '';
   ComboBox1.ItemIndex := 0;
   LabeledEdit3.SetFocus;
   m_modified := true;
@@ -178,7 +180,8 @@ begin
   item.Caption := Trim(LabeledEdit3.Text);
   item.SubItems.Strings[0] := trim(LabeledEdit4.Text);
   item.SubItems.Strings[1] := ComboBox1.Items.Strings[ComboBox1.ItemIndex];
-  item.SubItems.Strings[2] := trim(LabeledEdit5.Text);
+  item.SubItems.Strings[2] := trim(LabeledEdit6.Text);
+  item.SubItems.Strings[3] := trim(LabeledEdit5.Text);
   m_modified := true;
 end;
 
@@ -231,6 +234,7 @@ begin
       item.Caption := xi.Name;
       item.SubItems.Add(xi.Caption);
       item.SubItems.Add(xi.Fieldtype);
+      item.SubItems.Add(xi.DefaultValue );
       item.SubItems.Add(xi.Rem);
     end;
   end;
@@ -283,13 +287,12 @@ begin
     item := LV.Items.Item[i];
     xi   := x_block.Fields.Add;
 
-    xi.Name     := item.Caption;
-    xi.Caption  := item.SubItems.Strings[0];
-    xi.Fieldtype:= item.SubItems.Strings[1];
-    xi.Rem      := item.SubItems.Strings[2];
+    xi.Name           := item.Caption;
+    xi.Caption        := item.SubItems.Strings[0];
+    xi.Fieldtype      := item.SubItems.Strings[1];
+    xi.DefaultValue   := item.SubItems.Strings[2];
+    xi.Rem            := item.SubItems.Strings[3];
   end;
-
-  x_block.OwnerDocument.SaveToFile('textblock.xml');
 end;
 
 procedure TTextBlockEditForm.setID(value: integer);

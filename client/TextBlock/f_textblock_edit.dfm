@@ -135,11 +135,18 @@ object TextBlockEditForm: TTextBlockEditForm
       ShowCaption = False
       TabOrder = 0
       object Label2: TLabel
-        Left = 423
-        Top = 1
+        Left = 323
+        Top = 0
         Width = 45
         Height = 13
         Caption = 'Datentyp'
+      end
+      object Label5: TLabel
+        Left = 488
+        Top = 0
+        Width = 35
+        Height = 13
+        Caption = 'Default'
       end
       object LabeledEdit3: TLabeledEdit
         Left = 14
@@ -156,7 +163,7 @@ object TextBlockEditForm: TTextBlockEditForm
       object LabeledEdit4: TLabeledEdit
         Left = 152
         Top = 16
-        Width = 265
+        Width = 153
         Height = 21
         EditLabel.Width = 53
         EditLabel.Height = 13
@@ -174,7 +181,7 @@ object TextBlockEditForm: TTextBlockEditForm
         TabOrder = 2
       end
       object ComboBox1: TComboBox
-        Left = 423
+        Left = 323
         Top = 16
         Width = 145
         Height = 21
@@ -362,6 +369,23 @@ object TextBlockEditForm: TTextBlockEditForm
         TabOrder = 7
         OnClick = btnDeleteClick
       end
+      object LabeledEdit6: TComboBox
+        Left = 488
+        Top = 16
+        Width = 121
+        Height = 21
+        TabOrder = 8
+        Items.Strings = (
+          ''
+          '$$date'
+          '$$time'
+          '$$user'
+          'einstimmig'
+          'einstimmig angenommen'
+          'einstimmig abgelehnt'
+          'zugestimmt'
+          'abgelehnt')
+      end
     end
     object LV: TListView
       Left = 2
@@ -372,7 +396,7 @@ object TextBlockEditForm: TTextBlockEditForm
       Columns = <
         item
           Caption = 'Name'
-          Width = 100
+          Width = 75
         end
         item
           Caption = #220'berschrift'
@@ -381,6 +405,9 @@ object TextBlockEditForm: TTextBlockEditForm
         item
           Caption = 'Datentyp'
           Width = 60
+        end
+        item
+          Caption = 'Default'
         end
         item
           Caption = 'Reschreibung'
