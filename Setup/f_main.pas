@@ -47,6 +47,8 @@ type
     LabeledEdit1: TLabeledEdit;
     LabeledEdit2: TLabeledEdit;
     SetPwdQry: TFDQuery;
+    HCTab: TFDTable;
+    EPTab: TFDTable;
     procedure SearchGDSEnterPage(Sender: TObject;
       const FromPage: TJvWizardCustomPage);
     procedure ServerInfoEnterPage(Sender: TObject;
@@ -72,6 +74,10 @@ type
     procedure importDataTypes;
     procedure importGremium;
     procedure importTasks;
+    procedure importWWW;
+    procedure importEPub;
+
+    procedure updateLV;
 
     function AutoInc( name : string ) : integer;
     function md5( fname : string ) : string;
@@ -87,7 +93,7 @@ implementation
 uses
   System.IOUtils, System.Types, IdHashMessageDigest, xsd_TaskType,
   xsd_Betriebsrat, xsd_DataField, FireDAC.Phys.IBWrapper,
-  System.Win.ComObj, System.Hash;
+  System.Win.ComObj, System.Hash, u_ePub;
 
 {$R *.dfm}
 
@@ -107,6 +113,8 @@ begin
   importDataTypes;
   importGremium;
   importTasks;
+  importWWW;
+  importEPub;
 
   InitData.VisibleButtons := [TJvWizardButtonKind.bkFinish];
 end;
@@ -263,6 +271,7 @@ begin
   end;
   DATab.Close;
   item.SubItems.Strings[0] := 'Abgeschlossen';
+  updateLV;
 end;
 
 procedure TMainSetupForm.importDelTimes;
@@ -291,8 +300,43 @@ begin
   end;
   FDTab.Close;
 
-
   item.SubItems.Strings[0] := 'Abgeschlossen';
+  updateLV;
+end;
+
+procedure TMainSetupForm.importEPub;
+var
+  item  : TListItem;
+  i     : integer;
+  path  : string;
+  arr   : TStringDynArray;
+  book  : ePub;
+begin
+  item := LV.Items.Add;
+  item.Caption := 'ePub';
+  item.SubItems.Add('einfügen');
+
+  EPTab.Open;
+  path  := TPath.Combine(m_home, 'ePub');
+  arr   := TDirectory.GetFiles(path);
+  for i := low(arr) to High(arr) do begin
+    EPTab.Append;
+    EPTab.FieldByName('EP_ID').AsInteger  := AutoInc('gen_EP_ID');
+    EPTab.FieldByName('EP_NAME').AsString := ExtractFileName(arr[i]);
+    EPTab.FieldByName('EP_MD5').AsString  := md5(arr[i]);
+    TBlobField(EPTab.FieldByName('EP_DATA')).LoadFromFile(arr[i]);
+    book := epub.create;
+    try
+      if book.setFileName(arr[i]) then
+        EPTab.FieldByName('EP_TITLE').AsString := book.Title;
+    finally
+      book.Free;
+    end;
+    EPTab.Post;
+  end;
+  item.SubItems.Strings[0] := 'Abgeschlossen';
+  EPTab.Close;
+  updateLV;
 end;
 
 procedure TMainSetupForm.importGremium;
@@ -322,6 +366,7 @@ begin
   GRTab.Close;
 
   item.SubItems.Strings[0] := 'Abgeschlossen';
+  updateLV;
 end;
 
 procedure TMainSetupForm.importImages;
@@ -359,6 +404,7 @@ begin
   PITab.Close;
   SetLength(fi, 0);
   item.SubItems.Strings[0] := 'Abgeschlossen';
+  updateLV;
 end;
 
 procedure TMainSetupForm.importTasks;
@@ -401,6 +447,7 @@ begin
   TETab.Close;
   SetLength(fi, 0);
   item.SubItems.Strings[0] := 'Abgeschlossen';
+  updateLV;
 end;
 
 procedure TMainSetupForm.importTaskTypes;
@@ -427,6 +474,41 @@ begin
   end;
   TYTab.close;
   item.SubItems.Strings[0] := 'Abgeschlossen';
+  updateLV;
+end;
+
+procedure TMainSetupForm.importWWW;
+var
+  item  : TListItem;
+  path  : string;
+  start : integer;
+  arr   : TStringDynArray;
+  i     : integer;
+begin
+  item := LV.Items.Add;
+  item.Caption := 'Webserverdateien';
+  item.SubItems.Add('einfügen');
+
+  path  :=TPath.Combine(m_home, 'wwwroot');
+  start := Length(path);
+  arr   := TDirectory.GetFiles(path, '*.*', TSearchOption.soAllDirectories );
+
+  HCTab.Open;
+  for i := low(arr) to High(arr) do begin
+    path := copy( arr[i], start+2 );  // remove root
+    path := ExcludeTrailingPathDelimiter(ExtractFilePath(path) ); //
+
+    HCTab.Append;
+    HCTab.FieldByName('HC_ID').AsInteger  := AutoInc('gen_HC_ID');
+    HCTab.FieldByName('HC_MD5').AsString  := md5( arr[i] );
+    TBlobField(HCTab.FieldByName('HC_DATA')).LoadFromFile(arr[i]);
+    HCTab.FieldByName('HC_NAME').AsString := ExtractFileName(arr[i]);
+    HCTab.FieldByName('HC_PATH').AsString := path;
+    HCTab.Post;
+  end;
+  HCTab.Close;
+  item.SubItems.Strings[0] := 'Abgeschlossen';
+  updateLV;
 end;
 
 procedure TMainSetupForm.InitDataEnterPage(Sender: TObject;
@@ -542,6 +624,12 @@ begin
   if IBTransaction1.Active then
     IBTransaction1.Commit;
 
+end;
+
+procedure TMainSetupForm.updateLV;
+begin
+  LV.Invalidate;
+  Application.ProcessMessages;
 end;
 
 end.

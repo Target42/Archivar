@@ -458,9 +458,6 @@
         <DCCReference Include="http\f_web_editor.pas">
             <Form>WebEditorForm</Form>
         </DCCReference>
-        <DCCReference Include="ePub\u_ePub.pas"/>
-        <DCCReference Include="ePub\u_navpoint.pas"/>
-        <DCCReference Include="ePub\u_xml.pas"/>
         <DCCReference Include="ePub\f_epub.pas">
             <Form>epubform</Form>
         </DCCReference>
@@ -550,6 +547,9 @@
             <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\misc\xsd_TextBlock.pas"/>
+        <DCCReference Include="..\misc\ePub\u_ePub.pas"/>
+        <DCCReference Include="..\misc\ePub\u_navpoint.pas"/>
+        <DCCReference Include="..\misc\ePub\u_xml.pas"/>
         <None Include="Datafields\ERA-NS.txt"/>
         <RcItem Include="dws\dws.html">
             <ContainerId>ResourceItem</ContainerId>

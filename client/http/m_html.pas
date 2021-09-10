@@ -102,6 +102,7 @@ var
   '<#data>'+
   '</body>'+
   '</html>';
+
 { THtmlMod }
 
 function THtmlMod.addHeader(xHeader: IXMLHeader): string;
@@ -194,16 +195,7 @@ end;
 
 procedure THtmlMod.clearFrameData;
 begin
-  Frame.HTMLDoc.Text :=
-  '<!DOCTYPE html>'+
-  '<html>'+
-  '  <head>'+
-  '    <link rel="stylesheet" type="text/css" href="/css/archivar.css">'+
-  '  </head>'+
-  '<body>'+
-  '<#data>'+
-  '</body>'+
-  '</html>';
+  Frame.HTMLDoc.Text := defHTML;
 end;
 
 function THtmlMod.Content: string;

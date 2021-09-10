@@ -102,7 +102,6 @@ type
     procedure Disconnect;
 
 
-
     property IsAdmin    : boolean         read FIsAdmin     write setIsAdmin;
     property UserName   : string          read FUserName    write FUserName;
     property Vorname    : string          read FVorname     write FVorname;
@@ -163,7 +162,7 @@ var
   GM: TGM;
 
 var
-  arrRolls : TArray<String> = ['', 'Vorsitz', 'Stellvertretung', 'Schriftführung', 'Ersatz', 'Berater'];
+  arrRolls : TArray<String> = ['', 'Vorsitz', 'Stellvertretung', 'Schriftführung', 'Ersatz', 'Berater', 'Praktikant', 'Auszubildender'];
 
 function ShowResult( res : TJSONObject; positiv : Boolean = false ) : boolean;
 

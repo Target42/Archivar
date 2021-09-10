@@ -70,6 +70,8 @@ object dsTemplate: TdsTemplate
   end
   object TEQry: TFDQuery
     ObjectView = False
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
     SQL.Strings = (
       'select * from TE_TEMPLATE'
       'where TE_SYSTEM = :sys'

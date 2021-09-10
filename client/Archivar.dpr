@@ -152,9 +152,6 @@ uses
   f_protokoll_view in 'Protokoll\f_protokoll_view.pas' {ProtokollViewForm},
   u_protocoll2XML in 'Protokoll\u_protocoll2XML.pas',
   f_web_editor in 'http\f_web_editor.pas' {WebEditorForm},
-  u_ePub in 'ePub\u_ePub.pas',
-  u_navpoint in 'ePub\u_navpoint.pas',
-  u_xml in 'ePub\u_xml.pas',
   f_epub in 'ePub\f_epub.pas' {epubform},
   f_epub_mngr in 'ePub\f_epub_mngr.pas' {epubMngrForm},
   fr_epub in 'ePub\fr_epub.pas' {ePupFrame: TFrame},
@@ -180,7 +177,10 @@ uses
   f_abstimmung in 'Online\f_abstimmung.pas' {AbstimmungsForm},
   f_image_preview in 'images\f_image_preview.pas' {ImagePreviewform},
   f_textblock_preview in 'TextBlock\f_textblock_preview.pas' {TextBlockPreviewForm},
-  xsd_TextBlock in '..\misc\xsd_TextBlock.pas';
+  xsd_TextBlock in '..\misc\xsd_TextBlock.pas',
+  u_ePub in '..\misc\ePub\u_ePub.pas',
+  u_navpoint in '..\misc\ePub\u_navpoint.pas',
+  u_xml in '..\misc\ePub\u_xml.pas';
 
 {$R *.res}
 

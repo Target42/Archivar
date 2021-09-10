@@ -98,18 +98,19 @@ object TextBlockEditForm: TTextBlockEditForm
     end
   end
   inline EditFrame1: TEditFrame
-    Left = 0
-    Top = 113
-    Width = 635
-    Height = 167
+    AlignWithMargins = True
+    Left = 3
+    Top = 116
+    Width = 629
+    Height = 161
     Align = alClient
     TabOrder = 2
     ExplicitTop = 113
     ExplicitWidth = 635
     ExplicitHeight = 167
     inherited RE: TRichEdit
-      Width = 635
-      Height = 167
+      Width = 629
+      Height = 161
       PopupMenu = PopupMenu1
       OnKeyPress = EditFrame1REKeyPress
       ExplicitWidth = 635
@@ -388,10 +389,11 @@ object TextBlockEditForm: TTextBlockEditForm
       end
     end
     object LV: TListView
-      Left = 2
-      Top = 15
-      Width = 631
-      Height = 121
+      AlignWithMargins = True
+      Left = 5
+      Top = 18
+      Width = 625
+      Height = 115
       Align = alClient
       Columns = <
         item
@@ -419,6 +421,10 @@ object TextBlockEditForm: TTextBlockEditForm
       TabOrder = 1
       ViewStyle = vsReport
       OnDblClick = LVDblClick
+      ExplicitLeft = 2
+      ExplicitTop = 15
+      ExplicitWidth = 631
+      ExplicitHeight = 121
     end
   end
   object GroupBox2: TGroupBox

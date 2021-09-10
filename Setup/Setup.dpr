@@ -6,7 +6,10 @@ uses
   xsd_TaskType in '..\misc\xsd_TaskType.pas',
   xsd_StoreLimits in '..\misc\xsd_StoreLimits.pas',
   xsd_Betriebsrat in '..\misc\xsd_Betriebsrat.pas',
-  xsd_DataField in '..\misc\xsd_DataField.pas';
+  xsd_DataField in '..\misc\xsd_DataField.pas',
+  u_ePub in '..\misc\ePub\u_ePub.pas',
+  u_navpoint in '..\misc\ePub\u_navpoint.pas',
+  u_xml in '..\misc\ePub\u_xml.pas';
 
 {$R *.res}
 

@@ -1,7 +1,7 @@
 object MainSetupForm: TMainSetupForm
   Left = 0
   Top = 0
-  ActiveControl = LabeledEdit1
+  ActiveControl = WelcomePage
   Caption = 'Setup'
   ClientHeight = 299
   ClientWidth = 558
@@ -29,7 +29,7 @@ object MainSetupForm: TMainSetupForm
     Top = 0
     Width = 558
     Height = 280
-    ActivePage = Sicherheit
+    ActivePage = WelcomePage
     ButtonBarHeight = 42
     ButtonStart.Caption = 'To &Start Page'
     ButtonStart.NumGlyphs = 1
@@ -576,9 +576,10 @@ object MainSetupForm: TMainSetupForm
   end
   object ArchivarConnection: TFDConnection
     Params.Strings = (
-      'DriverID=FB'
       'User_Name=sysdba'
-      'Password=masterkey')
+      'Password=masterkey'
+      'Database=d:\db\archivar.fdb'
+      'DriverID=FB')
     LoginPrompt = False
     Transaction = IBTransaction1
     Left = 46
@@ -676,5 +677,21 @@ object MainSetupForm: TMainSetupForm
         DataType = ftString
         ParamType = ptInput
       end>
+  end
+  object HCTab: TFDTable
+    Connection = ArchivarConnection
+    Transaction = IBTransaction1
+    UpdateOptions.UpdateTableName = 'HC_HTTP'
+    TableName = 'HC_HTTP'
+    Left = 320
+    Top = 192
+  end
+  object EPTab: TFDTable
+    Connection = ArchivarConnection
+    Transaction = IBTransaction1
+    UpdateOptions.UpdateTableName = 'EP_EPUB'
+    TableName = 'EP_EPUB'
+    Left = 312
+    Top = 72
   end
 end
