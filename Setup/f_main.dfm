@@ -354,6 +354,8 @@ object MainSetupForm: TMainSetupForm
         4E44AE426082}
       Image.Transparent = True
       Caption = 'WelcomePage'
+      ExplicitWidth = 0
+      ExplicitHeight = 0
     end
     object SearchGDS: TJvWizardInteriorPage
       Header.Title.Color = clNone
@@ -374,6 +376,8 @@ object MainSetupForm: TMainSetupForm
       Header.Subtitle.Font.Style = []
       Caption = 'SearchGDS'
       OnEnterPage = SearchGDSEnterPage
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Memo1: TMemo
         Left = 0
         Top = 70
@@ -405,6 +409,8 @@ object MainSetupForm: TMainSetupForm
       Header.Subtitle.Font.Style = []
       Caption = 'ServerInfo'
       OnEnterPage = ServerInfoEnterPage
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object edHostname: TLabeledEdit
         Left = 16
         Top = 96
@@ -491,6 +497,8 @@ object MainSetupForm: TMainSetupForm
       Caption = 'Sicherheit'
       OnEnterPage = SicherheitEnterPage
       OnExitPage = SicherheitExitPage
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object LabeledEdit1: TLabeledEdit
         Left = 24
         Top = 96
@@ -532,6 +540,8 @@ object MainSetupForm: TMainSetupForm
       Header.Subtitle.Font.Style = []
       Caption = 'InitData'
       OnEnterPage = InitDataEnterPage
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Panel1: TPanel
         Left = 0
         Top = 197

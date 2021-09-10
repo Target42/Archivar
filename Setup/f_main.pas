@@ -329,6 +329,7 @@ begin
     try
       if book.setFileName(arr[i]) then
         EPTab.FieldByName('EP_TITLE').AsString := book.Title;
+      book.deleteData;
     finally
       book.Free;
     end;
