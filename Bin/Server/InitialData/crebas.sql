@@ -1,7 +1,7 @@
 /* ============================================================ */
 /*   Database name:  MODEL_2                                    */
 /*   DBMS name:      InterBase                                  */
-/*   Created on:     31.08.2021  16:34                          */
+/*   Created on:     10.09.2021  14:25                          */
 /* ============================================================ */
 
 create generator gen_be_id;
@@ -132,7 +132,7 @@ create table EP_EPUB
 (
     EP_ID                           INTEGER                not null,
     EP_NAME                         VARCHAR(100)                   ,
-    EP_TITLE                        VARCHAR(100)                   ,
+    EP_TITLE                        VARCHAR(200)                   ,
     EP_MD5                          VARCHAR(32)                    ,
     EP_GROUP                        VARCHAR(50)                    ,
     EP_SUB                          VARCHAR(50)                    ,
