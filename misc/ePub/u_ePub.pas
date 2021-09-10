@@ -35,12 +35,14 @@ type
       property Home  : string read m_home;
 
       function search( pattern : string ) : TList;
+
+      procedure deleteData;
   end;
 
 implementation
 
 uses Xml.XmlIntf, XML.Win.msxmldom, Xml.XMLDoc, System.SysUtils, System.IoUtils,
-  u_xml, System.zip, StrUtils ;
+  u_xml, System.zip, StrUtils, System.Types, ShellAPI ;
 
 constructor ePub.create;
 begin
@@ -114,6 +116,17 @@ begin
       end;
     end;
   end;
+end;
+
+procedure ePub.deleteData;
+var
+  FileOp: TSHFileOpStruct;
+begin
+  FillChar(FileOp, SizeOf(FileOp), 0);
+  FileOp.wFunc := FO_DELETE;
+  FileOp.pFrom := PChar(m_home+#0);//double zero-terminated
+  FileOp.fFlags := FOF_SILENT or FOF_NOERRORUI or FOF_NOCONFIRMATION;
+  SHFileOperation(FileOp);
 end;
 
 destructor ePub.Destroy;
