@@ -318,7 +318,7 @@ begin
 
   EPTab.Open;
   path  := TPath.Combine(m_home, 'ePub');
-  arr   := TDirectory.GetFiles(path);
+  arr   := TDirectory.GetFiles(path, '*.epub');
   for i := low(arr) to High(arr) do begin
     EPTab.Append;
     EPTab.FieldByName('EP_ID').AsInteger  := AutoInc('gen_EP_ID');

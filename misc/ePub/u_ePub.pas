@@ -120,11 +120,14 @@ end;
 
 procedure ePub.deleteData;
 var
-  FileOp: TSHFileOpStruct;
+  FileOp  : TSHFileOpStruct;
+  path    : string;
 begin
+  path := m_home;
+
   FillChar(FileOp, SizeOf(FileOp), 0);
   FileOp.wFunc := FO_DELETE;
-  FileOp.pFrom := PChar(m_home+#0);//double zero-terminated
+  FileOp.pFrom := PChar(path+#0);//double zero-terminated
   FileOp.fFlags := FOF_SILENT or FOF_NOERRORUI or FOF_NOCONFIRMATION;
   SHFileOperation(FileOp);
 end;
