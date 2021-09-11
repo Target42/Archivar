@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_base, Data.DB, Datasnap.DBClient,
-  Datasnap.DSConnect, Vcl.Grids, Vcl.DBGrids;
+  Datasnap.DSConnect, Vcl.Grids, Vcl.DBGrids, Vcl.StdCtrls;
 
 type
   TDownloadEpubform = class(TForm)
@@ -14,10 +14,13 @@ type
     EPTab: TClientDataSet;
     DBGrid1: TDBGrid;
     DataSource1: TDataSource;
+    GroupBox1: TGroupBox;
+    Edit1: TEdit;
     procedure FormCreate(Sender: TObject);
     procedure BaseFrame1OKBtnClick(Sender: TObject);
+    procedure Edit1KeyUp(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
-    m_ds : TDataSet;
+    m_ds  : TDataSet;
 
     procedure download;
   public
@@ -82,11 +85,22 @@ begin
   end;
 end;
 
+procedure TDownloadEpubform.Edit1KeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if key = 13  then begin
+    EPTab.Locate('EP_TITLE', VarArrayOf([Edit1.Text]), [loCaseInsensitive, loPartialKey]);
+  end;
+end;
+
 procedure TDownloadEpubform.FormCreate(Sender: TObject);
 begin
+  DSProviderConnection1.SQLConnection := GM.SQLConnection1;
+
   BaseFrame1.StatusBar1.SimplePanel := true;
   m_ds := NIL;
-  DSProviderConnection1.SQLConnection := GM.SQLConnection1;
+
+  Edit1.Text := '';
   EPTab.Open;
 end;
 
