@@ -1,7 +1,7 @@
 /* ============================================================ */
 /*   Database name:  MODEL_2                                    */
 /*   DBMS name:      InterBase                                  */
-/*   Created on:     10.09.2021  14:25                          */
+/*   Created on:     10.09.2021  17:05                          */
 /* ============================================================ */
 
 create generator gen_be_id;
@@ -139,6 +139,16 @@ create table EP_EPUB
     EP_DATA                         BLOB                           ,
     constraint PK_EP_EPUB primary key (EP_ID)
 );
+
+/* ============================================================ */
+/*   Index: EP_EPUB_TITLE_INX                                   */
+/* ============================================================ */
+create ASC index EP_EPUB_TITLE_INX on EP_EPUB (EP_TITLE);
+
+/* ============================================================ */
+/*   Index: EP_EPUB_NAME_INX                                    */
+/* ============================================================ */
+create ASC index EP_EPUB_NAME_INX on EP_EPUB (EP_NAME);
 
 /* ============================================================ */
 /*   Table: LN_LINK                                             */

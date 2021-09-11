@@ -61,6 +61,7 @@ type
     FVorname  : string;
     FName     : string;
 
+    m_public  : string;
     m_home    : string;
     m_export  : string;
     m_images  : string;
@@ -85,7 +86,6 @@ type
     procedure checkimages;
     procedure checkImage( obj : TJSONObject; client : TdsImageClient );
 
-    procedure checkCache;
     procedure requestUser;
 
     function downloadimage( name : string;client : TdsImageClient) :  boolean;
@@ -108,6 +108,7 @@ type
     property Name       : string          read FName        write FName;
     property UserID     : integer         read FUserID      write FUserID;
 
+    property PublicPath : string          read m_public;
     property Home       : string          read m_home;
     property ExportDir  : string          read m_export;
     property Images     : string          read m_images;
@@ -151,6 +152,8 @@ type
     procedure saveUserList;
 
     function getHostName : string;
+
+    procedure checkWWWRoot;
   end;
 
   TMyCallback = class(TDBXCallback)
@@ -210,7 +213,7 @@ begin
   end;
 end;
 
-procedure TGM.checkCache;
+procedure TGM.checkWWWRoot;
 begin
   Application.CreateForm(TCacheMod, CacheMod);
   CacheMod.checkFiles;
@@ -357,13 +360,15 @@ end;
 
 procedure TGM.CreateDirs;
 begin
-  m_home      := TPath.Combine(TPath.GetHomePath, 'Archivar\'+FUserName );
-  m_images    := TPath.Combine(m_home, 'Images' );
-  m_httpHome  := TPath.Combine(m_home, 'wwwroot');
+  m_public    := TPath.Combine(TPath.GetHomePath, 'Archivar' );
+  m_home      := TPath.Combine(m_public, 'user\'+FUserName );
+  m_images    := TPath.Combine(m_public, 'Images' );
+  m_httpHome  := TPath.Combine(m_public, 'wwwroot');
   m_epubHome  := TPath.Combine(m_home, 'epubs');
   m_export    := TPath.Combine(TPath.GetDocumentsPath, 'Archivar\export');
 
 
+  ForceDirectories(m_public);
   ForceDirectories(m_home);
   ForceDirectories(m_images);
   ForceDirectories(m_httpHome);
@@ -512,7 +517,7 @@ begin
     DeleteTimesTab.FieldByName('FD_MONATE').AsInteger := JInt( row, 'monate');
     DeleteTimesTab.Post;
   end;
-  fname := TPath.Combine(m_home, 'deltimes.adb');
+  fname := TPath.Combine(m_public, 'deltimes.adb');
   DeleteTimesTab.SaveToFile( fname, sfBinary );
   DeleteTimesTab.Close;
 end;
@@ -827,7 +832,7 @@ begin
   BookMarkHandler.load;
 
   checkimages;
-  checkCache;
+  checkWWWRoot;
 
   requestUser;
 

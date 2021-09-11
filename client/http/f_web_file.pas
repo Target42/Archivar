@@ -28,6 +28,8 @@ type
     property Dirs: TStrings read GetDirs write SetDirs;
     property Path: string read GetPath write SetPath;
     property FileName: string read GetFileName write SetFileName;
+
+
   end;
 
 var
@@ -67,6 +69,8 @@ procedure TWebFileForm.SetPath(const Value: string);
 begin
   ComboBox1.Text := value;
   ComboBox1.ItemIndex := ComboBox1.Items.IndexOf(value);
+
+  ComboBox1.Enabled := false;
 end;
 
 procedure TWebFileForm.SpeedButton1Click(Sender: TObject);

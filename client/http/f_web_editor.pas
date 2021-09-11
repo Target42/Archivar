@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, SynHighlighterXML, SynHighlighterDWS,
   SynHighlighterJSON, SynHighlighterHtml, SynEditHighlighter, SynHighlighterCSS,
-  SynEdit, fr_base;
+  SynEdit, fr_base, Vcl.StdCtrls, Vcl.ExtCtrls;
 
 type
   TWebEditorForm = class(TForm)
@@ -26,9 +26,12 @@ type
     FNeedUpload: boolean;
     function GetFileName: string;
     procedure SetFileName(const Value: string);
+    function GetPath: string;
+    procedure SetPath(const Value: string);
   public
     property FileName: string read GetFileName write SetFileName;
     property NeedUpload: boolean read FNeedUpload write FNeedUpload;
+    property Path: string read GetPath write SetPath;
 
     function canEdit( fname : string ) : boolean;
   end;
@@ -87,6 +90,11 @@ begin
   Result := m_fname;
 end;
 
+function TWebEditorForm.GetPath: string;
+begin
+  Result := BaseFrame1.StatusBar1.SimpleText;
+end;
+
 procedure TWebEditorForm.SetFileName(const Value: string);
 var
   ext : string;
@@ -107,6 +115,11 @@ begin
 
   SynEdit1.Lines.LoadFromFile(m_fname);
   FNeedUpload := false;
+end;
+
+procedure TWebEditorForm.SetPath(const Value: string);
+begin
+  BaseFrame1.StatusBar1.SimpleText := value;
 end;
 
 end.

@@ -76,7 +76,7 @@
     Top = 0
     Width = 249
     Height = 467
-    ActivePage = TabSheet6
+    ActivePage = TabSheet1
     Align = alLeft
     MultiLine = True
     TabOrder = 1
@@ -133,9 +133,23 @@
         TabOrder = 0
         ExplicitWidth = 221
         ExplicitHeight = 459
-        inherited DBGrid1: TDBGrid
+        inherited GroupBox1: TGroupBox
           Width = 221
-          Height = 459
+          Height = 394
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 221
+          ExplicitHeight = 394
+          inherited DBGrid1: TDBGrid
+            Width = 217
+            Height = 377
+          end
+        end
+        inherited GroupBox2: TGroupBox
+          Top = 394
+          Width = 221
+          ExplicitTop = 394
+          ExplicitWidth = 221
         end
         inherited EpubTab: TFDMemTable
           Left = 16

@@ -13,6 +13,7 @@ object dsEpub: TdsEpub
     Top = 8
   end
   object ePub: TFDTable
+    IndexName = 'EP_EPUB_TITLE_INX'
     Connection = DBMod.ArchivarConnection
     Transaction = FDTransaction1
     UpdateOptions.UpdateTableName = 'EP_EPUB'

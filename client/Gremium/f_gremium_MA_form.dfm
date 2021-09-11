@@ -32,7 +32,7 @@ object GremiumMAForm: TGremiumMAForm
     Align = alBottom
     AutoSize = True
     TabOrder = 0
-    ExplicitTop = 463
+    ExplicitTop = 452
     ExplicitWidth = 919
     inherited StatusBar1: TStatusBar
       Width = 919
@@ -66,7 +66,6 @@ object GremiumMAForm: TGremiumMAForm
     Caption = 'Panel3'
     ShowCaption = False
     TabOrder = 3
-    ExplicitHeight = 422
     object SpeedButton1: TSpeedButton
       Left = 11
       Top = 48

@@ -44,7 +44,7 @@ var
 implementation
 
 uses
-  m_glob_client, f_web_file, f_web_editor, System.IOUtils;
+  m_glob_client, f_web_file, f_web_editor, System.IOUtils, system.uiTypes;
 
 {$R *.dfm}
 
@@ -72,7 +72,8 @@ begin
 
   end;
 
-  WebEditorForm.FileName := fname;
+  WebEditorForm.Path      := HCTab.FieldByName('HC_PATH').AsString;
+  WebEditorForm.FileName  := fname;
   if WebEditorForm.ShowModal = mrOk then
   begin
     if WebEditorForm.NeedUpload then
@@ -92,6 +93,9 @@ begin
 end;
 
 procedure TWebServerFilesForm.bntUploadClick(Sender: TObject);
+var
+  doUpload  : boolean;
+  msg       : string;
 begin
   if HCTab.IsEmpty then
     exit;
@@ -103,11 +107,22 @@ begin
 
   if WebFileForm.ShowModal = mrOk then
   begin
-    HCTab.Edit;
-    HCTab.FieldByName('HC_PATH').AsString := WebFileForm.Path;
-    upload(HCTab.FieldByName('HC_DATA'), WebFileForm.FileName);
-    HCTab.FieldByName('HC_MD5').AsString  := GM.md5(WebFileForm.FileName);
-    HCTab.Post;
+    doUpload := SameText( HCTab.FieldByName('HC_NAME').AsString, ExtractFileName(WebFileForm.FileName));
+    if not doUpload then begin
+      msg := format('Die Serverdatei "%s" wird mit dem Iinhalt'#13+
+      'der lokalen Datei "%s" überschrieben',
+      [
+        HCTab.FieldByName('HC_NAME').AsString,
+        ExtractFileName(WebFileForm.FileName) ]);
+      doUpload := (MessageDlg(msg, mtConfirmation, [mbYes, mbNo], 0) = mrYes);
+    end;
+
+    if doUpload then begin
+      HCTab.Edit;
+      upload(HCTab.FieldByName('HC_DATA'), WebFileForm.FileName);
+      HCTab.FieldByName('HC_MD5').AsString  := GM.md5(WebFileForm.FileName);
+      HCTab.Post;
+    end;
   end;
   WebFileForm.free;
 
@@ -223,8 +238,11 @@ end;
 
 procedure TWebServerFilesForm.FormDestroy(Sender: TObject);
 begin
-  if HCTab.UpdatesPending then
+  if HCTab.UpdatesPending then begin
     HCTab.ApplyUpdates(0);
+    // update the changes ..
+    GM.checkWWWRoot;
+  end;
 
   HCTab.Close;
   m_list.Free;

@@ -264,7 +264,7 @@ object WebServerFilesForm: TWebServerFilesForm
     object BitBtn1: TBitBtn
       Left = 370
       Top = 22
-      Width = 75
+      Width = 87
       Height = 25
       Caption = 'Bearbeiten'
       Glyph.Data = {

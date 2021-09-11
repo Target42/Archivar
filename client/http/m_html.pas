@@ -23,6 +23,7 @@ type
     m_Framestyle: ITaskStyle;
     m_FrameTC   : ITaskContainer;
     m_Framedata : IXMLList;
+    m_FrameTemplate : String;
     // task
     m_style: ITaskStyle;
     m_tc   : ITaskContainer;
@@ -195,7 +196,10 @@ end;
 
 procedure THtmlMod.clearFrameData;
 begin
-  Frame.HTMLDoc.Text := defHTML;
+  if FileExists(m_FrameTemplate) then
+    Frame.HTMLFile := m_FrameTemplate
+  else
+    Frame.HTMLDoc.Text := defHTML;
 end;
 
 function THtmlMod.Content: string;
@@ -253,9 +257,12 @@ begin
   m_style := NIL;
   m_stack := TStringList.create;
 
-  m_Framestyle:= NIL;
-  m_FrameTC   := NIL;
-  m_Framedata := NIL;
+  m_Framestyle    := NIL;
+  m_FrameTC       := NIL;
+  m_Framedata     := NIL;
+  m_FrameTemplate := TPath.combine( GM.wwwHome, 'templates\frame.html');
+
+  clearFrameData;
 
 end;
 

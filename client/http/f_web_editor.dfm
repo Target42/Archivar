@@ -28,6 +28,7 @@ object WebEditorForm: TWebEditorForm
     ExplicitWidth = 781
     inherited StatusBar1: TStatusBar
       Width = 781
+      SimplePanel = True
       ExplicitWidth = 781
     end
     inherited Panel1: TPanel
@@ -67,6 +68,7 @@ object WebEditorForm: TWebEditorForm
     Lines.Strings = (
       'SynEdit1')
     FontSmoothing = fsmNone
+    ExplicitHeight = 474
   end
   object SynCssSyn1: TSynCssSyn
     Options.AutoDetectEnabled = False

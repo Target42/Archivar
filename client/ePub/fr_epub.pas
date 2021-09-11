@@ -13,7 +13,6 @@ uses
 type
   TePupFrame = class(TFrame)
     EpubTab: TFDMemTable;
-    DBGrid1: TDBGrid;
     DataSource1: TDataSource;
     EpubTabEP_ID: TAutoIncField;
     EpubTabEP_TITEL: TStringField;
@@ -25,6 +24,11 @@ type
     Download1: TMenuItem;
     N1: TMenuItem;
     Anzeigen1: TMenuItem;
+    GroupBox1: TGroupBox;
+    DBGrid1: TDBGrid;
+    GroupBox2: TGroupBox;
+    BitBtn1: TBitBtn;
+    BitBtn2: TBitBtn;
     procedure DBGrid1DblClick(Sender: TObject);
     procedure Download1Click(Sender: TObject);
     procedure Anzeigen1Click(Sender: TObject);

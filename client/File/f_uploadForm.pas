@@ -114,7 +114,7 @@ begin
   m_list := NIL;
   m_default := 0;
 
-  fname := TPath.Combine(GM.home, 'deltimes.adb');
+  fname := TPath.Combine(GM.PublicPath, 'deltimes.adb');
   DeleteTimesTab.Open;
   if FileExists(fname) then
     DeleteTimesTab.LoadFromFile(fname, sfBinary);
