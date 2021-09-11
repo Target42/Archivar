@@ -64,6 +64,7 @@ type
       const FromPage: TJvWizardCustomPage);
     procedure SicherheitExitPage(Sender: TObject;
       const FromPage: TJvWizardCustomPage);
+    procedure JvWizard1CancelButtonClick(Sender: TObject);
   private
     m_home  : string;
     m_ini   : TiniFile;
@@ -78,6 +79,8 @@ type
     procedure importEPub;
 
     procedure updateLV;
+
+    function progress( name : string ) : TListItem;
 
     function AutoInc( name : string ) : integer;
     function md5( fname : string ) : string;
@@ -244,9 +247,7 @@ var
   bs    : TStream;
   st    : TStream;
 begin
-  item := LV.Items.Add;
-  item.Caption := 'Datenfelder';
-  item.SubItems.Add('einfügen');
+  item          := progress('Datenfelder');
 
   path := TPath.Combine(m_home, 'Datafields');
   fi := TDirectory.GetFiles(path, '*.xml');
@@ -281,9 +282,7 @@ var
   xml   : IXMLStoreLimits;
   i     : integer;
 begin
-  item := LV.Items.Add;
-  item.Caption := 'Löschfristen';
-  item.SubItems.Add('einfügen');
+  item := progress('Löschfristen');
 
   fname := TPath.Combine(m_home, 'StoreLimits.xml');
   xml   := LoadStoreLimits(fname);
@@ -312,9 +311,7 @@ var
   arr   : TStringDynArray;
   book  : ePub;
 begin
-  item := LV.Items.Add;
-  item.Caption := 'ePub';
-  item.SubItems.Add('einfügen');
+  item := progress('ePub');
 
   EPTab.Open;
   path  := TPath.Combine(m_home, 'ePub');
@@ -347,9 +344,8 @@ var
   i     : integer;
   xml   : IXMLBER;
 begin
-  item := LV.Items.Add;
-  item.Caption := 'Gremium';
-  item.SubItems.Add('einfügen');
+  item := progress('Gremium');
+
   fname := TPath.Combine(m_home, 'gremium.xml');
   xml   := LoadBER(fname);
   GRTab.Open;
@@ -379,9 +375,7 @@ var
   bs : TStream;
   st : TStream;
 begin
-  item := LV.Items.Add;
-  item.Caption := 'Bilder';
-  item.SubItems.Add('einfügen');
+  item := progress('Bilder');
 
   PITab.Open;
   path := TPath.Combine(m_home, 'images');
@@ -417,10 +411,7 @@ var
   bs : TStream;
   st : TStream;
 begin
-  exit;
-  item := LV.Items.Add;
-  item.Caption := 'Tasks';
-  item.SubItems.Add('einfügen');
+  item := progress('Vorlagen');
 
   TETab.Open;
   path := TPath.Combine(m_home, 'Templates');
@@ -458,9 +449,8 @@ var
   fname: string;
   i    : integer;
 begin
-  item := LV.Items.Add;
-  item.Caption := 'Aufgabentypen';
-  item.SubItems.Add('einfügen');
+  item := progress('Aufgabentypen');
+
   fname := TPath.Combine(m_home, 'TaskTypes.xml');
   xml := LoadTaskTypes(fname);
 
@@ -486,9 +476,7 @@ var
   arr   : TStringDynArray;
   i     : integer;
 begin
-  item := LV.Items.Add;
-  item.Caption := 'Webserverdateien';
-  item.SubItems.Add('einfügen');
+  item := progress('Webserverdateien');
 
   path  :=TPath.Combine(m_home, 'wwwroot');
   start := Length(path);
@@ -518,6 +506,11 @@ begin
   InitData.VisibleButtons := [TJvWizardButtonKind.bkBack, TJvWizardButtonKind.bkCancel];
 end;
 
+procedure TMainSetupForm.JvWizard1CancelButtonClick(Sender: TObject);
+begin
+  Close;
+end;
+
 procedure TMainSetupForm.JvWizard1FinishButtonClick(Sender: TObject);
 begin
   Close;
@@ -540,6 +533,15 @@ begin
     fs.Free;
   end;
   IdMD5.Free;
+end;
+
+function TMainSetupForm.progress(name: string): TListItem;
+begin
+  Result := LV.Items.Add;
+
+  Result.Caption := name;
+  Result.SubItems.Add('einfügen');
+  LV.Selected   := Result;
 end;
 
 procedure TMainSetupForm.SearchGDSEnterPage(Sender: TObject;
