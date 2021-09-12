@@ -197,7 +197,7 @@ end;
 procedure THtmlMod.clearFrameData;
 begin
   if FileExists(m_FrameTemplate) then
-    Frame.HTMLFile := m_FrameTemplate
+    Frame.HTMLDoc.LoadFromFile(m_FrameTemplate)
   else
     Frame.HTMLDoc.Text := defHTML;
 end;
@@ -424,7 +424,9 @@ begin
   m_Framestyle  := style;
   m_Framedata   := data;
 
-  //
+
+  clearFrameData;
+
   if Assigned(m_FrameTC) then
   begin
     if not Assigned(m_Framestyle)  then
@@ -433,11 +435,9 @@ begin
     begin
       tf := m_Framestyle.Files.getFile('index.html');
       if Assigned(tf) then
-        frame.HTMLDoc.Text := tf.Text;
+        frame.HTMLDoc.Text := tf.Text
     end;
   end
-  else
-    Frame.HTMLDoc.Text := defHTML;
 end;
 
 class procedure THtmlMod.SetHTML(text: string; WebBrowser: TWebBrowser);

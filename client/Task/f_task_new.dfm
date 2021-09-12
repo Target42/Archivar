@@ -78,7 +78,7 @@ object Taskform: TTaskform
         Columns = <
           item
             Caption = 'Name'
-            Width = 100
+            Width = 150
           end
           item
             Caption = 'Frist'

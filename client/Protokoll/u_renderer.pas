@@ -142,7 +142,9 @@ begin
     // store this task container until rendering end ....
     m_frame := FLoader.TaskContainer;
     m_html.setFrameData( m_frame, FLoader.TaskStyle, p2x.xml(proto));
-  end;
+  end
+  else
+    m_html.setFrameData( NIL, NIL, p2x.xml(proto));
   p2x.Free;
 
   for i := 0 to pred(proto.Chapter.Count) do

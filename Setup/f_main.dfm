@@ -1,7 +1,7 @@
 object MainSetupForm: TMainSetupForm
   Left = 0
   Top = 0
-  ActiveControl = WelcomePage
+  ActiveControl = BitBtn1
   Caption = 'Setup'
   ClientHeight = 299
   ClientWidth = 558
@@ -29,7 +29,7 @@ object MainSetupForm: TMainSetupForm
     Top = 0
     Width = 558
     Height = 280
-    ActivePage = WelcomePage
+    ActivePage = InitData
     ButtonBarHeight = 42
     ButtonStart.Caption = 'To &Start Page'
     ButtonStart.NumGlyphs = 1
@@ -557,7 +557,7 @@ object MainSetupForm: TMainSetupForm
         Left = 0
         Top = 70
         Width = 558
-        Height = 127
+        Height = 104
         Align = alClient
         Columns = <
           item
@@ -572,6 +572,19 @@ object MainSetupForm: TMainSetupForm
         RowSelect = True
         TabOrder = 1
         ViewStyle = vsReport
+        ExplicitHeight = 91
+      end
+      object ProgressBar1: TProgressBar
+        AlignWithMargins = True
+        Left = 3
+        Top = 177
+        Width = 552
+        Height = 17
+        Align = alBottom
+        TabOrder = 2
+        ExplicitLeft = 96
+        ExplicitTop = 168
+        ExplicitWidth = 150
       end
     end
   end
@@ -651,7 +664,7 @@ object MainSetupForm: TMainSetupForm
     Transaction = IBTransaction1
     SQL.Strings = (
       'SELECT * FROM DA_DATAFIELD')
-    Left = 255
+    Left = 223
     Top = 167
   end
   object CreateDB: TFDScript

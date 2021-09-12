@@ -550,6 +550,10 @@
         <DCCReference Include="..\misc\ePub\u_ePub.pas"/>
         <DCCReference Include="..\misc\ePub\u_navpoint.pas"/>
         <DCCReference Include="..\misc\ePub\u_xml.pas"/>
+        <DCCReference Include="Task\f_task_type.pas">
+            <Form>TaskTypeForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <None Include="Datafields\ERA-NS.txt"/>
         <RcItem Include="dws\dws.html">
             <ContainerId>ResourceItem</ContainerId>

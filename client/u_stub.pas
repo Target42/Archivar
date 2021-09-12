@@ -1,6 +1,6 @@
 //
 // Erzeugt vom DataSnap-Proxy-Generator.
-// 23.07.2021 20:12:14
+// 12.09.2021 12:41:48
 //
 
 unit u_stub;
@@ -28,7 +28,6 @@ type
 
   TdsGremiumClient = class(TDSAdminClient)
   private
-    FDSServerModuleCreateCommand: TDBXCommand;
     FGremiumTabBeforePostCommand: TDBXCommand;
     FImportGremiumCSVCommand: TDBXCommand;
     FExportGremiumCSVCommand: TDBXCommand;
@@ -40,7 +39,6 @@ type
     constructor Create(ADBXConnection: TDBXConnection); overload;
     constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
     destructor Destroy; override;
-    procedure DSServerModuleCreate(Sender: TObject);
     procedure GremiumTabBeforePost(DataSet: TDataSet);
     function ImportGremiumCSV(st: TStream): TJSONObject;
     function ExportGremiumCSV: TStream;
@@ -278,6 +276,14 @@ type
     function getFileList: TJSONObject;
   end;
 
+  TStammModClient = class(TDSAdminClient)
+  private
+  public
+    constructor Create(ADBXConnection: TDBXConnection); overload;
+    constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
+    destructor Destroy; override;
+  end;
+
 implementation
 
 procedure TAdminModClient.DSServerModuleCreate(Sender: TObject);
@@ -362,31 +368,6 @@ begin
   FgetGremiumListCommand.DisposeOf;
   FgetDeleteTimesCommand.DisposeOf;
   inherited;
-end;
-
-procedure TdsGremiumClient.DSServerModuleCreate(Sender: TObject);
-begin
-  if FDSServerModuleCreateCommand = nil then
-  begin
-    FDSServerModuleCreateCommand := FDBXConnection.CreateCommand;
-    FDSServerModuleCreateCommand.CommandType := TDBXCommandTypes.DSServerMethod;
-    FDSServerModuleCreateCommand.Text := 'TdsGremium.DSServerModuleCreate';
-    FDSServerModuleCreateCommand.Prepare;
-  end;
-  if not Assigned(Sender) then
-    FDSServerModuleCreateCommand.Parameters[0].Value.SetNull
-  else
-  begin
-    FMarshal := TDBXClientCommand(FDSServerModuleCreateCommand.Parameters[0].ConnectionHandler).GetJSONMarshaler;
-    try
-      FDSServerModuleCreateCommand.Parameters[0].Value.SetJSONValue(FMarshal.Marshal(Sender), True);
-      if FInstanceOwner then
-        Sender.Free
-    finally
-      FreeAndNil(FMarshal)
-    end
-  end;
-  FDSServerModuleCreateCommand.ExecuteUpdate;
 end;
 
 procedure TdsGremiumClient.GremiumTabBeforePost(DataSet: TDataSet);
@@ -498,7 +479,6 @@ end;
 
 destructor TdsGremiumClient.Destroy;
 begin
-  FDSServerModuleCreateCommand.DisposeOf;
   FGremiumTabBeforePostCommand.DisposeOf;
   FImportGremiumCSVCommand.DisposeOf;
   FExportGremiumCSVCommand.DisposeOf;
@@ -1508,6 +1488,21 @@ destructor TdsUpdaterClient.Destroy;
 begin
   FdownloadCommand.DisposeOf;
   FgetFileListCommand.DisposeOf;
+  inherited;
+end;
+
+constructor TStammModClient.Create(ADBXConnection: TDBXConnection);
+begin
+  inherited Create(ADBXConnection);
+end;
+
+constructor TStammModClient.Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean);
+begin
+  inherited Create(ADBXConnection, AInstanceOwner);
+end;
+
+destructor TStammModClient.Destroy;
+begin
   inherited;
 end;
 

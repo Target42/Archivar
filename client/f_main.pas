@@ -139,6 +139,9 @@ type
     ac_view_admin: TAction;
     Verwaltung1: TMenuItem;
     Aufgaben1: TMenuItem;
+    ac_ad_tasktype: TAction;
+    N16: TMenuItem;
+    Aufgabentypen1: TMenuItem;
     procedure ac_prg_closeExecute(Sender: TObject);
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure ac_prg_disconExecute(Sender: TObject);
@@ -175,6 +178,7 @@ type
     procedure ac_pr_deleteExecute(Sender: TObject);
     procedure ac_view_taskExecute(Sender: TObject);
     procedure ac_view_adminExecute(Sender: TObject);
+    procedure ac_ad_tasktypeExecute(Sender: TObject);
   private
     m_noStatChange : boolean;
 
@@ -204,7 +208,7 @@ uses
   f_template_new, f_taskEditor, f_select_templateForm, f_bechlus, f_set,
   f_textblock_edit, f_testblock_list, f_webserver_files, f_epub_mngr,
   f_meeting_new, f_meeting_select, f_meeting_proto, f_login,
-  system.UITypes, f_protocol_sec, u_onlineUser, f_doMeeting;
+  system.UITypes, f_protocol_sec, u_onlineUser, f_doMeeting, f_task_type;
 
 {$R *.dfm}
 
@@ -271,6 +275,13 @@ end;
 procedure TMainForm.ac_ad_sys_templateExecute(Sender: TObject);
 begin
   templateEdit( true );
+end;
+
+procedure TMainForm.ac_ad_tasktypeExecute(Sender: TObject);
+begin
+  Application.CreateForm(TTaskTypeForm, TaskTypeForm);
+  TaskTypeForm.ShowModal;
+  TaskTypeForm.Free;
 end;
 
 procedure TMainForm.ac_ad_templatesExecute(Sender: TObject);

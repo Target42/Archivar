@@ -180,7 +180,8 @@ uses
   xsd_TextBlock in '..\misc\xsd_TextBlock.pas',
   u_ePub in '..\misc\ePub\u_ePub.pas',
   u_navpoint in '..\misc\ePub\u_navpoint.pas',
-  u_xml in '..\misc\ePub\u_xml.pas';
+  u_xml in '..\misc\ePub\u_xml.pas',
+  f_task_type in 'Task\f_task_type.pas' {TaskTypeForm};
 
 {$R *.res}
 

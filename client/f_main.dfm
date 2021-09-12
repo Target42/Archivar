@@ -420,7 +420,7 @@
         Caption = '-'
       end
       object Vorlagen1: TMenuItem
-        Caption = 'Vorlagen'
+        Caption = 'Aufgaben'
         object NeueVorlage1: TMenuItem
           Action = ac_ad_template_new
         end
@@ -432,6 +432,12 @@
         end
         object Systemvorlage1: TMenuItem
           Action = ac_ad_sys_template
+        end
+        object N16: TMenuItem
+          Caption = '-'
+        end
+        object Aufgabentypen1: TMenuItem
+          Action = ac_ad_tasktype
         end
       end
       object extbausteine1: TMenuItem
@@ -710,6 +716,11 @@
       Caption = 'Verwaltung'
       Checked = True
       OnExecute = ac_view_adminExecute
+    end
+    object ac_ad_tasktype: TAction
+      Category = 'Admin'
+      Caption = 'Aufgabentypen'
+      OnExecute = ac_ad_tasktypeExecute
     end
   end
   object ApplicationEvents1: TApplicationEvents

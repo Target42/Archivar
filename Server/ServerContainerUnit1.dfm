@@ -133,8 +133,8 @@ object ServerContainer1: TServerContainer1
     Left = 256
     Top = 288
   end
-  object DSServerClass1: TDSServerClass
-    OnGetClass = DSServerClass1GetClass
+  object dsTextBlock: TDSServerClass
+    OnGetClass = dsTextBlockGetClass
     Server = DSServer1
     Left = 328
     Top = 400
@@ -160,8 +160,8 @@ object ServerContainer1: TServerContainer1
   object dsSitzung: TDSServerClass
     OnGetClass = dsSitzungGetClass
     Server = DSServer1
-    Left = 336
-    Top = 456
+    Left = 328
+    Top = 464
   end
   object dsUpdater: TDSServerClass
     OnGetClass = dsUpdaterGetClass
@@ -204,5 +204,12 @@ object ServerContainer1: TServerContainer1
         DataType = ftInteger
         ParamType = ptInput
       end>
+  end
+  object dsStammData: TDSServerClass
+    OnGetClass = dsStammDataGetClass
+    Server = DSServer1
+    LifeCycle = 'Invocation'
+    Left = 256
+    Top = 464
   end
 end

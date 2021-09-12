@@ -32,7 +32,7 @@ type
     dsTaskEdit: TDSServerClass;
     dsTemplate: TDSServerClass;
     dsTaskView: TDSServerClass;
-    DSServerClass1: TDSServerClass;
+    dsTextBlock: TDSServerClass;
     dsFileCache: TDSServerClass;
     dsEpub: TDSServerClass;
     dsMeeing: TDSServerClass;
@@ -41,6 +41,7 @@ type
     IBTransaction1: TFDTransaction;
     QueryUser: TFDQuery;
     GRPEQry: TFDQuery;
+    dsStammData: TDSServerClass;
     procedure dsAdminGetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
     procedure ServiceStart(Sender: TService; var Started: Boolean);
@@ -75,7 +76,7 @@ type
     procedure ServiceStop(Sender: TService; var Stopped: Boolean);
     procedure dsTaskViewGetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
-    procedure DSServerClass1GetClass(DSServerClass: TDSServerClass;
+    procedure dsTextBlockGetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
     procedure DSServer1Error(DSErrorEventObject: TDSErrorEventObject);
     procedure dsFileCacheGetClass(DSServerClass: TDSServerClass;
@@ -91,6 +92,8 @@ type
       var PersistentClass: TPersistentClass);
     procedure ServiceDestroy(Sender: TObject);
     procedure dsUpdaterGetClass(DSServerClass: TDSServerClass;
+      var PersistentClass: TPersistentClass);
+    procedure dsStammDataGetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
   private
     const
@@ -132,7 +135,7 @@ uses
   ds_taks, ds_file, ds_misc, ds_protocol, ds_image, ds_chapter,
   ds_taskEdit, ds_template, ds_taskView, ds_textblock, ds_fileCache, ds_epub,
   ds_meeting, System.Hash, u_json, ds_sitzung, m_hell, Grijjy.sysUtils, u_ini,
-  m_fileServer, ds_updater;
+  m_fileServer, ds_updater, ds_stamm;
 
 procedure TServerContainer1.dsAdminGetClass(
   DSServerClass: TDSServerClass; var PersistentClass: TPersistentClass);
@@ -188,7 +191,7 @@ begin
   GrijjyLog.ExitMethod(self, 'DSServer1Error');
 end;
 
-procedure TServerContainer1.DSServerClass1GetClass(
+procedure TServerContainer1.dsTextBlockGetClass(
   DSServerClass: TDSServerClass; var PersistentClass: TPersistentClass);
 begin
   PersistentClass := ds_textblock.TdsTextBlock;
@@ -204,6 +207,12 @@ procedure TServerContainer1.dsSitzungGetClass(DSServerClass: TDSServerClass;
   var PersistentClass: TPersistentClass);
 begin
   PersistentClass := ds_sitzung.TdsSitzung;
+end;
+
+procedure TServerContainer1.dsStammDataGetClass(DSServerClass: TDSServerClass;
+  var PersistentClass: TPersistentClass);
+begin
+  PersistentClass := ds_stamm.TStammMod;
 end;
 
 procedure TServerContainer1.dsTaskEditGetClass(DSServerClass: TDSServerClass;

@@ -49,6 +49,7 @@ type
     SetPwdQry: TFDQuery;
     HCTab: TFDTable;
     EPTab: TFDTable;
+    ProgressBar1: TProgressBar;
     procedure SearchGDSEnterPage(Sender: TObject;
       const FromPage: TJvWizardCustomPage);
     procedure ServerInfoEnterPage(Sender: TObject;
@@ -81,6 +82,7 @@ type
     procedure updateLV;
 
     function progress( name : string ) : TListItem;
+    procedure initPGBar( count : integer );
 
     function AutoInc( name : string ) : integer;
     function md5( fname : string ) : string;
@@ -252,6 +254,7 @@ begin
   path := TPath.Combine(m_home, 'Datafields');
   fi := TDirectory.GetFiles(path, '*.xml');
   DATab.Open;
+  initPGBar( Length(fi ));
   for i := 0 to pred(Length(fi)) do
   begin
     xml := LoadDataField(fi[i]);
@@ -269,6 +272,7 @@ begin
     st.Free;
 
     DATab.Post;
+    ProgressBar1.Position := i;
   end;
   DATab.Close;
   item.SubItems.Strings[0] := 'Abgeschlossen';
@@ -287,6 +291,7 @@ begin
   fname := TPath.Combine(m_home, 'StoreLimits.xml');
   xml   := LoadStoreLimits(fname);
 
+  initPGBar( xml.Count );
   FDTab.Open;
   for i := 0 to pred(xml.Count) do
   begin
@@ -296,6 +301,7 @@ begin
     FDTab.FieldByName('FD_MONATE').AsInteger  := xml.Limit[i].Monate;
     FDTab.FieldByName('FD_TEXT').AsString     := xml.Limit[i].Rem;
     FDTab.Post;
+    ProgressBar1.Position := i;
   end;
   FDTab.Close;
 
@@ -316,6 +322,7 @@ begin
   EPTab.Open;
   path  := TPath.Combine(m_home, 'ePub');
   arr   := TDirectory.GetFiles(path, '*.epub');
+  initPGBar( high(arr));
   for i := low(arr) to High(arr) do begin
     EPTab.Append;
     EPTab.FieldByName('EP_ID').AsInteger  := AutoInc('gen_EP_ID');
@@ -331,6 +338,7 @@ begin
       book.Free;
     end;
     EPTab.Post;
+    ProgressBar1.Position := i;
   end;
   item.SubItems.Strings[0] := 'Abgeschlossen';
   EPTab.Close;
@@ -348,6 +356,7 @@ begin
 
   fname := TPath.Combine(m_home, 'gremium.xml');
   xml   := LoadBER(fname);
+  initPGBar( xml.Count);
   GRTab.Open;
   for i := 0 to pred(xml.Count) do
   begin
@@ -358,6 +367,7 @@ begin
     GRTab.FieldByName('GR_PARENT_SHORT').AsString   := xml.Gremium[i].Pkurz;
     GRTab.FieldByName('GR_PIC_NAME').AsString       := xml.Gremium[i].Pic;
     GRTab.Post;
+    ProgressBar1.Position := i;
   end;
 
   GRTab.Close;
@@ -380,6 +390,8 @@ begin
   PITab.Open;
   path := TPath.Combine(m_home, 'images');
   fi := TDirectory.GetFiles(path, '*.png');
+
+  initPGBar(Length(fi)-1);
   for i := 0 to Length(fi)-1 do begin
 
 
@@ -395,6 +407,7 @@ begin
     st.Free;
 
     PITab.Post;
+    ProgressBar1.Position := i;
   end;
   PITab.Close;
   SetLength(fi, 0);
@@ -416,6 +429,7 @@ begin
   TETab.Open;
   path := TPath.Combine(m_home, 'Templates');
   fi := TDirectory.GetFiles(path, '*.task');
+  initPGBar(Length(fi)-1);
   for i := 0 to Length(fi)-1 do
   begin
 
@@ -435,6 +449,7 @@ begin
     st.Free;
 
     TETab.Post;
+    ProgressBar1.Position := i;
   end;
   TETab.Close;
   SetLength(fi, 0);
@@ -453,6 +468,7 @@ begin
 
   fname := TPath.Combine(m_home, 'TaskTypes.xml');
   xml := LoadTaskTypes(fname);
+  initPGBar(xml.Count);
 
   TYTab.Open;
   for i := 0 to pred(xml.Count) do
@@ -462,6 +478,7 @@ begin
     TYTab.FieldByName('TY_NAME').AsString   := xml.TaskType[i].Name;
     TYTab.FieldByName('TY_TAGE').AsInteger  := xml.TaskType[i].Tage;
     TYTab.post;
+    ProgressBar1.Position := i;
   end;
   TYTab.close;
   item.SubItems.Strings[0] := 'Abgeschlossen';
@@ -482,6 +499,7 @@ begin
   start := Length(path);
   arr   := TDirectory.GetFiles(path, '*.*', TSearchOption.soAllDirectories );
 
+  initPGBar(high(arr));
   HCTab.Open;
   for i := low(arr) to High(arr) do begin
     path := copy( arr[i], start+2 );  // remove root
@@ -494,6 +512,8 @@ begin
     HCTab.FieldByName('HC_NAME').AsString := ExtractFileName(arr[i]);
     HCTab.FieldByName('HC_PATH').AsString := path;
     HCTab.Post;
+
+    ProgressBar1.Position := i;
   end;
   HCTab.Close;
   item.SubItems.Strings[0] := 'Abgeschlossen';
@@ -504,6 +524,12 @@ procedure TMainSetupForm.InitDataEnterPage(Sender: TObject;
   const FromPage: TJvWizardCustomPage);
 begin
   InitData.VisibleButtons := [TJvWizardButtonKind.bkBack, TJvWizardButtonKind.bkCancel];
+end;
+
+procedure TMainSetupForm.initPGBar(count: integer);
+begin
+  ProgressBar1.Max      := count;
+  ProgressBar1.Position := 0;
 end;
 
 procedure TMainSetupForm.JvWizard1CancelButtonClick(Sender: TObject);
