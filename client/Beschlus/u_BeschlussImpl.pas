@@ -210,27 +210,27 @@ function TBeschlussImpl.getData: IXMLList;
   end;
   procedure addVal( name: string;  data : integer ); overload;
   var
-    xdf : IXMLField;
+    xdf       : IXMLField;
   begin
-    xdf := m_xList.Values.Add;
+    xdf       := m_xList.Values.Add;
     xdf.Field := name;
     xdf.Value := IntToStr(data);
   end;
 begin
-  m_xList := NewList;
+  m_xList     := NewList;
 
-  AddTable( 'TAB_TEILNEHMER',       m_vote.Gremium );
-  AddTable( 'TAB_NICHT_ABGESTIMMT', m_vote.NichtAbgestimmt);
-  AddTable( 'TAB_ABWESENDE',        m_vote.Abwesend );
+  AddTable( 'BE_TAB_TEILNEHMER',       m_vote.Gremium );
+  AddTable( 'BE_TAB_NICHT_ABGESTIMMT', m_vote.NichtAbgestimmt);
+  AddTable( 'BE_TAB_ABWESENDE',        m_vote.Abwesend );
 
-  addVal('VOTE_ZUSTIMMUNG',     m_vote.Zustimmung);
-  addVal('VOTE_ABLEHNUNG',      m_vote.Abgelehnt);
-  addVal('VOTE_ENTHALTUNGEN',   m_vote.Enthalten);
-  addVal('VOTE_ERGEBNIS',       BeschlussStatusToStr(m_status));
-  addVal('VOTE_DATUM',          DateToStr(m_vote.Zeitpunkt));
-  addVal('VOTE_ZEIT',           FormatDateTime('hh:mm',  m_vote.Zeitpunkt));
-  addVal('VOTE_SUMME',          m_vote.Zustimmung + m_vote.Abgelehnt + m_vote.Enthalten );
-  addVal('VOTE_TEXT',           m_text );
+  addVal('BE_ZUSTIMMUNG',     m_vote.Zustimmung);
+  addVal('BE_ABLEHNUNG',      m_vote.Abgelehnt);
+  addVal('BE_ENTHALTUNGEN',   m_vote.Enthalten);
+  addVal('BE_ERGEBNIS',       BeschlussStatusToStr(m_status));
+  addVal('BE_DATUM',          DateToStr(m_vote.Zeitpunkt));
+  addVal('BE_ZEIT',           FormatDateTime('hh:mm',  m_vote.Zeitpunkt));
+  addVal('BE_SUMME',          m_vote.Zustimmung + m_vote.Abgelehnt + m_vote.Enthalten );
+  addVal('BE_TEXT',           m_text );
 
 
   Result := m_xList;
@@ -423,22 +423,22 @@ var
 begin
   m_xList := value;
 
-  m_vote.Zustimmung   := getInt('VOTE_ZUSTIMMUNG');
-  m_vote.Abgelehnt    := getInt('VOTE_ABLEHNUNG');
-  m_vote.Enthalten    := getInt('VOTE_ENTHALTUNGEN');
+  m_vote.Zustimmung   := getInt('BE_ZUSTIMMUNG');
+  m_vote.Abgelehnt    := getInt('BE_ABLEHNUNG');
+  m_vote.Enthalten    := getInt('BE_ENTHALTUNGEN');
 
-  m_text              := getStr('VOTE_TEXT');
-  m_status            := StrToBeschlussStatus(getStr('VOTE_ERGEBNIS'));
+  m_text              := getStr('BE_TEXT');
+  m_status            := StrToBeschlussStatus(getStr('BE_ERGEBNIS'));
 
   da := 0.0;
-  TryStrToDate(getStr('VOTE_DATUM'), da);
+  TryStrToDate(getStr('BE_DATUM'), da);
   m_vote.Zeitpunkt := da;
-  TryStrToDate(getStr('VOTE_ZEIT'), da);
+  TryStrToDate(getStr('BE_ZEIT'), da);
   m_vote.Zeitpunkt := m_vote.Zeitpunkt + da;
 
-  ReadTable('TAB_TEILNEHMER',       m_vote.Gremium );
-  ReadTable('TAB_ABWESENDE',        m_vote.Abwesend );
-  ReadTable('TAB_NICHT_ABGESTIMMT', m_vote.NichtAbgestimmt );
+  ReadTable('BE_TAB_TEILNEHMER',       m_vote.Gremium );
+  ReadTable('BE_TAB_ABWESENDE',        m_vote.Abwesend );
+  ReadTable('BE_TAB_NICHT_ABGESTIMMT', m_vote.NichtAbgestimmt );
 
 end;
 

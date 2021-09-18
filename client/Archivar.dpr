@@ -146,7 +146,6 @@ uses
   u_BesucherImpl in 'Protokoll\u_BesucherImpl.pas',
   u_BesucherlisteImpl in 'Protokoll\u_BesucherlisteImpl.pas',
   f_besucher in 'Protokoll\f_besucher.pas' {BesucherForm},
-  xsd_beschlus in '..\misc\xsd_beschlus.pas',
   u_templateCache in 'Task\u_templateCache.pas' {TemplateCacheMod: TDataModule},
   u_renderer in 'Protokoll\u_renderer.pas',
   f_protokoll_view in 'Protokoll\f_protokoll_view.pas' {ProtokollViewForm},

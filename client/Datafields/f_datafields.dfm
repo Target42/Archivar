@@ -315,7 +315,6 @@ object DataFieldForm: TDataFieldForm
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsTaskEdit'
-    Connected = True
     SQLConnection = GM.SQLConnection1
     Left = 296
     Top = 80

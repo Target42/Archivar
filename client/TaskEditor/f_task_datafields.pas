@@ -50,8 +50,10 @@ begin
     fd := m_fields.getByName( Datafields.FieldByName('DA_NAME').AsString);
     if not Assigned(fd) then
     begin
-      fd := m_fields.newField( Datafields.FieldByName('DA_NAME').AsString,
-      Datafields.FieldByName('DA_TYPE').AsString );
+      fd := m_fields.newField(
+        Datafields.FieldByName('DA_NAME').AsString,
+        Datafields.FieldByName('DA_TYPE').AsString
+      );
     end;
     updateProps( fd );
   end;

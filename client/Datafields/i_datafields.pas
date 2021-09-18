@@ -3,7 +3,7 @@ unit i_datafields;
 interface
 
 uses
-  System.Generics.Collections, System.Classes;
+  System.Generics.Collections, System.Classes, Data.DB;
 
 type
   IDataField = interface;
@@ -133,7 +133,7 @@ begin
   items.Add('text');
   items.Add('time');
   items.Add('linktable');
-//  items.Add('table');
+  items.Add('table');
 end;
 
 end.

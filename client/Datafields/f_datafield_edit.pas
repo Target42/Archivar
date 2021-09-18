@@ -38,11 +38,12 @@ type
     function  getDataField : IDataField;
     procedure setDataField(const Value: IDataField);
     procedure setProps;
+    procedure setFieldList( value : IDataFieldList );
   public
     property IsGlobal   : boolean         read FIsGlobal    write FIsGlobal;
     property DataSet    : TDataSet                          write setDataSet;
     property DataField  : IDataField      read getDataField write setDataField;
-    property FieldList  : IDataFieldList  read m_list       write m_list;
+    property FieldList  : IDataFieldList  read m_list       write setFieldList;
   end;
 
 var
@@ -87,7 +88,11 @@ var
 begin
   try
     Application.CreateForm(TTableFieldEditorForm, TableFieldEditorForm);
-    TableFieldEditorForm.FieldList  := m_list;
+    if not Assigned(m_list) then
+      TableFieldEditorForm.FieldList  := m_data.Childs
+    else
+      TableFieldEditorForm.FieldList  := m_list;
+
     TableFieldEditorForm.Root       := m_data;
     TableFieldEditorForm.ShowModal;
   finally
@@ -195,6 +200,11 @@ begin
 
   xw.Free;
   st.Free;
+end;
+
+procedure TDatafieldEditform.setFieldList(value: IDataFieldList);
+begin
+  m_list := value;
 end;
 
 procedure TDatafieldEditform.setProps;

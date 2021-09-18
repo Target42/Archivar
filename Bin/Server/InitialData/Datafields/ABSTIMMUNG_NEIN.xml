@@ -1,2 +1,0 @@
-<?xml version="1.0"?>
-<DataField name="ABSTIMMUNG_NEIN" clid="{B00547E6-C4D4-4D9F-81BD-6B4990AA0D2D}" datatype="integer" isGlobal="true" globalname="ABSTIMMUNG_NEIN"><Text>Ablehnungen</Text><Properties><Property name="Default" typ="integer"><value>0</value></Property><Property name="Min" typ="integer"><value>0</value></Property><Property name="Max" typ="integer"><value>0</value></Property></Properties></DataField>

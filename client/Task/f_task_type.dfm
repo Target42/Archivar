@@ -25,18 +25,18 @@ object TaskTypeForm: TTaskTypeForm
     AutoSize = True
     TabOrder = 0
     ExplicitTop = 221
-    ExplicitWidth = 585
+    ExplicitWidth = 417
     inherited StatusBar1: TStatusBar
       Width = 417
-      ExplicitWidth = 423
+      ExplicitWidth = 417
     end
     inherited Panel1: TPanel
       Width = 417
-      ExplicitWidth = 585
+      ExplicitWidth = 417
       inherited OKBtn: TBitBtn
         Left = 318
         OnClick = BaseFrame1OKBtnClick
-        ExplicitLeft = 486
+        ExplicitLeft = 318
       end
     end
   end
@@ -76,20 +76,17 @@ object TaskTypeForm: TTaskTypeForm
     Height = 25
     DataSource = TYSrc
     Align = alBottom
+    ParentShowHint = False
+    ShowHint = True
     TabOrder = 2
-    ExplicitLeft = 240
-    ExplicitTop = 176
-    ExplicitWidth = 240
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TStammMod'
-    Connected = True
     SQLConnection = GM.SQLConnection1
     Left = 48
     Top = 16
   end
   object TYTab: TClientDataSet
-    Active = True
     Aggregates = <>
     Params = <>
     ProviderName = 'TYTab'
