@@ -25,17 +25,22 @@ type
     procedure BitBtn5Click(Sender: TObject);
     procedure LVDblClick(Sender: TObject);
   private
-    m_root : IDataField;
-    m_list : IDataFieldList;
+    m_root      : IDataField;
+    m_list      : IDataFieldList;
+    m_readonly  : boolean;
 
     procedure setRoot( value : IDataField );
     function  getRoot : IDataField;
     function  getList : IDataFieldList;
     procedure setList( value : IDataFieldList);
     procedure updateView;
+    function GetReadOnly: boolean;
+    procedure SetReadOnly(const Value: boolean);
   public
     property Root       : IDataField      read getRoot write setRoot;
     property FieldList  : IDataFieldList  read getList write setList;
+
+    property ReadOnly: boolean read GetReadOnly write SetReadOnly;
   end;
 
 var
@@ -139,6 +144,11 @@ begin
   Result := m_list;
 end;
 
+function TTableFieldEditorForm.GetReadOnly: boolean;
+begin
+  Result := m_readonly;
+end;
+
 function TTableFieldEditorForm.getRoot: IDataField;
 begin
   Result := m_root;
@@ -146,13 +156,20 @@ end;
 
 procedure TTableFieldEditorForm.LVDblClick(Sender: TObject);
 begin
-  BitBtn2.Click;
+  if not m_readonly then
+    BitBtn2.Click;
 end;
 
 procedure TTableFieldEditorForm.setList(value: IDataFieldList);
 begin
   m_list := value;
   updateView;
+end;
+
+procedure TTableFieldEditorForm.SetReadOnly(const Value: boolean);
+begin
+  m_readonly      := value;
+  Panel1.Enabled  := not m_readonly;
 end;
 
 procedure TTableFieldEditorForm.setRoot(value: IDataField);

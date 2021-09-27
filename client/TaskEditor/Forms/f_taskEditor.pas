@@ -171,8 +171,11 @@ begin
 
   try
     Application.CreateForm(TDatafieldEditform, DatafieldEditform);
+
     DatafieldEditform.FieldList := m_tc.Task.Fields;
     DatafieldEditform.DataField := df;
+    DatafieldEditform.ReadOnly  := df.isGlobal;
+
     if DatafieldEditform.ShowModal = mrOk then
       updateVarList;
   finally

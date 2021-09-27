@@ -159,6 +159,7 @@ function TDataFieldList.newField( name, typ : string ): IDataField;
 begin
   Result := TDataField.create(name, typ);
   m_list.Add(Result);
+
   inform( dlcNew, Result);
 end;
 

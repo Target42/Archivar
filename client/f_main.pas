@@ -142,6 +142,7 @@ type
     ac_ad_tasktype: TAction;
     N16: TMenuItem;
     Aufgabentypen1: TMenuItem;
+    Reports1: TMenuItem;
     procedure ac_prg_closeExecute(Sender: TObject);
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure ac_prg_disconExecute(Sender: TObject);
@@ -677,6 +678,7 @@ procedure TMainForm.ApplicationSetMenu(flag: boolean);
 begin
   Aufgabe1.Visible        := flag;
   Ansicht1.Visible        := flag;
+  Reports1.Visible        := flag;
 
   ac_prg_connect.Enabled  := not flag;
   ac_prg_discon.Enabled   := flag;
@@ -710,7 +712,6 @@ begin
   PageControl2.Visible    := flag;
   Splitter2.Visible       := flag;
   Splitter1.Visible       := flag;
-
 end;
 
 procedure TMainForm.doMeeting(id: integer);

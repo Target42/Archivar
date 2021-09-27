@@ -127,17 +127,15 @@ begin
   while not DATab.Eof do
   begin
     fname := TPath.combine( path, DATab.FieldByName('DA_NAME').AsString+'.xml');
-    bs := NIL;
-    fs := NIL;
+    bs   := NIL;
+    fs   := NIL;
     try
-      fs    := TFileStream.Create(fname, fmCreate + fmShareExclusive);
-      bs := DATab.CreateBlobStream(DATab.FieldByName('DA_PROPS'), bmRead );
+      fs := TFileStream.Create(fname, fmCreate + fmShareExclusive);
+      bs := DATab.CreateBlobStream(DATab.FieldByName('DA_PROPS'), bmRead ); // export
       fs.CopyFrom(bs, bs.Size);
     finally
-      if Assigned(bs) then
-        bs.Free;
-      if Assigned(fs) then
-        fs.Free;
+      if Assigned(bs) then bs.Free;
+      if Assigned(fs) then fs.Free;
     end;
     DATab.Next;
   end;
@@ -163,6 +161,7 @@ begin
       begin
         try
           xml := LoadDataField(OpenDialog1.Files.Strings[i]);
+
           if not DATab.Locate('DA_CLID', VarArrayOf([xml.Clid]), []) then
           begin
             DATab.Append;
@@ -172,7 +171,7 @@ begin
             DATab.FieldByName('DA_REM').AsString  := xml.Text;
             DATab.FieldByName('DA_CLID').AsString := xml.Clid;
 
-            st := DATab.CreateBlobStream(DATab.FieldByName('DA_PROPS'), bmWrite);
+            st := DATab.CreateBlobStream(DATab.FieldByName('DA_PROPS'), bmWrite); // import
             xml.OwnerDocument.SaveToStream(st);
             st.Free;
             DATab.Post;

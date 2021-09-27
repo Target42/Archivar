@@ -50,6 +50,7 @@ object TableFieldEditorForm: TTableFieldEditorForm
     Caption = 'Panel1'
     ShowCaption = False
     TabOrder = 1
+    ExplicitTop = 124
     object BitBtn1: TBitBtn
       Left = 16
       Top = 10
@@ -97,7 +98,7 @@ object TableFieldEditorForm: TTableFieldEditorForm
     object BitBtn2: TBitBtn
       Left = 104
       Top = 10
-      Width = 75
+      Width = 90
       Height = 25
       Caption = 'Bearbeiten'
       Glyph.Data = {

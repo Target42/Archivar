@@ -28,22 +28,28 @@ type
     procedure Button1Click(Sender: TObject);
     procedure VEEditButtonClick(Sender: TObject);
   private
-    m_tab      : TDataSet;
-    m_data     : IDataField;
-    m_list     : IDataFieldList;
-    m_noChange : Boolean;
-    FIsGlobal: boolean;
+    m_tab       : TDataSet;
+    m_data      : IDataField;
+    m_list      : IDataFieldList;
+    m_noChange  : Boolean;
+    FIsGlobal   : boolean;
+    m_readOnly  : boolean;
+
     procedure setDataSet( dataset :TDataSet );
 
     function  getDataField : IDataField;
     procedure setDataField(const Value: IDataField);
     procedure setProps;
     procedure setFieldList( value : IDataFieldList );
+    function GetReadOnly: boolean;
+    procedure SetReadOnly(const Value: boolean);
   public
     property IsGlobal   : boolean         read FIsGlobal    write FIsGlobal;
     property DataSet    : TDataSet                          write setDataSet;
     property DataField  : IDataField      read getDataField write setDataField;
     property FieldList  : IDataFieldList  read m_list       write setFieldList;
+
+    property ReadOnly: boolean read GetReadOnly write SetReadOnly;
   end;
 
 var
@@ -59,26 +65,22 @@ uses
 
 procedure TDatafieldEditform.BaseFrame1OKBtnClick(Sender: TObject);
 var
-  st : TStream;
   xw : TDataField2XML;
 begin
-  m_data.Name       := trim(LabeledEdit1.Text);
+  if m_readOnly then
+    exit;
+
+  m_data.Name         := trim(LabeledEdit1.Text);
   if FIsGlobal then
     m_data.GlobalName := m_data.Name;
-  m_data.Rem        := LabeledEdit2.Text;
-  m_data.isGlobal   := FIsGlobal;
+  m_data.Rem          := LabeledEdit2.Text;
+  m_data.isGlobal     := FIsGlobal;
 
   if Assigned(m_tab) then
   begin
     xw :=  TDataField2XML.create;
-    m_tab.FieldByName('DA_NAME').AsString := m_data.Name;
-    m_tab.FieldByName('DA_TYPE').AsString := m_data.Typ;
-    m_tab.FieldByName('DA_REM').AsString := m_data.Rem;
-
-    st := m_tab.CreateBlobStream( m_tab.FieldByName('DA_PROPS'), bmWrite );
-    xw.saveToStream(m_data, st);
+    xw.saveToDBField(m_data, m_tab.FieldByName('DA_PROPS'));
     xw.Free;
-    st.Free;
   end;
 end;
 
@@ -88,12 +90,14 @@ var
 begin
   try
     Application.CreateForm(TTableFieldEditorForm, TableFieldEditorForm);
+
+    TableFieldEditorForm.ReadOnly     := m_readOnly;
     if not Assigned(m_list) then
       TableFieldEditorForm.FieldList  := m_data.Childs
     else
       TableFieldEditorForm.FieldList  := m_list;
 
-    TableFieldEditorForm.Root       := m_data;
+    TableFieldEditorForm.Root         := m_data;
     TableFieldEditorForm.ShowModal;
   finally
     TableFieldEditorForm.free;
@@ -114,6 +118,7 @@ begin
   m_list                    := NIL;
   FIsGlobal                 := false;
   m_data                    := NIL;
+  m_readOnly                := false;
   DataTypeFillList( ComboBox1.Items );
 end;
 
@@ -127,6 +132,11 @@ end;
 function TDatafieldEditform.getDataField: IDataField;
 begin
   Result := m_data;
+end;
+
+function TDatafieldEditform.GetReadOnly: boolean;
+begin
+  Result := m_readOnly;
 end;
 
 procedure TDatafieldEditform.LabeledEdit1KeyPress(Sender: TObject;
@@ -157,12 +167,6 @@ begin
   LabeledEdit2.Text   := m_data.Rem;
 
   setProps;
-  {
-  if not Assigned(m_tab) and ( ComboBox1.ItemIndex <> -1 ) then
-  begin
-    ComboBox1.Enabled     := false;
-  end;
-  }
   if m_data.isGlobal and not FIsGlobal then
   begin
     LabeledEdit1.Hint     := m_data.GlobalName;
@@ -174,12 +178,9 @@ end;
 
 procedure TDatafieldEditform.setDataSet(dataset: TDataSet);
 var
-  st : TStream;
   ds : IDataField;
-  xw : TDataField2XML;
 begin
   m_tab := dataset;
-  xw := TDataField2XML.create;
 
   if m_tab.State = dsInsert then
   begin
@@ -189,17 +190,10 @@ begin
     m_tab.FieldByName('DA_CLID').AsString := CreateClassID;
   end;
 
-  st := m_tab.CreateBlobStream(m_tab.FieldByName('DA_PROPS'), bmRead );
-  ds := xw.loadFromStream(st);
-
-  ds.CLID := m_tab.FieldByName('DA_CLID').AsString;
-  ds.Rem  := m_tab.FieldByName('DA_REM').AsString;
-  ds.isGlobal := FIsGlobal;;
+  ds := TDataField2XML.createFromDB(m_tab.FieldByName('DA_PROPS'));
+  ds.isGlobal := FIsGlobal;
 
   setDataField(ds);
-
-  xw.Free;
-  st.Free;
 end;
 
 procedure TDatafieldEditform.setFieldList(value: IDataFieldList);
@@ -244,6 +238,11 @@ begin
   end;
 end;
 
+procedure TDatafieldEditform.SetReadOnly(const Value: boolean);
+begin
+  m_readOnly := value;
+end;
+
 procedure TDatafieldEditform.VEEditButtonClick(Sender: TObject);
 var
   row       : Integer;
@@ -271,10 +270,15 @@ var
 begin
   if not Assigned(m_data) then
     exit;
+
   row := VE.Row;
   val := VE.Cells[1, row];
   key := VE.Keys[row];
   p := m_data.getPropertyByName(key);
+
+  if m_readOnly then
+    val := p.Value;
+
   if  Assigned(p) and not p.hasEditor then
   begin
     p.Value := val;

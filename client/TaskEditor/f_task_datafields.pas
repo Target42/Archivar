@@ -19,9 +19,9 @@ type
   private
     m_fields : IDataFieldList;
 
-    procedure updateProps( field : IDataField );
+    procedure setFields( value : IDataFieldList );
   public
-    property Fields : IDataFieldList read m_fields write m_fields;
+    property Fields : IDataFieldList read m_fields write setFields;
     procedure setServer( serv : TCustomRemoteServer  );
     procedure open;
   end;
@@ -47,7 +47,7 @@ begin
     mark := DBGrid1.SelectedRows.Items[i];
     Datafields.GotoBookmark(mark);
 
-    fd := m_fields.getByName( Datafields.FieldByName('DA_NAME').AsString);
+    fd  := TDataField2XML.createFromDB(Datafields.FieldByName('DA_PROPS'));
     if not Assigned(fd) then
     begin
       fd := m_fields.newField(
@@ -55,14 +55,14 @@ begin
         Datafields.FieldByName('DA_TYPE').AsString
       );
     end;
-    updateProps( fd );
+    fd.isGlobal := true;
+    m_fields.add(fd);
   end;
 end;
 
 procedure TTaskDatafieldsForm.FormCreate(Sender: TObject);
 begin
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
-  Datafields.RemoteServer
 end;
 
 
@@ -71,39 +71,14 @@ begin
   Datafields.Open;
 end;
 
+procedure TTaskDatafieldsForm.setFields(value: IDataFieldList);
+begin
+  m_fields := value;
+end;
+
 procedure TTaskDatafieldsForm.setServer(serv: TCustomRemoteServer);
 begin
   Datafields.RemoteServer := serv;
-end;
-
-procedure TTaskDatafieldsForm.updateProps(field: IDataField);
-var
-  st : TStream;
-  ds : IDataField;
-  xw : TDataField2XML;
-  i  : integer;
-begin
-  field.isGlobal := true;
-
-  xw := TDataField2XML.create;
-  st := Datafields.CreateBlobStream(Datafields.FieldByName('DA_PROPS'), bmRead );
-  ds := xw.loadFromStream(st);
-  st.Free;
-  xw.free;
-
-  field.Rem   := ds.Rem;
-  field.CLID  := ds.CLID;
-  field.GlobalName := ds.GlobalName;
-
-  field.Properties.Clear;
-  for i := 0 to pred(ds.Properties.Count) do
-  begin
-    field.Properties.Add(ds.Properties.Items[i]);
-  end;
-
-  ds.release;
-  ds := NIL;
-
 end;
 
 end.

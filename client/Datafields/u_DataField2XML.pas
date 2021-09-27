@@ -3,7 +3,7 @@ unit u_DataField2XML;
 interface
 
 uses
-  System.Classes, i_datafields, xsd_DataField;
+  System.Classes, i_datafields, xsd_DataField, Data.DB;
 
 type
   TDataField2XML = class
@@ -14,8 +14,13 @@ type
     constructor create;
     Destructor Destroy; override;
 
-    function loadFromStream( st : TStream ) : IDataField;
+    function loadFromStream( st : TStream )     : IDataField;
+    function loadFromDBField( field : TField )  : IDataField;
+
     procedure saveToStream( dataField : IDataField ; st  : TStream );
+    procedure saveToDBField( dataField : IDataField ; field : TField );
+
+    class function createFromDB( field : TField ) : IDataField;
   end;
 
 implementation
@@ -30,10 +35,35 @@ begin
 
 end;
 
+class function TDataField2XML.createFromDB(field: TField): IDataField;
+var
+  xw : TDataField2XML;
+begin
+  Result := NIL;
+  if not Assigned(field) or not (field is TBlobField) then
+    exit;
+
+  xw := TDataField2XML.create;
+  try
+    Result := xw.loadFromDBField(field);
+  finally
+    xw.Free;
+  end;
+end;
+
 destructor TDataField2XML.Destroy;
 begin
 
   inherited;
+end;
+
+function TDataField2XML.loadFromDBField(field : TField): IDataField;
+var
+  st : TStream;
+begin
+  st := field.DataSet.CreateBlobStream(Field, bmRead);
+  Result := loadFromStream( st );
+  st.Free;
 end;
 
 function TDataField2XML.loadFromStream(st: TStream): IDataField;
@@ -93,11 +123,29 @@ begin
   end;
 end;
 
+procedure TDataField2XML.saveToDBField(dataField: IDataField; field: TField);
+var
+  st : TStream;
+  ds  : TDataSet;
+begin
+  ds := field.DataSet;
+
+  ds.FieldByName('DA_NAME').AsString  := dataField.Name;
+  ds.FieldByName('DA_TYPE').AsString  := dataField.Typ;
+  ds.FieldByName('DA_REM').AsString   := dataField.Rem;
+  ds.FieldByName('DA_CLID').AsString  := dataField.CLID;
+
+  st := ds.CreateBlobStream(field, bmWrite);
+  saveToStream(dataField, st);
+  st.Free;
+end;
+
 procedure TDataField2XML.saveToStream(dataField: IDataField; st: TStream);
 var
   xData : IXMLDataField;
 begin
   xData           := NewDataField;
+
   saveXData(dataField, xData);
 
   xData.OwnerDocument.SaveToStream(st);
