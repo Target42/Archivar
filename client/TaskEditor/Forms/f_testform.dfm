@@ -25,17 +25,23 @@ object TestForm: TTestForm
     AutoSize = True
     TabOrder = 0
     ExplicitTop = 555
-    ExplicitWidth = 802
+    ExplicitWidth = 646
     inherited StatusBar1: TStatusBar
       Width = 646
-      ExplicitWidth = 638
+      ExplicitWidth = 646
     end
     inherited Panel1: TPanel
       Width = 646
-      ExplicitWidth = 802
+      ExplicitWidth = 646
+      inherited AbortBtn: TBitBtn
+        Top = 6
+        ExplicitTop = 6
+      end
       inherited OKBtn: TBitBtn
-        Left = 558
-        ExplicitLeft = 714
+        Left = 542
+        Top = 6
+        ExplicitLeft = 542
+        ExplicitTop = 6
       end
     end
   end
@@ -46,12 +52,12 @@ object TestForm: TTestForm
     Height = 555
     Align = alClient
     TabOrder = 1
-    ExplicitWidth = 802
+    ExplicitWidth = 646
     ExplicitHeight = 555
     inherited ScrollBox1: TScrollBox
       Width = 646
       Height = 555
-      ExplicitWidth = 802
+      ExplicitWidth = 646
       ExplicitHeight = 555
     end
   end

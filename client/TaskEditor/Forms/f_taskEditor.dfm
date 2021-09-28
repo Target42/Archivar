@@ -33,7 +33,7 @@ object TaksEditorForm: TTaksEditorForm
     Top = 0
     Width = 802
     Height = 480
-    ActivePage = TabSheet1
+    ActivePage = TabSheet2
     Align = alClient
     TabOrder = 1
     object TabSheet1: TTabSheet
@@ -73,6 +73,9 @@ object TaksEditorForm: TTaksEditorForm
             end
             item
               Caption = 'Tabelle'
+            end
+            item
+              Caption = 'Global'
             end
             item
               Caption = 'Beschreibung'
@@ -420,7 +423,7 @@ object TaksEditorForm: TTaksEditorForm
           ExplicitHeight = 452
         end
         inherited Splitter3: TSplitter
-          Left = 568
+          Left = 566
           Height = 452
           ExplicitLeft = 606
           ExplicitHeight = 452
@@ -430,44 +433,41 @@ object TaksEditorForm: TTaksEditorForm
           Height = 452
           ExplicitLeft = 571
           ExplicitHeight = 452
-          inherited Splitter1: TSplitter
-            Height = 205
-            ExplicitHeight = 121
-          end
           inherited PropertyFrame1: TPropertyFrame
-            Height = 205
-            ExplicitHeight = 205
+            Height = 200
+            ExplicitTop = 451
+            ExplicitHeight = 0
             inherited VE: TValueListEditor
-              Height = 205
-              ExplicitHeight = 205
+              Height = 200
+              ExplicitHeight = 200
             end
           end
         end
         inherited EditPanel: TPanel
-          Width = 380
+          Width = 376
           Height = 452
-          ExplicitWidth = 380
+          ExplicitWidth = 376
           ExplicitHeight = 452
         end
         inherited Panel2: TPanel
           Height = 452
           ExplicitHeight = 452
           inherited GroupBox2: TGroupBox
-            Height = 256
-            ExplicitHeight = 256
+            Height = 254
+            ExplicitHeight = 254
             inherited TV: TTreeView
-              Height = 198
-              ExplicitHeight = 198
+              Height = 196
+              ExplicitHeight = 196
             end
             inherited Panel4: TPanel
-              Top = 213
-              ExplicitTop = 213
+              Top = 211
+              ExplicitTop = 211
             end
           end
         end
         inherited ImageList1: TImageList
           Bitmap = {
-            494C01010C001800CC0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+            494C01010C001800D40010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
             0000000000003600000028000000400000004000000001002000000000000040
             0000000000000000000000000000000000000000000000000000000000000000
             0000000000000000000000000000000000000000000000000000000000000000

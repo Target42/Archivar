@@ -298,6 +298,9 @@ var
   st : TStream;
   clid : String;
 begin
+  if Assigned(m_tc.Task) then
+    m_tc.Task.Rem := EditFrame1.Text;
+
   EditorFrame1.saveCurrentForm;
 
   st := TETab.CreateBlobStream(  TETab.FieldByName('TE_DATA'), bmWrite);
@@ -320,6 +323,9 @@ begin
   CheckDefaultStype;
 
   updateVarList;
+
+  if Assigned(m_tc.Task) then
+    EditFrame1.Text := m_tc.Task.Rem;
 end;
 
 procedure TTaksEditorForm.setTEID(value: integer);
@@ -376,6 +382,12 @@ begin
       item.SubItems.Add('Ja')
     else
       item.SubItems.Add('');
+
+    if df.isGlobal then
+      item.SubItems.Add('Ja')
+    else
+      item.SubItems.Add('');
+
     item.SubItems.Add(df.Rem);
 
     if df = old then

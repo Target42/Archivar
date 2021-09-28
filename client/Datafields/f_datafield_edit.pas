@@ -240,7 +240,11 @@ end;
 
 procedure TDatafieldEditform.SetReadOnly(const Value: boolean);
 begin
-  m_readOnly := value;
+  m_readOnly            := value;
+
+  LabeledEdit1.ReadOnly := m_readOnly;
+  ComboBox1.Enabled     := not m_readOnly;
+  LabeledEdit2.ReadOnly := m_readOnly;
 end;
 
 procedure TDatafieldEditform.VEEditButtonClick(Sender: TObject);

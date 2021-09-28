@@ -26,7 +26,6 @@ type
     EditPanel: TPanel;
     GroupBox1: TGroupBox;
     LV: TListView;
-    Splitter1: TSplitter;
     PropertyFrame1: TPropertyFrame;
     Splitter2: TSplitter;
     Splitter3: TSplitter;
@@ -49,6 +48,8 @@ type
     SpeedButton11: TSpeedButton;
     SpeedButton12: TSpeedButton;
     ImageList1: TImageList;
+    Splitter1: TSplitter;
+    GroupBox4: TGroupBox;
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure FrameMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);

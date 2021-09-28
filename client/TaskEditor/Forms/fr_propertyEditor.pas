@@ -248,6 +248,8 @@ begin
 
   if (m_ctrl.Typ = ctTable) or ( m_ctrl.Typ = ctTableField) then
     m_ctrl.updateControl;
+  if SameText(key, 'name') and Assigned(m_pchanged) then
+    m_pchanged;
 
 end;
 

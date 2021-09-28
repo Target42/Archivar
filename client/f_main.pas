@@ -143,6 +143,7 @@ type
     N16: TMenuItem;
     Aufgabentypen1: TMenuItem;
     Reports1: TMenuItem;
+    Tools1: TMenuItem;
     procedure ac_prg_closeExecute(Sender: TObject);
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure ac_prg_disconExecute(Sender: TObject);
@@ -679,6 +680,7 @@ begin
   Aufgabe1.Visible        := flag;
   Ansicht1.Visible        := flag;
   Reports1.Visible        := flag;
+  Tools1.Visible          := flag;
 
   ac_prg_connect.Enabled  := not flag;
   ac_prg_discon.Enabled   := flag;

@@ -104,10 +104,6 @@
     object TabSheet2: TTabSheet
       Caption = 'Lesezeichen'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       inline BookmarkFrame1: TBookmarkFrame
         Left = 0
         Top = 0
@@ -168,10 +164,6 @@
     object TabSheet6: TTabSheet
       Caption = 'Online'
       ImageIndex = 3
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object UserView: TListView
         Left = 0
         Top = 0
@@ -409,6 +401,16 @@
       Caption = 'Reports'
       GroupIndex = 200
     end
+    object Ansicht1: TMenuItem
+      Caption = 'Ansicht'
+      GroupIndex = 200
+      object Verwaltung1: TMenuItem
+        Action = ac_view_admin
+      end
+      object Aufgaben1: TMenuItem
+        Action = ac_view_task
+      end
+    end
     object Admin1: TMenuItem
       Caption = 'Admin'
       GroupIndex = 200
@@ -477,15 +479,9 @@
         Action = ac_ad_epub
       end
     end
-    object Ansicht1: TMenuItem
-      Caption = 'Ansicht'
+    object Tools1: TMenuItem
+      Caption = 'Tools'
       GroupIndex = 200
-      object Verwaltung1: TMenuItem
-        Action = ac_view_admin
-      end
-      object Aufgaben1: TMenuItem
-        Action = ac_view_task
-      end
     end
     object Fenster1: TMenuItem
       Caption = 'Fenster'

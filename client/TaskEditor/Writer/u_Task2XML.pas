@@ -63,6 +63,8 @@ begin
   Result      := TTask.create;
   Result.Name := m_xTask.Name;
   Result.CLID := m_xTask.Clid;
+  Result.Rem  := m_xTask.Rem;
+
   m_task      := Result;
 
   xw := TaskDataField2XML.create;
@@ -86,8 +88,9 @@ var
 begin
   m_xTask := NewTask;
 
-  m_xTask.Name := task.Name;
-  m_xTask.Clid := task.CLID;
+  m_xTask.Name  := task.Name;
+  m_xTask.Clid  := task.CLID;
+  m_xTask.Rem   := task.Rem;
 
   xw := TaskDataField2XML.create;
   try
@@ -114,9 +117,11 @@ begin
   try
     m_xTask := LoadTask(fname);
   except
+    on e : exception do
     begin
       m_xTask := NewTask;
       m_xTask.Name := 'Exception';
+      m_xTask.Rem  := e.ToString;
     end;
   end;
 
@@ -174,9 +179,11 @@ begin
     xml.LoadFromStream(st);
     m_xTask := xml.GetDocBinding('Task', TXMLTask, TargetNamespace) as IXMLTask;
   except
+    on e : exception do
     begin
-      m_xTask := NewTask;
-      m_xTask.Name := 'Exception';
+      m_xTask       := NewTask;
+      m_xTask.Name  := 'Exception';
+      m_xTask.Rem   := e.ToString;
     end;
   end;
   st.Free;

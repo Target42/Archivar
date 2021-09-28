@@ -11,6 +11,7 @@ type
     m_tc      : ITaskContainer;
     m_name    : string;
     m_clid    : string;
+    m_rem     : string;
     m_fields  : IDataFieldList;
     m_forms   : TList<ITaskForm>;
 
@@ -26,6 +27,9 @@ type
     function  getWorkDir : string;
     procedure setOwner( value : ITaskContainer);
     function  getOwner : ITaskContainer;
+    procedure setRem( value : string );
+    function  getRem : string;
+
   public
     constructor create;
     Destructor Destroy; override;
@@ -122,6 +126,11 @@ begin
   Result := m_tc;
 end;
 
+function TTask.getRem: string;
+begin
+  Result := m_rem;
+end;
+
 function TTask.getWorkDir: string;
 begin
   Result := m_workDir;
@@ -158,6 +167,11 @@ end;
 procedure TTask.setOwner(value: ITaskContainer);
 begin
   m_tc := value;
+end;
+
+procedure TTask.setRem(value: string);
+begin
+  m_rem := value;
 end;
 
 procedure TTask.setWorkDir(value: string);

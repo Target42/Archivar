@@ -47,6 +47,8 @@ type
     function  getWorkDir : string;
     procedure setOwner( value : ITaskContainer);
     function  getOwner : ITaskContainer;
+    procedure setRem( value : string );
+    function  getRem : string;
 
   //public
     property Owner  : ITaskContainer read getOwner write setOwner;
@@ -54,7 +56,7 @@ type
     property CLID   : string read getCLID write setCLID;
     property Fields : IDataFieldList read getFields;
     property Forms  : TList<ITaskForm> read getForms;
-//    property WorkDir: string read getWorkDir write setWorkDir;
+    property Rem    : string read getRem write setRem;
 
     function getMainForm : ITaskForm;
     function NewForm : ITaskForm;
