@@ -5,7 +5,7 @@ object dsMisc: TdsMisc
   Width = 689
   object OpenTaskQry: TDataSetProvider
     DataSet = openTasks
-    Left = 48
+    Left = 56
     Top = 144
   end
   object MeetingQry: TDataSetProvider

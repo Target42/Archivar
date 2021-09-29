@@ -14,10 +14,13 @@ type
     procedure DataModuleDestroy(Sender: TObject);
   private
     m_files : TStringList;
+
     procedure download( fname : string );
     procedure fillFiles;
   public
-    procedure checkFiles;
+
+    procedure checkHttpFiles;
+
   end;
 
 var
@@ -32,7 +35,7 @@ uses
 
 {$R *.dfm}
 
-procedure TCacheMod.checkFiles;
+procedure TCacheMod.checkHttpFiles;
 var
   fname : string;
   inx   : integer;

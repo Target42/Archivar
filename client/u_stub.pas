@@ -1,6 +1,6 @@
 //
 // Erzeugt vom DataSnap-Proxy-Generator.
-// 12.09.2021 12:41:48
+// 29.09.2021 12:31:41
 //
 
 unit u_stub;
@@ -200,10 +200,14 @@ type
 
   TdsFileCacheClient = class(TDSAdminClient)
   private
+    FuploadCommand: TDBXCommand;
+    FdeleteFileCommand: TDBXCommand;
   public
     constructor Create(ADBXConnection: TDBXConnection); overload;
     constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
     destructor Destroy; override;
+    function upload(req: TJSONObject; st: TStream): TJSONObject;
+    function deleteFile(req: TJSONObject): TJSONObject;
   end;
 
   TdsEpubClient = class(TDSAdminClient)
@@ -1133,6 +1137,35 @@ begin
   inherited;
 end;
 
+function TdsFileCacheClient.upload(req: TJSONObject; st: TStream): TJSONObject;
+begin
+  if FuploadCommand = nil then
+  begin
+    FuploadCommand := FDBXConnection.CreateCommand;
+    FuploadCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FuploadCommand.Text := 'TdsFileCache.upload';
+    FuploadCommand.Prepare;
+  end;
+  FuploadCommand.Parameters[0].Value.SetJSONValue(req, FInstanceOwner);
+  FuploadCommand.Parameters[1].Value.SetStream(st, FInstanceOwner);
+  FuploadCommand.ExecuteUpdate;
+  Result := TJSONObject(FuploadCommand.Parameters[2].Value.GetJSONValue(FInstanceOwner));
+end;
+
+function TdsFileCacheClient.deleteFile(req: TJSONObject): TJSONObject;
+begin
+  if FdeleteFileCommand = nil then
+  begin
+    FdeleteFileCommand := FDBXConnection.CreateCommand;
+    FdeleteFileCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FdeleteFileCommand.Text := 'TdsFileCache.deleteFile';
+    FdeleteFileCommand.Prepare;
+  end;
+  FdeleteFileCommand.Parameters[0].Value.SetJSONValue(req, FInstanceOwner);
+  FdeleteFileCommand.ExecuteUpdate;
+  Result := TJSONObject(FdeleteFileCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
+end;
+
 constructor TdsFileCacheClient.Create(ADBXConnection: TDBXConnection);
 begin
   inherited Create(ADBXConnection);
@@ -1145,6 +1178,8 @@ end;
 
 destructor TdsFileCacheClient.Destroy;
 begin
+  FuploadCommand.DisposeOf;
+  FdeleteFileCommand.DisposeOf;
   inherited;
 end;
 

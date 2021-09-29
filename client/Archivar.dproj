@@ -553,6 +553,11 @@
             <Form>TaskTypeForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="File\m_fileCache.pas">
+            <Form>FileCacheMod</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
         <None Include="Datafields\ERA-NS.txt"/>
         <RcItem Include="dws\dws.html">
             <ContainerId>ResourceItem</ContainerId>

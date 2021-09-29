@@ -67,6 +67,7 @@ type
     m_images  : string;
     m_httpHome: string;
     m_epubHome: string;
+    m_cache   : string;
 
     m_misc    : TdsMiscClient;
     m_gremien : TList<TGremium>;
@@ -115,6 +116,7 @@ type
     property Gremien    : TList<TGremium> read m_gremien;
     property wwwHome    : string          read m_httpHome;
     property ePubHome   : string          read m_epubHome;
+    property Cache      : string          read m_cache;
 
     property Hostlist   : TStringList     read m_hostList;
     property UserList   : TStringList     read m_userList;
@@ -176,7 +178,7 @@ uses
   System.UITypes, system.IOUtils, FireDAC.Stan.Storagebin,
   System.Win.ComObj, m_WindowHandler, m_BookMarkHandler, IdHashMessageDigest,
   Vcl.Graphics, u_PersonenListeImpl, u_PersonImpl, m_cache, f_login, u_kategorie,
-  u_onlineUser, m_http, f_doMeeting, u_eventHandler, u_Konst, IdStack;
+  u_onlineUser, m_http, f_doMeeting, u_eventHandler, u_Konst, IdStack, m_fileCache;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -216,7 +218,7 @@ end;
 procedure TGM.checkWWWRoot;
 begin
   Application.CreateForm(TCacheMod, CacheMod);
-  CacheMod.checkFiles;
+  CacheMod.checkHttpFiles;
   CacheMod.Free;
 end;
 
@@ -360,12 +362,14 @@ end;
 
 procedure TGM.CreateDirs;
 begin
-  m_public    := TPath.Combine(TPath.GetHomePath, 'Archivar' );
-  m_home      := TPath.Combine(m_public, 'user\'+FUserName );
-  m_images    := TPath.Combine(m_public, 'Images' );
-  m_httpHome  := TPath.Combine(m_public, 'wwwroot');
-  m_epubHome  := TPath.Combine(m_home, 'epubs');
   m_export    := TPath.Combine(TPath.GetDocumentsPath, 'Archivar\export');
+  m_public    := TPath.Combine(TPath.GetHomePath, 'Archivar' );
+  m_home      := TPath.Combine(m_public,  'user\'+FUserName );
+  m_images    := TPath.Combine(m_public,  'Images' );
+  m_httpHome  := TPath.Combine(m_public,  'wwwroot');
+  m_epubHome  := TPath.Combine(m_home,    'epubs');
+  m_cache     := TPath.Combine(m_public,  'cache');
+
 
 
   ForceDirectories(m_public);
@@ -374,6 +378,7 @@ begin
   ForceDirectories(m_httpHome);
   ForceDirectories(m_export);
   ForceDirectories(m_epubHome);
+  ForceDirectories(m_cache);
 end;
 
 function GetUsername: String;
@@ -833,6 +838,8 @@ begin
 
   checkimages;
   checkWWWRoot;
+
+  FileCacheMod.SyncCache;
 
   requestUser;
 

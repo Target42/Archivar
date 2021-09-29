@@ -1,7 +1,7 @@
 /* ============================================================ */
 /*   Database name:  MODEL_2                                    */
 /*   DBMS name:      InterBase                                  */
-/*   Created on:     10.09.2021  17:05                          */
+/*   Created on:     29.09.2021  10:04                          */
 /* ============================================================ */
 
 create generator gen_be_id;
@@ -9,6 +9,7 @@ create generator gen_ct_id;
 create generator gen_cp_id;
 create generator gen_da_id;
 create generator gen_el_id;
+create generator gen_fc_id;
 create generator gen_fi_id;
 create generator gen_fd_id;
 create generator gen_gr_id;
@@ -169,6 +170,25 @@ create table LN_LINK
 /*   Index: LN_LINK_SEC                                         */
 /* ============================================================ */
 create ASC index LN_LINK_SEC on LN_LINK (LN_SHORT);
+
+/* ============================================================ */
+/*   Table: FC_FILE_CACHE                                       */
+/* ============================================================ */
+create table FC_FILE_CACHE
+(
+    FC_ID                           INTEGER                not null,
+    FC_NAME                         VARCHAR(100)                   ,
+    FC_CACHE                        VARCHAR(50)                    ,
+    FC_MD5                          VARCHAR(32)                    ,
+    FC_STAMP                        TIMESTAMP                      ,
+    FC_DATA                         BLOB                           ,
+    constraint PK_FC_FILE_CACHE primary key (FC_ID)
+);
+
+/* ============================================================ */
+/*   Index: FC_FILE_CACHE_NAME                                  */
+/* ============================================================ */
+create ASC index FC_FILE_CACHE_NAME on FC_FILE_CACHE (FC_NAME);
 
 /* ============================================================ */
 /*   Table: PE_PERSON                                           */

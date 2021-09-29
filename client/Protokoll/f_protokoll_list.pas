@@ -51,10 +51,10 @@ var
   client : TdsProtocolClient;
   res, req : TJSONObject;
 begin
+  client := TdsProtocolClient.Create(GM.SQLConnection1.DBXConnection);
   try
     req := TJSONObject.Create;
     JReplace( req, 'id', id);
-    client := TdsProtocolClient.Create(GM.SQLConnection1.DBXConnection);
 
     Res := client.deleteProtocol(req);
 

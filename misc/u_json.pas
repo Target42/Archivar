@@ -652,6 +652,9 @@ end;
 *******************************************************************************}
 procedure JResult( obj : TJSONObject ; ok : Boolean ; text : string );
 begin
+  if not Assigned(obj) then
+    exit;
+
   JReplace( obj, 'result', ok);
   JReplace( obj, 'text', text);
 end;
@@ -669,11 +672,7 @@ end;
 *******************************************************************************}
 procedure JResponse( data : TJSONObject ; state : boolean ; text : string );
 begin
-  if not Assigned(data) then
-    exit;
-
-  Jreplace( data, 'result', state);
-  Jreplace( data, 'text', text);
+  JResult( data, state, text );
 end;
 
 

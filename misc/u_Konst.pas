@@ -45,6 +45,8 @@ const
   BRD_VOTE_START      : string = 'vote_start';
   BRD_VOTE_END        : string = 'vote_end';
   BRD_VOTE_LEAVE      : string = 'vote_leave';
+  BRD_FILE_CACHE_UPT  : string = 'fc_update';
+  BRD_FILE_CACHE_DEL  : string = 'fc_delete';
 
 
 const

@@ -5,7 +5,7 @@ interface
 uses
   System.SysUtils, System.Classes, dwsComp, xsd_TaskData, dwsErrors,
   i_taskEdit, dwsExprs, Xml.XMLIntf, Web.HTTPApp, Web.HTTPProd, dwsDebugger,
-  dwsInfo;
+  dwsInfo, dwsFileSystem;
 
 type
   TXmlContainer = class( TObject )
@@ -61,6 +61,12 @@ type
       var ExtObject: TObject);
     procedure dwsUnit1ClassesTTableCleanUp(ExternalObject: TObject);
     procedure dwsUnit1ClassesTTableHeaderCleanUp(ExternalObject: TObject);
+    procedure dwsUnit1ClassesTTableHeaderMethodsNameEval(Info: TProgramInfo;
+      ExtObject: TObject);
+    procedure dwsUnit1ClassesTTableHeaderMethodsCaption_Integer_Eval(
+      Info: TProgramInfo; ExtObject: TObject);
+    procedure dwsUnit1ClassesTTableHeaderMethodsWidth_Integer_Eval(
+      Info: TProgramInfo; ExtObject: TObject);
   private
     m_script : TStringList;
     m_params : TStringList;
@@ -76,8 +82,11 @@ type
     function getScript: String;
     procedure setScript(const Value: String);
     function hasError( msgs:TdwsMessageList): boolean;
+
     function getField( name : string ) : IXMLField;
-    function getHeaderField( name : string; header : IXMLHeader ) : IXMLField;
+
+    function getHeaderField( name : string; header : IXMLHeader ) : IXMLField; overload;
+    function getHeaderField( inx : integer ; header : IXMLHeader ) : IXMLField; overload;
   public
     property Data      : IXMLList read m_xList write m_xList;
     property TaskStyle : ITaskStyle read m_style write m_style;
@@ -97,7 +106,8 @@ var
 implementation
 
 uses
-  Vcl.Dialogs, System.StrUtils, dwsUtils, Xml.XMLDoc;
+  Vcl.Dialogs, System.StrUtils, dwsUtils, Xml.XMLDoc, m_glob_client,
+  System.ioutils;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -137,6 +147,10 @@ begin
 
   m_xList  := NewList;
   m_style  := NIL;
+
+  DelphiWebScript1.Config.ScriptPaths.Clear;
+
+  DelphiWebScript1.Config.ScriptPaths.Add(TPath.combine(GM.cache, 'dwslib'));
 end;
 
 procedure TDwsMod.DataModuleDestroy(Sender: TObject);
@@ -206,12 +220,48 @@ begin
     info.ResultAsString := f.Header;
 end;
 
+procedure TDwsMod.dwsUnit1ClassesTTableHeaderMethodsCaption_Integer_Eval(
+  Info: TProgramInfo; ExtObject: TObject);
+var
+  xHeader : IXMLHeader;
+  xf      : IXMLField;
+begin
+  if not ( ExtObject is TXmlContainer) then
+    exit;
+
+  xHeader := (ExtObject as TXmlContainer).XML as IXMLHeader;
+
+  xf := getHeaderField(info.ParamAsInteger[0], xHeader);
+  if Assigned(xf) then
+    Info.ResultAsString := xf.Header
+  else
+    info.ResultAsString := Format('index %d not found', [Info.ParamAsInteger[0]]);
+end;
+
 procedure TDwsMod.dwsUnit1ClassesTTableHeaderMethodsCountEval(
   Info: TProgramInfo; ExtObject: TObject);
 begin
   if not ( ExtObject is TXmlContainer) then
     exit;
   info.ResultAsInteger := ((ExtObject as TXmlContainer).XML as IXMLHeader).Count;
+end;
+
+procedure TDwsMod.dwsUnit1ClassesTTableHeaderMethodsNameEval(Info: TProgramInfo;
+  ExtObject: TObject);
+var
+  xHeader : IXMLHeader;
+  xf      : IXMLField;
+begin
+  if not ( ExtObject is TXmlContainer) then
+    exit;
+
+  xHeader := (ExtObject as TXmlContainer).XML as IXMLHeader;
+
+  xf := getHeaderField(info.ParamAsInteger[0], xHeader);
+  if Assigned(xf) then
+    Info.ResultAsString := xf.Field
+  else
+    info.ResultAsString := Format('index %d not found', [Info.ParamAsInteger[0]]);
 end;
 
 procedure TDwsMod.dwsUnit1ClassesTTableHeaderMethodsNamesEval(
@@ -244,6 +294,24 @@ begin
   f := getHeaderField( info.ParamAsString[0], ((ExtObject as TXmlContainer).XML as IXMLHeader));
   if Assigned(f) then
     info.ResultAsInteger := f.Width;
+end;
+
+procedure TDwsMod.dwsUnit1ClassesTTableHeaderMethodsWidth_Integer_Eval(
+  Info: TProgramInfo; ExtObject: TObject);
+var
+  xHeader : IXMLHeader;
+  xf      : IXMLField;
+begin
+  if not ( ExtObject is TXmlContainer) then
+    exit;
+
+  xHeader := (ExtObject as TXmlContainer).XML as IXMLHeader;
+
+  xf := getHeaderField(info.ParamAsInteger[0], xHeader);
+  if Assigned(xf) then
+    Info.ResultAsInteger := xf.Width
+  else
+    Info.ResultAsInteger := -1;
 end;
 
 procedure TDwsMod.dwsUnit1ClassesTTableMethodsCellEval(Info: TProgramInfo;
@@ -418,8 +486,7 @@ var
   i : integer;
 begin
   Result := NIL;
-  if not Assigned(m_xList) then
-    exit;
+  if not Assigned(m_xList) then  exit;
 
   for i := 0 to pred(m_xList.Values.Count) do
   begin
@@ -429,6 +496,15 @@ begin
       break;
     end;
   end;
+end;
+
+function TDwsMod.getHeaderField(inx: integer; header: IXMLHeader): IXMLField;
+begin
+  Result := NIL;
+
+  if (inx >= 0 ) and ( inx < header.Count) then
+    Result := header.Field[inx];
+
 end;
 
 function TDwsMod.getHeaderField(name: string; header: IXMLHeader): IXMLField;

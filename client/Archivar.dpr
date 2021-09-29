@@ -180,7 +180,8 @@ uses
   u_ePub in '..\misc\ePub\u_ePub.pas',
   u_navpoint in '..\misc\ePub\u_navpoint.pas',
   u_xml in '..\misc\ePub\u_xml.pas',
-  f_task_type in 'Task\f_task_type.pas' {TaskTypeForm};
+  f_task_type in 'Task\f_task_type.pas' {TaskTypeForm},
+  m_fileCache in 'File\m_fileCache.pas' {FileCacheMod: TDataModule};
 
 {$R *.res}
 
@@ -194,11 +195,12 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
 
-  Application.CreateForm(TGM, GM);
-  Application.CreateForm(THttpMod, HttpMod);
-  Application.CreateForm(TWindowHandler, WindowHandler);
-  Application.CreateForm(TBookMarkHandler, BookMarkHandler);
+  Application.CreateForm(TGM,               GM);
+  Application.CreateForm(THttpMod,          HttpMod);
+  Application.CreateForm(TWindowHandler,    WindowHandler);
+  Application.CreateForm(TBookMarkHandler,  BookMarkHandler);
   Application.CreateForm(TTemplateCacheMod, TemplateCacheMod);
-  Application.CreateForm(TMainForm, MainForm);
+  Application.CreateForm(TFileCacheMod,     FileCacheMod);
+  Application.CreateForm(TMainForm,         MainForm);
   Application.Run;
 end.

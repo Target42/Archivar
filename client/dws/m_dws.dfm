@@ -99,6 +99,23 @@ object DwsMod: TDwsMod
             Kind = mkFunction
           end
           item
+            Name = 'Names'
+            ResultType = 'array of string'
+            OnEval = dwsUnit1ClassesTTableHeaderMethodsNamesEval
+            Kind = mkFunction
+          end
+          item
+            Name = 'Name'
+            Parameters = <
+              item
+                Name = 'index'
+                DataType = 'Integer'
+              end>
+            ResultType = 'string'
+            OnEval = dwsUnit1ClassesTTableHeaderMethodsNameEval
+            Kind = mkFunction
+          end
+          item
             Name = 'Caption'
             Parameters = <
               item
@@ -106,7 +123,20 @@ object DwsMod: TDwsMod
                 DataType = 'String'
               end>
             ResultType = 'String'
+            Overloaded = True
             OnEval = dwsUnit1ClassesTTableHeaderMethodsCaptionEval
+            Kind = mkFunction
+          end
+          item
+            Name = 'Caption'
+            Parameters = <
+              item
+                Name = 'index'
+                DataType = 'Integer'
+              end>
+            ResultType = 'string'
+            Overloaded = True
+            OnEval = dwsUnit1ClassesTTableHeaderMethodsCaption_Integer_Eval
             Kind = mkFunction
           end
           item
@@ -117,13 +147,20 @@ object DwsMod: TDwsMod
                 DataType = 'String'
               end>
             ResultType = 'integer'
+            Overloaded = True
             OnEval = dwsUnit1ClassesTTableHeaderMethodsWidthEval
             Kind = mkFunction
           end
           item
-            Name = 'Names'
-            ResultType = 'array of string'
-            OnEval = dwsUnit1ClassesTTableHeaderMethodsNamesEval
+            Name = 'Width'
+            Parameters = <
+              item
+                Name = 'index'
+                DataType = 'Integer'
+              end>
+            ResultType = 'integer'
+            Overloaded = True
+            OnEval = dwsUnit1ClassesTTableHeaderMethodsWidth_Integer_Eval
             Kind = mkFunction
           end>
         OnCleanUp = dwsUnit1ClassesTTableHeaderCleanUp
@@ -191,8 +228,8 @@ object DwsMod: TDwsMod
       end>
     UnitName = 'Helper'
     StaticSymbols = False
-    Left = 184
-    Top = 40
+    Left = 128
+    Top = 112
   end
   object XMLDump: TPageProducer
     HTMLDoc.Strings = (
@@ -208,8 +245,8 @@ object DwsMod: TDwsMod
       '</table>'
       ' <#tables>')
     OnHTMLTag = XMLDumpHTMLTag
-    Left = 144
-    Top = 128
+    Left = 24
+    Top = 192
   end
   object DumpTable: TPageProducer
     HTMLDoc.Strings = (
@@ -226,8 +263,8 @@ object DwsMod: TDwsMod
       '</table>'
       '')
     OnHTMLTag = DumpTableHTMLTag
-    Left = 216
-    Top = 120
+    Left = 88
+    Top = 192
   end
   object dwsDebugger1: TdwsDebugger
     OnNotifyException = dwsDebugger1NotifyException
