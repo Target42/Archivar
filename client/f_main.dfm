@@ -411,6 +411,10 @@
         Action = ac_view_task
       end
     end
+    object Tools1: TMenuItem
+      Caption = 'Tools'
+      GroupIndex = 200
+    end
     object Admin1: TMenuItem
       Caption = 'Admin'
       GroupIndex = 200
@@ -478,10 +482,12 @@
       object ePubmanager1: TMenuItem
         Action = ac_ad_epub
       end
-    end
-    object Tools1: TMenuItem
-      Caption = 'Tools'
-      GroupIndex = 200
+      object N17: TMenuItem
+        Caption = '-'
+      end
+      object Dateicache1: TMenuItem
+        Action = ac_ad_filecache
+      end
     end
     object Fenster1: TMenuItem
       Caption = 'Fenster'
@@ -729,6 +735,11 @@
       Category = 'Admin'
       Caption = 'Aufgabentypen'
       OnExecute = ac_ad_tasktypeExecute
+    end
+    object ac_ad_filecache: TAction
+      Category = 'Admin'
+      Caption = 'Dateicache'
+      OnExecute = ac_ad_filecacheExecute
     end
   end
   object ApplicationEvents1: TApplicationEvents

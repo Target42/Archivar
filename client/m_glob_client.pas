@@ -370,8 +370,6 @@ begin
   m_epubHome  := TPath.Combine(m_home,    'epubs');
   m_cache     := TPath.Combine(m_public,  'cache');
 
-
-
   ForceDirectories(m_public);
   ForceDirectories(m_home);
   ForceDirectories(m_images);

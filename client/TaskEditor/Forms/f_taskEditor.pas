@@ -224,10 +224,13 @@ end;
 procedure TTaksEditorForm.FormCloseQuery(Sender: TObject;
   var CanClose: Boolean);
 begin
-
   if (MessageDlg('Sollen die Änderungen übernommen werden?', mtConfirmation, [mbYes, mbNo], 0) = mrYes) then begin
+
+    ReportFrame1.save;
     saveToStream;
+
     TETab.Post;
+
     if TETab.UpdatesPending then
       TETab.ApplyUpdates(0);
   end  else begin

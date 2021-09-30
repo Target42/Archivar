@@ -38,6 +38,8 @@ object TaksEditorForm: TTaksEditorForm
     TabOrder = 1
     object TabSheet1: TTabSheet
       Caption = 'Allgemeines'
+      ExplicitWidth = 296
+      ExplicitHeight = 154
       object Splitter1: TSplitter
         Left = 0
         Top = 341
@@ -328,6 +330,8 @@ object TaksEditorForm: TTaksEditorForm
         Align = alBottom
         Caption = 'Beschreibung'
         TabOrder = 1
+        ExplicitTop = 46
+        ExplicitWidth = 296
         inline EditFrame1: TEditFrame
           Left = 2
           Top = 15
@@ -337,7 +341,7 @@ object TaksEditorForm: TTaksEditorForm
           TabOrder = 0
           ExplicitLeft = 2
           ExplicitTop = 15
-          ExplicitWidth = 790
+          ExplicitWidth = 292
           ExplicitHeight = 91
           inherited RE: TRichEdit
             Width = 790
@@ -433,13 +437,16 @@ object TaksEditorForm: TTaksEditorForm
           Height = 452
           ExplicitLeft = 571
           ExplicitHeight = 452
-          inherited PropertyFrame1: TPropertyFrame
+          inherited GroupBox4: TGroupBox
             Height = 200
-            ExplicitTop = 451
-            ExplicitHeight = 0
-            inherited VE: TValueListEditor
-              Height = 200
-              ExplicitHeight = 200
+            ExplicitHeight = 200
+            inherited PropertyFrame1: TPropertyFrame
+              Height = 183
+              ExplicitHeight = 183
+              inherited VE: TValueListEditor
+                Height = 183
+                ExplicitHeight = 183
+              end
             end
           end
         end
@@ -467,7 +474,7 @@ object TaksEditorForm: TTaksEditorForm
         end
         inherited ImageList1: TImageList
           Bitmap = {
-            494C01010C001800D40010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+            494C01010C001800D80010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
             0000000000003600000028000000400000004000000001002000000000000040
             0000000000000000000000000000000000000000000000000000000000000000
             0000000000000000000000000000000000000000000000000000000000000000

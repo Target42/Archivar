@@ -26,6 +26,7 @@ type
   public
     [TRoleAuth('admin', 'user,download,broadcast')]
     function upload( req : TJSONObject; st : TStream ) : TJSONObject;
+
     [TRoleAuth('admin', 'user,download,broadcast')]
     function deleteFile( req : TJSONObject ) : TJSONObject;
   end;
@@ -52,17 +53,31 @@ begin
   cache   := JString( req, 'cache');
   name    := JString( req, 'name');
 
-  FileDelQry.ParamByName('cache').AsString  := UpperCase(cache);
-  FileDelQry.ParamByName('name').AsString   := UpperCase(name);
+  try
+    if FileDelQry.Active then
+      FileDelQry.Transaction.Rollback;
 
-  FileDelQry.ExecSQL;
+    FileDelQry.Transaction.StartTransaction;
+    FileDelQry.ParamByName('cache').AsString  := UpperCase(cache);
+    FileDelQry.ParamByName('name').AsString   := UpperCase(name);
 
-  ok := FileDelQry.RowsAffected = 1;
+    FileDelQry.ExecSQL;
 
-  FileDelQry.Transaction.Commit;
+    ok := FileDelQry.RowsAffected = 1;
 
-  if ok  then
-    sendInfo(BRD_FILE_CACHE_DEL, cache, name);
+    if FileDelQry.Active then
+      FileDelQry.Transaction.Commit;
+
+    if ok  then begin
+      sendInfo(BRD_FILE_CACHE_DEL, cache, name);
+      JResult( result, ok, '');
+    end else
+      JResult( Result, false, 'Datei nicht gefunden!');
+
+  except
+    on e : exception do
+      JResult(Result, false, e.ToString);
+  end;
 end;
 
 procedure TdsFileCache.sendInfo(cmd, cache, name: string; md5 : string);
@@ -83,40 +98,49 @@ end;
 function TdsFileCache.upload(req: TJSONObject; st: TStream): TJSONObject;
 var
   cache : string;
-  name  : string;
+  fname : string;
   mem   : TStream;
 begin
   Result  := TJSONObject.Create;
 
   cache   := JString( req, 'cache');
-  name    := JString( req, 'name');
+  fname   := JString( req, 'name');
 
-  with UploadTab do begin
-    open;
+  try
+    with UploadTab do begin
+      if  Transaction.Active then
+        Transaction.Rollback;
+      Transaction.StartTransaction;
 
-    if Locate('FC_CACHE;FC_NAME', varArrayOf([cache, name]), [loCaseInsensitive]) then
-      edit
-    else begin
-      Append;
-      FieldByName('FC_ID').AsInteger    := 1;
-      FieldByName('FC_NAME').AsString   := name;
-      FieldByName('FC_CACHE').AsString  := cache;
+      open;
+
+      if Locate('FC_CACHE;FC_NAME', varArrayOf([cache, fname]), [loCaseInsensitive]) then
+        edit
+      else begin
+        Append;
+        FieldByName('FC_ID').AsInteger    := 1;
+        FieldByName('FC_NAME').AsString   := fname;
+        FieldByName('FC_CACHE').AsString  := cache;
+      end;
+
+      mem := GM.downloadMem(st);
+
+      FieldByName('FC_STAMP').AsDateTime  := now;
+      FieldByName('FC_MD5').AsString      := GM.md5(mem);
+      (FieldByName('FC_DATA') as TBlobField).LoadFromStream(mem);
+
+      mem.Free;
+      post;
+      if Transaction.Active then
+        Transaction.Commit;
+      close;
     end;
-
-    mem := GM.downloadMem(st);
-    mem.Position := 0;
-
-    FieldByName('FC_MD5').AsString  := GM.md5(mem);
-    mem.Position := 0;
-
-    (FieldByName('FC_DATA') as TBlobField).LoadFromStream(mem);
-    mem.Free;
-    post;
-    Transaction.Commit;
-    close;
+    sendInfo(BRD_FILE_CACHE_UPT, cache, fname);
+    JResult(Result, true, '');
+  except
+    on e : exception do
+      JResult( Result, false, e.ToString);
   end;
-  sendInfo(BRD_FILE_CACHE_UPT, cache, name);
-
 end;
 
 end.

@@ -5,7 +5,6 @@ object HellMod: THellMod
   Height = 435
   Width = 670
   object IBTransaction1: TIBTransaction
-    DefaultDatabase = DBMod.IBDatabase1
     Params.Strings = (
       'read_committed'
       'rec_version'
@@ -14,7 +13,6 @@ object HellMod: THellMod
     Top = 32
   end
   object MeetingQry: TIBQuery
-    Database = DBMod.IBDatabase1
     Transaction = IBTransaction1
     BufferChunks = 1000
     CachedUpdates = False
@@ -32,7 +30,6 @@ object HellMod: THellMod
       end>
   end
   object UpdateStateQry: TIBQuery
-    Database = DBMod.IBDatabase1
     Transaction = IBTransaction1
     BufferChunks = 1000
     CachedUpdates = False
@@ -62,7 +59,6 @@ object HellMod: THellMod
       end>
   end
   object UpdateMeetingStatQry: TIBQuery
-    Database = DBMod.IBDatabase1
     Transaction = IBTransaction1
     BufferChunks = 1000
     CachedUpdates = False
@@ -86,7 +82,6 @@ object HellMod: THellMod
       end>
   end
   object PEqry: TIBQuery
-    Database = DBMod.IBDatabase1
     Transaction = IBTransaction1
     BufferChunks = 1000
     CachedUpdates = False

@@ -7,6 +7,7 @@ uses
   Datasnap.DSConnect, System.JSON, System.Generics.Collections;
 
 type
+  TCacheChange = procedure (Sender : TObject ) of object;
   TFileCacheMod = class(TDataModule)
     DSProviderConnection1: TDSProviderConnection;
     FCTab: TClientDataSet;
@@ -19,22 +20,28 @@ type
         cache : string;
         name  : string;
         md5   : string;
+        ts    : TDateTime;
       end;
   private
     m_files : TList<TPEntry>;
+    m_listner : TCacheChange;
 
     procedure CheckFile( en : TEntry );
     procedure clear;
+
+    procedure setListner( value : TCacheChange );
   public
-    property Files : Tlist<TPEntry> read m_files;
+    property Files    : Tlist<TPEntry> read m_files;
+    property Listner  : TCacheChange read m_listner write setListner;
 
     procedure SyncCache;
 
-    function upload( cache, name : string ) : boolean;
+    function upload( cache, name, fname : string ) : boolean;
     function deleteFile( cache, name : string ) : boolean;
 
     function handle_update (const arg : TJSONObject) : boolean;
     function handle_delete (const arg : TJSONObject) : boolean;
+
   end;
 
 var
@@ -53,9 +60,13 @@ uses
 procedure TFileCacheMod.CheckFile(en: TEntry);
 var
   fname : string;
+  dir   : string;
   st    : TStream;
 begin
-  fname := TPath.Combine(GM.Cache, format('%s\%s', [en.cache, en.name]));
+  dir   := TPath.Combine(GM.Cache, en.cache );
+  ForceDirectories(dir);
+
+  fname := TPath.Combine(dir, en.name);
 
   if en.md5 <> GM.md5(fname) then begin
     st := FCTab.CreateBlobStream(FCTab.FieldByName('FC_DATA'), bmRead);
@@ -76,7 +87,8 @@ end;
 procedure TFileCacheMod.DataModuleCreate(Sender: TObject);
 begin
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
-  m_files := TList<TPEntry>.create;
+  m_files   := TList<TPEntry>.create;
+  m_listner := NIL;
 
   EventHandler.Register( self, handle_update, BRD_FILE_CACHE_UPT );
   EventHandler.Register( self, handle_delete, BRD_FILE_CACHE_DEL );
@@ -129,6 +141,8 @@ begin
       m_files.Delete(i);
     end;
   end;
+  if Assigned(m_listner) then
+    m_listner(Self);
 end;
 
 function TFileCacheMod.handle_update(const arg: TJSONObject): boolean;
@@ -158,8 +172,20 @@ begin
     ptr^.cache  := cache;
     ptr^.name   := name;
     ptr^.md5    := md5;
+    ptr^.ts     := now;
     m_files.Add(ptr);
   end;
+
+  if Assigned(m_listner) then
+    m_listner(Self);
+end;
+
+procedure TFileCacheMod.setListner(value: TCacheChange);
+begin
+  m_listner := value;
+  if Assigned(m_listner) then
+    m_listner(Self);
+
 end;
 
 procedure TFileCacheMod.SyncCache;
@@ -171,10 +197,12 @@ begin
     open;
     while not eof  do begin
       new(ptr);
+      m_files.Add(ptr);
 
       ptr^.cache  := FieldByName('FC_CACHE').AsString;
       ptr^.name   := FieldByName('FC_NAME').AsString;
       ptr^.md5    := FieldByName('FC_MD5').AsString;
+      ptr^.ts     := FieldByName('FC_STAMP').AsDateTime;
 
       CheckFile( ptr^ );
 
@@ -184,15 +212,13 @@ begin
   end;
 end;
 
-function TFileCacheMod.upload(cache, name: string): boolean;
+function TFileCacheMod.upload(cache, name, fname: string): boolean;
 var
-  fname     : string;
   client    : TdsFileCacheClient;
   req, res  : TJSONObject;
   st        : TStream;
 begin
   Result  := false;
-  fname   := TPath.combine( GM.Cache, format('%s\%s', [cache, name]));
 
   if not FileExists(fname) then  exit;
 
@@ -205,7 +231,6 @@ begin
     st  := TFileStream.Create(fname, fmOpenRead + fmShareDenyNone);
     res := client.upload( req, st);
     Result := JBool( res, 'result');
-    st.Free;
   finally
 
   end;

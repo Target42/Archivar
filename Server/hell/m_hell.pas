@@ -172,7 +172,6 @@ var
   list  : TList<TMeeting>;
   me    : TMeeting;
   id    : Integer;
-  beid  : integer;
   msg   : TJSONObject;
   cancel: boolean;
 begin
@@ -180,7 +179,7 @@ begin
   JResult( Result, false, 'Es ist ein Fehler aufgetreten!');
 
   id      := JInt( obj, 'meid' );
-  beid    := JInt( obj, 'beid' );
+//  beid    := JInt( obj, 'beid' );
   cancel  := Jbool(obj, 'cancel');
 
   if id = 0 then begin

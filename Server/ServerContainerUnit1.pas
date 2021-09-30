@@ -514,7 +514,7 @@ begin
   valid := not Assigned(AuthorizeEventObject.AuthorizedRoles) or
            not Assigned(AuthorizeEventObject.DeniedRoles);
 
-  if Assigned(AuthorizeEventObject.AuthorizedRoles)  then begin
+  if not valid and Assigned(AuthorizeEventObject.AuthorizedRoles)  then begin
 //    GrijjyLog.Send('Authorise auth rols', AuthorizeEventObject.AuthorizedRoles );
     for i := 0 to pred( AuthorizeEventObject.UserRoles.Count) do begin
       if AuthorizeEventObject.AuthorizedRoles.IndexOf(AuthorizeEventObject.UserRoles.Strings[i]) > -1 then begin
@@ -524,7 +524,7 @@ begin
     end;
   end;
 
-  if Assigned(AuthorizeEventObject.DeniedRoles) then begin
+  if not valid and Assigned(AuthorizeEventObject.DeniedRoles) then begin
 //    GrijjyLog.Send('Authorise deny rols', AuthorizeEventObject.DeniedRoles );
     for i := 0 to pred( AuthorizeEventObject.UserRoles.Count) do begin
       if AuthorizeEventObject.DeniedRoles.IndexOf(AuthorizeEventObject.UserRoles.Strings[i]) > -1 then begin

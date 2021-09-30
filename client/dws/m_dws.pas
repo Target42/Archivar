@@ -5,7 +5,7 @@ interface
 uses
   System.SysUtils, System.Classes, dwsComp, xsd_TaskData, dwsErrors,
   i_taskEdit, dwsExprs, Xml.XMLIntf, Web.HTTPApp, Web.HTTPProd, dwsDebugger,
-  dwsInfo, dwsFileSystem;
+  dwsInfo, dwsFileSystem, dwsUnitSymbols;
 
 type
   TXmlContainer = class( TObject )
@@ -88,13 +88,13 @@ type
     function getHeaderField( name : string; header : IXMLHeader ) : IXMLField; overload;
     function getHeaderField( inx : integer ; header : IXMLHeader ) : IXMLField; overload;
   public
-    property Data      : IXMLList read m_xList write m_xList;
-    property TaskStyle : ITaskStyle read m_style write m_style;
+    property Data      : IXMLList   read m_xList    write m_xList;
+    property TaskStyle : ITaskStyle read m_style    write m_style;
 
-    property Params : TStringList read m_params;
-    property Script : String read getScript write setScript;
+    property Params : TStringList   read m_params;
+    property Script : String        read getScript  write setScript;
 
-    property MsgText : string read m_msgText;
+    property MsgText : string       read m_msgText;
 
     function compile : boolean;
     function run : string;

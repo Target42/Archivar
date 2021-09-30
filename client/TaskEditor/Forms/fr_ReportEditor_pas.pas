@@ -23,7 +23,7 @@ type
   private
     m_dws : TDwsMod;
   protected
-    function changed : boolean; override;
+    function  changed : boolean; override;
     procedure setDataFile( value : ITaskFile ); override;
   public
     procedure save; override;

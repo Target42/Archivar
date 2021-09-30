@@ -92,6 +92,7 @@ type
     property TaskContainer : ITaskContainer read m_tc write setTaskContainer;
     property Form : ITaskForm read m_form write m_form;
 
+    procedure save;
     procedure doNewForm( frm : ITaskForm );
 
     procedure updateFiles( sender : ITaskFiles);
@@ -405,6 +406,14 @@ begin
 
     TDirectory.Delete(m_Path);
   end;
+end;
+
+procedure TReportFrame.save;
+var
+  tf : TReportFrameEditor;
+begin
+  for tf in m_files do
+    tf.save;
 end;
 
 procedure TReportFrame.saveAllEdits;

@@ -1,8 +1,10 @@
 inherited ReportFrameEditorPas: TReportFrameEditorPas
+  Width = 664
+  Height = 481
   object Splitter1: TSplitter [0]
     Left = 0
-    Top = 169
-    Width = 451
+    Top = 345
+    Width = 664
     Height = 3
     Cursor = crVSplit
     Align = alBottom
@@ -10,15 +12,17 @@ inherited ReportFrameEditorPas: TReportFrameEditorPas
     ExplicitWidth = 235
   end
   inherited Panel1: TPanel
+    Width = 664
     inherited SpeedButton1: TSpeedButton
+      Left = 638
       ExplicitLeft = 425
     end
   end
   object SynEdit1: TSynEdit
     Left = 0
     Top = 21
-    Width = 451
-    Height = 148
+    Width = 664
+    Height = 324
     Align = alClient
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -45,21 +49,23 @@ inherited ReportFrameEditorPas: TReportFrameEditorPas
     Options = [eoAutoIndent, eoDragDropEditing, eoEnhanceEndKey, eoGroupUndo, eoScrollPastEol, eoShowScrollHint, eoSmartTabDelete, eoSmartTabs, eoTabIndent, eoTabsToSpaces]
     WantTabs = True
     FontSmoothing = fsmNone
-    ExplicitLeft = 1
-    ExplicitTop = 19
+    ExplicitWidth = 451
+    ExplicitHeight = 148
   end
   object Panel2: TPanel
     Left = 0
-    Top = 172
-    Width = 451
+    Top = 348
+    Width = 664
     Height = 133
     Align = alBottom
     Caption = 'Panel2'
     TabOrder = 2
+    ExplicitTop = 172
+    ExplicitWidth = 451
     object Memo1: TMemo
       Left = 1
       Top = 42
-      Width = 449
+      Width = 662
       Height = 90
       Align = alClient
       Lines.Strings = (
@@ -68,17 +74,19 @@ inherited ReportFrameEditorPas: TReportFrameEditorPas
       ScrollBars = ssBoth
       TabOrder = 0
       WordWrap = False
+      ExplicitWidth = 449
     end
     object Panel3: TPanel
       Left = 1
       Top = 1
-      Width = 449
+      Width = 662
       Height = 41
       Align = alTop
       BevelOuter = bvNone
       Caption = 'Panel3'
       ShowCaption = False
       TabOrder = 1
+      ExplicitWidth = 449
       object btnCompile: TBitBtn
         Left = 16
         Top = 10

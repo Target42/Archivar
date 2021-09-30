@@ -133,13 +133,14 @@ function TGM.md5(st: TStream): string;
 var
   IdMD5: TIdHashMessageDigest5;
 begin
+  st.Position := 0;
   IdMD5 := TIdHashMessageDigest5.Create;
   try
     Result := LowerCase( IdMD5.HashStreamAsHex(st));
   finally
     IdMD5.Free;
   end;
-
+  st.Position := 0;
 end;
 
 function TGM.md5(fname: string): string;
