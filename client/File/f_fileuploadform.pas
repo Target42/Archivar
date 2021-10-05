@@ -36,7 +36,7 @@ var
 implementation
 
 uses
-  m_fileCache, system.uitypes;
+  m_fileCache, system.uitypes, m_glob_client, System.JSON;
 
 {$R *.dfm}
 
@@ -51,13 +51,16 @@ begin
     ShowMessage('Die Datei wurde nicht gefunden!');
     exit;
   end;
+
   if cache = '' then begin
     ShowMessage('Es muss ein Verzeichniss angegeben werden!');
     exit;
   end;
-  if (MessageDlg(format('Soll die Datei:'+#13+#10+'%s'+#13+
-    #10+'in Verzeichnis:'+#13+#10+'%s'+#13+#10+'hochgelanden werden?',
+
+  if (MessageDlg(format('Soll die Datei:%s'+#13+
+    #10+'in Verzeichnis:%s'+#13+#10+'hochgelanden werden?',
     [ExtractFileName(name), cache]), mtConfirmation, [mbYes, mbNo], 0) = mrYes) then begin
+
       FileCacheMod.upload(cache,ExtractFileName(name), name);
       ModalResult := mrOk;
   end;

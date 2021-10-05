@@ -1,6 +1,6 @@
 //
 // Erzeugt vom DataSnap-Proxy-Generator.
-// 29.09.2021 12:31:41
+// 04.10.2021 17:26:14
 //
 
 unit u_stub;
@@ -200,14 +200,22 @@ type
 
   TdsFileCacheClient = class(TDSAdminClient)
   private
+    FAutoIncCommand: TDBXCommand;
     FuploadCommand: TDBXCommand;
+    FdownloadCommand: TDBXCommand;
     FdeleteFileCommand: TDBXCommand;
+    FLockCommand: TDBXCommand;
+    FunlockCommand: TDBXCommand;
   public
     constructor Create(ADBXConnection: TDBXConnection); overload;
     constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
     destructor Destroy; override;
+    function AutoInc(gen: string): Integer;
     function upload(req: TJSONObject; st: TStream): TJSONObject;
+    function download(req: TJSONObject): TStream;
     function deleteFile(req: TJSONObject): TJSONObject;
+    function Lock(req: TJSONObject): TJSONObject;
+    function unlock(req: TJSONObject): TJSONObject;
   end;
 
   TdsEpubClient = class(TDSAdminClient)
@@ -1137,6 +1145,20 @@ begin
   inherited;
 end;
 
+function TdsFileCacheClient.AutoInc(gen: string): Integer;
+begin
+  if FAutoIncCommand = nil then
+  begin
+    FAutoIncCommand := FDBXConnection.CreateCommand;
+    FAutoIncCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FAutoIncCommand.Text := 'TdsFileCache.AutoInc';
+    FAutoIncCommand.Prepare;
+  end;
+  FAutoIncCommand.Parameters[0].Value.SetWideString(gen);
+  FAutoIncCommand.ExecuteUpdate;
+  Result := FAutoIncCommand.Parameters[1].Value.GetInt32;
+end;
+
 function TdsFileCacheClient.upload(req: TJSONObject; st: TStream): TJSONObject;
 begin
   if FuploadCommand = nil then
@@ -1150,6 +1172,20 @@ begin
   FuploadCommand.Parameters[1].Value.SetStream(st, FInstanceOwner);
   FuploadCommand.ExecuteUpdate;
   Result := TJSONObject(FuploadCommand.Parameters[2].Value.GetJSONValue(FInstanceOwner));
+end;
+
+function TdsFileCacheClient.download(req: TJSONObject): TStream;
+begin
+  if FdownloadCommand = nil then
+  begin
+    FdownloadCommand := FDBXConnection.CreateCommand;
+    FdownloadCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FdownloadCommand.Text := 'TdsFileCache.download';
+    FdownloadCommand.Prepare;
+  end;
+  FdownloadCommand.Parameters[0].Value.SetJSONValue(req, FInstanceOwner);
+  FdownloadCommand.ExecuteUpdate;
+  Result := FdownloadCommand.Parameters[1].Value.GetStream(FInstanceOwner);
 end;
 
 function TdsFileCacheClient.deleteFile(req: TJSONObject): TJSONObject;
@@ -1166,6 +1202,34 @@ begin
   Result := TJSONObject(FdeleteFileCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
 end;
 
+function TdsFileCacheClient.Lock(req: TJSONObject): TJSONObject;
+begin
+  if FLockCommand = nil then
+  begin
+    FLockCommand := FDBXConnection.CreateCommand;
+    FLockCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FLockCommand.Text := 'TdsFileCache.Lock';
+    FLockCommand.Prepare;
+  end;
+  FLockCommand.Parameters[0].Value.SetJSONValue(req, FInstanceOwner);
+  FLockCommand.ExecuteUpdate;
+  Result := TJSONObject(FLockCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
+end;
+
+function TdsFileCacheClient.unlock(req: TJSONObject): TJSONObject;
+begin
+  if FunlockCommand = nil then
+  begin
+    FunlockCommand := FDBXConnection.CreateCommand;
+    FunlockCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FunlockCommand.Text := 'TdsFileCache.unlock';
+    FunlockCommand.Prepare;
+  end;
+  FunlockCommand.Parameters[0].Value.SetJSONValue(req, FInstanceOwner);
+  FunlockCommand.ExecuteUpdate;
+  Result := TJSONObject(FunlockCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
+end;
+
 constructor TdsFileCacheClient.Create(ADBXConnection: TDBXConnection);
 begin
   inherited Create(ADBXConnection);
@@ -1178,8 +1242,12 @@ end;
 
 destructor TdsFileCacheClient.Destroy;
 begin
+  FAutoIncCommand.DisposeOf;
   FuploadCommand.DisposeOf;
+  FdownloadCommand.DisposeOf;
   FdeleteFileCommand.DisposeOf;
+  FLockCommand.DisposeOf;
+  FunlockCommand.DisposeOf;
   inherited;
 end;
 

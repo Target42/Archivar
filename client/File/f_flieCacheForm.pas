@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_base, Vcl.StdCtrls, Vcl.ComCtrls,
-  Vcl.Buttons;
+  Vcl.Buttons, m_glob_client;
 
 type
   TFileCacheForm = class(TForm)
@@ -14,10 +14,14 @@ type
     GroupBox1: TGroupBox;
     BitBtn1: TBitBtn;
     BitBtn2: TBitBtn;
+    BitBtn3: TBitBtn;
+    BitBtn4: TBitBtn;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
+    procedure BitBtn3Click(Sender: TObject);
+    procedure BitBtn4Click(Sender: TObject);
   private
     procedure updateList(Sender : TObject );
   public
@@ -30,7 +34,7 @@ var
 implementation
 
 uses
-  m_fileCache, f_fileuploadform;
+  m_fileCache, f_fileuploadform, u_stub, System.JSON, u_json;
 
 {$R *.dfm}
 
@@ -75,6 +79,57 @@ begin
 
 end;
 
+procedure TFileCacheForm.BitBtn3Click(Sender: TObject);
+var
+  client  : TdsFileCacheClient;
+  ptr     : TFileCacheMod.TPEntry;
+  req     : TJSONObject;
+  res     : TJSONObject;
+begin
+  if not Assigned(LV.Selected) then
+    exit;
+
+  ptr := TFileCacheMod.TPEntry( LV.Selected.Data );
+
+  try
+    req := TJSONObject.Create;
+    JReplace( req, 'fcid', ptr^.id);
+    client := TdsFileCacheClient.Create(GM.SQLConnection1.DBXConnection);
+    res := client.Lock(req);
+    ShowResult( res );
+    client.Free;
+
+  except
+
+  end;
+
+end;
+
+procedure TFileCacheForm.BitBtn4Click(Sender: TObject);
+var
+  client  : TdsFileCacheClient;
+  ptr     : TFileCacheMod.TPEntry;
+  req     : TJSONObject;
+  res     : TJSONObject;
+begin
+  if not Assigned(LV.Selected) then
+    exit;
+
+  ptr := TFileCacheMod.TPEntry( LV.Selected.Data );
+
+  try
+    req := TJSONObject.Create;
+    JReplace( req, 'fcid', ptr^.id);
+    client := TdsFileCacheClient.Create(GM.SQLConnection1.DBXConnection);
+    res := client.unlock(req);
+    ShowResult( res );
+    client.Free;
+  except
+
+  end;
+
+end;
+
 procedure TFileCacheForm.FormCreate(Sender: TObject);
 begin
   FileCacheMod.Listner := updateList;
@@ -91,7 +146,8 @@ procedure TFileCacheForm.updateList(Sender : TObject );
     i : integer;
     grp : TListGroup;
   begin
-    Result := 0;
+    Result  := 0;
+
     for i := 0 to pred(LV.Groups.Count) do begin
       if SameText(LV.Groups.Items[i].Header, name) then begin
         grp := LV.Groups.Items[i];
@@ -117,8 +173,12 @@ begin
   for i := 0 to pred(FileCacheMod.Files.Count) do begin
     item          := LV.Items.Add;
     item.Caption  := FileCacheMod.Files.Items[i].name;
-    item.SubItems.add(DateTimeToStr(FileCacheMod.Files.Items[i].ts));
+    item.SubItems.add( FileCacheMod.Files.Items[i].ts);
+    item.SubItems.add( FileCacheMod.Files.Items[i].user );
+    item.SubItems.add( FileCacheMod.Files.Items[i].tl );
     item.GroupID  := getGroup(FileCacheMod.Files.Items[i].cache);
+
+    item.Data     := FileCacheMod.Files.Items[i];
   end;
   LV.Items.EndUpdate;
 end;

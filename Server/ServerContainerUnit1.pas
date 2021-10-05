@@ -467,6 +467,7 @@ begin
       if QueryUser.FieldByName('PE_ID').AsInteger = 1 then
       begin
         Session.PutData('admin', 'true');
+        Session.PutData('ID', '1' );
         UserRoles.Add('admin');
       end
       else begin

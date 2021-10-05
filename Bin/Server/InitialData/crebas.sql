@@ -1,7 +1,7 @@
 /* ============================================================ */
 /*   Database name:  MODEL_2                                    */
 /*   DBMS name:      InterBase                                  */
-/*   Created on:     29.09.2021  10:04                          */
+/*   Created on:     30.09.2021  15:01                          */
 /* ============================================================ */
 
 create generator gen_be_id;
@@ -172,25 +172,6 @@ create table LN_LINK
 create ASC index LN_LINK_SEC on LN_LINK (LN_SHORT);
 
 /* ============================================================ */
-/*   Table: FC_FILE_CACHE                                       */
-/* ============================================================ */
-create table FC_FILE_CACHE
-(
-    FC_ID                           INTEGER                not null,
-    FC_NAME                         VARCHAR(100)                   ,
-    FC_CACHE                        VARCHAR(50)                    ,
-    FC_MD5                          VARCHAR(32)                    ,
-    FC_STAMP                        TIMESTAMP                      ,
-    FC_DATA                         BLOB                           ,
-    constraint PK_FC_FILE_CACHE primary key (FC_ID)
-);
-
-/* ============================================================ */
-/*   Index: FC_FILE_CACHE_NAME                                  */
-/* ============================================================ */
-create ASC index FC_FILE_CACHE_NAME on FC_FILE_CACHE (FC_NAME);
-
-/* ============================================================ */
 /*   Table: PE_PERSON                                           */
 /* ============================================================ */
 create table PE_PERSON
@@ -265,6 +246,25 @@ create table TY_TASKTYPE
 /*   Index: TY_TASKTYPE_SEC                                     */
 /* ============================================================ */
 create ASC index TY_TASKTYPE_SEC on TY_TASKTYPE (TY_NAME);
+
+/* ============================================================ */
+/*   Table: FC_FILE_CACHE                                       */
+/* ============================================================ */
+create table FC_FILE_CACHE
+(
+    FC_ID                           INTEGER                not null,
+    FC_NAME                         VARCHAR(100)                   ,
+    FC_CACHE                        VARCHAR(50)                    ,
+    FC_MD5                          VARCHAR(32)                    ,
+    FC_STAMP                        TIMESTAMP                      ,
+    FC_DATA                         BLOB                           ,
+    constraint PK_FC_FILE_CACHE primary key (FC_ID)
+);
+
+/* ============================================================ */
+/*   Index: FC_FILE_CACHE_NAME                                  */
+/* ============================================================ */
+create ASC index FC_FILE_CACHE_NAME on FC_FILE_CACHE (FC_NAME);
 
 /* ============================================================ */
 /*   Table: PR_PROTOKOL                                         */
@@ -478,6 +478,18 @@ create table EL_EINLADUNG
     constraint PK_EL_EINLADUNG primary key (EL_ID)
 );
 
+/* ============================================================ */
+/*   Table: FL_FILE_LOCK                                        */
+/* ============================================================ */
+create table FL_FILE_LOCK
+(
+    FC_ID                           INTEGER                not null,
+    PE_ID                           INTEGER                        ,
+    FL_USER                         VARCHAR(150)                   ,
+    FL_STAMP                        TIMESTAMP                      ,
+    constraint PK_FL_FILE_LOCK primary key (FC_ID)
+);
+
 alter table PR_PROTOKOL
     add constraint FK_REF_108 foreign key  (GR_ID)
        references GR_GREMIUM;
@@ -552,6 +564,14 @@ alter table EL_EINLADUNG
 
 alter table EL_EINLADUNG
     add constraint FK_REF_7035 foreign key  (PE_ID)
+       references PE_PERSON;
+
+alter table FL_FILE_LOCK
+    add constraint FK_REF_7931 foreign key  (FC_ID)
+       references FC_FILE_CACHE;
+
+alter table FL_FILE_LOCK
+    add constraint FK_REF_7935 foreign key  (PE_ID)
        references PE_PERSON;
 
 

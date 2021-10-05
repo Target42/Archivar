@@ -47,6 +47,7 @@ const
   BRD_VOTE_LEAVE      : string = 'vote_leave';
   BRD_FILE_CACHE_UPT  : string = 'fc_update';
   BRD_FILE_CACHE_DEL  : string = 'fc_delete';
+  BRD_FILE_LOCK       : string = 'fc_lock';
 
 
 const

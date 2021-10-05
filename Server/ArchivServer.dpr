@@ -46,7 +46,8 @@ uses
   ds_updater in 'ds_updater.pas' {dsUpdater: TDSServerModule},
   u_ini in 'u_ini.pas',
   u_vote in 'hell\u_vote.pas',
-  ds_stamm in 'ds_stamm.pas' {StammMod: TDSServerModule};
+  ds_stamm in 'ds_stamm.pas' {StammMod: TDSServerModule},
+  u_broadcastMsg in 'u_broadcastMsg.pas';
 
 var
   MyDummyBoolean  : Boolean;

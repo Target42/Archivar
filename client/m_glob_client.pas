@@ -451,7 +451,10 @@ var bytes : integer;
    buffer : array  of byte;
    fout : TFileStream;
 begin
-  Result := true;
+  Result := false;
+  if not Assigned(st) then
+    exit;
+
   try
     SetLength(Buffer, BSize);
     fout := TFileStream.Create( fname, fmCreate);
@@ -460,6 +463,7 @@ begin
       fout.Write(buffer[0], bytes)
     until bytes <> BSize;
     FreeAndNil(fout);
+    Result := true;
   except
     Result := false;
   end;

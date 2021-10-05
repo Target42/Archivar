@@ -17,4 +17,12 @@ object FileCacheMod: TFileCacheMod
     Left = 64
     Top = 88
   end
+  object FLTab: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    ProviderName = 'FLTab'
+    RemoteServer = DSProviderConnection1
+    Left = 136
+    Top = 88
+  end
 end

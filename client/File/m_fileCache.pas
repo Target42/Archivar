@@ -11,22 +11,32 @@ type
   TFileCacheMod = class(TDataModule)
     DSProviderConnection1: TDSProviderConnection;
     FCTab: TClientDataSet;
+    FLTab: TClientDataSet;
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
   public
     type
       TPEntry = ^TEntry;
       TEntry  = record
+        id    : integer;
         cache : string;
         name  : string;
         md5   : string;
-        ts    : TDateTime;
+        ts    : string;
+
+        // lock
+        locked: boolean;  // flag, if locked
+        user  : string;   // lock user
+        tl    : string;   //lock time
+
       end;
   private
     m_files : TList<TPEntry>;
     m_listner : TCacheChange;
 
     procedure CheckFile( en : TEntry );
+    procedure download(  en : TEntry );
+
     procedure clear;
 
     procedure setListner( value : TCacheChange );
@@ -39,8 +49,11 @@ type
     function upload( cache, name, fname : string ) : boolean;
     function deleteFile( cache, name : string ) : boolean;
 
-    function handle_update (const arg : TJSONObject) : boolean;
-    function handle_delete (const arg : TJSONObject) : boolean;
+    function handle_update  (const arg : TJSONObject) : boolean;
+    function handle_delete  (const arg : TJSONObject) : boolean;
+    function handle_lock    (const arg : TJSONObject) : boolean;
+
+    function getID( cache, name : string ) : integer;
 
   end;
 
@@ -52,7 +65,8 @@ implementation
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
 uses
-  m_glob_client, u_stub, u_json, system.IOUtils, u_eventHandler, u_Konst;
+  m_glob_client, u_stub, u_json, system.IOUtils, u_eventHandler, u_Konst,
+  System.Variants;
 
 
 {$R *.dfm}
@@ -92,6 +106,7 @@ begin
 
   EventHandler.Register( self, handle_update, BRD_FILE_CACHE_UPT );
   EventHandler.Register( self, handle_delete, BRD_FILE_CACHE_DEL );
+  EventHandler.Register( self, handle_lock,   BRD_FILE_LOCK);
 end;
 
 procedure TFileCacheMod.DataModuleDestroy(Sender: TObject);
@@ -120,6 +135,47 @@ begin
   end;
 end;
 
+procedure TFileCacheMod.download(en: TEntry);
+var
+  client  : TdsFileCacheClient;
+  fname   : string;
+  md5     : string;
+  st      : TStream;
+  req     : TJSONObject;
+begin
+  fname := TPath.Combine(GM.Cache, format('', [en.cache, en.Name]));
+
+  md5 := GM.md5(fname);
+
+  if md5 <> en.md5 then begin
+    client := TdsFileCacheClient.Create(GM.SQLConnection1.DBXConnection);
+
+    req := TJSONObject.Create;
+    JReplace( req, 'id', en.id);
+    try
+      st := client.download( req );
+      if Assigned(st) then begin
+        GM.download( fname, st );
+      end;
+    finally
+      client.Free;
+    end;
+  end;
+end;
+
+function TFileCacheMod.getID(cache, name: string): integer;
+var
+  ptr : TPEntry;
+begin
+  Result := -1;
+  for ptr in m_files do begin
+    if SameText(cache, ptr^.cache) and SameText(name, ptr^.name) then begin
+      Result := ptr^.id;
+      break;
+    end;
+  end;
+end;
+
 function TFileCacheMod.handle_delete(const arg: TJSONObject): boolean;
 var
   name, cache : string;
@@ -145,35 +201,71 @@ begin
     m_listner(Self);
 end;
 
+function TFileCacheMod.handle_lock(const arg: TJSONObject): boolean;
+var
+  id    : integer;
+  ptr   : TPEntry;
+begin
+  id    := JInt   ( arg, 'id');
+
+  for ptr in m_files do begin
+    if ptr^.id = id then begin
+      ptr^.locked := JBool  ( arg, 'lock');
+      ptr^.user   := JString( arg, 'user');
+      ptr^.tl     := JString( arg, 'tl');
+      break;
+    end;
+  end;
+
+  if Assigned(m_listner) then
+    m_listner(self);
+  Result := true;
+end;
+
 function TFileCacheMod.handle_update(const arg: TJSONObject): boolean;
 var
-  name, cache : string;
-  md5         : string;
-  fname       : string;
   i           : integer;
-  found       : boolean;
   ptr         : TPEntry;
+  id          : integer;
+  fname       : string;
+  client      : TdsFileCacheClient;
+  req         : TJSONObject;
+  st          : TStream;
 begin
   Result  := false;
-  found   := false;
 
-  name    := JString( arg, 'name');
-  cache   := JString( arg, 'cache');
-  md5     := JString( arg, 'md5');
-  fname   := TPath.Combine(GM.Cache, format('%s\%s', [cache, name]));
-
+  id      := JInt( arg, 'id');
+  ptr := NIL;
   for i := 0 to pred(m_files.Count) do begin
-    found := SameText(m_files[i]^.cache, cache) and SameText(m_files[i]^.name, name);
-    if found then
+    if m_files[i]^.id = id then begin
+      ptr := m_files[i];
       break;
+    end;
   end;
-  if not found then begin
+
+  if not Assigned(ptr) then begin
     new(ptr);
-    ptr^.cache  := cache;
-    ptr^.name   := name;
-    ptr^.md5    := md5;
-    ptr^.ts     := now;
+    ptr^.id := id;
     m_files.Add(ptr);
+  end;
+  ptr^.cache  := JString( arg, 'cache');
+  ptr^.name   := JString( arg, 'name');
+  ptr^.md5    := JString( arg, 'md5');
+  ptr^.ts     := JString( arg, 'ts');
+
+  fname       := TPath.Combine(GM.Cache, format('%s\%s', [ptr^.cache, ptr^.name]));
+
+  if not FileExists(fname) or (ptr^.md5 <> GM.md5(fname)) then begin
+    client      := TdsFileCacheClient.Create(GM.SQLConnection1.DBXConnection);
+    try
+      req := TJSONObject.Create;
+      JReplace( req, 'id', ptr^.id);
+
+      st := client.download(req);
+      GM.download(fname, st);
+    finally
+      client.Free;
+    end;
   end;
 
   if Assigned(m_listner) then
@@ -193,23 +285,32 @@ var
   ptr : TPEntry;
 begin
   clear;
+  FLTab.Open;
   with FCTAb do begin
     open;
     while not eof  do begin
       new(ptr);
       m_files.Add(ptr);
 
+      ptr^.ID     := FieldByName('FC_ID').AsInteger;
       ptr^.cache  := FieldByName('FC_CACHE').AsString;
       ptr^.name   := FieldByName('FC_NAME').AsString;
       ptr^.md5    := FieldByName('FC_MD5').AsString;
-      ptr^.ts     := FieldByName('FC_STAMP').AsDateTime;
+      ptr^.ts     := FieldByName('FC_STAMP').AsString;
+      ptr^.locked := FLTab.Locate('FC_ID', VarArrayOf([ptr^.id]), []);
 
       CheckFile( ptr^ );
+
+      if  ptr^.locked then begin
+        ptr^.user := FLTab.FieldByName('FL_USER').AsString;
+        ptr^.tl   := FLTab.FieldByName('FL_STAMP').AsString;
+      end;
 
       next;
     end;
     close;
   end;
+  FLTab.Close;
 end;
 
 function TFileCacheMod.upload(cache, name, fname: string): boolean;
@@ -226,15 +327,18 @@ begin
   req     := TJSONObject.Create;
   JReplace( req, 'cache', cache);
   JReplace( req, 'name', name);
+  JReplace( req, 'fcid', getID( cache, name));
 
   try
     st  := TFileStream.Create(fname, fmOpenRead + fmShareDenyNone);
     res := client.upload( req, st);
     Result := JBool( res, 'result');
+    ShowResult( res, true);
   finally
 
   end;
   client.Free;
 end;
+
 
 end.
