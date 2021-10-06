@@ -83,7 +83,6 @@ begin
     Screen.Cursor :=crHourGlass;
     client := TdsPersonClient.Create(GM.SQLConnection1.DBXConnection);
     try
-
       st     := TFileStream.Create(OpenDialog1.FileName, fmOpenRead + fmShareDenyWrite);
       data   := client.ImportPersonenCSV(st);
       ShowMessage(JString( data, 'text'));

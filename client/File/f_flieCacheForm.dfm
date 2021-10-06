@@ -58,6 +58,10 @@ object FileCacheForm: TFileCacheForm
         Width = 150
       end
       item
+        Caption = 'Ge'#228'ndert'
+        Width = 60
+      end
+      item
         Caption = 'Gesperrt'
         Width = 100
       end

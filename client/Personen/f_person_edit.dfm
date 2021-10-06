@@ -132,6 +132,7 @@ object PersonEditForm: TPersonEditForm
     Params = <>
     ProviderName = 'PETab'
     RemoteServer = DSProviderConnection1
+    BeforePost = PETabBeforePost
     Left = 328
   end
   object PESrc: TDataSource

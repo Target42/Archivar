@@ -27,6 +27,7 @@ type
     procedure BaseFrame1OKBtnClick(Sender: TObject);
     procedure BaseFrame1AbortBtnClick(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure PETabBeforePost(DataSet: TDataSet);
   private
     m_id : integer;
     function GetID: integer;
@@ -91,6 +92,12 @@ end;
 function TPersonEditForm.GetID: integer;
 begin
   Result := m_id;
+end;
+
+procedure TPersonEditForm.PETabBeforePost(DataSet: TDataSet);
+begin
+  if DataSet.FieldByName('PE_ROLS').AsString = '' then
+    DataSet.FieldByName('PE_ROLS').AsString := 'user';
 end;
 
 procedure TPersonEditForm.SetID(const Value: integer);

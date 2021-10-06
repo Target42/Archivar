@@ -70,6 +70,7 @@ begin
       PETable.FieldByName('PE_VORNAME').AsString    := JvCsvDataSet1.FieldByName('vorname').AsString;
       PETable.FieldByName('PE_DEPARTMENT').AsString := JvCsvDataSet1.FieldByName('abteilung').AsString;
       PETable.FieldByName('PE_MAIL').AsString       := JvCsvDataSet1.FieldByName('mail').AsString;
+      PETable.FieldByName('PE_ROLS').AsString       := 'user';
       PETable.Post;
 
       JvCsvDataSet1.Next;

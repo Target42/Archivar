@@ -34,7 +34,7 @@ var
 implementation
 
 uses
-  m_fileCache, f_fileuploadform, u_stub, System.JSON, u_json;
+  m_fileCache, f_fileuploadform, u_stub, System.JSON, u_json, system.IOUtils;
 
 {$R *.dfm}
 
@@ -62,19 +62,36 @@ end;
 
 procedure TFileCacheForm.BitBtn2Click(Sender: TObject);
 var
-  i : integer;
+  i     : integer;
+  fname : string;
+  ptr   : TFileCacheMod.TPEntry;
+  localChanged : boolean;
 begin
-  Application.CreateForm(TFileUploadForm, FileUploadForm);
-
-  for i := 0 to pred(FileCacheMod.Files.Count) do begin
-    if FileUploadForm.Dirs.IndexOf(FileCacheMod.Files.Items[i].cache) = -1  then
-      FileUploadForm.Dirs.Add(FileCacheMod.Files.Items[i].cache);
+  localChanged  := false;
+  ptr           := NIL;
+  if Assigned(LV.Selected) then begin
+    ptr   := TFileCacheMod.TPEntry(LV.Selected.Data);
+    fname := TPath.Combine(GM.Cache, format('%s\%s', [ptr^.cache, ptr^.name]));
+    localChanged  := ptr^.md5 <> GM.md5(fname);
   end;
 
-  try
-    FileUploadForm.ShowModal;
-  finally
-    FileUploadForm.Free;
+  if not localChanged then begin
+    Application.CreateForm(TFileUploadForm, FileUploadForm);
+
+    for i := 0 to pred(FileCacheMod.Files.Count) do begin
+      if FileUploadForm.Dirs.IndexOf(FileCacheMod.Files.Items[i].cache) = -1  then
+        FileUploadForm.Dirs.Add(FileCacheMod.Files.Items[i].cache);
+    end;
+
+    try
+      FileUploadForm.ShowModal;
+    finally
+      FileUploadForm.Free;
+    end;
+  end else begin
+    // upload local ..
+    if Assigned(ptr) then
+      FileCacheMod.upload(ptr^.cache, ptr^.name,fname);
   end;
 
 end;
@@ -94,6 +111,7 @@ begin
   try
     req := TJSONObject.Create;
     JReplace( req, 'fcid', ptr^.id);
+    JReplace( req, 'usid', GM.UserID );
     client := TdsFileCacheClient.Create(GM.SQLConnection1.DBXConnection);
     res := client.Lock(req);
     ShowResult( res );
@@ -120,6 +138,7 @@ begin
   try
     req := TJSONObject.Create;
     JReplace( req, 'fcid', ptr^.id);
+    JReplace( req, 'usid', GM.UserID );
     client := TdsFileCacheClient.Create(GM.SQLConnection1.DBXConnection);
     res := client.unlock(req);
     ShowResult( res );
@@ -164,16 +183,27 @@ procedure TFileCacheForm.updateList(Sender : TObject );
     Result := grp.GroupID;
   end;
 var
-  i : integer;
-  item : TlistItem;
+  i     : integer;
+  item  : TlistItem;
+  fname : string;
 begin
   LV.Items.BeginUpdate;
   LV.Groups.Clear;
   LV.Items.Clear;
   for i := 0 to pred(FileCacheMod.Files.Count) do begin
+
+    fname := TPath.Combine(GM.Cache, Format('%s\%s',
+      [FileCacheMod.Files.Items[i].cache, FileCacheMod.Files.Items[i].name ]));
+
     item          := LV.Items.Add;
     item.Caption  := FileCacheMod.Files.Items[i].name;
     item.SubItems.add( FileCacheMod.Files.Items[i].ts);
+
+    if FileCacheMod.Files.Items[i].md5 <> GM.md5(fname) then
+      item.SubItems.add( 'Ja')
+    else
+      item.SubItems.add( '' );
+
     item.SubItems.add( FileCacheMod.Files.Items[i].user );
     item.SubItems.add( FileCacheMod.Files.Items[i].tl );
     item.GroupID  := getGroup(FileCacheMod.Files.Items[i].cache);

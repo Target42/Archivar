@@ -425,6 +425,11 @@ var
     valid := true;
   end;
 
+  procedure addUserRols( rols : string );
+  begin
+    UserRoles.DelimitedText := rols;
+  end;
+
 begin
   GrijjyLog.EnterMethod(self, 'DSAuthenticationManager1UserAuthenticate');
   valid   := false;
@@ -468,7 +473,7 @@ begin
       begin
         Session.PutData('admin', 'true');
         Session.PutData('ID', '1' );
-        UserRoles.Add('admin');
+        addUserRols(QueryUser.FieldByName('PE_ROLS').AsString);
       end
       else begin
         //is user in, at least, one concile?
@@ -487,7 +492,9 @@ begin
         Session.PutData('vorname',  QueryUser.FieldByName('pe_vorname').AsString);
         Session.PutData('dept',     QueryUser.FieldByName('PE_DEPARTMENT').AsString);
 
-        UserRoles.Add('user');
+        addUserRols(QueryUser.FieldByName('PE_ROLS').AsString);
+        if UserRoles.IndexOf('admin') >-1 then
+          Session.PutData('admin', 'true');
       end;
     end;
   end;
