@@ -13,6 +13,7 @@ type
       m_mem  : TMemoryStream;
       m_name : String;
       m_path : string;
+      m_readOnly : boolean;
 
       procedure setName( value : string );
       function  getName : string;
@@ -22,6 +23,9 @@ type
       function  getText : string;
 
       procedure doChange;
+      procedure setReadOnly( value : boolean );
+      function  getReadOnly : boolean;
+
     public
       constructor create;
       Destructor Destroy; override;
@@ -56,6 +60,7 @@ constructor TTaskFileImpl.create;
 begin
   m_mem       := TMemoryStream.Create;
   m_listener  := Tlist<TaskFileChange>.create;
+  m_readOnly  := false;
 end;
 
 function TTaskFileImpl.delete: boolean;
@@ -90,6 +95,11 @@ end;
 function TTaskFileImpl.getName: string;
 begin
   Result := m_name;
+end;
+
+function TTaskFileImpl.getReadOnly: boolean;
+begin
+  Result := m_readOnly;
 end;
 
 function TTaskFileImpl.getStream: TStream;
@@ -165,6 +175,8 @@ function TTaskFileImpl.save(path: string): boolean;
 var
   fname : string;
 begin
+  if m_readOnly then  exit;
+
   fname := TPath.Combine( path, m_name);
   try
     m_mem.Position := 0;
@@ -180,6 +192,7 @@ var
   fname : string;
   st    : TStream;
 begin
+  
   fname := TPath.Combine( path, m_name);
   st    := TMemoryStream.Create;
   try
@@ -200,10 +213,17 @@ begin
   doChange;
 end;
 
+procedure TTaskFileImpl.setReadOnly(value: boolean);
+begin
+  m_readOnly := value;
+end;
+
 procedure TTaskFileImpl.setText(value: string);
 var
   ss : TStringStream;
 begin
+  if m_readOnly then  exit;
+
   ss := TStringStream.Create( value );
   m_mem.Clear;
   m_mem.CopyFrom(ss, ss.Size);
