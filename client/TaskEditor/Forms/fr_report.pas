@@ -47,6 +47,12 @@ type
     WebBrowser2: TWebBrowser;
     SpeedButton11: TSpeedButton;
     SaveDialog1: TSaveDialog;
+    GroupBox4: TGroupBox;
+    Splitter2: TSplitter;
+    Splitter3: TSplitter;
+    Splitter4: TSplitter;
+    Panel7: TPanel;
+    ListBox4: TListBox;
     procedure PopupMenu1Popup(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure CheckBox1Click(Sender: TObject);
@@ -63,15 +69,17 @@ type
     procedure SpeedButton4Click(Sender: TObject);
     procedure SpeedButton10Click(Sender: TObject);
     procedure SpeedButton11Click(Sender: TObject);
+    procedure ListBox4Click(Sender: TObject);
   private
     m_Path : string;
     m_tc   : ITaskContainer;
     m_form : ITaskForm;
     DwsMod : TDwsMod;
 
-    m_files: TList<TReportFrameEditor>;
+    m_files     : TList<TReportFrameEditor>;
+    m_libFiles  : TList<ITaskFile>;
 
-    procedure OpenCode(tf : ITaskFile );
+    function OpenCode(tf : ITaskFile;style : ITaskStyle ) : TReportFrameEditor;
 
     procedure setTaskContainer( value : ITaskContainer);
     procedure addFieldName1Click(Sender: TObject);
@@ -84,6 +92,9 @@ type
     procedure doCloseFrame( value : TReportFrameEditor );
 
     procedure fillHelp;
+
+    procedure clearLibFiles;
+    procedure fillDWS;
   public
 
     procedure init;
@@ -103,7 +114,7 @@ implementation
 uses
   Xml.XMLDoc, i_datafields, m_glob_client, System.IOUtils, m_html,
   u_taskForm2XML, Xml.XMLIntf, f_InputBox, u_helper, System.UITypes,
-  fr_ReportEditor_pas, fr_ReportEditor_html;
+  fr_ReportEditor_pas, fr_ReportEditor_html, u_TTaskFileImpl, m_fileCache;
 
 {$R *.dfm}
 
@@ -191,6 +202,16 @@ begin
   ListBox1.Enabled := not CheckBox1.Checked;
 end;
 
+procedure TReportFrame.clearLibFiles;
+var
+  tf : ITaskFile;
+begin
+  for tf in m_libFiles do
+    tf.release;
+  m_libFiles.Clear;
+
+end;
+
 procedure TReportFrame.closeEditor(tf: ITaskFile);
 var
   i : integer;
@@ -220,6 +241,36 @@ begin
   m_form := frm;
 end;
 
+procedure TReportFrame.fillDWS;
+var
+  i   : integer;
+  tf  : ITaskFile;
+  ptr : TFileCacheMod.TPentry;
+  list: TList<TFileCacheMod.TPentry>;
+  fname : string;
+begin
+  clearLibFiles;
+
+  ListBox4.Items.BeginUpdate;
+  ListBox4.Items.Clear;
+  list := FileCacheMod.getFiles('dwslib');
+
+  for i := 0 to pred(list.Count) do begin
+    ptr := list[i];
+    fname := FileCacheMod.getFile(ptr);
+    if fname <>''  then begin
+      tf := TTaskFileImpl.create;
+      tf.load(fname);
+      tf.Readonly := ptr^.userid <> GM.UserID;
+      m_libFiles.Add(tf);
+
+      ListBox4.Items.AddObject( tf.Name, TObject(i));
+    end;
+  end;
+  ListBox4.Items.EndUpdate;
+  list.Free;
+end;
+
 procedure TReportFrame.fillHelp;
 var
   RS: TResourceStream;
@@ -245,12 +296,16 @@ end;
 
 procedure TReportFrame.init;
 begin
+  m_libFiles  := TList<ITaskFile>.create;
+
   Application.CreateForm(TDwsMod, DwsMod);
   PageControl1.ActivePage := TabSheet3;
   m_files:= TList<TReportFrameEditor>.create;
   m_form := NIL;
 
   fillHelp;
+
+  fillDWS;
 end;
 
 procedure TReportFrame.initFile(tf: ITaskFile);
@@ -300,43 +355,56 @@ begin
 
   tf := ITaskFile(Pointer(ListBox3.Items.Objects[ListBox3.ItemIndex]));
 
-  OpenCode( tf);
+  OpenCode( tf, ITaskStyle( Pointer( ListBox2.Items.Objects[ ListBox2.ItemIndex])));
 end;
 
-procedure TReportFrame.OpenCode(tf : ITaskFile );
+procedure TReportFrame.ListBox4Click(Sender: TObject);
+var
+  tf  : ITaskFile;
+  inx : integer;
+begin
+  if ListBox4.ItemIndex = -1 then
+    exit;
+
+  inx := integer(ListBox4.Items.Objects[ListBox4.ItemIndex]);
+  tf  := m_libFiles[inx];
+
+  OpenCode( tf, NIL );
+end;
+
+function TReportFrame.OpenCode(tf : ITaskFile; style : ITaskStyle ) : TReportFrameEditor;
 var
   i   : integer;
-  fc  : TReportFrameEditor;
   ext : string;
 begin
-  for i := 0 to pred(m_files.Count) do
-    begin
-      if m_files[i].DataFile = tf then
-      begin
-        PageControl1.ActivePage := m_files[i].Tab;
-        exit
-      end;
+
+  Result := NIL;
+  for i := 0 to pred(m_files.Count) do begin
+    if m_files[i].DataFile = tf then begin
+      PageControl1.ActivePage := m_files[i].Tab;
+      exit
     end;
+  end;
+
   ext := LowerCase(ExtractFileExt(tf.Name));
-  fc  := NIL;
 
-  if ext = '.pas' then
-    fc := TReportFrameEditorPas.create(PageControl1)
-  else if ext = '.html' then
-    fc := TReportFrameEditorHtml.create(PageControl1);
+  if      ext = '.pas' then     result := TReportFrameEditorPas.create(PageControl1)
+  else if ext = '.html' then    result := TReportFrameEditorHtml.create(PageControl1)
+  else                          result := NIL;
 
-  if Assigned(fc) then
+  if Assigned(result) then
   begin
-    fc.init;
-    fc.Name             := 'ED'+IntToStr(GetTickCount);
-    fc.Tab              := TTabSheet.Create(PageControl1);
-    fc.Style            := ITaskStyle( Pointer( ListBox2.Items.Objects[ ListBox2.ItemIndex]));;
-    fc.DataFile         := tf;
-    fc.onCloseFrame     := self.doCloseFrame;
-    fc.setPopup(self.PopupMenu1);
+    result.init;
+    result.Name             := 'ED'+IntToStr(GetTickCount);
+    result.Tab              := TTabSheet.Create(PageControl1);
+    result.Style            := style;
+    result.CacheFile        := not Assigned(style);
+    result.DataFile         := tf;
+    result.onCloseFrame     := self.doCloseFrame;
+    result.setPopup(self.PopupMenu1);
 
-    m_files.Add(fc);
-    PageControl1.ActivePage := fc.Tab;
+    m_files.Add(result);
+    PageControl1.ActivePage := result.Tab;
   end
   else
     ShowMessage('Für diesen Dateityp gibt es keinen Editor!');
@@ -406,14 +474,26 @@ begin
 
     TDirectory.Delete(m_Path);
   end;
+
+  clearLibFiles;
+  m_libFiles.Free;
 end;
 
 procedure TReportFrame.save;
 var
   tf : TReportFrameEditor;
+  cacheChanged : boolean;
 begin
-  for tf in m_files do
+  cacheChanged := falsE;
+  for tf in m_files do begin
     tf.save;
+    if Assigned(tf.DataFile) and ( tf.CacheFile) then begin
+      tf.DataFile.save( TPath.Combine(GM.Cache, 'dwslib'));
+      cacheChanged := true;
+    end;
+  end;
+  if cacheChanged then
+    PostMessage( Application.MainFormHandle, msgShowFileCache, 0, 0 );
 end;
 
 procedure TReportFrame.saveAllEdits;
@@ -423,6 +503,8 @@ begin
   for i := 0 to pred(m_files.Count) do
   begin
     m_files[i].save;
+    if m_files[i].CacheFile then
+      m_files[i].DataFile.save( TPath.Combine(GM.Cache, 'dwslib'));
   end;
 
 end;

@@ -175,10 +175,11 @@ begin
       JResult(Result, true, '');
 
       msg := TBroadcastMsg.create(BRD_FILE_LOCK);
-      msg.add('lock', true);
-      msg.add('id',   JInt( req, 'fcid'));
-      msg.add('user', uname);
-      msg.add('tl',  DateTimeToStr(now));
+      msg.add('lock',   true);
+      msg.add('id',     JInt( req, 'fcid'));
+      msg.add('user',   uname);
+      msg.add('tl',     DateTimeToStr(now));
+      msg.add('userid', peid );;
 
       TBroadcastMsg.SendMsg(msg);
 

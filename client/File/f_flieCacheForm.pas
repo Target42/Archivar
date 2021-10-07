@@ -183,9 +183,11 @@ procedure TFileCacheForm.updateList(Sender : TObject );
     Result := grp.GroupID;
   end;
 var
-  i     : integer;
+  i, j  : integer;
   item  : TlistItem;
   fname : string;
+  max   : integer;
+  len   : integer;
 begin
   LV.Items.BeginUpdate;
   LV.Groups.Clear;
@@ -210,6 +212,20 @@ begin
 
     item.Data     := FileCacheMod.Files.Items[i];
   end;
+
+  for i := 0 to pred(LV.Columns.Count) do begin
+    max := LV.Canvas.TextWidth(LV.Columns.Items[i].Caption);
+    for j := 0 to pred(LV.Items.Count) do begin
+      if i = 0 then
+        len := LV.Canvas.TextWidth(LV.Items.Item[j].Caption)
+      else
+        len := LV.Canvas.TextWidth(LV.Items.Item[j].SubItems.Strings[i-1]);
+      if len > max then
+        max := len;
+    end;
+    LV.Columns.Items[i].Width := max + 16;
+  end;
+
   LV.Items.EndUpdate;
 end;
 

@@ -93,7 +93,8 @@ procedure TReportFrameEditorPas.setDataFile(value: ITaskFile);
 begin
   inherited;
   SynEdit1.Lines.text := m_tf.Text;
-  m_changed := false;
+  m_changed           := false;
+  SynEdit1.ReadOnly   := m_tf.Readonly;
 end;
 
 procedure TReportFrameEditorPas.setPopup(pop: TPopupMenu);
@@ -106,7 +107,8 @@ procedure TReportFrameEditorPas.SynEdit1KeyPress(Sender: TObject;
   var Key: Char);
 begin
   inherited;
-  m_changed := true;
+  if not m_tf.Readonly then
+    m_changed := true;
 end;
 
 end.

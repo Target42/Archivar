@@ -28,6 +28,7 @@ type
         locked: boolean;  // flag, if locked
         user  : string;   // lock user
         tl    : string;   //lock time
+        userid: integer;
 
       end;
   private
@@ -54,6 +55,9 @@ type
     function handle_lock    (const arg : TJSONObject) : boolean;
 
     function getID( cache, name : string ) : integer;
+
+    function getFiles( cache : string ) : TList<TPEntry>;
+    function getFile( ptr : TPEntry ) : string;
 
   end;
 
@@ -163,6 +167,27 @@ begin
   end;
 end;
 
+function TFileCacheMod.getFile(ptr: TPEntry): string;
+
+begin
+  Result := '';
+  if not Assigned(ptr) then  exit;
+
+  Result := TPath.Combine( GM.Cache, Format('%s\%s', [ptr^.cache, ptr^.name]));
+  if not FileExists(Result) then  Result := '';
+end;
+
+function TFileCacheMod.getFiles(cache: string): TList<TPEntry>;
+var
+  ptr : TPEntry;
+begin
+  Result := TList<TPEntry>.create;
+  for ptr in m_files do begin
+    if SameText(cache, ptr^.cache) then
+      Result.Add(ptr);
+  end;
+end;
+
 function TFileCacheMod.getID(cache, name: string): integer;
 var
   ptr : TPEntry;
@@ -213,6 +238,7 @@ begin
       ptr^.locked := JBool  ( arg, 'lock');
       ptr^.user   := JString( arg, 'user');
       ptr^.tl     := JString( arg, 'tl');
+      ptr^.userid := JInt(    arg, 'userid');
       break;
     end;
   end;
@@ -253,7 +279,8 @@ begin
   ptr^.md5    := JString( arg, 'md5');
   ptr^.ts     := JString( arg, 'ts');
 
-  fname       := TPath.Combine(GM.Cache, format('%s\%s', [ptr^.cache, ptr^.name]));
+  fname       := getFile(ptr);
+
 
   if not FileExists(fname) or (ptr^.md5 <> GM.md5(fname)) then begin
     client      := TdsFileCacheClient.Create(GM.SQLConnection1.DBXConnection);
@@ -302,8 +329,9 @@ begin
       CheckFile( ptr^ );
 
       if  ptr^.locked then begin
-        ptr^.user := FLTab.FieldByName('FL_USER').AsString;
-        ptr^.tl   := FLTab.FieldByName('FL_STAMP').AsString;
+        ptr^.user   := FLTab.FieldByName('FL_USER').AsString;
+        ptr^.tl     := FLTab.FieldByName('FL_STAMP').AsString;
+        ptr^.userid := FLTab.FieldByName('PE_ID').Asinteger;
       end;
 
       next;

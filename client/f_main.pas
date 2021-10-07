@@ -685,6 +685,7 @@ begin
     msgDoMeeting      : doMeeting(msg.lParam);
     msgMeetingEnd     : showAdmin;
     msgRetryLogin     : ac_prg_connect.Execute;
+    msgShowFileCache  : ac_ad_filecache.Execute;
     else
       Handled := false;
   end;

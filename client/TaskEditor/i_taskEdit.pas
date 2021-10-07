@@ -313,10 +313,13 @@ type
       function  getStream : TStream;
       procedure setText( value : string );
       function  getText : string;
+      procedure setReadOnly( value : boolean );
+      function  getReadOnly : boolean;
     //public
-      property Name : string read getName write setName;
-      property Text : String read getText write setText;
+      property Name       : string  read getName      write setName;
+      property Text       : String  read getText      write setText;
       property DataStream : TStream read getStream;
+      property Readonly   : boolean read getReadOnly  write setReadOnly;
 
       function isName( name : string ) : Boolean;
 
