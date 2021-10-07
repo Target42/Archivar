@@ -33,6 +33,7 @@ const
   msgDoMeeting      = WMUSER + 14;
   msgMeetingEnd     = WMUSER + 15;
   msgRetryLogin     = WMUSER + 16;
+  msgShowFileCache  = WMUSER + 17;
 
 type
   TGM = class(TDataModule)
