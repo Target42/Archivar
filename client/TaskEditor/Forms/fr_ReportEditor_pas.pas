@@ -66,6 +66,7 @@ procedure TReportFrameEditorPas.init;
 begin
   inherited;
   m_dws       := TDwsMod.Create(NIL);
+  Memo1.Lines.Clear;
 end;
 
 procedure TReportFrameEditorPas.insertFieldName(name: string);

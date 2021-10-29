@@ -649,7 +649,7 @@ begin
         ApplicationSetMenu( true );
 
         setPanel(integer(stStatus), 'Verbunden');
-        setPanel(integer(stHost), GM.getHostName);
+        setPanel(integer(stHost),  GM.getHostName);
         setPanel(integer(stLogin), GM.UserName);
         setPanel(integer(stUser),  GM.Name+', '+GM.Vorname);
 

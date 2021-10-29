@@ -139,10 +139,12 @@ object dsFileCache: TdsFileCache
     Top = 208
   end
   object FDTransaction3: TFDTransaction
+    Connection = DBMod.ArchivarConnection
     Left = 160
     Top = 208
   end
   object DnlQry: TFDQuery
+    Connection = DBMod.ArchivarConnection
     Transaction = FDTransaction2
     SQL.Strings = (
       

@@ -5,7 +5,7 @@ interface
 uses
   System.SysUtils, System.Classes, Web.HTTPApp, Web.HTTPProd, xsd_TaskData,
   JvComponentBase, JvRichEditToHtml, i_taskEdit, SHDocVw, Data.DB,
-  Datasnap.DBClient, Datasnap.DSConnect;
+  Datasnap.DBClient, Datasnap.DSConnect, System.Generics.Collections;
 
 type
   THtmlMod = class(TDataModule)
@@ -20,25 +20,25 @@ type
       TagParams: TStrings; var ReplaceText: string);
   private
     // frame
-    m_Framestyle: ITaskStyle;
-    m_FrameTC   : ITaskContainer;
-    m_Framedata : IXMLList;
+    m_Framestyle    : ITaskStyle;
+    m_FrameTC       : ITaskContainer;
+    m_Framedata     : IXMLList;
     m_FrameTemplate : String;
     // task
-    m_style: ITaskStyle;
-    m_tc   : ITaskContainer;
-    m_task : IXMLList;
+    m_style         : ITaskStyle;
+    m_tc            : ITaskContainer;
+    m_task          : IXMLList;
 
-    m_title: string;
+    m_title         : string;
 
 
-    m_stack: TStringList;
-    m_path : string;
-    m_clid : string;
+    m_stack         : TStringList;
+    m_path          : string;
+    m_clid          : string;
 
     function  getField( name : string; data : IXMLList )    : string;
-    function  createTable( name : string; data : IXMLList ) : String;
-    function  addHeader( xHeader : IXMLHeader )  : string;
+    function  createTable( params : TStrings; data : IXMLList ) : String;
+    function  addHeader( xHeader : IXMLHeader; params : TStrings; var indexTab : TList<integer> )  : string;
     function  execScript( TagParams: TStrings; style : ITaskStyle; data : IXMLList )  : string;
     procedure SaveImages( path : string; style : ITaskStyle );
 
@@ -106,18 +106,31 @@ var
 
 { THtmlMod }
 
-function THtmlMod.addHeader(xHeader: IXMLHeader): string;
+function THtmlMod.addHeader(xHeader: IXMLHeader; params : TStrings;
+  var indexTab : TList<integer>): string;
 
   function calcLen : integer;
   var
-    j : integer;
+    j   : integer;
+    inx : integer;
   begin
     Result := 0;
     for j := 0 to pred(xHeader.Count) do
     begin
-      Result := Result + xHeader.Field[j].Width;
+      if params.Count = 0 then begin
+        Result := Result + xHeader.Field[j].Width;
+        indexTab.Add(j);
+      end
+      else begin
+        inx := params.IndexOf(xHeader.Field[j].Field);
+        if  inx <> -1 then begin
+          Result := Result + xHeader.Field[j].Width;
+          indexTab.Add(inx);
+        end;
+      end;
     end;
   end;
+
 var
   i : integer;
   len : double;
@@ -128,6 +141,7 @@ begin
     Result := Result + Format('    <th style="width:%d%%">%s</th>',
       [trunc(( xHeader.Field[i].Width / len)*100.0),
        xHeader.Field[i].Header]) + sLineBreak;
+
   Result := Result + '  </tr>'+sLineBreak;
 end;
 
@@ -207,40 +221,56 @@ begin
   Result := PageProducer1.Content;
 end;
 
-function THtmlMod.createTable(name: string; data : IXMLList): String;
+function THtmlMod.createTable(params: Tstrings; data : IXMLList): String;
 var
   xTab : IXMLTable;
   xRow : IXMLRow;
   i, j : integer;
   s    : string;
+  indexTab : TList<integer>;
 begin
+  // not tablename
+  if params.Count = 0 then begin
+    Result := '<p>Es wurden keine Parameter angegeben!</p>';
+    exit;
+  end;
+
   xTab := NIL;
   if not Assigned(data) then
     exit;
 
+    // find the table
   for i := 0 to pred(data.Tables.Count) do
   begin
-    if SameTExt( name, data.Tables.Table[i].Field) then
+    if SameText( params[0], data.Tables.Table[i].Field) then
     begin
       xTab := data.Tables.Table[i];
       break;
     end;
   end;
+
+  // nor table -> exit;
   if not Assigned(xTab) then
   begin
-    Result := '<p>Table : '+name+' not found!</p>';
+    Result := '<p>Die Table : '+params[0]+' wurde nicht gefunden!</p>';
     exit;
   end;
 
+  // remote the tablename from the params
+  params.Delete(0);
+  indexTab := TList<integer>.create;
+
+
   Result := '<table>' +sLineBreak+' <tbody>' +sLineBreak;
-  Result := result + addHeader( xTab.Header );
+  Result := result + addHeader( xTab.Header, params, indexTab );
+
   for i := 0 to pred(xTab.Rows.Count) do
   begin
     Result := Result+'  <tr>'+sLineBreak;
     xRow := xTab.Rows.Row[i];
-    for j := 0 to pred(xRow.Count) do
+    for j := 0 to pred(indexTab.Count) do
     begin
-      s := xRow.Value[j];
+      s := xRow.Value[indexTab[j]];
       if trim(s) = '' then
         s := '&nbsp;';
 
@@ -248,6 +278,7 @@ begin
     end;
     Result := Result+'  </tr>'+sLineBreak;
   end;
+  indexTab.Free;
   Result := Result + ' </tbody>'+sLineBreak+'</table>'+sLineBreak;
 end;
 
@@ -263,7 +294,6 @@ begin
   m_FrameTemplate := TPath.combine( GM.wwwHome, 'templates\frame.html');
 
   clearFrameData;
-
 end;
 
 procedure THtmlMod.DataModuleDestroy(Sender: TObject);
@@ -296,6 +326,8 @@ begin
   DwsMod.Data       := data;
   DwsMod.TaskStyle  := style;
   DwsMod.Params.Assign(TagParams);
+  if DwsMod.Params.Count > 0 then
+    DwsMod.Params.Delete(0); // name of the script
   try
     Result := DwsMod.run;
   except
@@ -565,7 +597,7 @@ begin
   end
   else if cmd = 'table' then
   begin
-    ReplaceText := createTable( TagParams.Strings[0], data);
+    ReplaceText := createTable( TagParams, data);
   end
   else if cmd = 'script' then
   begin
@@ -578,9 +610,11 @@ begin
   begin
     if TagParams.Count > 0 then
     begin
-      if SameText(TagParams.Strings[0], 'title') then
-        ReplaceText := m_title
-      else
+           if SameText(TagParams.Strings[0], 'title') then    ReplaceText := m_title
+      else if SameText(TagParams.Strings[0], 'date') then     ReplaceText := FormatDateTime('dd.mm.yyyy', now)
+      else if SameText(TagParams.Strings[0], 'time') then     ReplaceText := FormatDateTime('hh:nn', now)
+      else if SameText(TagParams.Strings[0], 'user') then     ReplaceText := GM.UserName
+      else if SameText(TagParams.Strings[0], 'host') then     ReplaceText := GM.JvComputerInfoEx1.Identification.LocalComputerName      else
         ReplaceText := 'Unbekannter system parameter : '+TagParams.Strings[0]+'<br>';
     end;
 

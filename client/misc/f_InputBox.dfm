@@ -45,5 +45,6 @@ object InputBoxForm: TInputBoxForm
     Width = 277
     Height = 21
     TabOrder = 1
+    OnKeyPress = Edit1KeyPress
   end
 end

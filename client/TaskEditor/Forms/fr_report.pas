@@ -306,6 +306,8 @@ begin
   fillHelp;
 
   fillDWS;
+
+  CheckBox1Click( self );
 end;
 
 procedure TReportFrame.initFile(tf: ITaskFile);
@@ -487,6 +489,7 @@ begin
   cacheChanged := falsE;
   for tf in m_files do begin
     tf.save;
+
     if Assigned(tf.DataFile) and ( tf.CacheFile) then begin
       tf.DataFile.save( TPath.Combine(GM.Cache, 'dwslib'));
       cacheChanged := true;
@@ -506,7 +509,6 @@ begin
     if m_files[i].CacheFile then
       m_files[i].DataFile.save( TPath.Combine(GM.Cache, 'dwslib'));
   end;
-
 end;
 
 procedure TReportFrame.setTaskContainer(value: ITaskContainer);

@@ -165,8 +165,7 @@ procedure TFileCacheForm.updateList(Sender : TObject );
     i : integer;
     grp : TListGroup;
   begin
-    Result  := 0;
-
+    grp     := NIL;
     for i := 0 to pred(LV.Groups.Count) do begin
       if SameText(LV.Groups.Items[i].Header, name) then begin
         grp := LV.Groups.Items[i];
@@ -174,7 +173,7 @@ procedure TFileCacheForm.updateList(Sender : TObject );
       end;
     end;
 
-    if Result = 0 then begin
+    if not Assigned(grp) then begin
       grp := LV.Groups.Add;
       grp.Header := name;
       grp.GroupID := Lv.Groups.Count;

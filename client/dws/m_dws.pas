@@ -17,6 +17,21 @@ type
     Destructor Destroy; override;
   end;
 
+  TPP = class( TObject )
+    private
+      m_info: TProgramInfo;
+      m_fi  : ITaskFile;
+      m_pg: TPageProducer;
+      procedure PageProducer1HTMLTag(Sender: TObject; Tag: TTag;
+        const TagString: string; TagParams: TStrings; var ReplaceText: string);
+
+    public
+      constructor create( info : TProgramInfo; fi :ITaskFile);
+      destructor Destroy; override;
+
+      function run : string;
+  end;
+
   TDwsMod = class(TDataModule)
     DelphiWebScript1: TDelphiWebScript;
     dwsUnit1: TdwsUnit;
@@ -67,6 +82,7 @@ type
       Info: TProgramInfo; ExtObject: TObject);
     procedure dwsUnit1ClassesTTableHeaderMethodsWidth_Integer_Eval(
       Info: TProgramInfo; ExtObject: TObject);
+    procedure dwsUnit1FunctionsRunTemplateEval(info: TProgramInfo);
   private
     m_script : TStringList;
     m_params : TStringList;
@@ -107,7 +123,7 @@ implementation
 
 uses
   Vcl.Dialogs, System.StrUtils, dwsUtils, Xml.XMLDoc, m_glob_client,
-  System.ioutils;
+  System.ioutils, System.Variants;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -465,6 +481,17 @@ begin
   info.ResultAsString := XMLDump.Content;
 end;
 
+procedure TDwsMod.dwsUnit1FunctionsRunTemplateEval(info: TProgramInfo);
+var
+  fi  : ITaskFile;
+  pg : TPP;
+begin
+  fi := m_style.Files.getFile(info.ParamAsString[0]);
+  pg := TPP.create(info, fi);
+  info.ResultAsString := pg.run;
+  pg.Free;
+end;
+
 procedure TDwsMod.dwsUnit1FunctionsScriptParamCVountEval(info: TProgramInfo);
 begin
   info.ResultAsInteger := m_params.Count;
@@ -621,6 +648,44 @@ destructor TXmlContainer.Destroy;
 begin
   m_xml := NIL;
   inherited;
+end;
+
+{ TPP }
+
+constructor TPP.create(info: TProgramInfo; fi: ITaskFile);
+begin
+  m_info  := info;
+  m_fi    := fi;
+  m_pg    := TPageProducer.Create(NIL);
+  m_pg.OnHTMLTag := PageProducer1HTMLTag;
+  m_pg.HTMLDoc.Text := fi.Text;
+end;
+
+destructor TPP.destroy;
+begin
+  m_pg.Free;
+  inherited
+end;
+
+procedure TPP.PageProducer1HTMLTag(Sender: TObject; Tag: TTag;
+  const TagString: string; TagParams: TStrings; var ReplaceText: string);
+var
+ xx   : variant;
+ res  : IInfo;
+begin
+  xx := TagString;
+
+  if not VarIsClear(m_info.Params[1].value) then begin
+    Res := m_info.Params[1].Call( [xx] );
+    ReplaceText := res.Value;
+  end
+  else
+    ReplaceText := 'Variant is null';
+end;
+
+function TPP.run: string;
+begin
+  Result := m_pg.Content;
 end;
 
 end.

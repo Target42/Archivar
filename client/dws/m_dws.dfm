@@ -225,6 +225,30 @@ object DwsMod: TDwsMod
         Name = 'printXML'
         ResultType = 'String'
         OnEval = dwsUnit1FunctionsprintXMLEval
+      end
+      item
+        Name = 'RunTemplate'
+        Parameters = <
+          item
+            Name = 'fileName'
+            DataType = 'String'
+          end
+          item
+            Name = 'rtf'
+            DataType = 'ReplaceTagFunc'
+          end>
+        ResultType = 'String'
+        OnEval = dwsUnit1FunctionsRunTemplateEval
+      end>
+    Delegates = <
+      item
+        Name = 'ReplaceTagFunc'
+        Parameters = <
+          item
+            Name = 'Tag'
+            DataType = 'String'
+          end>
+        ResultType = 'String'
       end>
     UnitName = 'Helper'
     StaticSymbols = False

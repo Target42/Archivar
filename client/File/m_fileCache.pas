@@ -326,13 +326,14 @@ begin
       ptr^.ts     := FieldByName('FC_STAMP').AsString;
       ptr^.locked := FLTab.Locate('FC_ID', VarArrayOf([ptr^.id]), []);
 
-      CheckFile( ptr^ );
-
       if  ptr^.locked then begin
         ptr^.user   := FLTab.FieldByName('FL_USER').AsString;
         ptr^.tl     := FLTab.FieldByName('FL_STAMP').AsString;
         ptr^.userid := FLTab.FieldByName('PE_ID').Asinteger;
       end;
+
+      if (not ptr^.locked) or ((ptr^.locked) and (ptr^.userid <> GM.UserID)) then
+        CheckFile( ptr^ );
 
       next;
     end;

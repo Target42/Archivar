@@ -10,6 +10,7 @@ type
   TInputBoxForm = class(TForm)
     BaseFrame1: TBaseFrame;
     Edit1: TEdit;
+    procedure Edit1KeyPress(Sender: TObject; var Key: Char);
   private
     function GetText: string;
     procedure SetText(const Value: string);
@@ -25,7 +26,16 @@ implementation
 
 {$R *.dfm}
 
+uses
+  system.IOUtils;
+
 { TInputBoxForm }
+
+procedure TInputBoxForm.Edit1KeyPress(Sender: TObject; var Key: Char);
+begin
+  if not TPath.IsValidPathChar(Key) then
+    Key := #0;
+end;
 
 function TInputBoxForm.GetText: string;
 begin

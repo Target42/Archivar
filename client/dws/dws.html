@@ -2,152 +2,240 @@
 <html>
 <head>
 
+
     
+  
   <title></title>
 </head>
 
 
+<body>
 
-  <body>
 
     
 <h2>Interpreter</h2>
+
 <a href="https://github.com/EricGrange/DWScript">https://github.com/EricGrange/DWScript</a><br>
+
+<h2>Delegate</h2>
+ReplaceTagFunc = function( tag : string ) : string;
 <h2>Funktionen</h2>
+
 <ul>
 
+
       <li>
+    
     
     <div>function&nbsp;ScriptParamCount : integer;
     </div>
 
+
       </li>
 
+
       <li>
+    
     
     <div>function ScriptParam( index : integer ) : string;
     </div>
 
+
       </li>
 
+
       <li>
+    
     
     <div>function hasField( name : string ) : integer;
     </div>
 
+
       </li>
 
+
       <li>
+    
     
     <div>fucntion getFieldStr( name : string ) : string;
     </div>
 
+
       </li>
 
+
       <li>
+    
     
     <div>function getFieldInt( name : string ) : &iacute;nteger;
     </div>
 
+
       </li>
 
+
       <li>
+    
     
     <div>function getTable( name : string ) : TTable;
     </div>
 
+
       </li>
+
 
       <li>
     
-    <div>function printXML : string;
-    </div>
+    
+    <div>function printXML : string;</div>
+  </li>
+  <li>function runTemplate(fileName : string; rtf : ReplaceTagFunc ) : string</li>
 
-      </li>
 
     
 </ul>
+
 
     
 <h2>Klassen
 </h2>
 
+
     
 <h3>TTable
 </h3>
 
+
     
 <ul>
 
+
       <li>
+    
     
     <div>property TableHeader : TTableHeader;
     </div>
 
+
       </li>
 
+
       <li>
+    
     
     <div>function Rows : integer;
     </div>
 
+
       </li>
 
+
       <li>
+    
     
     <div>function Cols : integer;
     </div>
 
+
       </li>
 
+
       <li>
+    
     
     <div>function Cell( row : integer; col : integer ): string;
     </div>
 
+
       </li>
+
 
     
 </ul>
+
 
     
 <h3>TTableHeader
 </h3>
 
+
     
 <ul>
 
-      <li>
-    
-    <div>function count : integer;</div>
-  </li>
-  <li>function Names : array of string;</li>
-  <li>function name( index : integer ) : string;</li>
 
       <li>
+    
+    
+    <div>function count : integer;</div>
+
+  </li>
+
+  <li>function Names : array of string;</li>
+
+  <li>function name( index : integer ) : string;</li>
+
+
+      <li>
+    
     
     <div>fucntion Caption( name : string ) : string;
     </div>
+
   </li>
+
   <li>
       function Caption( index : integer ) : string;</li>
 
+
       <li>
+    
     
     <div>function Width( name : string ) : integer;
     </div>
 
+
       </li>
+
 
       <li>
     
+    
     <div>
 function Width( index : integer ) : integer</div>
+  </li>
 
-      </li>
 
     
 </ul>
+<br>
+<br>
+Beispiel:<br>
+<br>
+{<br>
+&nbsp;&nbsp;&nbsp; Erzeugt am 28.10.2021 19:14:37<br>
+}<br>
+<br>
+program main;<br>
+<br>
+<br>
+function rep( text : string ) : string;<br>
+begin<br>
+&nbsp; if text = 'Weihnachten' then<br>
+&nbsp;&nbsp;&nbsp; Result := 'Hallo Weihnachtsmann'<br>
+&nbsp; else if text = 'Ostern' then<br>
+&nbsp;&nbsp;&nbsp; Result := 'Hallo Osterhase'<br>
+&nbsp; else<br>
+&nbsp; Result := 'Hallo Welt ';<br>
+end;<br>
+<br>
+<br>
+var<br>
+&nbsp; s : string;<br>
+begin<br>
+&nbsp; s := RunTemplate( 'test.html', rep );<br>
+&nbsp; printLN(s);<br>
+end.<br>
+
 
 
   
