@@ -1,0 +1,14 @@
+{
+  "templates": [
+    {
+      "name": "Beschluss",
+      "clid": "{1C0F5A8C-2510-4D1C-BF21-C5D8604DAE28}",
+      "exists": false
+    },
+    {
+      "name": "Protokoll",
+      "clid": "{183C11C4-9864-451F-AFB2-05B10CC44D62}",
+      "exists": false
+    }
+  ]
+}
