@@ -15,6 +15,9 @@ object TemplateNewForm: TTemplateNewForm
   Position = poMainFormCenter
   OnCreate = FormCreate
   OnDestroy = FormDestroy
+  DesignSize = (
+    351
+    315)
   PixelsPerInch = 96
   TextHeight = 13
   object Label1: TLabel
@@ -53,7 +56,7 @@ object TemplateNewForm: TTemplateNewForm
     Align = alBottom
     AutoSize = True
     TabOrder = 0
-    ExplicitTop = 168
+    ExplicitTop = 255
     ExplicitWidth = 351
     inherited StatusBar1: TStatusBar
       Width = 351
@@ -64,6 +67,9 @@ object TemplateNewForm: TTemplateNewForm
       ExplicitWidth = 351
       inherited OKBtn: TBitBtn
         Left = 252
+        Enabled = False
+        Kind = bkCustom
+        ModalResult = 0
         OnClick = BaseFrame1OKBtnClick
         ExplicitLeft = 252
       end
@@ -72,17 +78,20 @@ object TemplateNewForm: TTemplateNewForm
   object DBEdit1: TDBEdit
     Left = 16
     Top = 27
-    Width = 241
+    Width = 248
     Height = 21
+    Anchors = [akLeft, akTop, akRight]
     DataField = 'TE_NAME'
     DataSource = TESrc
     TabOrder = 1
+    OnKeyPress = DBEdit1KeyPress
   end
   object DBCheckBox1: TDBCheckBox
-    Left = 272
+    Left = 270
     Top = 29
-    Width = 97
+    Width = 68
     Height = 17
+    Anchors = [akTop, akRight]
     Caption = 'System'
     DataField = 'TE_SYSTEM'
     DataSource = TESrc
@@ -97,6 +106,7 @@ object TemplateNewForm: TTemplateNewForm
     Top = 73
     Width = 322
     Height = 21
+    Anchors = [akLeft, akTop, akRight]
     DataField = 'TE_SHORT'
     DataSource = TESrc
     TabOrder = 3
@@ -123,9 +133,35 @@ object TemplateNewForm: TTemplateNewForm
     ListSource = TYSrc
     TabOrder = 5
   end
+  object LV: TListView
+    Left = 16
+    Top = 165
+    Width = 322
+    Height = 84
+    Anchors = [akLeft, akTop, akRight]
+    Columns = <
+      item
+        Caption = 'Name'
+        Width = 75
+      end
+      item
+        Caption = 'Vorhanden'
+        Width = 65
+      end
+      item
+        Caption = 'CLID'
+        Width = 150
+      end>
+    ReadOnly = True
+    RowSelect = True
+    SortType = stText
+    TabOrder = 6
+    ViewStyle = vsReport
+    Visible = False
+    OnClick = LVClick
+  end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsTemplate'
-    SQLConnection = GM.SQLConnection1
     Left = 56
     Top = 24
   end
@@ -150,11 +186,11 @@ object TemplateNewForm: TTemplateNewForm
     ProviderName = 'TYTab'
     RemoteServer = DSProviderConnection1
     Left = 96
-    Top = 120
+    Top = 8
   end
   object TYSrc: TDataSource
     DataSet = TYTab
-    Left = 224
-    Top = 96
+    Left = 208
+    Top = 24
   end
 end

@@ -1,7 +1,7 @@
 /* ============================================================ */
 /*   Database name:  MODEL_2                                    */
 /*   DBMS name:      InterBase                                  */
-/*   Created on:     30.09.2021  15:01                          */
+/*   Created on:     02.11.2021  19:42                          */
 /* ============================================================ */
 
 create generator gen_be_id;
@@ -183,6 +183,8 @@ create table PE_PERSON
     PE_NET                          VARCHAR(25)                    ,
     PE_MAIL                         VARCHAR(200)                   ,
     PE_PWD                          VARCHAR(64)                    ,
+    PE_ROLS                         VARCHAR(200)                   ,
+    PE_KEY                          BLOB                           ,
     constraint PK_PE_PERSON primary key (PE_ID)
 );
 
@@ -351,8 +353,14 @@ create table TA_TASK
     TA_STYLE_CLID                   VARCHAR(38)                    ,
     TA_REM                          VARCHAR(256)                   ,
     TA_COLOR                        INTEGER                        ,
+    TA_DELETED                      CHAR(1)                        ,
     constraint PK_TA_TASK primary key (TA_ID)
 );
+
+/* ============================================================ */
+/*   Index: TA_TASK_CLID                                        */
+/* ============================================================ */
+create unique ASC index TA_TASK_CLID on TA_TASK (TA_CLID);
 
 /* ============================================================ */
 /*   Table: CT_CHAPTER_TEXT                                     */
@@ -599,7 +607,7 @@ SET TERM ; ^
 commit;
 
 INSERT INTO PE_PERSON (PE_ID, PE_NAME, PE_VORNAME, PE_DEPARTMENT, PE_NET,
-    PE_MAIL, PE_PWD)
+    PE_MAIL, PE_PWD, PE_ROLS)
 VALUES (
     1, 
     'Doe', 
@@ -607,7 +615,8 @@ VALUES (
     'Admin', 
     'admin', 
     '', 
-    ''
+    '',
+    'admin'
 );
 
 set generator gen_pe_id to 10;

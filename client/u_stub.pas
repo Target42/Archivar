@@ -1,6 +1,6 @@
 //
 // Erzeugt vom DataSnap-Proxy-Generator.
-// 04.10.2021 17:26:14
+// 02.11.2021 19:54:52
 //
 
 unit u_stub;
@@ -174,12 +174,14 @@ type
   private
     FAutoIncCommand: TDBXCommand;
     FhasNameCommand: TDBXCommand;
+    FgetSysTemplatesCommand: TDBXCommand;
   public
     constructor Create(ADBXConnection: TDBXConnection); overload;
     constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
     destructor Destroy; override;
     function AutoInc(gen: string): Integer;
     function hasName(name: string): Boolean;
+    function getSysTemplates: TJSONObject;
   end;
 
   TdsTaskViewClient = class(TDSAdminClient)
@@ -1098,6 +1100,19 @@ begin
   Result := FhasNameCommand.Parameters[1].Value.GetBoolean;
 end;
 
+function TdsTemplateClient.getSysTemplates: TJSONObject;
+begin
+  if FgetSysTemplatesCommand = nil then
+  begin
+    FgetSysTemplatesCommand := FDBXConnection.CreateCommand;
+    FgetSysTemplatesCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FgetSysTemplatesCommand.Text := 'TdsTemplate.getSysTemplates';
+    FgetSysTemplatesCommand.Prepare;
+  end;
+  FgetSysTemplatesCommand.ExecuteUpdate;
+  Result := TJSONObject(FgetSysTemplatesCommand.Parameters[0].Value.GetJSONValue(FInstanceOwner));
+end;
+
 constructor TdsTemplateClient.Create(ADBXConnection: TDBXConnection);
 begin
   inherited Create(ADBXConnection);
@@ -1112,6 +1127,7 @@ destructor TdsTemplateClient.Destroy;
 begin
   FAutoIncCommand.DisposeOf;
   FhasNameCommand.DisposeOf;
+  FgetSysTemplatesCommand.DisposeOf;
   inherited;
 end;
 

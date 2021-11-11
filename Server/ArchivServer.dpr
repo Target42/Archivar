@@ -7,6 +7,8 @@ program ArchivServer;
 
 {$R *.RES}
 
+{$R *.dres}
+
 uses
   Vcl.SvcMgr,
   ds_admin in 'ds_admin.pas' {AdminMod: TDSServerModule},

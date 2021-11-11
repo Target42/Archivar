@@ -18,6 +18,7 @@ type
     procedure setOwner( value : IDataField );
     function  getOwner :IDataField;
 
+    procedure SortFields;
   public
     constructor create (Owner :IDataField );
     Destructor Destroy; override;
@@ -42,7 +43,7 @@ type
 implementation
 
 uses
-  System.SysUtils, u_DataFieldImpl;
+  System.SysUtils, u_DataFieldImpl, System.Generics.Defaults;
 
 { TDataFieldList }
 
@@ -149,6 +150,9 @@ procedure TDataFieldList.inform(event: TDataListChangeType; value: IDataField);
 var
   i : integer;
 begin
+  if event <> dlcDelete then
+    SortFields;
+
   for i := 0 to pred(m_listener.Count) do
   begin
     m_listener[i](event, value);
@@ -187,6 +191,18 @@ end;
 procedure TDataFieldList.setOwner(value: IDataField);
 begin
   m_owner := value;
+end;
+
+procedure TDataFieldList.SortFields;
+begin
+  m_list.Sort(
+    TComparer<IDataField>.Construct(
+      function(const Left, Right: IDataField): Integer
+      begin
+        Result := CompareStr(left.Name, Right.Name);
+      end
+    )
+  );
 end;
 
 procedure TDataFieldList.UnregisterListener(evt: TDataListChange);

@@ -96,4 +96,21 @@ object dsTemplate: TdsTemplate
     Left = 208
     Top = 32
   end
+  object FindCLIDQry: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
+    SQL.Strings = (
+      'SELECT *'
+      'FROM TA_TASK r'
+      'where ta_clid = :clid')
+    Left = 352
+    Top = 144
+    ParamData = <
+      item
+        Name = 'CLID'
+        DataType = ftString
+        ParamType = ptInput
+        Value = Null
+      end>
+  end
 end
