@@ -42,25 +42,11 @@ type
     Label5: TLabel;
     DBEdit4: TDBEdit;
     TemplateTab: TClientDataSet;
-    TaskTabTE_ID: TIntegerField;
-    TaskTabTA_ID: TIntegerField;
-    TaskTabTY_ID: TIntegerField;
-    TaskTabTA_STARTED: TDateField;
-    TaskTabTA_CREATED: TDateTimeField;
-    TaskTabTA_NAME: TWideStringField;
-    TaskTabTA_DATA: TBlobField;
-    TaskTabTA_CREATED_BY: TWideStringField;
-    TaskTabTA_TERMIN: TDateField;
-    TaskTabTA_CLID: TWideStringField;
-    TaskTabTA_FLAGS: TIntegerField;
-    TaskTabTA_STATUS: TWideStringField;
     TaskTabTA_REST: TStringField;
     Label7: TLabel;
     ComboBox1: TComboBox;
     Label8: TLabel;
     ComboBox2: TComboBox;
-    TaskTabTA_STYLE: TWideStringField;
-    TaskTabTA_STYLE_CLID: TWideStringField;
     PageControl2: TPageControl;
     TabSheet3: TTabSheet;
     TabSheet4: TTabSheet;
@@ -74,10 +60,25 @@ type
     ac_bookmark: TAction;
     Label9: TLabel;
     DBEdit5: TDBEdit;
-    TaskTabTA_REM: TWideStringField;
-    TaskTabTA_COLOR: TIntegerField;
     JvColorComboBox1: TJvColorComboBox;
     Label10: TLabel;
+    TaskTabTE_ID: TIntegerField;
+    TaskTabTA_ID: TIntegerField;
+    TaskTabTY_ID: TIntegerField;
+    TaskTabTA_STARTED: TDateField;
+    TaskTabTA_CREATED: TSQLTimeStampField;
+    TaskTabTA_NAME: TStringField;
+    TaskTabTA_DATA: TBlobField;
+    TaskTabTA_CREATED_BY: TStringField;
+    TaskTabTA_TERMIN: TDateField;
+    TaskTabTA_CLID: TStringField;
+    TaskTabTA_FLAGS: TIntegerField;
+    TaskTabTA_STATUS: TStringField;
+    TaskTabTA_STYLE: TStringField;
+    TaskTabTA_STYLE_CLID: TStringField;
+    TaskTabTA_REM: TStringField;
+    TaskTabTA_COLOR: TIntegerField;
+    TaskTabTA_DELETED: TStringField;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -467,7 +468,6 @@ begin
 
   TaskTab.Close;
   TaskTab.Open;
-
 
   if not TaskTab.Locate('TA_ID', VarArrayOf([m_ta_id]), []) then
   begin
