@@ -72,7 +72,6 @@ type
     procedure SpeedButton11Click(Sender: TObject);
     procedure ListBox4Click(Sender: TObject);
   private
-    m_Path : string;
     m_tc   : ITaskContainer;
     m_form : ITaskForm;
     DwsMod : TDwsMod;
@@ -189,7 +188,7 @@ begin
     HtmlMod.TaskStyle     := st;
     HtmlMod.TaskData      := xList;
     HtmlMod.Title         := 'Titeltext';
-    m_path := HtmlMod.show(WebBrowser1);
+    HtmlMod.show(WebBrowser1);
   finally
     HtmlMod.Free;
   end;
@@ -468,15 +467,6 @@ begin
 
   m_form  := NIL;
   m_tc    := NIL;
-
-  if m_Path <> '' then
-  begin
-    arr := TDirectory.GetFiles(m_Path);
-    for i := 0 to pred(Length(arr)) do
-      DeleteFile(arr[i]);
-
-    TDirectory.Delete(m_Path);
-  end;
 
   clearLibFiles;
   m_libFiles.Free;
