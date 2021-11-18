@@ -65,16 +65,16 @@ type
     procedure AddTitleToStack( text : string ; level : integer );
     procedure AddTextToStack( text : string );
     procedure AddHtmlToStack( text : string );
+
     function  showStack( web : TWebBrowser) : string;
 
-    function show(web : TWebBrowser ) : string;
+    procedure show(web : TWebBrowser );
 
     class procedure SetHTML(st : TStream; WebBrowser: TWebBrowser); overload;
     class procedure SetHTML(text : string; WebBrowser: TWebBrowser); overload;
     class function  Text2HTML( text : string ) : TStream;
 
-    function loadByID(taid : integer ) : boolean;
-
+    function  loadByID(taid : integer ) : boolean;
     procedure clearFiles( path : string );
   end;
 
@@ -507,58 +507,62 @@ begin
   end;
 end;
 
-function THtmlMod.show( web : TWebBrowser) : string;
+procedure THtmlMod.show( web : TWebBrowser);
 var
   list : TStringList;
-  err  : boolean;
   tf    : ITaskFile;
-begin
-  Result := '';
 
-  err := false;
-  list:= TStringList.Create;
-  list.Add('<body>');
-  list.Add('<ul>Fehler:<br>');
-  if not Assigned(m_task) then
+  function hasError : boolean;
   begin
-    err := true;
-    list.Add('<li>Kein Daten zur Darstellung</li>');
-  end;
-
-  if not Assigned(m_style) then
-  begin
-    err := true;
-    list.Add('<li>Kein Style zur Formatierung</li>');
-  end
-  else
-  begin
-    tf := m_style.Files.getFile('index.html');
-    if not Assigned(tf) then
+    Result := false;
+    list:= TStringList.Create;
+    list.Add('<body>');
+    list.Add('<ul>Fehler:<br>');
+    if not Assigned(m_task) then
     begin
-      err := true;
-      list.Add('<li>Die Datei "index.html" wurde nicht gefunden</li>');
+      Result := true;
+      list.Add('<li>Kein Daten zur Darstellung</li>');
+    end;
+
+    if not Assigned(m_style) then
+    begin
+      Result := true;
+      list.Add('<li>Kein Style zur Formatierung</li>');
     end
     else
     begin
-      PageProducer1.HTMLDoc.Text := tf.Text;
+      tf := m_style.Files.getFile('index.html');
+      if not Assigned(tf) then
+      begin
+        Result := true;
+        list.Add('<li>Die Datei "index.html" wurde nicht gefunden</li>');
+      end
     end;
+    list.Add('</ul>');
+    list.Add('</body>');
   end;
 
-  Result := TPath.Combine(GM.wwwHome, m_tc.CLID);
+begin
+  self.openStack(m_tc.CLID);
 
-  ForceDirectories(Result);
-  clearFiles( Result );
-  SaveImages(Result, m_style);
+  if hasError then begin
+    self.AddHtmlToStack(list.Text);
+  end else begin
 
-  list.Add('</ul>');
+    tf := m_style.Files.getFile('index.html');
+    PageProducer1.HTMLDoc.Text := tf.Text;
+    self.AddHtmlToStack(PageProducer1.Content);
 
-  list.Add('</body>');
-  if err then
-    list.SaveToFile(TPath.combine(Result, 'index.html'))
-  else
-    SaveToFile(TPath.combine(Result, 'index.html'));
+    SaveImages(m_path, m_style);
+  end;
 
+  clearFrameData;
+
+  self.showStack(web);
   web.Navigate('http://localhost:'+IntToStr(HttpMod.Port)+'/'+m_tc.CLID+'/index.html');
+
+  //clearFiles(m_path);
+
   list.Free;
 end;
 
