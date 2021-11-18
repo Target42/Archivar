@@ -135,7 +135,7 @@ var
 begin
   req     := TJSONObject.Create;
   JReplace(req, 'id',   id);
-  JReplace(req, 'type', typ);
+  JReplace(req, 'typ', typ);
 
   Result  := isLocked(req);
 
