@@ -29,6 +29,8 @@ type
     PEQryPE_NAME: TStringField;
     PEQryPE_VORNAME: TStringField;
     PEQryPE_DEPARTMENT: TStringField;
+    GetKeyQry: TFDQuery;
+    FDTransaction1: TFDTransaction;
     procedure DSServerModuleCreate(Sender: TObject);
   private
   private
@@ -45,6 +47,8 @@ type
 
     function getUserList : TJSONobject;
     function changeOnlineStatus(req: TJSONObject) : TJSONObject;
+
+    function getPublicKey( net : string; stamp : TDateTime ) : TStream;
   end;
 
 implementation
@@ -110,6 +114,31 @@ end;
 procedure TdsMisc.DSServerModuleCreate(Sender: TObject);
 begin
   m_Session := TDSSessionManager.GetThreadSession;
+end;
+
+function TdsMisc.getPublicKey(net : string; stamp: TDateTime): TStream;
+var
+  st : TStream;
+begin
+  Result := TMemoryStream.Create;
+
+  if net = '' then
+    net := m_Session.GetData('user');
+
+  GetKeyQry.ParamByName('name').AsString  := net;
+  GetKeyQry.ParamByName('da').AsDateTime  := stamp;
+
+  GetKeyQry.Open;
+  if not GetKeyQry.IsEmpty then begin
+    st := GetKeyQry.CreateBlobStream(GetKeyQry.FieldByName('PK_DATA'), bmRead);
+    Result.CopyFrom(st, -1);
+    st.Free;
+    Result.Position := 0;
+  end;
+  GetKeyQry.Close;
+
+  if GetKeyQry.Transaction.Active then
+    GetKeyQry.Transaction.Commit;
 end;
 
 function TdsMisc.getUserList: TJSONobject;

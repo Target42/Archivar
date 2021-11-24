@@ -137,4 +137,34 @@ object dsMisc: TdsMisc
       Size = 25
     end
   end
+  object GetKeyQry: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Transaction = FDTransaction1
+    SQL.Strings = (
+      'SELECT r.PE_ID, r.PK_ID, r.PK_START, r.PK_END, r.PK_DATA'
+      'FROM PK_PUBLIC_KEY r, pe_person b'
+      'where '
+      'upper(b.PE_NET) = upper(:name) and'
+      'r.PE_ID = b.PE_ID and'
+      ':da >= pk_start and '
+      ':da <= pk_end')
+    Left = 520
+    Top = 152
+    ParamData = <
+      item
+        Name = 'NAME'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'DA'
+        DataType = ftTimeStamp
+        ParamType = ptInput
+      end>
+  end
+  object FDTransaction1: TFDTransaction
+    Connection = DBMod.ArchivarConnection
+    Left = 584
+    Top = 152
+  end
 end
