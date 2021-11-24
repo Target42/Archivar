@@ -52,6 +52,8 @@ type
     procedure setRichEditProps( value : string );
 
     function  getValueList : TStringList;
+
+    procedure setAlign( value : string );
   public
 
     constructor create( owner : ITaskCtrl; name, typ : string; ctrl : Tcontrol ); overload;
@@ -300,6 +302,24 @@ begin
   m_owner := NIL;
 end;
 
+procedure TaskCtrlPropImpl.setAlign(value: string);
+var
+  al : TAlign;
+begin
+  al := Text2TAlign(value);
+
+  case al of
+    alNone:   ;
+    alTop:    m_ctrl.Top  := 1080;
+    alBottom: m_ctrl.Top  := 0;
+    alLeft:   m_ctrl.left := 1920;
+    alRight:  m_ctrl.Left := 0;
+    alClient: ;
+    alCustom: ;
+  end;
+  m_ctrl.Align := al;
+end;
+
 procedure TaskCtrlPropImpl.setComboBoxProps(value: string);
 begin
   if SameText(m_name, 'Items') and Assigned(m_ctrl) then
@@ -406,7 +426,7 @@ begin
   if      SameText(m_name, 'Enabled') then  m_ctrl.Enabled := Str2Bool(value)
 
   else if SameText(m_name, 'Visible') then  m_ctrl.visible := Str2Bool(value)
-  else if SameText(m_name, 'Align') then    m_ctrl.Align := Text2TAlign(value)
+  else if SameText(m_name, 'Align') then    setAlign(value)
   else if SameText(m_name, 'Required') then m_owner.Required := Str2Bool(value);
 
   if m_ctrl is TLabel then      setLabelProps(value);
