@@ -42,6 +42,7 @@ type
     QueryUser: TFDQuery;
     GRPEQry: TFDQuery;
     dsStammData: TDSServerClass;
+    dsPKI: TDSServerClass;
     procedure dsAdminGetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
     procedure ServiceStart(Sender: TService; var Started: Boolean);
@@ -95,6 +96,8 @@ type
       var PersistentClass: TPersistentClass);
     procedure dsStammDataGetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
+    procedure dsPKIGetClass(DSServerClass: TDSServerClass;
+      var PersistentClass: TPersistentClass);
   private
     const
       MaxUserNameLength = 25;
@@ -135,7 +138,7 @@ uses
   ds_taks, ds_file, ds_misc, ds_protocol, ds_image, ds_chapter,
   ds_taskEdit, ds_template, ds_taskView, ds_textblock, ds_fileCache, ds_epub,
   ds_meeting, System.Hash, u_json, ds_sitzung, m_hell, Grijjy.sysUtils, u_ini,
-  m_fileServer, ds_updater, ds_stamm;
+  m_fileServer, ds_updater, ds_stamm, ds_pki;
 
 procedure TServerContainer1.dsAdminGetClass(
   DSServerClass: TDSServerClass; var PersistentClass: TPersistentClass);
@@ -601,6 +604,12 @@ procedure TServerContainer1.dsPersonGetClass(DSServerClass: TDSServerClass;
   var PersistentClass: TPersistentClass);
 begin
   PersistentClass := ds_person.TdsPerson;
+end;
+
+procedure TServerContainer1.dsPKIGetClass(DSServerClass: TDSServerClass;
+  var PersistentClass: TPersistentClass);
+begin
+  PersistentClass := ds_pki.TdsPKI;
 end;
 
 procedure TServerContainer1.dsProtocolGetClass(DSServerClass: TDSServerClass;
