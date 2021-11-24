@@ -161,6 +161,8 @@ type
     Statistik1: TMenuItem;
     ac_to_import: TAction;
     Import1: TMenuItem;
+    ac_to_keys: TAction;
+    Schlssel1: TMenuItem;
     procedure ac_prg_closeExecute(Sender: TObject);
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure ac_prg_disconExecute(Sender: TObject);
@@ -199,6 +201,7 @@ type
     procedure ac_view_adminExecute(Sender: TObject);
     procedure ac_ad_tasktypeExecute(Sender: TObject);
     procedure ac_ad_filecacheExecute(Sender: TObject);
+    procedure ac_to_keysExecute(Sender: TObject);
   private
     m_noStatChange : boolean;
 
@@ -229,7 +232,7 @@ uses
   f_textblock_edit, f_testblock_list, f_webserver_files, f_epub_mngr,
   f_meeting_new, f_meeting_select, f_meeting_proto, f_login,
   system.UITypes, f_protocol_sec, u_onlineUser, f_doMeeting, f_task_type,
-  f_flieCacheForm;
+  f_flieCacheForm, f_keys;
 
 {$R *.dfm}
 
@@ -629,6 +632,13 @@ begin
   TextBlockEditForm.free;
 end;
 
+procedure TMainForm.ac_to_keysExecute(Sender: TObject);
+begin
+  Application.CreateForm(TKeysform, Keysform);
+  Keysform.ShowModal;
+  Keysform.free;
+end;
+
 procedure TMainForm.ac_view_adminExecute(Sender: TObject);
 begin
   ac_view_admin.Checked := not ac_view_admin.Checked;
@@ -700,6 +710,7 @@ begin
     msgMeetingEnd     : showAdmin;
     msgRetryLogin     : ac_prg_connect.Execute;
     msgShowFileCache  : ac_ad_filecache.Execute;
+    msgNeedKeys       : ac_to_keys.Execute;
     else
       Handled := false;
   end;

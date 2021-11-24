@@ -39,11 +39,12 @@ type
 
   public
     property BinaryKeys     : boolean read FBinaryKeys        write FBinaryKeys;
+
     property Password       : string  read FPassword          write FPassword;
     property PrivateKeyFile : string  read FPrivateKeyFile    write FPrivateKeyFile;
     property PublicKeyFile  : string  read FPublicKeyFile     write FPublicKeyFile;
 
-    function generateKeys   : boolean;
+    function generateKeys(hourglass : boolean )   : boolean;
 
     function saveKeys       : boolean;
     function loadKeys       : boolean;
@@ -68,7 +69,8 @@ var
 implementation
 
 uses
-  System.IOUtils, uTPLb_StreamUtils, f_main, uTPLb_Constants, System.StrUtils;
+  System.IOUtils, uTPLb_StreamUtils, f_main, uTPLb_Constants, System.StrUtils,
+  Vcl.Forms, system.UITypes;
 
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
@@ -127,9 +129,15 @@ begin
   end;
 end;
 
-function TCryptMod.generateKeys: boolean;
+function TCryptMod.generateKeys(hourglass : boolean ): boolean;
 begin
+  if hourglass then
+    Screen.Cursor := crHourGlass;
+
   Result := Signatory1.GenerateKeys;
+
+  if hourglass then
+    Screen.Cursor := crDefault
 end;
 
 function TCryptMod.load(part: TKeyStoragePart): boolean;
@@ -139,10 +147,13 @@ var
   plain : TStream;
   st    : TStream;
 begin
+  Result := false;
   case part of
     partPublic  : fname := FPublicKeyFile;
     partPrivate : fname := FPrivateKeyFile;
   end;
+
+  if not FileExists(fname) then  exit;
 
   mem := TMemoryStream.Create;
   try
@@ -242,7 +253,7 @@ begin
     end;
 
     if not FBinaryKeys then begin
-      st  := TFile.OpenWrite(fname);
+      st  := TFileStream.Create( fname, fmCreate + fmShareDenyNone);
       saveToStream(mem, st);
       st.Free;
     end else begin

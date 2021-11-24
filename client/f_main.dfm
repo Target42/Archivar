@@ -435,6 +435,9 @@
       object Wiki1: TMenuItem
         Action = ac_to_wiki
       end
+      object Schlssel1: TMenuItem
+        Action = ac_to_keys
+      end
     end
     object Admin1: TMenuItem
       Caption = 'Admin'
@@ -789,6 +792,11 @@
     object ac_to_import: TAction
       Category = 'Tools'
       Caption = 'Import'
+    end
+    object ac_to_keys: TAction
+      Category = 'Tools'
+      Caption = 'Schl'#252'ssel'
+      OnExecute = ac_to_keysExecute
     end
   end
   object ApplicationEvents1: TApplicationEvents

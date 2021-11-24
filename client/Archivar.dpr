@@ -187,7 +187,8 @@ uses
   fr_log in 'Task\fr_log.pas' {LogFrame: TFrame},
   f_log_entry in 'Task\f_log_entry.pas' {LogEntryform},
   f_taglist in 'TextBlock\f_taglist.pas' {TagListForm},
-  m_crypt in '..\misc\m_crypt.pas' {CryptMod: TDataModule};
+  m_crypt in '..\misc\m_crypt.pas' {CryptMod: TDataModule},
+  f_keys in 'crypt\f_keys.pas' {Keysform};
 
 {$R *.res}
 
@@ -209,6 +210,5 @@ begin
   Application.CreateForm(TFileCacheMod, FileCacheMod);
   Application.CreateForm(TCryptMod, CryptMod);
   Application.CreateForm(TMainForm, MainForm);
-
   Application.Run;
 end.

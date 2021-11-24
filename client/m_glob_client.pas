@@ -34,6 +34,7 @@ const
   msgMeetingEnd     = WMUSER + 15;
   msgRetryLogin     = WMUSER + 16;
   msgShowFileCache  = WMUSER + 17;
+  msgNeedKeys       = WMUSER + 18;
 
 type
   TGM = class(TDataModule)
@@ -179,7 +180,7 @@ uses
   System.UITypes, system.IOUtils, FireDAC.Stan.Storagebin,
   System.Win.ComObj, m_WindowHandler, m_BookMarkHandler, IdHashMessageDigest,
   Vcl.Graphics, u_PersonenListeImpl, u_PersonImpl, m_cache, f_login, u_kategorie,
-  u_onlineUser, m_http, f_doMeeting, u_eventHandler, u_Konst, IdStack, m_fileCache;
+  u_onlineUser, m_http, f_doMeeting, u_eventHandler, u_Konst, IdStack, m_fileCache, m_crypt;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -851,6 +852,12 @@ begin
 
   PostMessage( Application.MainFormHandle, msgLoadLogo,       0, 0 );
   PostMessage( Application.MainFormHandle, msgUpdateMeetings, 0, 0 );
+
+  CryptMod.PrivateKeyFile := TPath.Combine(Home, 'key.pri');
+  CryptMod.PublicKeyFile  := TPath.Combine(Home, 'key.pub');
+
+  if not CryptMod.loadKeys then
+    PostMessage( Application.MainFormHandle, msgNeedKeys, 0, 0 );
 end;
 
 procedure TGM.SQLConnection1AfterDisconnect(Sender: TObject);
