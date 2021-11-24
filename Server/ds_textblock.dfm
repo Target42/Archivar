@@ -42,4 +42,18 @@ object dsTextBlock: TdsTextBlock
         ParamType = ptInput
       end>
   end
+  object ListTagQry: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Transaction = FDTransaction1
+    SQL.Strings = (
+      'SELECT distinct r.TB_TAGS'
+      'FROM TB_TEXT r')
+    Left = 248
+    Top = 96
+  end
+  object FDTransaction1: TFDTransaction
+    Connection = DBMod.ArchivarConnection
+    Left = 328
+    Top = 96
+  end
 end

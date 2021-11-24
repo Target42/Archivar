@@ -8,7 +8,8 @@ uses
   Data.DB, IBX.IBCustomDataSet, IBX.IBTable, IBX.IBDatabase, IBX.IBQuery,
   FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
-  FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.Client, FireDAC.Comp.DataSet;
+  FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.Client, FireDAC.Comp.DataSet,
+  System.JSON;
 
 type
   [TRoleAuth('user,admin', 'download')]
@@ -18,20 +19,56 @@ type
     IBTransaction1: TFDTransaction;
     TB: TFDTable;
     DelQry: TFDQuery;
+    ListTagQry: TFDQuery;
+    FDTransaction1: TFDTransaction;
   private
     { Private-Deklarationen }
   public
-    { Public-Deklarationen }
+    function getTagList : TJSONObject;
   end;
 
 implementation
 
 uses
-  m_db;
+  m_db, u_json;
 
 {%CLASSGROUP 'System.Classes.TPersistent'}
 
 {$R *.dfm}
+
+{ TdsTextBlock }
+
+function TdsTextBlock.getTagList: TJSONObject;
+var
+  split   : TSTringList;
+  list    : TStringList;
+  inx, i  : integer;
+begin
+  Result := TJSONObject.Create;
+  split  := TSTringList.Create;
+  list   := TStringList.Create;
+
+  ListTagQry.Open;
+  while not ListTagQry.Eof do begin
+    split.DelimitedText := ListTagQry.FieldByName('TB_TAGS').AsString;
+    for i := 0 to pred(split.Count) do begin
+      inx := list.IndexOf(split[i]);
+      if inx = -1 then
+        list.Add(split[i]);
+    end;
+    ListTagQry.Next;
+  end;
+  ListTagQry.Close;
+
+  list.Sort;
+
+  setText(Result, 'tags', list);
+  list.Free;
+  split.Free;
+
+  if FDTransaction1.Active then
+    FDTransaction1.Commit;
+end;
 
 end.
 
