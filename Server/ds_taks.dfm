@@ -30,8 +30,8 @@ object dsTask: TdsTask
   object TaskTableSrc: TDataSetProvider
     DataSet = TaskTable
     UpdateMode = upWhereKeyOnly
-    Left = 912
-    Top = 128
+    Left = 840
+    Top = 152
   end
   object IBTransaction2: TFDTransaction
     Connection = DBMod.ArchivarConnection
@@ -41,11 +41,11 @@ object dsTask: TdsTask
   object TaskTable: TFDTable
     ObjectView = False
     Connection = DBMod.ArchivarConnection
-    UpdateTransaction = IBTransaction2
+    Transaction = IBTransaction2
     UpdateOptions.UpdateTableName = 'TA_TASK'
     TableName = 'TA_TASK'
-    Left = 912
-    Top = 80
+    Left = 840
+    Top = 96
   end
   object DeleteTrans: TFDTransaction
     Connection = DBMod.ArchivarConnection
@@ -253,6 +253,7 @@ object dsTask: TdsTask
   end
   object TaskTab: TFDTable
     ObjectView = False
+    IndexFieldNames = 'TA_ID'
     Connection = DBMod.ArchivarConnection
     Transaction = IBTransaction1
     UpdateOptions.UpdateTableName = 'TA_TASK'
@@ -356,5 +357,20 @@ object dsTask: TdsTask
         DataType = ftInteger
         ParamType = ptInput
       end>
+  end
+  object TaskLogTab: TFDTable
+    BeforePost = TaskLogTabBeforePost
+    IndexFieldNames = 'LT_ID'
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction2
+    UpdateOptions.UpdateTableName = 'LT_TASK_LOG'
+    TableName = 'LT_TASK_LOG'
+    Left = 920
+    Top = 88
+  end
+  object TaskLogSrc: TDataSetProvider
+    DataSet = TaskLogTab
+    Left = 920
+    Top = 152
   end
 end

@@ -44,6 +44,9 @@ type
     GremiumQry: TFDQuery;
     SetStatusQry: TFDQuery;
     Templates: TFDQuery;
+    TaskLogTab: TFDTable;
+    TaskLogSrc: TDataSetProvider;
+    procedure TaskLogTabBeforePost(DataSet: TDataSet);
   private
     { Private declarations }
 
@@ -65,7 +68,7 @@ implementation
 
 uses
   Grijjy.CloudLogging, m_db, u_json, Variants, u_Konst, m_lockMod, ServerContainerUnit1, m_glob_server,
-  u_berTypes;
+  u_berTypes, Datasnap.DSSession;
 
 {%CLASSGROUP 'System.Classes.TPersistent'}
 
@@ -315,6 +318,19 @@ function TdsTask.TaskInfo(data: TJSONObject): TJSONObject;
 begin
   Result := NIL;
   GrijjyLog.Send('not supported: TaskInfo', TgoLogLevel.Error);
+end;
+
+procedure TdsTask.TaskLogTabBeforePost(DataSet: TDataSet);
+var
+  session : TDSSession;
+begin
+  Session := TDSSessionManager.GetThreadSession;
+
+  if DataSet.FieldByName('LT_STAMP').IsNull then
+    DataSet.FieldByName('LT_STAMP').AsDateTime := now;
+
+  if DataSet.FieldByName('LT_NAME').IsNull then
+    DataSet.FieldByName('LT_NAME').AsString := session.GetData('user');
 end;
 
 end.
