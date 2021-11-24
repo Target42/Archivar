@@ -49,7 +49,8 @@ uses
   u_ini in 'u_ini.pas',
   u_vote in 'hell\u_vote.pas',
   ds_stamm in 'ds_stamm.pas' {StammMod: TDSServerModule},
-  u_broadcastMsg in 'u_broadcastMsg.pas';
+  u_broadcastMsg in 'u_broadcastMsg.pas',
+  ds_pki in 'ds_pki.pas' {dsPKI: TDSServerModule};
 
 var
   MyDummyBoolean  : Boolean;

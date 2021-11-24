@@ -21,7 +21,10 @@ type
   private
     m_noTags : boolean;
     procedure FilterContent;
+    function GetLogFilter: string;
+    procedure SetLogFilter(const Value: string);
   public
+    property TagFilter: string read GetLogFilter write SetLogFilter;
     procedure init( noTags : boolean = true);
 
     function getBlock : IXMLblock;
@@ -29,6 +32,8 @@ type
     function getContent( var text : string ) : boolean;
 
     procedure release;
+
+
   end;
 
 implementation
@@ -133,6 +138,11 @@ begin
   end;
 end;
 
+function TTextBlockFrame.GetLogFilter: string;
+begin
+  Result := Trim(LabeledEdit1.Text);
+end;
+
 procedure TTextBlockFrame.init( noTags : boolean);
 var
   col : TListColumn;
@@ -165,6 +175,12 @@ end;
 procedure TTextBlockFrame.release;
 begin
   TBTab.Close;
+end;
+
+procedure TTextBlockFrame.SetLogFilter(const Value: string);
+begin
+  LabeledEdit1.Text := Value;
+  FilterContent;
 end;
 
 end.

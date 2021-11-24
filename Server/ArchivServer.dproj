@@ -223,6 +223,11 @@
             <DesignClass>TDSServerModule</DesignClass>
         </DCCReference>
         <DCCReference Include="u_broadcastMsg.pas"/>
+        <DCCReference Include="ds_pki.pas">
+            <Form>dsPKI</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDSServerModule</DesignClass>
+        </DCCReference>
         <RcItem Include="system.json">
             <ContainerId>ResourceItem</ContainerId>
             <ResourceType>RCDATA</ResourceType>

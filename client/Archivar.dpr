@@ -183,7 +183,11 @@ uses
   f_task_type in 'Task\f_task_type.pas' {TaskTypeForm},
   m_fileCache in 'File\m_fileCache.pas' {FileCacheMod: TDataModule},
   f_flieCacheForm in 'File\f_flieCacheForm.pas' {FileCacheForm},
-  f_fileuploadform in 'File\f_fileuploadform.pas' {FileUploadForm};
+  f_fileuploadform in 'File\f_fileuploadform.pas' {FileUploadForm},
+  fr_log in 'Task\fr_log.pas' {LogFrame: TFrame},
+  f_log_entry in 'Task\f_log_entry.pas' {LogEntryform},
+  f_taglist in 'TextBlock\f_taglist.pas' {TagListForm},
+  m_crypt in '..\misc\m_crypt.pas' {CryptMod: TDataModule};
 
 {$R *.res}
 
@@ -203,6 +207,8 @@ begin
   Application.CreateForm(TBookMarkHandler, BookMarkHandler);
   Application.CreateForm(TTemplateCacheMod, TemplateCacheMod);
   Application.CreateForm(TFileCacheMod, FileCacheMod);
+  Application.CreateForm(TCryptMod, CryptMod);
   Application.CreateForm(TMainForm, MainForm);
+
   Application.Run;
 end.

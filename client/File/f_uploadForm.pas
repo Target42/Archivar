@@ -18,14 +18,12 @@ type
     DataTabID: TIntegerField;
     DataTabFNAME: TStringField;
     DataSource1: TDataSource;
-    Panel1: TPanel;
     DataTabFD_ID: TIntegerField;
     DataTabFD_TEXT: TStringField;
     DeleteTimesTab: TFDMemTable;
     DeleteTimesTabFD_ID: TIntegerField;
     DeleteTimesTabFD_NAME: TStringField;
     DeleteTimesTabFD_MONATE: TIntegerField;
-    Button1: TButton;
     DataTabUploaded: TBooleanField;
     procedure FormCreate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
@@ -70,7 +68,7 @@ begin
       try
         id := DataTab.FieldByName('ID').AsInteger;
         try
-        fs := TFileStream.Create( m_list[id], fmOpenRead + fmShareDenyWrite);
+          fs := TFileStream.Create( m_list[id], fmOpenRead + fmShareDenyWrite);
         except
           fs := NIL;
         end;

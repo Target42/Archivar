@@ -33,11 +33,9 @@ object UploadForm: TUploadForm
     inherited Panel1: TPanel
       Width = 635
       ExplicitWidth = 635
-      inherited AbortBtn: TBitBtn
-        Visible = False
-      end
       inherited OKBtn: TBitBtn
         Left = 547
+        OnClick = Button1Click
         ExplicitLeft = 547
       end
     end
@@ -46,7 +44,7 @@ object UploadForm: TUploadForm
     Left = 0
     Top = 0
     Width = 635
-    Height = 198
+    Height = 239
     Align = alClient
     DataSource = DataSource1
     TabOrder = 1
@@ -75,26 +73,6 @@ object UploadForm: TUploadForm
         FieldName = 'Uploaded'
         Visible = True
       end>
-  end
-  object Panel1: TPanel
-    Left = 0
-    Top = 198
-    Width = 635
-    Height = 41
-    Align = alBottom
-    BevelOuter = bvNone
-    Caption = 'Panel1'
-    ShowCaption = False
-    TabOrder = 2
-    object Button1: TButton
-      Left = 16
-      Top = 6
-      Width = 75
-      Height = 25
-      Caption = 'Upload'
-      TabOrder = 0
-      OnClick = Button1Click
-    end
   end
   object DataTab: TFDMemTable
     FieldDefs = <>
