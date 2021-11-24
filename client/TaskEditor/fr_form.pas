@@ -11,7 +11,6 @@ type
   TFormFrame = class(TFrame)
     ScrollBox1: TScrollBox;
   private
-    m_loader : TTaskLoaderMod;
     m_form : ITaskForm;
 
     procedure setForm( value : ITaskForm);
@@ -28,6 +27,8 @@ type
     procedure releaseData;
 
     function getHeight : integer;
+
+    procedure resizeForm;
 
     procedure prepare;
     procedure release;
@@ -58,36 +59,58 @@ end;
 
 function TFormFrame.loadByID(taid: integer): boolean;
 var
-  loader : TTaskForm2XML;
+  FormLoader : TTaskForm2XML;
+  taskLoader : TTaskLoaderMod;
 begin
   Result := false;
 
-  if m_loader.load(taid) then
+  taskLoader := TTaskLoaderMod.Create(self);
+  if taskLoader.load(taid) then
   begin
-    m_form := m_loader.BuildForm(ScrollBox1);
+    m_form := taskLoader.BuildForm(ScrollBox1);
 
-    loader := TTaskForm2XML.create;
-    loader.fillData( m_form, m_loader.TaskData);
-    loader.Free;
+    FormLoader := TTaskForm2XML.create;
+    FormLoader.fillData( m_form, taskLoader.TaskData);
+    FormLoader.Free;
 
     Result := Assigned(m_form);
   end;
+  FreeAndNil(taskLoader);
 end;
 
 procedure TFormFrame.prepare;
 begin
-  m_loader := TTaskLoaderMod.Create(self);
   m_form  := NIL;
 end;
 
 procedure TFormFrame.release;
 begin
-  m_loader.Free;
   m_form  := NIL;
 end;
 
 procedure TFormFrame.releaseData;
 begin
+end;
+
+procedure TFormFrame.resizeForm;
+var
+  i : integer;
+  max : integer;
+  m   : integeR;
+  ctrl : TControl;
+  dif   : integer;
+begin
+  max := 0;
+  for i := 0 to pred(ScrollBox1.ComponentCount) do
+  begin
+    ctrl := ScrollBox1.Components[i] as TControl;
+    m := ctrl.Top + ctrl.Height;
+    if m > max then
+      max := m;
+  end;
+  dif := max - ScrollBox1.ClientHeight;
+  if dif > 0 then
+    self.ClientHeight := self.ClientHeight + dif;
 end;
 
 procedure TFormFrame.setForm(value: ITaskForm);
