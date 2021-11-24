@@ -104,10 +104,6 @@
     object TabSheet2: TTabSheet
       Caption = 'Lesezeichen'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       inline BookmarkFrame1: TBookmarkFrame
         Left = 0
         Top = 0
@@ -418,6 +414,27 @@
     object Tools1: TMenuItem
       Caption = 'Tools'
       GroupIndex = 200
+      object Disput1: TMenuItem
+        Action = ac_to_disput
+      end
+      object Dokumentenmanagement1: TMenuItem
+        Action = ac_to_dms
+      end
+      object FAQ1: TMenuItem
+        Action = ac_to_faq
+      end
+      object Import1: TMenuItem
+        Action = ac_to_import
+      end
+      object Statistik1: TMenuItem
+        Action = ac_to_stat
+      end
+      object agebuch1: TMenuItem
+        Action = ac_to_dairy
+      end
+      object Wiki1: TMenuItem
+        Action = ac_to_wiki
+      end
     end
     object Admin1: TMenuItem
       Caption = 'Admin'
@@ -744,6 +761,34 @@
       Category = 'Admin'
       Caption = 'Dateicache'
       OnExecute = ac_ad_filecacheExecute
+    end
+    object ac_to_dairy: TAction
+      Category = 'Tools'
+      Caption = 'Tagebuch'
+    end
+    object ac_to_dms: TAction
+      Category = 'Tools'
+      Caption = 'Dokumentenmanagement'
+    end
+    object ac_to_wiki: TAction
+      Category = 'Tools'
+      Caption = 'Wiki'
+    end
+    object ac_to_faq: TAction
+      Category = 'Tools'
+      Caption = 'FAQ'
+    end
+    object ac_to_disput: TAction
+      Category = 'Tools'
+      Caption = 'Disput'
+    end
+    object ac_to_stat: TAction
+      Category = 'Tools'
+      Caption = 'Statistik'
+    end
+    object ac_to_import: TAction
+      Category = 'Tools'
+      Caption = 'Import'
     end
   end
   object ApplicationEvents1: TApplicationEvents
