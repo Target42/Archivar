@@ -17,6 +17,7 @@ type
 
     function download( fname : string ; st : TStream ) : boolean;
     function downloadMem( st : TStream ) : TMemoryStream;
+    function downloadInto( src, dest : TStream ) : boolean;
     function CopyStream( fromSt, toSt : TStream ) : integer;
     function saveToTempFile(st : TStream ) : string;
 
@@ -92,6 +93,25 @@ begin
     FreeAndNil(fout);
   except
     Result := false;
+  end;
+  SetLength(Buffer, 0);
+end;
+
+function TGM.downloadInto(src, dest: TStream): boolean;
+const
+  BSize = 1024 * 1024;
+var bytes : integer;
+   buffer : array  of byte;
+begin
+  try
+    SetLength(Buffer, BSize);
+    repeat
+      bytes := src.Read( buffer[0], BSize);
+      dest.Write(buffer[0], bytes)
+    until bytes <> BSize;
+    Result := true;
+  except
+    Result := false
   end;
   SetLength(Buffer, 0);
 end;
