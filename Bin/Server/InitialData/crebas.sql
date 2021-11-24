@@ -1,7 +1,7 @@
 /* ============================================================ */
 /*   Database name:  MODEL_2                                    */
 /*   DBMS name:      InterBase                                  */
-/*   Created on:     02.11.2021  19:42                          */
+/*   Created on:     24.11.2021  11:44                          */
 /* ============================================================ */
 
 create generator gen_be_id;
@@ -15,9 +15,11 @@ create generator gen_fd_id;
 create generator gen_gr_id;
 create generator gen_hc_id;
 create generator gen_ln_id;
+create generator gen_lt_id;
 create generator gen_ma_id;
 create generator gen_pi_id;
 create generator gen_pe_id;
+create generator gen_pk_id;
 create generator gen_pr_id;
 create generator gen_ta_id;
 create generator gen_tb_id;
@@ -498,6 +500,37 @@ create table FL_FILE_LOCK
     constraint PK_FL_FILE_LOCK primary key (FC_ID)
 );
 
+/* ============================================================ */
+/*   Table: LT_TASK_LOG                                         */
+/* ============================================================ */
+create table LT_TASK_LOG
+(
+    LT_ID                           INTEGER                not null,
+    TA_ID                           INTEGER                        ,
+    LT_STAMP                        TIMESTAMP                      ,
+    LT_NAME                         VARCHAR(200)                   ,
+    LT_REM                          BLOB                           ,
+    constraint PK_LT_TASK_LOG primary key (LT_ID)
+);
+
+/* ============================================================ */
+/*   Index: LT_TASK_LOG                                         */
+/* ============================================================ */
+create ASC index LT_TASK_LOG on LT_TASK_LOG (TA_ID, LT_STAMP);
+
+/* ============================================================ */
+/*   Table: PK_PUBLIC_KEY                                       */
+/* ============================================================ */
+create table PK_PUBLIC_KEY
+(
+    PE_ID                           INTEGER                not null,
+    PK_ID                           INTEGER                        ,
+    PK_START                        TIMESTAMP                      ,
+    PK_END                          TIMESTAMP                      ,
+    PK_DATA                         BLOB                           ,
+    constraint PK_PK_PUBLIC_KEY primary key (PE_ID)
+);
+
 alter table PR_PROTOKOL
     add constraint FK_REF_108 foreign key  (GR_ID)
        references GR_GREMIUM;
@@ -580,6 +613,14 @@ alter table FL_FILE_LOCK
 
 alter table FL_FILE_LOCK
     add constraint FK_REF_7935 foreign key  (PE_ID)
+       references PE_PERSON;
+
+alter table LT_TASK_LOG
+    add constraint FK_REF_8996 foreign key  (TA_ID)
+       references TA_TASK;
+
+alter table PK_PUBLIC_KEY
+    add constraint FK_REF_9279 foreign key  (PE_ID)
        references PE_PERSON;
 
 
