@@ -175,6 +175,8 @@ function TTaskFileImpl.save(path: string): boolean;
 var
   fname : string;
 begin
+  Result := false;
+
   if m_readOnly then  exit;
 
   fname := TPath.Combine( path, m_name);
@@ -183,7 +185,7 @@ begin
     m_mem.SaveToFile(fname);
     Result := true;
   except
-    Result := false;
+
   end;
 end;
 
