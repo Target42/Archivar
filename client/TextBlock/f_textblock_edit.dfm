@@ -77,6 +77,15 @@ object TextBlockEditForm: TTextBlockEditForm
       Height = 13
       Caption = 'Tags'
     end
+    object SpeedButton1: TSpeedButton
+      Left = 599
+      Top = 68
+      Width = 23
+      Height = 22
+      Anchors = [akLeft, akTop, akRight]
+      Caption = '...'
+      OnClick = SpeedButton1Click
+    end
     object LabeledEdit1: TDBEdit
       Left = 16
       Top = 23
@@ -89,7 +98,7 @@ object TextBlockEditForm: TTextBlockEditForm
     object LabeledEdit2: TDBEdit
       Left = 16
       Top = 68
-      Width = 606
+      Width = 569
       Height = 21
       Anchors = [akLeft, akTop, akRight]
       DataField = 'TB_TAGS'
@@ -105,16 +114,17 @@ object TextBlockEditForm: TTextBlockEditForm
     Height = 161
     Align = alClient
     TabOrder = 2
-    ExplicitTop = 113
-    ExplicitWidth = 635
-    ExplicitHeight = 167
+    ExplicitLeft = 3
+    ExplicitTop = 116
+    ExplicitWidth = 629
+    ExplicitHeight = 161
     inherited RE: TRichEdit
       Width = 629
       Height = 161
       PopupMenu = PopupMenu1
       OnKeyPress = EditFrame1REKeyPress
-      ExplicitWidth = 635
-      ExplicitHeight = 167
+      ExplicitWidth = 629
+      ExplicitHeight = 161
     end
   end
   object GroupBox1: TGroupBox
@@ -241,7 +251,7 @@ object TextBlockEditForm: TTextBlockEditForm
       object btnEdit: TBitBtn
         Left = 104
         Top = 96
-        Width = 75
+        Width = 90
         Height = 25
         Caption = 'Bearbeiten'
         Glyph.Data = {
@@ -283,9 +293,9 @@ object TextBlockEditForm: TTextBlockEditForm
         OnClick = btnEditClick
       end
       object btnSave: TBitBtn
-        Left = 200
+        Left = 216
         Top = 96
-        Width = 75
+        Width = 89
         Height = 25
         Caption = 'Speichern'
         Glyph.Data = {
@@ -421,10 +431,6 @@ object TextBlockEditForm: TTextBlockEditForm
       TabOrder = 1
       ViewStyle = vsReport
       OnDblClick = LVDblClick
-      ExplicitLeft = 2
-      ExplicitTop = 15
-      ExplicitWidth = 631
-      ExplicitHeight = 121
     end
   end
   object GroupBox2: TGroupBox

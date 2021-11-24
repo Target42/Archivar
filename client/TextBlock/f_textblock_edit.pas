@@ -38,6 +38,7 @@ type
     BitBtn1: TBitBtn;
     LabeledEdit6: TComboBox;
     Label5: TLabel;
+    SpeedButton1: TSpeedButton;
     procedure btnNeuClick(Sender: TObject);
     procedure btnEditClick(Sender: TObject);
     procedure btnSaveClick(Sender: TObject);
@@ -52,6 +53,7 @@ type
     procedure Variableeinfgen1Click(Sender: TObject);
     procedure PopupMenu1Popup(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
+    procedure SpeedButton1Click(Sender: TObject);
   private
     m_id        : integeR;
     x_block     : IXMLBlock;
@@ -74,7 +76,7 @@ implementation
 
 uses
   ClipBrd, m_glob_client, Xml.XMLDoc, system.UITypes, f_textblock_param,
-  f_textblock_preview;
+  f_textblock_preview, f_taglist;
 
 
 procedure TTextBlockEditForm.BaseFrame1AbortBtnClick(Sender: TObject);
@@ -195,6 +197,7 @@ procedure TTextBlockEditForm.FormCreate(Sender: TObject);
 begin
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
   Application.CreateForm(TTextBlockPreviewForm, TextBlockPreviewForm);
+  Application.CreateForm(TTagListForm, TagListForm);
 end;
 
 procedure TTextBlockEditForm.FormDestroy(Sender: TObject);
@@ -207,6 +210,8 @@ begin
       TBtab.CancelUpdates;
   end;
   TextBlockPreviewForm.free;
+
+  TagListForm.free;
 end;
 
 procedure TTextBlockEditForm.loadXML;
@@ -317,6 +322,13 @@ begin
     m_modified := true;
   end;
 
+end;
+
+procedure TTextBlockEditForm.SpeedButton1Click(Sender: TObject);
+begin
+  if TagListForm.ShowModal = mrOk then begin
+    LabeledEdit2.Text := LabeledEdit2.Text + ' '+ TagListForm.Selected;
+  end;
 end;
 
 procedure TTextBlockEditForm.TBtabBeforePost(DataSet: TDataSet);
