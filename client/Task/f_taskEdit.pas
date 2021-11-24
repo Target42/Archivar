@@ -8,7 +8,7 @@ uses
   Vcl.ActnList, Vcl.Menus, i_taskEdit, Data.DB, Datasnap.DBClient,
   Datasnap.DSConnect, JvExMask, JvToolEdit, JvMaskEdit, JvCheckedMaskEdit,
   JvDatePickerEdit, JvDBDatePickerEdit, Vcl.StdCtrls, Vcl.Mask, Vcl.DBCtrls,
-  Vcl.OleCtrls, SHDocVw, JvExStdCtrls, JvCombobox, JvColorCombo;
+  Vcl.OleCtrls, SHDocVw, JvExStdCtrls, JvCombobox, JvColorCombo, fr_form, fr_log;
 
 type
   TTaskEditForm = class(TForm)
@@ -50,7 +50,6 @@ type
     PageControl2: TPageControl;
     TabSheet3: TTabSheet;
     TabSheet4: TTabSheet;
-    ScrollBox1: TScrollBox;
     WebBrowser1: TWebBrowser;
     ac_refresh: TAction;
     N2: TMenuItem;
@@ -79,6 +78,10 @@ type
     TaskTabTA_REM: TStringField;
     TaskTabTA_COLOR: TIntegerField;
     TaskTabTA_DELETED: TStringField;
+    FormFrame1: TFormFrame;
+    TabSheet5: TTabSheet;
+    LogTab: TClientDataSet;
+    LogFrame1: TLogFrame;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -229,14 +232,16 @@ begin
 
 end;
 
+
 procedure TTaskEditForm.cancel;
 begin
-    TaskTab.Cancel;
+  TaskTab.Cancel;
+  LogTab.Cancel;
 end;
 
 function TTaskEditForm.changed: boolean;
 begin
-  Result := m_changed or TaskTab.Modified;
+  Result := m_changed or TaskTab.Modified or TaskTab.Modified;
   if not Result then
   begin
     if Assigned(m_form) then
@@ -286,6 +291,7 @@ begin
                      mtConfirmation, [mbYes, mbNo, mbCancel], 0) of
       mrYes :
       begin
+        LogFrame1.AddLogEntry(m_ta_id);
         save;
         CanClose := true;
       end;
@@ -304,6 +310,8 @@ procedure TTaskEditForm.FormCreate(Sender: TObject);
 var
   i : integer;
 begin
+  FormFrame1.prepare;
+  LogFrame1.prepare;
   PageControl1.ActivePage := TabSheet1;
   PageControl2.ActivePage := TabSheet3;
 
@@ -325,6 +333,8 @@ begin
     GM.UnLockDocument(m_ta_id, integer(ltTask));
 
   FileFrame1.release;
+  FormFrame1.release;
+  LogFrame1.release;
 
   if Assigned(m_tc) then
     m_tc.release;
@@ -378,9 +388,7 @@ begin
 
      m_form  := m_tc.Task.getMainForm;
      if Assigned(m_form) then begin
-        m_form.Base.Control := ScrollBox1;
-        m_form.Base.build;
-        m_form.Base.clearContent(true);
+       FormFrame1.TaskForm := m_form;
      end;
   end;
 
@@ -466,6 +474,8 @@ begin
     m_tc.release;
   m_tc := NIL;
 
+  LogTab.Close;
+
   TaskTab.Close;
   TaskTab.Open;
 
@@ -474,6 +484,11 @@ begin
     TaskTab.Close;
     exit;
   end;
+
+  LogTab.Filter := 'TA_ID = '+IntToStr(m_ta_id);
+  LogTab.Filtered := true;
+  LogTab.Open;
+  LogFrame1.updateData(LogTab);
 
   JvColorComboBox1.ColorValue := TColor(TaskTab.FieldByName('TA_COLOR').AsInteger);
 
@@ -520,24 +535,8 @@ begin
 end;
 
 procedure TTaskEditForm.resizeForm;
-var
-  i : integer;
-  max : integer;
-  m   : integeR;
-  ctrl : TControl;
-  dif   : integer;
 begin
-  max := 0;
-  for i := 0 to pred(ScrollBox1.ComponentCount) do
-  begin
-    ctrl := ScrollBox1.Components[i] as TControl;
-    m := ctrl.Top + ctrl.Height;
-    if m > max then
-      max := m;
-  end;
-  dif := max - ScrollBox1.ClientHeight;
-  if dif > 0 then
-    self.ClientHeight := self.ClientHeight + dif;
+  FormFrame1.resizeForm;
   Self.Position := poOwnerFormCenter;
 end;
 
@@ -578,6 +577,9 @@ begin
   if TaskTab.UpdatesPending then
     TaskTab.ApplyUpdates(-1);
 
+  if LogTab.UpdatesPending then
+    LogTab.ApplyUpdates(-1);
+
   m_changed := false;
   if Assigned(m_form) then
     m_form.Changed := false;
@@ -608,6 +610,7 @@ begin
   ac_refresh.Enabled          := m_ro;
 
   GroupBox1.Enabled           := not m_ro;
+  LogFrame1.Enabled           := not m_ro;
 
   TaskTab.ReadOnly  := m_ro;
 

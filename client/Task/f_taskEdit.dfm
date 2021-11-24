@@ -45,7 +45,7 @@ object TaskEditForm: TTaskEditForm
     Top = 0
     Width = 725
     Height = 420
-    ActivePage = TabSheet1
+    ActivePage = TabSheet5
     Align = alClient
     TabOrder = 1
     object TabSheet1: TTabSheet
@@ -161,7 +161,7 @@ object TaskEditForm: TTaskEditForm
           DataSource = TaskSrc
           Enabled = False
           ReadOnly = True
-          TabOrder = 3
+          TabOrder = 4
           OnKeyPress = DBEdit1KeyPress
         end
         object DBEdit4: TDBEdit
@@ -172,7 +172,7 @@ object TaskEditForm: TTaskEditForm
           DataField = 'TA_REST'
           DataSource = TaskSrc
           ReadOnly = True
-          TabOrder = 4
+          TabOrder = 3
         end
         object ComboBox1: TComboBox
           Left = 213
@@ -199,7 +199,7 @@ object TaskEditForm: TTaskEditForm
           Height = 21
           DataField = 'TA_REM'
           DataSource = TaskSrc
-          TabOrder = 7
+          TabOrder = 8
           OnKeyPress = DBEdit1KeyPress
         end
         object JvColorComboBox1: TJvColorComboBox
@@ -211,7 +211,7 @@ object TaskEditForm: TTaskEditForm
           DroppedDownWidth = 121
           NewColorText = 'Custom'
           Options = [coText]
-          TabOrder = 8
+          TabOrder = 7
         end
       end
       object PageControl2: TPageControl
@@ -225,14 +225,21 @@ object TaskEditForm: TTaskEditForm
         OnChange = PageControl2Change
         object TabSheet3: TTabSheet
           Caption = 'Details'
-          object ScrollBox1: TScrollBox
+          inline FormFrame1: TFormFrame
             Left = 0
             Top = 0
             Width = 709
             Height = 251
-            HorzScrollBar.Visible = False
             Align = alClient
             TabOrder = 0
+            ExplicitWidth = 709
+            ExplicitHeight = 251
+            inherited ScrollBox1: TScrollBox
+              Width = 709
+              Height = 251
+              ExplicitWidth = 709
+              ExplicitHeight = 251
+            end
           end
         end
         object TabSheet4: TTabSheet
@@ -284,6 +291,61 @@ object TaskEditForm: TTaskEditForm
             Left = 596
             Color = clMoneyGreen
             ExplicitLeft = 596
+          end
+        end
+      end
+    end
+    object TabSheet5: TTabSheet
+      Caption = 'Log-buch'
+      ImageIndex = 2
+      inline LogFrame1: TLogFrame
+        Left = 0
+        Top = 0
+        Width = 717
+        Height = 392
+        Align = alClient
+        TabOrder = 0
+        inherited GroupBox3: TGroupBox
+          Left = 532
+          Height = 392
+          inherited TextBlockFrame1: TTextBlockFrame
+            Height = 375
+            inherited Panel1: TPanel
+              Top = 319
+              inherited LabeledEdit1: TLabeledEdit
+                ExplicitWidth = 0
+              end
+            end
+            inherited LV: TListView
+              Height = 319
+            end
+          end
+        end
+        inherited Panel1: TPanel
+          Width = 532
+          Height = 392
+          inherited GroupBox1: TGroupBox
+            Width = 532
+            inherited EditFrame1: TEditFrame
+              Width = 528
+              inherited RE: TRichEdit
+                Width = 528
+                ExplicitWidth = 528
+                ExplicitHeight = 80
+              end
+            end
+          end
+          inherited GroupBox2: TGroupBox
+            Width = 532
+            Height = 295
+            inherited WebBrowser1: TWebBrowser
+              ControlData = {
+                4C000000161200007A0800000000000000000000000000000000000000000000
+                000000004C000000000000000000000001000000E0D057007335CF11AE690800
+                2B2E126208000000000000004C0000000114020000000000C000000000000046
+                8000000000000000000000000000000000000000000000000000000000000000
+                00000000000000000100000000000000000000000000000000000000}
+            end
           end
         end
       end
@@ -353,8 +415,8 @@ object TaskEditForm: TTaskEditForm
   object TaskSrc: TDataSource
     AutoEdit = False
     DataSet = TaskTab
-    Left = 152
-    Top = 184
+    Left = 40
+    Top = 232
   end
   object TaskTab: TClientDataSet
     Aggregates = <>
@@ -464,7 +526,15 @@ object TaskEditForm: TTaskEditForm
     ProviderName = 'TemplateTab'
     ReadOnly = True
     RemoteServer = DSProviderConnection1
-    Left = 84
+    Left = 92
     Top = 161
+  end
+  object LogTab: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    ProviderName = 'TaskLogSrc'
+    RemoteServer = DSProviderConnection1
+    Left = 100
+    Top = 224
   end
 end
