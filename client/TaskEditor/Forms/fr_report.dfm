@@ -739,6 +739,7 @@ object ReportFrame: TReportFrame
         ImageIndex = 2
         ExplicitLeft = 0
         ExplicitTop = 0
+        ExplicitWidth = 0
         ExplicitHeight = 0
         object WebBrowser1: TWebBrowser
           Left = 0

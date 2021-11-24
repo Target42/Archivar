@@ -453,7 +453,6 @@ end;
 procedure TReportFrame.release;
 var
   i : integer;
-  arr : TStringDynArray;
 begin
   for i := m_files.Count-1 downto 0 do
   begin
