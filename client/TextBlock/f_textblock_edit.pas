@@ -54,6 +54,7 @@ type
     procedure PopupMenu1Popup(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
     procedure SpeedButton1Click(Sender: TObject);
+    procedure LabeledEdit1KeyPress(Sender: TObject; var Key: Char);
   private
     m_id        : integeR;
     x_block     : IXMLBlock;
@@ -76,7 +77,7 @@ implementation
 
 uses
   ClipBrd, m_glob_client, Xml.XMLDoc, system.UITypes, f_textblock_param,
-  f_textblock_preview, f_taglist;
+  f_textblock_preview, f_taglist, System.Win.ComObj, System.IOUtils;
 
 
 procedure TTextBlockEditForm.BaseFrame1AbortBtnClick(Sender: TObject);
@@ -93,6 +94,9 @@ var
 begin
   if m_modified  then
   begin
+    if TBtab.FieldByName('TB_CLID').IsNull then
+      TBtab.FieldByName('TB_CLID').AsString := CreateClassID;
+
     saveXML;
 
     st := TBtab.CreateBlobStream(TBtab.FieldByName('TB_TEXT'), bmWrite);
@@ -214,6 +218,15 @@ begin
   TagListForm.free;
 end;
 
+procedure TTextBlockEditForm.LabeledEdit1KeyPress(Sender: TObject;
+  var Key: Char);
+begin
+  if key >= ' ' then begin
+    if not TPath.IsValidFileNameChar( key ) then
+      key := #0;
+  end;
+end;
+
 procedure TTextBlockEditForm.loadXML;
 var
   st  : TStream;
@@ -283,6 +296,7 @@ var
   xi    : IXMLField;
 begin
   x_block         := NewBlock;
+  x_block.Id      := TBtab.FieldByName('TB_CLID').AsString;
   x_block.Name    := trim( TBtab.FieldByName('TB_NAME').AsString);
   x_block.Tags    := Trim( TBtab.FieldByName('TB_TAGS').AsString);
   x_block.Content := EditFrame1.Text;

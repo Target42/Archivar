@@ -1,6 +1,6 @@
 //
 // Erzeugt vom DataSnap-Proxy-Generator.
-// 02.11.2021 19:54:52
+// 25.11.2021 19:26:25
 //
 
 unit u_stub;
@@ -64,6 +64,7 @@ type
 
   TdsTaskClient = class(TDSAdminClient)
   private
+    FTaskLogTabBeforePostCommand: TDBXCommand;
     FnewTaskCommand: TDBXCommand;
     FdeleteTaskCommand: TDBXCommand;
     FTaskInfoCommand: TDBXCommand;
@@ -76,6 +77,7 @@ type
     constructor Create(ADBXConnection: TDBXConnection); overload;
     constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
     destructor Destroy; override;
+    procedure TaskLogTabBeforePost(DataSet: TDataSet);
     function newTask(data: TJSONObject): TJSONObject;
     function deleteTask(ta_id: Integer): TJSONObject;
     function TaskInfo(data: TJSONObject): TJSONObject;
@@ -110,6 +112,7 @@ type
     FAutoIncCommand: TDBXCommand;
     FgetUserListCommand: TDBXCommand;
     FchangeOnlineStatusCommand: TDBXCommand;
+    FgetPublicKeyCommand: TDBXCommand;
   public
     constructor Create(ADBXConnection: TDBXConnection); overload;
     constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
@@ -122,6 +125,7 @@ type
     function AutoInc(gen: string): Integer;
     function getUserList: TJSONObject;
     function changeOnlineStatus(req: TJSONObject): TJSONObject;
+    function getPublicKey(net: string; stamp: TDateTime): TStream;
   end;
 
   TdsProtocolClient = class(TDSAdminClient)
@@ -194,10 +198,12 @@ type
 
   TdsTextBlockClient = class(TDSAdminClient)
   private
+    FgetTagListCommand: TDBXCommand;
   public
     constructor Create(ADBXConnection: TDBXConnection); overload;
     constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
     destructor Destroy; override;
+    function getTagList: TJSONObject;
   end;
 
   TdsFileCacheClient = class(TDSAdminClient)
@@ -296,6 +302,20 @@ type
     constructor Create(ADBXConnection: TDBXConnection); overload;
     constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
     destructor Destroy; override;
+  end;
+
+  TdsPKIClient = class(TDSAdminClient)
+  private
+    FuploadKeysCommand: TDBXCommand;
+    FgetPublicKeyCommand: TDBXCommand;
+    FhasValidKeyCommand: TDBXCommand;
+  public
+    constructor Create(ADBXConnection: TDBXConnection); overload;
+    constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
+    destructor Destroy; override;
+    function uploadKeys(net: string; pub: TStream; priv: TStream): TJSONObject;
+    function getPublicKey(net: string; stamp: TDateTime): TStream;
+    function hasValidKey(net: string; stamp: TDateTime): Boolean;
   end;
 
 implementation
@@ -562,6 +582,19 @@ begin
   inherited;
 end;
 
+procedure TdsTaskClient.TaskLogTabBeforePost(DataSet: TDataSet);
+begin
+  if FTaskLogTabBeforePostCommand = nil then
+  begin
+    FTaskLogTabBeforePostCommand := FDBXConnection.CreateCommand;
+    FTaskLogTabBeforePostCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FTaskLogTabBeforePostCommand.Text := 'TdsTask.TaskLogTabBeforePost';
+    FTaskLogTabBeforePostCommand.Prepare;
+  end;
+  FTaskLogTabBeforePostCommand.Parameters[0].Value.SetDBXReader(TDBXDataSetReader.Create(DataSet, FInstanceOwner), True);
+  FTaskLogTabBeforePostCommand.ExecuteUpdate;
+end;
+
 function TdsTaskClient.newTask(data: TJSONObject): TJSONObject;
 begin
   if FnewTaskCommand = nil then
@@ -689,6 +722,7 @@ end;
 
 destructor TdsTaskClient.Destroy;
 begin
+  FTaskLogTabBeforePostCommand.DisposeOf;
   FnewTaskCommand.DisposeOf;
   FdeleteTaskCommand.DisposeOf;
   FTaskInfoCommand.DisposeOf;
@@ -885,6 +919,21 @@ begin
   Result := TJSONObject(FchangeOnlineStatusCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
 end;
 
+function TdsMiscClient.getPublicKey(net: string; stamp: TDateTime): TStream;
+begin
+  if FgetPublicKeyCommand = nil then
+  begin
+    FgetPublicKeyCommand := FDBXConnection.CreateCommand;
+    FgetPublicKeyCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FgetPublicKeyCommand.Text := 'TdsMisc.getPublicKey';
+    FgetPublicKeyCommand.Prepare;
+  end;
+  FgetPublicKeyCommand.Parameters[0].Value.SetWideString(net);
+  FgetPublicKeyCommand.Parameters[1].Value.AsDateTime := stamp;
+  FgetPublicKeyCommand.ExecuteUpdate;
+  Result := FgetPublicKeyCommand.Parameters[2].Value.GetStream(FInstanceOwner);
+end;
+
 constructor TdsMiscClient.Create(ADBXConnection: TDBXConnection);
 begin
   inherited Create(ADBXConnection);
@@ -905,6 +954,7 @@ begin
   FAutoIncCommand.DisposeOf;
   FgetUserListCommand.DisposeOf;
   FchangeOnlineStatusCommand.DisposeOf;
+  FgetPublicKeyCommand.DisposeOf;
   inherited;
 end;
 
@@ -1146,6 +1196,19 @@ begin
   inherited;
 end;
 
+function TdsTextBlockClient.getTagList: TJSONObject;
+begin
+  if FgetTagListCommand = nil then
+  begin
+    FgetTagListCommand := FDBXConnection.CreateCommand;
+    FgetTagListCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FgetTagListCommand.Text := 'TdsTextBlock.getTagList';
+    FgetTagListCommand.Prepare;
+  end;
+  FgetTagListCommand.ExecuteUpdate;
+  Result := TJSONObject(FgetTagListCommand.Parameters[0].Value.GetJSONValue(FInstanceOwner));
+end;
+
 constructor TdsTextBlockClient.Create(ADBXConnection: TDBXConnection);
 begin
   inherited Create(ADBXConnection);
@@ -1158,6 +1221,7 @@ end;
 
 destructor TdsTextBlockClient.Destroy;
 begin
+  FgetTagListCommand.DisposeOf;
   inherited;
 end;
 
@@ -1622,6 +1686,70 @@ end;
 
 destructor TStammModClient.Destroy;
 begin
+  inherited;
+end;
+
+function TdsPKIClient.uploadKeys(net: string; pub: TStream; priv: TStream): TJSONObject;
+begin
+  if FuploadKeysCommand = nil then
+  begin
+    FuploadKeysCommand := FDBXConnection.CreateCommand;
+    FuploadKeysCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FuploadKeysCommand.Text := 'TdsPKI.uploadKeys';
+    FuploadKeysCommand.Prepare;
+  end;
+  FuploadKeysCommand.Parameters[0].Value.SetWideString(net);
+  FuploadKeysCommand.Parameters[1].Value.SetStream(pub, FInstanceOwner);
+  FuploadKeysCommand.Parameters[2].Value.SetStream(priv, FInstanceOwner);
+  FuploadKeysCommand.ExecuteUpdate;
+  Result := TJSONObject(FuploadKeysCommand.Parameters[3].Value.GetJSONValue(FInstanceOwner));
+end;
+
+function TdsPKIClient.getPublicKey(net: string; stamp: TDateTime): TStream;
+begin
+  if FgetPublicKeyCommand = nil then
+  begin
+    FgetPublicKeyCommand := FDBXConnection.CreateCommand;
+    FgetPublicKeyCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FgetPublicKeyCommand.Text := 'TdsPKI.getPublicKey';
+    FgetPublicKeyCommand.Prepare;
+  end;
+  FgetPublicKeyCommand.Parameters[0].Value.SetWideString(net);
+  FgetPublicKeyCommand.Parameters[1].Value.AsDateTime := stamp;
+  FgetPublicKeyCommand.ExecuteUpdate;
+  Result := FgetPublicKeyCommand.Parameters[2].Value.GetStream(FInstanceOwner);
+end;
+
+function TdsPKIClient.hasValidKey(net: string; stamp: TDateTime): Boolean;
+begin
+  if FhasValidKeyCommand = nil then
+  begin
+    FhasValidKeyCommand := FDBXConnection.CreateCommand;
+    FhasValidKeyCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FhasValidKeyCommand.Text := 'TdsPKI.hasValidKey';
+    FhasValidKeyCommand.Prepare;
+  end;
+  FhasValidKeyCommand.Parameters[0].Value.SetWideString(net);
+  FhasValidKeyCommand.Parameters[1].Value.AsDateTime := stamp;
+  FhasValidKeyCommand.ExecuteUpdate;
+  Result := FhasValidKeyCommand.Parameters[2].Value.GetBoolean;
+end;
+
+constructor TdsPKIClient.Create(ADBXConnection: TDBXConnection);
+begin
+  inherited Create(ADBXConnection);
+end;
+
+constructor TdsPKIClient.Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean);
+begin
+  inherited Create(ADBXConnection, AInstanceOwner);
+end;
+
+destructor TdsPKIClient.Destroy;
+begin
+  FuploadKeysCommand.DisposeOf;
+  FgetPublicKeyCommand.DisposeOf;
+  FhasValidKeyCommand.DisposeOf;
   inherited;
 end;
 

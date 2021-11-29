@@ -94,6 +94,7 @@ object TextBlockEditForm: TTextBlockEditForm
       DataField = 'TB_NAME'
       DataSource = TBSrc
       TabOrder = 0
+      OnKeyPress = LabeledEdit1KeyPress
     end
     object LabeledEdit2: TDBEdit
       Left = 16
@@ -189,7 +190,7 @@ object TextBlockEditForm: TTextBlockEditForm
         EditLabel.Width = 64
         EditLabel.Height = 13
         EditLabel.Caption = 'Beschreibung'
-        TabOrder = 2
+        TabOrder = 4
       end
       object ComboBox1: TComboBox
         Left = 323
@@ -197,7 +198,7 @@ object TextBlockEditForm: TTextBlockEditForm
         Width = 145
         Height = 21
         ItemIndex = 0
-        TabOrder = 3
+        TabOrder = 2
         Text = 'String'
         Items.Strings = (
           'String'
@@ -245,7 +246,7 @@ object TextBlockEditForm: TTextBlockEditForm
           90FFF9CA90FFF9C991ABFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
-        TabOrder = 4
+        TabOrder = 5
         OnClick = btnNeuClick
       end
       object btnEdit: TBitBtn
@@ -289,7 +290,7 @@ object TextBlockEditForm: TTextBlockEditForm
           3F55B4513F55B4513F55B351412FFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
-        TabOrder = 5
+        TabOrder = 6
         OnClick = btnEditClick
       end
       object btnSave: TBitBtn
@@ -333,7 +334,7 @@ object TextBlockEditForm: TTextBlockEditForm
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
-        TabOrder = 6
+        TabOrder = 7
         OnClick = btnSaveClick
       end
       object btnDelete: TBitBtn
@@ -377,7 +378,7 @@ object TextBlockEditForm: TTextBlockEditForm
           FF28FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
-        TabOrder = 7
+        TabOrder = 8
         OnClick = btnDeleteClick
       end
       object LabeledEdit6: TComboBox
@@ -385,7 +386,7 @@ object TextBlockEditForm: TTextBlockEditForm
         Top = 16
         Width = 121
         Height = 21
-        TabOrder = 8
+        TabOrder = 3
         Items.Strings = (
           ''
           '$$date'

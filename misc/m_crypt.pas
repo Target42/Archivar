@@ -61,6 +61,9 @@ type
     function Verify( document, signature, keyfile : TStream; binKey : boolean ) : boolean; overload;
     function Verify( document, signature, keyfile : string ; binKey : boolean ) : boolean; overload;
 
+    function hasKeyFiles : boolean;
+    function hasKeysLoaded : boolean;
+
   end;
 
 var
@@ -70,7 +73,7 @@ implementation
 
 uses
   System.IOUtils, uTPLb_StreamUtils, f_main, uTPLb_Constants, System.StrUtils,
-  Vcl.Forms, system.UITypes;
+  Vcl.Forms, system.UITypes, f_passwd;
 
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
@@ -140,12 +143,23 @@ begin
     Screen.Cursor := crDefault
 end;
 
+function TCryptMod.hasKeyFiles: boolean;
+begin
+  Result := FileExists(FPublicKeyFile) and FileExists(FPrivateKeyFile);
+end;
+
+function TCryptMod.hasKeysLoaded: boolean;
+begin
+  Result := Signatory1.HasParts <> [];
+end;
+
 function TCryptMod.load(part: TKeyStoragePart): boolean;
 var
   fname : string;
   mem   : TStream;
   plain : TStream;
   st    : TStream;
+  error : boolean;
 begin
   Result := false;
   case part of
@@ -157,6 +171,7 @@ begin
 
   mem := TMemoryStream.Create;
   try
+    error := false;
     if not FBinaryKeys then begin
       st := TFile.OpenRead(fname);
       loadToStream(st, mem);
@@ -173,15 +188,21 @@ begin
       AES.Password := FPassword;
 
       plain := TMemoryStream.Create;
-      aes.DecryptStream(plain, mem);
-      mem.Size := 0;
-      mem.CopyFrom(plain, -1);
+      try
+        aes.DecryptStream(plain, mem);
+        mem.Size := 0;
+        mem.CopyFrom(plain, -1);
+      except
+        error := true;
+      end;
       mem.Position := 0;
       plain.Free;
     end;
 
-    Signatory1.LoadKeysFromStream(mem, [part]);
-    Result := true;
+    if not error then begin
+      Signatory1.LoadKeysFromStream(mem, [part]);
+      Result := true;
+    end;
   except
     Result := false;
   end;
@@ -192,7 +213,23 @@ end;
 
 function TCryptMod.loadKeys: boolean;
 begin
-  Result := load( partPublic) and load(partPrivate);
+  Result := hasKeyFiles;
+  if not Result then
+    exit;
+
+  try
+    if FPassword = '' then begin
+      Application.CreateForm(TPassWdform, PassWdform);
+      if PassWdform.ShowModal = mrOk then
+        FPassword := PassWdform.Password;
+      PassWdform.Free;
+    end;
+
+    if FPassword <> '' then
+      Result := load( partPublic) and load(partPrivate);
+  except
+
+  end;
 end;
 
 function TCryptMod.loadToStream(st: TStream; inSt : TStream): boolean;
@@ -200,11 +237,21 @@ var
   list  : TStringList;
   s     : string;
   arr   : TBytes;
+  i     : integer;
 begin
   st.Position := 0;
   try
     list := TStringList.Create;
     list.LoadFromStream(st);
+    // last line remove
+    for i := pred(list.Count) downto 0 do begin
+      if trim(list[i])= '' then
+        list.Delete(i);
+      if list[i][1] = '-' then
+        list.Delete(i);
+    end;
+
+
 
     s := trim(ReplaceStr(list.Text, #10, ''));
     s := trim(ReplaceStr(s,         #13, ''));

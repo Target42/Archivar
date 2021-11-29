@@ -40,10 +40,6 @@ object Keysform: TKeysform
       ReadOnly = True
       ScrollBars = ssVertical
       TabOrder = 0
-      ExplicitLeft = 3
-      ExplicitTop = 11
-      ExplicitWidth = 631
-      ExplicitHeight = 104
     end
   end
   object GroupBox2: TGroupBox
@@ -54,7 +50,6 @@ object Keysform: TKeysform
     Align = alTop
     Caption = 'Passwort privater Schl'#252'ssel'
     TabOrder = 1
-    ExplicitWidth = 635
     object LabeledEdit1: TLabeledEdit
       Left = 16
       Top = 32
@@ -95,9 +90,6 @@ object Keysform: TKeysform
     Align = alClient
     Caption = 'Privater Schl'#252'ssel'
     TabOrder = 2
-    ExplicitTop = 193
-    ExplicitWidth = 635
-    ExplicitHeight = 121
     object Memo2: TMemo
       Left = 2
       Top = 15
@@ -115,8 +107,6 @@ object Keysform: TKeysform
       ReadOnly = True
       ScrollBars = ssVertical
       TabOrder = 0
-      ExplicitWidth = 631
-      ExplicitHeight = 104
     end
   end
 end

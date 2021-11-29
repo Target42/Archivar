@@ -43,6 +43,7 @@ type
     GRPEQry: TFDQuery;
     dsStammData: TDSServerClass;
     dsPKI: TDSServerClass;
+    dsDairy: TDSServerClass;
     procedure dsAdminGetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
     procedure ServiceStart(Sender: TService; var Started: Boolean);
@@ -98,6 +99,8 @@ type
       var PersistentClass: TPersistentClass);
     procedure dsPKIGetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
+    procedure dsDairyGetClass(DSServerClass: TDSServerClass;
+      var PersistentClass: TPersistentClass);
   private
     const
       MaxUserNameLength = 25;
@@ -138,7 +141,7 @@ uses
   ds_taks, ds_file, ds_misc, ds_protocol, ds_image, ds_chapter,
   ds_taskEdit, ds_template, ds_taskView, ds_textblock, ds_fileCache, ds_epub,
   ds_meeting, System.Hash, u_json, ds_sitzung, m_hell, Grijjy.sysUtils, u_ini,
-  m_fileServer, ds_updater, ds_stamm, ds_pki;
+  m_fileServer, ds_updater, ds_stamm, ds_pki, ds_dairy;
 
 procedure TServerContainer1.dsAdminGetClass(
   DSServerClass: TDSServerClass; var PersistentClass: TPersistentClass);
@@ -556,6 +559,12 @@ procedure TServerContainer1.dsChapterGetClass(DSServerClass: TDSServerClass;
   var PersistentClass: TPersistentClass);
 begin
   PersistentClass := ds_chapter.TdsChapter;
+end;
+
+procedure TServerContainer1.dsDairyGetClass(DSServerClass: TDSServerClass;
+  var PersistentClass: TPersistentClass);
+begin
+  PersistentClass := ds_dairy.TdsDairy;
 end;
 
 procedure TServerContainer1.dsEpubGetClass(DSServerClass: TDSServerClass;

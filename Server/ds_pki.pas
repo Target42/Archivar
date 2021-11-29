@@ -19,10 +19,11 @@ type
     UpdateKeyQry: TFDQuery;
     FDTransaction2: TFDTransaction;
     AutoIncQry: TFDQuery;
+    PETab: TFDTable;
   private
     function AutoInc( gen : string ) : integer;
   public
-    function uploadPublicKey( net : string; st : TStream ) : TJSONObject;
+    function uploadKeys( net : string; pub, priv : TStream ) : TJSONObject;
     function getPublicKey( net : string; stamp : TDateTime ) : TStream;
     function hasValidKey ( net : string; stamp : TDateTime ) : Boolean;
   end;
@@ -30,7 +31,7 @@ type
 implementation
 
 uses
-  m_db, Datasnap.DSSession, u_json, m_glob_server;
+  m_db, Datasnap.DSSession, u_json, m_glob_server, System.Variants;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -82,7 +83,7 @@ begin
   st.Free;
 end;
 
-function TdsPKI.uploadPublicKey(net: string; st: TStream): TJSONObject;
+function TdsPKI.uploadKeys(net: string; pub, priv: TStream): TJSONObject;
 var
   id    : integer;
   dest  : TStream;
@@ -95,11 +96,11 @@ begin
   FDTransaction2.StartTransaction;
   try
     id := -1;
-    GetKeyQry.ParamByName('net').AsString := net;
-    GetKeyQry.Open;
-    if GetKeyQry.IsEmpty then
-      id := GetKeyQry.FieldByName('PE_ID').AsInteger;
-    GetKeyQry.Close;
+    getUserQry.ParamByName('net').AsString := net;
+    getUserQry.Open;
+    if not getUserQry.IsEmpty then
+      id := getUserQry.FieldByName('PE_ID').AsInteger;
+    getUserQry.Close;
 
     if id <> -1  then begin
       UpdateKeyQry.ParamByName('ID').AsInteger := id;
@@ -113,13 +114,25 @@ begin
       PKTab.FieldByName('PK_END').AsDateTime    := IncMonth(now, 50*12);
 
       dest := PKTab.CreateBlobStream(PKTab.FieldByName('PK_DATA'), bmWrite);
-      GM.downloadInto(st, dest);
+      GM.downloadInto(pub, dest);
       dest.Free;
 
       PKTab.Post;
 
+      PETab.Open;
+
+      if PETab.Locate('PE_ID', VarArrayOf([id]), [] ) then begin
+        PETab.Edit;
+        dest := PETab.CreateBlobStream(PETab.FieldByName('PE_KEY'), bmWrite);
+        GM.downloadInto(priv, dest);
+        dest.Free;
+        PETab.Post;
+      end;
+
       FDTransaction2.Commit;
       PKTab.Close;
+      PeTab.Close;
+
       JResult( Result, true, '');
 
     end else

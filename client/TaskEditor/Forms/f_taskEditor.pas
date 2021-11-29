@@ -98,7 +98,7 @@ procedure TTaksEditorForm.ac_exportExecute(Sender: TObject);
 var
   path : string;
 begin
-  path := TPath.Combine(Gm.ExportDir, 'tasks');
+  path := TPath.Combine(Gm.ExportDir, 'templates');
   try
     ForceDirectories(path)
   except

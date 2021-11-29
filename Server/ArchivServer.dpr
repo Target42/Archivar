@@ -50,7 +50,8 @@ uses
   u_vote in 'hell\u_vote.pas',
   ds_stamm in 'ds_stamm.pas' {StammMod: TDSServerModule},
   u_broadcastMsg in 'u_broadcastMsg.pas',
-  ds_pki in 'ds_pki.pas' {dsPKI: TDSServerModule};
+  ds_pki in 'ds_pki.pas' {dsPKI: TDSServerModule},
+  ds_dairy in 'ds_dairy.pas' {dsDairy: TDSServerModule};
 
 var
   MyDummyBoolean  : Boolean;

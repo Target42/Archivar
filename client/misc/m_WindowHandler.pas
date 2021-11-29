@@ -14,6 +14,7 @@ type
     m_taskMap     : TDictionary<integer,TTaskEditForm>;
     m_protocolMap : TDictionary<integer,TProtokollForm>;
     m_protoView   : TDictionary<integer,TProtokollViewForm>;
+    m_forms       : TList<TForm>;
 
   public
     procedure openTaskWindow( id, typeID : integer; ro : boolean; modal : boolean = false );
@@ -31,6 +32,11 @@ type
 
     procedure openMeetingView( id : integer );
     procedure closeMeetingView( id : integer );
+
+    procedure closeAll;
+    procedure registerForm( frm : TForm );
+    procedure unregisterForm( frm : TForm );
+
   end;
 
 var
@@ -48,6 +54,20 @@ uses
 procedure TWindowHandler.closeTaskWindow(id: integer);
 begin
   m_taskMap.Remove(id);
+end;
+
+procedure TWindowHandler.closeAll;
+var
+  arr : TArray<TForm>;
+  i   : integer;
+begin
+  arr := m_forms.ToArray;
+  for i := low(arr) to High(arr) do begin
+    arr[i].Close;
+    arr[i].Free;
+  end;
+
+  setLength(arr, 0);
 end;
 
 procedure TWindowHandler.closeMeetingView(id: integer);
@@ -94,6 +114,7 @@ begin
   m_taskMap     := TDictionary<integer,TTaskEditForm>.create;
   m_protocolMap := TDictionary<integer,TProtokollForm>.Create;
   m_protoView   := TDictionary<integer,TProtokollViewForm>.create;
+  m_forms       := TList<TForm>.create;
 end;
 
 procedure TWindowHandler.DataModuleDestroy(Sender: TObject);
@@ -101,6 +122,7 @@ begin
   m_taskMap.Free;
   m_protocolMap.Free;
   m_protoView.free;
+  m_forms.Free;
 end;
 
 function TWindowHandler.isProtocolOpen(id: integer): boolean;
@@ -194,6 +216,18 @@ begin
     TaskEditForm.Show;
     TaskEditForm.LockCheck;
   end;
+end;
+
+procedure TWindowHandler.registerForm(frm: TForm);
+begin
+  if not m_forms.Contains(frm) then
+    m_forms.Add(frm);
+
+end;
+
+procedure TWindowHandler.unregisterForm(frm: TForm);
+begin
+  m_forms.Remove(frm);
 end;
 
 end.

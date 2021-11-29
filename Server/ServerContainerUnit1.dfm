@@ -215,7 +215,13 @@ object ServerContainer1: TServerContainer1
   object dsPKI: TDSServerClass
     OnGetClass = dsPKIGetClass
     Server = DSServer1
-    Left = 264
+    Left = 256
+    Top = 520
+  end
+  object dsDairy: TDSServerClass
+    OnGetClass = dsDairyGetClass
+    Server = DSServer1
+    Left = 320
     Top = 520
   end
 end

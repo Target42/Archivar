@@ -188,7 +188,11 @@ uses
   f_log_entry in 'Task\f_log_entry.pas' {LogEntryform},
   f_taglist in 'TextBlock\f_taglist.pas' {TagListForm},
   m_crypt in '..\misc\m_crypt.pas' {CryptMod: TDataModule},
-  f_keys in 'crypt\f_keys.pas' {Keysform};
+  f_keys in 'crypt\f_keys.pas' {Keysform},
+  f_passwd in 'crypt\f_passwd.pas' {PassWdform},
+  f_dairy in 'Dairy\f_dairy.pas' {DairyForm},
+  f_textblock_export in 'TextBlock\f_textblock_export.pas' {TextBlockExportForm},
+  f_textblock_import in 'TextBlock\f_textblock_import.pas' {TextblockImportForm};
 
 {$R *.res}
 

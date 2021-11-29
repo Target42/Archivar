@@ -588,6 +588,22 @@
             <Form>Keysform</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="crypt\f_passwd.pas">
+            <Form>PassWdform</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="Dairy\f_dairy.pas">
+            <Form>DairyForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="TextBlock\f_textblock_export.pas">
+            <Form>TextBlockExportForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="TextBlock\f_textblock_import.pas">
+            <Form>TextblockImportForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <None Include="Datafields\ERA-NS.txt"/>
         <RcItem Include="dws\dws.html">
             <ContainerId>ResourceItem</ContainerId>

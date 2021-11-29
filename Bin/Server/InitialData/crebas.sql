@@ -1,13 +1,14 @@
 /* ============================================================ */
 /*   Database name:  MODEL_2                                    */
 /*   DBMS name:      InterBase                                  */
-/*   Created on:     24.11.2021  11:44                          */
+/*   Created on:     26.11.2021  15:52                          */
 /* ============================================================ */
 
 create generator gen_be_id;
 create generator gen_ct_id;
 create generator gen_cp_id;
 create generator gen_da_id;
+create generator gen_di_id;
 create generator gen_el_id;
 create generator gen_fc_id;
 create generator gen_fi_id;
@@ -524,12 +525,30 @@ create ASC index LT_TASK_LOG on LT_TASK_LOG (TA_ID, LT_STAMP);
 create table PK_PUBLIC_KEY
 (
     PE_ID                           INTEGER                not null,
-    PK_ID                           INTEGER                        ,
+    PK_ID                           INTEGER                not null,
     PK_START                        TIMESTAMP                      ,
     PK_END                          TIMESTAMP                      ,
     PK_DATA                         BLOB                           ,
-    constraint PK_PK_PUBLIC_KEY primary key (PE_ID)
+    constraint PK_PK_PUBLIC_KEY primary key (PE_ID, PK_ID)
 );
+
+/* ============================================================ */
+/*   Table: DI_DAIRY                                            */
+/* ============================================================ */
+create table DI_DAIRY
+(
+    DI_ID                           INTEGER                not null,
+    PE_ID                           INTEGER                        ,
+    DI_STAMP                        TIMESTAMP                      ,
+    DI_CRYPTED                      CHAR(1)                        ,
+    DI_TEXT                         BLOB                           ,
+    constraint PK_DI_DAIRY primary key (DI_ID)
+);
+
+/* ============================================================ */
+/*   Index: DI_DAIRY_USER                                       */
+/* ============================================================ */
+create DESC index DI_DAIRY_USER on DI_DAIRY (PE_ID, DI_STAMP);
 
 alter table PR_PROTOKOL
     add constraint FK_REF_108 foreign key  (GR_ID)
@@ -621,6 +640,10 @@ alter table LT_TASK_LOG
 
 alter table PK_PUBLIC_KEY
     add constraint FK_REF_9279 foreign key  (PE_ID)
+       references PE_PERSON;
+
+alter table DI_DAIRY
+    add constraint FK_REF_9581 foreign key  (PE_ID)
        references PE_PERSON;
 
 

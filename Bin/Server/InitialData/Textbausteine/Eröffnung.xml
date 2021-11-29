@@ -1,0 +1,3 @@
+<?xml version="1.0"?>
+<Block id="{6A01C698-88B4-42DB-A34B-51B59E50511A}" name="Eröffnung"><Tags>sitzung</Tags><Content>Das Protokoll %%NR%% vom %%DATUM%% wurde verlesen und beschlossen.
+</Content><Fields><Field name="DATUM" caption="Datum" fieldtype="Datum" defaultValue=""><Rem>Das Datum der letzten Sitzung</Rem></Field><Field name="NR" caption="Nummer" fieldtype="Zahl" defaultValue=""><Rem>Protokollnummer</Rem></Field></Fields></Block>

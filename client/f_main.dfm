@@ -496,6 +496,15 @@
         object Lschen1: TMenuItem
           Action = ac_tb_löschen
         end
+        object N18: TMenuItem
+          Caption = '-'
+        end
+        object Export1: TMenuItem
+          Action = ac_tb_export
+        end
+        object Import2: TMenuItem
+          Action = ac_tb_import
+        end
       end
       object N6: TMenuItem
         Caption = '-'
@@ -768,6 +777,7 @@
     object ac_to_dairy: TAction
       Category = 'Tools'
       Caption = 'Tagebuch'
+      OnExecute = ac_to_dairyExecute
     end
     object ac_to_dms: TAction
       Category = 'Tools'
@@ -797,6 +807,16 @@
       Category = 'Tools'
       Caption = 'Schl'#252'ssel'
       OnExecute = ac_to_keysExecute
+    end
+    object ac_tb_export: TAction
+      Category = 'Textbausteine'
+      Caption = 'Export'
+      OnExecute = ac_tb_exportExecute
+    end
+    object ac_tb_import: TAction
+      Category = 'Textbausteine'
+      Caption = 'Import'
+      OnExecute = ac_tb_importExecute
     end
   end
   object ApplicationEvents1: TApplicationEvents

@@ -853,10 +853,11 @@ begin
   PostMessage( Application.MainFormHandle, msgLoadLogo,       0, 0 );
   PostMessage( Application.MainFormHandle, msgUpdateMeetings, 0, 0 );
 
+
   CryptMod.PrivateKeyFile := TPath.Combine(Home, 'key.pri');
   CryptMod.PublicKeyFile  := TPath.Combine(Home, 'key.pub');
 
-  if not CryptMod.loadKeys then
+  if not FileExists(CryptMod.PrivateKeyFile) or not FileExists(CryptMod.PublicKeyFile) then
     PostMessage( Application.MainFormHandle, msgNeedKeys, 0, 0 );
 end;
 
@@ -875,6 +876,8 @@ begin
   if Assigned(m_misc) then
     m_misc.Free;
   m_misc := NIL;
+
+  WindowHandler.closeAll;
 end;
 
 function TGM.UnLockDocument(id, typ: integer; subid : integer): TJSONObject;

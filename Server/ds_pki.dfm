@@ -85,4 +85,12 @@ object dsPKI: TdsPKI
     Left = 464
     Top = 24
   end
+  object PETab: TFDTable
+    Connection = DBMod.ArchivarConnection
+    Transaction = FDTransaction2
+    UpdateOptions.UpdateTableName = 'PE_PERSON'
+    TableName = 'PE_PERSON'
+    Left = 456
+    Top = 88
+  end
 end
