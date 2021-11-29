@@ -50,6 +50,7 @@ type
     HCTab: TFDTable;
     EPTab: TFDTable;
     ProgressBar1: TProgressBar;
+    TBTab: TFDTable;
     procedure SearchGDSEnterPage(Sender: TObject;
       const FromPage: TJvWizardCustomPage);
     procedure ServerInfoEnterPage(Sender: TObject;
@@ -78,6 +79,7 @@ type
     procedure importTasks;
     procedure importWWW;
     procedure importEPub;
+    procedure importTextblock;
 
     procedure updateLV;
 
@@ -98,7 +100,7 @@ implementation
 uses
   System.IOUtils, System.Types, IdHashMessageDigest, xsd_TaskType,
   xsd_Betriebsrat, xsd_DataField, FireDAC.Phys.IBWrapper,
-  System.Win.ComObj, System.Hash, u_ePub;
+  System.Win.ComObj, System.Hash, u_ePub, xsd_TextBlock;
 
 {$R *.dfm}
 
@@ -120,6 +122,7 @@ begin
   importTasks;
   importWWW;
   importEPub;
+  importTextblock;
 
   InitData.VisibleButtons := [TJvWizardButtonKind.bkFinish];
 end;
@@ -481,6 +484,44 @@ begin
     ProgressBar1.Position := i;
   end;
   TYTab.close;
+  item.SubItems.Strings[0] := 'Abgeschlossen';
+  updateLV;
+end;
+
+procedure TMainSetupForm.importTextblock;
+var
+  item : TListItem;
+  path : string;
+  fi : TStringDynArray;
+  i  : integer;
+  st : TStream;
+  xBlock  : IXMLBlock;
+begin
+  item := progress('Textblöcke');
+
+  TBTab.Open;
+  path := TPath.Combine(m_home, 'Textbausteine');
+  fi := TDirectory.GetFiles(path, '*.xml');
+  initPGBar(Length(fi)-1);
+  for i := 0 to Length(fi)-1 do
+  begin
+
+    xBlock := LoadBlock(fi[i]);
+
+    TBtab.Append;
+    TBtab.FieldByName('TB_ID').AsInteger := autoInc('gen_tb_id');
+    TBtab.FieldByName('TB_CLID').AsString:= xblock.Id;
+    TBtab.FieldByName('TB_NAME').AsString:= xblock.Name;
+    TBtab.FieldByName('TB_TAGS').AsString:= xblock.Tags;
+
+    st := TBtab.CreateBlobStream(TBtab.FieldByName('TB_TEXT'), bmWrite);
+    xBlock.OwnerDocument.SaveToStream(st);
+    st.Free;
+    TETab.Post;
+    ProgressBar1.Position := i;
+  end;
+  TBTab.Close;
+  SetLength(fi, 0);
   item.SubItems.Strings[0] := 'Abgeschlossen';
   updateLV;
 end;

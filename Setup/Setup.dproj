@@ -113,6 +113,7 @@
         <DCCReference Include="..\misc\ePub\u_ePub.pas"/>
         <DCCReference Include="..\misc\ePub\u_navpoint.pas"/>
         <DCCReference Include="..\misc\ePub\u_xml.pas"/>
+        <DCCReference Include="..\misc\xsd_TextBlock.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

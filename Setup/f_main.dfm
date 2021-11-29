@@ -1,7 +1,7 @@
 object MainSetupForm: TMainSetupForm
   Left = 0
   Top = 0
-  ActiveControl = BitBtn1
+  ActiveControl = WelcomePage
   Caption = 'Setup'
   ClientHeight = 299
   ClientWidth = 558
@@ -29,7 +29,7 @@ object MainSetupForm: TMainSetupForm
     Top = 0
     Width = 558
     Height = 280
-    ActivePage = InitData
+    ActivePage = WelcomePage
     ButtonBarHeight = 42
     ButtonStart.Caption = 'To &Start Page'
     ButtonStart.NumGlyphs = 1
@@ -572,7 +572,6 @@ object MainSetupForm: TMainSetupForm
         RowSelect = True
         TabOrder = 1
         ViewStyle = vsReport
-        ExplicitHeight = 91
       end
       object ProgressBar1: TProgressBar
         AlignWithMargins = True
@@ -582,9 +581,6 @@ object MainSetupForm: TMainSetupForm
         Height = 17
         Align = alBottom
         TabOrder = 2
-        ExplicitLeft = 96
-        ExplicitTop = 168
-        ExplicitWidth = 150
       end
     end
   end
@@ -594,6 +590,7 @@ object MainSetupForm: TMainSetupForm
       'Password=masterkey'
       'Database=d:\db\archivar.fdb'
       'DriverID=FB')
+    Connected = True
     LoginPrompt = False
     Transaction = IBTransaction1
     Left = 46
@@ -707,5 +704,13 @@ object MainSetupForm: TMainSetupForm
     TableName = 'EP_EPUB'
     Left = 312
     Top = 72
+  end
+  object TBTab: TFDTable
+    Connection = ArchivarConnection
+    Transaction = IBTransaction1
+    UpdateOptions.UpdateTableName = 'TB_TEXT'
+    TableName = 'TB_TEXT'
+    Left = 440
+    Top = 192
   end
 end
