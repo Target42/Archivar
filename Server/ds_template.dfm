@@ -101,8 +101,8 @@ object dsTemplate: TdsTemplate
     Transaction = IBTransaction1
     SQL.Strings = (
       'SELECT *'
-      'FROM TA_TASK r'
-      'where ta_clid = :clid')
+      'FROM TE_TEMPLATE '
+      'where te_clid = :clid')
     Left = 352
     Top = 144
     ParamData = <

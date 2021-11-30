@@ -265,7 +265,7 @@ end;
 
 procedure TTaksEditorForm.loadFromStream(st: TStream ; tname : string);
 begin
-  m_tc := loadTaskContainer( st, name );
+  m_tc := loadTaskContainer( st, tname );
 
   CheckDefaultStype;
   setTaskContainer(m_tc);
@@ -301,8 +301,10 @@ var
   st : TStream;
   clid : String;
 begin
-  if Assigned(m_tc.Task) then
-    m_tc.Task.Rem := EditFrame1.Text;
+  if Assigned(m_tc.Task) then begin
+    m_tc.Task.Rem  := EditFrame1.Text;
+    m_tc.Task.Name := TETab.FieldByName('TE_NAME').AsString;
+  end;
 
   EditorFrame1.saveCurrentForm;
 

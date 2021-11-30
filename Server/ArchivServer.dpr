@@ -46,12 +46,12 @@ uses
   u_meeting in 'hell\u_meeting.pas',
   m_fileServer in 'fileServer\m_fileServer.pas' {FileServer: TDataModule},
   ds_updater in 'ds_updater.pas' {dsUpdater: TDSServerModule},
-  u_ini in 'u_ini.pas',
   u_vote in 'hell\u_vote.pas',
   ds_stamm in 'ds_stamm.pas' {StammMod: TDSServerModule},
   u_broadcastMsg in 'u_broadcastMsg.pas',
   ds_pki in 'ds_pki.pas' {dsPKI: TDSServerModule},
-  ds_dairy in 'ds_dairy.pas' {dsDairy: TDSServerModule};
+  ds_dairy in 'ds_dairy.pas' {dsDairy: TDSServerModule},
+  u_ini in 'u_ini.pas';
 
 var
   MyDummyBoolean  : Boolean;

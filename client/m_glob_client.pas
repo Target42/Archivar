@@ -847,7 +847,8 @@ begin
 
   requestUser;
 
-  fname := TPath.Combine( self.wwwHome, 'data\Kategorie.json');
+
+  fname :=  FileCacheMod.getFile('data', 'Kategorie.json');
   Kategorien.load(fname);
 
   PostMessage( Application.MainFormHandle, msgLoadLogo,       0, 0 );

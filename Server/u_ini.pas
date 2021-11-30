@@ -10,7 +10,8 @@ const
   csIniDSSection = 'DS';
   csIniclientSection = 'client';
   csIniDNLSection = 'DNL';
-  cdSecretSection = 'secret';
+  csInisecretSection = 'secret';
+  csInipathSection = 'path';
 
   {Section: DB}
   csIniDBhost = 'host';
@@ -31,8 +32,11 @@ const
   csIniDNLport = 'port';
   csIniDNLwwwroot = 'wwwroot';
 
-  {Section: secret }
-  csIniSecretName = 'name';
+  {Section: secret}
+  csInisecretname = 'name';
+
+  {Section: path}
+  csInipathdatadir = 'datadir';
 
 type
   TIniOptions = class(TObject)
@@ -56,8 +60,11 @@ type
     FDNLport: Integer;
     FDNLwwwroot: string;
 
-    {section: secret}
-    FSecretName : string;
+    {Section: secret}
+    Fsecretname: string;
+
+    {Section: path}
+    Fpathdatadir: string;
   public
     procedure LoadSettings(Ini: TIniFile);
     procedure SaveSettings(Ini: TIniFile);
@@ -85,7 +92,10 @@ type
     property DNLwwwroot: string read FDNLwwwroot write FDNLwwwroot;
 
     {Section: secret}
-    property SecretName : string read FSecretName write FSecretName;
+    property secretname: string read Fsecretname write Fsecretname;
+
+    {Section: path}
+    property pathdatadir: string read Fpathdatadir write Fpathdatadir;
   end;
 
 var
@@ -99,7 +109,7 @@ begin
   begin
     {Section: DB}
     FDBhost := Ini.ReadString(csIniDBSection, csIniDBhost, 'localhost');
-    FDBdb := Ini.ReadString(csIniDBSection, csIniDBdb, 'd:\db\archivar.gdb');
+    FDBdb := Ini.ReadString(csIniDBSection, csIniDBdb, 'd:\db\archivar.fdb');
     FDBuser := Ini.ReadString(csIniDBSection, csIniDBuser, 'sysdba');
     FDBpwd := Ini.ReadString(csIniDBSection, csIniDBpwd, 'masterkey');
 
@@ -117,7 +127,10 @@ begin
     FDNLwwwroot := Ini.ReadString(csIniDNLSection, csIniDNLwwwroot, '.\www_dnl\');
 
     {Section: secret}
-    FSecretName := ini.ReadString(cdSecretSection, csIniSecretName, '');
+    Fsecretname := Ini.ReadString(csInisecretSection, csInisecretname, '');
+
+    {Section: path}
+    Fpathdatadir := Ini.ReadString(csInipathSection, csInipathdatadir, '.\data\');
   end;
 end;
 
@@ -145,7 +158,10 @@ begin
     Ini.WriteString(csIniDNLSection, csIniDNLwwwroot, FDNLwwwroot);
 
     {Section: secret}
-    ini.WriteString(cdSecretSection, csIniSecretName, FSecretName);
+    Ini.WriteString(csInisecretSection, csInisecretname, Fsecretname);
+
+    {Section: path}
+    Ini.WriteString(csInipathSection, csInipathdatadir, Fpathdatadir);
   end;
 end;
 

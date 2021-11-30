@@ -462,7 +462,7 @@
         Caption = '-'
       end
       object Vorlagen1: TMenuItem
-        Caption = 'Aufgaben'
+        Caption = 'Aufgabenvorlage'
         object NeueVorlage1: TMenuItem
           Action = ac_ad_template_new
         end

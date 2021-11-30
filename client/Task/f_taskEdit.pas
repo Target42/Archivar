@@ -59,7 +59,6 @@ type
     ac_bookmark: TAction;
     Label9: TLabel;
     DBEdit5: TDBEdit;
-    JvColorComboBox1: TJvColorComboBox;
     Label10: TLabel;
     TaskTabTE_ID: TIntegerField;
     TaskTabTA_ID: TIntegerField;
@@ -82,6 +81,7 @@ type
     TabSheet5: TTabSheet;
     LogTab: TClientDataSet;
     LogFrame1: TLogFrame;
+    JvColorComboBox1: TJvColorComboBox;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -105,6 +105,7 @@ type
     procedure ac_refreshExecute(Sender: TObject);
     procedure StatusBar1DrawPanel(StatusBar: TStatusBar; Panel: TStatusPanel;
       const Rect: TRect);
+    procedure JvColorComboBox1Change(Sender: TObject);
   private
     m_ta_id : integer;
     m_ty_id : integeR;
@@ -321,6 +322,10 @@ begin
 
   FillFlagslist( ComboBox1.Items);
 
+
+  Label10.Visible           := Kategorien.count > 0 ;
+  JvColorComboBox1.Visible  := Kategorien.count > 0 ;
+
   for i := 0 to pred(Kategorien.count) do
   begin
     JvColorComboBox1.AddColor( Kategorien.Items[i].Color, Kategorien.Items[i].Name );
@@ -350,6 +355,11 @@ end;
 function TTaskEditForm.getRO: boolean;
 begin
   Result := m_ro;
+end;
+
+procedure TTaskEditForm.JvColorComboBox1Change(Sender: TObject);
+begin
+  m_changed := true;
 end;
 
 procedure TTaskEditForm.JvDBDatePickerEdit1Change(Sender: TObject);
@@ -491,6 +501,7 @@ begin
   LogFrame1.updateData(LogTab);
 
   JvColorComboBox1.ColorValue := TColor(TaskTab.FieldByName('TA_COLOR').AsInteger);
+
 
   if not Assigned(m_tc) then
     LoadTemplate( TaskTab.FieldByName('TE_ID').AsInteger );

@@ -57,7 +57,8 @@ type
     function getID( cache, name : string ) : integer;
 
     function getFiles( cache : string ) : TList<TPEntry>;
-    function getFile( ptr : TPEntry ) : string;
+    function getFile( ptr : TPEntry ) : string; overload;
+    function getFile( cache, name : string ) : string; overload;
 
   end;
 
@@ -174,6 +175,12 @@ begin
   if not Assigned(ptr) then  exit;
 
   Result := TPath.Combine( GM.Cache, Format('%s\%s', [ptr^.cache, ptr^.name]));
+  if not FileExists(Result) then  Result := '';
+end;
+
+function TFileCacheMod.getFile(cache, name: string): string;
+begin
+  Result := TPath.Combine( GM.Cache, Format('%s\%s', [cache, name]));
   if not FileExists(Result) then  Result := '';
 end;
 

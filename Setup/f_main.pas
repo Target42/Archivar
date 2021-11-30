@@ -51,6 +51,7 @@ type
     EPTab: TFDTable;
     ProgressBar1: TProgressBar;
     TBTab: TFDTable;
+    FCTab: TFDTable;
     procedure SearchGDSEnterPage(Sender: TObject;
       const FromPage: TJvWizardCustomPage);
     procedure ServerInfoEnterPage(Sender: TObject;
@@ -80,6 +81,7 @@ type
     procedure importWWW;
     procedure importEPub;
     procedure importTextblock;
+    procedure importFileCache;
 
     procedure updateLV;
 
@@ -123,6 +125,7 @@ begin
   importWWW;
   importEPub;
   importTextblock;
+  importFileCache;
 
   InitData.VisibleButtons := [TJvWizardButtonKind.bkFinish];
 end;
@@ -345,6 +348,51 @@ begin
   end;
   item.SubItems.Strings[0] := 'Abgeschlossen';
   EPTab.Close;
+  updateLV;
+end;
+
+procedure TMainSetupForm.importFileCache;
+var
+  item  : TListItem;
+  fname : string;
+  path  : String;
+  subs  : TStringDynArray;
+  arr   : TStringDynArray;
+  i, j  : integer;
+  st    : TStream;
+  fi    : TStream;
+begin
+  item := progress('Filecache');
+  path := TPath.Combine(m_home, 'FileCache');
+
+  FCTab.Open;
+  subs := TDirectory.GetDirectories(path);
+  initPGBar( high(subs));
+  for i := low(subs) to high(subs) do begin
+    arr := TDirectory.GetFiles(subs[i]);
+    for j:= Low(arr) to High(arr) do begin
+      FDTab.Append;
+      FDTab.FieldByName('FC_ID').AsInteger    := AutoInc('gen_fc_id');
+      FDTab.FieldByName('FC_NAME').AsString   := ExtractFileName(arr[j]);
+      FDTab.FieldByName('FC_CACHE').AsString  := ExtractFileName(subs[i]);
+      FDTab.FieldByName('FC_STAMP').AsDateTime:= now;
+      FDTab.FieldByName('FC_MD5').AsString    := md5(arr[i]);
+
+      st  := FDTab.CreateBlobStream(FDTab.FieldByName('FC_DATA'), bmWrite);
+      fi  := TFileStream.Create(arr[i], fmOpenRead + fmShareDenyNone);
+      st.CopyFrom(fi, -1);
+      fi.Free;
+      st.Free;
+
+      FDTab.Post;
+
+      ProgressBar1.Position := i;
+    end;
+  end;
+
+  FCTab.Close;
+
+  item.SubItems.Strings[0] := 'Abgeschlossen';
   updateLV;
 end;
 

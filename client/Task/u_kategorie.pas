@@ -114,6 +114,9 @@ var
     end;
   end;
 begin
+  if not FileExists(fname) then
+    exit;
+
   obj := loadJSON(fname);
   arr := JArray( obj, 'Kategorie');
   if not Assigned(arr) then

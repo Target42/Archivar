@@ -406,6 +406,8 @@ object MainSetupForm: TMainSetupForm
       Header.Subtitle.Font.Style = []
       Caption = 'ServerInfo'
       OnEnterPage = ServerInfoEnterPage
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object edHostname: TLabeledEdit
         Left = 16
         Top = 96
@@ -492,6 +494,8 @@ object MainSetupForm: TMainSetupForm
       Caption = 'Sicherheit'
       OnEnterPage = SicherheitEnterPage
       OnExitPage = SicherheitExitPage
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object LabeledEdit1: TLabeledEdit
         Left = 24
         Top = 96
@@ -533,6 +537,8 @@ object MainSetupForm: TMainSetupForm
       Header.Subtitle.Font.Style = []
       Caption = 'InitData'
       OnEnterPage = InitDataEnterPage
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Panel1: TPanel
         Left = 0
         Top = 197
@@ -712,5 +718,13 @@ object MainSetupForm: TMainSetupForm
     TableName = 'TB_TEXT'
     Left = 440
     Top = 192
+  end
+  object FCTab: TFDTable
+    Connection = ArchivarConnection
+    Transaction = IBTransaction1
+    UpdateOptions.UpdateTableName = 'FC_FILE_CACHE'
+    TableName = 'FC_FILE_CACHE'
+    Left = 256
+    Top = 216
   end
 end

@@ -51,10 +51,10 @@ type
           FStatus: String;
           Fid: integer;
           Fty: integer;
-        FFlags: integer;
-        FIndex: integer;
-        FRems: string;
-        FColor: TColor;
+          FFlags: integer;
+          FIndex: integer;
+          FRems: string;
+          FColor: TColor;
         public
           constructor create;
           Destructor Destroy; override;
@@ -335,6 +335,8 @@ begin
     LV.Canvas.Font.Color := clRed
   else
     LV.Canvas.Font.Color := clBlack;
+  if (SubItem = 8) and ( d.Color <> 0 ) then
+    LV.Canvas.Brush.Color := d.Color;
 end;
 
 procedure TTaskListFrame.LVDblClick(Sender: TObject);

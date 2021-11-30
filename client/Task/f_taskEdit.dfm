@@ -45,7 +45,7 @@ object TaskEditForm: TTaskEditForm
     Top = 0
     Width = 725
     Height = 420
-    ActivePage = TabSheet5
+    ActivePage = TabSheet1
     Align = alClient
     TabOrder = 1
     object TabSheet1: TTabSheet
@@ -108,14 +108,14 @@ object TaskEditForm: TTaskEditForm
           Caption = 'Style'
         end
         object Label9: TLabel
-          Left = 188
+          Left = 4
           Top = 84
           Width = 54
           Height = 13
           Caption = 'Kommentar'
         end
         object Label10: TLabel
-          Left = 8
+          Left = 466
           Top = 80
           Width = 28
           Height = 13
@@ -193,25 +193,27 @@ object TaskEditForm: TTaskEditForm
           OnChange = ComboBox2Change
         end
         object DBEdit5: TDBEdit
-          Left = 248
+          Left = 64
           Top = 78
           Width = 380
           Height = 21
           DataField = 'TA_REM'
           DataSource = TaskSrc
-          TabOrder = 8
+          TabOrder = 7
           OnKeyPress = DBEdit1KeyPress
         end
         object JvColorComboBox1: TJvColorComboBox
-          Left = 49
+          Left = 500
           Top = 78
-          Width = 121
+          Width = 145
           Height = 20
           ColorDialogText = 'Custom...'
-          DroppedDownWidth = 121
+          DroppedDownWidth = 145
           NewColorText = 'Custom'
           Options = [coText]
-          TabOrder = 7
+          Sorted = True
+          TabOrder = 8
+          OnChange = JvColorComboBox1Change
         end
       end
       object PageControl2: TPageControl
@@ -305,42 +307,58 @@ object TaskEditForm: TTaskEditForm
         Height = 392
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 717
+        ExplicitHeight = 392
         inherited GroupBox3: TGroupBox
           Left = 532
           Height = 392
+          ExplicitLeft = 532
+          ExplicitHeight = 392
           inherited TextBlockFrame1: TTextBlockFrame
             Height = 375
+            ExplicitHeight = 375
             inherited Panel1: TPanel
               Top = 319
-              inherited LabeledEdit1: TLabeledEdit
-                ExplicitWidth = 0
-              end
+              ExplicitTop = 319
+              ExplicitWidth = 181
             end
             inherited LV: TListView
               Height = 319
+              ExplicitHeight = 319
             end
           end
         end
         inherited Panel1: TPanel
           Width = 532
           Height = 392
+          ExplicitWidth = 532
+          ExplicitHeight = 392
           inherited GroupBox1: TGroupBox
             Width = 532
+            ExplicitWidth = 532
             inherited EditFrame1: TEditFrame
               Width = 528
+              ExplicitWidth = 528
               inherited RE: TRichEdit
                 Width = 528
                 ExplicitWidth = 528
-                ExplicitHeight = 80
               end
             end
           end
           inherited GroupBox2: TGroupBox
             Width = 532
             Height = 295
+            ExplicitLeft = 0
+            ExplicitTop = 97
+            ExplicitWidth = 532
+            ExplicitHeight = 295
             inherited WebBrowser1: TWebBrowser
+              Width = 522
+              Height = 272
+              ExplicitWidth = 175
+              ExplicitHeight = 82
               ControlData = {
-                4C000000161200007A0800000000000000000000000000000000000000000000
+                4C000000F33500001D1C00000000000000000000000000000000000000000000
                 000000004C000000000000000000000001000000E0D057007335CF11AE690800
                 2B2E126208000000000000004C0000000114020000000000C000000000000046
                 8000000000000000000000000000000000000000000000000000000000000000
@@ -385,7 +403,7 @@ object TaskEditForm: TTaskEditForm
   end
   object ActionList1: TActionList
     Left = 436
-    Top = 112
+    Top = 152
     object ac_bearbeiten: TAction
       Caption = 'Bearbeiten'
       ShortCut = 114
@@ -516,7 +534,6 @@ object TaskEditForm: TTaskEditForm
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsTask'
-    SQLConnection = GM.SQLConnection1
     Left = 232
     Top = 152
   end

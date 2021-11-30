@@ -56,7 +56,6 @@ implementation
 uses
   Grijjy.CloudLogging, m_db, m_glob_server, m_lockMod, System.Generics.Collections,
   u_berTypes, i_user;
-
 {%CLASSGROUP 'System.Classes.TPersistent'}
 
 {$R *.dfm}

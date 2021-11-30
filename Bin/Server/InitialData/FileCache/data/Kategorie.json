@@ -1,0 +1,25 @@
+{
+  "Kategorie": 
+  [
+    {
+      "name":"Unkritisch",
+      "farbe":"#A9F5A9"
+    },
+    {
+      "name":"Kritisch",
+      "farbe":"#FF0000"
+    },
+    {
+      "name":"Nachfrage",
+      "farbe":"#F7D358"
+    },
+    {
+      "name":"Externe",
+      "farbe":"#FE2EC8"
+    },
+    {
+      "name":"Unbearbeitet",
+      "farbe":"#FFFFFF"
+    }
+  ]
+}
