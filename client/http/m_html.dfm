@@ -19,9 +19,9 @@ object HtmlMod: THtmlMod
         'ss">'
       '  </head>'
       '<body>'
-      ''
-      '<#data>'
-      ''
+      '  <div id="data">'
+      '    <#data>'
+      '  </div>'
       '</body>'
       '</html>')
     OnHTMLTag = FrameHTMLTag

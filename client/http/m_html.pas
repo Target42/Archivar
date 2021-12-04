@@ -100,7 +100,9 @@ var
       '<link rel="stylesheet" type="text/css" href="/css/archivar.css">'+
     '</head>'+
   '<body>'+
+  '<div id="data">'+
   '<#data>'+
+  '</div>'+
   '</body>'+
   '</html>';
 
