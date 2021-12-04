@@ -22,6 +22,7 @@ type
   TKategorien = class
     private
       m_list : TList<TKategorie>;
+      m_dict : TDictionary<TColor, TKategorie>;
       function getCount : integer;
 
       function  getItem( inx : integer ) : TKategorie;
@@ -35,6 +36,8 @@ type
 
       property count : integer read getCount;
       property Items[inx : integer ] : TKategorie read getItem write setItem;
+
+      function getColorName( color : TColor ) : string;
   end;
 
 var
@@ -63,6 +66,7 @@ end;
 constructor TKategorien.create;
 begin
   m_list := TList<TKategorie>.create;
+  m_dict := TDictionary<TColor, TKategorie>.create;
 end;
 
 destructor TKategorien.Destroy;
@@ -74,7 +78,17 @@ begin
   m_list.Clear;
   m_list.Free;
 
+  m_dict.Free;
+
   inherited;
+end;
+
+function TKategorien.getColorName(color: TColor): string;
+begin
+  Result := '';
+
+  if m_dict.ContainsKey(color) then
+    Result := m_dict[color].Name;
 end;
 
 function TKategorien.getCount: integer;
@@ -130,6 +144,8 @@ begin
 
     kat.Name  := JString(row, 'name');
     kat.Color := fromHTML( JString( row, 'farbe'));
+
+    m_dict.AddOrSetValue(kat.Color, kat);
   end;
 
   obj.Free;
