@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<DataField name="SONTAGSARBEIT" clid="{11F9B1FB-9E19-4121-9DC1-90B6B7B230F3}" datatype="bool" isGlobal="true" globalname="SONTAGSARBEIT"><Text></Text><Properties><Property name="Default" typ="bool"><value>false</value></Property></Properties></DataField>

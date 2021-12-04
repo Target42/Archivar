@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<DataField name="FEIERTAGSARBEIT" clid="{7B176EE6-2993-4B78-A23F-CF1CD626EF67}" datatype="bool" isGlobal="true" globalname="FEIERTAGSARBEIT"><Text></Text><Properties><Property name="Default" typ="bool"><value>false</value></Property></Properties></DataField>

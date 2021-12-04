@@ -106,6 +106,7 @@ object TableColumnsForm: TTableColumnsForm
         EE09EEEEEEEEEEEEEEEEEEEEEEEEEEEEEE81EEEEEEEEEEEEEEEEEEEEEEEEEEEE
         EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE}
       NumGlyphs = 2
+      OnClick = SpeedButton1Click
     end
     object SpeedButton2: TSpeedButton
       Left = 45
@@ -164,6 +165,7 @@ object TableColumnsForm: TTableColumnsForm
         09090909EEEEEEEEEEEEEEEEEEEEEE8181818181EEEEEEEEEEEEEEEEEEEEEEEE
         EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE}
       NumGlyphs = 2
+      OnClick = SpeedButton2Click
     end
     object BitBtn1: TBitBtn
       Left = 88
@@ -364,5 +366,6 @@ object TableColumnsForm: TTableColumnsForm
     RowSelect = True
     TabOrder = 2
     ViewStyle = vsReport
+    OnDblClick = LVDblClick
   end
 end

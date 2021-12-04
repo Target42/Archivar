@@ -139,6 +139,7 @@ begin
     end;
     DATab.Next;
   end;
+
   DBGrid1.Enabled := true;
 end;
 

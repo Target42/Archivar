@@ -24,6 +24,9 @@ type
     procedure BitBtn2Click(Sender: TObject);
     procedure BitBtn3Click(Sender: TObject);
     procedure BitBtn4Click(Sender: TObject);
+    procedure SpeedButton1Click(Sender: TObject);
+    procedure SpeedButton2Click(Sender: TObject);
+    procedure LVDblClick(Sender: TObject);
   private
     m_table : ITaskCtrl;
     m_df    : IDataField;
@@ -143,6 +146,11 @@ begin
 
 end;
 
+procedure TTableColumnsForm.LVDblClick(Sender: TObject);
+begin
+  BitBtn2.Click;
+end;
+
 procedure TTableColumnsForm.setPropertyValue(ctrl: ITaskCtrl; name,
   value: string);
 var
@@ -170,6 +178,31 @@ begin
 
   updateView;
 end;
+
+procedure TTableColumnsForm.SpeedButton1Click(Sender: TObject);
+var
+  ctrl : ITaskCtrl;
+begin
+  if not Assigned(LV.Selected) then  exit;
+
+  ctrl := ITaskCtrl(LV.Selected.Data);
+  ctrl.up;
+
+  updateView;
+end;
+
+procedure TTableColumnsForm.SpeedButton2Click(Sender: TObject);
+var
+  ctrl : ITaskCtrl;
+begin
+  if not Assigned(LV.Selected) then  exit;
+
+  ctrl := ITaskCtrl(LV.Selected.Data);
+  ctrl.down;
+
+  updateView;
+end;
+
 
 procedure TTableColumnsForm.updateView;
 var

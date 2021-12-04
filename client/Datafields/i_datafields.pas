@@ -118,22 +118,45 @@ type
   end;
 
 procedure DataTypeFillList( items : TStrings );
+function DataTypeToDBType( name : string ) : string;
 
 implementation
 
+uses
+  System.SysUtils;
+
+const DataTypes : array[0..10] of string =
+(
+  'bool',   'date',   'datetime',   'enum',       'float',  'integer',
+  'string', 'text',   'time',       'linktable',  'table'
+);
+
+const DBTypes : array[0..10] of string =
+(
+  'string', 'float',  'float',      'string',     'float',  'integer',
+  'string', 'blob',   'float',      '',           ''
+);
+
 procedure DataTypeFillList( items : TStrings );
+var
+  i : integer;
 begin
-  items.Add('bool');
-  items.Add('date');
-  items.Add('datetime');
-  items.Add('enum');
-  items.Add('float');
-  items.Add('integer');
-  items.Add('string');
-  items.Add('text');
-  items.Add('time');
-  items.Add('linktable');
-  items.Add('table');
+  for i := low(DataTypes) to high(DataTypes) do
+    items.Add(DataTypes[i]);
+end;
+
+function DataTypeToDBType( name : string ) : string;
+var
+  i : integer;
+begin
+  Result := '';
+  for i := low(DataTypes) to high(DataTypes) do begin
+    if SameText( name, DataTypes[i]) then begin
+      Result := DBTypes[i];
+      break;
+    end;
+  end;
+
 end;
 
 end.

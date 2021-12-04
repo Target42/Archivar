@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<DataField name="MEHRSTUNDEN" clid="{5889EF53-EF7A-48CC-9986-500BD5F39379}" datatype="float" isGlobal="true" globalname="MEHRSTUNDEN"><Text>Überstunden</Text><Properties><Property name="Default" typ="unknown"><value>0.0</value></Property><Property name="Min" typ="unknown"><value>0.0</value></Property><Property name="Max" typ="unknown"><value>0.0</value></Property></Properties></DataField>

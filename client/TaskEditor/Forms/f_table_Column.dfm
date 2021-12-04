@@ -1,6 +1,7 @@
 object TableCloumnForm: TTableCloumnForm
   Left = 0
   Top = 0
+  ActiveControl = LabeledEdit1
   BorderStyle = bsDialog
   Caption = 'Tabellenspalte'
   ClientHeight = 180
