@@ -33,8 +33,14 @@ th, td {
 	border-collapse: collapse;
 }
 
-#tab1 
- {
-  width: 100%;
+#t01 table, #t01 tr, #t01 th, #t01 td {    
   background-color: #f1f1c1;
+  border: none;
+  border-collapse: collapse;
+}
+
+#data
+{
+  width:21cm;  
+  border-right: 1px solid black;
 }
