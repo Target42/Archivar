@@ -9,7 +9,7 @@ object FileFrame: TFileFrame
     Left = 0
     Top = 0
     Width = 451
-    Height = 227
+    Height = 248
     Align = alClient
     DataSource = LitFilesSrc
     Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgMultiSelect, dgTitleClick, dgTitleHotTrack]
@@ -20,6 +20,8 @@ object FileFrame: TFileFrame
     TitleFont.Height = -11
     TitleFont.Name = 'Tahoma'
     TitleFont.Style = []
+    OnDblClick = DBGrid1DblClick
+    OnDragOver = DBGrid1DragOver
     Columns = <
       item
         Expanded = False
@@ -56,32 +58,15 @@ object FileFrame: TFileFrame
   end
   object GroupBox1: TGroupBox
     Left = 0
-    Top = 227
+    Top = 248
     Width = 451
-    Height = 78
+    Height = 57
     Align = alBottom
     Caption = 'Aktionen'
     TabOrder = 1
-    object Panel1: TPanel
-      Left = 330
-      Top = 15
-      Width = 119
-      Height = 61
-      Align = alRight
-      Caption = 'Dropzone'
-      Color = clYellow
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -13
-      Font.Name = 'Tahoma'
-      Font.Style = [fsBold]
-      ParentBackground = False
-      ParentFont = False
-      TabOrder = 3
-    end
     object Button1: TBitBtn
       Left = 16
-      Top = 32
+      Top = 24
       Width = 75
       Height = 25
       Caption = 'Upload'
@@ -126,7 +111,7 @@ object FileFrame: TFileFrame
     end
     object Button2: TBitBtn
       Left = 112
-      Top = 32
+      Top = 24
       Width = 75
       Height = 25
       Caption = 'Download'
@@ -171,7 +156,7 @@ object FileFrame: TFileFrame
     end
     object Button3: TBitBtn
       Left = 216
-      Top = 32
+      Top = 24
       Width = 75
       Height = 25
       Caption = 'L'#246'schen'
@@ -239,7 +224,7 @@ object FileFrame: TFileFrame
     Top = 88
   end
   object JvDragDrop1: TJvDragDrop
-    DropTarget = Panel1
+    DropTarget = DBGrid1
     OnDrop = JvDragDrop1Drop
     Left = 142
     Top = 164
@@ -248,5 +233,16 @@ object FileFrame: TFileFrame
     Options = [ofHideReadOnly, ofAllowMultiSelect, ofFileMustExist, ofEnableSizing]
     Left = 48
     Top = 179
+  end
+  object JvBrowseForFolderDialog1: TJvBrowseForFolderDialog
+    RootDirectory = fdMyDocuments
+    Title = 'Downloadziel w'#228'hlen'
+    Left = 256
+    Top = 96
+  end
+  object FDGUIxAsyncExecuteDialog1: TFDGUIxAsyncExecuteDialog
+    Provider = 'Forms'
+    Left = 176
+    Top = 280
   end
 end
