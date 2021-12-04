@@ -97,7 +97,7 @@ implementation
 
 uses
   m_glob_client, f_taskEdit, m_WindowHandler, f_gremiumList, u_stub, u_Konst,
-  System.JSON, System.UITypes, u_json, System.Generics.Defaults;
+  System.JSON, System.UITypes, u_json, System.Generics.Defaults, u_kategorie;
 
 {$R *.dfm}
 
@@ -348,11 +348,13 @@ procedure TTaskListFrame.prepare;
 var
   i : integer;
 begin
+
   m_list := TList<DataRec>.create;
   m_sortNr := 0;
 
   for i := low(m_up) to high(m_up) do
     m_up[i] := true;
+
 end;
 
 procedure TTaskListFrame.refshData;
@@ -536,6 +538,13 @@ begin
       item.SubItems.Add(FormatDateTime('dd.MM.yyyy', Eingang));
       item.SubItems.Add(flagsToStr(flags));
       item.SubItems.Add(Rem);
+      item.SubItems.Add('');
+      if Color = 0 then
+        item.SubItems.Add('')
+      else
+        item.SubItems.Add( Kategorien.getColorName( color ));
+
+
     end;
   end;
   LV.Items.EndUpdate;
