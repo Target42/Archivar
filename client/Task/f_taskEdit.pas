@@ -313,6 +313,8 @@ var
 begin
   FormFrame1.prepare;
   LogFrame1.prepare;
+  FileFrame1.prepare;
+
   PageControl1.ActivePage := TabSheet1;
   PageControl2.ActivePage := TabSheet3;
 

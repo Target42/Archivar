@@ -20,6 +20,7 @@ type
     procedure BaseFrame1OKBtnClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure BaseFrame1AbortBtnClick(Sender: TObject);
   private
     m_fname : string;
     m_data  : TStringList;
@@ -47,9 +48,15 @@ uses
   StrUtils;
 { TWebEditorForm }
 
+procedure TWebEditorForm.BaseFrame1AbortBtnClick(Sender: TObject);
+begin
+  FNeedUpload := false;
+end;
+
 procedure TWebEditorForm.BaseFrame1OKBtnClick(Sender: TObject);
 begin
   SynEdit1.Lines.SaveToFile(m_fname);
+
   FNeedUpload := true;
   FreeAndNil(m_data);
 end;

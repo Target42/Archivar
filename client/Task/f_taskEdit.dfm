@@ -45,7 +45,7 @@ object TaskEditForm: TTaskEditForm
     Top = 0
     Width = 725
     Height = 420
-    ActivePage = TabSheet1
+    ActivePage = TabSheet2
     Align = alClient
     TabOrder = 1
     object TabSheet1: TTabSheet
@@ -282,18 +282,13 @@ object TaskEditForm: TTaskEditForm
         ExplicitHeight = 392
         inherited DBGrid1: TDBGrid
           Width = 717
-          Height = 314
+          Height = 335
         end
         inherited GroupBox1: TGroupBox
-          Top = 314
+          Top = 335
           Width = 717
-          ExplicitTop = 314
+          ExplicitTop = 335
           ExplicitWidth = 717
-          inherited Panel1: TPanel
-            Left = 596
-            Color = clMoneyGreen
-            ExplicitLeft = 596
-          end
         end
       end
     end
@@ -319,8 +314,8 @@ object TaskEditForm: TTaskEditForm
             ExplicitHeight = 375
             inherited Panel1: TPanel
               Top = 319
+              ExplicitLeft = 0
               ExplicitTop = 319
-              ExplicitWidth = 181
             end
             inherited LV: TListView
               Height = 319
@@ -348,8 +343,6 @@ object TaskEditForm: TTaskEditForm
           inherited GroupBox2: TGroupBox
             Width = 532
             Height = 295
-            ExplicitLeft = 0
-            ExplicitTop = 97
             ExplicitWidth = 532
             ExplicitHeight = 295
             inherited WebBrowser1: TWebBrowser

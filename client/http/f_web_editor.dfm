@@ -34,6 +34,9 @@ object WebEditorForm: TWebEditorForm
     inherited Panel1: TPanel
       Width = 781
       ExplicitWidth = 781
+      inherited AbortBtn: TBitBtn
+        OnClick = BaseFrame1AbortBtnClick
+      end
       inherited OKBtn: TBitBtn
         Left = 682
         OnClick = BaseFrame1OKBtnClick
@@ -68,7 +71,6 @@ object WebEditorForm: TWebEditorForm
     Lines.Strings = (
       'SynEdit1')
     FontSmoothing = fsmNone
-    ExplicitHeight = 474
   end
   object SynCssSyn1: TSynCssSyn
     Options.AutoDetectEnabled = False

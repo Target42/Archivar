@@ -254,9 +254,11 @@ var
   src : TFileStream;
 begin
   src := TFileStream.Create(fname, fmOpenRead + fmShareDenyNone);
-  st  := HCTab.CreateBlobStream(field, bmWrite);
-  st.CopyFrom( src, -1);
-  st.Free;
+  if src.Size > 0  then begin
+    st  := HCTab.CreateBlobStream(field, bmWrite);
+    st.CopyFrom( src, -1);
+    st.Free;
+  end;
   src.Free;
 end;
 

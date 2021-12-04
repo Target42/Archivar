@@ -1,13 +1,13 @@
 object ReportFrame: TReportFrame
   Left = 0
   Top = 0
-  Width = 451
+  Width = 941
   Height = 601
   Align = alTop
   AutoSize = True
   TabOrder = 0
   object Splitter1: TSplitter
-    Left = 116
+    Left = 606
     Top = 0
     Width = 5
     Height = 601
@@ -17,13 +17,14 @@ object ReportFrame: TReportFrame
     ExplicitLeft = 845
   end
   object GroupBox5: TGroupBox
-    Left = 121
+    Left = 611
     Top = 0
     Width = 330
     Height = 601
     Align = alRight
     Caption = 'Hilfe'
     TabOrder = 0
+    ExplicitLeft = 121
     object WebBrowser2: TWebBrowser
       Left = 2
       Top = 15
@@ -44,17 +45,18 @@ object ReportFrame: TReportFrame
   object Panel2: TPanel
     Left = 0
     Top = 0
-    Width = 116
+    Width = 606
     Height = 601
     Align = alClient
     BevelOuter = bvNone
     Caption = 'Panel2'
     ShowCaption = False
     TabOrder = 1
+    ExplicitWidth = 116
     object Splitter2: TSplitter
       Left = 0
       Top = 105
-      Width = 116
+      Width = 606
       Height = 5
       Cursor = crVSplit
       Align = alTop
@@ -65,13 +67,14 @@ object ReportFrame: TReportFrame
     object Panel8: TPanel
       Left = 0
       Top = 0
-      Width = 116
+      Width = 606
       Height = 105
       Align = alTop
       BevelOuter = bvNone
       Caption = 'Panel8'
       ShowCaption = False
       TabOrder = 0
+      ExplicitWidth = 116
       object Splitter5: TSplitter
         Left = 113
         Top = 0
@@ -534,6 +537,7 @@ object ReportFrame: TReportFrame
           Align = alBottom
           BevelOuter = bvNone
           Caption = 'Panel7'
+          ShowCaption = False
           TabOrder = 0
           Visible = False
         end
@@ -729,28 +733,26 @@ object ReportFrame: TReportFrame
     object PageControl1: TPageControl
       Left = 0
       Top = 110
-      Width = 116
+      Width = 606
       Height = 491
       ActivePage = TabSheet3
       Align = alClient
       TabOrder = 1
+      ExplicitWidth = 116
       object TabSheet3: TTabSheet
         Caption = 'Preview'
         ImageIndex = 2
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
+        ExplicitWidth = 108
         object WebBrowser1: TWebBrowser
           Left = 0
           Top = 41
-          Width = 761
+          Width = 598
           Height = 422
           Align = alClient
           TabOrder = 0
-          ExplicitWidth = 835
+          ExplicitWidth = 895
           ControlData = {
-            4C000000A74E00009D2B00000000000000000000000000000000000000000000
+            4C000000CE3D00009D2B00000000000000000000000000000000000000000000
             000000004C000000000000000000000001000000E0D057007335CF11AE690800
             2B2E126208000000000000004C0000000114020000000000C000000000000046
             8000000000000000000000000000000000000000000000000000000000000000
@@ -759,7 +761,7 @@ object ReportFrame: TReportFrame
         object Panel1: TPanel
           Left = 0
           Top = 0
-          Width = 761
+          Width = 598
           Height = 41
           Align = alTop
           BevelOuter = bvNone

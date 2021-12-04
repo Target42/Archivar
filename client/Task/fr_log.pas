@@ -23,6 +23,8 @@ type
     procedure Memo1DragOver(Sender, Source: TObject; X, Y: Integer;
       State: TDragState; var Accept: Boolean);
     procedure Memo1DragDrop(Sender, Source: TObject; X, Y: Integer);
+    procedure TextBlockFrame1LabeledEdit1KeyPress(Sender: TObject;
+      var Key: Char);
   private
     m_dataset : TDataSet;
   public
@@ -105,6 +107,13 @@ procedure TLogFrame.release;
 begin
   m_dataset := NIL;
   TextBlockFrame1.release;
+end;
+
+procedure TLogFrame.TextBlockFrame1LabeledEdit1KeyPress(Sender: TObject;
+  var Key: Char);
+begin
+  TextBlockFrame1.LabeledEdit1KeyPress(Sender, Key);
+
 end;
 
 procedure TLogFrame.updateData(DataSet: TDataSet);
