@@ -3,7 +3,7 @@ unit u_TaskControlFactory;
 interface
 
 uses
-  i_taskEdit, System.Generics.Collections, u_TaskCtrlEdit;
+  i_taskEdit, System.Generics.Collections, u_TaskCtrlEdit, u_TaskCtrlRichEdit;
 
 type
   TTaskControlFactory = class sealed
@@ -29,8 +29,8 @@ implementation
 uses
   Winapi.Windows, System.SysUtils, u_TaskCtrlImpl, u_TaskCtrlLabel,
   u_TaskCtrlGroupBox, u_TaskCtrlTable, u_TaskCtrlComboBox,
-  u_TaskCtrlLabeledEdit, u_TaskCtrlTableField, u_TaskCtrlPanel, u_TaskCtrlMemo,
-  u_TaskCtrlRichEdit, u_TaskCtrlSpliter;
+  u_TaskCtrlLabeledEdit, u_TaskCtrlTableField, u_TaskCtrlPanel, u_TaskCtrlMemo, u_TaskCtrlSpliter, u_taskCtrlRadio, u_TaskCtrlCheck,
+  u_TaskCtrlRadioGroup;
 
 constructor TTaskControlFactory.Create;
 begin
@@ -48,6 +48,8 @@ begin
   m_map.Add(LowerCase('TRichEdit'),    ctRichEdit );
   m_map.Add(LowerCase('TSplitter'),    ctSpliter );
   m_map.Add(LowerCase('TPanel'),       ctPanel );
+  m_map.Add(LowerCase('TRadioButton'), ctRadio );
+  m_map.Add(LowerCase('TCheckBox'),    ctCheckBox );
 
 end;
 
@@ -77,12 +79,12 @@ begin
     ctPanel:        Result := TaskCtrlPanel.create(frm);
     ctMemo:         Result := TaskCtrlMemo.create( frm );
     ctRichEdit:     Result := TaskCtrlRichEdit.create(frm);
-    ctRadio: ;
-    ctRadioGrp: ;
-    ctCheckBox: ;
-    ctTable:       Result := TaskCtrlTable.create( frm );
-    ctTableField:  Result := TaskCtrlTableField.create( frm );
-    ctSpliter:     Result := TaskCtrlSplitter.Create(frm);
+    ctRadio:        Result := TTaskCtrlRadio.create(frm);
+    ctRadioGrp:     Result := TaskCtrlRadioGroup.Create(frm);
+    ctCheckBox:     Result := TTaskCtrlCheck.create(frm);
+    ctTable:        Result := TaskCtrlTable.create( frm );
+    ctTableField:   Result := TaskCtrlTableField.create( frm );
+    ctSpliter:      Result := TaskCtrlSplitter.Create(frm);
   else
     Result := NIL;
   end;

@@ -9,14 +9,14 @@ type
   TDataField = class(TInterfacedObject, IDataField)
     private
       m_owner:IDataFieldList;
-      m_list : TList<IProperty>;
-      m_name : string;
-      m_gname: string;
-      m_clid : string;
-      m_typ  : string;
-      m_rem  : string;
-      m_glob : boolean;
-      m_childs: IDataFieldList;
+      m_list    : TList<IProperty>;
+      m_name    : string;
+      m_gname   : string;
+      m_clid    : string;
+      m_typ     : string;
+      m_rem     : string;
+      m_glob    : boolean;
+      m_childs  : IDataFieldList;
 
       procedure SetName( value : string );
       function  GetName : string;

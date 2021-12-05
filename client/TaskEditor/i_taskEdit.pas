@@ -187,6 +187,8 @@ type
     procedure updateControl;
 
     procedure clearContent( recursive : boolean );
+
+    procedure KeyPress(Sender: TObject; var Key: Char);
   end;
 
   ITaskCtrlProp   = interface

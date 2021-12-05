@@ -47,7 +47,10 @@ type
     procedure setReadOnly( value : boolean ); virtual;
     function  getReadOnly : boolean; virtual;
 
-    procedure KeyPress(Sender: TObject; var Key: Char);
+    procedure KeyPress(Sender: TObject; var Key: Char); virtual;
+    function checkKey( var key : Char ) : boolean; virtual;
+
+    procedure doClick(Sender : TObject );
   private
 
     function  getChilds : TList<ITaskCtrl>;
@@ -159,6 +162,14 @@ begin
   end;
 end;
 
+function TaskCtrlImpl.checkKey(var key: Char): boolean;
+begin
+  Result := true;
+  if Assigned(m_dataField) then begin
+
+  end;
+end;
+
 procedure TaskCtrlImpl.clearContent(recursive: boolean);
 var
   i : integer;
@@ -212,6 +223,11 @@ begin
   m_props.Free;
   m_list.Free;
   inherited;
+end;
+
+procedure TaskCtrlImpl.doClick(Sender: TObject);
+begin
+  m_changed := true;
 end;
 
 procedure TaskCtrlImpl.doSetMouse(md: TControlMouseDown; mv: TControlMouseMove;

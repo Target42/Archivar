@@ -16,6 +16,8 @@ type
       function  getTableCtrlIF : ITaskCtrlTable; override;
       procedure setReadOnly( value : boolean ); override;
       function  getReadOnly : boolean; override;
+
+      procedure KeyPress(Sender: TObject; var Key: Char); override;
     private
       m_sg : TStringGrid;
 
@@ -168,6 +170,18 @@ begin
   Result := self;
 end;
 
+procedure TaskCtrlTable.KeyPress(Sender: TObject; var Key: Char);
+var
+  ctrl : ITaskCtrl;
+begin
+  if (m_sg.Col = 0) or (m_sg.Row = 0 ) then  exit;
+  inherited;
+
+  ctrl := m_list[m_sg.Col-1];
+  if Assigned(ctrl) then
+    ctrl.KeyPress( sender, Key );
+end;
+
 function TaskCtrlTable.newControl(parent: TWinControl; x, y: Integer): TControl;
 var
   pop : TPopupMenu;
@@ -225,7 +239,7 @@ end;
 procedure TaskCtrlTable.setControlTypeProps;
 begin
   inherited;
-  m_props.Add(TaskCtrlPropImpl.create(self, 'Fields',   'TFields'));
+  m_props.Add(TaskCtrlPropImpl.create(self, 'Fields',     'TFields'));
   m_props.Add(TaskCtrlPropImpl.create(self, 'Datafield',  'TaskDataField'));
 end;
 

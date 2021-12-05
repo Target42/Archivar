@@ -84,8 +84,7 @@ begin
     Result := (m_ctrl as TComboBox).Enabled;
 end;
 
-function TaskCtrlComboBox.newControl(parent: TWinControl; x,
-  y: Integer): TControl;
+function TaskCtrlComboBox.newControl(parent: TWinControl; x, y: Integer): TControl;
 var
   cb : TComboBox;
 begin

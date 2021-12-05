@@ -152,28 +152,32 @@ const
   );
   ContainerList : array[1..3] of TCtrlEntry =
   (
-    (name:'TPanel';         typ:ctPanel;    inx:7),
-    (name:'TGroupbox';      typ:ctGroupBox; inx:3),
-    (name:'TSplitter';      typ:ctSpliter;  inx:10)
+    (name:'TPanel';       typ:ctPanel;    inx:7),
+    (name:'TGroupbox';    typ:ctGroupBox; inx:3),
+    (name:'TSplitter';    typ:ctSpliter;  inx:10)
   );
   TextList : array[1..1] of TCtrlEntry =
   (
-    (name:'TLabel';         typ:ctLabel;    inx:4)
+    (name:'TLabel';       typ:ctLabel;    inx:4)
   );
 
   TextFieldList : array[1..2] of TCtrlEntry =
   (
-    (name:'TMemo';            typ:ctMemo;     inx:6),
-    (name:'TRichEdit';        typ:ctRichEdit; inx:9)
+    (name:'TMemo';        typ:ctMemo;     inx:6),
+    (name:'TRichEdit';    typ:ctRichEdit; inx:9)
   );
   RadioList : array[1..2] of TCtrlEntry =
   (
-    (name:'TRadioBtn';          typ:ctRadio;    inx:8),
-    (name:'TRadioGroup';        typ:ctRadioGrp; inx:-1)
+    (name:'TRadioBtn';    typ:ctRadio;    inx:8),
+    (name:'TRadioGroup';  typ:ctRadioGrp; inx:12)
   );
   TableList : array[1..1] of TCtrlEntry =
   (
-    (name:'TTable';         typ:ctTable;        inx:11)
+    (name:'TTable';       typ:ctTable;    inx:11)
+  );
+  CheckList : array[1..1] of TCtrlEntry =
+  (
+    (name:'TCheckBox';    typ:ctCheckBox; inx:0)
   );
 
 
@@ -406,7 +410,8 @@ begin
   end;
 
   ctrl := m_form.createControl(Sender as TControl, m_newType, x, y);
-  ctrl.setMouse( ControlMouseDown, ControlMouseMove, ControlMouseUp );
+  if Assigned(ctrl) then
+    ctrl.setMouse( ControlMouseDown, ControlMouseMove, ControlMouseUp );
 
   updateTree;
 
@@ -1165,6 +1170,8 @@ begin
   fillGroup('Label',      TextList);
   fillGroup('Table',      TableList);
   fillGroup('Text',       TextFieldList);
+  fillGroup('Radio',      RadioList);
+  fillGroup('Check',      CheckList );
 
   LV.Items.EndUpdate;
 end;

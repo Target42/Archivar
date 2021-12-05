@@ -192,7 +192,10 @@ uses
   f_passwd in 'crypt\f_passwd.pas' {PassWdform},
   f_dairy in 'Dairy\f_dairy.pas' {DairyForm},
   f_textblock_export in 'TextBlock\f_textblock_export.pas' {TextBlockExportForm},
-  f_textblock_import in 'TextBlock\f_textblock_import.pas' {TextblockImportForm};
+  f_textblock_import in 'TextBlock\f_textblock_import.pas' {TextblockImportForm},
+  u_taskCtrlRadio in 'TaskEditor\controls\u_taskCtrlRadio.pas',
+  u_TaskCtrlCheck in 'TaskEditor\controls\u_TaskCtrlCheck.pas',
+  u_TaskCtrlRadioGroup in 'TaskEditor\controls\u_TaskCtrlRadioGroup.pas';
 
 {$R *.res}
 

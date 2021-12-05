@@ -51,6 +51,15 @@ type
     function  getRichEditProps( var value : string ) : boolean;
     procedure setRichEditProps( value : string );
 
+    function  getRadioBtnProps( var value : string ) : boolean;
+    procedure setRadioBtnProps( value : string );
+
+    function  getCheckBoxProps( var value : string ) : boolean;
+    procedure setCheckBoxProps( value : string );
+
+    function  getRadioGroupProps( var value : string ) : boolean;
+    procedure setRadioGroupProps( value : string );
+
     function  getValueList : TStringList;
 
     procedure setAlign( value : string );
@@ -143,6 +152,18 @@ begin
   list.Assign(m_list);
 end;
 
+function TaskCtrlPropImpl.getCheckBoxProps(var value: string): boolean;
+begin
+  Result := true;
+  if SameText( m_name, 'checked') then begin
+    if (m_ctrl as TCheckBox).Checked then
+      Value := 'true'
+    else
+      value := 'false';
+  end else
+    Result := false;
+end;
+
 function TaskCtrlPropImpl.getComboBoxProps( var value : string ) : boolean;
 begin
   Result := true;
@@ -221,6 +242,31 @@ begin
   Result := m_name;
 end;
 
+function TaskCtrlPropImpl.getRadioBtnProps(var value: string): boolean;
+begin
+  Result := true;
+  if SameText( m_name, 'checked') then begin
+    if (m_ctrl as TRadioButton).Checked then
+      Value := 'true'
+    else
+      value := 'false';
+  end else
+    Result := false;
+
+end;
+
+function TaskCtrlPropImpl.getRadioGroupProps(var value: string): boolean;
+begin
+  Result := true;
+  if SameText(m_name, 'Items') and Assigned(m_ctrl) then
+    (m_ctrl as TRadioGroup).Items.Assign(m_list);
+
+
+  if      SameText(m_name, 'Items') then      value := (m_ctrl as TRadioGroup).Items.Text
+  else if SameText(m_name, 'ItemIndex') then  value := IntToStr((m_ctrl as TRadioGroup).ItemIndex)
+  else Result := false;
+end;
+
 function TaskCtrlPropImpl.getRichEditProps(var value: string): boolean;
 begin
   Result := true;
@@ -274,7 +320,10 @@ begin
     if (not ValueSet) and (m_ctrl is TLabeledEdit) then       ValueSet := getLabeledEditProps(Result);
     if (not ValueSet) and (m_ctrl is TComboBox) then          ValueSet := getComboBoxProps(Result);
     if (not ValueSet) and (m_ctrl is TMemo) then              ValueSet := getMemoProps(Result);
-    if (not ValueSet) and (m_ctrl is TRichEdit) then          getRichEditProps(Result);
+    if (not ValueSet) and (m_ctrl is TRichEdit) then          ValueSet := getRichEditProps(Result);
+    if (not ValueSet) and (m_ctrl is TRadioButton) then       ValueSet := getRadioBtnProps(Result);
+    if (not ValueSet) and (m_ctrl is TCheckBox) then          ValueSet := getCheckBoxProps(Result);
+    if (not ValueSet) and (m_ctrl is TRadioGroup) then        getRadioGroupProps(Result);
   end;
 
   m_value := Result;
@@ -318,6 +367,11 @@ begin
     alCustom: ;
   end;
   m_ctrl.Align := al;
+end;
+
+procedure TaskCtrlPropImpl.setCheckBoxProps(value: string);
+begin
+  if SameText(m_name, 'checked') then  (m_ctrl as TCheckBox).Checked := SameText(value, 'true') or SameText(value, 'ja');
 end;
 
 procedure TaskCtrlPropImpl.setComboBoxProps(value: string);
@@ -378,6 +432,20 @@ begin
   m_name := value;
 end;
 
+procedure TaskCtrlPropImpl.setRadioBtnProps(value: string);
+begin
+  if SameText(m_name, 'checked') then  (m_ctrl as TRadiobutton).Checked := SameText(value, 'true') or SameText(value, 'ja');
+end;
+
+procedure TaskCtrlPropImpl.setRadioGroupProps(value: string);
+begin
+  if SameText(m_name, 'Items') and Assigned(m_ctrl) then
+    m_list.Text := value;
+
+  if      SameText(m_name, 'Items') then      (m_ctrl as TRadioGroup).Items.Text := value
+  else if SameText(m_name, 'ItemIndex') then  try (m_ctrl as TRadioGroup).ItemIndex := StrToint( value); except end;
+end;
+
 procedure TaskCtrlPropImpl.setRichEditProps(value: string);
 begin
     if SameText(m_name, 'Text') then       (m_ctrl as TRichEdit).Lines.Text := value;
@@ -429,14 +497,17 @@ begin
   else if SameText(m_name, 'Align') then    setAlign(value)
   else if SameText(m_name, 'Required') then m_owner.Required := Str2Bool(value);
 
-  if m_ctrl is TLabel then      setLabelProps(value);
-  if m_ctrl is TGroupbox then   setGroupboxProps(value);
-  if m_ctrl is TCustomEdit then setCustomEditProps(value);
-  if m_ctrl is TEdit then       setdEditProps( value );
-  if m_ctrl is TLabeledEdit then setLabeledEditProps(value);
-  if m_ctrl is TComboBox then   setComboBoxProps(value);
-  if m_ctrl is TMemo then       setMemoProps(value);
-  if m_ctrl is TRichEdit then   setRichEditProps(value);
+  if m_ctrl is TLabel then        setLabelProps(value);
+  if m_ctrl is TGroupbox then     setGroupboxProps(value);
+  if m_ctrl is TCustomEdit then   setCustomEditProps(value);
+  if m_ctrl is TEdit then         setdEditProps( value );
+  if m_ctrl is TLabeledEdit then  setLabeledEditProps(value);
+  if m_ctrl is TComboBox then     setComboBoxProps(value);
+  if m_ctrl is TMemo then         setMemoProps(value);
+  if m_ctrl is TRichEdit then     setRichEditProps(value);
+  if m_ctrl is TRadioButton then  setRadioBtnProps(value);
+  if m_ctrl is TCheckBox then     setCheckBoxProps(value);
+  if m_ctrl is TRadioGroup then   setRadioGroupProps(value);
 end;
 
 function TaskCtrlPropImpl.ShowEditor : boolean;

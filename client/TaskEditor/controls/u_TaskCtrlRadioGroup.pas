@@ -1,12 +1,11 @@
-unit u_TaskCtrlEdit;
+unit u_TaskCtrlRadioGroup;
 
 interface
-
 uses
   u_TaskCtrlImpl, i_taskEdit, Vcl.Controls, System.Classes;
 
 type
-  TaskCtrlEdit = class(TaskCtrlImpl)
+  TaskCtrlRadioGroup = class(TaskCtrlImpl)
     protected
       procedure setControlTypeProps; override;
       function  newControl(parent : TWinControl; x, y : Integer) :  TControl; override;
@@ -18,7 +17,6 @@ type
       procedure setReadOnly( value : boolean ); override;
       function  getReadOnly : boolean; override;
     private
-
     public
       constructor Create(owner : ITaskForm);
       destructor Destroy; override;
@@ -29,108 +27,105 @@ type
 implementation
 
 uses
-  Vcl.StdCtrls, Winapi.Windows, System.SysUtils, u_TaskCtrlPropImpl,
-  System.UITypes, Vcl.Graphics;
+  Vcl.ExtCtrls, Vcl.Graphics, System.SysUtils, u_TaskCtrlPropImpl,
+  Winapi.Windows;
 
-{ TaskCtrlEdit }
+{ TaskCtrlRadioGroup }
 
-procedure TaskCtrlEdit.clearContent(recursive: boolean);
+procedure TaskCtrlRadioGroup.clearContent(recursive: boolean);
 begin
   inherited;
   if not Assigned(m_ctrl) then
     exit;
 
-  (m_ctrl as TEdit).Text := '';
+  (m_ctrl as TRadioGroup).ItemIndex := -1;
+
 end;
 
-procedure TaskCtrlEdit.colorRequired;
+procedure TaskCtrlRadioGroup.colorRequired;
 var
-  ed : TEdit;
+  ed : TRadioGroup;
 begin
   if not Assigned(m_ctrl) then
     exit;
 
-  ed := m_ctrl as TEdit;
+  ed := m_ctrl as TRadioGroup;
   if m_required then
     ed.Color := req
   else
     ed.Color := clWindow;
 end;
 
-constructor TaskCtrlEdit.Create(owner: ITaskForm);
+constructor TaskCtrlRadioGroup.Create(owner: ITaskForm);
 begin
   inherited;
   m_canContainData  := true;
-  m_typ             := ctEdit;
+  m_typ             := ctRadioGrp;
 end;
 
-function TaskCtrlEdit.CtrlValue: string;
+function TaskCtrlRadioGroup.CtrlValue: string;
 begin
   Result := '';
 
   if Assigned( m_ctrl) then
-    Result := trim( ( m_ctrl as TEdit).Text)
+    Result := intToStr( ( m_ctrl as TRadioGroup).ItemIndex)
   else
-    Result := self.propertyValue('Text');
+    Result := self.propertyValue('ImageIndex');
 end;
 
-destructor TaskCtrlEdit.Destroy;
+destructor TaskCtrlRadioGroup.Destroy;
 begin
 
   inherited;
 end;
 
-procedure TaskCtrlEdit.doSetMouse(md: TControlMouseDown; mv: TControlMouseMove;
+procedure TaskCtrlRadioGroup.doSetMouse(md: TControlMouseDown; mv: TControlMouseMove;
   mu: TControlMouseUp);
 begin
-  ( m_ctrl as TEdit).OnMouseDown  := md;
-  ( m_ctrl as TEdit).OnMouseUp    := mu;
-  ( m_ctrl as TEdit).OnMouseMove  := mv;
+  inherited;
 end;
 
-function TaskCtrlEdit.getReadOnly: boolean;
+function TaskCtrlRadioGroup.getReadOnly: boolean;
 begin
   Result := false;
   if Assigned(m_ctrl) then
-    Result := ( m_ctrl as TEdit).ReadOnly;
+    Result := not ( m_ctrl as TRadioGroup).Enabled;
 end;
 
-function TaskCtrlEdit.newControl(parent: TWinControl; x, y: Integer): TControl;
+function TaskCtrlRadioGroup.newControl(parent: TWinControl; x, y: Integer): TControl;
 var
-  ed : TEdit;
+  ed : TRadioGroup;
 begin
-  ed := TEdit.Create(parent as TComponent);
+  ed := TRadioGroup.Create(parent as TComponent);
   ed.Parent := parent as TWinControl;
-  ed.Name := 'Edit'+intToStr(GetTickCount);
+  ed.Name := 'RadioGroup'+intToStr(GetTickCount);
   ed.Top  := y;
   ed.Left := X;
-  ed.OnKeyPress := Self.KeyPress;
+  ed.OnClick := doClick;
 
   Result := ed;
   m_ctrl := ed;
 end;
 
-procedure TaskCtrlEdit.setControlTypeProps;
+procedure TaskCtrlRadioGroup.setControlTypeProps;
 begin
   inherited;
-
-  m_props.Add(TaskCtrlPropImpl.create(self, 'Text',       'string'));
   m_props.Add(TaskCtrlPropImpl.create(self, 'Datafield',  'TaskDataField'));
-  m_props.Add(TaskCtrlPropImpl.create(self, 'CharCase',   'TEditCharCase'));
-  m_props.Add(TaskCtrlPropImpl.create(self, 'NumbersOnly','boolean'));
+  m_props.Add(TaskCtrlPropImpl.create(self, 'ImageIndex', 'integer'));
+  m_props.Add(TaskCtrlPropImpl.create(self, 'Items',      'TStringList'));
 end;
 
-procedure TaskCtrlEdit.setCtrlValue(value: string);
+procedure TaskCtrlRadioGroup.setCtrlValue(value: string);
 begin
   inherited;
   if Assigned( m_ctrl) then
-    ( m_ctrl as TEdit).Text := value;
+    ( m_ctrl as TRadioGroup).ItemIndex := StrToIntDef(value, -1);
 end;
 
-procedure TaskCtrlEdit.setReadOnly(value: boolean);
+procedure TaskCtrlRadioGroup.setReadOnly(value: boolean);
 begin
   if Assigned(m_ctrl) then
-    ( m_ctrl as TEdit).ReadOnly := value;
+    ( m_ctrl as TRadioGroup).Enabled := not value;
 end;
 
 end.
