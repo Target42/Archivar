@@ -28,7 +28,7 @@ type
 
     function getHeight : integer;
 
-    procedure resizeForm;
+    procedure getSize( var x, y : integer );
 
     procedure prepare;
     procedure release;
@@ -37,7 +37,7 @@ type
 implementation
 
 uses
-  u_taskForm2XML, m_glob_client;
+  u_taskForm2XML, m_glob_client, Vcl.Grids;
 
 {$R *.dfm}
 
@@ -55,6 +55,52 @@ begin
   Result := true;
   if Assigned(m_form) then
     Result := m_form.ReadOnly;
+end;
+
+procedure TFormFrame.getSize(var x, y: integer);
+
+  procedure search( cmp : TComponent );
+  var
+    i, j  : integer;
+    ctrl  : TControl;
+    m     : integer;
+    s     : string;
+    sg    : TStringGrid;
+  begin
+    for i := 0 to pred(cmp.ComponentCount) do begin
+      if cmp.Components[i] is TControl then begin
+        ctrl := cmp.Components[i] as TControl;
+        s := ctrl.name;
+        m := 0;
+
+        if ctrl is TStringGrid then begin
+          sg := ctrl as TStringGrid;
+          for j := 0 to pred(sg.ColCount) do
+            m := m + SG.ColWidths[j] + 2;
+        end
+        else if not (ctrl.Align in [alClient, alTop, alBottom, alLeft, alRight]) then
+          m := ctrl.Left + ctrl.Width;
+
+        if m > X then
+          X := m;
+
+        if ctrl.Align <> alClient then begin
+          m := ctrl.Top + ctrl.Height;
+          if m > Y then
+            Y := m;
+        end;
+      end;
+      search(cmp.Components[i]);
+    end;
+  end;
+begin
+  X := 300;
+  Y := 100;
+
+  search(ScrollBox1);
+
+  Y := y + 4;
+  X := X + 16;
 end;
 
 function TFormFrame.loadByID(taid: integer): boolean;
@@ -90,27 +136,6 @@ end;
 
 procedure TFormFrame.releaseData;
 begin
-end;
-
-procedure TFormFrame.resizeForm;
-var
-  i : integer;
-  max : integer;
-  m   : integeR;
-  ctrl : TControl;
-  dif   : integer;
-begin
-  max := 0;
-  for i := 0 to pred(ScrollBox1.ComponentCount) do
-  begin
-    ctrl := ScrollBox1.Components[i] as TControl;
-    m := ctrl.Top + ctrl.Height;
-    if m > max then
-      max := m;
-  end;
-  dif := max - ScrollBox1.ClientHeight;
-  if dif > 0 then
-    self.ClientHeight := self.ClientHeight + dif;
 end;
 
 procedure TFormFrame.setForm(value: ITaskForm);

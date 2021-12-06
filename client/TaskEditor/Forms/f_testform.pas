@@ -42,9 +42,15 @@ begin
 end;
 
 procedure TTestForm.setForm(value: ITaskform);
+var
+  x, y : integer;
 begin
   m_form := value;
   FormFrame1.TaskForm := m_form;
+  FormFrame1.getSize(x, y);
+
+  ClientWidth  := x;
+  ClientHeight := y + BaseFrame1.Height;
 end;
 
 end.

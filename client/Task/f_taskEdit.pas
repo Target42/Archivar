@@ -548,8 +548,17 @@ begin
 end;
 
 procedure TTaskEditForm.resizeForm;
+var
+  x, y : Integer;
 begin
-  FormFrame1.resizeForm;
+  FormFrame1.getSize(x, y);
+
+  if x > ClientWidth then
+    ClientWidth :=x;
+
+  if TabSheet1.Height < y then begin
+    ClientHeight := ClientHeight + ( y - TabSheet1.Height );
+  end;
   Self.Position := poOwnerFormCenter;
 end;
 

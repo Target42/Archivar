@@ -45,7 +45,7 @@ object TaskEditForm: TTaskEditForm
     Top = 0
     Width = 725
     Height = 420
-    ActivePage = TabSheet2
+    ActivePage = TabSheet1
     Align = alClient
     TabOrder = 1
     object TabSheet1: TTabSheet
