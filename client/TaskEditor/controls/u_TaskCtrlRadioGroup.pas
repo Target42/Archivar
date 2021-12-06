@@ -70,7 +70,7 @@ begin
   if Assigned( m_ctrl) then
     Result := intToStr( ( m_ctrl as TRadioGroup).ItemIndex)
   else
-    Result := self.propertyValue('ImageIndex');
+    Result := self.propertyValue('ItemIndex');
 end;
 
 destructor TaskCtrlRadioGroup.Destroy;
@@ -111,15 +111,19 @@ procedure TaskCtrlRadioGroup.setControlTypeProps;
 begin
   inherited;
   m_props.Add(TaskCtrlPropImpl.create(self, 'Datafield',  'TaskDataField'));
-  m_props.Add(TaskCtrlPropImpl.create(self, 'ImageIndex', 'integer'));
+  m_props.Add(TaskCtrlPropImpl.create(self, 'ItemIndex',  'integer'));
   m_props.Add(TaskCtrlPropImpl.create(self, 'Items',      'TStringList'));
 end;
 
 procedure TaskCtrlRadioGroup.setCtrlValue(value: string);
+var
+  cb : TRadioGroup;
 begin
-  inherited;
-  if Assigned( m_ctrl) then
-    ( m_ctrl as TRadioGroup).ItemIndex := StrToIntDef(value, -1);
+  if Assigned(m_ctrl) then
+  begin
+    cb := m_ctrl as TRadioGroup;
+    cb.ItemIndex := cb.Items.IndexOf(value);
+  end
 end;
 
 procedure TaskCtrlRadioGroup.setReadOnly(value: boolean);

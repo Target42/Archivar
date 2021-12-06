@@ -263,7 +263,7 @@ begin
           win := com as TControl;
           if win.Owner <> self then
           begin
-            if win is TComboBox then
+            if (win is TComboBox) or ( win is TRadioGroup) then
             begin
               m_inReposition := true;
               ControlMouseDown( win, mbLeft, shift, mouse.CursorPos.X, Mouse.CursorPos.Y);
@@ -280,7 +280,7 @@ begin
       if com is TControl then
       begin
         win := com as TControl;
-        if win is TComboBox then
+        if (win is TComboBox) or ( win is TRadioGroup) then
         begin
           ControlMouseUp( win, mbLeft, shift, Mouse.CursorPos.X, Mouse.CursorPos.Y);;
           m_inReposition := false;
@@ -291,7 +291,7 @@ begin
     begin
       if Assigned(FCurrentNodeControl) and m_inReposition then
       begin
-        if FCurrentNodeControl is TComboBox then
+        if (FCurrentNodeControl is TComboBox) or ( FCurrentNodeControl is TRadioGroup) then
         begin
           ControlMouseMove( FCurrentNodeControl, shift, Mouse.CursorPos.X, Mouse.CursorPos.Y);
         end;

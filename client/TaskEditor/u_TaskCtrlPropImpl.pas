@@ -521,10 +521,24 @@ var
   begin
     Application.CreateForm(TStringEditorForm, StringEditorForm);
 
-    StringEditorForm.Memo1.Lines.Text := (m_ctrl as TRichEdit).Lines.Text;
+    StringEditorForm.Memo1.Lines.Assign((m_ctrl as TRichEdit).Lines);
     if StringEditorForm.ShowModal = mrok then
     begin
-      (m_ctrl as TRichEdit).Lines.Text := StringEditorForm.Memo1.Lines.Text;
+      (m_ctrl as TRichEdit).Lines.Assign(StringEditorForm.Memo1.Lines);
+      Result := true;
+    end;
+    StringEditorForm.Free;
+  end;
+  procedure setRadioGroupText;
+  var
+    StringEditorForm  : TStringEditorForm;
+  begin
+    Application.CreateForm(TStringEditorForm, StringEditorForm);
+
+    StringEditorForm.Memo1.Lines.Assign((m_ctrl as TRadioGroup).Items);
+    if StringEditorForm.ShowModal = mrok then
+    begin
+      (m_ctrl as TRadioGroup).items.Assign(StringEditorForm.Memo1.Lines);
       Result := true;
     end;
     StringEditorForm.Free;
@@ -565,6 +579,8 @@ begin
    begin
      setRichTExtText;
    end;
+  end else if m_ctrl is TRadioGroup then begin
+    if SameText(m_name, 'items' ) then setRadioGroupText;
   end;
 end;
 
