@@ -107,11 +107,12 @@ const
   (
     (name:'Default';      typ:'bool';       value:'false')
   );
-  FloatProps : array[1..3] of TPropertyEntry =
+  FloatProps : array[1..4] of TPropertyEntry =
   (
     (name:'Default';      typ:'float';      value:'0.0'),
     (name:'Min';          typ:'float';      value:'0.0'),
-    (name:'Max';          typ:'float';      value:'0.0')
+    (name:'Max';          typ:'float';      value:'0.0'),
+    (name:'Format';       typ:'string';     value:'#,##')
   );
   TextProps : array[1..1] of TPropertyEntry =
   (
@@ -252,7 +253,6 @@ begin
   Result := m_typ;
 end;
 
-
 procedure TDataField.release;
 var
   i : integer;
@@ -313,28 +313,17 @@ procedure TDataField.SetTyp(value: string);
 begin
   m_typ := value;
 
-   if m_typ = 'string' then
-     config(StringProps)
-  else if m_typ = 'integer' then
-    config(IntegerProps)
-  else if m_typ = 'float' then
-    config(FloatProps)
-  else if m_typ = 'date' then
-    config(DateProps)
-  else if m_typ = 'time' then
-    config(TimeProps)
-  else if m_typ = 'datetime' then
-    config(DateTimeProps)
-  else if m_typ = 'bool' then
-    config(BoolProps)
-  else if m_typ = 'enum' then
-    config(EnumProps)
-  else if m_typ = 'text' then
-    config(TextProps)
-  else if m_typ = 'table' then
-    config(TableProps)
-  else if m_typ = 'linktable' then
-    config(LinkTableProps);
+       if m_typ = 'string' then     config(StringProps)
+  else if m_typ = 'integer' then    config(IntegerProps)
+  else if m_typ = 'float' then      config(FloatProps)
+  else if m_typ = 'date' then       config(DateProps)
+  else if m_typ = 'time' then       config(TimeProps)
+  else if m_typ = 'datetime' then   config(DateTimeProps)
+  else if m_typ = 'bool' then       config(BoolProps)
+  else if m_typ = 'enum' then       config(EnumProps)
+  else if m_typ = 'text' then       config(TextProps)
+  else if m_typ = 'table' then      config(TableProps)
+  else if m_typ = 'linktable' then  config(LinkTableProps);
 end;
 
 end.

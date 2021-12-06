@@ -51,6 +51,11 @@ type
     function checkKey( var key : Char ) : boolean; virtual;
 
     procedure doClick(Sender : TObject );
+
+    procedure setData( value : string );
+    function  getData  : string;
+
+
   private
 
     function  getChilds : TList<ITaskCtrl>;
@@ -107,9 +112,6 @@ type
 
     procedure updateControl; virtual;
     procedure check( list : TStringList ); virtual;
-
-    procedure setData( value : string );
-    function  getData( var name, value : string ) : boolean;
 
     function  containData : boolean;
     function  isContainer : boolean;
@@ -380,11 +382,9 @@ begin
   Result := m_ctrlClass;
 end;
 
-function TaskCtrlImpl.getData( var name, value :string) : boolean;
+function TaskCtrlImpl.getData : string;
 begin
-  Result := false;
-  name := propertyValue('name');
-  value := CtrlValue;
+  Result := CtrlValue;
 end;
 
 function TaskCtrlImpl.getDataField: IDataField;

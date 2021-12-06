@@ -70,7 +70,7 @@ begin
     xf := xList.Values.Field[i];
     ctrl := form.Base.findCtrlByCLID(xf.Ctrlclid);
     if Assigned(ctrl) then
-      ctrl.setData(xf.Value);
+      ctrl.Data := xf.Value;
   end;
   for i := 0 to pred(xList.Tables.Count) do
   begin
@@ -229,7 +229,6 @@ procedure TTaskForm2XML.SaveControl(ctrl: ITaskCtrl);
 var
   i : integer;
   xField : IXMLField;
-  n, v :string;
 begin
   if Assigned( ctrl.TableCtrlIF) then
     SaveTable(ctrl)
@@ -247,8 +246,7 @@ begin
         xField.Field      := ctrl.DataField.Name;
         xField.Fieldclid  := ctrl.DataField.CLID;
       end;
-      ctrl.getData(n, v);
-      xField.Value := v;
+      xField.Value := ctrl.Data;
     end;
     for i := 0 to pred(ctrl.Childs.Count) do
       SaveControl(ctrl.Childs[i]);

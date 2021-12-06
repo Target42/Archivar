@@ -137,6 +137,9 @@ type
 
     function getTableCtrlIF : ITaskCtrlTable;
     function getTyp : TControlType;
+
+    procedure setData( value : string );
+    function getData : String;
   // public
 
     property Typ            : TControlType          read getTyp;
@@ -154,6 +157,8 @@ type
 
     property Changed        : boolean               read getChanged       write setChanged;
     property ReadOnly       : boolean               read getReadOnly      write setReadOnly;
+
+    property Data           : string                read getData          write setData;
 
     procedure release;
 
@@ -174,9 +179,6 @@ type
     procedure setMouse( md : TControlMouseDown; mv : TControlMouseMove; mu : TControlMouseUp );
     function find( pkt : TPoint ) : ITaskCtrl;
     procedure check( list : TStringList );
-
-    procedure setData( value : string );
-    function getData( var name, value :string ) : boolean;
 
     function getPropertyByName( name : string ) : ITaskCtrlProp;
     function propertyValue( name : string ) : string;
