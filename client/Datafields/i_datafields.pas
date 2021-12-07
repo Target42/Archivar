@@ -52,6 +52,7 @@ type
     property Childs     : IDataFieldList read getChilds write setChilds;
 
     function getPropertyByName( name : string ) : IProperty;
+    function propertyValue( name : string ) : string;
 
     procedure release;
     function clone : IDataField;

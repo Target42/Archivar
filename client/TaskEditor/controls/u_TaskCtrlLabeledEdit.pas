@@ -2,7 +2,7 @@ unit u_TaskCtrlLabeledEdit;
 
 interface
 uses
-  u_TaskCtrlImpl, i_taskEdit, Vcl.Controls, System.Classes;
+  u_TaskCtrlImpl, i_taskEdit, Vcl.Controls, System.Classes, u_typeHelper;
 
 type
   TaskCtrlLabeledEdit = class(TaskCtrlImpl)
@@ -16,6 +16,8 @@ type
       procedure colorRequired; override;
       procedure setReadOnly( value : boolean ); override;
       function  getReadOnly : boolean; override;
+
+      procedure configControl; override;
     private
 
     public
@@ -54,6 +56,26 @@ begin
     ed.Color := req
   else
     ed.Color := clWindow;
+end;
+
+procedure TaskCtrlLabeledEdit.configControl;
+var
+  ctrl  : TEdit;
+begin
+  inherited;
+  if not Assigned(m_ctrl) then exit;
+
+  ctrl := m_ctrl as TEdit;
+
+  ctrl.Text         := propertyValue('Text');
+  ctrl.NumbersOnly  := SameText( propertyValue('NumbersOnly'), 'true');
+  ctrl.CharCase     := Text2TEditCharCase( propertyValue('CharCase') );
+
+  if Assigned(m_dataField) then begin
+    ctrl.ReadOnly   := SameText(m_dataField.propertyValue('Readonly'), 'true');
+    ctrl.MaxLength  := StrToIntDef(m_dataField.propertyValue('Length'), 0 );
+    ctrl.CharCase   := Text2TEditCharCase(m_dataField.propertyValue('CharCase'));
+  end;
 end;
 
 constructor TaskCtrlLabeledEdit.Create(owner: ITaskForm);
@@ -109,6 +131,8 @@ begin
   ed.Left := X;
   ed.OnKeyPress := KeyPress;
   Result := ed;
+
+  configControl;
 end;
 
 procedure TaskCtrlLabeledEdit.setControlTypeProps;

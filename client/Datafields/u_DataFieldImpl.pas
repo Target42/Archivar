@@ -55,6 +55,7 @@ type
       property Childs     : IDataFieldList read getChilds write setChilds;
 
       function getPropertyByName( name : string ) : IProperty;
+      function propertyValue( name : string ) : string;
 
       procedure release;
       function clone : IDataField;
@@ -251,6 +252,17 @@ end;
 function TDataField.GetTyp: string;
 begin
   Result := m_typ;
+end;
+
+function TDataField.propertyValue(name: string): string;
+var
+  p : IProperty;
+begin
+  Result := '';
+  p := getPropertyByName(name);
+  if Assigned(p) then begin
+    Result := p.Value;
+  end;
 end;
 
 procedure TDataField.release;

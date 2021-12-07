@@ -17,6 +17,8 @@ type
       procedure colorRequired; override;
       procedure setReadOnly( value : boolean ); override;
       function  getReadOnly : boolean; override;
+
+      procedure configControl; override;
     private
     public
       constructor Create(owner : ITaskForm);
@@ -55,6 +57,22 @@ begin
     ed.Color := req
   else
     ed.Color := clWindow;
+end;
+
+procedure TTaskCtrlRadio.configControl;
+var
+  ctrl : TRadioButton;
+begin
+  inherited;
+  if not Assigned(m_ctrl) then exit;
+
+  ctrl := m_ctrl as TRadioButton;
+
+  ctrl.Checked := SameText(propertyValue('checked'), 'true');
+
+  if Assigned(m_dataField) then begin
+    ctrl.Checked := SameText(m_dataField.propertyValue('checked'), 'true');
+  end;
 end;
 
 constructor TTaskCtrlRadio.Create(owner: ITaskForm);
@@ -114,6 +132,8 @@ begin
 
   Result := ed;
   m_ctrl := ed;
+
+  configControl;
 end;
 
 procedure TTaskCtrlRadio.setControlTypeProps;

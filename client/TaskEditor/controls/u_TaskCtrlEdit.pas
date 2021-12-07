@@ -17,6 +17,8 @@ type
       procedure colorRequired; override;
       procedure setReadOnly( value : boolean ); override;
       function  getReadOnly : boolean; override;
+
+      procedure configControl; override;
     private
 
     public
@@ -30,7 +32,7 @@ implementation
 
 uses
   Vcl.StdCtrls, Winapi.Windows, System.SysUtils, u_TaskCtrlPropImpl,
-  System.UITypes, Vcl.Graphics;
+  System.UITypes, Vcl.Graphics, u_typeHelper;
 
 { TaskCtrlEdit }
 
@@ -55,6 +57,26 @@ begin
     ed.Color := req
   else
     ed.Color := clWindow;
+end;
+
+procedure TaskCtrlEdit.configControl;
+var
+  ctrl  : TEdit;
+begin
+  inherited;
+  if not Assigned(m_ctrl) then exit;
+
+  ctrl := m_ctrl as TEdit;
+
+  ctrl.Text         := propertyValue('Text');
+  ctrl.NumbersOnly  := SameText( propertyValue('NumbersOnly'), 'true');
+  ctrl.CharCase     := Text2TEditCharCase( propertyValue('CharCase') );
+
+  if Assigned(m_dataField) then begin
+    ctrl.ReadOnly   := SameText(m_dataField.propertyValue('Readonly'), 'true');
+    ctrl.MaxLength  := StrToIntDef(m_dataField.propertyValue('Length'), 0 );
+    ctrl.CharCase   := Text2TEditCharCase(m_dataField.propertyValue('CharCase'));
+  end;
 end;
 
 constructor TaskCtrlEdit.Create(owner: ITaskForm);
@@ -108,6 +130,8 @@ begin
 
   Result := ed;
   m_ctrl := ed;
+
+  configControl;
 end;
 
 procedure TaskCtrlEdit.setControlTypeProps;

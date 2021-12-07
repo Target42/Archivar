@@ -18,6 +18,8 @@ type
       procedure colorRequired; override;
       procedure setReadOnly( value : boolean ); override;
       function  getReadOnly : boolean; override;
+
+      procedure configControl; override;
     private
 
     public
@@ -55,6 +57,22 @@ begin
     ed.Color := req
   else
     ed.Color := clWindow;
+end;
+
+procedure TTaskCtrlCheck.configControl;
+var
+  ctrl : TCheckBox;
+begin
+  inherited;
+  if not Assigned(m_ctrl) then exit;
+
+  ctrl := m_ctrl as TCheckBox;
+
+  ctrl.Checked := SameText(propertyValue('checked'), 'true');
+
+  if Assigned(m_dataField) then begin
+    ctrl.Checked := SameText(m_dataField.propertyValue('checked'), 'true');
+  end;
 end;
 
 constructor TTaskCtrlCheck.Create(owner: ITaskForm);
@@ -115,6 +133,8 @@ begin
 
   Result := ed;
   m_ctrl := ed;
+
+  configControl;
 end;
 
 procedure TTaskCtrlCheck.setControlTypeProps;

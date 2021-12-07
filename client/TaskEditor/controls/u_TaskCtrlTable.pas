@@ -205,7 +205,6 @@ begin
   m_sg.Left := X;
   m_sg.Options := [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine,
     goRangeSelect, goDrawFocusSelected, goRowSizing, goColSizing, goEditing, goTabs, goAlwaysShowEditor ];
-//    goThumbTracking, goFixedColClick, goFixedRowClick, goFixedHotTrack];
 
   pop   := TPopupMenu.Create( m_sg );
   m_sg.PopupMenu := pop;
@@ -333,12 +332,20 @@ begin
     for x := 1 to pred(SG.ColCount) do
       SG.Cells[ x, 0 ] := char( 64 + x );
   end;
+  // Row number
   for y := 1 to pred(SG.RowCount) do
     SG.Cells[0, y] := IntToStr( y );
 
+  // content ...
   for y := 1 to pred(SG.RowCount) do
-    for x := 1 to pred(sg.ColCount) do
-      SG.Cells[X, y ] := SG.Cells[x, 0]+SG.Cells[0, y];
+    for x := 1 to pred(sg.ColCount) do begin
+
+      if not Assigned(m_list[x-1].DataField) then
+        SG.Cells[X, y ] := SG.Cells[x, 0]+SG.Cells[0, y]
+      else
+        SG.Cells[X, y ] := m_list[x-1].data;
+
+    end;
 end;
 
 end.

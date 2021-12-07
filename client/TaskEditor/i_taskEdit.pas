@@ -33,6 +33,7 @@ type
   ITaskFile       = interface;
   ITaskStyle      = interface;
   ITaskStyles     = interface;
+  IValidator      = interface;
 
   ITask = interface
     ['{5056AAD9-1DCC-4A50-B316-A9DDBE1CFD1D}']
@@ -140,6 +141,8 @@ type
 
     procedure setData( value : string );
     function getData : String;
+
+    function getValidator : IValidator;
   // public
 
     property Typ            : TControlType          read getTyp;
@@ -159,6 +162,7 @@ type
     property ReadOnly       : boolean               read getReadOnly      write setReadOnly;
 
     property Data           : string                read getData          write setData;
+    property Validator      : IValidator            read getValidator;
 
     procedure release;
 
@@ -400,6 +404,10 @@ type
 
 
       procedure release;
+  end;
+
+  IValidator = interface
+    ['{8E0DC4C1-7173-40FB-B70D-2DF6467BF53B}']
   end;
 
 

@@ -55,6 +55,9 @@ type
     procedure setData( value : string );
     function  getData  : string;
 
+    function getValidator : IValidator;
+
+    procedure configControl; virtual;
 
   private
 
@@ -193,6 +196,14 @@ begin
 
 end;
 
+procedure TaskCtrlImpl.configControl;
+begin
+  if Assigned(m_ctrl) then begin
+    m_ctrl.Enabled    := SameText(m_dataField.propertyValue('Enabled'), 'true');
+    m_ctrl.Visible    := SameText(m_dataField.propertyValue('Visible'), 'true');
+  end;
+end;
+
 function TaskCtrlImpl.containData: boolean;
 begin
   Result := m_canContainData;
@@ -216,8 +227,24 @@ begin
 end;
 
 function TaskCtrlImpl.CtrlValue: string;
+var
+  p : IProperty;
 begin
   Result := '';
+  if Assigned(m_dataField) then begin
+    p := m_dataField.getPropertyByName('default');
+    if Assigned(p) then
+      Result := p.Value;
+
+    if SameText(Result, '$date') or SameText(Result, '$time') or SameText(Result, '$now') then begin
+      p := m_dataField.getPropertyByName('format');
+      if Assigned(p) then
+        Result := FormatDateTime( p.Value, now )
+      else
+        Result := DateTimeToStr( now );
+    end;
+
+  end;
 end;
 
 destructor TaskCtrlImpl.Destroy;
@@ -460,6 +487,11 @@ end;
 function TaskCtrlImpl.getTyp: TControlType;
 begin
   Result := m_typ;
+end;
+
+function TaskCtrlImpl.getValidator: IValidator;
+begin
+  Result := NIL;
 end;
 
 function TaskCtrlImpl.isContainer: boolean;
