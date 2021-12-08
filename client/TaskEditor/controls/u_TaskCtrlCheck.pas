@@ -68,10 +68,10 @@ begin
 
   ctrl := m_ctrl as TCheckBox;
 
-  ctrl.Checked := SameText(propertyValue('checked'), 'true');
+  ctrl.Checked := SameText(propertyValue('checked'), 'true') or SameText(propertyValue('checked'), 'ja');
 
   if Assigned(m_dataField) then begin
-    ctrl.Checked := SameText(m_dataField.propertyValue('checked'), 'true');
+    ctrl.Checked := SameText(m_dataField.propertyValue('checked'), 'true') or SameText(m_dataField.propertyValue('checked'), 'ja');
   end;
 end;
 
@@ -88,9 +88,9 @@ begin
 
   if Assigned( m_ctrl) then begin
     if ( m_ctrl as TCheckBox).Checked then
-      Result := 'true'
+      Result := 'Ja'
     else
-      Result := 'false';
+      Result := 'Nein';
   end else
     Result := self.propertyValue('Checked');
 end;

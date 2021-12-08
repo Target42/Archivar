@@ -68,10 +68,10 @@ begin
 
   ctrl := m_ctrl as TRadioButton;
 
-  ctrl.Checked := SameText(propertyValue('checked'), 'true');
+  ctrl.Checked := SameText(propertyValue('checked'), 'true') or SameText(propertyValue('checked'), 'ja');
 
   if Assigned(m_dataField) then begin
-    ctrl.Checked := SameText(m_dataField.propertyValue('checked'), 'true');
+    ctrl.Checked := SameText(m_dataField.propertyValue('checked'), 'true') or SameText(m_dataField.propertyValue('checked'), 'ja');
   end;
 end;
 

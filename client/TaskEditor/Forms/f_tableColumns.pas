@@ -99,16 +99,25 @@ end;
 
 procedure TTableColumnsForm.BitBtn4Click(Sender: TObject);
 var
-  i : integer;
-  ctrl: ITaskCtrl;
+  i, j  : integer;
+  ctrl  : ITaskCtrl;
+  found : boolean;
+  s     : string;
 begin
   if not Assigned(m_table) or  not Assigned(m_df) then
     exit;
 
   for i := 0 to pred(m_df.Childs.Count) do
   begin
-    ctrl := m_table.findCtrl(m_df.Childs.Items[i].Name);
-    if not Assigned( ctrl ) then
+    found   := false;
+    for j   := 0 to pred(LV.Items.Count) do begin
+      ctrl  := ITaskCtrl(LV.Items.Item[j].Data);
+      s     := ctrl.propertyValue('Datafield');
+      found := SameText( m_df.Childs.Items[i].Name, s);
+      if found then  break;
+    end;
+
+    if not found then
     begin
       ctrl := m_table.NewChild('TTableField');
       setPropertyValue(ctrl, 'Header',    m_df.Childs.Items[i].Name);

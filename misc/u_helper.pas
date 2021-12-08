@@ -19,15 +19,15 @@ uses
 function bool2Str( value : boolean ) : string;
 begin
   if value then
-    Result := 'true'
+    Result := 'Ja'
   else
-    Result := 'false';
+    Result := 'Nein';
 
 end;
 
 function str2bool( value : string ) :  boolean;
 begin
-  Result := SameText( value, 'true' );
+  Result := SameText( value, 'ja' ) or SameText( value, 'true' );
 end;
 
 procedure selectItem( list : TListBox; obj : pointer );

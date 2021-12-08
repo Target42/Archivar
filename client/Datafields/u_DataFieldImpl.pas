@@ -73,7 +73,7 @@ const
   StringProps : array[1..4] of TPropertyEntry =
   (
     (name:'Length';       typ:'integer';        value:'100'),
-    (name:'Readonly';     typ:'bool';           value:'false'),
+    (name:'Readonly';     typ:'bool';           value:'Nein'),
     (name:'RegEx';        typ:'string';         value:''),
     (name:'CharCase';     typ:'TEditCharCase';  value:'ecNormal';)
   );
@@ -81,7 +81,7 @@ const
   (
     (name:'Values';       typ:'EnumList';   value:'1;2;3'),
     (name:'Default';      typ:'string';     value:'1'),
-    (name:'Egene Werte';  typ:'bool';       value:'false')
+    (name:'Egene Werte';  typ:'bool';       value:'Nein')
   );
   IntegerProps : array[1..3] of TPropertyEntry =
   (
@@ -106,7 +106,7 @@ const
   );
   BoolProps : array[1..1] of TPropertyEntry =
   (
-    (name:'Default';      typ:'bool';       value:'false')
+    (name:'Default';      typ:'bool';       value:'Nein')
   );
   FloatProps : array[1..4] of TPropertyEntry =
   (
@@ -117,7 +117,7 @@ const
   );
   TextProps : array[1..1] of TPropertyEntry =
   (
-    (name:'Default';      typ:'bool';       value:'false')
+    (name:'Default';      typ:'bool';       value:'Nein')
   );
   TableProps : array[1..2] of TPropertyEntry =
   (

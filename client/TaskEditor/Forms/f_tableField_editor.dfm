@@ -2,7 +2,7 @@ object TableFieldEditorForm: TTableFieldEditorForm
   Left = 0
   Top = 0
   Caption = 'Tabellenfelder'
-  ClientHeight = 223
+  ClientHeight = 449
   ClientWidth = 507
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,7 +18,7 @@ object TableFieldEditorForm: TTableFieldEditorForm
   TextHeight = 13
   inline BaseFrame1: TBaseFrame
     Left = 0
-    Top = 163
+    Top = 389
     Width = 507
     Height = 60
     Align = alBottom
@@ -42,7 +42,7 @@ object TableFieldEditorForm: TTableFieldEditorForm
   end
   object Panel1: TPanel
     Left = 0
-    Top = 122
+    Top = 348
     Width = 507
     Height = 41
     Align = alBottom
@@ -50,7 +50,7 @@ object TableFieldEditorForm: TTableFieldEditorForm
     Caption = 'Panel1'
     ShowCaption = False
     TabOrder = 1
-    ExplicitTop = 124
+    ExplicitTop = 122
     object BitBtn1: TBitBtn
       Left = 16
       Top = 10
@@ -197,7 +197,7 @@ object TableFieldEditorForm: TTableFieldEditorForm
     Left = 0
     Top = 0
     Width = 507
-    Height = 122
+    Height = 348
     Align = alClient
     Columns = <
       item
@@ -219,5 +219,6 @@ object TableFieldEditorForm: TTableFieldEditorForm
     TabOrder = 2
     ViewStyle = vsReport
     OnDblClick = LVDblClick
+    ExplicitHeight = 122
   end
 end

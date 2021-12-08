@@ -199,8 +199,8 @@ end;
 procedure TaskCtrlImpl.configControl;
 begin
   if Assigned(m_ctrl) then begin
-    m_ctrl.Enabled    := SameText(m_dataField.propertyValue('Enabled'), 'true');
-    m_ctrl.Visible    := SameText(m_dataField.propertyValue('Visible'), 'true');
+    m_ctrl.Enabled    := SameText(m_dataField.propertyValue('Enabled'), 'true') or SameText(m_dataField.propertyValue('Enabled'), 'ja');
+    m_ctrl.Visible    := SameText(m_dataField.propertyValue('Visible'), 'true') or SameText(m_dataField.propertyValue('Visible'), 'ja')
   end;
 end;
 
@@ -243,7 +243,6 @@ begin
       else
         Result := DateTimeToStr( now );
     end;
-
   end;
 end;
 

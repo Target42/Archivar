@@ -2,7 +2,7 @@ object TableColumnsForm: TTableColumnsForm
   Left = 0
   Top = 0
   Caption = 'Tabellenspalten'
-  ClientHeight = 299
+  ClientHeight = 470
   ClientWidth = 477
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,13 +18,13 @@ object TableColumnsForm: TTableColumnsForm
   TextHeight = 13
   inline BaseFrame1: TBaseFrame
     Left = 0
-    Top = 239
+    Top = 410
     Width = 477
     Height = 60
     Align = alBottom
     AutoSize = True
     TabOrder = 0
-    ExplicitTop = 239
+    ExplicitTop = 410
     ExplicitWidth = 477
     inherited StatusBar1: TStatusBar
       Width = 477
@@ -41,7 +41,7 @@ object TableColumnsForm: TTableColumnsForm
   end
   object Panel1: TPanel
     Left = 0
-    Top = 198
+    Top = 369
     Width = 477
     Height = 41
     Align = alBottom
@@ -348,19 +348,19 @@ object TableColumnsForm: TTableColumnsForm
     Left = 0
     Top = 0
     Width = 477
-    Height = 198
+    Height = 369
     Align = alClient
     Columns = <
       item
         Caption = #220'berschrift'
-        Width = 100
+        Width = 150
       end
       item
         Caption = 'Breite'
       end
       item
         Caption = 'DatenFeld'
-        Width = 100
+        Width = 200
       end>
     ReadOnly = True
     RowSelect = True

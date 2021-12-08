@@ -159,7 +159,7 @@ begin
     m_typ := ptLinkTable;
 
   if m_typ = ptBool then
-    m_values.DelimitedText := 'true;false';
+    m_values.DelimitedText := 'Ja;Nein';
   if m_typ = ptEditCharCase then
     m_values.DelimitedText := 'ecNormal;ecLowerCase;ecUpperCase';
 end;

@@ -2,7 +2,7 @@ object DataFieldForm: TDataFieldForm
   Left = 0
   Top = 0
   Caption = 'Datenfelder'
-  ClientHeight = 299
+  ClientHeight = 591
   ClientWidth = 635
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,7 +18,7 @@ object DataFieldForm: TDataFieldForm
   TextHeight = 13
   inline BaseFrame1: TBaseFrame
     Left = 0
-    Top = 239
+    Top = 531
     Width = 635
     Height = 60
     Align = alBottom
@@ -44,7 +44,7 @@ object DataFieldForm: TDataFieldForm
     Left = 0
     Top = 0
     Width = 635
-    Height = 184
+    Height = 476
     Align = alClient
     DataSource = DASrc
     Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
@@ -81,12 +81,13 @@ object DataFieldForm: TDataFieldForm
   end
   object GroupBox1: TGroupBox
     Left = 0
-    Top = 184
+    Top = 476
     Width = 635
     Height = 55
     Align = alBottom
     Caption = 'Aktionen'
     TabOrder = 2
+    ExplicitTop = 184
     DesignSize = (
       635
       55)

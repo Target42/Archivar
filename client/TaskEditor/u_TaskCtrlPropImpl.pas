@@ -157,9 +157,9 @@ begin
   Result := true;
   if SameText( m_name, 'checked') then begin
     if (m_ctrl as TCheckBox).Checked then
-      Value := 'true'
+      Value := 'Ja'
     else
-      value := 'false';
+      value := 'Nein';
   end else
     Result := false;
 end;
@@ -247,9 +247,9 @@ begin
   Result := true;
   if SameText( m_name, 'checked') then begin
     if (m_ctrl as TRadioButton).Checked then
-      Value := 'true'
+      Value := 'Ja'
     else
-      value := 'false';
+      value := 'Nein';
   end else
     Result := false;
 
@@ -455,7 +455,7 @@ procedure TaskCtrlPropImpl.setTyp(value: string);
 begin
   m_typ := value;
   if SameText( m_typ, 'boolean') then
-    m_list.DelimitedText := 'true;false';
+    m_list.DelimitedText := 'Ja;Nein';
 end;
 
 procedure TaskCtrlPropImpl.setValue(value: string);
