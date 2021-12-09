@@ -27,6 +27,8 @@ begin
     TEditCharCase.ecNormal:     Result := 'ecNormal';
     TEditCharCase.ecUpperCase:  Result := 'ecUpperCase';
     TEditCharCase.ecLowerCase:  Result := 'ecLowerCase';
+    else
+      Result := 'ecNormal';
   end;
 end;
 function Text2TEditCharCase( value : string ) : TEditCharCase;
@@ -34,7 +36,8 @@ begin
   Result := ecNormal;
   if      SameText(value, 'ecNormal')    then Result := TEditCharCase.ecNormal
   else if SameText(value, 'ecUpperCase') then Result := TEditCharCase.ecUpperCase
-  else if SameText(value, 'ecLowerCase') then Result := TEditCharCase.ecLowerCase;
+  else if SameText(value, 'ecLowerCase') then Result := TEditCharCase.ecLowerCase
+  else Result := TEditCharCase.ecNormal;
 end;
 procedure fillTEditcharList( list : TStrings );
 begin

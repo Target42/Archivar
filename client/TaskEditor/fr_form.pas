@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, i_taskEdit,
-  Datasnap.DBClient, Data.DB, Datasnap.DSConnect, m_taskLoader;
+  Datasnap.DBClient, Data.DB, Datasnap.DSConnect, m_taskLoader, Vcl.Grids;
 
 type
   TFormFrame = class(TFrame)
@@ -37,7 +37,7 @@ type
 implementation
 
 uses
-  u_taskForm2XML, m_glob_client, Vcl.Grids;
+  u_taskForm2XML, m_glob_client;
 
 {$R *.dfm}
 

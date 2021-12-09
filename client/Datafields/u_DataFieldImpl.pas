@@ -8,7 +8,7 @@ uses
 type
   TDataField = class(TInterfacedObject, IDataField)
     private
-      m_owner:IDataFieldList;
+      m_owner   : IDataFieldList;
       m_list    : TList<IProperty>;
       m_name    : string;
       m_gname   : string;
@@ -17,6 +17,7 @@ type
       m_rem     : string;
       m_glob    : boolean;
       m_childs  : IDataFieldList;
+      m_dtype   : TDataFieldType;
 
       procedure SetName( value : string );
       function  GetName : string;
@@ -40,19 +41,12 @@ type
       procedure setGlobalName( value : string );
       function  getGlobalName : string;
 
+      function getDataFieldType : TDataFieldType;
+
     public
       constructor Create; overload;
       constructor Create( name, typ : string ); overload;
       Destructor Destroy; override;
-
-      property Name  : string read GetName write SetName;
-      property CLID  : string read GetCLID write SetCLID;
-      property Typ   : string read GetTyp  write SetTyp;
-      property Rem   : string read getRem write setRem;
-      property isGlobal : boolean read getIsGlobal write setIsGlobal;
-
-      property Properties : TList<IProperty> read GetItems;
-      property Childs     : IDataFieldList read getChilds write setChilds;
 
       function getPropertyByName( name : string ) : IProperty;
       function propertyValue( name : string ) : string;
@@ -67,7 +61,6 @@ implementation
 uses
   Win.ComObj, xsd_DataField, Xml.XMLIntf, Xml.XMLDoc, u_PropertyImpl,
   u_DataFieldLislImpl;
-
 
 const
   StringProps : array[1..4] of TPropertyEntry =
@@ -152,7 +145,7 @@ begin
     if Assigned(p) then
       p.Value := m_list[i].Value;
   end;
-  Result.Childs := self.Childs.clone;
+  Result.Childs := self.getChilds.clone;
 end;
 
 procedure TDataField.config(const arr: array of TPropertyEntry);
@@ -174,6 +167,7 @@ begin
   m_list      := TList<IProperty>.create;
   m_childs    := TDataFieldList.create(self);
   m_clid      := CreateClassID;
+  m_dtype     := dtUnkown;
 end;
 
 constructor TDataField.Create(name, typ: string);
@@ -202,6 +196,11 @@ end;
 function TDataField.GetCLID: string;
 begin
   Result := m_clid;
+end;
+
+function TDataField.getDataFieldType: TDataFieldType;
+begin
+  Result := m_dtype;
 end;
 
 function TDataField.getGlobalName: string;
@@ -322,20 +321,32 @@ begin
 end;
 
 procedure TDataField.SetTyp(value: string);
+var
+  i : integer;
 begin
   m_typ := value;
 
-       if m_typ = 'string' then     config(StringProps)
-  else if m_typ = 'integer' then    config(IntegerProps)
-  else if m_typ = 'float' then      config(FloatProps)
-  else if m_typ = 'date' then       config(DateProps)
-  else if m_typ = 'time' then       config(TimeProps)
-  else if m_typ = 'datetime' then   config(DateTimeProps)
-  else if m_typ = 'bool' then       config(BoolProps)
-  else if m_typ = 'enum' then       config(EnumProps)
-  else if m_typ = 'text' then       config(TextProps)
-  else if m_typ = 'table' then      config(TableProps)
-  else if m_typ = 'linktable' then  config(LinkTableProps);
+  for i := low(StrMap) to High(StrMap) do begin
+    if SameText( m_typ, StrMap[i].name) then begin
+      m_dtype := strMap[i].typ;
+      break;
+    end;
+  end;
+
+  case m_dtype of
+    dtUnkown: ;
+    dtBool:       config(BoolProps);
+    dtDate:       config(DateProps);
+    dtDatetime:   config(DateTimeProps);
+    dtEnum:       config(EnumProps);
+    dtFloat:      config(FloatProps);
+    dtInteger:    config(IntegerProps);
+    dtString:     config(StringProps);
+    dtText:       config(TextProps);
+    dtTime:       config(TimeProps);
+    dtLinktable:  config(LinkTableProps);
+    dtTable:      config(TableProps);
+  end;
 end;
 
 end.

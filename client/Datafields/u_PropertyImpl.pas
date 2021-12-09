@@ -56,7 +56,7 @@ implementation
 { TPropertyImpl }
 
 uses
-  Win.ComObj, System.SysUtils, f_df_EnumList;
+  Win.ComObj, System.SysUtils, f_df_EnumList, u_helper, u_typeHelper;
 
 constructor TPropertyImpl.Create( owner : IDataField; entry : TPropertyEntry);
 begin
@@ -166,7 +166,17 @@ end;
 
 procedure TPropertyImpl.SetValue(value: string);
 begin
-  m_value := value;
+  case m_typ of
+    ptUnknown:      m_value := value;
+    ptString:       m_value := value;
+    ptInteger:      m_value := intToStr(StrToIntDef(value, 0));
+    ptBool:         m_value := Bool2Str( SameText(value, 'true') or SameText(value, 'ja'));
+    ptEditCharCase: m_value := TEditCharCase2Text(Text2TEditCharCase(value));
+    ptEnumList: ;
+    ptLinkTable:    m_value := value;
+    else
+      m_value := value;
+  end;
 end;
 
 function TPropertyImpl.ShowEditor: boolean;

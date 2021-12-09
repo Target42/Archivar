@@ -408,20 +408,34 @@ type
 
   IValidator = interface
     ['{8E0DC4C1-7173-40FB-B70D-2DF6467BF53B}']
-  end;
 
+    // privatwe
+    // public
+    function validateKey( var ch : char ) : boolean;
+    function validateData( var text : string ) : boolean;
+
+    procedure updateProbs;
+
+    procedure release;
+
+  end;
 
 function loadTaskContainer( st : TStream;  name : string ) : ITaskContainer;
 
-var
-  req : TColor ;
-
+function RequiredColor : TColor;
 
 implementation
 
 uses
   u_TTaskContainerImpl;
 
+var
+  req : TColor ;
+
+function RequiredColor : TColor;
+begin
+  Result := req;
+end;
 
 function loadTaskContainer( st : TStream;  name : string ) : ITaskContainer;
 var

@@ -4,7 +4,7 @@ interface
 
 uses
   u_TaskCtrlImpl, i_taskEdit, Vcl.Controls, System.Classes,
-  System.Generics.Collections, Vcl.Grids;
+  System.Generics.Collections, Vcl.Grids, Vcl.StdCtrls;
 
 type
   TaskCtrlTable = class(TaskCtrlImpl, ITaskCtrlTable)
@@ -18,8 +18,13 @@ type
       function  getReadOnly : boolean; override;
 
       procedure KeyPress(Sender: TObject; var Key: Char); override;
+      procedure KeyUp(Sender: TObject; var Key: Word;Shift: TShiftState);
+
+      procedure SelectCell(Sender: TObject; ACol, ARow: Integer; var CanSelect: Boolean);
+
+
     private
-      m_sg : TStringGrid;
+      m_sg  : TStringGrid;
 
       function  getCell( row, col : integer) : string;
       procedure setCell( row, col : integer; value : string );
@@ -52,7 +57,7 @@ type
 implementation
 
 uses
-  u_TaskCtrlPropImpl, Vcl.StdCtrls, System.SysUtils, Winapi.Windows, Vcl.Menus;
+  u_TaskCtrlPropImpl, System.SysUtils, Winapi.Windows, Vcl.Menus, i_datafields;
 { TaskCtrlTable }
 
 function TaskCtrlTable.addRow: integer;
@@ -172,14 +177,32 @@ end;
 
 procedure TaskCtrlTable.KeyPress(Sender: TObject; var Key: Char);
 var
-  ctrl : ITaskCtrl;
+  ctrl  : ITaskCtrl;
 begin
-  if (m_sg.Col = 0) or (m_sg.Row = 0 ) then  exit;
-  inherited;
+  if (m_sg.Col = 0) or (m_sg.Row = 0 ) then
+    exit;
 
   ctrl := m_list[m_sg.Col-1];
-  if Assigned(ctrl) then
-    ctrl.KeyPress( sender, Key );
+  if Assigned(ctrl) and Assigned(ctrl.Validator) then begin
+    ctrl.Validator.validateKey( key );
+  end;
+end;
+
+procedure TaskCtrlTable.KeyUp(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+var
+  ctrl  : ITaskCtrl;
+  s     : string;
+begin
+  if (m_sg.Col = 0) or (m_sg.Row = 0 ) then
+    exit;
+
+  ctrl := m_list[m_sg.Col-1];
+  if Assigned(ctrl) and Assigned(ctrl.Validator) then begin
+    s := m_sg.Cells[m_sg.Col, m_sg.Row ];
+    if not ctrl.Validator.validateData(s) then
+      m_sg.Cells[m_sg.Col, m_sg.Row ] := s;
+  end;
 end;
 
 function TaskCtrlTable.newControl(parent: TWinControl; x, y: Integer): TControl;
@@ -200,7 +223,10 @@ begin
   m_sg.Parent := parent as TWinControl;
   m_sg.Name := 'Table'+intToStr(GetTickCount);
 
-  m_sg.OnKeyPress := KeyPress;
+  m_sg.OnKeyPress   := KeyPress;
+  m_sg.OnSelectCell := SelectCell;
+  m_sg.OnKeyUp      := KeyUp;
+
   m_sg.Top  := y;
   m_sg.Left := X;
   m_sg.Options := [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine,
@@ -227,6 +253,11 @@ begin
     m_sg.Cells[0, y] := IntToStr(y);
 end;
 
+procedure TaskCtrlTable.SelectCell(Sender: TObject; ACol, ARow: Integer;
+  var CanSelect: Boolean);
+begin
+  CanSelect := (ACol > 0) and ( ARow > 0 );
+end;
 
 procedure TaskCtrlTable.setCell(row, col: integer; value: string);
 begin

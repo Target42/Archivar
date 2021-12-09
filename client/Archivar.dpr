@@ -195,7 +195,14 @@ uses
   f_textblock_import in 'TextBlock\f_textblock_import.pas' {TextblockImportForm},
   u_taskCtrlRadio in 'TaskEditor\controls\u_taskCtrlRadio.pas',
   u_TaskCtrlCheck in 'TaskEditor\controls\u_TaskCtrlCheck.pas',
-  u_TaskCtrlRadioGroup in 'TaskEditor\controls\u_TaskCtrlRadioGroup.pas';
+  u_TaskCtrlRadioGroup in 'TaskEditor\controls\u_TaskCtrlRadioGroup.pas',
+  u_ValidatorFactory in 'TaskEditor\Validator\u_ValidatorFactory.pas',
+  u_ValidatorStringImpl in 'TaskEditor\Validator\u_ValidatorStringImpl.pas',
+  u_ValidatorBoolImpl in 'TaskEditor\Validator\u_ValidatorBoolImpl.pas',
+  u_validatorBaseImpl in 'TaskEditor\Validator\u_validatorBaseImpl.pas',
+  u_validatorIntegerImpl in 'TaskEditor\Validator\u_validatorIntegerImpl.pas',
+  u_ValidatorFloatImpl in 'TaskEditor\Validator\u_ValidatorFloatImpl.pas',
+  u_ValidatorDateTimeImpl in 'TaskEditor\Validator\u_ValidatorDateTimeImpl.pas';
 
 {$R *.res}
 

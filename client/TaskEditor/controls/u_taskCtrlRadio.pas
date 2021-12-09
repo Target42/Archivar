@@ -54,7 +54,7 @@ begin
 
   ed := m_ctrl as TRadioButton;
   if m_required then
-    ed.Color := req
+    ed.Color := RequiredColor
   else
     ed.Color := clWindow;
 end;

@@ -20,10 +20,12 @@ type
     m_parent    : ITaskCtrl;
     m_isBase    : boolean;
 
-    m_canContainData : boolean;
-    m_isContainer    : boolean;
-    m_required  : boolean;
-    m_changed   : boolean;
+    m_canContainData  : boolean;
+    m_isContainer     : boolean;
+    m_required        : boolean;
+    m_changed         : boolean;
+
+    m_validator       : IValidator;
 
     procedure setControlTypeProps; virtual;
     function  newControl(parent : TWinControl; x, y : Integer) :  TControl; virtual;
@@ -48,7 +50,6 @@ type
     function  getReadOnly : boolean; virtual;
 
     procedure KeyPress(Sender: TObject; var Key: Char); virtual;
-    function checkKey( var key : Char ) : boolean; virtual;
 
     procedure doClick(Sender : TObject );
 
@@ -125,7 +126,7 @@ implementation
 uses
   System.SysUtils, Vcl.StdCtrls, Winapi.Windows,
   u_TaskCtrlPropImpl, Vcl.ExtCtrls, Generics.Defaults, Win.ComObj, Vcl.Grids,
-  u_TaskCtrlLabel, u_TaskControlFactory;
+  u_TaskCtrlLabel, u_TaskControlFactory, u_ValidatorFactory;
 
 { TaskCtrlImpl }
 
@@ -136,8 +137,18 @@ begin
   if not Assigned(m_ctrl) and (m_ctrlClass <> '') then
   begin
     m_ctrl := newControl( m_parent.Control as TWinControl, 0, 1000 );
-    updateControl;
 
+    updateControl;
+{
+    if Assigned(m_validator) then begin
+      m_validator.release;
+      m_validator := NIL;
+    end;
+
+    if Assigned(m_dataField) then begin
+      m_validator := ValidatorFactory.Validator( m_dataField );
+    end;
+ }
     if Assigned( m_ctrl) then
     begin
       for i := 0 to pred(m_props.Count) do
@@ -164,14 +175,6 @@ begin
   for i := 0 to pred(m_list.Count) do
   begin
     m_list[i].check(list);
-  end;
-end;
-
-function TaskCtrlImpl.checkKey(var key: Char): boolean;
-begin
-  Result := true;
-  if Assigned(m_dataField) then begin
-
   end;
 end;
 
@@ -211,19 +214,20 @@ end;
 
 constructor TaskCtrlImpl.Create(owner : ITaskForm);
 begin
-  m_typ       := ctNone;
-  m_owner     := owner;
-  m_clid      := CreateClassID;
-  m_dataField := NIL;
-  m_parent    := NIL;
-  m_ctrl      := NIL;
-  m_list      := TList<ITaskCtrl>.create;
-  m_props     := TList<ITaskCtrlProp>.create;
-  m_isBase    := false;
-  m_canContainData := false;
-  m_isContainer := false;
-  m_required  := false;
-  m_changed   := false;
+  m_typ             := ctNone;
+  m_owner           := owner;
+  m_clid            := CreateClassID;
+  m_dataField       := NIL;
+  m_parent          := NIL;
+  m_ctrl            := NIL;
+  m_list            := TList<ITaskCtrl>.create;
+  m_props           := TList<ITaskCtrlProp>.create;
+  m_isBase          := false;
+  m_canContainData  := false;
+  m_isContainer     := false;
+  m_required        := false;
+  m_changed         := false;
+  m_validator       := NIL;
 end;
 
 function TaskCtrlImpl.CtrlValue: string;
@@ -250,6 +254,7 @@ destructor TaskCtrlImpl.Destroy;
 begin
   m_props.Free;
   m_list.Free;
+  m_validator := NIL;
   inherited;
 end;
 
@@ -490,7 +495,7 @@ end;
 
 function TaskCtrlImpl.getValidator: IValidator;
 begin
-  Result := NIL;
+  Result := m_validator;
 end;
 
 function TaskCtrlImpl.isContainer: boolean;
@@ -501,6 +506,10 @@ end;
 procedure TaskCtrlImpl.KeyPress(Sender: TObject; var Key: Char);
 begin
   m_changed := true;
+  if Assigned( m_validator) then begin
+    m_validator.validateKey(key);
+
+  end;
 end;
 
 function TaskCtrlImpl.NewChild( clName : string ): ITaskCtrl;
@@ -541,6 +550,11 @@ procedure TaskCtrlImpl.release;
 var
   i : integer;
 begin
+  if Assigned(m_validator) then begin
+    m_validator.release;
+    m_validator := NIL;
+  end;
+
   m_parent  := NIL;
   m_owner   := NIL;
 
@@ -633,6 +647,15 @@ end;
 procedure TaskCtrlImpl.setDataField(value: IDataField);
 begin
   m_dataField := value;
+
+  if Assigned(m_validator) then begin
+    m_validator.release;
+    m_validator := NIL;
+  end;
+
+  if Assigned(m_dataField) then begin
+    m_validator := ValidatorFactory.Validator( m_dataField );
+  end;
 end;
 
 procedure TaskCtrlImpl.setMouse(md: TControlMouseDown; mv: TControlMouseMove;

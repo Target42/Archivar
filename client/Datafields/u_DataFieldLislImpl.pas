@@ -8,9 +8,9 @@ uses
 type
   TDataFieldList = class(TInterfacedObject, IDataFieldList )
   private
-    m_owner : IDataField;
-    m_list : TList<IDataField>;
-    m_listener : Tlist<TDataListChange>;
+    m_owner     : IDataField;
+    m_list      : TList<IDataField>;
+    m_listener  : Tlist<TDataListChange>;
 
     procedure SetItems( inx : integer ; const value : IDataField );
     function  GetItems( inx : integer ) :IDataField;

@@ -607,6 +607,13 @@
         <DCCReference Include="TaskEditor\controls\u_taskCtrlRadio.pas"/>
         <DCCReference Include="TaskEditor\controls\u_TaskCtrlCheck.pas"/>
         <DCCReference Include="TaskEditor\controls\u_TaskCtrlRadioGroup.pas"/>
+        <DCCReference Include="TaskEditor\Validator\u_ValidatorFactory.pas"/>
+        <DCCReference Include="TaskEditor\Validator\u_ValidatorStringImpl.pas"/>
+        <DCCReference Include="TaskEditor\Validator\u_ValidatorBoolImpl.pas"/>
+        <DCCReference Include="TaskEditor\Validator\u_validatorBaseImpl.pas"/>
+        <DCCReference Include="TaskEditor\Validator\u_validatorIntegerImpl.pas"/>
+        <DCCReference Include="TaskEditor\Validator\u_ValidatorFloatImpl.pas"/>
+        <DCCReference Include="TaskEditor\Validator\u_ValidatorDateTimeImpl.pas"/>
         <None Include="Datafields\ERA-NS.txt"/>
         <RcItem Include="dws\dws.html">
             <ContainerId>ResourceItem</ContainerId>
