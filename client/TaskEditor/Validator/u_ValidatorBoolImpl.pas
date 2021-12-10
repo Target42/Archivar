@@ -23,7 +23,7 @@ uses
 
 function TValidatorBoolImpl.validateData(var text: string): boolean;
 begin
-  Result := SameText( text, 'ja') or SameText(text, 'nein');;
+  Result := SameText( text, 'ja') or SameText(text, 'nein');
 
   if not Result then begin
     if UpperCase(text) = 'J' then
@@ -33,6 +33,7 @@ begin
     else
       text := 'Nein';
   end;
+  Result := SameText( text, 'ja') or SameText(text, 'nein');
 end;
 
 function TValidatorBoolImpl.validateKey(var ch: char): boolean;

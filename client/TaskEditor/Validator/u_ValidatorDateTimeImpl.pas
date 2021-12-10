@@ -56,6 +56,9 @@ begin
   else
     Result := TryStrToDateTime( text, val, m_set);
 
+  if Result then
+    text := FormatDateTime(m_format, StrToDateTime(text));
+
 end;
 
 function TValidatorDateTimeImpl.validateKey(var ch: char): boolean;

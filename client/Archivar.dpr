@@ -202,7 +202,8 @@ uses
   u_validatorBaseImpl in 'TaskEditor\Validator\u_validatorBaseImpl.pas',
   u_validatorIntegerImpl in 'TaskEditor\Validator\u_validatorIntegerImpl.pas',
   u_ValidatorFloatImpl in 'TaskEditor\Validator\u_ValidatorFloatImpl.pas',
-  u_ValidatorDateTimeImpl in 'TaskEditor\Validator\u_ValidatorDateTimeImpl.pas';
+  u_ValidatorDateTimeImpl in 'TaskEditor\Validator\u_ValidatorDateTimeImpl.pas',
+  u_ValidatorEnumImpl in 'TaskEditor\Validator\u_ValidatorEnumImpl.pas';
 
 {$R *.res}
 

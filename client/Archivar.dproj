@@ -614,6 +614,7 @@
         <DCCReference Include="TaskEditor\Validator\u_validatorIntegerImpl.pas"/>
         <DCCReference Include="TaskEditor\Validator\u_ValidatorFloatImpl.pas"/>
         <DCCReference Include="TaskEditor\Validator\u_ValidatorDateTimeImpl.pas"/>
+        <DCCReference Include="TaskEditor\Validator\u_ValidatorEnumImpl.pas"/>
         <None Include="Datafields\ERA-NS.txt"/>
         <RcItem Include="dws\dws.html">
             <ContainerId>ResourceItem</ContainerId>

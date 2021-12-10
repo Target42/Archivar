@@ -74,7 +74,7 @@ const
   (
     (name:'Values';       typ:'EnumList';   value:'1;2;3'),
     (name:'Default';      typ:'string';     value:'1'),
-    (name:'Egene Werte';  typ:'bool';       value:'Nein')
+    (name:'Eigene Werte'; typ:'bool';       value:'Nein')
   );
   IntegerProps : array[1..3] of TPropertyEntry =
   (

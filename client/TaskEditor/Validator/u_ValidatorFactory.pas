@@ -23,7 +23,7 @@ implementation
 
 uses
   u_ValidatorStringImpl, u_ValidatorBoolImpl, u_validatorIntegerImpl,
-  u_ValidatorFloatImpl, u_ValidatorDateTimeImpl;
+  u_ValidatorFloatImpl, u_ValidatorDateTimeImpl, u_ValidatorEnumImpl;
 
 { TValidatorFactory }
 
@@ -48,7 +48,7 @@ begin
     dtBool:       Result := TValidatorBoolImpl.create(df);
     dtDate:       Result := TValidatorDateTimeImpl.create(df);
     dtDatetime:   Result := TValidatorDateTimeImpl.create(df);
-    dtEnum: ;
+    dtEnum:       Result := TValidatorEnumImpl.create(df);
     dtFloat:      Result := TValidatorFloatImpl.create(df);
     dtInteger:    Result := TValidatorIntegerImpl.create(df);
     dtString:     Result := TValidatorStringImpl.create(df);

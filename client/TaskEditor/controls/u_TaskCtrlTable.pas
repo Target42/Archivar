@@ -18,13 +18,16 @@ type
       function  getReadOnly : boolean; override;
 
       procedure KeyPress(Sender: TObject; var Key: Char); override;
-      procedure KeyUp(Sender: TObject; var Key: Word;Shift: TShiftState);
 
       procedure SelectCell(Sender: TObject; ACol, ARow: Integer; var CanSelect: Boolean);
+      procedure SGExit(Sender: TObject);
+      procedure Enter(Sender: TObject);
 
 
     private
       m_sg  : TStringGrid;
+      m_row : integer;
+      m_col : integer;
 
       function  getCell( row, col : integer) : string;
       procedure setCell( row, col : integer; value : string );
@@ -146,6 +149,12 @@ begin
   m_sg := NIL;
 end;
 
+procedure TaskCtrlTable.Enter(Sender: TObject);
+begin
+  m_row := m_sg.Row;
+  m_col := m_sg.Col;
+end;
+
 function TaskCtrlTable.getCell(row, col: integer): string;
 begin
   Result := '';
@@ -184,24 +193,8 @@ begin
 
   ctrl := m_list[m_sg.Col-1];
   if Assigned(ctrl) and Assigned(ctrl.Validator) then begin
-    ctrl.Validator.validateKey( key );
-  end;
-end;
-
-procedure TaskCtrlTable.KeyUp(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-var
-  ctrl  : ITaskCtrl;
-  s     : string;
-begin
-  if (m_sg.Col = 0) or (m_sg.Row = 0 ) then
-    exit;
-
-  ctrl := m_list[m_sg.Col-1];
-  if Assigned(ctrl) and Assigned(ctrl.Validator) then begin
-    s := m_sg.Cells[m_sg.Col, m_sg.Row ];
-    if not ctrl.Validator.validateData(s) then
-      m_sg.Cells[m_sg.Col, m_sg.Row ] := s;
+    if not ctrl.Validator.validateKey( key ) then
+      key := #0;
   end;
 end;
 
@@ -225,7 +218,8 @@ begin
 
   m_sg.OnKeyPress   := KeyPress;
   m_sg.OnSelectCell := SelectCell;
-  m_sg.OnKeyUp      := KeyUp;
+  m_sg.OnExit       := SGExit;
+  m_sg.OnEnter      := Enter;
 
   m_sg.Top  := y;
   m_sg.Left := X;
@@ -235,9 +229,9 @@ begin
   pop   := TPopupMenu.Create( m_sg );
   m_sg.PopupMenu := pop;
 
-  addItem('Reihe einfügen', Self.SGInsertRow );
-  addItem('Reihe anhängen', self.SGAddRow);
-  addItem('Reihe löschen',  Self.SGRemoveRow );
+  addItem('Zeile einfügen', Self.SGInsertRow );
+  addItem('Zeile anhängen', self.SGAddRow);
+  addItem('Zeile löschen',  Self.SGRemoveRow );
   addItem('-', NIL);
   addItem('Inhalt löschen', Self.SGClear );
 
@@ -255,8 +249,21 @@ end;
 
 procedure TaskCtrlTable.SelectCell(Sender: TObject; ACol, ARow: Integer;
   var CanSelect: Boolean);
+var
+  ctrl  : ITaskCtrl;
+  s     : string;
 begin
-  CanSelect := (ACol > 0) and ( ARow > 0 );
+  if (m_row = -1 ) then begin
+    m_row := ARow;
+    m_col := ACol;
+  end else begin
+    ctrl := m_list[m_sg.Col-1];
+    if Assigned(ctrl) and Assigned(ctrl.Validator) then begin
+      s := m_sg.Cells[m_sg.Col, m_sg.Row ];
+      CanSelect := ctrl.Validator.validateData(s);
+      m_sg.Cells[m_sg.Col, m_sg.Row ] := s;
+    end;
+  end;
 end;
 
 procedure TaskCtrlTable.setCell(row, col: integer; value: string);
@@ -305,6 +312,19 @@ begin
       m_sg.Cells[x, y] := '';
 end;
 
+procedure TaskCtrlTable.SGExit(Sender: TObject);
+var
+  ctrl  : ITaskCtrl;
+  s     : string;
+begin
+  ctrl := m_list[m_sg.Col-1];
+  if Assigned(ctrl) and Assigned(ctrl.Validator) then begin
+    s := m_sg.Cells[m_sg.Col, m_sg.Row ];
+    if not ctrl.Validator.validateData(s) then
+      m_sg.SetFocus;
+    m_sg.Cells[m_sg.Col, m_sg.Row ] := s;
+  end;
+end;
 procedure TaskCtrlTable.SGInsertRow(sender: TObject);
 var
   y : integer;
