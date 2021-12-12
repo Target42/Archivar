@@ -60,6 +60,10 @@ type
     function  getRadioGroupProps( var value : string ) : boolean;
     procedure setRadioGroupProps( value : string );
 
+    function  getDateTimePickerProps( var value : string ) : boolean;
+    procedure setDateTimePickerProps( value : string );
+
+
     function  getValueList : TStringList;
 
     procedure setAlign( value : string );
@@ -147,7 +151,8 @@ begin
     m_list.Sort;
   end
   else if SameText(m_typ, 'TAlign') then         fillAlignList(m_list)
-  else if SameText(m_typ, 'TEditCharCase') then  fillTEditcharList(m_list);
+  else if SameText(m_typ, 'TEditCharCase') then  fillTEditcharList(m_list)
+  else if SameText(m_typ, 'TDateTimeKind') then  fillDateTimeKindList(m_list);
 
   list.Assign(m_list);
 end;
@@ -189,6 +194,15 @@ begin
   else
     Result := false;
 
+end;
+
+function TaskCtrlPropImpl.getDateTimePickerProps(var value: string): boolean;
+begin
+  Result := true;
+
+  if SameText(m_name, 'kind') then            value := DateTimePickerKind2Text((m_ctrl as TDateTimePicker).Kind)
+  else
+    Result := false;
 end;
 
 function TaskCtrlPropImpl.getEditProps( var value : string ) : boolean;
@@ -323,7 +337,8 @@ begin
     if (not ValueSet) and (m_ctrl is TRichEdit) then          ValueSet := getRichEditProps(Result);
     if (not ValueSet) and (m_ctrl is TRadioButton) then       ValueSet := getRadioBtnProps(Result);
     if (not ValueSet) and (m_ctrl is TCheckBox) then          ValueSet := getCheckBoxProps(Result);
-    if (not ValueSet) and (m_ctrl is TRadioGroup) then        getRadioGroupProps(Result);
+    if (not ValueSet) and (m_ctrl is TRadioGroup) then        ValueSet := getRadioGroupProps(Result);
+    if (not ValueSet) and (m_ctrl is TDateTimePicker) then    getDateTimePickerProps(Result);
   end;
 
   m_value := Result;
@@ -341,9 +356,12 @@ end;
 
 function TaskCtrlPropImpl.isList: boolean;
 begin
-  Result := (m_list.count > 0 ) or  SameText( m_typ, 'TaskDataField') or
-    SameText( m_typ, 'TAlign') or SameText(m_typ, 'TEditCharCase')
-    or SameText(m_typ, 'TStringList');
+  Result := (m_list.count > 0 ) or
+            SameText( m_typ, 'TaskDataField') or
+            SameText( m_typ, 'TAlign') or
+            SameText(m_typ, 'TEditCharCase') or
+            SameText(m_typ, 'TStringList') or
+            SameText(m_typ, 'TDateTimeKind');
 end;
 
 procedure TaskCtrlPropImpl.release;
@@ -394,6 +412,11 @@ end;
 procedure TaskCtrlPropImpl.setCustomEditProps(value: string);
 begin
   if      SameText(m_name, 'Text') then          (m_ctrl as TCustomEdit).Text := value;
+end;
+
+procedure TaskCtrlPropImpl.setDateTimePickerProps(value: string);
+begin
+  if SameText(m_name, 'kind') then  (m_ctrl as TDateTimePicker).Kind := Text2DateTimePickerKind(value);
 end;
 
 procedure TaskCtrlPropImpl.setdEditProps(value: string);
@@ -497,17 +520,19 @@ begin
   else if SameText(m_name, 'Align') then    setAlign(value)
   else if SameText(m_name, 'Required') then m_owner.Required := Str2Bool(value);
 
-  if m_ctrl is TLabel then        setLabelProps(value);
-  if m_ctrl is TGroupbox then     setGroupboxProps(value);
-  if m_ctrl is TCustomEdit then   setCustomEditProps(value);
-  if m_ctrl is TEdit then         setdEditProps( value );
-  if m_ctrl is TLabeledEdit then  setLabeledEditProps(value);
-  if m_ctrl is TComboBox then     setComboBoxProps(value);
-  if m_ctrl is TMemo then         setMemoProps(value);
-  if m_ctrl is TRichEdit then     setRichEditProps(value);
-  if m_ctrl is TRadioButton then  setRadioBtnProps(value);
-  if m_ctrl is TCheckBox then     setCheckBoxProps(value);
-  if m_ctrl is TRadioGroup then   setRadioGroupProps(value);
+  if m_ctrl is TLabel then          setLabelProps(value);
+  if m_ctrl is TGroupbox then       setGroupboxProps(value);
+  if m_ctrl is TCustomEdit then     setCustomEditProps(value);
+  if m_ctrl is TEdit then           setdEditProps( value );
+  if m_ctrl is TLabeledEdit then    setLabeledEditProps(value);
+  if m_ctrl is TComboBox then       setComboBoxProps(value);
+  if m_ctrl is TMemo then           setMemoProps(value);
+  if m_ctrl is TRichEdit then       setRichEditProps(value);
+  if m_ctrl is TRadioButton then    setRadioBtnProps(value);
+  if m_ctrl is TCheckBox then       setCheckBoxProps(value);
+  if m_ctrl is TRadioGroup then     setRadioGroupProps(value);
+  if m_ctrl is TDateTimePicker then setDateTimePickerProps(value);
+
 end;
 
 function TaskCtrlPropImpl.ShowEditor : boolean;

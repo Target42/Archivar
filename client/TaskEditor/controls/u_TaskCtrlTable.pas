@@ -60,7 +60,8 @@ type
 implementation
 
 uses
-  u_TaskCtrlPropImpl, System.SysUtils, Winapi.Windows, Vcl.Menus, i_datafields;
+  u_TaskCtrlPropImpl, System.SysUtils, Winapi.Windows, Vcl.Menus, i_datafields,
+  Vcl.Dialogs;
 { TaskCtrlTable }
 
 function TaskCtrlTable.addRow: integer;
@@ -196,6 +197,25 @@ begin
     if not ctrl.Validator.validateKey( key ) then
       key := #0;
   end;
+  if key = #13 then begin
+   with m_sg do
+    begin
+      if Col < ColCount -1 then
+        Col := Col +1
+      else if Row < RowCount -1 then
+      begin
+        Row := Row +1;
+        Col := 1;
+      end else
+      begin
+        RowCount := RowCount + 1;
+        Row := RowCount -1;
+        Col := 1;
+        renumber;
+      end;
+    end;
+  end;
+
 end;
 
 function TaskCtrlTable.newControl(parent: TWinControl; x, y: Integer): TControl;
@@ -223,10 +243,11 @@ begin
 
   m_sg.Top  := y;
   m_sg.Left := X;
-  m_sg.Options := [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine,
-    goRangeSelect, goDrawFocusSelected, goRowSizing, goColSizing, goEditing, goTabs, goAlwaysShowEditor ];
+  m_sg.Options := [ goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine,
+                    goRangeSelect, goDrawFocusSelected, goRowSizing, goColSizing,
+                    goEditing, goTabs, goAlwaysShowEditor ];
 
-  pop   := TPopupMenu.Create( m_sg );
+  pop   := TPopupMenu.Create( parent );
   m_sg.PopupMenu := pop;
 
   addItem('Zeile einfügen', Self.SGInsertRow );
@@ -260,8 +281,10 @@ begin
     ctrl := m_list[m_sg.Col-1];
     if Assigned(ctrl) and Assigned(ctrl.Validator) then begin
       s := m_sg.Cells[m_sg.Col, m_sg.Row ];
-      CanSelect := ctrl.Validator.validateData(s);
-      m_sg.Cells[m_sg.Col, m_sg.Row ] := s;
+      if s <> '' then begin
+        CanSelect := ctrl.Validator.validateData(s);
+        m_sg.Cells[m_sg.Col, m_sg.Row ] := s;
+      end;
     end;
   end;
 end;
@@ -320,9 +343,11 @@ begin
   ctrl := m_list[m_sg.Col-1];
   if Assigned(ctrl) and Assigned(ctrl.Validator) then begin
     s := m_sg.Cells[m_sg.Col, m_sg.Row ];
-    if not ctrl.Validator.validateData(s) then
-      m_sg.SetFocus;
-    m_sg.Cells[m_sg.Col, m_sg.Row ] := s;
+    if s <> '' then begin
+      if not ctrl.Validator.validateData(s) then
+        m_sg.SetFocus;
+      m_sg.Cells[m_sg.Col, m_sg.Row ] := s;
+    end;
   end;
 end;
 procedure TaskCtrlTable.SGInsertRow(sender: TObject);
@@ -400,3 +425,5 @@ begin
 end;
 
 end.
+
+

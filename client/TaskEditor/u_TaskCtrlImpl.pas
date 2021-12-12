@@ -139,16 +139,7 @@ begin
     m_ctrl := newControl( m_parent.Control as TWinControl, 0, 1000 );
 
     updateControl;
-{
-    if Assigned(m_validator) then begin
-      m_validator.release;
-      m_validator := NIL;
-    end;
 
-    if Assigned(m_dataField) then begin
-      m_validator := ValidatorFactory.Validator( m_dataField );
-    end;
- }
     if Assigned( m_ctrl) then
     begin
       for i := 0 to pred(m_props.Count) do
@@ -201,7 +192,7 @@ end;
 
 procedure TaskCtrlImpl.configControl;
 begin
-  if Assigned(m_ctrl) then begin
+  if Assigned(m_ctrl) and Assigned(m_dataField)then begin
     m_ctrl.Enabled    := SameText(m_dataField.propertyValue('Enabled'), 'true') or SameText(m_dataField.propertyValue('Enabled'), 'ja');
     m_ctrl.Visible    := SameText(m_dataField.propertyValue('Visible'), 'true') or SameText(m_dataField.propertyValue('Visible'), 'ja')
   end;

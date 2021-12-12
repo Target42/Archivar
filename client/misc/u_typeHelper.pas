@@ -3,7 +3,7 @@ unit u_typeHelper;
 interface
 
 uses
-  Vcl.StdCtrls, System.Classes, Vcl.Controls;
+  Vcl.StdCtrls, System.Classes, Vcl.Controls, Vcl.ComCtrls;
 
 //TEditCharCase
 function TEditCharCase2Text( value : TEditCharCase) : string;
@@ -15,6 +15,12 @@ procedure fillTEditcharList( list : TStrings );
 function TAlign2Text( value : TAlign ): string;
 function Text2TAlign( value : string ): TAlign;
 procedure fillAlignList( list : TStrings );
+
+
+// TDateTimePicker.Kind
+function DateTimePickerKind2Text( value : TDateTimeKind ) : string;
+function Text2DateTimePickerKind( value : string ) : TDateTimeKind;
+procedure fillDateTimeKindList(list : TStrings );
 
 implementation
 
@@ -81,6 +87,26 @@ begin
   list.add('alRight');
   list.add('alClient');
   list.add('alCustom');
+end;
+
+function DateTimePickerKind2Text( value : TDateTimeKind ) : string;
+begin
+  case value of
+    dtkDate:  Result := 'dtkDate';
+    dtkTime:  Result := 'dtkTime';
+  end;
+end;
+
+function Text2DateTimePickerKind( value : string ) : TDateTimeKind;
+begin
+  Result := dtkDate;
+  if SameText(value, 'dtkTime') then Result := dtkTime;
+end;
+
+procedure fillDateTimeKindList(list : TStrings );
+begin
+  list.Add('dtkDate');
+  list.Add('dtkTime');
 end;
 
 end.

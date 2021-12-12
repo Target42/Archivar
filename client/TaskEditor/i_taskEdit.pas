@@ -15,7 +15,8 @@ type
     ctMemo, ctRichEdit,
     ctRadio, ctRadioGrp, ctCheckBox,
     ctTable, ctTableField,
-    ctSpliter
+    ctSpliter,
+    ctDateTimePicker
     );
 type
   TControlMouseDown = procedure ( Sender : TObject; Button : TMouseButton; Shift : TShiftState; X, Y : integer) of object;

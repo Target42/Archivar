@@ -13,7 +13,10 @@ type
       TPropertyType = (ptUnknown, ptString, ptInteger, ptBool,
         ptEditCharCase,
         ptEnumList,
-        ptLinkTable);
+        ptLinkTable,
+        ptDateTimeKind,
+        ptFloat
+        );
   private
     m_owner   : IDataField;
     m_name    : string;
@@ -61,9 +64,11 @@ uses
 constructor TPropertyImpl.Create( owner : IDataField; entry : TPropertyEntry);
 begin
   m_owner     := owner;
-  m_values    := TStringList.create;
-  m_values.StrictDelimiter := true;
-  m_values.Delimiter := ';';
+
+  m_values                  := TStringList.create;
+  m_values.StrictDelimiter  := true;
+  m_values.Delimiter        := ';';
+
   self.Name   := entry.name;
   self.Typ    := entry.typ;
   self.Value  := entry.value;
@@ -105,6 +110,7 @@ begin
     ptEditCharCase: Result := 'TEditCharCase';
     ptEnumList:     Result := 'EnumList';
     ptLinkTable:    Result := 'TableLink';
+    ptDateTimeKind: Result := 'TDateTimeKind';
   else
     Result := 'unknown';
   end;
@@ -144,24 +150,18 @@ procedure TPropertyImpl.SetTyp(value: string);
 begin
   m_typ := ptUnknown;
 
-  value := LowerCase(value);
-  if value = 'integer' then
-    m_typ := ptInteger
-  else if value ='string' then
-    m_typ := ptString
-  else if value = 'bool' then
-    m_typ := ptBool
-  else if value = 'teditcharcase' then
-    m_typ := ptEditCharCase
-  else if value = 'enumlist' then
-    m_typ := ptEnumList
-  else if value = 'tablelink' then
-    m_typ := ptLinkTable;
+  if      SameText(value, 'integer')       then  m_typ := ptInteger
+  else if SameText(value, 'string')        then  m_typ := ptString
+  else if SameText(value, 'bool')          then  m_typ := ptBool
+  else if SameText(value, 'teditcharcase') then  m_typ := ptEditCharCase
+  else if SameText(value, 'enumlist')      then  m_typ := ptEnumList
+  else if SameText(value, 'tablelink')     then  m_typ := ptLinkTable
+  else if SameText(value, 'tdatetimekind') then  m_typ := ptDateTimeKind
+  else if SameText(value, 'float')         then  m_typ := ptFloat;
 
-  if m_typ = ptBool then
-    m_values.DelimitedText := 'Ja;Nein';
-  if m_typ = ptEditCharCase then
-    m_values.DelimitedText := 'ecNormal;ecLowerCase;ecUpperCase';
+  if m_typ = ptBool         then    m_values.DelimitedText := 'Ja;Nein';
+  if m_typ = ptEditCharCase then    fillTEditcharList(m_values);    //  m_values.DelimitedText := 'ecNormal;ecLowerCase;ecUpperCase';
+  if m_typ = ptDateTimeKind then    fillDateTimeKindList(m_values); // m_values.DelimitedText := 'dtkDate;dtkTime';
 end;
 
 procedure TPropertyImpl.SetValue(value: string);
@@ -174,6 +174,8 @@ begin
     ptEditCharCase: m_value := TEditCharCase2Text(Text2TEditCharCase(value));
     ptEnumList: ;
     ptLinkTable:    m_value := value;
+    ptDateTimeKind: m_value := DateTimePickerKind2Text(Text2DateTimePickerKind(value));
+    ptFloat:        m_value := value;
     else
       m_value := value;
   end;

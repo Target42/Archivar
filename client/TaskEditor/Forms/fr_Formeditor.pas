@@ -146,38 +146,42 @@ uses
 const
   EditList : array[1..3] of TCtrlEntry =
   (
-    (name:'TEdit';        typ:ctEdit;       inx:2 ),
-    (name:'TLabledEdit';  typ:ctLabeledEdit;inx:5 ),
-    (name:'TComboBox';    typ:ctComboBox;   inx:1)
+    (name:'TEdit';            typ:ctEdit;           inx:2),
+    (name:'TLabledEdit';      typ:ctLabeledEdit;    inx:5),
+    (name:'TComboBox';        typ:ctComboBox;       inx:1)
   );
   ContainerList : array[1..3] of TCtrlEntry =
   (
-    (name:'TPanel';       typ:ctPanel;    inx:7),
-    (name:'TGroupbox';    typ:ctGroupBox; inx:3),
-    (name:'TSplitter';    typ:ctSpliter;  inx:10)
+    (name:'TPanel';           typ:ctPanel;          inx:7),
+    (name:'TGroupbox';        typ:ctGroupBox;       inx:3),
+    (name:'TSplitter';        typ:ctSpliter;        inx:10)
   );
   TextList : array[1..1] of TCtrlEntry =
   (
-    (name:'TLabel';       typ:ctLabel;    inx:4)
+    (name:'TLabel';           typ:ctLabel;          inx:4)
   );
 
   TextFieldList : array[1..2] of TCtrlEntry =
   (
-    (name:'TMemo';        typ:ctMemo;     inx:6),
-    (name:'TRichEdit';    typ:ctRichEdit; inx:9)
+    (name:'TMemo';            typ:ctMemo;           inx:6),
+    (name:'TRichEdit';        typ:ctRichEdit;       inx:9)
   );
   RadioList : array[1..2] of TCtrlEntry =
   (
-    (name:'TRadioBtn';    typ:ctRadio;    inx:8),
-    (name:'TRadioGroup';  typ:ctRadioGrp; inx:12)
+    (name:'TRadioBtn';        typ:ctRadio;          inx:8),
+    (name:'TRadioGroup';      typ:ctRadioGrp;       inx:12)
   );
   TableList : array[1..1] of TCtrlEntry =
   (
-    (name:'TTable';       typ:ctTable;    inx:11)
+    (name:'TTable';           typ:ctTable;          inx:11)
   );
   CheckList : array[1..1] of TCtrlEntry =
   (
-    (name:'TCheckBox';    typ:ctCheckBox; inx:0)
+    (name:'TCheckBox';        typ:ctCheckBox;       inx:0)
+  );
+  DateTimeList : array[1..1] of TCtrlEntry =
+  (
+    (name:'TDateTimePicker';  typ:ctDateTimePicker; inx:1)
   );
 
 
@@ -263,7 +267,7 @@ begin
           win := com as TControl;
           if win.Owner <> self then
           begin
-            if (win is TComboBox) or ( win is TRadioGroup) then
+            if (win is TComboBox) or ( win is TRadioGroup) or ( win is TDateTimePicker) then
             begin
               m_inReposition := true;
               ControlMouseDown( win, mbLeft, shift, mouse.CursorPos.X, Mouse.CursorPos.Y);
@@ -280,9 +284,9 @@ begin
       if com is TControl then
       begin
         win := com as TControl;
-        if (win is TComboBox) or ( win is TRadioGroup) then
+        if (win is TComboBox) or ( win is TRadioGroup) or ( win is TDateTimePicker) then
         begin
-          ControlMouseUp( win, mbLeft, shift, Mouse.CursorPos.X, Mouse.CursorPos.Y);;
+          ControlMouseUp( win, mbLeft, shift, Mouse.CursorPos.X, Mouse.CursorPos.Y);
           m_inReposition := false;
         end;
       end;
@@ -291,7 +295,8 @@ begin
     begin
       if Assigned(FCurrentNodeControl) and m_inReposition then
       begin
-        if (FCurrentNodeControl is TComboBox) or ( FCurrentNodeControl is TRadioGroup) then
+        if (FCurrentNodeControl is TComboBox) or ( FCurrentNodeControl is TRadioGroup)
+            or ( FCurrentNodeControl is TDateTimePicker)then
         begin
           ControlMouseMove( FCurrentNodeControl, shift, Mouse.CursorPos.X, Mouse.CursorPos.Y);
         end;
@@ -828,11 +833,13 @@ begin
   saveDFM(m_form.Base);
 
   prepareDrop;
+
   m_form.Base.dropControls;
   m_form.Base.Control := NIL;
 
   Application.CreateForm(TTestForm, TestForm);
   TestForm.TaskForm := m_form;
+  TestForm.setTitle( m_task.Name+':'+m_form.Name);
 
   TestForm.ShowModal;
   TestForm.free;
@@ -1165,14 +1172,14 @@ begin
   LV.Items.BeginUpdate;
   LV.Items.Clear;
 
+  fillGroup('Check',      CheckList );
   fillGroup('Container',  ContainerList);
+  fillGroup('DateTime',   DateTimeList );
   fillGroup('Edit',       EditList);
   fillGroup('Label',      TextList);
+  fillGroup('Radio',      RadioList);
   fillGroup('Table',      TableList);
   fillGroup('Text',       TextFieldList);
-  fillGroup('Radio',      RadioList);
-  fillGroup('Check',      CheckList );
-
   LV.Items.EndUpdate;
 end;
 

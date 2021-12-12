@@ -121,6 +121,10 @@ const
   (
     (name:'TableName';     typ:'TableLink';     value:'')
   );
+  DateTimePickerProps : array[1..1] of TPropertyEntry =
+  (
+    (name:'Kind';          typ:'TDateTimeKind'; value:'dtkDate')
+  );
 
 
 { TDataField }
@@ -335,17 +339,18 @@ begin
 
   case m_dtype of
     dtUnkown: ;
-    dtBool:       config(BoolProps);
-    dtDate:       config(DateProps);
-    dtDatetime:   config(DateTimeProps);
-    dtEnum:       config(EnumProps);
-    dtFloat:      config(FloatProps);
-    dtInteger:    config(IntegerProps);
-    dtString:     config(StringProps);
-    dtText:       config(TextProps);
-    dtTime:       config(TimeProps);
-    dtLinktable:  config(LinkTableProps);
-    dtTable:      config(TableProps);
+    dtBool:           config(BoolProps);
+    dtDate:           config(DateProps);
+    dtDatetime:       config(DateTimeProps);
+    dtEnum:           config(EnumProps);
+    dtFloat:          config(FloatProps);
+    dtInteger:        config(IntegerProps);
+    dtString:         config(StringProps);
+    dtText:           config(TextProps);
+    dtTime:           config(TimeProps);
+    dtLinktable:      config(LinkTableProps);
+    dtTable:          config(TableProps);
+    dtDateTimePicker: config(DateTimePickerProps);
   end;
 end;
 

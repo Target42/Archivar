@@ -16,7 +16,8 @@ type
     m_form : ITaskform;
     procedure setForm(value: ITaskform);
   public
-    property TaskForm : ITaskForm read m_form write setForm;
+    property  TaskForm : ITaskForm read m_form write setForm;
+    procedure setTitle( text : string );
   end;
 
 var
@@ -51,6 +52,11 @@ begin
 
   ClientWidth  := x;
   ClientHeight := y + BaseFrame1.Height;
+end;
+
+procedure TTestForm.setTitle(text: string);
+begin
+  Caption := 'Formulartest : '+text;
 end;
 
 end.

@@ -30,27 +30,27 @@ uses
   Winapi.Windows, System.SysUtils, u_TaskCtrlImpl, u_TaskCtrlLabel,
   u_TaskCtrlGroupBox, u_TaskCtrlTable, u_TaskCtrlComboBox,
   u_TaskCtrlLabeledEdit, u_TaskCtrlTableField, u_TaskCtrlPanel, u_TaskCtrlMemo, u_TaskCtrlSpliter, u_taskCtrlRadio, u_TaskCtrlCheck,
-  u_TaskCtrlRadioGroup;
+  u_TaskCtrlRadioGroup, u_taskCtrlDateTimePicker;
 
 constructor TTaskControlFactory.Create;
 begin
   inherited;
   m_map := TDictionary<string, TControlType>.create;
 
-  m_map.Add(LowerCase('TLabel'),       ctLabel);
-  m_map.Add(LowerCase('TEdit'),        ctEdit);
-  m_map.Add(LowerCase('TLabeledEdit'), ctLabeledEdit);
-  m_map.Add(LowerCase('TComboBox'),    ctComboBox );
-  m_map.Add(LowerCase('TGroupBox'),    ctGroupBox );
-  m_map.Add(LowerCase('TStringGrid'),  ctTable );
-  m_map.Add(LowerCase('TTableField'),  ctTableField );
-  m_map.Add(LowerCase('TMemo'),        ctMemo );
-  m_map.Add(LowerCase('TRichEdit'),    ctRichEdit );
-  m_map.Add(LowerCase('TSplitter'),    ctSpliter );
-  m_map.Add(LowerCase('TPanel'),       ctPanel );
-  m_map.Add(LowerCase('TRadioButton'), ctRadio );
-  m_map.Add(LowerCase('TCheckBox'),    ctCheckBox );
-
+  m_map.Add(LowerCase('TLabel'),          ctLabel);
+  m_map.Add(LowerCase('TEdit'),           ctEdit);
+  m_map.Add(LowerCase('TDAteTimePicker'), ctDateTimePicker);
+  m_map.Add(LowerCase('TLabeledEdit'),    ctLabeledEdit);
+  m_map.Add(LowerCase('TComboBox'),       ctComboBox );
+  m_map.Add(LowerCase('TGroupBox'),       ctGroupBox );
+  m_map.Add(LowerCase('TStringGrid'),     ctTable );
+  m_map.Add(LowerCase('TTableField'),     ctTableField );
+  m_map.Add(LowerCase('TMemo'),           ctMemo );
+  m_map.Add(LowerCase('TRichEdit'),       ctRichEdit );
+  m_map.Add(LowerCase('TSplitter'),       ctSpliter );
+  m_map.Add(LowerCase('TPanel'),          ctPanel );
+  m_map.Add(LowerCase('TRadioButton'),    ctRadio );
+  m_map.Add(LowerCase('TCheckBox'),       ctCheckBox );
 end;
 
 function TTaskControlFactory.createControl(frm : ITaskForm; p: ITaskCtrl;
@@ -70,21 +70,22 @@ function TTaskControlFactory.createControl(frm : ITaskForm; p: ITaskCtrl; newTyp
 begin
   Result := NIL;
   case newType of
-    ctNone:         Result := TaskCtrlImpl.create(frm);
-    ctEdit:         Result := TaskCtrlEdit.create(frm);
-    ctLabeledEdit:  Result := TaskCtrlLabeledEdit.create(frm);
-    ctComboBox:     Result := TaskCtrlComboBox.create(frm);
-    ctLabel:        Result := TaskCtrlLabel.create(frm);
-    ctGroupBox:     Result := TaskCtrlGroupBox.create(frm);
-    ctPanel:        Result := TaskCtrlPanel.create(frm);
-    ctMemo:         Result := TaskCtrlMemo.create( frm );
-    ctRichEdit:     Result := TaskCtrlRichEdit.create(frm);
-    ctRadio:        Result := TTaskCtrlRadio.create(frm);
-    ctRadioGrp:     Result := TaskCtrlRadioGroup.Create(frm);
-    ctCheckBox:     Result := TTaskCtrlCheck.create(frm);
-    ctTable:        Result := TaskCtrlTable.create( frm );
-    ctTableField:   Result := TaskCtrlTableField.create( frm );
-    ctSpliter:      Result := TaskCtrlSplitter.Create(frm);
+    ctNone:           Result := TaskCtrlImpl.create(frm);
+    ctEdit:           Result := TaskCtrlEdit.create(frm);
+    ctLabeledEdit:    Result := TaskCtrlLabeledEdit.create(frm);
+    ctComboBox:       Result := TaskCtrlComboBox.create(frm);
+    ctLabel:          Result := TaskCtrlLabel.create(frm);
+    ctGroupBox:       Result := TaskCtrlGroupBox.create(frm);
+    ctPanel:          Result := TaskCtrlPanel.create(frm);
+    ctMemo:           Result := TaskCtrlMemo.create( frm );
+    ctRichEdit:       Result := TaskCtrlRichEdit.create(frm);
+    ctRadio:          Result := TTaskCtrlRadio.create(frm);
+    ctRadioGrp:       Result := TaskCtrlRadioGroup.Create(frm);
+    ctCheckBox:       Result := TTaskCtrlCheck.create(frm);
+    ctTable:          Result := TaskCtrlTable.create( frm );
+    ctTableField:     Result := TaskCtrlTableField.create( frm );
+    ctSpliter:        Result := TaskCtrlSplitter.Create(frm);
+    ctDateTimePicker: Result := TaskCtrlDateTimePicker.create(frm);
   else
     Result := NIL;
   end;

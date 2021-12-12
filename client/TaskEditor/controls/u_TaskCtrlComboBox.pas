@@ -1,6 +1,7 @@
 unit u_TaskCtrlComboBox;
 
 interface
+
 uses
   u_TaskCtrlImpl, i_taskEdit, Vcl.Controls, System.Classes, i_datafields;
 
@@ -9,7 +10,6 @@ type
     protected
       procedure setControlTypeProps; override;
       function  newControl(parent : TWinControl; x, y : Integer) :  TControl; override;
-      procedure doSetMouse( md : TControlMouseDown; mv : TControlMouseMove; mu : TControlMouseUp ); override;
       function CtrlValue : string; override;
       procedure setCtrlValue( value : string ); override;
 
@@ -70,18 +70,11 @@ begin
   inherited;
 end;
 
-procedure TaskCtrlComboBox.doSetMouse(md: TControlMouseDown;
-  mv: TControlMouseMove; mu: TControlMouseUp);
-begin
-  inherited;
-
-end;
-
 function TaskCtrlComboBox.getReadOnly: boolean;
 begin
   Result := false;
   if Assigned(m_ctrl) then
-    Result := (m_ctrl as TComboBox).Enabled;
+    Result := not (m_ctrl as TComboBox).Enabled;
 end;
 
 function TaskCtrlComboBox.newControl(parent: TWinControl; x, y: Integer): TControl;
@@ -121,7 +114,6 @@ end;
 
 procedure TaskCtrlComboBox.setDataField(value: IDataField);
 var
-//  cb    : TComboBox;
   prop  :IProperty;
   tprop :ITaskCtrlProp;
 begin
@@ -132,7 +124,6 @@ begin
 
   if (value.Typ = 'enum') and  Assigned(m_ctrl) then
   begin
-    //cb := m_ctrl as TComboBox;
 
     tprop := self.getPropertyByName('items');
     prop := value.getPropertyByName('Values');
@@ -140,8 +131,6 @@ begin
     if Assigned(prop) and Assigned(tProp) then
     begin
       tprop.ValueList.DelimitedText := prop.Value;
-//      cb.Items.Delimiter := ';';
-//      cb.Items.DelimitedText := prop.Value;
     end;
   end;
 end;

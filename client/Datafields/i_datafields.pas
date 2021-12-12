@@ -9,7 +9,7 @@ type
   TDataFieldType =
   (
     dtUnkown, dtBool, dtDate, dtDatetime, dtEnum, dtFloat, dtInteger,
-    dtString, dtText, dtTime, dtLinktable, dtTable
+    dtString, dtText, dtTime, dtLinktable, dtTable, dtDateTimePicker
   );
 
   IDataField      = interface;
