@@ -510,7 +510,7 @@ begin
 
   LoadData;
 
-  FileFrame1.ID := m_ta_id;
+  FileFrame1.RootID := m_ta_id;
   for i := 0 to pred(ComboBox1.Items.Count) do
   begin
     if integer(ComboBox1.Items.Objects[i]) = TaskTab.FieldByName('TA_FLAGS').AsInteger then

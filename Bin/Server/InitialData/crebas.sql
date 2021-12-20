@@ -1,13 +1,14 @@
 /* ============================================================ */
 /*   Database name:  MODEL_2                                    */
 /*   DBMS name:      InterBase                                  */
-/*   Created on:     26.11.2021  15:52                          */
+/*   Created on:     15.12.2021  18:02                          */
 /* ============================================================ */
 
 create generator gen_be_id;
 create generator gen_ct_id;
 create generator gen_cp_id;
 create generator gen_da_id;
+create generator gen_dr_id;
 create generator gen_di_id;
 create generator gen_el_id;
 create generator gen_fc_id;
@@ -29,18 +30,6 @@ create generator gen_tg_id;
 create generator gen_tn_id;
 create generator gen_ty_id;
 create generator gen_ep_id;
-/* ============================================================ */
-/*   Table: MA_MITAREITER                                       */
-/* ============================================================ */
-create table MA_MITAREITER
-(
-    MA_ID                           INTEGER                not null,
-    MA_NAME                         VARCHAR(100)                   ,
-    MA_VORNAME                      VARCHAR(100)                   ,
-    MA_DEPT                         VARCHAR(100)                   ,
-    constraint PK_MA_MITAREITER primary key (MA_ID)
-);
-
 /* ============================================================ */
 /*   Table: FD_DELETE                                           */
 /* ============================================================ */
@@ -108,6 +97,7 @@ create table TB_TEXT
     TB_NAME                         VARCHAR(200)                   ,
     TB_TEXT                         BLOB                           ,
     TB_TAGS                         VARCHAR(255)                   ,
+    TB_CLID                         VARCHAR(38)                    ,
     constraint PK_TB_TEXT primary key (TB_ID)
 );
 
@@ -175,65 +165,15 @@ create table LN_LINK
 create ASC index LN_LINK_SEC on LN_LINK (LN_SHORT);
 
 /* ============================================================ */
-/*   Table: PE_PERSON                                           */
+/*   Table: MA_MITAREITER                                       */
 /* ============================================================ */
-create table PE_PERSON
+create table MA_MITAREITER
 (
-    PE_ID                           INTEGER                not null,
-    PE_NAME                         VARCHAR(100)                   ,
-    PE_VORNAME                      VARCHAR(100)                   ,
-    PE_DEPARTMENT                   VARCHAR(25)                    ,
-    PE_NET                          VARCHAR(25)                    ,
-    PE_MAIL                         VARCHAR(200)                   ,
-    PE_PWD                          VARCHAR(64)                    ,
-    PE_ROLS                         VARCHAR(200)                   ,
-    PE_KEY                          BLOB                           ,
-    constraint PK_PE_PERSON primary key (PE_ID)
-);
-
-/* ============================================================ */
-/*   Index: PE_PERSON_NAME                                      */
-/* ============================================================ */
-create ASC index PE_PERSON_NAME on PE_PERSON (PE_NAME, PE_VORNAME);
-
-/* ============================================================ */
-/*   Index: PE_PERSON_NET                                       */
-/* ============================================================ */
-create unique ASC index PE_PERSON_NET on PE_PERSON (PE_NET);
-
-/* ============================================================ */
-/*   Table: GR_GREMIUM                                          */
-/* ============================================================ */
-create table GR_GREMIUM
-(
-    GR_ID                           INTEGER                not null,
-    GR_NAME                         VARCHAR(100)                   ,
-    GR_SHORT                        VARCHAR(20)                    ,
-    GR_PARENT_SHORT                 VARCHAR(20)                    ,
-    GR_CHANGES                      BLOB                           ,
-    GR_PIC_NAME                     VARCHAR(100)                   ,
-    constraint PK_GR_GREMIUM primary key (GR_ID)
-);
-
-/* ============================================================ */
-/*   Index: GR_GREMIUM_SHORT                                    */
-/* ============================================================ */
-create unique ASC index GR_GREMIUM_SHORT on GR_GREMIUM (GR_SHORT);
-
-/* ============================================================ */
-/*   Table: FI_FILE                                             */
-/* ============================================================ */
-create table FI_FILE
-(
-    FI_ID                           INTEGER                not null,
-    FI_NAME                         VARCHAR(150)                   ,
-    FI_TYPE                         VARCHAR(10)                    ,
-    FI_DATA                         BLOB                           ,
-    FI_CREATED                      DATE                           ,
-    FI_TODELETE                     DATE                           ,
-    FI_VERSION                      INTEGER                        ,
-    FI_CREATED_BY                   VARCHAR(200)                   ,
-    constraint PK_FI_FILE primary key (FI_ID)
+    MA_ID                           INTEGER                not null,
+    MA_NAME                         VARCHAR(100)                   ,
+    MA_VORNAME                      VARCHAR(100)                   ,
+    MA_DEPT                         VARCHAR(100)                   ,
+    constraint PK_MA_MITAREITER primary key (MA_ID)
 );
 
 /* ============================================================ */
@@ -272,39 +212,16 @@ create table FC_FILE_CACHE
 create ASC index FC_FILE_CACHE_NAME on FC_FILE_CACHE (FC_NAME);
 
 /* ============================================================ */
-/*   Table: PR_PROTOKOL                                         */
+/*   Table: DR_DIR                                              */
 /* ============================================================ */
-create table PR_PROTOKOL
+create table DR_DIR
 (
-    PR_ID                           INTEGER                not null,
-    GR_ID                           INTEGER                        ,
-    PR_DATUM                        DATE                           ,
-    PR_NR                           INTEGER                        ,
-    PR_NAME                         VARCHAR(75)                    ,
-    PR_STATUS                       CHAR(1)                        ,
-    PR_DATA                         BLOB                           ,
-    PR_CLID                         VARCHAR(38)                    ,
-    constraint PK_PR_PROTOKOL primary key (PR_ID)
+    DR_ID                           INTEGER                not null,
+    DR_GROUP                        INTEGER                        ,
+    DR_PARENT                       INTEGER                        ,
+    DR_NAME                         VARCHAR(150)                   ,
+    constraint PK_DR_DIR primary key (DR_ID)
 );
-
-/* ============================================================ */
-/*   Table: CP_CHAPTER                                          */
-/* ============================================================ */
-create table CP_CHAPTER
-(
-    PR_ID                           INTEGER                not null,
-    CP_ID                           INTEGER                not null,
-    CP_TITLE                        VARCHAR(200)                   ,
-    CP_DATA                         BLOB                           ,
-    CP_NR                           INTEGER                        ,
-    CP_CREATED                      TIMESTAMP                      ,
-    constraint PK_CP_CHAPTER primary key (CP_ID)
-);
-
-/* ============================================================ */
-/*   Index: CP_CHAPTER_SEC                                      */
-/* ============================================================ */
-create ASC index CP_CHAPTER_SEC on CP_CHAPTER (PR_ID, CP_ID);
 
 /* ============================================================ */
 /*   Table: TE_TEMPLATE                                         */
@@ -343,6 +260,7 @@ create table TA_TASK
     TE_ID                           INTEGER                        ,
     TA_ID                           INTEGER                not null,
     TY_ID                           INTEGER                        ,
+    DR_ID                           INTEGER                        ,
     TA_STARTED                      DATE                           ,
     TA_CREATED                      TIMESTAMP                      ,
     TA_NAME                         VARCHAR(200)                   ,
@@ -383,6 +301,89 @@ create table CT_CHAPTER_TEXT
 );
 
 /* ============================================================ */
+/*   Table: GR_GREMIUM                                          */
+/* ============================================================ */
+create table GR_GREMIUM
+(
+    GR_ID                           INTEGER                not null,
+    DR_ID                           INTEGER                        ,
+    GR_NAME                         VARCHAR(100)                   ,
+    GR_SHORT                        VARCHAR(20)                    ,
+    GR_PARENT_SHORT                 VARCHAR(20)                    ,
+    GR_CHANGES                      BLOB                           ,
+    GR_PIC_NAME                     VARCHAR(100)                   ,
+    constraint PK_GR_GREMIUM primary key (GR_ID)
+);
+
+/* ============================================================ */
+/*   Index: GR_GREMIUM_SHORT                                    */
+/* ============================================================ */
+create unique ASC index GR_GREMIUM_SHORT on GR_GREMIUM (GR_SHORT);
+
+/* ============================================================ */
+/*   Table: PE_PERSON                                           */
+/* ============================================================ */
+create table PE_PERSON
+(
+    PE_ID                           INTEGER                not null,
+    DR_ID                           INTEGER                        ,
+    PE_NAME                         VARCHAR(100)                   ,
+    PE_VORNAME                      VARCHAR(100)                   ,
+    PE_DEPARTMENT                   VARCHAR(25)                    ,
+    PE_NET                          VARCHAR(25)                    ,
+    PE_MAIL                         VARCHAR(200)                   ,
+    PE_PWD                          VARCHAR(64)                    ,
+    PE_ROLS                         VARCHAR(200)                   ,
+    PE_KEY                          BLOB                           ,
+    constraint PK_PE_PERSON primary key (PE_ID)
+);
+
+/* ============================================================ */
+/*   Index: PE_PERSON_NAME                                      */
+/* ============================================================ */
+create ASC index PE_PERSON_NAME on PE_PERSON (PE_NAME, PE_VORNAME);
+
+/* ============================================================ */
+/*   Index: PE_PERSON_NET                                       */
+/* ============================================================ */
+create unique ASC index PE_PERSON_NET on PE_PERSON (PE_NET);
+
+/* ============================================================ */
+/*   Table: PR_PROTOKOL                                         */
+/* ============================================================ */
+create table PR_PROTOKOL
+(
+    PR_ID                           INTEGER                not null,
+    GR_ID                           INTEGER                        ,
+    PR_DATUM                        DATE                           ,
+    PR_NR                           INTEGER                        ,
+    PR_NAME                         VARCHAR(75)                    ,
+    PR_STATUS                       CHAR(1)                        ,
+    PR_DATA                         BLOB                           ,
+    PR_CLID                         VARCHAR(38)                    ,
+    constraint PK_PR_PROTOKOL primary key (PR_ID)
+);
+
+/* ============================================================ */
+/*   Table: CP_CHAPTER                                          */
+/* ============================================================ */
+create table CP_CHAPTER
+(
+    PR_ID                           INTEGER                not null,
+    CP_ID                           INTEGER                not null,
+    CP_TITLE                        VARCHAR(200)                   ,
+    CP_DATA                         BLOB                           ,
+    CP_NR                           INTEGER                        ,
+    CP_CREATED                      TIMESTAMP                      ,
+    constraint PK_CP_CHAPTER primary key (CP_ID)
+);
+
+/* ============================================================ */
+/*   Index: CP_CHAPTER_SEC                                      */
+/* ============================================================ */
+create ASC index CP_CHAPTER_SEC on CP_CHAPTER (PR_ID, CP_ID);
+
+/* ============================================================ */
 /*   Table: GR_PA                                               */
 /* ============================================================ */
 create table GR_PA
@@ -394,13 +395,20 @@ create table GR_PA
 );
 
 /* ============================================================ */
-/*   Table: FI_TA                                               */
+/*   Table: FI_FILE                                             */
 /* ============================================================ */
-create table FI_TA
+create table FI_FILE
 (
-    TA_ID                           INTEGER                not null,
     FI_ID                           INTEGER                not null,
-    constraint PK_FI_TA primary key (TA_ID, FI_ID)
+    DR_ID                           INTEGER                        ,
+    FI_NAME                         VARCHAR(150)                   ,
+    FI_TYPE                         VARCHAR(10)                    ,
+    FI_DATA                         BLOB                           ,
+    FI_CREATED                      DATE                           ,
+    FI_TODELETE                     DATE                           ,
+    FI_VERSION                      INTEGER                        ,
+    FI_CREATED_BY                   VARCHAR(200)                   ,
+    constraint PK_FI_FILE primary key (FI_ID)
 );
 
 /* ============================================================ */
@@ -542,6 +550,7 @@ create table DI_DAIRY
     DI_STAMP                        TIMESTAMP                      ,
     DI_CRYPTED                      CHAR(1)                        ,
     DI_TEXT                         BLOB                           ,
+    DI_TAGS                         VARCHAR(255)                   ,
     constraint PK_DI_DAIRY primary key (DI_ID)
 );
 
@@ -549,14 +558,6 @@ create table DI_DAIRY
 /*   Index: DI_DAIRY_USER                                       */
 /* ============================================================ */
 create DESC index DI_DAIRY_USER on DI_DAIRY (PE_ID, DI_STAMP);
-
-alter table PR_PROTOKOL
-    add constraint FK_REF_108 foreign key  (GR_ID)
-       references GR_GREMIUM;
-
-alter table CP_CHAPTER
-    add constraint FK_REF_1627 foreign key  (PR_ID)
-       references PR_PROTOKOL;
 
 alter table TE_TEMPLATE
     add constraint FK_REF_3353 foreign key  (TY_ID)
@@ -570,6 +571,10 @@ alter table TA_TASK
     add constraint FK_REF_3336 foreign key  (TE_ID)
        references TE_TEMPLATE;
 
+alter table TA_TASK
+    add constraint FK_REF_10388 foreign key  (DR_ID)
+       references DR_DIR;
+
 alter table CT_CHAPTER_TEXT
     add constraint FK_REF_3850 foreign key  (CP_ID)
        references CP_CHAPTER;
@@ -577,6 +582,22 @@ alter table CT_CHAPTER_TEXT
 alter table CT_CHAPTER_TEXT
     add constraint FK_REF_4070 foreign key  (TA_ID)
        references TA_TASK;
+
+alter table GR_GREMIUM
+    add constraint FK_REF_10392 foreign key  (DR_ID)
+       references DR_DIR;
+
+alter table PE_PERSON
+    add constraint FK_REF_10396 foreign key  (DR_ID)
+       references DR_DIR;
+
+alter table PR_PROTOKOL
+    add constraint FK_REF_108 foreign key  (GR_ID)
+       references GR_GREMIUM;
+
+alter table CP_CHAPTER
+    add constraint FK_REF_1627 foreign key  (PR_ID)
+       references PR_PROTOKOL;
 
 alter table GR_PA
     add constraint FK_REF_16 foreign key  (GR_ID)
@@ -586,13 +607,9 @@ alter table GR_PA
     add constraint FK_REF_20 foreign key  (PE_ID)
        references PE_PERSON;
 
-alter table FI_TA
-    add constraint FK_REF_113 foreign key  (TA_ID)
-       references TA_TASK;
-
-alter table FI_TA
-    add constraint FK_REF_117 foreign key  (FI_ID)
-       references FI_FILE;
+alter table FI_FILE
+    add constraint FK_REF_10074 foreign key  (DR_ID)
+       references DR_DIR;
 
 alter table BE_BESCHLUS
     add constraint FK_REF_5058 foreign key  (CT_ID)

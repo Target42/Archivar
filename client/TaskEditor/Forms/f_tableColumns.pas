@@ -240,7 +240,7 @@ begin
     item.SubItems.Add( getPropertyValue(ctrl, 'Width'));
     item.SubItems.Add( getPropertyValue(ctrl, 'DataField'));
 
-    w := LV.Canvas.TextWidth(item.Caption) +8;
+    w := LV.Canvas.TextWidth(item.Caption) + 24;
     if w > len then
       len := w;
     if old = ctrl then

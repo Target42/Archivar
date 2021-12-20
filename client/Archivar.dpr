@@ -204,7 +204,8 @@ uses
   u_ValidatorFloatImpl in 'TaskEditor\Validator\u_ValidatorFloatImpl.pas',
   u_ValidatorDateTimeImpl in 'TaskEditor\Validator\u_ValidatorDateTimeImpl.pas',
   u_ValidatorEnumImpl in 'TaskEditor\Validator\u_ValidatorEnumImpl.pas',
-  u_taskCtrlDateTimePicker in 'TaskEditor\controls\u_taskCtrlDateTimePicker.pas';
+  u_taskCtrlDateTimePicker in 'TaskEditor\controls\u_taskCtrlDateTimePicker.pas',
+  f_storage in 'dms\f_storage.pas' {StorageForm};
 
 {$R *.res}
 

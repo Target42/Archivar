@@ -45,11 +45,15 @@ object TaskEditForm: TTaskEditForm
     Top = 0
     Width = 725
     Height = 420
-    ActivePage = TabSheet1
+    ActivePage = TabSheet5
     Align = alClient
     TabOrder = 1
     object TabSheet1: TTabSheet
       Caption = 'Daten'
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GroupBox1: TGroupBox
         Left = 0
         Top = 0
@@ -227,6 +231,10 @@ object TaskEditForm: TTaskEditForm
         OnChange = PageControl2Change
         object TabSheet3: TTabSheet
           Caption = 'Details'
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           inline FormFrame1: TFormFrame
             Left = 0
             Top = 0
@@ -247,6 +255,10 @@ object TaskEditForm: TTaskEditForm
         object TabSheet4: TTabSheet
           Caption = 'Vorschau'
           ImageIndex = 1
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object WebBrowser1: TWebBrowser
             Left = 0
             Top = 0
@@ -280,21 +292,36 @@ object TaskEditForm: TTaskEditForm
         TabOrder = 0
         ExplicitWidth = 717
         ExplicitHeight = 392
-        inherited DBGrid1: TDBGrid
-          Width = 717
-          Height = 335
+        inherited Splitter1: TSplitter
+          Height = 392
         end
-        inherited GroupBox1: TGroupBox
-          Top = 335
-          Width = 717
-          ExplicitTop = 335
-          ExplicitWidth = 717
+        inherited GroupBox2: TGroupBox
+          Height = 392
+        end
+        inherited GroupBox3: TGroupBox
+          Width = 465
+          Height = 392
+          inherited GroupBox1: TGroupBox
+            Top = 335
+            Width = 717
+            ExplicitTop = 335
+            ExplicitWidth = 717
+          end
+          inherited DBGrid1: TDBGrid
+            Width = 717
+            Height = 335
+          end
+        end
+        inherited JvDragDrop1: TJvDragDrop
+          DropTarget = FileFrame1
         end
       end
     end
     object TabSheet5: TTabSheet
       Caption = 'Log-buch'
       ImageIndex = 2
+      ExplicitWidth = 296
+      ExplicitHeight = 154
       inline LogFrame1: TLogFrame
         Left = 0
         Top = 0
@@ -302,8 +329,8 @@ object TaskEditForm: TTaskEditForm
         Height = 392
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 717
-        ExplicitHeight = 392
+        ExplicitWidth = 296
+        ExplicitHeight = 154
         inherited GroupBox3: TGroupBox
           Left = 532
           Height = 392
@@ -326,17 +353,18 @@ object TaskEditForm: TTaskEditForm
         inherited Panel1: TPanel
           Width = 532
           Height = 392
-          ExplicitWidth = 532
-          ExplicitHeight = 392
+          ExplicitWidth = 111
+          ExplicitHeight = 154
           inherited GroupBox1: TGroupBox
             Width = 532
-            ExplicitWidth = 532
+            ExplicitWidth = 111
             inherited EditFrame1: TEditFrame
               Width = 528
-              ExplicitWidth = 528
+              ExplicitWidth = 107
               inherited RE: TRichEdit
                 Width = 528
-                ExplicitWidth = 528
+                OnKeyPress = DBEdit1KeyPress
+                ExplicitWidth = 107
               end
             end
           end

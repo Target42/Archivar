@@ -106,6 +106,8 @@ begin
   JReplace( Result, 'name',     m_session.GetData('name'));
   JReplace( Result, 'vorname',  m_session.GetData('vorname'));
   JReplace( Result, 'id',       StrToInt(m_session.GetData('ID')));
+  JReplace( Result, 'drid',     StrToInt(m_session.GetData('DRID')));
+
 
   GrijjyLog.Send('session id', m_session.Id);
 

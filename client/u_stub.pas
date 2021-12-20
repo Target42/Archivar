@@ -1,6 +1,6 @@
 //
 // Erzeugt vom DataSnap-Proxy-Generator.
-// 25.11.2021 19:26:25
+// 17.12.2021 18:02:49
 //
 
 unit u_stub;
@@ -93,13 +93,21 @@ type
     FAutoIncCommand: TDBXCommand;
     FuploadCommand: TDBXCommand;
     FdeleteFileCommand: TDBXCommand;
+    FcreateRootCommand: TDBXCommand;
+    FnewFolderCommand: TDBXCommand;
+    FdeleteFolderCommand: TDBXCommand;
+    FrenameFolderCommand: TDBXCommand;
   public
     constructor Create(ADBXConnection: TDBXConnection); overload;
     constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
     destructor Destroy; override;
     function AutoInc(gen: string): Integer;
     function upload(data: TJSONObject; st: TStream): TJSONObject;
-    function deleteFile(ta_id: Integer; fi_id: Integer): TJSONObject;
+    function deleteFile(fi_id: Integer): TJSONObject;
+    function createRoot(data: TJSONObject): TJSONObject;
+    function newFolder(data: TJSONObject): TJSONObject;
+    function deleteFolder(data: TJSONObject): TJSONObject;
+    function renameFolder(data: TJSONObject): TJSONObject;
   end;
 
   TdsMiscClient = class(TDSAdminClient)
@@ -316,6 +324,18 @@ type
     function uploadKeys(net: string; pub: TStream; priv: TStream): TJSONObject;
     function getPublicKey(net: string; stamp: TDateTime): TStream;
     function hasValidKey(net: string; stamp: TDateTime): Boolean;
+  end;
+
+  TdsDairyClient = class(TDSAdminClient)
+  private
+    FDSServerModuleCreateCommand: TDBXCommand;
+    FDITabBeforePostCommand: TDBXCommand;
+  public
+    constructor Create(ADBXConnection: TDBXConnection); overload;
+    constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
+    destructor Destroy; override;
+    procedure DSServerModuleCreate(Sender: TObject);
+    procedure DITabBeforePost(DataSet: TDataSet);
   end;
 
 implementation
@@ -763,7 +783,7 @@ begin
   Result := TJSONObject(FuploadCommand.Parameters[2].Value.GetJSONValue(FInstanceOwner));
 end;
 
-function TdsFileClient.deleteFile(ta_id: Integer; fi_id: Integer): TJSONObject;
+function TdsFileClient.deleteFile(fi_id: Integer): TJSONObject;
 begin
   if FdeleteFileCommand = nil then
   begin
@@ -772,10 +792,65 @@ begin
     FdeleteFileCommand.Text := 'TdsFile.deleteFile';
     FdeleteFileCommand.Prepare;
   end;
-  FdeleteFileCommand.Parameters[0].Value.SetInt32(ta_id);
-  FdeleteFileCommand.Parameters[1].Value.SetInt32(fi_id);
+  FdeleteFileCommand.Parameters[0].Value.SetInt32(fi_id);
   FdeleteFileCommand.ExecuteUpdate;
-  Result := TJSONObject(FdeleteFileCommand.Parameters[2].Value.GetJSONValue(FInstanceOwner));
+  Result := TJSONObject(FdeleteFileCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
+end;
+
+function TdsFileClient.createRoot(data: TJSONObject): TJSONObject;
+begin
+  if FcreateRootCommand = nil then
+  begin
+    FcreateRootCommand := FDBXConnection.CreateCommand;
+    FcreateRootCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FcreateRootCommand.Text := 'TdsFile.createRoot';
+    FcreateRootCommand.Prepare;
+  end;
+  FcreateRootCommand.Parameters[0].Value.SetJSONValue(data, FInstanceOwner);
+  FcreateRootCommand.ExecuteUpdate;
+  Result := TJSONObject(FcreateRootCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
+end;
+
+function TdsFileClient.newFolder(data: TJSONObject): TJSONObject;
+begin
+  if FnewFolderCommand = nil then
+  begin
+    FnewFolderCommand := FDBXConnection.CreateCommand;
+    FnewFolderCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FnewFolderCommand.Text := 'TdsFile.newFolder';
+    FnewFolderCommand.Prepare;
+  end;
+  FnewFolderCommand.Parameters[0].Value.SetJSONValue(data, FInstanceOwner);
+  FnewFolderCommand.ExecuteUpdate;
+  Result := TJSONObject(FnewFolderCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
+end;
+
+function TdsFileClient.deleteFolder(data: TJSONObject): TJSONObject;
+begin
+  if FdeleteFolderCommand = nil then
+  begin
+    FdeleteFolderCommand := FDBXConnection.CreateCommand;
+    FdeleteFolderCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FdeleteFolderCommand.Text := 'TdsFile.deleteFolder';
+    FdeleteFolderCommand.Prepare;
+  end;
+  FdeleteFolderCommand.Parameters[0].Value.SetJSONValue(data, FInstanceOwner);
+  FdeleteFolderCommand.ExecuteUpdate;
+  Result := TJSONObject(FdeleteFolderCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
+end;
+
+function TdsFileClient.renameFolder(data: TJSONObject): TJSONObject;
+begin
+  if FrenameFolderCommand = nil then
+  begin
+    FrenameFolderCommand := FDBXConnection.CreateCommand;
+    FrenameFolderCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FrenameFolderCommand.Text := 'TdsFile.renameFolder';
+    FrenameFolderCommand.Prepare;
+  end;
+  FrenameFolderCommand.Parameters[0].Value.SetJSONValue(data, FInstanceOwner);
+  FrenameFolderCommand.ExecuteUpdate;
+  Result := TJSONObject(FrenameFolderCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
 end;
 
 constructor TdsFileClient.Create(ADBXConnection: TDBXConnection);
@@ -793,6 +868,10 @@ begin
   FAutoIncCommand.DisposeOf;
   FuploadCommand.DisposeOf;
   FdeleteFileCommand.DisposeOf;
+  FcreateRootCommand.DisposeOf;
+  FnewFolderCommand.DisposeOf;
+  FdeleteFolderCommand.DisposeOf;
+  FrenameFolderCommand.DisposeOf;
   inherited;
 end;
 
@@ -1750,6 +1829,61 @@ begin
   FuploadKeysCommand.DisposeOf;
   FgetPublicKeyCommand.DisposeOf;
   FhasValidKeyCommand.DisposeOf;
+  inherited;
+end;
+
+procedure TdsDairyClient.DSServerModuleCreate(Sender: TObject);
+begin
+  if FDSServerModuleCreateCommand = nil then
+  begin
+    FDSServerModuleCreateCommand := FDBXConnection.CreateCommand;
+    FDSServerModuleCreateCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FDSServerModuleCreateCommand.Text := 'TdsDairy.DSServerModuleCreate';
+    FDSServerModuleCreateCommand.Prepare;
+  end;
+  if not Assigned(Sender) then
+    FDSServerModuleCreateCommand.Parameters[0].Value.SetNull
+  else
+  begin
+    FMarshal := TDBXClientCommand(FDSServerModuleCreateCommand.Parameters[0].ConnectionHandler).GetJSONMarshaler;
+    try
+      FDSServerModuleCreateCommand.Parameters[0].Value.SetJSONValue(FMarshal.Marshal(Sender), True);
+      if FInstanceOwner then
+        Sender.Free
+    finally
+      FreeAndNil(FMarshal)
+    end
+  end;
+  FDSServerModuleCreateCommand.ExecuteUpdate;
+end;
+
+procedure TdsDairyClient.DITabBeforePost(DataSet: TDataSet);
+begin
+  if FDITabBeforePostCommand = nil then
+  begin
+    FDITabBeforePostCommand := FDBXConnection.CreateCommand;
+    FDITabBeforePostCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FDITabBeforePostCommand.Text := 'TdsDairy.DITabBeforePost';
+    FDITabBeforePostCommand.Prepare;
+  end;
+  FDITabBeforePostCommand.Parameters[0].Value.SetDBXReader(TDBXDataSetReader.Create(DataSet, FInstanceOwner), True);
+  FDITabBeforePostCommand.ExecuteUpdate;
+end;
+
+constructor TdsDairyClient.Create(ADBXConnection: TDBXConnection);
+begin
+  inherited Create(ADBXConnection);
+end;
+
+constructor TdsDairyClient.Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean);
+begin
+  inherited Create(ADBXConnection, AInstanceOwner);
+end;
+
+destructor TdsDairyClient.Destroy;
+begin
+  FDSServerModuleCreateCommand.DisposeOf;
+  FDITabBeforePostCommand.DisposeOf;
   inherited;
 end;
 

@@ -80,6 +80,7 @@ type
     m_userList  : TStringList;
 
     m_LoginFailCount  : integer;
+    FUserFolder: integer;
 
     procedure setIsAdmin( value : boolean );
 
@@ -110,6 +111,7 @@ type
     property Vorname    : string          read FVorname     write FVorname;
     property Name       : string          read FName        write FName;
     property UserID     : integer         read FUserID      write FUserID;
+    property UserFolder : integer         read FUserFolder  write FUserFolder;
 
     property PublicPath : string          read m_public;
     property Home       : string          read m_home;
@@ -403,6 +405,7 @@ begin
   m_hostList    := TStringList.Create;
   m_userList    := TStringList.Create;
   FUserName     := GetUsername;
+  FUserFolder   := -1;
 
 {$ifndef RELEASE}
   if ParamStr(1) <> '' then
@@ -816,11 +819,12 @@ begin
     data := Client.getUserInfo(req);
     if Assigned(data) then
     begin
-      self.UserName := JString( data, 'user' );
-      self.IsAdmin  := JBool(   data, 'admin');
-      Self.Name     := JString( data, 'name');
-      Self.Vorname  := JString( data, 'vorname');
-      Self.UserID   := JInt(    data, 'id' );
+      self.UserName   := JString( data, 'user' );
+      self.IsAdmin    := JBool(   data, 'admin');
+      Self.Name       := JString( data, 'name');
+      Self.Vorname    := JString( data, 'vorname');
+      Self.UserID     := JInt(    data, 'id' );
+      Self.UserFolder := JInt(    data, 'drid');
     end;
 
     CreateDirs;

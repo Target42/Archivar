@@ -39,7 +39,6 @@ begin
 end;
 function Text2TEditCharCase( value : string ) : TEditCharCase;
 begin
-  Result := ecNormal;
   if      SameText(value, 'ecNormal')    then Result := TEditCharCase.ecNormal
   else if SameText(value, 'ecUpperCase') then Result := TEditCharCase.ecUpperCase
   else if SameText(value, 'ecLowerCase') then Result := TEditCharCase.ecLowerCase

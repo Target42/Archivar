@@ -30,13 +30,13 @@ type
     procedure FormDestroy(Sender: TObject);
   private
     m_list : TStrings;
-    m_ta_id : integer;
+    m_drid : integer;
     m_map   : TDictionary<integer, integer>;
     m_default : integer;
     procedure setList( value : TStrings );
   public
     property List : TStrings read m_list write setList;
-    property TA_ID : integer read m_ta_id write m_ta_id;
+    property DR_ID : integer read m_drid write m_drid;
   end;
 
 var
@@ -78,7 +78,7 @@ begin
           JReplace( req, 'fname', DataTab.FieldByName('FNAME').AsString);
           JReplace( req, 'todelete', m_map[DataTab.FieldByName('FD_ID').AsInteger]);
           JReplace( req, 'type', '');
-          JReplace( req, 'taid', m_ta_id );
+          JReplace( req, 'drid', m_drid );
 
           res := client.upload(req, fs);
           DataTab.Edit;

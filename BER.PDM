@@ -48,6 +48,7 @@ create generator gen_be_id;\
 create generator gen_ct_id;\
 create generator gen_cp_id;\
 create generator gen_da_id;\
+create generator gen_dr_id;\
 create generator gen_di_id;\
 create generator gen_el_id;\
 create generator gen_fc_id;\
@@ -91,6 +92,17 @@ new.EL_DATA_STAMP = current_timestamp;\
 END^\
 SET TERM ; ^ \
 \
+set term /;\
+CREATE TRIGGER SET_DR_DIR_NEW FOR DR_DIR\
+ACTIVE BEFORE INSERT POSITION 0\
+AS\
+BEGIN\
+  IF (NEW.DR_STAMP IS NULL) THEN\
+    NEW.DR_STAMP = CURRENT_TIMESTAMP;\
+END\
+;/\
+set term ;/\
+\
 commit;\
 \
 INSERT INTO PE_PERSON (PE_ID, PE_NAME, PE_VORNAME, PE_DEPARTMENT, PE_NET,\
@@ -113,7 +125,7 @@ set generator gen_pe_id to 10;
 
 
 1582717246
-1638008522
+1639668742
 0
 0
 2
@@ -331,18 +343,18 @@ TY_TASKTYPE
 
 8
 3
-112
-112
+232
+232
 2
-FI_TA
-FI_TA
+BE_BESCHLUS
+BE_BESCHLUS
 
 
 
 0
 0
 0
-FI_TA
+BE_BESCHLUS
 
 
 
@@ -351,18 +363,18 @@ FI_TA
 
 9
 3
-232
-232
+635
+635
 2
-BE_BESCHLUS
-BE_BESCHLUS
+FD_DELETE
+FD_DELETE
 
 
 
 0
 0
 0
-BE_BESCHLUS
+FD_DELETE
 
 
 
@@ -371,18 +383,18 @@ BE_BESCHLUS
 
 10
 3
-635
-635
+1059
+1059
 2
-FD_DELETE
-FD_DELETE
+TN_TEILNEHMER
+TN_TEILNEHMER
 
 
 
 0
 0
 0
-FD_DELETE
+TN_TEILNEHMER
 
 
 
@@ -391,18 +403,18 @@ FD_DELETE
 
 11
 3
-1059
-1059
+1070
+1070
 2
-TN_TEILNEHMER
-TN_TEILNEHMER
+TG_GAESTE
+TG_GAESTE
 
 
 
 0
 0
 0
-TN_TEILNEHMER
+TG_GAESTE
 
 
 
@@ -411,18 +423,18 @@ TN_TEILNEHMER
 
 12
 3
-1070
-1070
+1250
+1250
 2
-TG_GAESTE
-TG_GAESTE
+TO_OPEN
+TO_OPEN
 
 
 
 0
 0
 0
-TG_GAESTE
+TO_OPEN
 
 
 
@@ -431,18 +443,18 @@ TG_GAESTE
 
 13
 3
-1250
-1250
+1626
+1626
 2
-TO_OPEN
-TO_OPEN
+CP_CHAPTER
+CP_CHAPTER
 
 
 
 0
 0
 0
-TO_OPEN
+CP_CHAPTER
 
 
 
@@ -451,18 +463,18 @@ TO_OPEN
 
 14
 3
-1626
-1626
+2050
+2050
 2
-CP_CHAPTER
-CP_CHAPTER
+PI_PIC
+PI_PIC
 
 
 
 0
 0
 0
-CP_CHAPTER
+PI_PIC
 
 
 
@@ -471,18 +483,18 @@ CP_CHAPTER
 
 15
 3
-2050
-2050
+2575
+2575
 2
-PI_PIC
-PI_PIC
+DA_DATAFIELD
+DA_DATAFIELD
 
 
 
 0
 0
 0
-PI_PIC
+DA_DATAFIELD
 
 
 
@@ -491,18 +503,18 @@ PI_PIC
 
 16
 3
-2575
-2575
+2761
+2761
 2
-DA_DATAFIELD
-DA_DATAFIELD
+TE_TEMPLATE
+TE_TEMPLATE
 
 
 
 0
 0
 0
-DA_DATAFIELD
+TE_TEMPLATE
 
 
 
@@ -511,18 +523,18 @@ DA_DATAFIELD
 
 17
 3
-2761
-2761
+3131
+3131
 2
-TE_TEMPLATE
-TE_TEMPLATE
+IN_INTERNAL
+IN_INTERNAL
 
 
 
 0
 0
 0
-TE_TEMPLATE
+IN_INTERNAL
 
 
 
@@ -531,18 +543,18 @@ TE_TEMPLATE
 
 18
 3
-3131
-3131
+3502
+3502
 2
-IN_INTERNAL
-IN_INTERNAL
+TB_TEXT
+TB_TEXT
 
 
 
 0
 0
 0
-IN_INTERNAL
+TB_TEXT
 
 
 
@@ -551,18 +563,18 @@ IN_INTERNAL
 
 19
 3
-3502
-3502
+3847
+3847
 2
-TB_TEXT
-TB_TEXT
+CT_CHAPTER_TEXT
+CT_CHAPTER_TEXT
 
 
 
 0
 0
 0
-TB_TEXT
+CT_CHAPTER_TEXT
 
 
 
@@ -571,18 +583,18 @@ TB_TEXT
 
 20
 3
-3847
-3847
+4227
+4227
 2
-CT_CHAPTER_TEXT
-CT_CHAPTER_TEXT
+HC_HTTP
+HC_HTTP
 
 
 
 0
 0
 0
-CT_CHAPTER_TEXT
+HC_HTTP
 
 
 
@@ -591,18 +603,18 @@ CT_CHAPTER_TEXT
 
 21
 3
-4227
-4227
+5320
+5320
 2
-HC_HTTP
-HC_HTTP
+EP_EPUB
+EP_EPUB
 
 
 
 0
 0
 0
-HC_HTTP
+EP_EPUB
 
 
 
@@ -611,18 +623,18 @@ HC_HTTP
 
 22
 3
-5320
-5320
+5535
+5535
 2
-EP_EPUB
-EP_EPUB
+EL_EINLADUNG
+EL_EINLADUNG
 
 
 
 0
 0
 0
-EP_EPUB
+EL_EINLADUNG
 
 
 
@@ -631,18 +643,18 @@ EP_EPUB
 
 23
 3
-5535
-5535
+7391
+7391
 2
-EL_EINLADUNG
-EL_EINLADUNG
+LN_LINK
+LN_LINK
 
 
 
 0
 0
 0
-EL_EINLADUNG
+LN_LINK
 
 
 
@@ -651,18 +663,18 @@ EL_EINLADUNG
 
 24
 3
-7391
-7391
+7666
+7666
 2
-LN_LINK
-LN_LINK
+FC_FILE_CACHE
+FC_FILE_CACHE
 
 
 
 0
 0
 0
-LN_LINK
+FC_FILE_CACHE
 
 
 
@@ -671,18 +683,18 @@ LN_LINK
 
 25
 3
-7666
-7666
+7930
+7930
 2
-FC_FILE_CACHE
-FC_FILE_CACHE
+FL_FILE_LOCK
+FL_FILE_LOCK
 
 
 
 0
 0
 0
-FC_FILE_CACHE
+FL_FILE_LOCK
 
 
 
@@ -691,18 +703,18 @@ FC_FILE_CACHE
 
 26
 3
-7930
-7930
+8987
+8987
 2
-FL_FILE_LOCK
-FL_FILE_LOCK
+LT_TASK_LOG
+LT_TASK_LOG
 
 
 
 0
 0
 0
-FL_FILE_LOCK
+LT_TASK_LOG
 
 
 
@@ -711,18 +723,18 @@ FL_FILE_LOCK
 
 27
 3
-8987
-8987
+9277
+9277
 2
-LT_TASK_LOG
-LT_TASK_LOG
+PK_PUBLIC_KEY
+PK_PUBLIC_KEY
 
 
 
 0
 0
 0
-LT_TASK_LOG
+PK_PUBLIC_KEY
 
 
 
@@ -731,18 +743,18 @@ LT_TASK_LOG
 
 28
 3
-9277
-9277
+9575
+9575
 2
-PK_PUBLIC_KEY
-PK_PUBLIC_KEY
+DI_DAIRY
+DI_DAIRY
 
 
 
 0
 0
 0
-PK_PUBLIC_KEY
+DI_DAIRY
 
 
 
@@ -751,18 +763,18 @@ PK_PUBLIC_KEY
 
 29
 3
-9575
-9575
+10069
+10069
 2
-DI_DAIRY
-DI_DAIRY
+DR_DIR
+DR_DIR
 
 
 
 0
 0
 0
-DI_DAIRY
+DR_DIR
 
 
 
@@ -843,40 +855,74 @@ PE_ID
 
 1
 3
-4
-4
-PE_NAME
-PE_NAME
+10397
+10397
+DR_ID
+DR_ID
 
 
 
 1
 0
-VARCHAR(100)
-100
-0
-0
-
-
-
-
-
+INTEGER
 0
 0
 0
 
 
 
+
+
 0
 0
+0
+
+
+
+0
+1
 0
 1
 0
 0
-PE_NAME
+DR_ID
 
 2
 3
+4
+4
+PE_NAME
+PE_NAME
+
+
+
+1
+0
+VARCHAR(100)
+100
+0
+0
+
+
+
+
+
+0
+0
+0
+
+
+
+0
+0
+0
+1
+0
+0
+PE_NAME
+
+3
+3
 5
 5
 PE_VORNAME
@@ -909,42 +955,42 @@ VARCHAR(100)
 0
 PE_VORNAME
 
-3
-3
-14
-14
-PE_DEPARTMENT
-PE_DEPARTMENT
-
-
-
-1
-0
-VARCHAR(25)
-25
-0
-0
-
-
-
-
-
-0
-0
-0
-
-
-
-0
-0
-0
-1
-0
-0
-PE_DEPARTMENT
-
 4
 3
+14
+14
+PE_DEPARTMENT
+PE_DEPARTMENT
+
+
+
+1
+0
+VARCHAR(25)
+25
+0
+0
+
+
+
+
+
+0
+0
+0
+
+
+
+0
+0
+0
+1
+0
+0
+PE_DEPARTMENT
+
+5
+3
 105
 105
 PE_NET
@@ -977,7 +1023,7 @@ VARCHAR(25)
 0
 PE_NET
 
-5
+6
 3
 174
 174
@@ -1011,7 +1057,7 @@ VARCHAR(200)
 0
 PE_MAIL
 
-6
+7
 3
 817
 817
@@ -1045,7 +1091,7 @@ VARCHAR(64)
 0
 PE_PWD
 
-7
+8
 3
 8204
 8204
@@ -1079,7 +1125,7 @@ VARCHAR(200)
 0
 PE_ROLS
 
-8
+9
 3
 8471
 8471
@@ -1113,7 +1159,7 @@ BLOB
 0
 PE_KEY
 
-9
+10
 3
 9
 9
@@ -1149,6 +1195,40 @@ GR_ID
 
 1
 3
+10393
+10393
+DR_ID
+DR_ID
+
+
+
+2
+0
+INTEGER
+0
+0
+0
+
+
+
+
+
+0
+0
+0
+
+
+
+0
+1
+0
+1
+0
+0
+DR_ID
+
+2
+3
 10
 10
 GR_NAME
@@ -1181,7 +1261,7 @@ VARCHAR(100)
 0
 GR_NAME
 
-2
+3
 3
 12
 12
@@ -1727,6 +1807,40 @@ FI_ID
 
 1
 3
+10075
+10075
+DR_ID
+DR_ID
+
+
+
+46
+0
+INTEGER
+0
+0
+0
+
+
+
+
+
+0
+0
+0
+
+
+
+0
+1
+0
+1
+0
+0
+DR_ID
+
+2
+3
 48
 48
 FI_NAME
@@ -1759,7 +1873,7 @@ VARCHAR(150)
 0
 FI_NAME
 
-2
+3
 3
 49
 49
@@ -1793,7 +1907,7 @@ VARCHAR(10)
 0
 FI_TYPE
 
-3
+4
 3
 50
 50
@@ -1827,42 +1941,42 @@ BLOB
 0
 FI_DATA
 
-4
-3
-51
-51
-FI_CREATED
-FI_CREATED
-
-
-
-46
-0
-DATE
-0
-0
-0
-
-
-
-
-
-0
-0
-0
-
-
-
-0
-0
-0
-1
-0
-0
-FI_CREATED
-
 5
 3
+51
+51
+FI_CREATED
+FI_CREATED
+
+
+
+46
+0
+DATE
+0
+0
+0
+
+
+
+
+
+0
+0
+0
+
+
+
+0
+0
+0
+1
+0
+0
+FI_CREATED
+
+6
+3
 52
 52
 FI_TODELETE
@@ -1895,7 +2009,7 @@ DATE
 0
 FI_TODELETE
 
-6
+7
 3
 633
 633
@@ -1929,7 +2043,7 @@ INTEGER
 0
 FI_VERSION
 
-7
+8
 3
 634
 634
@@ -1963,7 +2077,7 @@ VARCHAR(200)
 0
 FI_CREATED_BY
 
-8
+9
 3
 3337
 3337
@@ -2066,6 +2180,40 @@ INTEGER
 TY_ID
 
 3
+3
+10389
+10389
+DR_ID
+DR_ID
+
+
+
+53
+0
+INTEGER
+0
+0
+0
+
+
+
+
+
+0
+0
+0
+
+
+
+0
+1
+0
+1
+0
+0
+DR_ID
+
+4
 3
 55
 55
@@ -2780,74 +2928,6 @@ INTEGER
 TY_TAGE
 
 3
-3
-114
-114
-TA_ID
-TA_ID
-
-
-
-112
-0
-INTEGER
-0
-0
-0
-
-
-
-
-
-0
-0
-0
-
-
-
-1
-1
-1
-1
-0
-0
-TA_ID
-
-1
-3
-118
-118
-FI_ID
-FI_ID
-
-
-
-112
-0
-INTEGER
-0
-0
-0
-
-
-
-
-
-0
-0
-0
-
-
-
-1
-1
-1
-1
-0
-0
-FI_ID
-
-2
 3
 5059
 5059
@@ -5123,7 +5203,7 @@ VARCHAR(38)
 1
 0
 0
-
+TB_CLID
 
 5
 3
@@ -7370,6 +7450,176 @@ VARCHAR(255)
 DI_TAGS
 
 6
+3
+10070
+10070
+DR_ID
+DR_ID
+
+
+
+10069
+0
+INTEGER
+0
+0
+0
+
+
+
+
+
+0
+0
+0
+
+
+
+1
+0
+1
+1
+0
+0
+DR_ID
+
+1
+3
+10071
+10071
+DR_GROUP
+DR_GROUP
+
+
+
+10069
+0
+INTEGER
+0
+0
+0
+
+
+
+
+
+0
+0
+0
+
+
+
+0
+0
+0
+1
+0
+0
+DR_GROUP
+
+2
+3
+10072
+10072
+DR_PARENT
+DR_PARENT
+
+
+
+10069
+0
+INTEGER
+0
+0
+0
+
+
+
+
+
+0
+0
+0
+
+
+
+0
+0
+0
+1
+0
+0
+DR_PARENT
+
+3
+3
+10073
+10073
+DR_NAME
+DR_NAME
+
+
+
+10069
+0
+VARCHAR(150)
+150
+0
+0
+
+
+
+
+
+0
+0
+0
+
+
+
+0
+0
+0
+1
+0
+0
+DR_NAME
+
+4
+3
+10720
+10720
+DR_STAMP
+DR_STAMP
+
+
+
+10069
+0
+TIMESTAMP
+0
+0
+0
+
+
+
+
+
+0
+0
+0
+
+
+
+0
+0
+0
+1
+0
+0
+
+
+5
 /END_TABLE AMCCOLN
 
 /BEGIN_TABLE AMCREFR
@@ -7465,42 +7715,6 @@ REF_108
 
 4
 3
-113
-113
-Ref_113
-REF_113
-
-
-53
-112
-1
-1
-1
-1
-0
-0
-REF_113
-
-5
-3
-117
-117
-Ref_117
-REF_117
-
-
-46
-112
-1
-1
-1
-1
-0
-0
-REF_117
-
-6
-3
 1060
 1060
 Ref_1060
@@ -7517,7 +7731,7 @@ REF_1060
 0
 REF_1060
 
-7
+5
 3
 1071
 1071
@@ -7535,7 +7749,7 @@ REF_1071
 0
 REF_1071
 
-8
+6
 3
 1251
 1251
@@ -7553,7 +7767,7 @@ REF_1251
 0
 REF_1251
 
-9
+7
 3
 1255
 1255
@@ -7571,7 +7785,7 @@ REF_1255
 0
 REF_1255
 
-10
+8
 3
 1627
 1627
@@ -7589,7 +7803,7 @@ REF_1627
 0
 REF_1627
 
-11
+9
 3
 3336
 3336
@@ -7607,7 +7821,7 @@ REF_3336
 0
 REF_3336
 
-12
+10
 3
 3353
 3353
@@ -7625,7 +7839,7 @@ REF_3353
 0
 REF_3353
 
-13
+11
 3
 3850
 3850
@@ -7643,7 +7857,7 @@ REF_3850
 0
 REF_3850
 
-14
+12
 3
 4070
 4070
@@ -7661,7 +7875,7 @@ REF_4070
 0
 REF_4070
 
-15
+13
 3
 5058
 5058
@@ -7679,7 +7893,7 @@ REF_5058
 0
 REF_5058
 
-16
+14
 3
 5543
 5543
@@ -7697,7 +7911,7 @@ REF_5543
 0
 REF_5543
 
-17
+15
 3
 6727
 6727
@@ -7715,7 +7929,7 @@ REF_6727
 0
 REF_6727
 
-18
+16
 3
 7035
 7035
@@ -7733,7 +7947,7 @@ REF_7035
 0
 REF_7035
 
-19
+17
 3
 7931
 7931
@@ -7751,7 +7965,7 @@ REF_7931
 0
 REF_7931
 
-20
+18
 3
 7935
 7935
@@ -7769,7 +7983,7 @@ REF_7935
 0
 REF_7935
 
-21
+19
 3
 8996
 8996
@@ -7787,7 +8001,7 @@ REF_8996
 0
 REF_8996
 
-22
+20
 3
 9279
 9279
@@ -7805,7 +8019,7 @@ REF_9279
 0
 REF_9279
 
-23
+21
 3
 9581
 9581
@@ -7823,7 +8037,79 @@ REF_9581
 0
 REF_9581
 
+22
+3
+10074
+10074
+Ref_10074
+REF_10074
+
+
+10069
+46
+1
+1
+0
+1
+0
+0
+REF_10074
+
+23
+3
+10388
+10388
+Ref_10388
+REF_10388
+
+
+10069
+53
+1
+1
+0
+1
+0
+0
+REF_10388
+
 24
+3
+10392
+10392
+Ref_10392
+REF_10392
+
+
+10069
+2
+1
+1
+0
+1
+0
+0
+REF_10392
+
+25
+3
+10396
+10396
+Ref_10396
+REF_10396
+
+
+10069
+1
+1
+1
+0
+1
+0
+0
+REF_10396
+
+26
 /END_TABLE AMCREFR
 
 /BEGIN_TABLE AMCCCOL
@@ -7853,16 +8139,6 @@ COLN2   N8
 110
 9
 109
-1
-115
-115
-54
-114
-1
-119
-119
-47
-118
 1
 1062
 1062
@@ -7953,6 +8229,26 @@ COLN2   N8
 9583
 3
 9582
+1
+10076
+10076
+10070
+10075
+1
+10390
+10390
+10070
+10389
+1
+10394
+10394
+10070
+10393
+1
+10398
+10398
+10070
+10397
 /END_TABLE AMCCCOL
 
 /BEGIN_TABLE AMCCREF
@@ -7986,18 +8282,6 @@ NUMR    N8
 111
 108
 110
-1
-3
-116
-116
-113
-115
-1
-3
-120
-120
-117
-119
 1
 3
 1063
@@ -8106,6 +8390,30 @@ NUMR    N8
 9584
 9581
 9583
+1
+3
+10077
+10077
+10074
+10076
+1
+3
+10391
+10391
+10388
+10390
+1
+3
+10395
+10395
+10392
+10394
+1
+3
+10399
+10399
+10396
+10398
 1
 /END_TABLE AMCCREF
 
@@ -8351,6 +8659,18 @@ DI_DAIRY_USER
 
 
 19
+3
+10400
+10400
+DR_DIR_SEC
+10069
+0
+0
+0
+0
+
+
+20
 /END_TABLE AMCINDX
 
 /BEGIN_TABLE AMCCIDX
@@ -8544,6 +8864,13 @@ NUMR    N8
 9585
 0
 2
+3
+10401
+10401
+10400
+10071
+1
+1
 /END_TABLE AMCCIDX
 
 /BEGIN_TABLE AMCAKEY
@@ -8795,6 +9122,10 @@ MS Sans Serif
 Arial
 8
 8
+4
+Courier New
+10
+1
 /END_TABLE AMCFONT
 
 /BEGIN_TABLE AMCPENS
@@ -9597,10 +9928,10 @@ OID     N8
 0
 0
 0
--38381
-3877
--23607
-14227
+-38383
+3388
+-23609
+14712
 2
 1
 0
@@ -9629,10 +9960,10 @@ OID     N8
 0
 0
 0
-9470
-6015
-25294
-13439
+8868
+20974
+24692
+29373
 2
 1
 0
@@ -9725,10 +10056,10 @@ OID     N8
 0
 0
 0
--65558
--28398
--51459
--19024
+-73735
+-14490
+-59636
+-4141
 2
 1
 0
@@ -9757,10 +10088,10 @@ OID     N8
 0
 0
 0
--11530
--27930
-2944
--9781
+-11532
+-28418
+2942
+-9294
 2
 1
 0
@@ -9789,10 +10120,10 @@ OID     N8
 0
 0
 0
--73170
--5300
--59896
-174
+-62970
+9100
+-49696
+14574
 2
 5
 0
@@ -9821,10 +10152,10 @@ OID     N8
 0
 0
 0
--29596
--6617
--18272
--2118
+8354
+-1967
+19678
+2532
 2
 1
 0
@@ -9844,42 +10175,10 @@ OID     N8
 2
 60
 3
-113
-289
-0
-9
-0
-0
-0
-0
-0
--29912
--25392
--22488
--21868
-2
-1
-0
-0
-0
-0
-0
-0
-0
-0
-0
-
-0
-
-
-
-2
-112
-3
 168
 289
 0
-10
+9
 0
 0
 0
@@ -9911,7 +10210,7 @@ OID     N8
 2220
 289
 0
-11
+10
 0
 0
 0
@@ -9943,7 +10242,7 @@ OID     N8
 2400
 289
 0
-12
+11
 0
 0
 0
@@ -9975,7 +10274,7 @@ OID     N8
 2414
 289
 0
-13
+12
 0
 0
 0
@@ -10007,16 +10306,16 @@ OID     N8
 2552
 289
 0
-14
+13
 0
 0
 0
 0
 0
-7108
--4992
-14608
--1467
+-10742
+1308
+-3242
+4833
 2
 1
 0
@@ -10039,7 +10338,7 @@ OID     N8
 2664
 289
 0
-15
+14
 0
 0
 0
@@ -10071,7 +10370,7 @@ OID     N8
 2802
 289
 0
-16
+15
 0
 0
 0
@@ -10103,16 +10402,16 @@ OID     N8
 3022
 289
 0
-17
+16
 0
 0
 0
 0
 0
-19577
--18140
-31351
--10716
+11927
+-48290
+23701
+-40866
 2
 1
 0
@@ -10135,16 +10434,16 @@ OID     N8
 3123
 289
 0
-18
+17
 0
 0
 0
 0
 0
--48544
--12870
--35945
--571
+9731
+-20145
+22330
+-7846
 2
 1
 0
@@ -10167,7 +10466,7 @@ OID     N8
 3224
 289
 0
-19
+18
 0
 0
 0
@@ -10199,7 +10498,7 @@ OID     N8
 3392
 289
 0
-20
+19
 0
 0
 0
@@ -10231,7 +10530,7 @@ OID     N8
 3483
 289
 0
-21
+20
 0
 0
 0
@@ -10263,7 +10562,7 @@ OID     N8
 3652
 289
 0
-22
+21
 0
 0
 0
@@ -10295,7 +10594,7 @@ OID     N8
 3917
 289
 0
-23
+22
 0
 0
 0
@@ -10327,7 +10626,7 @@ OID     N8
 4018
 289
 0
-24
+23
 0
 0
 0
@@ -10359,7 +10658,7 @@ OID     N8
 4406
 289
 0
-25
+24
 0
 0
 0
@@ -10391,7 +10690,7 @@ OID     N8
 4522
 289
 0
-26
+25
 0
 0
 0
@@ -10423,7 +10722,7 @@ OID     N8
 4638
 289
 0
-27
+26
 0
 0
 0
@@ -10455,7 +10754,7 @@ OID     N8
 4764
 289
 0
-28
+27
 0
 0
 0
@@ -10487,7 +10786,7 @@ OID     N8
 4895
 289
 0
-29
+28
 0
 0
 0
@@ -10519,7 +10818,7 @@ OID     N8
 5033
 289
 0
-30
+29
 0
 0
 0
@@ -10548,6 +10847,38 @@ OID     N8
 2
 9575
 3
+5174
+289
+0
+30
+0
+0
+0
+0
+0
+-51456
+-12908
+-39157
+-6459
+2
+1
+0
+0
+0
+0
+0
+0
+0
+0
+0
+
+0
+
+
+
+2
+10069
+3
 6
 290
 0
@@ -10571,8 +10902,8 @@ OID     N8
 1
 0
 0
-2
-c82f00006330000074ebffff63300000
+3
+8d2c0000a35f000074ebffffa35f000074ebffff10310000
 2
 
 
@@ -10604,7 +10935,7 @@ c82f00006330000074ebffff63300000
 0
 0
 2
-df8affffd731000016efffffd7310000
+dd8affff8432000016efffff84320000
 1
 
 
@@ -10636,7 +10967,7 @@ df8affffd731000016efffffd7310000
 0
 0
 3
-46a0ffff54edffffb3e0ffff54edffffb3e0ffff66c6ffff
+843400007effffff7c0600007effffff7c06000043c7ffff
 2
 
 
@@ -10668,7 +10999,7 @@ df8affffd731000016efffffd7310000
 0
 0
 3
-54570000af28000054570000abfbffff61b90000abfbffff
+fa5400005f650000fa540000abfbffff61b90000abfbffff
 2
 
 
@@ -10676,74 +11007,10 @@ df8affffd731000016efffffd7310000
 2
 108
 3
-114
-290
-0
-35
-0
-68
-113
-0
-0
-0
-0
-0
-0
-2
-2
-0
-0
-0
-0
-0
-1
-0
-0
-2
-9fefffff159fffff0b99ffff159fffff
-2
-
-
-
-2
-113
-3
-117
-290
-0
-36
-0
-67
-113
-0
-0
-0
-0
-0
-0
-2
-2
-0
-0
-0
-0
-0
-1
-0
-0
-2
-451fffff7fa4ffff3893ffff7fa4ffff
-2
-
-
-
-2
-117
-3
 2401
 290
 0
-37
+35
 0
 36
 2400
@@ -10775,7 +11042,7 @@ cec400007500000095ef00007500000095ef0000cd410000
 2415
 290
 0
-38
+36
 0
 36
 2414
@@ -10807,7 +11074,7 @@ cec400007500000095ef00007500000095ef0000cd410000
 2553
 290
 0
-39
+37
 0
 4
 2552
@@ -10827,8 +11094,8 @@ cec400007500000095ef00007500000095ef0000cd410000
 1
 0
 0
-2
-582e000042230000582e000025f5ffff
+4
+492c0000845300006910000084530000691000007112000008e8ffff71120000
 2
 
 
@@ -10839,7 +11106,7 @@ cec400007500000095ef00007500000095ef0000cd410000
 2556
 290
 0
-40
+38
 0
 68
 2552
@@ -10859,8 +11126,8 @@ cec400007500000095ef00007500000095ef0000cd410000
 1
 0
 0
-3
-10fcffff0bd3ffffd22e00000bd3ffffd22e0000feeeffff
+2
+c8e9ffffe1d4ffffc8e9ffff9a070000
 1
 
 
@@ -10871,7 +11138,7 @@ cec400007500000095ef00007500000095ef0000cd410000
 2665
 290
 0
-41
+39
 0
 36
 2664
@@ -10903,7 +11170,7 @@ cec400007500000095ef00007500000095ef0000cd410000
 3338
 290
 0
-42
+40
 0
 3123
 68
@@ -10923,8 +11190,8 @@ cec400007500000095ef00007500000095ef0000cd410000
 1
 0
 0
-3
-ea57fffff0d7ffffea57ffff8abaffffa70200008abaffff
+2
+8d3b000027bbffffa502000027bbffff
 2
 
 
@@ -10935,7 +11202,7 @@ ea57fffff0d7ffffea57ffff8abaffffa70200008abaffff
 3355
 290
 0
-43
+41
 0
 70
 3123
@@ -10955,8 +11222,8 @@ ea57fffff0d7ffffea57ffff8abaffffa70200008abaffff
 1
 0
 0
-2
-c794ffffd6ecffff746bffffd6ecffff
+4
+0529000000ffffff05290000d6ecffff174f0000d6ecffff174f00006bd0ffff
 2
 
 
@@ -10967,7 +11234,7 @@ c794ffffd6ecffff746bffffd6ecffff
 3484
 290
 0
-44
+42
 0
 2664
 3483
@@ -10999,7 +11266,7 @@ c794ffffd6ecffff746bffffd6ecffff
 3615
 290
 0
-45
+43
 0
 68
 3483
@@ -11020,7 +11287,7 @@ c794ffffd6ecffff746bffffd6ecffff
 0
 0
 2
-ff0100004799ffff82a900004799ffff
+fd0100007f98ffff82a900007f98ffff
 2
 
 
@@ -11031,7 +11298,7 @@ ff0100004799ffff82a900004799ffff
 3884
 290
 0
-46
+44
 0
 3483
 168
@@ -11063,7 +11330,7 @@ e7bc0000ed95ffff88bd0000375effff
 4022
 290
 0
-47
+45
 0
 4
 4018
@@ -11084,7 +11351,7 @@ e7bc0000ed95ffff88bd0000375effff
 0
 0
 2
-803d0000e62d0000803d0000408e0000
+523c0000466b0000523c0000408e0000
 2
 
 
@@ -11095,7 +11362,7 @@ e7bc0000ed95ffff88bd0000375effff
 4326
 290
 0
-48
+46
 0
 36
 4018
@@ -11127,7 +11394,7 @@ ffc300002a010000ffc300007aa30000455700007aa30000
 4367
 290
 0
-49
+47
 0
 3
 4018
@@ -11148,7 +11415,7 @@ ffc300002a010000ffc300007aa30000455700007aa30000
 0
 0
 3
-8f98ffffce3300008f98ffffc5a20000fa390000c5a20000
+8d98ffff583500008d98ffffc5a20000fa390000c5a20000
 2
 
 
@@ -11159,7 +11426,7 @@ ffc300002a010000ffc300007aa30000455700007aa30000
 4639
 290
 0
-50
+48
 0
 4522
 4638
@@ -11191,7 +11458,7 @@ ffc300002a010000ffc300007aa30000455700007aa30000
 4644
 290
 0
-51
+49
 0
 3
 4638
@@ -11212,7 +11479,7 @@ ffc300002a010000ffc300007aa30000455700007aa30000
 0
 0
 3
-2c83ffff251c00002c83ffffeb5fffffe6baffffeb5fffff
+2a83ffff751b00002a83ffffeb5fffffe6baffffeb5fffff
 2
 
 
@@ -11223,7 +11490,7 @@ ffc300002a010000ffc300007aa30000455700007aa30000
 4768
 290
 0
-52
+50
 0
 68
 4764
@@ -11244,7 +11511,7 @@ ffc300002a010000ffc300007aa30000455700007aa30000
 0
 0
 4
-2c010000769dffff2c010000ec7cffff99fbffffec7cffff99fbffff9b61ffff
+2a010000209cffff2a010000ec7cffff99fbffffec7cffff99fbffff9b61ffff
 2
 
 
@@ -11255,7 +11522,7 @@ ffc300002a010000ffc300007aa30000455700007aa30000
 4896
 290
 0
-53
+51
 0
 3
 4895
@@ -11276,7 +11543,7 @@ ffc300002a010000ffc300007aa30000455700007aa30000
 0
 0
 3
-fe82fffff7280000fe82ffff1c5000007802ffff1c500000
+fc82ffff7c290000fc82ffff1c5000007802ffff1c500000
 2
 
 
@@ -11287,7 +11554,7 @@ fe82fffff7280000fe82ffff1c5000007802ffff1c500000
 5037
 290
 0
-54
+52
 0
 3
 5033
@@ -11308,13 +11575,141 @@ fe82fffff7280000fe82ffff1c5000007802ffff1c500000
 0
 0
 3
-2991ffff112b00002991ffffae8700001740ffffae870000
+2791ffffc92b00002791ffffae8700001740ffffae870000
 2
 
 
 
 2
 9581
+3
+5175
+290
+0
+53
+0
+5174
+67
+0
+0
+0
+0
+0
+0
+2
+2
+0
+0
+0
+0
+0
+1
+0
+0
+2
+7e4affff9be0ffffe2f7feff9be0ffff
+2
+
+
+
+2
+10074
+3
+5320
+290
+0
+54
+0
+5174
+68
+0
+0
+0
+0
+0
+0
+2
+2
+0
+0
+0
+0
+0
+1
+0
+0
+3
+e860ffff6fe1ffffe860fffff7c0ffff71d8fffff7c0ffff
+2
+
+
+
+2
+10388
+3
+5323
+290
+0
+55
+0
+5174
+4
+0
+0
+0
+0
+0
+0
+2
+2
+0
+0
+0
+0
+0
+1
+0
+0
+3
+da41ffffd9e3ffffda41ffff0d680000cc3100000d680000
+2
+
+
+
+2
+10392
+3
+5328
+290
+0
+56
+0
+5174
+3
+0
+0
+0
+0
+0
+0
+2
+2
+0
+0
+0
+0
+0
+1
+0
+0
+3
+734effff47e3ffff9f7dffff47e3ffff9f7dffffda130000
+2
+
+
+
+2
+10396
 /END_TABLE AMCSYMB
 
 

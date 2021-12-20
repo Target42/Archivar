@@ -438,6 +438,9 @@
       object Schlssel1: TMenuItem
         Action = ac_to_keys
       end
+      object PersnlichDatenablage1: TMenuItem
+        Action = ac_to_pdrive
+      end
     end
     object Admin1: TMenuItem
       Caption = 'Admin'
@@ -817,6 +820,11 @@
       Category = 'Textbausteine'
       Caption = 'Import'
       OnExecute = ac_tb_importExecute
+    end
+    object ac_to_pdrive: TAction
+      Category = 'Tools'
+      Caption = 'Pers'#246'nlich Datenablage'
+      OnExecute = ac_to_pdriveExecute
     end
   end
   object ApplicationEvents1: TApplicationEvents

@@ -48,6 +48,9 @@ const
   BRD_FILE_CACHE_UPT  : string = 'fc_update';
   BRD_FILE_CACHE_DEL  : string = 'fc_delete';
   BRD_FILE_LOCK       : string = 'fc_lock';
+  BRD_FOLDER_NEW      : string = 'fld_new';
+  BRD_FOLDER_REN      : string = 'fld_rename';
+  BRD_FOLDER_DEL      : string = 'fld_del';
 
 
 const

@@ -39,6 +39,8 @@ type
       procedure SGClear( sender : TObject );
       procedure SGRemoveRow( sender : TObject );
       procedure SGInsertRow( sender : TObject );
+
+      function getCtrl( index : integer ) : ITaskCtrl;
     public
 
       constructor Create(owner : ITaskForm);
@@ -95,7 +97,6 @@ function TaskCtrlTable.ColCount: integer;
 begin
   Result := m_list.Count;
 end;
-
 
 function TaskCtrlTable.ColDatafield(col: integer): string;
 begin
@@ -164,6 +165,13 @@ begin
   Result := m_sg.Cells[ col, row ];
 end;
 
+function TaskCtrlTable.getCtrl(index: integer): ITaskCtrl;
+begin
+  Result := NIL;
+  if index < m_list.Count then
+    Result := m_list[index];
+end;
+
 function TaskCtrlTable.getReadOnly: boolean;
 begin
   Result := false;
@@ -192,7 +200,10 @@ begin
   if (m_sg.Col = 0) or (m_sg.Row = 0 ) then
     exit;
 
-  ctrl := m_list[m_sg.Col-1];
+  ctrl := getCtrl(m_sg.Col-1);
+  if not Assigned(ctrl) then
+    exit;
+
   if Assigned(ctrl) and Assigned(ctrl.Validator) then begin
     if not ctrl.Validator.validateKey( key ) then
       key := #0;
@@ -278,7 +289,7 @@ begin
     m_row := ARow;
     m_col := ACol;
   end else begin
-    ctrl := m_list[m_sg.Col-1];
+    ctrl := getCtrl(m_sg.Col-1);
     if Assigned(ctrl) and Assigned(ctrl.Validator) then begin
       s := m_sg.Cells[m_sg.Col, m_sg.Row ];
       if s <> '' then begin
@@ -340,7 +351,7 @@ var
   ctrl  : ITaskCtrl;
   s     : string;
 begin
-  ctrl := m_list[m_sg.Col-1];
+  ctrl := getCtrl(m_sg.Col-1);
   if Assigned(ctrl) and Assigned(ctrl.Validator) then begin
     s := m_sg.Cells[m_sg.Col, m_sg.Row ];
     if s <> '' then begin
@@ -386,6 +397,7 @@ procedure TaskCtrlTable.updateControl;
 var
   sg : TStringGrid;
   x, y  : integer;
+  ctrl  : ITaskCtrl;
 begin
   if not Assigned(m_ctrl) then
     exit;
@@ -416,10 +428,12 @@ begin
   for y := 1 to pred(SG.RowCount) do
     for x := 1 to pred(sg.ColCount) do begin
 
-      if not Assigned(m_list[x-1].DataField) then
+      ctrl := getCtrl(x-1);
+
+      if not Assigned(ctrl) or not Assigned(ctrl.DataField) then
         SG.Cells[X, y ] := SG.Cells[x, 0]+SG.Cells[0, y]
       else
-        SG.Cells[X, y ] := m_list[x-1].data;
+        SG.Cells[X, y ] := ctrl.data;
 
     end;
 end;

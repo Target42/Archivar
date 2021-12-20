@@ -494,6 +494,7 @@ begin
       if valid then begin
         Session.PutData('user',     userName);
         Session.PutData('ID',       QueryUser.FieldByName('PE_ID').AsString );
+        Session.PutData('DRID',     QueryUser.FieldByName('DR_ID').AsString );
         Session.PutData('name',     QueryUser.FieldByName('pe_name').AsString);
         Session.PutData('vorname',  QueryUser.FieldByName('pe_vorname').AsString);
         Session.PutData('dept',     QueryUser.FieldByName('PE_DEPARTMENT').AsString);

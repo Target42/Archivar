@@ -168,6 +168,8 @@ type
     N18: TMenuItem;
     Export1: TMenuItem;
     Import2: TMenuItem;
+    ac_to_pdrive: TAction;
+    PersnlichDatenablage1: TMenuItem;
     procedure ac_prg_closeExecute(Sender: TObject);
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure ac_prg_disconExecute(Sender: TObject);
@@ -210,6 +212,7 @@ type
     procedure ac_to_dairyExecute(Sender: TObject);
     procedure ac_tb_exportExecute(Sender: TObject);
     procedure ac_tb_importExecute(Sender: TObject);
+    procedure ac_to_pdriveExecute(Sender: TObject);
   private
     m_noStatChange : boolean;
 
@@ -240,7 +243,8 @@ uses
   f_textblock_edit, f_testblock_list, f_webserver_files, f_epub_mngr,
   f_meeting_new, f_meeting_select, f_meeting_proto, f_login,
   system.UITypes, f_protocol_sec, u_onlineUser, f_doMeeting, f_task_type,
-  f_flieCacheForm, f_keys, f_dairy, f_textblock_export, f_textblock_import;
+  f_flieCacheForm, f_keys, f_dairy, f_textblock_export, f_textblock_import,
+  f_storage;
 
 {$R *.dfm}
 
@@ -670,6 +674,18 @@ begin
   Application.CreateForm(TKeysform, Keysform);
   Keysform.ShowModal;
   Keysform.free;
+end;
+
+procedure TMainForm.ac_to_pdriveExecute(Sender: TObject);
+begin
+  if not Assigned(StorageForm) then begin
+    Application.CreateForm(TStorageForm, StorageForm);
+    StorageForm.Header := 'Persönliche Ablage';
+    StorageForm.DirID  := GM.UserFolder;
+    StorageForm.Show;
+  end else begin
+    StorageForm.BringToFront;
+  end;
 end;
 
 procedure TMainForm.ac_view_adminExecute(Sender: TObject);
