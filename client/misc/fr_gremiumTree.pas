@@ -6,15 +6,18 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB,
   Datasnap.DBClient, Datasnap.DSConnect, System.JSON, Vcl.ComCtrls,
-  System.Generics.Collections, u_gremium;
+  System.Generics.Collections, u_gremium, Vcl.Menus;
 
 type
   TGremiumTreeFrame = class(TFrame)
     DSProviderConnection1: TDSProviderConnection;
     TV: TTreeView;
+    PopupMenu1: TPopupMenu;
+    Ablageffnen1: TMenuItem;
     procedure TVClick(Sender: TObject);
     procedure TVDragOver(Sender, Source: TObject; X, Y: Integer;
       State: TDragState; var Accept: Boolean);
+    procedure Ablageffnen1Click(Sender: TObject);
   private
     m_list : array of TGremium;
     procedure buildTree( data : TJSONObject );
@@ -36,11 +39,22 @@ type
 implementation
 
 uses
-  m_glob_client, u_stub, u_json;
+  m_glob_client, u_stub, u_json, m_WindowHandler;
 
 {$R *.dfm}
 
 { TGremiumTreeFrame }
+
+procedure TGremiumTreeFrame.Ablageffnen1Click(Sender: TObject);
+var
+ gr   : TGremium;
+begin
+  if not Assigned(TV.Selected) then exit;
+
+  gr := TGremium(TV.Selected.Data);
+
+  WindowHandler.openStorage( gr.StorageID, Format('Ablage : %s', [gr.Name]));
+end;
 
 procedure TGremiumTreeFrame.add(root: TTreeNode; gr: TGremium);
 var

@@ -4,7 +4,7 @@ interface
 
 uses
   System.SysUtils, System.Classes, System.Generics.Collections, Vcl.Forms, f_taskEdit,
-  f_protokoll, f_protokoll_view;
+  f_protokoll, f_protokoll_view, f_storage;
 
 type
   TWindowHandler = class(TDataModule)
@@ -14,6 +14,7 @@ type
     m_taskMap     : TDictionary<integer,TTaskEditForm>;
     m_protocolMap : TDictionary<integer,TProtokollForm>;
     m_protoView   : TDictionary<integer,TProtokollViewForm>;
+    m_storages    : TDictionary<integer, TStorageForm >;
     m_forms       : TList<TForm>;
 
   public
@@ -30,8 +31,8 @@ type
     procedure openProtocolView( id : integer );
     procedure closeProtoclView( id : integer );
 
-    procedure openMeetingView( id : integer );
-    procedure closeMeetingView( id : integer );
+    procedure openStorage( id : integer; caption : string );
+    procedure closeStorage(id : integer );
 
     procedure closeAll;
     procedure registerForm( frm : TForm );
@@ -70,11 +71,6 @@ begin
   setLength(arr, 0);
 end;
 
-procedure TWindowHandler.closeMeetingView(id: integer);
-begin
-
-end;
-
 procedure TWindowHandler.closeProtoclView(id: integer);
 begin
   m_protoView.Remove(id);
@@ -97,6 +93,11 @@ begin
   end;
 end;
 
+procedure TWindowHandler.closeStorage(id: integer);
+begin
+  m_storages.Remove(id);
+end;
+
 procedure TWindowHandler.closeTaksWindowMsg(id: integer; text: string);
 var
   frm : TTaskEditForm;
@@ -114,6 +115,7 @@ begin
   m_taskMap     := TDictionary<integer,TTaskEditForm>.create;
   m_protocolMap := TDictionary<integer,TProtokollForm>.Create;
   m_protoView   := TDictionary<integer,TProtokollViewForm>.create;
+  m_storages    := TDictionary<integer, TStorageForm >.create;
   m_forms       := TList<TForm>.create;
 end;
 
@@ -122,6 +124,7 @@ begin
   m_taskMap.Free;
   m_protocolMap.Free;
   m_protoView.free;
+  m_storages.free;
   m_forms.Free;
 end;
 
@@ -133,11 +136,6 @@ end;
 function TWindowHandler.isTaskOpen(id: integer): Boolean;
 begin
   Result := m_taskMap.ContainsKey(id);
-end;
-
-procedure TWindowHandler.openMeetingView(id: integer);
-begin
-
 end;
 
 procedure TWindowHandler.openProtoCclWindow(id: integer; ro: Boolean);
@@ -178,6 +176,27 @@ begin
     m_protoView.AddOrSetValue( id, frm);
   end;
   frm.Show;
+end;
+
+procedure TWindowHandler.openStorage(id: integer; caption: string);
+var
+  frm : TStorageForm;
+begin
+  if id = -1 then begin
+    ShowMessage(Format('Ungültige Ablage ID : %d', [id]));
+    exit;
+  end;
+
+  if not m_storages.ContainsKey(id) then begin
+    Application.CreateForm(TStorageForm, frm);
+    frm.Header := caption;
+    frm.DirID  := id;
+    frm.Show;
+  end else begin
+    frm := m_storages[id];
+    frm.BringToFront;
+    frm.WindowState := wsMaximized;
+  end;
 end;
 
 procedure TWindowHandler.openTaskWindow(id, typeID: integer; ro : boolean ; modal : boolean);

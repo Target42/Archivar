@@ -30,7 +30,7 @@ var
 implementation
 
 uses
-  m_crypt, u_stub, m_glob_client, System.JSON, u_json;
+  m_crypt, u_stub, m_glob_client, System.JSON, u_json, System.UITypes;
 
 {$R *.dfm}
 

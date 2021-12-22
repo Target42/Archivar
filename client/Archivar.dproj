@@ -620,6 +620,10 @@
             <Form>StorageForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="dws\f_file_info.pas">
+            <Form>FileInfoForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <None Include="Datafields\ERA-NS.txt"/>
         <RcItem Include="dws\dws.html">
             <ContainerId>ResourceItem</ContainerId>

@@ -23,6 +23,11 @@ type
     ListFolderQry: TDataSetProvider;
     DirTab: TFDTable;
     ListChilds: TFDQuery;
+    AddHistQry: TFDQuery;
+    DelFileHist: TFDQuery;
+    UpdateDirSum: TFDQuery;
+    FileInfoQry: TFDQuery;
+    FileHistInfo: TFDQuery;
   private
     { Private declarations }
     function findFile( dr_id : integer; fname : string) : integer;
@@ -35,6 +40,8 @@ type
     function newFolder   ( data : TJSONobject ) : TJSONObject;
     function deleteFolder( data : TJSONObject ) : TJSONObject;
     function renameFolder( data : TJSONObject ) : TJSONObject;
+
+    function getFileInfo( data : TJSONObject ) : TJSONObject;
   end;
 
 implementation
@@ -95,19 +102,29 @@ var
 begin
   Result := TJSONObject.Create;
 
-
   if FDTransaction1.Active then
     FDTransaction1.Rollback;
 
-  FDTransaction1.StartTransaction;
-  FileData.Open;
+  try
+    FDTransaction1.StartTransaction;
+    FileData.Open;
 
-  if FileData.Locate('FI_ID', VarArrayOf([FI_ID]), opts) then
-    FileData.Delete;
-  FileData.Close;
+    if FileData.Locate('FI_ID', VarArrayOf([FI_ID]), opts) then
+      FileData.Delete;
+    FileData.Close;
 
-  FDTransaction1.Commit;
-  JResponse(Result, true, 'Datei gelöscht');
+    DelFileHist.ParamByName('id').AsInteger := FI_ID;
+    DelFileHist.ExecSQL;
+
+    FDTransaction1.Commit;
+    JResponse(Result, true, 'Datei gelöscht');
+  except
+    on e : exception do begin
+      JResult( Result, false, e.ToString);
+      if FDTransaction1.Active then
+        FDTransaction1.Rollback;
+    end;
+  end;
 end;
 
 function TdsFile.deleteFolder(data: TJSONObject): TJSONObject;
@@ -131,6 +148,49 @@ begin
     FindFileQry.Next;
   end;
   FindFileQry.Close;
+end;
+
+function TdsFile.getFileInfo(data: TJSONObject): TJSONObject;
+var
+  arr : TJSONArray;
+  row : TJSONObject;
+begin
+  Result  := TJSONObject.Create;
+  arr     := TJSONArray.Create;
+  FileInfoQry.ParamByName('id').AsInteger := JInt( data, 'id');
+  FileInfoQry.Open;
+  if not FileInfoQry.IsEmpty then begin
+    JReplace( Result, 'drid',FileInfoQry.FieldByName('DR_ID').AsInteger);
+    row := TJSONObject.Create;
+
+    JReplace(       row, 'name',      FileInfoQry.FieldByName('FI_NAME').AsString);
+    JReplaceDouble( row, 'created',   FileInfoQry.FieldByName('FI_CREATED').AsDateTime);
+    JReplaceDouble( row, 'todelete',  FileInfoQry.FieldByName('FI_TODELETE').AsDateTime);
+    JReplace(       row, 'user',      FileInfoQry.FieldByName('FI_CREATED_BY').AsString);
+    JReplace(       row, 'size',      FileInfoQry.FieldByName('FI_SIZE').AsLargeInt);
+    JReplace(       row, 'version',   FileInfoQry.FieldByName('FI_VERSION').AsInteger );
+
+    arr.AddElement(row);
+  end;
+  FileInfoQry.Close;
+  FileHistInfo.ParamByName('ID').AsInteger := JInt( data, 'id');
+  FileHistInfo.Open;
+  while not FileHistInfo.Eof do begin
+    row := TJSONObject.Create;
+
+    JReplace(       row, 'name',      FileHistInfo.FieldByName('FI_NAME').AsString);
+    JReplaceDouble( row, 'created',   FileHistInfo.FieldByName('FI_CREATED').AsDateTime);
+    JReplaceDouble( row, 'todelete',  FileHistInfo.FieldByName('FI_TODELETE').AsDateTime);
+    JReplace(       row, 'user',      FileHistInfo.FieldByName('FI_CREATED_BY').AsString);
+    JReplace(       row, 'size',      FileHistInfo.FieldByName('FI_SIZE').AsLargeInt);
+    JReplace(       row, 'version',   FileHistInfo.FieldByName('FI_VERSION').AsInteger );
+
+    arr.AddElement(row);
+    FileHistInfo.Next;
+  end;
+
+  FileHistInfo.Close;
+  JReplace( Result, 'items', arr);
 end;
 
 function TdsFile.newFolder(data: TJSONobject): TJSONObject;
@@ -264,15 +324,15 @@ var
   opts : Tlocateoptions;
   fname : string;
 begin
-  opts := [loCaseInsensitive];
-  Result := TJSONObject.Create;
+  opts    := [loCaseInsensitive];
+  Result  := TJSONObject.Create;
 
   if FDTransaction1.Active then
     FDTransaction1.Rollback;
 
   FDTransaction1.StartTransaction;
   try
-    drid  := JInt( data,    'drid' );
+    drid  := JInt(    data,    'drid' );
     fname := JString( data, 'fname');
 
     FileData.Open;
@@ -289,6 +349,8 @@ begin
       FileData.FieldByName('FI_CREATED').AsDateTime  := now;
       FileData.FieldByName('FI_TODELETE').AsDateTime := IncMonth(now, JInt( data, 'todelete', 6));
       FileData.FieldByName('FI_VERSION').AsInteger   := 1;
+      FileData.FieldByName('FI_CREATED_BY').AsString := GM.getNameFromSession;
+      FileData.FieldByName('FI_SIZE').AsLargeInt     := JInt64( data, 'size');
 
       bst := FileData.CreateBlobStream( FileData.FieldByName('FI_DATA'), bmWrite);
       GM.CopyStream( st, bst);
@@ -299,14 +361,23 @@ begin
     begin // Update File ..
       if FileData.Locate('FI_ID', VarArrayOf([fiid]), opts) then
       begin
+        // add to history
+        AddHistQry.ParamByName('ID').AsInteger := fiid;
+        AddHistQry.ExecSQL;
+
         FileData.Edit;
         FileData.FieldByName('FI_VERSION').AsInteger   :=  FileData.FieldByName('FI_VERSION').AsInteger +1;
         bst := FileData.CreateBlobStream( FileData.FieldByName('FI_DATA'), bmWrite);
         GM.CopyStream( st, bst);
         bst.Free;
+        FileData.FieldByName('FI_CREATED').AsDateTime  := now;
+        FileData.FieldByName('FI_CREATED_BY').AsString := GM.getNameFromSession;
+        FileData.FieldByName('FI_SIZE').AsLargeInt     := JInt64( data, 'size');
         FileData.Post;
       end;
     end;
+    UpdateDirSum.ParamByName('ID').AsInteger := drid;
+    UpdateDirSum.ExecSQL;
 
     FDTransaction1.Commit;
 

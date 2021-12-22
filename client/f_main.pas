@@ -678,14 +678,7 @@ end;
 
 procedure TMainForm.ac_to_pdriveExecute(Sender: TObject);
 begin
-  if not Assigned(StorageForm) then begin
-    Application.CreateForm(TStorageForm, StorageForm);
-    StorageForm.Header := 'Persönliche Ablage';
-    StorageForm.DirID  := GM.UserFolder;
-    StorageForm.Show;
-  end else begin
-    StorageForm.BringToFront;
-  end;
+  WindowHandler.openStorage(GM.UserFolder, 'Perönliche Ablage');
 end;
 
 procedure TMainForm.ac_view_adminExecute(Sender: TObject);
@@ -694,7 +687,6 @@ begin
 
   Splitter1.Visible     := ac_view_admin.Checked;
   PageControl1.Visible  := ac_view_admin.Checked;
-
 end;
 
 procedure TMainForm.ac_view_taskExecute(Sender: TObject);

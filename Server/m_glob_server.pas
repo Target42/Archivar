@@ -24,6 +24,8 @@ type
     function md5( fname : string  ) : string; overload;
     function md5( st    : TStream ) : string; overload;
 
+    function getNameFromSession : string;
+
   end;
 
 var
@@ -37,7 +39,7 @@ implementation
 {$R *.dfm}
 
 uses
-  IOUtils, m_db, IniFiles, u_ini, IdHashMessageDigest;
+  IOUtils, m_db, IniFiles, u_ini, IdHashMessageDigest, Datasnap.DSSession;
 
 procedure DebugMsg( text : string );
 begin
@@ -139,6 +141,25 @@ begin
     Result.Free;
     Result := NIL;
   end;
+end;
+
+function TGM.getNameFromSession: string;
+var
+  Session : TDSSession;
+  user, name, vorname, dept : string;
+begin
+  Session := TDSSessionManager.GetThreadSession;
+
+  user    := Session.GetData('user');
+  name    := Session.GetData('name');
+  vorname := Session.GetData('vorname');
+  dept    := Session.GetData('dept');
+
+
+  if name = '' then
+    Result := user
+  else
+    Result := Format('%s %s (%s)', [vorname, name, dept]);
 end;
 
 procedure TGM.LoadIni;

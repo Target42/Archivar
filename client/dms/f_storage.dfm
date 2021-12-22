@@ -13,6 +13,8 @@ object StorageForm: TStorageForm
   FormStyle = fsMDIChild
   OldCreateOrder = False
   Visible = True
+  OnClose = FormClose
+  OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   PixelsPerInch = 96
@@ -24,38 +26,42 @@ object StorageForm: TStorageForm
     Height = 346
     Align = alClient
     TabOrder = 0
-    ExplicitWidth = 757
-    ExplicitHeight = 299
+    ExplicitWidth = 783
+    ExplicitHeight = 346
     inherited Splitter1: TSplitter
       Height = 346
       ExplicitHeight = 299
     end
     inherited GroupBox2: TGroupBox
       Height = 346
-      ExplicitHeight = 299
+      ExplicitHeight = 346
       inherited GroupBox4: TGroupBox
         Top = 287
-        ExplicitTop = 240
+        ExplicitTop = 287
       end
       inherited VST: TVirtualStringTree
         Height = 272
-        ExplicitHeight = 225
+        ExplicitHeight = 272
       end
     end
     inherited GroupBox3: TGroupBox
       Width = 531
       Height = 346
-      ExplicitWidth = 505
-      ExplicitHeight = 299
+      ExplicitWidth = 531
+      ExplicitHeight = 346
       inherited GroupBox1: TGroupBox
         Top = 287
         Width = 527
-        ExplicitTop = 240
-        ExplicitWidth = 501
+        ExplicitTop = 287
+        ExplicitWidth = 527
       end
-      inherited DBGrid1: TDBGrid
+      inherited LV: TListView
         Width = 527
         Height = 272
+        ExplicitLeft = 2
+        ExplicitTop = 15
+        ExplicitWidth = 527
+        ExplicitHeight = 272
       end
     end
     inherited JvDragDrop1: TJvDragDrop

@@ -449,68 +449,76 @@ begin
 
   ph      := THashSHA2.GetHashString(Password);
 
-  if IBTransaction1.Active then IBTransaction1.Rollback;
-  IBTransaction1.StartTransaction;
+  if IBTransaction1.Active then
+    IBTransaction1.Rollback;
+  try
+    IBTransaction1.StartTransaction;
 
-  Session := TDSSessionManager.GetThreadSession;
+    Session := TDSSessionManager.GetThreadSession;
 
-  GrijjyLog.send('thread id', GetCurrentThreadID );
-  GrijjyLog.Send('user name', userName );
+    GrijjyLog.send('thread id', GetCurrentThreadID );
+    GrijjyLog.Send('user name', userName );
 
-  if (userName = 'qwertzuiopmnbvcxy1234') and
-     ( ph = '912f5ed6722678ad07c807a443f54982b11bdc0b43993c50411422c8a6c0bcda') then begin
-    // download user ..
-    downloadUser;
-  end else if pos('*', userName) > 0 then begin
-    // callback channel ...
-    broadcastUser( userName);
-  end else begin
-    ph      := THashSHA2.GetHashString( LowerCase(userName)+m_secret+Password);
-    // normal user
-    GrijjyLog.send('session id', Session.Id );
-    GrijjyLog.Send('session name', Session.UserName );
+    if (userName = 'qwertzuiopmnbvcxy1234') and
+       ( ph = '912f5ed6722678ad07c807a443f54982b11bdc0b43993c50411422c8a6c0bcda') then begin
+      // download user ..
+      downloadUser;
+    end else if pos('*', userName) > 0 then begin
+      // callback channel ...
+      broadcastUser( userName);
+    end else begin
+      ph      := THashSHA2.GetHashString( LowerCase(userName)+m_secret+Password);
+      // normal user
+      GrijjyLog.send('session id', Session.Id );
+      GrijjyLog.Send('session name', Session.UserName );
 
-    // user exists ....
-    valid := checkUser(userName);
-    if valid then
-    begin
-      // is user admin?
-      if QueryUser.FieldByName('PE_ID').AsInteger = 1 then
+      // user exists ....
+      valid := checkUser(userName);
+      if valid then
       begin
-        Session.PutData('admin', 'true');
-        Session.PutData('ID', '1' );
-        addUserRols(QueryUser.FieldByName('PE_ROLS').AsString);
-      end
-      else begin
-        //is user in, at least, one concile?
-        GRPEQry.ParamByName('PE_ID').AsInteger := QueryUser.FieldByName('PE_ID').AsInteger;
-        GRPEQry.Open();
-        valid := GRPEQry.FieldByName('count').AsInteger > 0;
-        GRPEQry.Close;
-
-        Session.PutData('admin', 'false');
-      end;
-
-      if valid then begin
-        Session.PutData('user',     userName);
-        Session.PutData('ID',       QueryUser.FieldByName('PE_ID').AsString );
-        Session.PutData('DRID',     QueryUser.FieldByName('DR_ID').AsString );
-        Session.PutData('name',     QueryUser.FieldByName('pe_name').AsString);
-        Session.PutData('vorname',  QueryUser.FieldByName('pe_vorname').AsString);
-        Session.PutData('dept',     QueryUser.FieldByName('PE_DEPARTMENT').AsString);
-
-        addUserRols(QueryUser.FieldByName('PE_ROLS').AsString);
-        if UserRoles.IndexOf('admin') >-1 then
+        // is user admin?
+        if QueryUser.FieldByName('PE_ID').AsInteger = 1 then
+        begin
           Session.PutData('admin', 'true');
+          Session.PutData('ID', '1' );
+          addUserRols(QueryUser.FieldByName('PE_ROLS').AsString);
+        end
+        else begin
+          //is user in, at least, one concile?
+          GRPEQry.ParamByName('PE_ID').AsInteger := QueryUser.FieldByName('PE_ID').AsInteger;
+          GRPEQry.Open();
+          valid := GRPEQry.FieldByName('count').AsInteger > 0;
+          GRPEQry.Close;
+
+          Session.PutData('admin', 'false');
+        end;
+
+        if valid then begin
+          Session.PutData('user',     userName);
+          Session.PutData('ID',       QueryUser.FieldByName('PE_ID').AsString );
+          Session.PutData('DRID',     QueryUser.FieldByName('DR_ID').AsString );
+          Session.PutData('name',     QueryUser.FieldByName('pe_name').AsString);
+          Session.PutData('vorname',  QueryUser.FieldByName('pe_vorname').AsString);
+          Session.PutData('dept',     QueryUser.FieldByName('PE_DEPARTMENT').AsString);
+
+          addUserRols(QueryUser.FieldByName('PE_ROLS').AsString);
+          if UserRoles.IndexOf('admin') >-1 then
+            Session.PutData('admin', 'true');
+        end;
       end;
     end;
+
+    QueryUser.Close;
+    IBTransaction1.Commit;
+  except
+    on e : exception do begin
+      GrijjyLog.Send( e.ToString, Error);
+      QueryUser.Close;
+      if IBTransaction1.Active then
+        IBTransaction1.Rollback;
+    end;
   end;
-
   GrijjyLog.Send('user authenticate', valid);
-
-  QueryUser.Close;
-  IBTransaction1.Commit;
-
   GrijjyLog.Send('user rols', UserRoles);
 
   GrijjyLog.ExitMethod(self, 'DSAuthenticationManager1UserAuthenticate');

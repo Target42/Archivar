@@ -160,6 +160,8 @@ type
     function getHostName : string;
 
     procedure checkWWWRoot;
+
+    function calcSize( size : int64 ) : string;
   end;
 
   TMyCallback = class(TDBXCallback)
@@ -201,6 +203,15 @@ end;
 function TGM.autoInc(name: string): integer;
 begin
   Result := m_misc.AutoInc(name);
+end;
+
+function TGM.calcSize(size: int64): string;
+begin
+  if      size = 0 then           Result := '0 KB'
+  else if size < 1 shl 10 then    Result := Format('%d B',  [size])
+  else if size < 1 shl 20 then    Result := Format('%d KB', [size div (1 shl 10)])
+  else if size < 1 shl 30 then    Result := Format('%d MB', [size div (1 shl 20)])
+  else                            Result := Format('%d MB', [size div (1 shl 30)]);
 end;
 
 procedure TGM.changeStatus(text: string);

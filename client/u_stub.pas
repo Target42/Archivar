@@ -1,6 +1,6 @@
 //
 // Erzeugt vom DataSnap-Proxy-Generator.
-// 17.12.2021 18:02:49
+// 22.12.2021 17:22:13
 //
 
 unit u_stub;
@@ -97,6 +97,7 @@ type
     FnewFolderCommand: TDBXCommand;
     FdeleteFolderCommand: TDBXCommand;
     FrenameFolderCommand: TDBXCommand;
+    FgetFileInfoCommand: TDBXCommand;
   public
     constructor Create(ADBXConnection: TDBXConnection); overload;
     constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
@@ -108,6 +109,7 @@ type
     function newFolder(data: TJSONObject): TJSONObject;
     function deleteFolder(data: TJSONObject): TJSONObject;
     function renameFolder(data: TJSONObject): TJSONObject;
+    function getFileInfo(data: TJSONObject): TJSONObject;
   end;
 
   TdsMiscClient = class(TDSAdminClient)
@@ -853,6 +855,20 @@ begin
   Result := TJSONObject(FrenameFolderCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
 end;
 
+function TdsFileClient.getFileInfo(data: TJSONObject): TJSONObject;
+begin
+  if FgetFileInfoCommand = nil then
+  begin
+    FgetFileInfoCommand := FDBXConnection.CreateCommand;
+    FgetFileInfoCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FgetFileInfoCommand.Text := 'TdsFile.getFileInfo';
+    FgetFileInfoCommand.Prepare;
+  end;
+  FgetFileInfoCommand.Parameters[0].Value.SetJSONValue(data, FInstanceOwner);
+  FgetFileInfoCommand.ExecuteUpdate;
+  Result := TJSONObject(FgetFileInfoCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
+end;
+
 constructor TdsFileClient.Create(ADBXConnection: TDBXConnection);
 begin
   inherited Create(ADBXConnection);
@@ -872,6 +888,7 @@ begin
   FnewFolderCommand.DisposeOf;
   FdeleteFolderCommand.DisposeOf;
   FrenameFolderCommand.DisposeOf;
+  FgetFileInfoCommand.DisposeOf;
   inherited;
 end;
 

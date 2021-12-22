@@ -1,7 +1,7 @@
 /* ============================================================ */
 /*   Database name:  MODEL_2                                    */
 /*   DBMS name:      InterBase                                  */
-/*   Created on:     15.12.2021  18:02                          */
+/*   Created on:     22.12.2021  16:31                          */
 /* ============================================================ */
 
 create generator gen_be_id;
@@ -165,6 +165,23 @@ create table LN_LINK
 create ASC index LN_LINK_SEC on LN_LINK (LN_SHORT);
 
 /* ============================================================ */
+/*   Table: FH_FILE_HIST                                        */
+/* ============================================================ */
+create table FH_FILE_HIST
+(
+    FI_ID                           INTEGER                not null,
+    FI_VERSION                      INTEGER                not null,
+    FI_NAME                         VARCHAR(150)                   ,
+    FI_TYPE                         VARCHAR(10)                    ,
+    FI_CREATED                      DATE                           ,
+    FI_TODELETE                     DATE                           ,
+    FI_CREATED_BY                   VARCHAR(200)                   ,
+    FI_DATA                         BLOB                           ,
+    FI_SIZE                         BIGINT                         ,
+    constraint PK_FH_FILE_HIST primary key (FI_ID, FI_VERSION)
+);
+
+/* ============================================================ */
 /*   Table: MA_MITAREITER                                       */
 /* ============================================================ */
 create table MA_MITAREITER
@@ -220,8 +237,15 @@ create table DR_DIR
     DR_GROUP                        INTEGER                        ,
     DR_PARENT                       INTEGER                        ,
     DR_NAME                         VARCHAR(150)                   ,
+    DR_STAMP                        TIMESTAMP                      ,
+    DR_SIZE                         BIGINT                         ,
     constraint PK_DR_DIR primary key (DR_ID)
 );
+
+/* ============================================================ */
+/*   Index: DR_DIR_SEC                                          */
+/* ============================================================ */
+create ASC index DR_DIR_SEC on DR_DIR (DR_GROUP);
 
 /* ============================================================ */
 /*   Table: TE_TEMPLATE                                         */
@@ -408,8 +432,14 @@ create table FI_FILE
     FI_TODELETE                     DATE                           ,
     FI_VERSION                      INTEGER                        ,
     FI_CREATED_BY                   VARCHAR(200)                   ,
+    FI_SIZE                         BIGINT                         ,
     constraint PK_FI_FILE primary key (FI_ID)
 );
+
+/* ============================================================ */
+/*   Index: FI_FILE_SEC                                         */
+/* ============================================================ */
+create ASC index FI_FILE_SEC on FI_FILE (DR_ID, FI_ID);
 
 /* ============================================================ */
 /*   Table: BE_BESCHLUS                                         */
@@ -684,6 +714,17 @@ BEGIN
 new.EL_DATA_STAMP = current_timestamp;
 END^
 SET TERM ; ^ 
+
+set term /;
+CREATE TRIGGER SET_DR_DIR_NEW FOR DR_DIR
+ACTIVE BEFORE INSERT POSITION 0
+AS
+BEGIN
+  IF (NEW.DR_STAMP IS NULL) THEN
+    NEW.DR_STAMP = CURRENT_TIMESTAMP;
+END
+;/
+set term ;/
 
 commit;
 

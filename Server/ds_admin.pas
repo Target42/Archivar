@@ -79,11 +79,12 @@ begin
   while not GremiumQry.Eof do
   begin
     row := TJSONObject.Create;
-    JReplace( row, 'id',    GremiumQry.FieldByName('gr_id').AsInteger);
-    JReplace( row, 'name',  GremiumQry.FieldByName('gr_name').AsString);
-    JReplace( row, 'short',  GremiumQry.FieldByName('gr_short').AsString);
-    JReplace( row, 'parent', GremiumQry.FieldByName('GR_PARENT_SHORT').AsString);
-    JReplace( row, 'image', GremiumQry.FieldByName('GR_PIC_NAME').AsString);
+    JReplace( row, 'id',      GremiumQry.FieldByName('gr_id').AsInteger);
+    JReplace( row, 'name',    GremiumQry.FieldByName('gr_name').AsString);
+    JReplace( row, 'short',   GremiumQry.FieldByName('gr_short').AsString);
+    JReplace( row, 'parent',  GremiumQry.FieldByName('GR_PARENT_SHORT').AsString);
+    JReplace( row, 'image',   GremiumQry.FieldByName('GR_PIC_NAME').AsString);
+    JReplace( row, 'sid',     GremiumQry.FieldByName('DR_ID').AsInteger );
 
     arr.AddElement(row);
     GremiumQry.Next

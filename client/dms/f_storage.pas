@@ -11,6 +11,8 @@ type
     FileFrame1: TFileFrame;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
     m_drid : integer;
     function GetDirID: integer;
@@ -27,9 +29,22 @@ var
 
 implementation
 
+uses
+  m_WindowHandler, system.UITypes;
+
 {$R *.dfm}
 
 { TStorageForm }
+
+procedure TStorageForm.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  Action := caFree;
+end;
+
+procedure TStorageForm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+begin
+//  CanClose :=  MessageDlg('Soll die Ablage geschlossen werden?', mtConfirmation, [mbYes, mbNo], 0) = mrYes;
+end;
 
 procedure TStorageForm.FormCreate(Sender: TObject);
 begin
@@ -38,6 +53,7 @@ end;
 
 procedure TStorageForm.FormDestroy(Sender: TObject);
 begin
+  WindowHandler.closeStorage(FileFrame1.RootID);
   FileFrame1.release;
 end;
 

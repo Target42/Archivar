@@ -206,9 +206,7 @@ end;
 procedure Jreplace( obj : TJSONObject ; name : string ; value : TDate );
 var
   text : string;
-  s    : TFormatSettings;
 begin
-  s := TFormatSettings.Create('de-DE');
   text := FormatDateTime('dd.MM.YYYY hh:mm:ss', value);
   Jreplace( obj, name, text);
 end;

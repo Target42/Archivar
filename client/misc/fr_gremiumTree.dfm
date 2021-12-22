@@ -14,6 +14,7 @@ object GremiumTreeFrame: TGremiumTreeFrame
     DragMode = dmAutomatic
     HideSelection = False
     Indent = 19
+    PopupMenu = PopupMenu1
     ReadOnly = True
     SortType = stText
     TabOrder = 0
@@ -23,5 +24,13 @@ object GremiumTreeFrame: TGremiumTreeFrame
   object DSProviderConnection1: TDSProviderConnection
     Left = 48
     Top = 24
+  end
+  object PopupMenu1: TPopupMenu
+    Left = 208
+    Top = 152
+    object Ablageffnen1: TMenuItem
+      Caption = 'Ablage '#246'ffnen'
+      OnClick = Ablageffnen1Click
+    end
   end
 end

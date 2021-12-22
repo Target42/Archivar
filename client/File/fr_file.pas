@@ -9,7 +9,8 @@ uses
   Vcl.StdCtrls, JvComponentBase, JvDragDrop, Vcl.Buttons, JvBaseDlg,
   JvBrowseFolder, FireDAC.UI.Intf, FireDAC.VCLUI.Async, FireDAC.Stan.Intf,
   FireDAC.Comp.UI, Vcl.ComCtrls, VirtualTrees, System.Generics.Collections,
-  System.JSON, System.Actions, Vcl.ActnList, Vcl.Menus;
+  System.JSON, System.Actions, Vcl.ActnList, Vcl.Menus, Winapi.ActiveX,
+  System.ImageList, Vcl.ImgList;
 
 type
   TFileFrame = class(TFrame)
@@ -26,7 +27,6 @@ type
     Button1: TBitBtn;
     Button2: TBitBtn;
     Button3: TBitBtn;
-    DBGrid1: TDBGrid;
     Splitter1: TSplitter;
     GroupBox4: TGroupBox;
     ListFolder: TClientDataSet;
@@ -37,6 +37,10 @@ type
     NeuerOrdner1: TMenuItem;
     ac_edit: TAction;
     Bearbeiten1: TMenuItem;
+    ac_delete: TAction;
+    LV: TListView;
+    ImageList1: TImageList;
+    BitBtn1: TBitBtn;
     procedure Button1Click(Sender: TObject);
     procedure JvDragDrop1Drop(Sender: TObject; Pos: TPoint; Value: TStrings);
     procedure Button2Click(Sender: TObject);
@@ -54,6 +58,18 @@ type
     procedure VSTNewText(Sender: TBaseVirtualTree; Node: PVirtualNode;
       Column: TColumnIndex; NewText: string);
     procedure VSTChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
+    procedure ac_deleteExecute(Sender: TObject);
+    procedure DBGrid1DragDrop(Sender, Source: TObject; X, Y: Integer);
+    procedure VSTDragOver(Sender: TBaseVirtualTree; Source: TObject;
+      Shift: TShiftState; State: TDragState; Pt: TPoint; Mode: TDropMode;
+      var Effect: Integer; var Accept: Boolean);
+    procedure VSTDragDrop(Sender: TBaseVirtualTree; Source: TObject;
+      DataObject: IDataObject; Formats: TFormatArray; Shift: TShiftState;
+      Pt: TPoint; var Effect: Integer; Mode: TDropMode);
+    procedure VSTGetImageIndex(Sender: TBaseVirtualTree; Node: PVirtualNode;
+      Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: Boolean;
+      var ImageIndex: TImageIndex);
+    procedure BitBtn1Click(Sender: TObject);
   private
     type
       PTFolderRec = ^TFolderRec;
@@ -67,6 +83,7 @@ type
       end;
   private
     m_grid    : integer;
+    m_curDir  : integer;
     m_tempDir : string;
     m_list    : TList<PTFolderRec>;
     m_root    : PTFolderRec;
@@ -78,20 +95,27 @@ type
     procedure showUploadForm( list : TStrings );
     function GetRO: boolean;
     procedure SetRO(const Value: boolean);
-    function saveFile( fname : string ) : boolean;
+
+    function saveFile( id : integer; fname : string ) : boolean;
 
     procedure ClearRecList;
     procedure buildTree;
     procedure updateView;
+
+    procedure updateFiles;
+
+    function getFrame(ctrl : TControl ) : TFileFrame;
   public
     procedure prepare;
-    property RootID : integer write setID;
-    property RO: boolean read GetRO write SetRO;
+    property RootID   : integer read m_grid write setID;
+    property RO       : boolean read GetRO  write SetRO;
     procedure release;
 
     function handle_folder_new( const arg : TJSONObject ) : boolean;
     function handle_folder_del( const arg : TJSONObject ) : boolean;
     function handle_folder_ren( const arg : TJSONObject ) : boolean;
+
+    function getFileList    : TJSONObject;
   end;
 
 implementation
@@ -99,11 +123,40 @@ implementation
 uses
   m_glob_client, f_uploadForm, u_stub,
   system.IOUtils, System.Win.ComObj, System.Types, ShellApi, u_eventHandler,
-  u_Konst, u_json;
+  u_Konst, u_json, f_file_info;
 
 {$R *.dfm}
 
 { TFileFrame }
+
+procedure TFileFrame.ac_deleteExecute(Sender: TObject);
+var
+  ptr : PTFolderRec;
+  client : TdsFileClient;
+  res, req : TJSONObject;
+begin
+  if not Assigned(vst.GetFirstSelected()) then exit;
+
+  ptr := PTFolderRec(vst.GetFirstSelected.GetData);
+
+  if ptr^.id = m_grid then begin
+    ShowMessage('Dieser Ordner kann nicht gelöscht werden!');
+    exit;
+  end;
+
+  client := TdsFileClient.Create( GM.SQLConnection1.DBXConnection);
+  try
+    req := TJSONObject.Create;
+    JReplace( req, 'id', ptr^.id);
+
+    res := client.deleteFolder(req);
+    ShowResult(res);
+  finally
+    client.Free;
+  end;
+
+
+end;
 
 procedure TFileFrame.ac_editExecute(Sender: TObject);
 begin
@@ -166,6 +219,17 @@ begin
   end;
 end;
 
+procedure TFileFrame.BitBtn1Click(Sender: TObject);
+begin
+  if not Assigned(LV.Selected) then  exit;
+
+  // file info ...
+  Application.CreateForm(TFileInfoForm, FileInfoForm);
+  FileInfoForm.FileID := integer( LV.Selected.Data);
+  FileInfoForm.Showmodal;
+  FileInfoForm.free;
+end;
+
 procedure TFileFrame.buildTree;
 var
   ptr    : PTFolderRec;
@@ -191,7 +255,6 @@ end;
 procedure TFileFrame.Button2Click(Sender: TObject);
 var
   i     : integer;
-  mark  : TBookmark;
   path  : string;
   fname : string;
 
@@ -199,24 +262,22 @@ begin
   if not JvBrowseForFolderDialog1.Execute then  exit;
   path := JvBrowseForFolderDialog1.Directory;
 
-  for i := 0 to pred(DBGrid1.SelectedRows.Count) do
+  for i := 0 to pred(LV.Items.Count) do
   begin
-     mark := DBGrid1.SelectedRows.Items[i];
-     ListFilesQry.GotoBookmark(mark);
-     fname := TPath.Combine( path, ListFilesQry.FieldByName('FI_NAME').AsString );
-     if not saveFile( fname ) then
+    if LV.Items.Item[i].Checked then begin
+     fname := TPath.Combine( path, LV.Items.Item[i].Caption );
+     if not saveFile( integer(LV.Items.Item[i].Data), fname ) then
        ShowMessage(Format('Die Datei %s konnte nicht heruntergeladen werden!',
-       [ListFilesQry.FieldByName('FI_NAME').AsString]));
+       [LV.Items.Item[i].Caption]));
+    end;
   end;
-  if DBGrid1.SelectedRows.Count > 0 then
-    ShellExecute(Handle, 'explore', PWideChar(path), '', '', SW_SHOWNORMAL);
+  ShellExecute(Handle, 'explore', PWideChar(path), '', '', SW_SHOWNORMAL);
 end;
 
 procedure TFileFrame.Button3Click(Sender: TObject);
 var
   i : integer;
   del : Tlist<integer>;
-  mark : TBookmark;
   client : TdsFileClient;
 begin
   if ListFilesQry.ReadOnly then
@@ -227,13 +288,12 @@ begin
    try
     client := TdsFileClient.Create(GM.SQLConnection1.DBXConnection);
 
-    for i := 0 to pred(DBGrid1.SelectedRows.Count) do
+    for i := 0 to pred(LV.Items.Count) do
     begin
-      mark := DBGrid1.SelectedRows.Items[i];
-      ListFilesQry.GotoBookmark(mark);
-      del.Add( ListFilesQry.FieldByName('FI_ID').AsInteger);
+      if LV.Items.Item[i].Checked then begin
+        del.Add( integer(LV.Items.Item[i].Data));
+      end;
     end;
-    DBGrid1.SelectedRows.Clear;
 
     for i := 0 to pred(del.Count) do
       client.deleteFile(del[i]);
@@ -257,21 +317,71 @@ procedure TFileFrame.DBGrid1DblClick(Sender: TObject);
 var
   fname : string;
 begin
-  if ListFilesQry.IsEmpty then
-    exit;
+  if ListFilesQry.IsEmpty or not Assigned(LV.Selected) then   exit;
+
   ForceDirectories(m_tempDir);
-  fname := TPath.Combine(m_tempDir, ListFilesQry.FieldByName('FI_NAME').AsString);
-  if not saveFile( fname ) then
+  fname := TPath.Combine(m_tempDir, LV.Selected.Caption);
+  if not saveFile( integer(LV.Selected.Data), fname ) then
     ShowMessage(Format('Die Datei %s konnte nicht heruntergeladen werden!',
-    [ListFilesQry.FieldByName('FI_NAME').AsString]))
+    [LV.Selected.Caption]))
   else
     ShellExecute(Handle, 'open', PWideChar(fname), '', '', SW_SHOWNORMAL);
+end;
+
+procedure TFileFrame.DBGrid1DragDrop(Sender, Source: TObject; X, Y: Integer);
+var
+  frm : TFileFrame;
+  obj : TJSONObject;
+begin
+  //
+  if Source is TListView then begin
+    frm := getFrame( Source as TControl);
+    obj := frm.getFileList;
+    if Assigned(obj) then
+      JReplace( obj, 'dest', m_curDir );
+    ShowMessage(formatJSON(obj));
+    obj.Free;
+  end;
+  if Sender is TVirtualStringTree then begin
+    ShowMessage('Sender = VST');
+  end;
 end;
 
 procedure TFileFrame.DBGrid1DragOver(Sender, Source: TObject; X, Y: Integer;
   State: TDragState; var Accept: Boolean);
 begin
-  Accept := Assigned(VST.GetFirstSelected());
+  Accept := Assigned(VST.FocusedNode) and (Sender <> Source );
+end;
+
+function TFileFrame.getFileList: TJSONObject;
+var
+  i   : integer;
+  arr : TJSONArray;
+begin
+  Result := TJSONObject.Create;
+  JReplace( Result, 'type', 'files');
+  JReplace( Result, 'src', m_curDir );
+  arr := TJSONArray.Create;
+  for i := 0 to pred(LV.Items.Count) do begin
+    if LV.Items.Item[i].Checked then
+      arr.AddElement( TJSONNumber.Create(integer(LV.Items.Item[i].Data)));
+  end;
+  if (arr.Count = 0) and Assigned(LV.Selected) then
+    arr.AddElement( TJSONNumber.Create(integer(LV.Selected.Data)));
+
+  JReplace( Result, 'items', arr);
+end;
+
+function TFileFrame.getFrame(ctrl: TControl): TFileFrame;
+begin
+  Result := NIL;
+  while assigned(ctrl) do begin
+    if ctrl is TFileFrame then begin
+      Result := ctrl as TFileFrame;
+      break;
+    end;
+    ctrl := ctrl.Parent;
+  end;
 end;
 
 function TFileFrame.getParent(pid: integer): PTFolderRec;
@@ -363,6 +473,7 @@ begin
   m_tempDir :=  TPath.Combine(TPath.GetTempPath, createClassID );
   m_list    := TList<PTFolderRec>.create;
   m_root    := NIL;
+  m_curDir  := -1;
   vst.NodeDataSize := sizeof(TFolderRec);
 
   EventHandler.Register( self, handle_folder_new,   BRD_FOLDER_NEW );
@@ -393,11 +504,13 @@ begin
   m_list.free;
 end;
 
-function TFileFrame.saveFile(fname: string): boolean;
+function TFileFrame.saveFile(id : integer; fname: string): boolean;
 var
   src, dest : TSTream;
 begin
   Result := false;
+  if not ListFilesQry.Locate('FI_ID', VarArrayOf([id]), []) then
+    exit;
   Screen.Cursor := crHourGlass;
   src := ListFilesQry.CreateBlobStream(ListFilesQry.FieldByName('FI_DATA'), bmRead);
   try
@@ -461,16 +574,44 @@ procedure TFileFrame.showUploadForm(list: TStrings);
 var
   UploadForm : TUploadForm;
 begin
-  if not Assigned(VST.GetFirstSelected()) then exit;
+  if not Assigned(VST.FocusedNode) then exit;
 
   Application.CreateForm(TUploadForm, UploadForm);
 
-  UploadForm.Dr_ID := PTFolderRec(VST.GetFirstSelected.GetData)^.id;
+  UploadForm.Dr_ID := PTFolderRec(VST.FocusedNode.GetData)^.id;
 
   UploadForm.List := list;
-  if UploadForm.ShowModal = mrOk then
+  if UploadForm.ShowModal = mrOk then begin
     ListFilesQry.Refresh;
+    updateFiles;
+  end;
   UploadForm.Free;
+end;
+
+procedure TFileFrame.updateFiles;
+var
+  item  : TListItem;
+  size  : Int64;
+
+begin
+  LV.Items.BeginUpdate;
+  LV.Items.Clear;
+  with ListFilesQry do begin
+    first;
+    while not eof do begin
+      size := FieldByName('FI_SIZE').AsLargeInt;
+
+      item := LV.Items.Add;
+      item.Caption  := FieldByName('FI_NAME').AsString;
+      item.SubItems.Add(GM.calcSize(size));
+      item.SubItems.Add(FormatDateTime('dd.mm.yyyy', FieldByName('FI_TODELETE').AsDateTime));
+      item.SubItems.Add(FieldByName('FI_VERSION').AsString);
+      item.SubItems.Add(FieldByName('FI_CREATED_BY').AsString);
+      item.Data := Pointer(FieldByName('FI_ID').AsInteger);
+      next;
+    end;
+  end;
+  LV.Items.EndUpdate;
 end;
 
 procedure TFileFrame.updateView;
@@ -526,12 +667,18 @@ begin
   addChild( ptr, m_root.child);
 
   vst.FullExpand;
+  if not Assigned(vst.FocusedNode) then
+    vst.FocusedNode := vst.GetFirst();
+
+  VSTChange(VST, vst.FocusedNode);
+
 end;
 
 procedure TFileFrame.VSTChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
 var
   ptr : PTFolderRec;
 begin
+  m_curDir := -1;
   if not Assigned(Node) then  exit;
 
   ptr := PTFolderRec(node.GetData);
@@ -539,7 +686,110 @@ begin
   ListFilesQry.Close;
   ListFilesQry.ParamByName('DR_ID').AsInteger := ptr^.id;
   ListFilesQry.Open;
+  UpdateFiles;
+  m_curDir := ptr^.id;
+end;
 
+procedure TFileFrame.VSTDragDrop(Sender: TBaseVirtualTree; Source: TObject;
+  DataObject: IDataObject; Formats: TFormatArray; Shift: TShiftState;
+  Pt: TPoint; var Effect: Integer; Mode: TDropMode);
+var
+  frm : TFileFrame;
+  obj : TJSONObject;
+
+  function getNode: PVirtualNode;
+  begin
+    Result := (Sender as TVirtualStringTree).GetNodeAt(pt);
+    if not Assigned(Result) then
+      Result := (Sender as TVirtualStringTree).GetFirst;
+  end;
+
+  procedure handleListView;
+  var
+    node : PVirtualNode;
+    data : PTFolderRec;
+  begin
+    frm  := getFrame( source as TControl);
+    obj  := frm.getFileList;
+    node := getNode;
+    data := PTFolderRec(node.GetData);
+    JReplace( obj, 'to', data^.id);
+    JReplace( obj, 'name', data^.Name);
+    ShowMessage(formatJSON(obj));
+    obj.Free;
+  end;
+  procedure addVals( row : TJSONObject; data : PTFolderRec );
+  begin
+    JReplace( row, 'name', data^.Name);
+    JReplace( row, 'id',   data^.id);
+  end;
+
+  procedure handleTree;
+  var
+    node : PVirtualNode;
+    row   : TJSONObject;
+  begin
+    obj  := TJSONObject.Create;
+    node := getNode;
+    row  := TJSONObject.Create;
+    addVals(row, PTFolderRec(node.GetData) );
+    JReplace( obj, 'dest', row);
+
+    row  := TJSONObject.Create;
+    node := (Source as TVirtualStringTree).FocusedNode;
+    addVals(row, PTFolderRec( node.GetData));
+    JReplace( obj, 'src', row);
+
+    ShowMessage(formatJSON(obj));
+    obj.Free;
+  end;
+begin
+  if source is TListView then begin
+    handleListView;
+  end else if Source is TVirtualStringTree then
+    handleTree;
+end;
+
+procedure TFileFrame.VSTDragOver(Sender: TBaseVirtualTree; Source: TObject;
+  Shift: TShiftState; State: TDragState; Pt: TPoint; Mode: TDropMode;
+  var Effect: Integer; var Accept: Boolean);
+var
+  DestNode  : PVirtualNode;
+  SrcNode   : PVirtualNode;
+
+  function isChild(node : PVirtualNode) : boolean;
+  var
+    ptr : PVirtualNode;
+  begin
+    Result := destNode = node;
+    if not Result then begin
+      ptr := (Source as TVirtualStringTree).GetFirstChild(node);
+      while Assigned(ptr) do begin
+        Result := isChild(ptr);
+        ptr := (Source as TVirtualStringTree).GetNextSibling(ptr);
+      end;
+    end;
+  end;
+
+begin
+  Accept := ( source is TListView);
+
+  srcNode  := NIL;
+  destNode := (Sender as TVirtualStringTree).GetNodeAt(Pt);
+  if Assigned(Source) then
+    srcNode  := (Source as TVirtualStringTree).FocusedNode;
+
+  if Source = Sender then begin
+    Accept := (srcNode <> DestNode) and not isChild(srcNode);
+
+    if Assigned(DestNode) and Assigned(SrcNode) then
+      Accept := PTFolderRec(SrcNode.GetData)^.pid <>
+                PTFolderRec(DestNode.GetData)^.id;
+  end else if (Source is TVirtualStringTree) then begin
+    Accept := ( source <> Sender );
+    if Assigned(SrcNode) then
+      Accept := PTFolderRec(SrcNode.GetData)^.pid <> 0;
+  end;
 end;
 
 procedure TFileFrame.VSTEditing(Sender: TBaseVirtualTree; Node: PVirtualNode;
@@ -566,7 +816,21 @@ begin
 
   case e.Column of
     0 : e.CellText := ptr^.Name;
-    1 : e.CellText := DateTimeToStr(ptr^.Stamp);
+    1 : e.CellText := FormatDateTime('dd.mm.yyyy hh:nn',  ptr^.Stamp);
+  end;
+end;
+
+procedure TFileFrame.VSTGetImageIndex(Sender: TBaseVirtualTree;
+  Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex;
+  var Ghosted: Boolean; var ImageIndex: TImageIndex);
+begin
+  if (Kind in [ikNormal, ikSelected] ) then begin
+    if Column > 0 then exit;
+
+    if vsExpanded in node.States then
+      ImageIndex := 1
+    else
+      ImageIndex := 0;
   end;
 end;
 
