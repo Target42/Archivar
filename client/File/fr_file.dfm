@@ -1,16 +1,14 @@
 object FileFrame: TFileFrame
   Left = 0
   Top = 0
-  Width = 888
-  Height = 490
+  Width = 451
+  Height = 305
   Align = alClient
   TabOrder = 0
-  ExplicitWidth = 451
-  ExplicitHeight = 305
   object Splitter1: TSplitter
     Left = 249
     Top = 0
-    Height = 490
+    Height = 305
     ExplicitLeft = 224
     ExplicitTop = 32
     ExplicitHeight = 100
@@ -19,14 +17,13 @@ object FileFrame: TFileFrame
     Left = 0
     Top = 0
     Width = 249
-    Height = 490
+    Height = 305
     Align = alLeft
     Caption = 'Ordner'
     TabOrder = 0
-    ExplicitHeight = 305
     object GroupBox4: TGroupBox
       Left = 2
-      Top = 431
+      Top = 531
       Width = 245
       Height = 57
       Align = alBottom
@@ -38,7 +35,7 @@ object FileFrame: TFileFrame
       Left = 2
       Top = 15
       Width = 245
-      Height = 416
+      Height = 516
       Align = alClient
       DragMode = dmAutomatic
       Header.AutoSizeIndex = -1
@@ -57,7 +54,8 @@ object FileFrame: TFileFrame
       OnGetCellText = VSTGetCellText
       OnGetImageIndex = VSTGetImageIndex
       OnNewText = VSTNewText
-      ExplicitHeight = 231
+      ExplicitLeft = 3
+      ExplicitTop = 9
       Columns = <
         item
           Position = 0
@@ -67,24 +65,22 @@ object FileFrame: TFileFrame
         item
           Position = 1
           Text = 'Datum'
-          Width = 91
+          Width = 95
         end>
     end
   end
   object GroupBox3: TGroupBox
     Left = 252
     Top = 0
-    Width = 636
-    Height = 490
+    Width = 199
+    Height = 305
     Align = alClient
     Caption = 'Dateien'
     TabOrder = 1
-    ExplicitWidth = 199
-    ExplicitHeight = 305
     object GroupBox1: TGroupBox
       Left = 2
-      Top = 431
-      Width = 632
+      Top = 531
+      Width = 705
       Height = 57
       Align = alBottom
       Caption = 'Dateiaktionen'
@@ -274,8 +270,8 @@ object FileFrame: TFileFrame
     object LV: TListView
       Left = 2
       Top = 15
-      Width = 632
-      Height = 416
+      Width = 705
+      Height = 516
       Align = alClient
       Checkboxes = True
       Columns = <
@@ -398,7 +394,7 @@ object FileFrame: TFileFrame
     Left = 88
     Top = 360
     Bitmap = {
-      494C010102000800100010001000FFFFFFFFFF00FFFFFFFFFFFFFFFF424D3600
+      494C010102000800180010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       000000000000000000000000000000000000000000FF078DBE00078DBE00078D
       BE00078DBE00078DBE00078DBE00078DBE00078DBE00078DBE00078DBE00078D
@@ -534,6 +530,7 @@ object FileFrame: TFileFrame
       0001000100000000000100010000000000010001000000000001000000000000
       0001000000000000000100000000000000070007000000000007000700000000
       800F800F00000000C3FFC3FF00000000FFFFFFFF00000000FFFFFFFF00000000
-      FFFFFFFF00000000FFFFFFFF00000000}
+      FFFFFFFF00000000FFFFFFFF0000000000000000000000000000000000000000
+      000000000000}
   end
 end

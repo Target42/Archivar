@@ -1,5 +1,5 @@
 unit fr_file;
-
+{$WARN SYMBOL_DEPRECATED OFF}
 interface
 
 uses
@@ -100,11 +100,13 @@ type
 
     procedure ClearRecList;
     procedure buildTree;
+    procedure updateTree;
     procedure updateView;
-
     procedure updateFiles;
 
     function getFrame(ctrl : TControl ) : TFileFrame;
+
+    procedure move( req : TJSONObject );
   public
     procedure prepare;
     property RootID   : integer read m_grid write setID;
@@ -114,6 +116,7 @@ type
     function handle_folder_new( const arg : TJSONObject ) : boolean;
     function handle_folder_del( const arg : TJSONObject ) : boolean;
     function handle_folder_ren( const arg : TJSONObject ) : boolean;
+    function handle_folder_upd( const arg : TJSONObject ) : boolean;
 
     function getFileList    : TJSONObject;
   end;
@@ -277,31 +280,31 @@ end;
 procedure TFileFrame.Button3Click(Sender: TObject);
 var
   i : integer;
-  del : Tlist<integer>;
-  client : TdsFileClient;
+  client    : TdsFileClient;
+  req, res  : TJSONObject;
+  arr       : TJSONArray;
 begin
   if ListFilesQry.ReadOnly then
     exit;
 
-  del := Tlist<integer>.create;
-  client := NIL;
-   try
+  req     := TJSONObject.Create;
+  arr     := TJSONArray.Create;
+  client  := NIL;
+  for i := 0 to pred(LV.Items.Count) do
+  begin
+    if LV.Items.Item[i].Checked then
+      arr.AddElement(TJSONNumber.Create(integer(LV.Items.Item[i].Data)));
+  end;
+
+  try
     client := TdsFileClient.Create(GM.SQLConnection1.DBXConnection);
-
-    for i := 0 to pred(LV.Items.Count) do
-    begin
-      if LV.Items.Item[i].Checked then begin
-        del.Add( integer(LV.Items.Item[i].Data));
-      end;
-    end;
-
-    for i := 0 to pred(del.Count) do
-      client.deleteFile(del[i]);
+    JReplace( req, 'items', arr);;
+    Res := client.deleteFile(req);
+    ShowResult(res)
   finally
     client.Free;
   end;
-  del.Free;
-  ListFilesQry.Refresh;
+  updateFiles;
 end;
 
 procedure TFileFrame.ClearRecList;
@@ -339,8 +342,7 @@ begin
     obj := frm.getFileList;
     if Assigned(obj) then
       JReplace( obj, 'dest', m_curDir );
-    ShowMessage(formatJSON(obj));
-    obj.Free;
+    move( obj );
   end;
   if Sender is TVirtualStringTree then begin
     ShowMessage('Sender = VST');
@@ -460,12 +462,42 @@ begin
   Result := true;
 end;
 
+function TFileFrame.handle_folder_upd(const arg: TJSONObject): boolean;
+var
+  grp : integer;
+begin
+  Result := false;
+  grp := JInt( arg, 'grid');
+  if m_grid <> grp then
+    exit;
+  if SameText(JString(arg, 'type'), 'files') then begin
+    updateFiles;
+  end else begin
+    updateTree;
+  end;
+end;
+
 procedure TFileFrame.JvDragDrop1Drop(Sender: TObject; Pos: TPoint;
   Value: TStrings);
 begin
   if ListFilesQry.ReadOnly then
     exit;
   showUploadForm(value);
+end;
+
+procedure TFileFrame.move(req: TJSONObject);
+var
+  res : TJSONObject;
+  client : TdsFileClient;
+begin
+  client := TdsFileClient.Create(GM.SQLConnection1.DBXConnection);
+  try
+    res := client.move(req);
+    ShowResult(res);
+  finally
+    client.Free;
+  end;
+
 end;
 
 procedure TFileFrame.prepare;
@@ -479,6 +511,7 @@ begin
   EventHandler.Register( self, handle_folder_new,   BRD_FOLDER_NEW );
   EventHandler.Register( self, handle_folder_del,   BRD_FOLDER_DEL );
   EventHandler.Register( self, handle_folder_ren,   BRD_FOLDER_REN );
+  EventHandler.Register( self, handle_folder_upd,   BRD_FOLDER_UPDATE );
 end;
 
 procedure TFileFrame.release;
@@ -528,14 +561,74 @@ begin
 end;
 
 procedure TFileFrame.setID(value: integer);
-var
-  ptr : PTFolderRec;
 begin
   m_grid := value;
 
-  Screen.Cursor := crSQLWait;
-
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
+
+  updateTree;
+end;
+
+procedure TFileFrame.SetRO(const Value: boolean);
+begin
+  ListFilesQry.ReadOnly  := value;
+  JvDragDrop1.AcceptDrag := not Value;
+end;
+
+procedure TFileFrame.showUploadForm(list: TStrings);
+var
+  UploadForm : TUploadForm;
+begin
+  if not Assigned(VST.FocusedNode) then exit;
+
+  Application.CreateForm(TUploadForm, UploadForm);
+
+  UploadForm.Dr_ID := PTFolderRec(VST.FocusedNode.GetData)^.id;
+
+  UploadForm.List := list;
+  if UploadForm.ShowModal = mrOk then begin
+    updateFiles;
+  end;
+  UploadForm.Free;
+end;
+
+procedure TFileFrame.updateFiles;
+var
+  item  : TListItem;
+  size  : Int64;
+
+begin
+  LV.Items.BeginUpdate;
+  LV.Items.Clear;
+  with ListFilesQry do begin
+    if Active then
+      close;
+    Open;
+    first;
+    while not eof do begin
+      size := FieldByName('FI_SIZE').AsLargeInt;
+
+      item := LV.Items.Add;
+      item.Caption  := FieldByName('FI_NAME').AsString;
+      item.SubItems.Add(GM.calcSize(size));
+      item.SubItems.Add(FormatDateTime('dd.mm.yyyy', FieldByName('FI_TODELETE').AsDateTime));
+      item.SubItems.Add(FieldByName('FI_VERSION').AsString);
+      item.SubItems.Add(FieldByName('FI_CREATED_BY').AsString);
+      item.Data := Pointer(FieldByName('FI_ID').AsInteger);
+      next;
+    end;
+    close;
+  end;
+  LV.Items.EndUpdate;
+end;
+
+procedure TFileFrame.updateTree;
+var
+  ptr : PTFolderRec;
+begin
+  Screen.Cursor := crSQLWait;
+  ClearRecList;
+
   ListFolder.ParamByName('GRP').AsInteger := m_grid;
   ListFolder.Open;
 
@@ -562,56 +655,6 @@ begin
   updateView;
 
   Screen.Cursor := crDefault;
-end;
-
-procedure TFileFrame.SetRO(const Value: boolean);
-begin
-  ListFilesQry.ReadOnly  := value;
-  JvDragDrop1.AcceptDrag := not Value;
-end;
-
-procedure TFileFrame.showUploadForm(list: TStrings);
-var
-  UploadForm : TUploadForm;
-begin
-  if not Assigned(VST.FocusedNode) then exit;
-
-  Application.CreateForm(TUploadForm, UploadForm);
-
-  UploadForm.Dr_ID := PTFolderRec(VST.FocusedNode.GetData)^.id;
-
-  UploadForm.List := list;
-  if UploadForm.ShowModal = mrOk then begin
-    ListFilesQry.Refresh;
-    updateFiles;
-  end;
-  UploadForm.Free;
-end;
-
-procedure TFileFrame.updateFiles;
-var
-  item  : TListItem;
-  size  : Int64;
-
-begin
-  LV.Items.BeginUpdate;
-  LV.Items.Clear;
-  with ListFilesQry do begin
-    first;
-    while not eof do begin
-      size := FieldByName('FI_SIZE').AsLargeInt;
-
-      item := LV.Items.Add;
-      item.Caption  := FieldByName('FI_NAME').AsString;
-      item.SubItems.Add(GM.calcSize(size));
-      item.SubItems.Add(FormatDateTime('dd.mm.yyyy', FieldByName('FI_TODELETE').AsDateTime));
-      item.SubItems.Add(FieldByName('FI_VERSION').AsString);
-      item.SubItems.Add(FieldByName('FI_CREATED_BY').AsString);
-      item.Data := Pointer(FieldByName('FI_ID').AsInteger);
-      next;
-    end;
-  end;
-  LV.Items.EndUpdate;
 end;
 
 procedure TFileFrame.updateView;
@@ -683,10 +726,10 @@ begin
 
   ptr := PTFolderRec(node.GetData);
 
-  ListFilesQry.Close;
   ListFilesQry.ParamByName('DR_ID').AsInteger := ptr^.id;
-  ListFilesQry.Open;
+
   UpdateFiles;
+
   m_curDir := ptr^.id;
 end;
 
@@ -713,35 +756,30 @@ var
     obj  := frm.getFileList;
     node := getNode;
     data := PTFolderRec(node.GetData);
-    JReplace( obj, 'to', data^.id);
-    JReplace( obj, 'name', data^.Name);
-    ShowMessage(formatJSON(obj));
-    obj.Free;
+    JReplace( obj, 'dest', data^.id);
+    move( obj );
   end;
-  procedure addVals( row : TJSONObject; data : PTFolderRec );
-  begin
-    JReplace( row, 'name', data^.Name);
-    JReplace( row, 'id',   data^.id);
-  end;
-
   procedure handleTree;
   var
     node : PVirtualNode;
-    row   : TJSONObject;
   begin
     obj  := TJSONObject.Create;
+    JReplace( obj, 'type', 'folder');
+
     node := getNode;
-    row  := TJSONObject.Create;
-    addVals(row, PTFolderRec(node.GetData) );
-    JReplace( obj, 'dest', row);
+    if Assigned(node) then begin
+      JReplace( obj, 'dest', PTFolderRec(node.GetData).id);
+      JReplace( obj, 'destgrp', m_grid );
 
-    row  := TJSONObject.Create;
-    node := (Source as TVirtualStringTree).FocusedNode;
-    addVals(row, PTFolderRec( node.GetData));
-    JReplace( obj, 'src', row);
+      node := (Source as TVirtualStringTree).FocusedNode;
+      frm  := getFrame( source as TControl);
+      if Assigned(node) and Assigned(frm) then begin
+        JReplace( obj, 'src', PTFolderRec(node.GetData).id);
+        JReplace( obj, 'srcgrp', frm.RootID );
 
-    ShowMessage(formatJSON(obj));
-    obj.Free;
+        move(obj);
+      end;
+    end;
   end;
 begin
   if source is TListView then begin
@@ -776,7 +814,7 @@ begin
 
   srcNode  := NIL;
   destNode := (Sender as TVirtualStringTree).GetNodeAt(Pt);
-  if Assigned(Source) then
+  if Assigned(Source) and ( source is TVirtualStringTree) then
     srcNode  := (Source as TVirtualStringTree).FocusedNode;
 
   if Source = Sender then begin

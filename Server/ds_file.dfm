@@ -1,7 +1,7 @@
 object dsFile: TdsFile
   OldCreateOrder = False
-  Height = 321
-  Width = 639
+  Height = 476
+  Width = 819
   object ListFilesQry: TDataSetProvider
     DataSet = ListFiles
     Left = 96
@@ -81,8 +81,8 @@ object dsFile: TdsFile
     Transaction = FDTransaction1
     UpdateOptions.UpdateTableName = 'DR_DIR'
     TableName = 'DR_DIR'
-    Left = 232
-    Top = 152
+    Left = 160
+    Top = 136
   end
   object ListChilds: TFDQuery
     Connection = DBMod.ArchivarConnection
@@ -134,8 +134,8 @@ object dsFile: TdsFile
       'DELETE FROM FH_FILE_HIST a '
       'WHERE'
       '    a.FI_ID = :id')
-    Left = 320
-    Top = 120
+    Left = 304
+    Top = 232
     ParamData = <
       item
         Name = 'ID'
@@ -155,7 +155,7 @@ object dsFile: TdsFile
       ')'
       'where dr_id = :id')
     Left = 320
-    Top = 184
+    Top = 112
     ParamData = <
       item
         Name = 'ID'
@@ -169,8 +169,8 @@ object dsFile: TdsFile
     SQL.Strings = (
       'SELECT * FROM FI_FILE '
       'where FI_ID = :id')
-    Left = 472
-    Top = 48
+    Left = 408
+    Top = 72
     ParamData = <
       item
         Name = 'ID'
@@ -185,9 +185,115 @@ object dsFile: TdsFile
       'SELECT * FROM FH_FILE_HIST '
       'where FI_ID = :id'
       'order by fi_version desc')
-    Left = 472
-    Top = 96
+    Left = 408
+    Top = 120
     ParamData = <
+      item
+        Name = 'ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+  end
+  object MoveFilesQry: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Transaction = FDTransaction1
+    SQL.Strings = (
+      'UPDATE FI_FILE a'
+      'SET '
+      '    a.DR_ID = :dest'
+      'WHERE'
+      '    a.FI_ID = :id AND '
+      '    a.DR_ID = :src')
+    Left = 480
+    Top = 72
+    ParamData = <
+      item
+        Name = 'DEST'
+        DataType = ftInteger
+        ParamType = ptInput
+      end
+      item
+        Name = 'ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end
+      item
+        Name = 'SRC'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+  end
+  object DelFileQry: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Transaction = FDTransaction1
+    SQL.Strings = (
+      'DELETE FROM FI_FILE a '
+      'WHERE'
+      '    a.FI_ID = :id')
+    Left = 320
+    Top = 176
+    ParamData = <
+      item
+        Name = 'ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+  end
+  object FolderList: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Transaction = FDTransaction1
+    SQL.Strings = (
+      'SELECT * FROM DR_DIR'
+      'where DR_group = :grp')
+    Left = 560
+    Top = 72
+    ParamData = <
+      item
+        Name = 'GRP'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+  end
+  object UpdateParentQry: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Transaction = FDTransaction1
+    SQL.Strings = (
+      'UPDATE DR_DIR a'
+      'SET '
+      '    a.DR_PARENT = :pid'
+      'WHERE'
+      '    a.DR_ID = :id')
+    Left = 568
+    Top = 200
+    ParamData = <
+      item
+        Name = 'PID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end
+      item
+        Name = 'ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+  end
+  object UpdateGrpQry: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Transaction = FDTransaction1
+    SQL.Strings = (
+      'UPDATE DR_DIR a'
+      'SET '
+      '    a.DR_GROUP = :grp'
+      'WHERE'
+      '    a.DR_ID = :id')
+    Left = 568
+    Top = 152
+    ParamData = <
+      item
+        Name = 'GRP'
+        DataType = ftInteger
+        ParamType = ptInput
+      end
       item
         Name = 'ID'
         DataType = ftInteger

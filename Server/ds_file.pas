@@ -8,7 +8,8 @@ uses
   Data.DB,
   System.JSON, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
-  FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.Client, FireDAC.Comp.DataSet;
+  FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.Client, FireDAC.Comp.DataSet,
+  System.Generics.Collections;
 
 type
   [TRoleAuth('user,admin', 'download')]
@@ -28,18 +29,26 @@ type
     UpdateDirSum: TFDQuery;
     FileInfoQry: TFDQuery;
     FileHistInfo: TFDQuery;
+    MoveFilesQry: TFDQuery;
+    DelFileQry: TFDQuery;
+    FolderList: TFDQuery;
+    UpdateParentQry: TFDQuery;
+    UpdateGrpQry: TFDQuery;
   private
     { Private declarations }
     function findFile( dr_id : integer; fname : string) : integer;
+    function findFolder( id, grp : integer  ) : TList<integer>;
   public
     function AutoInc   ( gen  : string )                     : integer;
     function upload    ( data : TJSONObject ; st : TStream ) : TJSONObject;
-    function deleteFile( fi_id : integer )                   : TJSONObject;
+    function deleteFile( data : TJSONobject )                : TJSONObject;
 
     function createRoot  ( data : TJSONobject ) : TJSONObject;
     function newFolder   ( data : TJSONobject ) : TJSONObject;
     function deleteFolder( data : TJSONObject ) : TJSONObject;
     function renameFolder( data : TJSONObject ) : TJSONObject;
+
+    function move        ( data : TJSONObject ) : TJSONObject;
 
     function getFileInfo( data : TJSONObject ) : TJSONObject;
   end;
@@ -48,7 +57,7 @@ implementation
 
 uses
   m_db, Variants, u_json, m_glob_server, Datasnap.DBClient, u_Konst,
-  ServerContainerUnit1;
+  ServerContainerUnit1, u_folder;
 
 {%CLASSGROUP 'System.Classes.TPersistent'}
 
@@ -96,9 +105,10 @@ begin
   DirTab.close;
 end;
 
-function TdsFile.deleteFile(fi_id: integer): TJSONObject;
+function TdsFile.deleteFile(data : TJSONobject): TJSONObject;
 var
-  opts : TLocateOptions;
+  ids   : TList<integer>;
+  id    : integer;
 begin
   Result := TJSONObject.Create;
 
@@ -107,14 +117,20 @@ begin
 
   try
     FDTransaction1.StartTransaction;
-    FileData.Open;
 
-    if FileData.Locate('FI_ID', VarArrayOf([FI_ID]), opts) then
-      FileData.Delete;
-    FileData.Close;
+    ids := JArrayToInteger(JArray(data, 'items'));
+    DelFileHist.Prepare;
+    DelFileQry.Prepare;
 
-    DelFileHist.ParamByName('id').AsInteger := FI_ID;
-    DelFileHist.ExecSQL;
+    for id in ids do begin
+      DelFileQry.ParamByName('ID').AsInteger  := id;
+      DelFileQry.ExecSQL;
+
+      DelFileHist.ParamByName('id').AsInteger := id;
+      DelFileHist.ExecSQL;
+    end;
+    DelFileHist.Unprepare;
+    DelFileQry.Unprepare;
 
     FDTransaction1.Commit;
     JResponse(Result, true, 'Datei gelöscht');
@@ -148,6 +164,73 @@ begin
     FindFileQry.Next;
   end;
   FindFileQry.Close;
+end;
+
+function TdsFile.findFolder(id, grp: integer): TList<integer>;
+var
+  list  : TList<TFolder>;
+  fld   : TFolder;
+  root  : TFolder;
+  procedure fillList;
+  begin
+    with FolderList do begin
+      ParamByName('grp').AsInteger := grp;
+      open;
+      while not eof do begin
+        fld    := TFolder.create;
+        fld.ID := FieldByName('DR_ID').AsInteger;
+        fld.PID:= FieldByName('DR_PARENT').AsInteger;
+        list.Add(fld);
+        if fld.ID = id then
+          root := fld;
+        next;
+      end;
+      Close;
+    end;
+  end;
+  function find( id : integer ) : TFolder;
+  var
+    fld : TFolder;
+  begin
+    Result := NIL;
+    for fld in list do begin
+      if fld.ID = id then begin
+        Result := fld;
+        break;
+      end;
+    end;
+  end;
+  procedure findChilds;
+  var
+    fld : TFolder;
+    pfld: TFolder;
+  begin
+    for fld in list do begin
+      pfld := find(fld.PID);
+      if Assigned(pfld) then
+        pfld.add(fld);
+    end;
+  end;
+  procedure listFolder( root : TFolder );
+  var
+    fld : TFolder;
+  begin
+    if not Assigned(root) then exit;
+    Result.Add( root.ID );
+    for fld in root.Childs do
+      listFolder(fld);
+  end;
+begin
+  Result  := TList<integer>.create;
+  list    := TList<TFolder>.create;
+
+  fillList;
+  findChilds;
+  listFolder(root);
+
+  for fld in list do
+    fld.free;
+  list.free;
 end;
 
 function TdsFile.getFileInfo(data: TJSONObject): TJSONObject;
@@ -191,6 +274,101 @@ begin
 
   FileHistInfo.Close;
   JReplace( Result, 'items', arr);
+end;
+
+function TdsFile.move(data: TJSONObject): TJSONObject;
+
+  procedure sendUpdate( id : integer; typ : string );
+  var
+    msg : TJSONObject;
+  begin
+    msg := TJSONObject.Create;
+    JAction(  msg, BRD_FOLDER_UPDATE);
+    JReplace( msg, 'grid', id);
+    JReplace( msg, 'type', typ);
+    ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg);
+  end;
+
+  procedure moveFiles;
+  var
+    ids : TList<integer>;
+    id  : integer;
+  begin
+    try
+      ids  := JArrayToInteger( JArray(data, 'items'));
+      MoveFilesQry.ParamByName('src').AsInteger := JInt(data, 'src' );
+      MoveFilesQry.ParamByName('dest').AsInteger:= JInt(data, 'dest');
+      MoveFilesQry.Prepare;
+      for id in ids do begin
+        MoveFilesQry.ParamByName('id').AsInteger := id;
+        MoveFilesQry.ExecSQL;
+      end;
+      MoveFilesQry.Unprepare;
+      ids.free;
+
+      if FDTransaction1.Active then
+        FDTransaction1.Commit;
+
+      sendUpdate(JInt(data, 'src' ),  'files');
+      sendUpdate(JInt(data, 'dest' ), 'files');
+      JResult( Result, true, '');
+    except
+      on e : exception do begin
+        JResult( Result, false, e.ToString);
+        if FDTransaction1.Active then
+          FDTransaction1.Rollback;
+      end;
+    end;
+  end;
+
+  procedure moveFolder;
+  var
+    list  : TList<integer>;
+    id    : integer;
+    grp   : integer;
+  begin
+      list := findFolder( JInt( data, 'src'), JInt( data, 'srcgrp'));
+      try
+      grp  := JInt( data, 'destgrp');
+      UpdateGrpQry.Prepare;
+      for id in list do begin
+        UpdateGrpQry.ParamByName('grp').AsInteger := grp;
+        UpdateGrpQry.ParamByName('id').AsInteger  := id;
+        UpdateGrpQry.ExecSQL;
+      end;
+      UpdateGrpQry.Unprepare;
+
+      UpdateParentQry.ParamByName('pid').AsInteger := JInt( data, 'dest');
+      UpdateParentQry.ParamByName('id').AsInteger  := JInt( data, 'src');
+      UpdateParentQry.ExecSQL;
+
+      if FDTransaction1.Active then
+        FDTransaction1.Commit;
+
+      sendUpdate(JInt(data, 'srcgrp' ),  'folder');
+      sendUpdate(JInt(data, 'destgrp' ), 'folder');
+
+      JResult( Result, true, '');
+    except
+      on e : exception do begin
+        JResult( Result, false, e.ToString);
+      end;
+    end;
+    list.Free;
+  end;
+begin
+  Result := TJSONObject.Create;
+  if FDTransaction1.Active then  FDTransaction1.Rollback;
+
+  FDTransaction1.StartTransaction;
+
+  if SameText(JString( data, 'type'), 'files') then
+    moveFiles
+  else if SameText( JString( data, 'type'), 'folder') then
+    moveFolder;
+
+  if FDTransaction1.Active then   FDTransaction1.Rollback;
+
 end;
 
 function TdsFile.newFolder(data: TJSONobject): TJSONObject;

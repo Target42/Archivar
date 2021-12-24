@@ -1,6 +1,6 @@
 //
 // Erzeugt vom DataSnap-Proxy-Generator.
-// 22.12.2021 17:22:13
+// 23.12.2021 17:08:55
 //
 
 unit u_stub;
@@ -97,6 +97,7 @@ type
     FnewFolderCommand: TDBXCommand;
     FdeleteFolderCommand: TDBXCommand;
     FrenameFolderCommand: TDBXCommand;
+    FmoveCommand: TDBXCommand;
     FgetFileInfoCommand: TDBXCommand;
   public
     constructor Create(ADBXConnection: TDBXConnection); overload;
@@ -104,11 +105,12 @@ type
     destructor Destroy; override;
     function AutoInc(gen: string): Integer;
     function upload(data: TJSONObject; st: TStream): TJSONObject;
-    function deleteFile(fi_id: Integer): TJSONObject;
+    function deleteFile(data: TJSONObject): TJSONObject;
     function createRoot(data: TJSONObject): TJSONObject;
     function newFolder(data: TJSONObject): TJSONObject;
     function deleteFolder(data: TJSONObject): TJSONObject;
     function renameFolder(data: TJSONObject): TJSONObject;
+    function move(data: TJSONObject): TJSONObject;
     function getFileInfo(data: TJSONObject): TJSONObject;
   end;
 
@@ -785,7 +787,7 @@ begin
   Result := TJSONObject(FuploadCommand.Parameters[2].Value.GetJSONValue(FInstanceOwner));
 end;
 
-function TdsFileClient.deleteFile(fi_id: Integer): TJSONObject;
+function TdsFileClient.deleteFile(data: TJSONObject): TJSONObject;
 begin
   if FdeleteFileCommand = nil then
   begin
@@ -794,7 +796,7 @@ begin
     FdeleteFileCommand.Text := 'TdsFile.deleteFile';
     FdeleteFileCommand.Prepare;
   end;
-  FdeleteFileCommand.Parameters[0].Value.SetInt32(fi_id);
+  FdeleteFileCommand.Parameters[0].Value.SetJSONValue(data, FInstanceOwner);
   FdeleteFileCommand.ExecuteUpdate;
   Result := TJSONObject(FdeleteFileCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
 end;
@@ -855,6 +857,20 @@ begin
   Result := TJSONObject(FrenameFolderCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
 end;
 
+function TdsFileClient.move(data: TJSONObject): TJSONObject;
+begin
+  if FmoveCommand = nil then
+  begin
+    FmoveCommand := FDBXConnection.CreateCommand;
+    FmoveCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FmoveCommand.Text := 'TdsFile.move';
+    FmoveCommand.Prepare;
+  end;
+  FmoveCommand.Parameters[0].Value.SetJSONValue(data, FInstanceOwner);
+  FmoveCommand.ExecuteUpdate;
+  Result := TJSONObject(FmoveCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
+end;
+
 function TdsFileClient.getFileInfo(data: TJSONObject): TJSONObject;
 begin
   if FgetFileInfoCommand = nil then
@@ -888,6 +904,7 @@ begin
   FnewFolderCommand.DisposeOf;
   FdeleteFolderCommand.DisposeOf;
   FrenameFolderCommand.DisposeOf;
+  FmoveCommand.DisposeOf;
   FgetFileInfoCommand.DisposeOf;
   inherited;
 end;

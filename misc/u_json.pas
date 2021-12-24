@@ -55,6 +55,8 @@ function formatJSON( obj : TJSONObject; indend : integer = -1 ) : string;
 
 procedure JAction( data : TJSONObject; action : string );
 
+function JArrayToInteger( arr : TJSONArray ) : TList<integer>;
+
 implementation
 
 uses
@@ -756,6 +758,18 @@ end;
 procedure JAction( data : TJSONObject; action : string );
 begin
   JReplace( data, 'action', action);
+end;
+
+function JArrayToInteger( arr : TJSONArray ) : TList<integer>;
+var
+  i : integer;
+begin
+  Result := TList<integer>.create;
+  if not Assigned(arr) then exit;
+
+  for i := 0 to pred(arr.Count) do begin
+    Result.Add((arr.Items[i] as TJSONNumber).AsInt);
+  end;
 end;
 
 initialization
