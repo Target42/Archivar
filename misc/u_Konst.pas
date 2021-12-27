@@ -53,6 +53,7 @@ const
   BRD_FOLDER_REN      : string = 'fld_rename';
   BRD_FOLDER_DEL      : string = 'fld_del';
   BRD_FOLDER_UPDATE   : string = 'fld_update';
+  BRD_STORE_UPDATE    : string = 'store_update';
 
 
 const

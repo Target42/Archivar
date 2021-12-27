@@ -162,6 +162,8 @@ type
     procedure checkWWWRoot;
 
     function calcSize( size : int64 ) : string;
+
+    function getStorageList : TJSONObject;
   end;
 
   TMyCallback = class(TDBXCallback)
@@ -613,6 +615,15 @@ begin
   end;
 end;
 
+function TGM.getStorageList: TJSONObject;
+begin
+  try
+    Result := m_misc.getStorageList.Clone as TJSONObject;
+  except
+    Result := TJSONObject.Create;
+  end;
+end;
+
 function TGM.getUserList: TJSONobject;
 var
   obj : TJSONObject;
@@ -623,7 +634,6 @@ begin
 
     if Assigned(obj) then
       Result := obj.Clone as TJSONObject;
-
   end;
 end;
 

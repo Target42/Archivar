@@ -31,6 +31,8 @@ type
     PEQryPE_DEPARTMENT: TStringField;
     GetKeyQry: TFDQuery;
     FDTransaction1: TFDTransaction;
+    ListStoragesQry: TFDQuery;
+    PEQryDR_ID: TIntegerField;
     procedure DSServerModuleCreate(Sender: TObject);
   private
   private
@@ -49,6 +51,8 @@ type
     function changeOnlineStatus(req: TJSONObject) : TJSONObject;
 
     function getPublicKey( net : string; stamp : TDateTime ) : TStream;
+
+    function getStorageList : TJSONObject;
   end;
 
 implementation
@@ -140,6 +144,33 @@ begin
     GetKeyQry.Transaction.Commit;
 end;
 
+function TdsMisc.getStorageList: TJSONObject;
+var
+  arr : TJSONArray;
+  row : TJSONObject;
+begin
+  Result  := TJSONObject.Create;
+  arr     := TJSONArray.Create;
+
+  if FDTransaction1.Active then
+    FDTransaction1.Rollback;
+  FDTransaction1.StartTransaction;
+  with ListStoragesQry do begin
+    open;
+    while not eof do begin
+      row := TJSONObject.Create;
+      JReplace(row, 'id',     FieldByName('ST_ID').AsInteger);
+      JReplace(row, 'name',   FieldByName('ST_NAME').AsString );
+      JReplace(row, 'drid',   FieldByName('DR_ID').AsInteger);
+      arr.AddElement(row);
+      next;
+    end;
+    close;
+  end;
+  FDTransaction1.Commit;
+  JReplace(Result, 'items', arr);
+end;
+
 function TdsMisc.getUserList: TJSONobject;
 var
   arr : TJSONArray;
@@ -153,9 +184,10 @@ begin
     row := TJSONObject.Create;
 
     JReplace( row, 'id',      PEQryPE_ID.Value);
-    JReplace( row, 'name',    PEQryPE_NAME.Value);
-    JReplace( row, 'vorname', PEQryPE_VORNAME.Value);
-    JReplace( row, 'dept',    PEQryPE_DEPARTMENT.Value);
+    JReplace( row, 'name',    PEQryPE_NAME.AsString);
+    JReplace( row, 'vorname', PEQryPE_VORNAME.AsString);
+    JReplace( row, 'dept',    PEQryPE_DEPARTMENT.AsString);
+    JReplace( row, 'drid',    PEQryDR_ID.Value );
 
     arr.AddElement(row);
     PEQry.Next;

@@ -1,6 +1,6 @@
 //
 // Erzeugt vom DataSnap-Proxy-Generator.
-// 23.12.2021 17:08:55
+// 25.12.2021 13:08:59
 //
 
 unit u_stub;
@@ -125,6 +125,7 @@ type
     FgetUserListCommand: TDBXCommand;
     FchangeOnlineStatusCommand: TDBXCommand;
     FgetPublicKeyCommand: TDBXCommand;
+    FgetStorageListCommand: TDBXCommand;
   public
     constructor Create(ADBXConnection: TDBXConnection); overload;
     constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
@@ -138,6 +139,7 @@ type
     function getUserList: TJSONObject;
     function changeOnlineStatus(req: TJSONObject): TJSONObject;
     function getPublicKey(net: string; stamp: TDateTime): TStream;
+    function getStorageList: TJSONObject;
   end;
 
   TdsProtocolClient = class(TDSAdminClient)
@@ -340,6 +342,20 @@ type
     destructor Destroy; override;
     procedure DSServerModuleCreate(Sender: TObject);
     procedure DITabBeforePost(DataSet: TDataSet);
+  end;
+
+  TdsStorageClient = class(TDSAdminClient)
+  private
+    FAutoIncCommand: TDBXCommand;
+    FnewStorageCommand: TDBXCommand;
+    FrenameStorageCommand: TDBXCommand;
+  public
+    constructor Create(ADBXConnection: TDBXConnection); overload;
+    constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
+    destructor Destroy; override;
+    function AutoInc(gen: string): Integer;
+    function newStorage(data: TJSONObject): TJSONObject;
+    function renameStorage(data: TJSONObject): TJSONObject;
   end;
 
 implementation
@@ -1047,6 +1063,19 @@ begin
   Result := FgetPublicKeyCommand.Parameters[2].Value.GetStream(FInstanceOwner);
 end;
 
+function TdsMiscClient.getStorageList: TJSONObject;
+begin
+  if FgetStorageListCommand = nil then
+  begin
+    FgetStorageListCommand := FDBXConnection.CreateCommand;
+    FgetStorageListCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FgetStorageListCommand.Text := 'TdsMisc.getStorageList';
+    FgetStorageListCommand.Prepare;
+  end;
+  FgetStorageListCommand.ExecuteUpdate;
+  Result := TJSONObject(FgetStorageListCommand.Parameters[0].Value.GetJSONValue(FInstanceOwner));
+end;
+
 constructor TdsMiscClient.Create(ADBXConnection: TDBXConnection);
 begin
   inherited Create(ADBXConnection);
@@ -1068,6 +1097,7 @@ begin
   FgetUserListCommand.DisposeOf;
   FchangeOnlineStatusCommand.DisposeOf;
   FgetPublicKeyCommand.DisposeOf;
+  FgetStorageListCommand.DisposeOf;
   inherited;
 end;
 
@@ -1918,6 +1948,66 @@ destructor TdsDairyClient.Destroy;
 begin
   FDSServerModuleCreateCommand.DisposeOf;
   FDITabBeforePostCommand.DisposeOf;
+  inherited;
+end;
+
+function TdsStorageClient.AutoInc(gen: string): Integer;
+begin
+  if FAutoIncCommand = nil then
+  begin
+    FAutoIncCommand := FDBXConnection.CreateCommand;
+    FAutoIncCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FAutoIncCommand.Text := 'TdsStorage.AutoInc';
+    FAutoIncCommand.Prepare;
+  end;
+  FAutoIncCommand.Parameters[0].Value.SetWideString(gen);
+  FAutoIncCommand.ExecuteUpdate;
+  Result := FAutoIncCommand.Parameters[1].Value.GetInt32;
+end;
+
+function TdsStorageClient.newStorage(data: TJSONObject): TJSONObject;
+begin
+  if FnewStorageCommand = nil then
+  begin
+    FnewStorageCommand := FDBXConnection.CreateCommand;
+    FnewStorageCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FnewStorageCommand.Text := 'TdsStorage.newStorage';
+    FnewStorageCommand.Prepare;
+  end;
+  FnewStorageCommand.Parameters[0].Value.SetJSONValue(data, FInstanceOwner);
+  FnewStorageCommand.ExecuteUpdate;
+  Result := TJSONObject(FnewStorageCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
+end;
+
+function TdsStorageClient.renameStorage(data: TJSONObject): TJSONObject;
+begin
+  if FrenameStorageCommand = nil then
+  begin
+    FrenameStorageCommand := FDBXConnection.CreateCommand;
+    FrenameStorageCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FrenameStorageCommand.Text := 'TdsStorage.renameStorage';
+    FrenameStorageCommand.Prepare;
+  end;
+  FrenameStorageCommand.Parameters[0].Value.SetJSONValue(data, FInstanceOwner);
+  FrenameStorageCommand.ExecuteUpdate;
+  Result := TJSONObject(FrenameStorageCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
+end;
+
+constructor TdsStorageClient.Create(ADBXConnection: TDBXConnection);
+begin
+  inherited Create(ADBXConnection);
+end;
+
+constructor TdsStorageClient.Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean);
+begin
+  inherited Create(ADBXConnection, AInstanceOwner);
+end;
+
+destructor TdsStorageClient.Destroy;
+begin
+  FAutoIncCommand.DisposeOf;
+  FnewStorageCommand.DisposeOf;
+  FrenameStorageCommand.DisposeOf;
   inherited;
 end;
 

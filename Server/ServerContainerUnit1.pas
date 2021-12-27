@@ -44,6 +44,7 @@ type
     dsStammData: TDSServerClass;
     dsPKI: TDSServerClass;
     dsDairy: TDSServerClass;
+    dsStorage: TDSServerClass;
     procedure dsAdminGetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
     procedure ServiceStart(Sender: TService; var Started: Boolean);
@@ -101,6 +102,8 @@ type
       var PersistentClass: TPersistentClass);
     procedure dsDairyGetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
+    procedure dsStorageGetClass(DSServerClass: TDSServerClass;
+      var PersistentClass: TPersistentClass);
   private
     const
       MaxUserNameLength = 25;
@@ -141,7 +144,7 @@ uses
   ds_taks, ds_file, ds_misc, ds_protocol, ds_image, ds_chapter,
   ds_taskEdit, ds_template, ds_taskView, ds_textblock, ds_fileCache, ds_epub,
   ds_meeting, System.Hash, u_json, ds_sitzung, m_hell, Grijjy.sysUtils, u_ini,
-  m_fileServer, ds_updater, ds_stamm, ds_pki, ds_dairy;
+  m_fileServer, ds_updater, ds_stamm, ds_pki, ds_dairy, ds_storage;
 
 procedure TServerContainer1.dsAdminGetClass(
   DSServerClass: TDSServerClass; var PersistentClass: TPersistentClass);
@@ -219,6 +222,12 @@ procedure TServerContainer1.dsStammDataGetClass(DSServerClass: TDSServerClass;
   var PersistentClass: TPersistentClass);
 begin
   PersistentClass := ds_stamm.TStammMod;
+end;
+
+procedure TServerContainer1.dsStorageGetClass(DSServerClass: TDSServerClass;
+  var PersistentClass: TPersistentClass);
+begin
+  PersistentClass := ds_storage.TdsStorage;
 end;
 
 procedure TServerContainer1.dsTaskEditGetClass(DSServerClass: TDSServerClass;

@@ -76,7 +76,7 @@
     Top = 0
     Width = 249
     Height = 467
-    ActivePage = TabSheet1
+    ActivePage = TabSheet7
     Align = alLeft
     MultiLine = True
     TabOrder = 1
@@ -206,6 +206,26 @@
           Options = [coText]
           TabOrder = 0
           OnChange = JvColorComboBox1Change
+        end
+      end
+    end
+    object TabSheet7: TTabSheet
+      Caption = 'Ablagen'
+      ImageIndex = 4
+      inline StoragesFrame1: TStoragesFrame
+        Left = 0
+        Top = 0
+        Width = 221
+        Height = 459
+        Align = alClient
+        TabOrder = 0
+        ExplicitWidth = 221
+        ExplicitHeight = 459
+        inherited LV: TListView
+          Width = 221
+          Height = 459
+          ExplicitWidth = 221
+          ExplicitHeight = 459
         end
       end
     end
@@ -524,6 +544,12 @@
       object Dateicache1: TMenuItem
         Action = ac_ad_filecache
       end
+      object N20: TMenuItem
+        Caption = '-'
+      end
+      object N19: TMenuItem
+        Action = ac_ad_storages
+      end
     end
     object Fenster1: TMenuItem
       Caption = 'Fenster'
@@ -825,6 +851,11 @@
       Category = 'Tools'
       Caption = 'Pers'#246'nlich Datenablage'
       OnExecute = ac_to_pdriveExecute
+    end
+    object ac_ad_storages: TAction
+      Category = 'Admin'
+      Caption = 'Datenablagen'
+      OnExecute = ac_ad_storagesExecute
     end
   end
   object ApplicationEvents1: TApplicationEvents

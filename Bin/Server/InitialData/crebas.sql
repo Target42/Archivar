@@ -1,7 +1,7 @@
 /* ============================================================ */
 /*   Database name:  MODEL_2                                    */
 /*   DBMS name:      InterBase                                  */
-/*   Created on:     22.12.2021  16:31                          */
+/*   Created on:     24.12.2021  19:39                          */
 /* ============================================================ */
 
 create generator gen_be_id;
@@ -23,6 +23,7 @@ create generator gen_pi_id;
 create generator gen_pe_id;
 create generator gen_pk_id;
 create generator gen_pr_id;
+create generator gen_st_id;
 create generator gen_ta_id;
 create generator gen_tb_id;
 create generator gen_te_id;
@@ -589,6 +590,22 @@ create table DI_DAIRY
 /* ============================================================ */
 create DESC index DI_DAIRY_USER on DI_DAIRY (PE_ID, DI_STAMP);
 
+/* ============================================================ */
+/*   Table: ST_STORAGE                                          */
+/* ============================================================ */
+create table ST_STORAGE
+(
+    ST_ID                           INTEGER                not null,
+    DR_ID                           INTEGER                        ,
+    ST_NAME                         VARCHAR(150)                   ,
+    constraint PK_ST_STORAGE primary key (ST_ID)
+);
+
+/* ============================================================ */
+/*   Index: ST_STORAGE_NAME                                     */
+/* ============================================================ */
+create unique ASC index ST_STORAGE_NAME on ST_STORAGE (ST_NAME);
+
 alter table TE_TEMPLATE
     add constraint FK_REF_3353 foreign key  (TY_ID)
        references TY_TASKTYPE;
@@ -692,6 +709,10 @@ alter table PK_PUBLIC_KEY
 alter table DI_DAIRY
     add constraint FK_REF_9581 foreign key  (PE_ID)
        references PE_PERSON;
+
+alter table ST_STORAGE
+    add constraint FK_REF_11191 foreign key  (DR_ID)
+       references DR_DIR;
 
 
 set term /;

@@ -51,7 +51,9 @@ uses
   u_broadcastMsg in 'u_broadcastMsg.pas',
   ds_pki in 'ds_pki.pas' {dsPKI: TDSServerModule},
   ds_dairy in 'ds_dairy.pas' {dsDairy: TDSServerModule},
-  u_ini in 'u_ini.pas';
+  u_ini in 'u_ini.pas',
+  u_folder in 'u_folder.pas',
+  ds_storage in 'ds_storage.pas' {dsStorage: TDSServerModule};
 
 var
   MyDummyBoolean  : Boolean;

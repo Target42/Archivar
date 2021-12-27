@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.Menus, System.Actions,
   Vcl.ActnList, Vcl.AppEvnts, fr_gremiumTree, Vcl.ExtCtrls, Vcl.StdCtrls,
   fr_taskList, Vcl.StdActns, u_bookmark, fr_bookmark, fr_epub, fr_meeting,
-  JvExStdCtrls, JvCombobox, JvColorCombo;
+  JvExStdCtrls, JvCombobox, JvColorCombo, fr_storages;
 
 type
   TStatusInx = (stStatus = 0, stHost, stLogin, stUser );
@@ -170,6 +170,11 @@ type
     Import2: TMenuItem;
     ac_to_pdrive: TAction;
     PersnlichDatenablage1: TMenuItem;
+    TabSheet7: TTabSheet;
+    StoragesFrame1: TStoragesFrame;
+    ac_ad_storages: TAction;
+    N19: TMenuItem;
+    N20: TMenuItem;
     procedure ac_prg_closeExecute(Sender: TObject);
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure ac_prg_disconExecute(Sender: TObject);
@@ -213,6 +218,7 @@ type
     procedure ac_tb_exportExecute(Sender: TObject);
     procedure ac_tb_importExecute(Sender: TObject);
     procedure ac_to_pdriveExecute(Sender: TObject);
+    procedure ac_ad_storagesExecute(Sender: TObject);
   private
     m_noStatChange : boolean;
 
@@ -244,7 +250,7 @@ uses
   f_meeting_new, f_meeting_select, f_meeting_proto, f_login,
   system.UITypes, f_protocol_sec, u_onlineUser, f_doMeeting, f_task_type,
   f_flieCacheForm, f_keys, f_dairy, f_textblock_export, f_textblock_import,
-  f_storage;
+  f_storage, f_storages;
 
 {$R *.dfm}
 
@@ -316,6 +322,13 @@ begin
   finally
     ImagesForm.free;
   end;
+end;
+
+procedure TMainForm.ac_ad_storagesExecute(Sender: TObject);
+begin
+  Application.CreateForm(TStoragesForm, StoragesForm);
+  StoragesForm.ShowModal;
+  StoragesForm.free;
 end;
 
 procedure TMainForm.ac_ad_sys_templateExecute(Sender: TObject);
@@ -722,6 +735,7 @@ begin
         GremiumTreeFrame1.selectFirst;
 
         BookmarkFrame1.updatebookMarks;
+        StoragesFrame1.updateStorages;
         ePupFrame1.init;
       end;
     msgDisconnected:
@@ -828,6 +842,8 @@ begin
   PageControl2.ActivePage := TabSheet4;
   TaskListFrame1.prepare;
   MeetingFrame1.init;
+  StoragesFrame1.prepare;
+
   PageControl1.ActivePage := TabSheet1;
 
   PostMessage( Application.MainFormHandle, msgLogin, 0, 0 );
@@ -849,6 +865,7 @@ end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
+  StoragesFrame1.release;
   OnlineUser.OnChangeData := NIL;
   GremiumTreeFrame1.clear;
   TaskListFrame1.shutdown;

@@ -136,6 +136,10 @@ object dsMisc: TdsMisc
       Origin = 'PE_DEPARTMENT'
       Size = 25
     end
+    object PEQryDR_ID: TIntegerField
+      FieldName = 'DR_ID'
+      Origin = 'DR_ID'
+    end
   end
   object GetKeyQry: TFDQuery
     Connection = DBMod.ArchivarConnection
@@ -165,6 +169,14 @@ object dsMisc: TdsMisc
   object FDTransaction1: TFDTransaction
     Connection = DBMod.ArchivarConnection
     Left = 584
+    Top = 152
+  end
+  object ListStoragesQry: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Transaction = FDTransaction1
+    SQL.Strings = (
+      'SELECT * FROM ST_STORAGE')
+    Left = 224
     Top = 152
   end
 end
