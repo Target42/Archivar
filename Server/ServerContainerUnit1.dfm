@@ -136,30 +136,35 @@ object ServerContainer1: TServerContainer1
   object dsTextBlock: TDSServerClass
     OnGetClass = dsTextBlockGetClass
     Server = DSServer1
+    LifeCycle = 'Invocation'
     Left = 328
     Top = 400
   end
   object dsFileCache: TDSServerClass
     OnGetClass = dsFileCacheGetClass
     Server = DSServer1
+    LifeCycle = 'Invocation'
     Left = 256
     Top = 344
   end
   object dsEpub: TDSServerClass
     OnGetClass = dsEpubGetClass
     Server = DSServer1
+    LifeCycle = 'Invocation'
     Left = 328
     Top = 344
   end
   object dsMeeing: TDSServerClass
     OnGetClass = dsMeeingGetClass
     Server = DSServer1
+    LifeCycle = 'Invocation'
     Left = 256
     Top = 400
   end
   object dsSitzung: TDSServerClass
     OnGetClass = dsSitzungGetClass
     Server = DSServer1
+    LifeCycle = 'Invocation'
     Left = 328
     Top = 464
   end
@@ -215,18 +220,21 @@ object ServerContainer1: TServerContainer1
   object dsPKI: TDSServerClass
     OnGetClass = dsPKIGetClass
     Server = DSServer1
+    LifeCycle = 'Invocation'
     Left = 256
     Top = 520
   end
   object dsDairy: TDSServerClass
     OnGetClass = dsDairyGetClass
     Server = DSServer1
+    LifeCycle = 'Invocation'
     Left = 320
     Top = 520
   end
   object dsStorage: TDSServerClass
     OnGetClass = dsStorageGetClass
     Server = DSServer1
+    LifeCycle = 'Invocation'
     Left = 328
     Top = 576
   end

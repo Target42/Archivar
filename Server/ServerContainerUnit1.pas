@@ -491,6 +491,7 @@ begin
           Session.PutData('admin', 'true');
           Session.PutData('ID', '1' );
           addUserRols(QueryUser.FieldByName('PE_ROLS').AsString);
+          Session.PutData('fullname', 'admin');
         end
         else begin
           //is user in, at least, one concile?
@@ -510,6 +511,11 @@ begin
           Session.PutData('vorname',  QueryUser.FieldByName('pe_vorname').AsString);
           Session.PutData('dept',     QueryUser.FieldByName('PE_DEPARTMENT').AsString);
 
+          Session.PutData('fullname', Format('%s %s (%s)',
+          [QueryUser.FieldByName('pe_vorname').AsString,
+           QueryUser.FieldByName('pe_name').AsString,
+           QueryUser.FieldByName('PE_DEPARTMENT').AsString]));
+
           addUserRols(QueryUser.FieldByName('PE_ROLS').AsString);
           if UserRoles.IndexOf('admin') >-1 then
             Session.PutData('admin', 'true');
@@ -523,9 +529,11 @@ begin
     on e : exception do begin
       GrijjyLog.Send( e.ToString, Error);
       QueryUser.Close;
-      if IBTransaction1.Active then
-        IBTransaction1.Rollback;
     end;
+  end;
+  if IBTransaction1.Active then begin
+    IBTransaction1.Rollback;
+    GrijjyLog.Send('Emergency rollback', Error);
   end;
   GrijjyLog.Send('user authenticate', valid);
   GrijjyLog.Send('user rols', UserRoles);

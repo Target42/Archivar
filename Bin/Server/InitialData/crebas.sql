@@ -1,7 +1,7 @@
 /* ============================================================ */
 /*   Database name:  MODEL_2                                    */
 /*   DBMS name:      InterBase                                  */
-/*   Created on:     24.12.2021  19:39                          */
+/*   Created on:     29.12.2021  15:55                          */
 /* ============================================================ */
 
 create generator gen_be_id;
@@ -326,6 +326,29 @@ create table CT_CHAPTER_TEXT
 );
 
 /* ============================================================ */
+/*   Table: FI_FILE                                             */
+/* ============================================================ */
+create table FI_FILE
+(
+    FI_ID                           INTEGER                not null,
+    DR_ID                           INTEGER                        ,
+    FI_NAME                         VARCHAR(150)                   ,
+    FI_TYPE                         VARCHAR(10)                    ,
+    FI_DATA                         BLOB                           ,
+    FI_CREATED                      DATE                           ,
+    FI_TODELETE                     DATE                           ,
+    FI_VERSION                      INTEGER                        ,
+    FI_CREATED_BY                   VARCHAR(200)                   ,
+    FI_SIZE                         BIGINT                         ,
+    constraint PK_FI_FILE primary key (FI_ID)
+);
+
+/* ============================================================ */
+/*   Index: FI_FILE_SEC                                         */
+/* ============================================================ */
+create ASC index FI_FILE_SEC on FI_FILE (DR_ID, FI_ID);
+
+/* ============================================================ */
 /*   Table: GR_GREMIUM                                          */
 /* ============================================================ */
 create table GR_GREMIUM
@@ -418,29 +441,6 @@ create table GR_PA
     GP_ROLLE                        VARCHAR(100)                   ,
     constraint PK_GR_PA primary key (GR_ID, PE_ID)
 );
-
-/* ============================================================ */
-/*   Table: FI_FILE                                             */
-/* ============================================================ */
-create table FI_FILE
-(
-    FI_ID                           INTEGER                not null,
-    DR_ID                           INTEGER                        ,
-    FI_NAME                         VARCHAR(150)                   ,
-    FI_TYPE                         VARCHAR(10)                    ,
-    FI_DATA                         BLOB                           ,
-    FI_CREATED                      DATE                           ,
-    FI_TODELETE                     DATE                           ,
-    FI_VERSION                      INTEGER                        ,
-    FI_CREATED_BY                   VARCHAR(200)                   ,
-    FI_SIZE                         BIGINT                         ,
-    constraint PK_FI_FILE primary key (FI_ID)
-);
-
-/* ============================================================ */
-/*   Index: FI_FILE_SEC                                         */
-/* ============================================================ */
-create ASC index FI_FILE_SEC on FI_FILE (DR_ID, FI_ID);
 
 /* ============================================================ */
 /*   Table: BE_BESCHLUS                                         */
@@ -606,6 +606,41 @@ create table ST_STORAGE
 /* ============================================================ */
 create unique ASC index ST_STORAGE_NAME on ST_STORAGE (ST_NAME);
 
+/* ============================================================ */
+/*   Table: FI_LOCK                                             */
+/* ============================================================ */
+create table FI_LOCK
+(
+    FI_ID                           INTEGER                not null,
+    PE_ID                           INTEGER                        ,
+    FI_STAMP                        TIMESTAMP                      ,
+    FI_USER                         VARCHAR(250)                   ,
+    FI_HOST                         VARCHAR(30)                    ,
+    constraint PK_FI_LOCK primary key (FI_ID)
+);
+
+/* ============================================================ */
+/*   Table: FI_EV                                               */
+/* ============================================================ */
+create table FI_EV
+(
+    FI_ID                           INTEGER                not null,
+    PE_ID                           INTEGER                not null,
+    EV_EVENT                        INTEGER                        ,
+    constraint PK_FI_EV primary key (FI_ID, PE_ID)
+);
+
+/* ============================================================ */
+/*   Table: DR_EV                                               */
+/* ============================================================ */
+create table DR_EV
+(
+    DR_ID                           INTEGER                not null,
+    PE_ID                           INTEGER                not null,
+    EV_EVENT                        INTEGER                        ,
+    constraint PK_DR_EV primary key (DR_ID, PE_ID)
+);
+
 alter table TE_TEMPLATE
     add constraint FK_REF_3353 foreign key  (TY_ID)
        references TY_TASKTYPE;
@@ -630,6 +665,10 @@ alter table CT_CHAPTER_TEXT
     add constraint FK_REF_4070 foreign key  (TA_ID)
        references TA_TASK;
 
+alter table FI_FILE
+    add constraint FK_REF_10074 foreign key  (DR_ID)
+       references DR_DIR;
+
 alter table GR_GREMIUM
     add constraint FK_REF_10392 foreign key  (DR_ID)
        references DR_DIR;
@@ -653,10 +692,6 @@ alter table GR_PA
 alter table GR_PA
     add constraint FK_REF_20 foreign key  (PE_ID)
        references PE_PERSON;
-
-alter table FI_FILE
-    add constraint FK_REF_10074 foreign key  (DR_ID)
-       references DR_DIR;
 
 alter table BE_BESCHLUS
     add constraint FK_REF_5058 foreign key  (CT_ID)
@@ -712,6 +747,18 @@ alter table DI_DAIRY
 
 alter table ST_STORAGE
     add constraint FK_REF_11191 foreign key  (DR_ID)
+       references DR_DIR;
+
+alter table FI_LOCK
+    add constraint FK_REF_11537 foreign key  (PE_ID)
+       references PE_PERSON;
+
+alter table FI_EV
+    add constraint FK_REF_11553 foreign key  (FI_ID)
+       references FI_FILE;
+
+alter table DR_EV
+    add constraint FK_REF_11566 foreign key  (DR_ID)
        references DR_DIR;
 
 

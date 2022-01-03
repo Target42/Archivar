@@ -19,6 +19,7 @@ object GremiumTreeFrame: TGremiumTreeFrame
     SortType = stText
     TabOrder = 0
     OnClick = TVClick
+    OnDblClick = TVDblClick
     OnDragOver = TVDragOver
   end
   object DSProviderConnection1: TDSProviderConnection

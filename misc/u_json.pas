@@ -56,6 +56,7 @@ function formatJSON( obj : TJSONObject; indend : integer = -1 ) : string;
 procedure JAction( data : TJSONObject; action : string );
 
 function JArrayToInteger( arr : TJSONArray ) : TList<integer>;
+function IntListToJArray( var list : TList<integer> ) : TJSONArray;
 
 implementation
 
@@ -770,6 +771,15 @@ begin
   for i := 0 to pred(arr.Count) do begin
     Result.Add((arr.Items[i] as TJSONNumber).AsInt);
   end;
+end;
+
+function IntListToJArray( var list : TList<integer> ) : TJSONArray;
+var
+  nr :  integer;
+begin
+  Result := TJSONArray.Create;
+  for nr in list do
+    Result.AddElement(TJSONNumber.Create(nr));
 end;
 
 initialization

@@ -83,6 +83,8 @@ var
   fldname : string;
 begin
   cmd := JString(arg,   'cmd');
+  Result := true;
+
        if SameText(cmd, 'refresh')  then updateStorages
   else if SameText(cmd, 'new')      then addNew( arg )
   else if SameText(cmd, 'update')   then begin
@@ -98,7 +100,8 @@ begin
         break;
       end;
     end;
-  end;
+  end else
+    Result := false;
 end;
 
 procedure TStoragesFrame.prepare;

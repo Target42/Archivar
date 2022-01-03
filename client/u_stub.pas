@@ -1,6 +1,6 @@
 //
 // Erzeugt vom DataSnap-Proxy-Generator.
-// 25.12.2021 13:08:59
+// 30.12.2021 19:51:02
 //
 
 unit u_stub;
@@ -99,6 +99,9 @@ type
     FrenameFolderCommand: TDBXCommand;
     FmoveCommand: TDBXCommand;
     FgetFileInfoCommand: TDBXCommand;
+    FDeleteFileHistoryCommand: TDBXCommand;
+    FlockCommand: TDBXCommand;
+    FunlockCommand: TDBXCommand;
   public
     constructor Create(ADBXConnection: TDBXConnection); overload;
     constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
@@ -112,6 +115,9 @@ type
     function renameFolder(data: TJSONObject): TJSONObject;
     function move(data: TJSONObject): TJSONObject;
     function getFileInfo(data: TJSONObject): TJSONObject;
+    function DeleteFileHistory(data: TJSONObject): TJSONObject;
+    function lock(data: TJSONObject): TJSONObject;
+    function unlock(data: TJSONObject): TJSONObject;
   end;
 
   TdsMiscClient = class(TDSAdminClient)
@@ -901,6 +907,48 @@ begin
   Result := TJSONObject(FgetFileInfoCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
 end;
 
+function TdsFileClient.DeleteFileHistory(data: TJSONObject): TJSONObject;
+begin
+  if FDeleteFileHistoryCommand = nil then
+  begin
+    FDeleteFileHistoryCommand := FDBXConnection.CreateCommand;
+    FDeleteFileHistoryCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FDeleteFileHistoryCommand.Text := 'TdsFile.DeleteFileHistory';
+    FDeleteFileHistoryCommand.Prepare;
+  end;
+  FDeleteFileHistoryCommand.Parameters[0].Value.SetJSONValue(data, FInstanceOwner);
+  FDeleteFileHistoryCommand.ExecuteUpdate;
+  Result := TJSONObject(FDeleteFileHistoryCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
+end;
+
+function TdsFileClient.lock(data: TJSONObject): TJSONObject;
+begin
+  if FlockCommand = nil then
+  begin
+    FlockCommand := FDBXConnection.CreateCommand;
+    FlockCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FlockCommand.Text := 'TdsFile.lock';
+    FlockCommand.Prepare;
+  end;
+  FlockCommand.Parameters[0].Value.SetJSONValue(data, FInstanceOwner);
+  FlockCommand.ExecuteUpdate;
+  Result := TJSONObject(FlockCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
+end;
+
+function TdsFileClient.unlock(data: TJSONObject): TJSONObject;
+begin
+  if FunlockCommand = nil then
+  begin
+    FunlockCommand := FDBXConnection.CreateCommand;
+    FunlockCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FunlockCommand.Text := 'TdsFile.unlock';
+    FunlockCommand.Prepare;
+  end;
+  FunlockCommand.Parameters[0].Value.SetJSONValue(data, FInstanceOwner);
+  FunlockCommand.ExecuteUpdate;
+  Result := TJSONObject(FunlockCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
+end;
+
 constructor TdsFileClient.Create(ADBXConnection: TDBXConnection);
 begin
   inherited Create(ADBXConnection);
@@ -922,6 +970,9 @@ begin
   FrenameFolderCommand.DisposeOf;
   FmoveCommand.DisposeOf;
   FgetFileInfoCommand.DisposeOf;
+  FDeleteFileHistoryCommand.DisposeOf;
+  FlockCommand.DisposeOf;
+  FunlockCommand.DisposeOf;
   inherited;
 end;
 

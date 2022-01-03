@@ -174,7 +174,7 @@ begin
 
       JResult(Result, true, '');
 
-      msg := TBroadcastMsg.create(BRD_FILE_LOCK);
+      msg := TBroadcastMsg.create(BRD_FILE_CACHE_LOCK);
       msg.add('lock',   true);
       msg.add('id',     JInt( req, 'fcid'));
       msg.add('user',   uname);
@@ -238,7 +238,7 @@ begin
     if not ok then
       JResult( Result, ok, 'Kein Lock gefunden!')
     else begin
-      msg := TBroadcastMsg.create(BRD_FILE_LOCK);
+      msg := TBroadcastMsg.create(BRD_FILE_CACHE_LOCK);
       msg.add('lock', false);
       msg.add('id', fcid);
       TBroadcastMsg.SendMsg(msg);

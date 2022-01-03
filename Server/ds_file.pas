@@ -34,6 +34,13 @@ type
     FolderList: TFDQuery;
     UpdateParentQry: TFDQuery;
     UpdateGrpQry: TFDQuery;
+    DeleteHistQry: TFDQuery;
+    FITab: TFDTable;
+    FLTab: TFDTable;
+    LockTrans: TFDTransaction;
+    FileLockInfo: TFDQuery;
+    OnlineTrans: TFDTransaction;
+    OnlineTrans2: TFDTransaction;
   private
     { Private declarations }
     function findFile( dr_id : integer; fname : string) : integer;
@@ -51,13 +58,17 @@ type
     function move        ( data : TJSONObject ) : TJSONObject;
 
     function getFileInfo( data : TJSONObject ) : TJSONObject;
+    function DeleteFileHistory( data : TJSONObject ) : TJSONObject;
+
+    function lock( data : TJSONObject ) : TJSONObject;
+    function unlock( data : TJSONObject ) : TJSONObject;
   end;
 
 implementation
 
 uses
   m_db, Variants, u_json, m_glob_server, Datasnap.DBClient, u_Konst,
-  ServerContainerUnit1, u_folder;
+  ServerContainerUnit1, u_folder, Datasnap.DSSession, Grijjy.CloudLogging;
 
 {%CLASSGROUP 'System.Classes.TPersistent'}
 
@@ -233,10 +244,60 @@ begin
   list.free;
 end;
 
+function TdsFile.DeleteFileHistory(data: TJSONObject): TJSONObject;
+var
+  list: TList<integer>;
+  id  : integer;
+  count : integer;
+begin
+  Result := TJSONObject.Create;
+  if FDTransaction1.Active then
+    FDTransaction1.Rollback;
+
+  id := JInt( data, 'id');
+  FDTransaction1.StartTransaction;
+  DelFileHist.Prepare;
+  DelFileHist.ParamByName('ID').AsInteger := id;
+
+  try
+    list := JArrayToInteger(JArray( data, 'items'));
+    count := 0;
+    for id in list do begin
+      DelFileHist.ParamByName('version').AsInteger := id;
+      DelFileHist.ExecSQL;
+      inc(Count, DelFileHist.RowsAffected);
+    end;
+    JResult( Result, true, Format('%d von %d Dateien gelöscht.', [count, list.Count]));
+    FDTransaction1.Commit;
+    list.Free;
+  except
+    on e : exception do begin
+      JResult(Result, false, e.ToString);
+    end;
+  end;
+  DelFileHist.Unprepare;
+
+  if FDTransaction1.Active then
+    FDTransaction1.Rollback;
+
+end;
+
 function TdsFile.getFileInfo(data: TJSONObject): TJSONObject;
 var
   arr : TJSONArray;
   row : TJSONObject;
+
+  function add( dataset : TDataSet ) : TJSONObject;
+  begin
+    Result := TJSONObject.Create;
+    JReplace(       Result, 'id',        dataset.FieldByName('FI_ID').AsInteger );
+    JReplace(       Result, 'name',      dataset.FieldByName('FI_NAME').AsString);
+    JReplaceDouble( Result, 'created',   dataset.FieldByName('FI_CREATED').AsDateTime);
+    JReplaceDouble( Result, 'todelete',  dataset.FieldByName('FI_TODELETE').AsDateTime);
+    JReplace(       Result, 'user',      dataset.FieldByName('FI_CREATED_BY').AsString);
+    JReplace(       Result, 'size',      dataset.FieldByName('FI_SIZE').AsLargeInt);
+    JReplace(       Result, 'version',   dataset.FieldByName('FI_VERSION').AsInteger );
+  end;
 begin
   Result  := TJSONObject.Create;
   arr     := TJSONArray.Create;
@@ -244,36 +305,110 @@ begin
   FileInfoQry.Open;
   if not FileInfoQry.IsEmpty then begin
     JReplace( Result, 'drid',FileInfoQry.FieldByName('DR_ID').AsInteger);
-    row := TJSONObject.Create;
 
-    JReplace(       row, 'name',      FileInfoQry.FieldByName('FI_NAME').AsString);
-    JReplaceDouble( row, 'created',   FileInfoQry.FieldByName('FI_CREATED').AsDateTime);
-    JReplaceDouble( row, 'todelete',  FileInfoQry.FieldByName('FI_TODELETE').AsDateTime);
-    JReplace(       row, 'user',      FileInfoQry.FieldByName('FI_CREATED_BY').AsString);
-    JReplace(       row, 'size',      FileInfoQry.FieldByName('FI_SIZE').AsLargeInt);
-    JReplace(       row, 'version',   FileInfoQry.FieldByName('FI_VERSION').AsInteger );
-
+    row := add(FileInfoQry);
+    JReplace( row, 'main', true);
     arr.AddElement(row);
   end;
   FileInfoQry.Close;
   FileHistInfo.ParamByName('ID').AsInteger := JInt( data, 'id');
   FileHistInfo.Open;
   while not FileHistInfo.Eof do begin
-    row := TJSONObject.Create;
-
-    JReplace(       row, 'name',      FileHistInfo.FieldByName('FI_NAME').AsString);
-    JReplaceDouble( row, 'created',   FileHistInfo.FieldByName('FI_CREATED').AsDateTime);
-    JReplaceDouble( row, 'todelete',  FileHistInfo.FieldByName('FI_TODELETE').AsDateTime);
-    JReplace(       row, 'user',      FileHistInfo.FieldByName('FI_CREATED_BY').AsString);
-    JReplace(       row, 'size',      FileHistInfo.FieldByName('FI_SIZE').AsLargeInt);
-    JReplace(       row, 'version',   FileHistInfo.FieldByName('FI_VERSION').AsInteger );
-
+    row := add(FileHistInfo);
     arr.AddElement(row);
     FileHistInfo.Next;
   end;
 
   FileHistInfo.Close;
+  FileLockInfo.ParamByName('id').AsInteger  := JInt( data, 'id');
+  FileLockInfo.Open;
+  if not FileLockInfo.IsEmpty then begin
+    row := TJSONObject.Create;
+    JReplace( row, 'stamp', FormatDateTime('dd.mm.yyyy hh:nn', FileLockInfo.FieldByName('FI_STAMP').AsDateTime));
+    JReplace( row, 'user',  FileLockInfo.FieldByName('FI_USER').AsString );
+    JReplace( row, 'host',  FileLockInfo.FieldByName('FI_HOST').AsString );
+
+
+    JReplace( Result, 'lockinfo', row);
+  end;
+  FileLockInfo.Close;
+
   JReplace( Result, 'items', arr);
+end;
+
+function TdsFile.lock(data: TJSONObject): TJSONObject;
+var
+  Session : TDSSession;
+  usid    : integer;
+  list    : TList<integer>;
+  id      : Integer;
+
+  count   : integer;
+  procedure sendInfo;
+  var
+    msg : TJSONObject;
+    arr : TJSONArray;
+  begin
+    msg := TJSONObject.Create;
+    JAction( msg, BRD_FILE_LOCK );
+    JReplace( msg, 'cmd', 'lock');
+    JReplace( msg, 'grid', JInt(data, 'grid'));
+    JReplace( msg, 'drid', JInt(data, 'drid'));
+    arr := IntListToJArray(list);
+
+    JReplace(msg, 'items', arr);
+    ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg);
+  end;
+begin
+  GrijjyLog.EnterMethod(self, 'lock');
+  Result  := TJSONObject.Create;
+  Session := TDSSessionManager.GetThreadSession;
+  count   := 0;
+  usid    := StrToint( Session.GetData('id'));
+  list    := JArrayToInteger(JArray(data, 'items'));
+
+  if LockTrans.Active then
+    LockTrans.Rollback;
+  LockTrans.StartTransaction;
+  FITab.Open;
+  FLTab.Open;
+
+  for id in list do begin
+    if not FLTab.Locate('FI_ID', VarArrayOf([id]), []) then begin
+      try
+        FLTab.Append;
+        FLTab.FieldByName('FI_ID').AsInteger      := id;
+        FLTab.FieldByName('PE_ID').AsInteger      := usid;
+        FLTab.FieldByName('FI_STAMP').AsDateTime  := now;
+        FLTab.FieldByName('FI_USER').AsString     := Session.getData('fullname');
+        FLTab.Post;
+
+        if FITab.Locate('FI_ID', VarArrayOf([id]), []) then begin
+          FITab.Edit;
+          FITab.FieldByName('FI_LOCKED').AsString := 'T';
+          FITab.Post;
+          Inc(count);
+        end;
+      except
+        on e : exception do begin
+          GrijjyLog.Send(e.ToString, Error);
+          FLTab.cancel;
+        end;
+      end;
+    end;
+  end;
+
+
+  LockTrans.Commit;
+
+  FITab.Close;
+  FLTab.Close;
+  JResult( Result, true, format('%d von %d erfolgreich gesperrt', [count, list.Count]));
+
+  sendInfo;
+
+  list.Free;
+  GrijjyLog.ExitMethod(self, 'lock');
 end;
 
 function TdsFile.move(data: TJSONObject): TJSONObject;
@@ -494,6 +629,75 @@ begin
   end;
 end;
 
+function TdsFile.unlock(data: TJSONObject): TJSONObject;
+var
+  Session : TDSSession;
+  usid    : integer;
+  list    : TList<integer>;
+  id      : Integer;
+  count   : integer;
+
+  procedure sendInfo;
+  var
+    msg : TJSONObject;
+    arr : TJSONArray;
+  begin
+    msg := TJSONObject.Create;
+    JAction( msg, BRD_FILE_LOCK );
+    JReplace( msg, 'cmd', 'unlock');
+    JReplace( msg, 'grid', JInt(data, 'grid'));
+    JReplace( msg, 'drid', JInt(data, 'drid'));
+
+    arr := IntListToJArray(list);
+
+    JReplace(msg, 'items', arr);
+    ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg);
+  end;
+begin
+  GrijjyLog.EnterMethod(self, 'unlock');
+  Result  := TJSONObject.Create;
+  Session := TDSSessionManager.GetThreadSession;
+  count   := 0;
+  usid    := StrToint( Session.GetData('id'));
+  list    := JArrayToInteger(JArray(data, 'items'));
+
+  if LockTrans.Active then
+    LockTrans.Rollback;
+  LockTrans.StartTransaction;
+  FITab.Open;
+  FLTab.Open;
+
+  for id in list do begin
+    if FLTab.Locate('FI_ID', VarArrayOf([id]), []) then begin
+      try
+        if (usid=1) or (FLTab.FieldByName('PE_ID').AsInteger = usid) then begin
+          FLTab.Delete;
+          if FITab.Locate('FI_ID', VarArrayOf([id]), []) then begin
+            FITab.Edit;
+            FITab.FieldByName('FI_LOCKED').AsString := 'F';
+            FITab.Post;
+            Inc(count);
+          end;
+        end;
+      except
+        on e : exception do begin
+          GrijjyLog.Send(e.ToString, Error);
+          FLTab.cancel;
+        end;
+      end;
+    end;
+  end;
+
+  LockTrans.Commit;
+
+  FITab.Close;
+  FLTab.Close;
+  JResult( Result, true, format('%d von %d erfolgreich entsperrt', [count, list.Count]));
+  SendInfo;
+  list.Free;
+  GrijjyLog.ExitMethod(self, 'unlock');
+end;
+
 function TdsFile.upload(data: TJSONObject; st: TStream): TJSONObject;
 var
   bst : TStream;
@@ -545,9 +749,11 @@ begin
 
         FileData.Edit;
         FileData.FieldByName('FI_VERSION').AsInteger   :=  FileData.FieldByName('FI_VERSION').AsInteger +1;
+
         bst := FileData.CreateBlobStream( FileData.FieldByName('FI_DATA'), bmWrite);
         GM.CopyStream( st, bst);
         bst.Free;
+
         FileData.FieldByName('FI_CREATED').AsDateTime  := now;
         FileData.FieldByName('FI_CREATED_BY').AsString := GM.getNameFromSession;
         FileData.FieldByName('FI_SIZE').AsLargeInt     := JInt64( data, 'size');

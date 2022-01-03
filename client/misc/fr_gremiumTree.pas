@@ -18,6 +18,7 @@ type
     procedure TVDragOver(Sender, Source: TObject; X, Y: Integer;
       State: TDragState; var Accept: Boolean);
     procedure Ablageffnen1Click(Sender: TObject);
+    procedure TVDblClick(Sender: TObject);
   private
     m_list : array of TGremium;
     procedure buildTree( data : TJSONObject );
@@ -194,6 +195,11 @@ begin
   gr := TGremium(TV.Selected.Data);
   PostMessage( Application.MainFormHandle, msgFilterTasks,0, gr.ID );
   PostMessage( Application.MainFormHandle, msgUpdateGremium, 0, gr.ID);
+end;
+
+procedure TGremiumTreeFrame.TVDblClick(Sender: TObject);
+begin
+  Ablageffnen1Click(Sender);
 end;
 
 procedure TGremiumTreeFrame.TVDragOver(Sender, Source: TObject; X, Y: Integer;

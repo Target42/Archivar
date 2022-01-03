@@ -111,7 +111,7 @@ begin
 
   EventHandler.Register( self, handle_update, BRD_FILE_CACHE_UPT );
   EventHandler.Register( self, handle_delete, BRD_FILE_CACHE_DEL );
-  EventHandler.Register( self, handle_lock,   BRD_FILE_LOCK);
+  EventHandler.Register( self, handle_lock,   BRD_FILE_CACHE_LOCK);
 end;
 
 procedure TFileCacheMod.DataModuleDestroy(Sender: TObject);

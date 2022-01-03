@@ -13,6 +13,7 @@ type
   TDBMod = class(TDataModule)
     ArchivarConnection: TFDConnection;
     FDTransaction1: TFDTransaction;
+    FDManager1: TFDManager;
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
   private
@@ -53,12 +54,12 @@ begin
   db := IniOptions.DBhost+':'+IniOptions.DBdb;
   GrijjyLog.Send('db name', db);
 
+//  ArchivarConnection.ConnectionDefName := 'Archivar_pooled';
   ArchivarConnection.Params.Clear;
   ArchivarConnection.DriverName := 'FB';
   ArchivarConnection.LoginPrompt := false;
   with ArchivarConnection.Params as TFDPhysFBConnectionDefParams do
   begin
-
     Protocol  := ipTCPIP;
     Server    := IniOptions.DBhost;
     Database  := IniOptions.DBdb;
@@ -66,6 +67,7 @@ begin
     Password  := IniOptions.DBpwd;
     SQLDialect:= 3;
     PageSize  := ps4096;
+//    Pooled    := true;
   end;
 
   try

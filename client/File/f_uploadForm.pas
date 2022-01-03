@@ -75,11 +75,11 @@ begin
         if Assigned(fs) then
         begin
           req := TJSONObject.Create;
-          JReplace( req, 'fname', DataTab.FieldByName('FNAME').AsString);
-          JReplace( req, 'todelete', m_map[DataTab.FieldByName('FD_ID').AsInteger]);
-          JReplace( req, 'type', '');
-          JReplace( req, 'drid', m_drid );
-          JReplace( req, 'size', fs.Size );
+          JReplace( req, 'fname',     DataTab.FieldByName('FNAME').AsString);
+          JReplace( req, 'todelete',  m_map[DataTab.FieldByName('FD_ID').AsInteger]);
+          JReplace( req, 'type',      '');
+          JReplace( req, 'drid',      m_drid );
+          JReplace( req, 'size',      fs.Size );
 
           res := client.upload(req, fs);
           DataTab.Edit;

@@ -4,8 +4,8 @@ object dsFile: TdsFile
   Width = 819
   object ListFilesQry: TDataSetProvider
     DataSet = ListFiles
-    Left = 96
-    Top = 248
+    Left = 40
+    Top = 328
   end
   object FDTransaction1: TFDTransaction
     Connection = DBMod.ArchivarConnection
@@ -14,12 +14,12 @@ object dsFile: TdsFile
   end
   object ListFiles: TFDQuery
     Connection = DBMod.ArchivarConnection
-    Transaction = FDTransaction1
+    Transaction = OnlineTrans
     SQL.Strings = (
       'select * FROM FI_FILE'
       'where dr_id = :dr_id')
-    Left = 88
-    Top = 184
+    Left = 32
+    Top = 280
     ParamData = <
       item
         Name = 'DR_ID'
@@ -34,7 +34,7 @@ object dsFile: TdsFile
       'select * FROM FI_FILE'
       'where dr_id = :dr_id')
     Left = 32
-    Top = 184
+    Top = 176
     ParamData = <
       item
         Name = 'DR_ID'
@@ -54,16 +54,16 @@ object dsFile: TdsFile
     UpdateOptions.UpdateTableName = 'FI_FILE'
     TableName = 'FI_FILE'
     Left = 32
-    Top = 136
+    Top = 120
   end
   object ListFolder: TFDQuery
     Connection = DBMod.ArchivarConnection
-    Transaction = FDTransaction1
+    Transaction = OnlineTrans
     SQL.Strings = (
       'SELECT * FROM DR_DIR'
       'where DR_group = :grp')
-    Left = 168
-    Top = 200
+    Left = 112
+    Top = 280
     ParamData = <
       item
         Name = 'GRP'
@@ -73,15 +73,15 @@ object dsFile: TdsFile
   end
   object ListFolderQry: TDataSetProvider
     DataSet = ListFolder
-    Left = 168
-    Top = 248
+    Left = 112
+    Top = 328
   end
   object DirTab: TFDTable
     Connection = DBMod.ArchivarConnection
     Transaction = FDTransaction1
     UpdateOptions.UpdateTableName = 'DR_DIR'
     TableName = 'DR_DIR'
-    Left = 160
+    Left = 104
     Top = 136
   end
   object ListChilds: TFDQuery
@@ -133,12 +133,19 @@ object dsFile: TdsFile
     SQL.Strings = (
       'DELETE FROM FH_FILE_HIST a '
       'WHERE'
-      '    a.FI_ID = :id')
+      '    a.FI_ID = :id'
+      'and'
+      '  a.FI_VERSION = :version')
     Left = 304
     Top = 232
     ParamData = <
       item
         Name = 'ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end
+      item
+        Name = 'VERSION'
         DataType = ftInteger
         ParamType = ptInput
       end>
@@ -299,5 +306,69 @@ object dsFile: TdsFile
         DataType = ftInteger
         ParamType = ptInput
       end>
+  end
+  object DeleteHistQry: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Transaction = FDTransaction1
+    SQL.Strings = (
+      'DELETE FROM FH_FILE_HIST a '
+      'WHERE'
+      '    a.FI_ID = :id')
+    Left = 416
+    Top = 184
+    ParamData = <
+      item
+        Name = 'ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+  end
+  object FITab: TFDTable
+    Connection = DBMod.ArchivarConnection
+    Transaction = LockTrans
+    UpdateOptions.UpdateTableName = 'FI_FILE'
+    TableName = 'FI_FILE'
+    Left = 488
+    Top = 336
+  end
+  object FLTab: TFDTable
+    Connection = DBMod.ArchivarConnection
+    Transaction = LockTrans
+    UpdateOptions.UpdateTableName = 'FI_LOCK'
+    TableName = 'FI_LOCK'
+    Left = 560
+    Top = 336
+  end
+  object LockTrans: TFDTransaction
+    Connection = DBMod.ArchivarConnection
+    Left = 624
+    Top = 344
+  end
+  object FileLockInfo: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Transaction = FDTransaction1
+    SQL.Strings = (
+      'SELECT *'
+      'FROM FI_LOCK a '
+      'WHERE'
+      '    a.FI_ID = :id')
+    Left = 336
+    Top = 320
+    ParamData = <
+      item
+        Name = 'ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+  end
+  object OnlineTrans: TFDTransaction
+    Connection = DBMod.ArchivarConnection
+    Left = 40
+    Top = 392
+  end
+  object OnlineTrans2: TFDTransaction
+    Connection = DBMod.ArchivarConnection
+    Left = 112
+    Top = 392
   end
 end

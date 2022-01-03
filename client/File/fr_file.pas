@@ -41,6 +41,8 @@ type
     LV: TListView;
     ImageList1: TImageList;
     BitBtn1: TBitBtn;
+    BitBtn2: TBitBtn;
+    BitBtn3: TBitBtn;
     procedure Button1Click(Sender: TObject);
     procedure JvDragDrop1Drop(Sender: TObject; Pos: TPoint; Value: TStrings);
     procedure Button2Click(Sender: TObject);
@@ -70,6 +72,8 @@ type
       Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: Boolean;
       var ImageIndex: TImageIndex);
     procedure BitBtn1Click(Sender: TObject);
+    procedure BitBtn2Click(Sender: TObject);
+    procedure BitBtn3Click(Sender: TObject);
   private
     type
       PTFolderRec = ^TFolderRec;
@@ -117,6 +121,7 @@ type
     function handle_folder_del( const arg : TJSONObject ) : boolean;
     function handle_folder_ren( const arg : TJSONObject ) : boolean;
     function handle_folder_upd( const arg : TJSONObject ) : boolean;
+    function handle_file_lock ( const arg : TJSONObject ) : boolean;
 
     function getFileList    : TJSONObject;
   end;
@@ -233,6 +238,69 @@ begin
   FileInfoForm.free;
 end;
 
+procedure TFileFrame.BitBtn2Click(Sender: TObject);
+var
+  req, res  : TJSONObject;
+  arr       : TJSONArray;
+  i         : integer;
+  client    : TdsFileClient;
+begin
+  Req := TJSONObject.Create;
+  arr := TJSONArray.Create;
+  JReplace( req, 'grid', m_grid );
+  JReplace( req, 'drid', m_curDir );
+
+  for i := 0 to pred(LV.Items.Count) do begin
+    if LV.Items.Item[i].Checked then begin
+      arr.AddElement(TJSONNumber.Create(integer( LV.Items.Item[i].Data)));
+    end;
+  end;
+  if (arr.Count = 0) and Assigned(LV.Selected) then
+    arr.AddElement(TJSONNumber.Create(integer( LV.Selected.Data)));
+
+  JReplace( req, 'items', arr);
+
+  client := TdsFileClient.Create(GM.SQLConnection1.DBXConnection);
+  try
+    Res := client.lock(req);
+    ShowResult( res, true);
+  except
+
+  end;
+  client.Free;
+end;
+
+procedure TFileFrame.BitBtn3Click(Sender: TObject);
+var
+  req, res  : TJSONObject;
+  arr       : TJSONArray;
+  i         : integer;
+  client    : TdsFileClient;
+begin
+  Req := TJSONObject.Create;
+  arr := TJSONArray.Create;
+  JReplace( req, 'grid', m_grid );
+  JReplace( req, 'drid', m_curDir );
+
+  for i := 0 to pred(LV.Items.Count) do begin
+    if LV.Items.Item[i].Checked then begin
+      arr.AddElement(TJSONNumber.Create(integer( LV.Items.Item[i].Data)));
+    end;
+  end;
+    if (arr.Count = 0) and Assigned(LV.Selected) then
+    arr.AddElement(TJSONNumber.Create(integer( LV.Selected.Data)));
+  JReplace( req, 'items', arr);
+
+  client := TdsFileClient.Create(GM.SQLConnection1.DBXConnection);
+  try
+    Res := client.unlock(req);
+    ShowResult( res, true);
+  except
+
+  end;
+  client.Free;
+end;
+
 procedure TFileFrame.buildTree;
 var
   ptr    : PTFolderRec;
@@ -249,6 +317,7 @@ procedure TFileFrame.Button1Click(Sender: TObject);
 begin
   if ListFilesQry.ReadOnly then
     exit;
+
   if OpenDialog1.Execute then
   begin
     showUploadForm( OpenDialog1.Files );
@@ -404,9 +473,42 @@ begin
   Result := ListFilesQry.ReadOnly;
 end;
 
-function TFileFrame.handle_folder_del(const arg: TJSONObject): boolean;
+function TFileFrame.handle_file_lock(const arg: TJSONObject): boolean;
+var
+  list   : TList<Integer>;
+  locked : boolean;
+  i      : integer;
 begin
   Result := false;
+  if (m_grid <> JInt( arg, 'grid')) or (m_curDir <> JInt(arg, 'drid')) then
+    exit;
+
+  locked  := SameText(JString( arg, 'cmd'), 'lock');
+  list    := JArrayToInteger( JArray(arg, 'items'));
+  for i := 0 to pred(LV.Items.Count) do begin
+    if list.IndexOf(Integer(LV.Items.Item[i].Data)) > -1 then begin
+      if locked then
+        LV.Items.Item[i].SubItems.Strings[4] := 'Ja'
+      else
+        LV.Items.Item[i].SubItems.Strings[4] := '';
+      LV.Items.Item[i].Checked := false;
+    end;
+  end;
+  list.Free;
+
+  Result  := true;
+end;
+
+function TFileFrame.handle_folder_del(const arg: TJSONObject): boolean;
+var
+  grp : integer;
+begin
+  Result := false;
+  grp := JInt( arg, 'grid');
+  if m_grid <> grp then
+    exit;
+
+  Result := true;
 end;
 
 function TFileFrame.handle_folder_new(const arg: TJSONObject): boolean;
@@ -475,6 +577,8 @@ begin
   end else begin
     updateTree;
   end;
+  Result := true;
+
 end;
 
 procedure TFileFrame.JvDragDrop1Drop(Sender: TObject; Pos: TPoint;
@@ -512,6 +616,7 @@ begin
   EventHandler.Register( self, handle_folder_del,   BRD_FOLDER_DEL );
   EventHandler.Register( self, handle_folder_ren,   BRD_FOLDER_REN );
   EventHandler.Register( self, handle_folder_upd,   BRD_FOLDER_UPDATE );
+  EventHandler.Register( self, handle_file_lock,    BRD_FILE_LOCK);
 end;
 
 procedure TFileFrame.release;
@@ -614,7 +719,12 @@ begin
       item.SubItems.Add(FormatDateTime('dd.mm.yyyy', FieldByName('FI_TODELETE').AsDateTime));
       item.SubItems.Add(FieldByName('FI_VERSION').AsString);
       item.SubItems.Add(FieldByName('FI_CREATED_BY').AsString);
+      if FieldByName('FI_LOCKED').AsString = 'T' then
+        item.SubItems.Add('Ja')
+      else
+        item.SubItems.Add('');
       item.Data := Pointer(FieldByName('FI_ID').AsInteger);
+
       next;
     end;
     close;
