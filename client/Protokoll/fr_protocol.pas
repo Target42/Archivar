@@ -7,7 +7,7 @@ uses
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Buttons, Vcl.ComCtrls,
   Vcl.StdCtrls, System.ImageList, Vcl.ImgList, Vcl.Menus, System.Actions,
   Vcl.ActnList, Vcl.OleCtrls, SHDocVw, i_chapter, i_beschluss, u_renderer,
-  m_taskLoader, f_titel_edit;
+  m_taskLoader, f_titel_edit, System.Generics.Collections;
 
 type
   TProtocolFrame = class(TFrame)
@@ -88,6 +88,8 @@ type
     m_ro            : boolean;
     m_TitelEditform : TTitelEditform;
 
+    m_map           : TDictionary<TTreeNode, TEntry>;
+
     // selected
     m_sel_type  : TEntryType;
     m_sel_id    : integer;
@@ -163,7 +165,8 @@ begin
   if m_proto.ReadOnly or not Assigned(TV.Selected) then
     exit;
 
-  en := TEntry(TV.Selected.Data);
+  if not m_map.TryGetValue(TV.Selected, en) then exit;
+
   if not(en.Typ in [etTask, etChapterText]) then
     exit;
 
@@ -193,16 +196,14 @@ var
   en  : TEntry;
   cp  : IChapter;
 begin
-  if m_proto.ReadOnly or not Assigned(TV.Selected) then
-    exit;
-  en := TEntry(TV.Selected.Data);
-  if not(en.Typ = etBeschluss) then
-    exit;
+  if m_proto.ReadOnly or not Assigned(TV.Selected)  then exit;
+  if not m_map.TryGetValue(tv.Selected, en)         then exit;
+  if not(en.Typ = etBeschluss)                      then exit;
+
   be := IBeschluss(en.Ptr);
 
-  en := TEntry(TV.Selected.Parent.Data);
-  if not (en.Typ in [etTask, etChapterText]) then
-    exit;
+  if not m_map.TryGetValue(TV.Selected.Parent, en)  then exit;
+  if not (en.Typ in [etTask, etChapterText])        then exit;
   cp := IChapter( en.Ptr);
 
   m_proto.SyncUser( be, false );
@@ -228,22 +229,16 @@ var
   pen: TEntry;
   cp: IChapter;
 begin
-  if m_proto.ReadOnly or not Assigned(TV.Selected) then
-    exit;
-  en := TEntry(TV.Selected.Data);
-  if not(en.Typ = etBeschluss) then
-    exit;
+  if m_proto.ReadOnly                               then exit;
+  if not m_map.TryGetValue(TV.Selected, en)         then exit;
+  if not(en.Typ = etBeschluss)                      then exit;
   be := IBeschluss(en.Ptr);
 
-  if not Assigned(TV.Selected.Parent) then
-    exit;
-  pen := TEntry(TV.Selected.Parent.Data);
-  if not(pen.Typ in [etTask, etTitle]) then
-    exit;
+  if not m_map.TryGetValue(TV.Selected.Parent, pen) then exit;
+  if not(pen.Typ in [etTask, etTitle])              then exit;
 
   if not(MessageDlg('Soll der Beschluss wirklich gelöscht werden?',
-    mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
-    exit;
+    mtConfirmation, [mbYes, mbNo], 0) = mrYes)      then exit;
 
   cp.Votes.delete(be);
 
@@ -257,15 +252,14 @@ var
   en: TEntry;
 begin
   Node := TV.Selected;
-  if (Node = NIL) then
-    exit;
+  if (Node = NIL) then  exit;
+
   if not(MessageDlg('Soll das Kapitel gelöscht werden?', mtConfirmation,
     [mbYes, mbNo], 0) = mrYes) then
     exit;
 
   en := findNode(Node, etTitle);
-  if not Assigned(en) then
-    exit;
+  if not Assigned(en) then exit;
 
   cp := IChapterTitle(en.Ptr);
   m_proto.Chapter.remove(cp);
@@ -281,12 +275,10 @@ var
   en: TEntry;
 begin
   Node := TV.Selected;
-  if (Node = NIL) then
-    exit;
+  if (Node = NIL) then exit;
 
   en := findNode(Node, etTitle);
-  if not Assigned(en) then
-    exit;
+  if not Assigned(en) then exit;
 
   cp := IChapterTitle(en.Ptr);
   cp.down;
@@ -303,12 +295,10 @@ var
   en: TEntry;
 begin
   Node := TV.Selected;
-  if (Node = NIL) then
-    exit;
+  if (Node = NIL) then exit;
 
   en := findNode(Node, etTitle);
-  if not Assigned(en) then
-    exit;
+  if not Assigned(en) then exit;
 
   cp := IChapterTitle(en.Ptr);
   m_TitelEditform.TitelText := cp.Text;
@@ -329,15 +319,12 @@ var
   en: TEntry;
 begin
   Node := TV.Selected;
-  if (Node = NIL) then
-    exit;
+  if (Node = NIL) then exit;
 
   en := findNode(Node, etTitle);
-  if not Assigned(en) then
-    exit;
+  if not Assigned(en) then exit;
 
   cp := IChapterTitle(en.Ptr);
-
   if m_proto.Modified then
   begin
     m_proto.saveTree;
@@ -360,10 +347,7 @@ var
   ChapterEditForm : TChapterEditForm;
   upd : boolean;
 begin
-  if not Assigned(TV.Selected) then
-    exit;
-
-  en := TEntry( TV.Selected.Data );
+  if not m_map.TryGetValue(tv.Selected, en) then exit;
   cp := IChapter(en.ptr);
 
   if  en.Typ =  etChapterText then begin
@@ -385,8 +369,6 @@ begin
   begin
     updateCpList
   end;
-
-
 end;
 
 procedure TProtocolFrame.ac_upExecute(Sender: TObject);
@@ -396,12 +378,10 @@ var
   en: TEntry;
 begin
   Node := TV.Selected;
-  if (Node = NIL) then
-    exit;
+  if (Node = NIL) then  exit;
 
   en := findNode(Node, etTitle);
-  if not Assigned(en) then
-    exit;
+  if not Assigned(en) then   exit;
 
   cp := IChapterTitle(en.Ptr);
   cp.up;
@@ -430,8 +410,9 @@ procedure TProtocolFrame.buildTree(root: TTreeNode; ct: IChapterTitle);
     begin
       be := cp.Votes.Item[j];
       en := TEntry.create(be);
+      sub := TV.Items.AddChild(root, 'Beschluss: ' + be.Titel);
 
-      sub := TV.Items.AddChildObject(root, 'Beschluss: ' + be.Titel, en);
+      m_map.Add(sub, en);
       case be.Status of
         bsGeplant:
           setInx(sub, 6);
@@ -456,7 +437,8 @@ procedure TProtocolFrame.buildTree(root: TTreeNode; ct: IChapterTitle);
     begin
       cp := Items.Items[j];
       en := TEntry.create(cp);
-      Node := TV.Items.AddChildObject(root, cp.fullTitle, en);
+      Node := TV.Items.AddChild(root, cp.fullTitle);
+      m_map.Add(node, en);
       if Items.Items[j].TAID > 0 then
         setInx(Node, 1)
       else
@@ -476,16 +458,12 @@ end;
 
 procedure TProtocolFrame.clearTree;
 var
-  i: integer;
+  p : TPair<TTreeNode, TEntry>;
 begin
-  for i := 0 to pred(TV.Items.Count) do
-  begin
-    if Assigned(TV.Items.Item[i].Data) then
-    begin
-      TEntry(TV.Items.Item[i].Data).Free;
-      TV.Items.Item[i].Data := NIL;
-    end;
-  end;
+  for p in m_map do
+    p.Value.Free;
+
+  m_map.Clear;
   TV.Items.Clear;
 end;
 
@@ -497,7 +475,8 @@ begin
 
   while Assigned(Node) do
   begin
-    en := TEntry(Node.Data);
+    if not m_map.TryGetValue(node, en) then exit;
+
     if en.Typ = Typ then
     begin
       Result := en;
@@ -519,6 +498,7 @@ end;
 
 procedure TProtocolFrame.init;
 begin
+  m_map       := TDictionary<TTreeNode, TEntry>.create;
   FBrowser    := NIL;
   m_proto     := NIL;
   m_renderer  := TProtocolRenderer.create;
@@ -537,9 +517,11 @@ end;
 
 procedure TProtocolFrame.release;
 begin
-  m_proto := NIL;
-  m_renderer.Free;
   cleartree;
+
+  m_map.Free;
+  m_proto   := NIL;
+  m_renderer.Free;
 end;
 
 procedure TProtocolFrame.restoreSelected;
@@ -551,9 +533,7 @@ begin
     exit;
 
   for i := 0 to pred(tv.Items.Count) do begin
-    en := TEntry( tv.Items.Item[i].Data);
-
-    if Assigned(en) then begin
+    if m_map.TryGetValue(tv.Items.Item[i], en ) then begin
       if en.Typ = m_sel_type then begin
         case en.Typ of
           etNothing:      TV.Selected := tv.Items.Item[i];
@@ -577,20 +557,16 @@ begin
   m_sel_id    := 0;
   m_sel_type  := etNothing;
 
-  if not Assigned(Tv.Selected) or not Assigned( TV.Selected.Data) then
-    exit;
-
-  en := TEntry(TV.Selected.Data);
-
-  m_sel_type := en.Typ;
-  case en.Typ of
-    etNothing     : m_sel_id  := 0;
-    etChapterText : m_sel_id  := IChapter(en.Ptr).ID;
-    etTask        : m_sel_id  := IChapter(en.Ptr).ID;
-    etBeschluss   : m_sel_id  := IBeschluss(en.Ptr).ID;
-    etTitle       : m_sel_id  := IChapterTitle(en.Ptr).ID;
+  if m_map.TryGetValue(tv.selected, en) then begin
+    m_sel_type := en.Typ;
+    case en.Typ of
+      etNothing     : m_sel_id  := 0;
+      etChapterText : m_sel_id  := IChapter(en.Ptr).ID;
+      etTask        : m_sel_id  := IChapter(en.Ptr).ID;
+      etBeschluss   : m_sel_id  := IBeschluss(en.Ptr).ID;
+      etTitle       : m_sel_id  := IChapterTitle(en.Ptr).ID;
+    end;
   end;
-
 end;
 
 function TProtocolFrame.SelectBeschlus(id: integer): boolean;
@@ -601,13 +577,13 @@ var
 begin
   Result := false;
   for i := 0 to pred(TV.Items.Count) do begin
-    en := TEntry( TV.Items.Item[i].Data );
-
-    if en.Typ = etBeschluss then begin
-      be := IBeschluss(en.Ptr);
-      if be.ID = id then begin
-        TV.Selected := TV.Items.Item[i];
-        break;
+    if m_map.TryGetValue(TV.Items.Item[i], en) then begin
+      if en.Typ = etBeschluss then begin
+        be := IBeschluss(en.Ptr);
+        if be.ID = id then begin
+          TV.Selected := TV.Items.Item[i];
+          break;
+        end;
       end;
     end;
   end;
@@ -615,14 +591,15 @@ end;
 
 procedure TProtocolFrame.SetProtocol(const Value: IProtocol);
 begin
+  if not Assigned(value) then
+    TV.Selected := NIL;
+
   saveSelected;
 
   m_proto := value;
 
   updateCpList;
-
   restoreSelected;
-
 end;
 
 procedure TProtocolFrame.SetReadOnly(const Value: boolean);
@@ -676,10 +653,7 @@ var
       FonBeschlusChange(cp.Votes.Item[0]);
   end;
 begin
-  if not Assigned(TV.Selected) or not Assigned(TV.Selected.Data) then
-    exit;
-  en := TEntry(TV.Selected.Data);
-
+  if not m_map.TryGetValue(Tv.Selected, en) then exit;
   if Assigned(FonBeschlusChange) and FMeetingMode then
     FonBeschlusChange(nil);
 
@@ -712,7 +686,8 @@ begin
   if m_ro  or not Assigned(tv.Selected) then
     exit;
 
-  en := TEntry(TV.Selected.Data);
+  if not m_map.TryGetValue(tv.Selected, en) then exit;
+
   case en.Typ of
     etChapterText : ac_edit_task.Execute;
     etTask        : ac_edit_task.Execute;
@@ -736,40 +711,48 @@ var
   end;
 
 begin
-  old := NIL;
+  old   := NIL;
+  root  := NIL;
+
   Screen.Cursor := crHourGlass;
+
   TV.Items.BeginUpdate;
   try
     if Assigned(TV.Selected) and not Assigned(TV.Selected.Parent) then
     begin
-      en  := TV.Selected.Data;
+      en := m_map[ TV.Selected ];
       old := IChapterTitle(en.Ptr);
     end;
 
     clearTree;
+    if Assigned(m_proto) then begin
+      en   := TEntry.create;
+      root := TV.Items.AddChild(NIL, 'Dokument');
+      m_map.Add(root, en);
+      setIndex(root, 7);
 
-    en   := TEntry.create;
-    root := TV.Items.AddChildObject(NIL, 'Dokument', en);
-    setIndex(root, 7);
+      for i := 0 to pred(m_proto.Chapter.Count) do
+      begin
+        cp := m_proto.Chapter.Items[i];
+        en := TEntry.create(cp);
 
-    for i := 0 to pred(m_proto.Chapter.Count) do
-    begin
-      cp := m_proto.Chapter.Items[i];
-      en := TEntry.create(cp);
-      Node := TV.Items.AddChildObject(root, cp.fullTitle, en);
-      setIndex(Node, 0);
+        Node := TV.Items.AddChild(root, cp.fullTitle);
+        m_map.Add(node, en );
+        setIndex(Node, 0);
 
-      buildTree(Node, cp);
+        buildTree(Node, cp);
 
-      if cp = old then
-        TV.Selected := Node;
+        if cp = old then
+          TV.Selected := Node;
 
+      end;
     end;
   finally
     TV.Items.EndUpdate;
     Screen.Cursor := crDefault;
   end;
-  root.Expand(true);
+  if Assigned(root) then
+    root.Expand(true);
 end;
 
 { TProtocolFrame.TEntry }

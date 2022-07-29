@@ -33,17 +33,19 @@ object MeetingProtoForm: TMeetingProtoForm
     Align = alBottom
     AutoSize = True
     TabOrder = 0
-    ExplicitLeft = 184
-    ExplicitTop = 40
+    ExplicitTop = 397
+    ExplicitWidth = 635
     inherited StatusBar1: TStatusBar
       Width = 635
       ExplicitWidth = 635
     end
     inherited Panel1: TPanel
       Width = 635
+      ExplicitWidth = 635
       inherited OKBtn: TBitBtn
         Left = 536
         Enabled = False
+        ExplicitLeft = 536
       end
     end
   end
@@ -64,10 +66,14 @@ object MeetingProtoForm: TMeetingProtoForm
       TabOrder = 0
       ExplicitLeft = 2
       ExplicitTop = 15
+      ExplicitWidth = 631
+      ExplicitHeight = 200
       inherited TV: TTreeView
         Width = 631
         Height = 200
         OnChange = GremiumFrame1TVChange
+        ExplicitWidth = 631
+        ExplicitHeight = 200
       end
     end
   end
@@ -79,10 +85,6 @@ object MeetingProtoForm: TMeetingProtoForm
     Align = alClient
     Caption = 'Protokolle'
     TabOrder = 2
-    ExplicitLeft = 40
-    ExplicitTop = 240
-    ExplicitWidth = 185
-    ExplicitHeight = 105
     object DBGrid1: TDBGrid
       Left = 2
       Top = 15
@@ -122,16 +124,17 @@ object MeetingProtoForm: TMeetingProtoForm
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsMeeing'
+    Connected = True
     SQLConnection = GM.SQLConnection1
-    Left = 48
+    Left = 56
     Top = 32
   end
   object ProtoQry: TClientDataSet
     Aggregates = <>
     Params = <
       item
-        DataType = ftInteger
-        Name = 'gr_id'
+        DataType = ftUnknown
+        Name = 'GR_ID'
         ParamType = ptInput
       end>
     ProviderName = 'ListProtocolQry'

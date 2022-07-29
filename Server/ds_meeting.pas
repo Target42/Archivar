@@ -25,9 +25,7 @@ type
     ProtoQry: TFDQuery;
     CPTab: TFDQuery;
     CTTab: TFDQuery;
-    GrPeQry: TFDQuery;
     LastDocQry: TFDQuery;
-    DelELQry: TFDQuery;
     FrindELQry: TFDQuery;
     SetReadQry: TFDQuery;
     UpdateTnQry: TFDQuery;
@@ -35,12 +33,12 @@ type
     ChangeELPEStatusQry: TFDQuery;
     PRTable: TFDTable;
     ElTable: TFDTable;
-    ELPETab: TFDTable;
     AutoIncQry: TFDQuery;
     ListProtocol: TFDQuery;
     Teilnehmer: TFDQuery;
     Gaeste: TFDQuery;
     OptTn: TFDQuery;
+    DelELQry: TFDQuery;
   private
     procedure updateMeeting( el_id : integer );
   public
@@ -458,21 +456,6 @@ begin
     ElTable.FieldByName('PR_ID').AsInteger      := prid;
     ElTable.FieldByName('PE_ID').AsInteger      := peid;
     ElTable.Post;
-
-    ELPETab.Open;
-
-    GrPeQry.ParamByName('PR_ID').AsInteger := prid;
-    GrPeQry.Open;
-    while not GrPeQry.Eof do
-    begin
-      ELPETab.Append;
-      ELPETab.FieldByName('EL_ID').AsInteger := id;
-      ELPETab.FieldByName('PE_ID').AsInteger := GrPeQry.FieldByName('PE_ID').AsInteger;
-      ELPETab.Post;
-      GrPeQry.Next;
-    end;
-    GrPeQry.Close;
-    ELPETab.Close;
 
     JReplace( Result, 'id', id);
     JResult( Result, true, 'Eine neue Sitzung wurde angelegt.');

@@ -14,17 +14,18 @@ type
     CPTextTab: TClientDataSet;
     UpdateCPQry: TClientDataSet;
     TNTab: TClientDataSet;
+    TGTab: TClientDataSet;
+    BETab: TClientDataSet;
     TNTabPR_ID: TIntegerField;
     TNTabTN_ID: TIntegerField;
-    TNTabTN_NAME: TWideStringField;
-    TNTabTN_VORNAME: TWideStringField;
-    TNTabTN_DEPARTMENT: TWideStringField;
-    TNTabTN_ROLLE: TWideStringField;
+    TNTabTN_NAME: TStringField;
+    TNTabTN_VORNAME: TStringField;
+    TNTabTN_DEPARTMENT: TStringField;
+    TNTabTN_ROLLE: TStringField;
     TNTabTN_STATUS: TIntegerField;
     TNTabPE_ID: TIntegerField;
-    TGTab: TClientDataSet;
-    TNTabTN_GRUND: TWideStringField;
-    BETab: TClientDataSet;
+    TNTabTN_GRUND: TStringField;
+    TNTabTN_READ: TSQLTimeStampField;
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
     procedure TNTabBeforePost(DataSet: TDataSet);
@@ -129,14 +130,12 @@ end;
 procedure TProtocolMod.SetReadOnly(const Value: boolean);
 begin
   m_readOnly := value;
-
 end;
 
 procedure TProtocolMod.TGTabBeforePost(DataSet: TDataSet);
 begin
   if DataSet.FieldByName('TG_ID').AsInteger = 0 then
     DataSet.FieldByName('TG_ID').AsInteger := GM.autoInc('gen_tg_id');
-
 end;
 
 procedure TProtocolMod.TNTabBeforePost(DataSet: TDataSet);

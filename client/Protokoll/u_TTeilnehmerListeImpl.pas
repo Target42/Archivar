@@ -19,7 +19,7 @@ type
 
 
       function getByID( id : integer ) : ITeilnehmer;
-      function getByPEID( id : integer ) : ITeilnehmer;
+
 
       procedure clear;
     public
@@ -32,6 +32,7 @@ type
       procedure saveChanged;
 
       function newTeilnehmer : ITeilnehmer;
+      function getByPEID( id : integer ) : ITeilnehmer;
 
       procedure release;
 
@@ -136,13 +137,13 @@ begin
     begin
       t           := newTeilnehmer;
       t.ID        := TNTabTN_ID.Value;
-      t.Name      := TNTabTN_NAME.Value;
-      t.Vorname   := TNTabTN_VORNAME.Value;
-      t.Abteilung := TNTabTN_DEPARTMENT.Value;
-      t.Rolle     := TNTabTN_ROLLE.Value;
-      t.Status    := TTeilnehmerStatus(TNTabTN_STATUS.Value);
+      t.Name      := TNTabTN_NAME.AsString;
+      t.Vorname   := TNTabTN_VORNAME.AsString;
+      t.Abteilung := TNTabTN_DEPARTMENT.AsString;
+      t.Rolle     := TNTabTN_ROLLE.AsString;
+      t.Status    := TTeilnehmerStatus(TNTabTN_STATUS.value);
       t.PEID      := TNTabPE_ID.Value;
-      t.Grund     := TNTabTN_GRUND.Value;
+      t.Grund     := TNTabTN_GRUND.AsString;
       t.Modified  := false;
 
       TNTab.Next;
@@ -206,14 +207,14 @@ begin
 
         if (TNTab.State = dsEdit) or  (TNTab.State = dsInsert) then
         begin
-          TNTabPR_ID.Value        := m_proto.ID;
-          TNTabTN_NAME.Value      := t.Name;
-          TNTabTN_VORNAME.Value   := t.Vorname;
-          TNTabTN_DEPARTMENT.Value:= t.Abteilung;
-          TNTabTN_ROLLE.Value     := t.Rolle;
-          TNTabTN_STATUS.Value    := integer(t.Status);
-          TNTabPE_ID.Value        := t.PEID;
-          TNTabTN_GRUND.Value     := t.Grund;
+          TNTabPR_ID.Value            := m_proto.ID;
+          TNTabTN_NAME.AsString       := t.Name;
+          TNTabTN_VORNAME.AsString    := t.Vorname;
+          TNTabTN_DEPARTMENT.AsString := t.Abteilung;
+          TNTabTN_ROLLE.AsString      := t.Rolle;
+          TNTabTN_STATUS.Value        := integer(t.Status);
+          TNTabPE_ID.Value            := t.PEID;
+          TNTabTN_GRUND.AsString      := t.Grund;
           TNTab.Post;
           t.ID := TNTabTN_ID.Value;
         end;

@@ -208,7 +208,8 @@ uses
   f_storage in 'dms\f_storage.pas' {StorageForm},
   f_file_info in 'dws\f_file_info.pas' {FileInfoForm},
   fr_storages in 'dms\fr_storages.pas' {StoragesFrame: TFrame},
-  f_storages in 'dms\f_storages.pas' {StoragesForm};
+  f_storages in 'dms\f_storages.pas' {StoragesForm},
+  f_personen_list in 'Personen\f_personen_list.pas' {PersonenListForm};
 
 {$R *.res}
 
@@ -230,6 +231,5 @@ begin
   Application.CreateForm(TFileCacheMod, FileCacheMod);
   Application.CreateForm(TCryptMod, CryptMod);
   Application.CreateForm(TMainForm, MainForm);
-
   Application.Run;
 end.

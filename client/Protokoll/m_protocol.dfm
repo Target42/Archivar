@@ -73,19 +73,19 @@ object ProtocolMod: TProtocolMod
       FieldName = 'TN_ID'
       Required = True
     end
-    object TNTabTN_NAME: TWideStringField
+    object TNTabTN_NAME: TStringField
       FieldName = 'TN_NAME'
       Size = 100
     end
-    object TNTabTN_VORNAME: TWideStringField
+    object TNTabTN_VORNAME: TStringField
       FieldName = 'TN_VORNAME'
       Size = 100
     end
-    object TNTabTN_DEPARTMENT: TWideStringField
+    object TNTabTN_DEPARTMENT: TStringField
       FieldName = 'TN_DEPARTMENT'
       Size = 25
     end
-    object TNTabTN_ROLLE: TWideStringField
+    object TNTabTN_ROLLE: TStringField
       FieldName = 'TN_ROLLE'
       Size = 50
     end
@@ -95,9 +95,12 @@ object ProtocolMod: TProtocolMod
     object TNTabPE_ID: TIntegerField
       FieldName = 'PE_ID'
     end
-    object TNTabTN_GRUND: TWideStringField
+    object TNTabTN_GRUND: TStringField
       FieldName = 'TN_GRUND'
       Size = 100
+    end
+    object TNTabTN_READ: TSQLTimeStampField
+      FieldName = 'TN_READ'
     end
   end
   object TGTab: TClientDataSet

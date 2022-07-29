@@ -69,6 +69,8 @@ begin
     Writeln('q = quit');
     writeln('o = user online');
     writeln('s = sessions');
+    writeln('l = start logging');
+
 
     // Create the TService descendant manually.
     ServerContainer1 := TServerContainer1.Create(nil);
@@ -83,6 +85,7 @@ begin
 
       if s = 'o' then ServerContainer1.dumpOnlineUser;
       if s = 's' then ServerContainer1.dumpSessions;
+      if s = 'l' then ServerContainer1.startLogging;
 
     until s = 'q';
 

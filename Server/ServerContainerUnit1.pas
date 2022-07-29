@@ -125,6 +125,8 @@ type
 
     procedure dumpOnlineUser;
     procedure dumpSessions;
+
+    procedure startLogging;
   end;
 
 var
@@ -739,6 +741,11 @@ begin
   DBMod.stopDB;
   Stopped := true;
   GrijjyLog.ExitMethod( self, 'ServiceStop');
+end;
+
+procedure TServerContainer1.startLogging;
+begin
+  GrijjyLog.Connect(GrijjyLog.DEFAULT_BROKER, GrijjyLog.Service );
 end;
 
 end.

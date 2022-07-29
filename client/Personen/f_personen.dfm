@@ -190,7 +190,7 @@ object PersonenForm: TPersonenForm
     Height = 168
     Align = alClient
     DataSource = PESrc
-    Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
+    Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgMultiSelect, dgTitleClick, dgTitleHotTrack]
     ReadOnly = True
     TabOrder = 2
     TitleFont.Charset = DEFAULT_CHARSET
@@ -246,7 +246,7 @@ object PersonenForm: TPersonenForm
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsPerson'
-    Left = 56
+    Left = 64
     Top = 32
   end
   object PETab: TClientDataSet

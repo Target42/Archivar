@@ -53,6 +53,9 @@ type
     N4: TMenuItem;
     Panel2: TPanel;
     ProtocolFrame1: TProtocolFrame;
+    PopupMenu1: TPopupMenu;
+    BitBtn3: TBitBtn;
+    BitBtn4: TBitBtn;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -72,6 +75,7 @@ type
     procedure Aktualisieren1Click(Sender: TObject);
     procedure StatusBar1DrawPanel(StatusBar: TStatusBar; Panel: TStatusPanel;
       const Rect: TRect);
+    procedure BitBtn3Click(Sender: TObject);
   private
     m_prid          : integer;
     m_proto         : IProtocol;
@@ -96,6 +100,7 @@ type
     procedure fillStatusMap;
 
     procedure reload;
+    procedure RollChange(Sender: TObject);
   public
     property ID: integer read getID write setID;
     property RO: Boolean read m_ro write setRO;
@@ -111,7 +116,7 @@ uses
   u_berTypes, System.JSON, u_json,
   m_WindowHandler, f_chapter_content, u_gremium, System.UITypes,
   u_ChapterImpl, u_ProtocolImpl, u_speedbutton, f_abwesenheit,
-  f_besucher, f_bechlus;
+  f_besucher, f_bechlus, f_personen_list;
 
 {$R *.dfm}
 { TProtokollForm }
@@ -141,6 +146,7 @@ begin
   else
   begin
     m_locked := true;
+
     reload;
 
     Caption := '*' + m_proto.Title;
@@ -227,13 +233,26 @@ begin
   end;
 end;
 
+procedure TProtokollForm.BitBtn3Click(Sender: TObject);
+begin
+  try
+    Application.CreateForm(TPersonenListForm, PersonenListForm);
+    PersonenListForm.Teilnehmer := m_proto.Teilnehmer;
+    if PersonenListForm.ShowModal = mrOk then begin
+      m_proto.Modified := true;
+      UpdateTN;
+    end;
+  finally
+    PersonenListForm.Free;
+  end;
+end;
+
 procedure TProtokollForm.btnDeleteClick(Sender: TObject);
 var
   i: integer;
   b: IBesucher;
 begin
-  if m_proto.ReadOnly then
-    exit;
+  if m_proto.ReadOnly then exit;
   if not(MessageDlg('Sollen die ausgwewählten Gäste gelöscht werden?',
     mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
     exit;
@@ -360,6 +379,9 @@ begin
 end;
 
 procedure TProtokollForm.FormCreate(Sender: TObject);
+var
+  i : integer;
+  item : TMenuItem;
 begin
   m_statusMap := TDictionary<TTeilnehmerStatus, integer>.create;
 
@@ -376,6 +398,18 @@ begin
   m_prid := 0;
   ProtocolFrame1.init;
   ProtocolFrame1.Browser := WebBrowser1;
+
+  for i := low(arrRolls) to high(arrRolls) do
+  begin
+    item := TMenuItem.Create(PopupMenu1);
+    PopupMenu1.Items.Add(item);
+    item.Tag := i;
+    if i = 0 then
+      item.Caption := 'Rolle entfernen'
+    else
+      item.Caption  := arrRolls[i];
+    item.OnClick    := RollChange;
+  end;
 end;
 
 procedure TProtokollForm.FormDestroy(Sender: TObject);
@@ -384,8 +418,10 @@ begin
 
   WindowHandler.closeProtoclWindow(m_proto.ID);
 
+  ProtocolFrame1.Protocol := NIL;
   m_proto.release;
   m_proto := NIL;
+
   m_statusMap.Free;
   ProtocolFrame1.release;
 end;
@@ -399,8 +435,13 @@ end;
 
 procedure TProtokollForm.reload;
 begin
-  if Assigned(m_proto) then
+  if Assigned(m_proto) then begin
+
+    ProtocolFrame1.Protocol := NIL;
+
     m_proto.release;
+    m_proto := nil;
+  end;
 
   m_proto := TProtocolImpl.create;
 
@@ -411,13 +452,31 @@ begin
     DBEdit2.Text  := IntToStr(m_proto.Nr);
 
     JvDBDateTimePicker1.DateTime := m_proto.Date;
-    ProtocolFrame1.Protocol := m_proto;
+    ProtocolFrame1.Protocol      := m_proto;
 
     UpdateTN;
     UpdateTG;
+
     WebBrowser1.Navigate('about:blank');
   end;
   m_proto.Modified := false;
+end;
+
+procedure TProtokollForm.RollChange(Sender: TObject);
+var
+  roll : string;
+  t: ITeilnehmer;
+begin
+  if not Assigned(TN.Selected) then exit;
+
+  roll    := arrRolls[(Sender as TMenuItem).Tag];
+  t       := ITeilnehmer(TN.Selected.Data);
+  t.Rolle := roll;
+
+  m_proto.Teilnehmer.saveChanged;
+  m_proto.Modified := true;
+
+  UpdateTN;
 end;
 
 procedure TProtokollForm.save;

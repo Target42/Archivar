@@ -22,7 +22,10 @@ type
 
 function TeilnehmerStatusToString( st : TTeilnehmerStatus; ShowAll : boolean = false) : string;
 function StringToTTeilnehmerStatus( value : string ) : TTeilnehmerStatus;
+
 procedure FillTeilnehmerStatusList( list : TStrings );
+procedure FillSubStatus( st : TTeilnehmerStatus; list : TStrings );
+
 
 implementation
 
@@ -81,6 +84,21 @@ begin
     list.AddObject(TeilnehmerStatusToString(i), (TObject(i)));
   end;
 
+end;
+
+procedure FillSubStatus( st : TTeilnehmerStatus; list : TStrings );
+begin
+  case st of
+    tsUnbekannt     : list.Text:=''+sLineBreak;
+    tsVerfuegbar    : list.Text:=''+sLineBreak;
+    tsAnwesend      : list.Text:=''+sLineBreak;
+    tsEntschuldigt  : list.Text:='Urlaub'+sLineBreak+'Schulung'+sLineBreak+'Krank'+sLineBreak+'Verpflichtungen durch den BER'+sLineBreak+'Rechtlich Anerkannter Grund'+sLineBreak;
+    tsEingeladen    : list.Text:=''+sLineBreak+'Keine Antwort'+sLineBreak;
+    tsUnentschuldigt: list.Text:='Privat'+sLineBreak+'Arbeit'+sLineBreak;
+    tsZugesagt      : list.Text:=''+sLineBreak;
+    tsAbgelehnt     : list.Text:=''+sLineBreak+'Privat'+sLineBreak;
+    tsLast          : list.Text:=''+sLineBreak;
+  end;
 end;
 
 end.

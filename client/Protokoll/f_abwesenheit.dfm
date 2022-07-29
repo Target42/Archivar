@@ -3,7 +3,7 @@ object AbwesenForm: TAbwesenForm
   Top = 0
   Caption = 'Abwesenheit'
   ClientHeight = 174
-  ClientWidth = 248
+  ClientWidth = 256
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -32,7 +32,7 @@ object AbwesenForm: TAbwesenForm
   inline BaseFrame1: TBaseFrame
     Left = 0
     Top = 114
-    Width = 248
+    Width = 256
     Height = 60
     Align = alBottom
     AutoSize = True
@@ -40,14 +40,14 @@ object AbwesenForm: TAbwesenForm
     ExplicitTop = 114
     ExplicitWidth = 248
     inherited StatusBar1: TStatusBar
-      Width = 248
-      ExplicitWidth = 248
+      Width = 256
+      ExplicitWidth = 255
     end
     inherited Panel1: TPanel
-      Width = 248
+      Width = 256
       ExplicitWidth = 248
       inherited OKBtn: TBitBtn
-        Left = 149
+        Left = 157
         ExplicitLeft = 149
       end
     end
@@ -55,7 +55,7 @@ object AbwesenForm: TAbwesenForm
   object ComboBox1: TComboBox
     Left = 16
     Top = 75
-    Width = 219
+    Width = 227
     Height = 21
     TabOrder = 1
     Text = 'Krankheit'
@@ -70,9 +70,10 @@ object AbwesenForm: TAbwesenForm
   object ComboBox2: TComboBox
     Left = 16
     Top = 29
-    Width = 219
+    Width = 227
     Height = 21
     TabOrder = 2
     Text = 'ComboBox2'
+    OnChange = ComboBox2Change
   end
 end

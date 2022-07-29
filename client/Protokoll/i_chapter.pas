@@ -3,8 +3,8 @@ unit i_chapter;
 interface
 
 uses
-  xsd_chapter, xsd_protocol, System.Classes, Data.DB, i_beschluss, i_personen,
-  u_teilnehmer;
+  xsd_chapter, xsd_protocol, Data.DB, i_beschluss, i_personen,
+  u_teilnehmer, System.Classes;
 
 type
 
@@ -301,6 +301,7 @@ type
       property Item[inx : integer ] : ITeilnehmer read GetItem write SetItem;
 
       function newTeilnehmer : ITeilnehmer;
+      function getByPEID( id : integer ) : ITeilnehmer;
       procedure loadFromSrc( data : TDataSet );
       procedure load;
       procedure init( list : IPersonenListe );

@@ -228,6 +228,7 @@ begin
 
   m_styles.release;
   m_styles := NIL;
+
   m_info.release;
   m_info := NIL;
 end;

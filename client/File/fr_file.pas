@@ -676,8 +676,9 @@ end;
 
 procedure TFileFrame.SetRO(const Value: boolean);
 begin
-  ListFilesQry.ReadOnly  := value;
-  JvDragDrop1.AcceptDrag := not Value;
+  ListFilesQry.ReadOnly   := value;
+  JvDragDrop1.AcceptDrag  := not Value;
+  GroupBox1.Enabled       := not Value;
 end;
 
 procedure TFileFrame.showUploadForm(list: TStrings);

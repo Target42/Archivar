@@ -111,22 +111,6 @@ object dsMeeing: TdsMeeing
         ParamType = ptInput
       end>
   end
-  object GrPeQry: TFDQuery
-    ObjectView = False
-    Connection = DBMod.ArchivarConnection
-    Transaction = IBTransaction1
-    SQL.Strings = (
-      'SELECT * FROM TN_TEILNEHMER'
-      'where PR_ID = :pr_id')
-    Left = 72
-    Top = 248
-    ParamData = <
-      item
-        Name = 'PR_ID'
-        DataType = ftInteger
-        ParamType = ptInput
-      end>
-  end
   object LastDocQry: TFDQuery
     ObjectView = False
     Connection = DBMod.ArchivarConnection
@@ -141,22 +125,6 @@ object dsMeeing: TdsMeeing
     ParamData = <
       item
         Name = 'GR_ID'
-        DataType = ftInteger
-        ParamType = ptInput
-      end>
-  end
-  object DelELQry: TFDQuery
-    ObjectView = False
-    Connection = DBMod.ArchivarConnection
-    Transaction = IBTransaction1
-    SQL.Strings = (
-      'delete from EL_EINLADUNG'
-      'where EL_ID = :EL_ID')
-    Left = 16
-    Top = 320
-    ParamData = <
-      item
-        Name = 'EL_ID'
         DataType = ftInteger
         ParamType = ptInput
       end>
@@ -291,15 +259,6 @@ object dsMeeing: TdsMeeing
     Left = 240
     Top = 16
   end
-  object ELPETab: TFDTable
-    ObjectView = False
-    Connection = DBMod.ArchivarConnection
-    Transaction = IBTransaction1
-    UpdateOptions.UpdateTableName = 'EL_PE'
-    TableName = 'EL_PE'
-    Left = 16
-    Top = 192
-  end
   object AutoIncQry: TFDQuery
     ObjectView = False
     Connection = DBMod.ArchivarConnection
@@ -313,13 +272,12 @@ object dsMeeing: TdsMeeing
     Transaction = IBTransaction1
     SQL.Strings = (
       'SELECT * FROM PR_PROTOKOL'
-      'where pr_id= :id')
+      'where gr_id= :gr_id')
     Left = 112
     Top = 16
     ParamData = <
       item
-        Name = 'ID'
-        DataType = ftInteger
+        Name = 'GR_ID'
         ParamType = ptInput
       end>
   end
@@ -377,6 +335,22 @@ object dsMeeing: TdsMeeing
     ParamData = <
       item
         Name = 'PR_ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+  end
+  object DelELQry: TFDQuery
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
+    SQL.Strings = (
+      'delete from EL_EINLADUNG'
+      'where EL_ID = :EL_ID')
+    Left = 16
+    Top = 320
+    ParamData = <
+      item
+        Name = 'EL_ID'
         DataType = ftInteger
         ParamType = ptInput
       end>

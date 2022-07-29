@@ -14,6 +14,7 @@ type
     Label2: TLabel;
     ComboBox2: TComboBox;
     procedure FormCreate(Sender: TObject);
+    procedure ComboBox2Change(Sender: TObject);
   private
     m_stauts : TTeilnehmerStatus;
 
@@ -37,10 +38,25 @@ implementation
 
 { TAbwesenForm }
 
+procedure TAbwesenForm.ComboBox2Change(Sender: TObject);
+var
+  st : TTeilnehmerStatus;
+begin
+  ComboBox1.Text := '';
+  ComboBox1.Items.Clear;
+  if ComboBox2.ItemIndex > -1 then
+  begin
+    st := TTeilnehmerStatus(ComboBox2.Items.Objects[ComboBox2.ItemIndex]);
+    FillSubStatus(st ,ComboBox1.Items);
+    ComboBox1.ItemIndex := 0;
+  end;
+end;
+
 procedure TAbwesenForm.FormCreate(Sender: TObject);
 begin
   FillTeilnehmerStatusList(ComboBox2.Items);
   ComboBox2.ItemIndex  := 0;
+  ComboBox2Change(nil);
 end;
 
 function TAbwesenForm.GetGrund: String;

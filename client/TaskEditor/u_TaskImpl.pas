@@ -146,12 +146,16 @@ procedure TTask.release;
 var
   i : integer;
 begin
-  m_tc := NIL;
-  m_fields.release;
+  if Assigned(m_fields) then begin
+    m_fields.release;
+    m_fields := NIL;
+  end;
 
   for i := 0 to pred(m_forms.Count) do
     m_forms[i].release;
   m_forms.Clear;
+
+  m_tc := NIL;
 end;
 
 procedure TTask.setCLID(value: string);

@@ -71,8 +71,6 @@ object SelectMeetingForm: TSelectMeetingForm
         Width = 495
         Height = 232
         OnChange = GremiumFrame1TVChange
-        ExplicitLeft = 0
-        ExplicitTop = 0
         ExplicitWidth = 495
         ExplicitHeight = 232
       end
@@ -146,8 +144,11 @@ object SelectMeetingForm: TSelectMeetingForm
     Params = <>
     ProviderName = 'ElTab'
     RemoteServer = DSProviderConnection1
-    Left = 56
+    Left = 64
     Top = 96
+    object ELTabPR_ID: TIntegerField
+      FieldName = 'PR_ID'
+    end
     object ELTabEL_ID: TIntegerField
       FieldName = 'EL_ID'
       Required = True
@@ -155,33 +156,36 @@ object SelectMeetingForm: TSelectMeetingForm
     object ELTabGR_ID: TIntegerField
       FieldName = 'GR_ID'
     end
+    object ELTabPE_ID: TIntegerField
+      FieldName = 'PE_ID'
+    end
     object ELTabEL_DATUM: TDateField
       FieldName = 'EL_DATUM'
     end
     object ELTabEL_ZEIT: TTimeField
       FieldName = 'EL_ZEIT'
-      DisplayFormat = 'hh:nn'
     end
-    object ELTabEL_TITEL: TWideStringField
+    object ELTabEL_TITEL: TStringField
       FieldName = 'EL_TITEL'
       Size = 200
     end
     object ELTabEL_DATA: TBlobField
       FieldName = 'EL_DATA'
-      Size = 8
     end
-    object ELTabEL_DATA_STAMP: TDateTimeField
+    object ELTabEL_DATA_STAMP: TSQLTimeStampField
       FieldName = 'EL_DATA_STAMP'
-      DisplayFormat = 'dd.mm.yy hh:nn'
     end
     object ELTabEL_ENDE: TTimeField
       FieldName = 'EL_ENDE'
-      DisplayFormat = 'hh:nn'
     end
-    object ELTabEL_STATUS: TWideStringField
+    object ELTabEL_STATUS: TStringField
       FieldName = 'EL_STATUS'
       FixedChar = True
       Size = 1
+    end
+    object ELTabEL_CLID: TStringField
+      FieldName = 'EL_CLID'
+      Size = 38
     end
   end
   object ELSrc: TDataSource
