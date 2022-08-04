@@ -124,9 +124,9 @@ type
 implementation
 
 uses
-  System.SysUtils, Vcl.StdCtrls, Winapi.Windows,
-  u_TaskCtrlPropImpl, Vcl.ExtCtrls, Generics.Defaults, Win.ComObj, Vcl.Grids,
-  u_TaskCtrlLabel, u_TaskControlFactory, u_ValidatorFactory;
+  System.SysUtils, Winapi.Windows,
+  u_TaskCtrlPropImpl, Vcl.ExtCtrls, Generics.Defaults, Win.ComObj,
+  u_TaskControlFactory, u_ValidatorFactory;
 
 { TaskCtrlImpl }
 

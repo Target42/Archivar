@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_textblock,
   Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Buttons, fr_editForm, Vcl.Menus, i_beschluss,
-  Vcl.OleCtrls, SHDocVw, Vcl.ComCtrls, u_stub;
+  Vcl.OleCtrls, Vcl.ComCtrls, u_stub;
 
 type
   TBeschlussFrame = class(TFrame)
@@ -84,7 +84,7 @@ type
 implementation
 
 uses
-  f_bechlus, i_personen, system.UITypes, f_abstimmung, System.JSON, u_json, m_glob_client, u_Konst;
+  f_bechlus, i_personen, system.UITypes, System.JSON, u_json;
 
 {$R *.dfm}
 

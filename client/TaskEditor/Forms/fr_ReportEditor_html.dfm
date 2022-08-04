@@ -1,19 +1,15 @@
 inherited ReportFrameEditorHtml: TReportFrameEditorHtml
-  Width = 594
-  Height = 477
   inherited Panel1: TPanel
-    Width = 594
     TabOrder = 1
     inherited SpeedButton1: TSpeedButton
-      Left = 568
       ExplicitLeft = 425
     end
   end
   object SynEdit1: TSynEdit
     Left = 0
     Top = 21
-    Width = 594
-    Height = 456
+    Width = 451
+    Height = 284
     Align = alClient
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
@@ -35,8 +31,6 @@ inherited ReportFrameEditorHtml: TReportFrameEditorHtml
     Gutter.Font.Style = []
     Highlighter = SynHTMLSyn1
     FontSmoothing = fsmNone
-    ExplicitWidth = 451
-    ExplicitHeight = 284
   end
   object SynHTMLSyn1: TSynHTMLSyn
     Options.AutoDetectEnabled = False

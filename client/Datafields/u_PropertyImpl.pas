@@ -3,7 +3,7 @@ unit u_PropertyImpl;
 interface
 
 uses
-  i_datafields, System.Generics.Collections, System.Classes, Vcl.Forms,
+  i_datafields, System.Classes, Vcl.Forms,
   f_df_listbox, Vcl.Controls;
 
 type

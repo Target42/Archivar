@@ -29,7 +29,7 @@ var
 implementation
 
 uses
-  system.IOUtils, IdHashMessageDigest, System.Types;
+  system.IOUtils, System.Types;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 

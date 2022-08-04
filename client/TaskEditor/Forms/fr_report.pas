@@ -6,8 +6,8 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls,
   xsd_TaskData, Vcl.ComCtrls, SynEditHighlighter, SynHighlighterXML, SynEdit,
-  JvExStdCtrls, JvRichEdit, SynHighlighterHtml, JvExControls, JvXMLBrowser,
-  Vcl.OleCtrls, SHDocVw, JvSimpleXml, i_taskEdit, Vcl.Menus, Vcl.ExtCtrls,
+  SynHighlighterHtml, JvExControls,
+  Vcl.OleCtrls, SHDocVw, i_taskEdit, Vcl.Menus, Vcl.ExtCtrls,
   System.Types, System.Generics.Collections, SynHighlighterDWS, Vcl.Buttons,
   fr_ReportEditor, m_dws;
 

@@ -5,7 +5,7 @@ interface
 uses
   System.SysUtils, System.Classes, dwsComp, xsd_TaskData, dwsErrors,
   i_taskEdit, dwsExprs, Xml.XMLIntf, Web.HTTPApp, Web.HTTPProd, dwsDebugger,
-  dwsInfo, dwsFileSystem, dwsUnitSymbols;
+  dwsInfo;
 
 type
   TXmlContainer = class( TObject )
@@ -122,7 +122,7 @@ var
 implementation
 
 uses
-  Vcl.Dialogs, System.StrUtils, dwsUtils, Xml.XMLDoc, m_glob_client,
+  Vcl.Dialogs, System.StrUtils, dwsUtils, m_glob_client,
   System.ioutils, System.Variants;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}

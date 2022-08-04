@@ -179,7 +179,7 @@ const
 
 implementation
 
-uses Xml.xmlutil;
+
 
 { Globale Funktionen }
 

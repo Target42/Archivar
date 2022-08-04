@@ -37,7 +37,7 @@ object ProtocolFrame: TProtocolFrame
     Top = 239
     Width = 451
     Height = 66
-    ActivePage = TabSheet5
+    ActivePage = TabSheet4
     Align = alBottom
     TabOrder = 1
     object TabSheet4: TTabSheet
@@ -110,6 +110,10 @@ object ProtocolFrame: TProtocolFrame
     object TabSheet5: TTabSheet
       Caption = 'Beschluss'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object SpeedButton7: TSpeedButton
         Tag = 1
         Left = 4
@@ -232,7 +236,7 @@ object ProtocolFrame: TProtocolFrame
     Left = 100
     Top = 25
     Bitmap = {
-      494C010106001001A00110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010106001001B40110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

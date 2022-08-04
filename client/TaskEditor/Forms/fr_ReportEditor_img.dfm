@@ -1,6 +1,4 @@
 inherited ReportFrameEditorImg: TReportFrameEditorImg
-  ExplicitWidth = 451
-  ExplicitHeight = 305
   object Image1: TImage [0]
     Left = 0
     Top = 21
@@ -13,10 +11,7 @@ inherited ReportFrameEditorImg: TReportFrameEditorImg
     ExplicitHeight = 105
   end
   inherited Panel1: TPanel
-    Width = 451
-    ExplicitWidth = 451
     inherited SpeedButton1: TSpeedButton
-      Left = 425
       ExplicitLeft = 425
     end
   end

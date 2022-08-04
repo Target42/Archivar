@@ -2,7 +2,7 @@ unit u_xml;
 
 interface
 
-uses System.Classes, Xml.XMLDoc, Xml.XmlIntf;
+uses System.Classes, Xml.XmlIntf;
 
 function getPath( root : IXMLNode ; path : string ) : IXMLNode;
 procedure initXML;

@@ -5,9 +5,9 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Data.DB,
-  Datasnap.DBClient, Datasnap.DSConnect, fr_base, Vcl.DBCtrls, Vcl.StdCtrls,
-  Vcl.Mask, JvExComCtrls, JvDateTimePicker, JvDBDateTimePicker, JvWizard,
-  JvExControls;
+  Datasnap.DBClient, Datasnap.DSConnect, Vcl.DBCtrls, Vcl.StdCtrls,
+  JvDBDateTimePicker, JvWizard,
+  JvExControls, JvExComCtrls, JvDateTimePicker, Vcl.Mask;
 
 type
   TTaskform = class(TForm)
@@ -65,7 +65,7 @@ var
 implementation
 
 uses
-  m_glob_client, u_stub, f_taskEdit, m_WindowHandler, Win.ComObj, u_gremium,
+  m_glob_client, u_stub, m_WindowHandler, Win.ComObj, u_gremium,
   System.DateUtils, u_berTypes;
 
 {$R *.dfm}

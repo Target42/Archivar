@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Datasnap.DBClient,
-  Datasnap.DSConnect, Vcl.Grids, Vcl.DBGrids, fr_base;
+  Datasnap.DSConnect, Vcl.DBGrids, fr_base, Vcl.Grids;
 
 type
   TTestBlockListForm = class(TForm)

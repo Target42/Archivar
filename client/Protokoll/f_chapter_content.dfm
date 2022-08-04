@@ -61,11 +61,19 @@ object ChapterContentForm: TChapterContentForm
       ExplicitHeight = 399
       inherited TV: TTreeView
         Height = 296
+        ExplicitLeft = 2
+        ExplicitTop = 31
         ExplicitHeight = 296
       end
       inherited PageControl1: TPageControl
         Top = 327
         ExplicitTop = 327
+        inherited TabSheet3: TTabSheet
+          ExplicitLeft = 4
+          ExplicitTop = 24
+          ExplicitWidth = 239
+          ExplicitHeight = 42
+        end
       end
     end
     inherited GroupBox2: TGroupBox
@@ -96,7 +104,7 @@ object ChapterContentForm: TChapterContentForm
     end
     inherited ImageList1: TImageList
       Bitmap = {
-        494C010108002800380010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+        494C0101080028003C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
         0000000000003600000028000000400000003000000001002000000000000030
         0000000000000000000000000000000000000000000000000000000000000000
         0000000000000000000000000000000000000000000000000000000000000000

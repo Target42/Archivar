@@ -22,7 +22,7 @@ type
 implementation
 
 uses
-  Vcl.StdCtrls, Winapi.Windows, System.SysUtils, u_TaskCtrlPropImpl,
+  Winapi.Windows, System.SysUtils,
   System.UITypes, Vcl.Graphics, Vcl.ExtCtrls;
 
 

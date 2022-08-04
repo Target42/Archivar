@@ -61,7 +61,7 @@ function IntListToJArray( var list : TList<integer> ) : TJSONArray;
 implementation
 
 uses
-  System.SysUtils, System.StrUtils, REST.Json;
+  System.SysUtils;
 
 var
   AddSpc : string;

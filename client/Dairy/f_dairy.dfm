@@ -34,9 +34,6 @@ object DairyForm: TDairyForm
     Width = 935
     Height = 19
     Panels = <>
-    ExplicitLeft = 176
-    ExplicitTop = 80
-    ExplicitWidth = 0
   end
   object GroupBox1: TGroupBox
     Left = 0
@@ -101,10 +98,6 @@ object DairyForm: TDairyForm
     Align = alClient
     Caption = 'Daten'
     TabOrder = 3
-    ExplicitLeft = 88
-    ExplicitTop = 304
-    ExplicitWidth = 185
-    ExplicitHeight = 105
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsDairy'
@@ -119,8 +112,8 @@ object DairyForm: TDairyForm
     Params = <>
     ProviderName = 'DISrc'
     RemoteServer = DSProviderConnection1
-    Left = 288
-    Top = 112
+    Left = 264
+    Top = 96
     object DITabDI_ID: TAutoIncField
       FieldName = 'DI_ID'
       Origin = 'DI_ID'
@@ -159,7 +152,7 @@ object DairyForm: TDairyForm
   end
   object DISrc: TDataSource
     DataSet = DITab
-    Left = 296
-    Top = 168
+    Left = 328
+    Top = 112
   end
 end

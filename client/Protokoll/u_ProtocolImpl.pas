@@ -80,7 +80,7 @@ type
 implementation
 
 uses
-  u_ChapterTitleListImpl, Xml.XMLIntf, Xml.XMLDoc, System.SysUtils, m_glob_client,
+  u_ChapterTitleListImpl, Xml.XMLIntf, Xml.XMLDoc, System.SysUtils,
   u_TTeilnehmerListeImpl, u_BesucherlisteImpl, Vcl.Forms,
   Vcl.Controls, u_teilnehmer, i_personen;
 

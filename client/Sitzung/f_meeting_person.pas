@@ -5,8 +5,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_base, Data.DB, Datasnap.DBClient,
-  Datasnap.DSConnect, Vcl.Grids, Vcl.DBGrids, Vcl.ExtCtrls, Vcl.StdCtrls,
-  Vcl.Buttons, u_stub, System.JSON;
+  Datasnap.DSConnect, Vcl.DBGrids, Vcl.ExtCtrls, Vcl.StdCtrls,
+  Vcl.Buttons, u_stub, System.JSON, Vcl.Grids;
 
 type
   TMeetingPersonForm = class(TForm)

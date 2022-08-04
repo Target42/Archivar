@@ -6,8 +6,8 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_base, fr_editForm, Vcl.StdCtrls,
   Vcl.ExtCtrls, Vcl.Buttons, Vcl.ComCtrls, Vcl.Menus, System.Actions,
-  Vcl.ActnList, System.ImageList, Vcl.ImgList, xsd_TaskData, i_personen,
-  fr_textblock, i_beschluss, fr_teilnehmer;
+  Vcl.ActnList, xsd_TaskData, i_personen,
+  fr_textblock, i_beschluss, fr_teilnehmer, System.ImageList, Vcl.ImgList;
 
 type
   TBeschlusform = class(TForm)
@@ -81,8 +81,7 @@ var
 
 implementation
 
-uses
-  m_glob_client;
+
 
 {$R *.dfm}
 

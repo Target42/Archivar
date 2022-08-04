@@ -4,8 +4,8 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_base, i_datafields, Vcl.StdCtrls,
-  Vcl.Buttons, Vcl.ComCtrls, Vcl.ExtCtrls, i_taskEdit;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_base, i_datafields,
+  Vcl.Buttons, Vcl.ComCtrls, Vcl.ExtCtrls, i_taskEdit, Vcl.StdCtrls;
 
 type
   TTableColumnsForm = class(TForm)

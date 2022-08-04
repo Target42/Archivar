@@ -4,9 +4,9 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_base, Vcl.StdCtrls, JvComponentBase,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_base, Vcl.StdCtrls,
   JvDragDrop, Vcl.ComCtrls, Data.DB, Datasnap.DBClient, Datasnap.DSConnect,
-  Vcl.Buttons;
+  Vcl.Buttons, JvComponentBase;
 
 type
   TTextblockImportForm = class(TForm)

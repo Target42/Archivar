@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_base, Data.DB, Datasnap.DBClient,
-  Datasnap.DSConnect, Vcl.Grids, Vcl.DBGrids, Data.SqlExpr, i_datafields;
+  Datasnap.DSConnect, Vcl.DBGrids, i_datafields, Vcl.Grids;
 
 type
   TTaskDatafieldsForm = class(TForm)

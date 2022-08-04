@@ -14,7 +14,7 @@ function hasFile( zip : TZipFile; fname : string ) : Boolean;
 implementation
 
 uses
-  system.IOUtils, System.RegularExpressions, System.SysUtils;
+  System.RegularExpressions, System.SysUtils;
 
 function getZipFiles( zip : TZipfile ; path, mask : string ) : TStringList;
 var

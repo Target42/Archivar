@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_ReportEditor, Vcl.Buttons,
-  Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.ExtDlgs, i_taskEdit;
+  Vcl.ExtCtrls, Vcl.ExtDlgs, i_taskEdit, Vcl.StdCtrls;
 
 type
   TReportFrameEditorImg = class(TReportFrameEditor)

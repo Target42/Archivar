@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.OleCtrls, SHDocVw, Vcl.ComCtrls,
-  u_renderer, m_taskLoader, i_chapter, Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls,
+  u_renderer, m_taskLoader, i_chapter, Vcl.Buttons, Vcl.ExtCtrls,
   Vcl.Menus;
 
 type

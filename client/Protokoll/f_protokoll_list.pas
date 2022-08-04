@@ -5,8 +5,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_base, Data.DB, Datasnap.DBClient,
-  Datasnap.DSConnect, Vcl.Grids, Vcl.DBGrids, Vcl.ExtCtrls, fr_gremium,
-  Vcl.StdCtrls, Vcl.ComCtrls;
+  Datasnap.DSConnect, Vcl.DBGrids, Vcl.ExtCtrls, fr_gremium,
+  Vcl.StdCtrls, Vcl.ComCtrls, Vcl.Grids;
 
 type
   TProtocollListForm = class(TForm)

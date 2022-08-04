@@ -36,7 +36,7 @@ var
 implementation
 
 uses
-  m_fileCache, system.uitypes, m_glob_client, System.JSON;
+  m_fileCache, system.uitypes, System.JSON;
 
 {$R *.dfm}
 

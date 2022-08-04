@@ -26,7 +26,7 @@ object Beschlusform: TBeschlusform
     Align = alBottom
     AutoSize = True
     TabOrder = 0
-    ExplicitTop = 406
+    ExplicitTop = 364
     ExplicitWidth = 726
     inherited StatusBar1: TStatusBar
       Width = 726
@@ -60,12 +60,9 @@ object Beschlusform: TBeschlusform
     ActivePage = TabSheet2
     Align = alClient
     TabOrder = 1
-    ExplicitHeight = 406
     object TabSheet2: TTabSheet
       Caption = 'Beschlustext'
       ImageIndex = 1
-      ExplicitWidth = 296
-      ExplicitHeight = 113
       object Splitter1: TSplitter
         Left = 448
         Top = 0
@@ -83,7 +80,6 @@ object Beschlusform: TBeschlusform
         Align = alBottom
         Caption = 'Abstimmung'
         TabOrder = 0
-        ExplicitTop = 295
         object Button1: TBitBtn
           Left = 9
           Top = 24
@@ -271,7 +267,7 @@ object Beschlusform: TBeschlusform
           inherited Panel1: TPanel
             Top = 180
             Width = 263
-            ExplicitTop = 222
+            ExplicitTop = 180
             ExplicitWidth = 263
             inherited LabeledEdit1: TLabeledEdit
               Width = 248
@@ -282,7 +278,7 @@ object Beschlusform: TBeschlusform
             Width = 263
             Height = 180
             ExplicitWidth = 263
-            ExplicitHeight = 222
+            ExplicitHeight = 180
           end
         end
       end
@@ -294,8 +290,6 @@ object Beschlusform: TBeschlusform
         Align = alClient
         Caption = 'Erweiterter Text'
         TabOrder = 2
-        ExplicitWidth = 26
-        ExplicitHeight = 30
         inline EditFrame2: TEditFrame
           Left = 2
           Top = 15
@@ -305,15 +299,15 @@ object Beschlusform: TBeschlusform
           TabOrder = 0
           ExplicitLeft = 2
           ExplicitTop = 15
-          ExplicitWidth = 22
-          ExplicitHeight = 13
+          ExplicitWidth = 444
+          ExplicitHeight = 236
           inherited RE: TRichEdit
             Width = 444
             Height = 236
             OnDragDrop = EditFrame2REDragDrop
             OnDragOver = EditFrame2REDragOver
-            ExplicitWidth = 22
-            ExplicitHeight = 13
+            ExplicitWidth = 444
+            ExplicitHeight = 236
           end
         end
       end
@@ -390,7 +384,7 @@ object Beschlusform: TBeschlusform
     Left = 559
     Top = 208
     Bitmap = {
-      494C010101000800880010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C0101010008008C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       000000000000000000000000000000000000000000FF000000FF000000FF0000
       00FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF0000

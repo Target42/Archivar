@@ -4,8 +4,8 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.Grids, Vcl.DBGrids, fr_base,
-  Datasnap.DBClient, Datasnap.DSConnect;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.DBGrids, fr_base,
+  Datasnap.DBClient, Datasnap.DSConnect, Vcl.Grids;
 
 type
   TSelectTemplateForm = class(TForm)

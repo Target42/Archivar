@@ -29,7 +29,7 @@ type
 implementation
 
 uses
-  u_TaskCtrlPropImpl, Vcl.StdCtrls, System.SysUtils, Winapi.Windows, Vcl.Grids;
+  u_TaskCtrlPropImpl, Vcl.StdCtrls, System.SysUtils, Winapi.Windows;
 
 { TaskCtrlComboBox }
 

@@ -6,8 +6,8 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_editForm, Vcl.ExtCtrls,
   Vcl.StdCtrls, Vcl.ComCtrls, Vcl.Buttons, i_taskEdit, fr_Formeditor, fr_report,
-  System.Actions, Vcl.ActnList, Vcl.Menus, Vcl.Mask, Vcl.DBCtrls, Data.DB,
-  Datasnap.DBClient, Datasnap.DSConnect;
+  System.Actions, Vcl.ActnList, Vcl.Menus, Vcl.DBCtrls, Data.DB,
+  Datasnap.DBClient, Datasnap.DSConnect, Vcl.Mask;
 
 type
   TTaksEditorForm = class(TForm)
@@ -88,8 +88,8 @@ var
 implementation
 
 uses
-  u_TaskImpl, i_datafields, f_datafield_edit, System.IOUtils,
-  u_TTaskContainerImpl, system.zip, m_glob_client, f_task_datafields,
+  i_datafields, f_datafield_edit, System.IOUtils,
+  u_TTaskContainerImpl, m_glob_client, f_task_datafields,
   System.UITypes, u_templateCache;
 
 {$R *.dfm}

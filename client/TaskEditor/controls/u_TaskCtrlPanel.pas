@@ -20,7 +20,7 @@ type
 implementation
 
 uses
-  Vcl.StdCtrls, Winapi.Windows, System.SysUtils, u_TaskCtrlPropImpl,
+  Winapi.Windows, System.SysUtils,
   Vcl.ExtCtrls, Vcl.Graphics;
 { TaskCtrlPanel }
 

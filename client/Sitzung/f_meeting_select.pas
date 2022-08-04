@@ -5,8 +5,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_base, Vcl.StdCtrls, fr_gremium,
-  Vcl.ExtCtrls, Data.DB, Datasnap.DBClient, Datasnap.DSConnect, Vcl.Grids,
-  Vcl.DBGrids, Vcl.ComCtrls;
+  Vcl.ExtCtrls, Data.DB, Datasnap.DBClient, Datasnap.DSConnect,
+  Vcl.DBGrids, Vcl.ComCtrls, Vcl.Grids;
 
 type
   TSelectMeetingForm = class(TForm)

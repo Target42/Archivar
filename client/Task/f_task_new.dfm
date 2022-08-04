@@ -110,6 +110,8 @@ object Taskform: TTaskform
       Header.Subtitle.Font.Style = []
       Caption = 'Gremium'
       OnEnterPage = GremiumEnterPage
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object LV: TListView
         Left = 0
         Top = 70
@@ -153,6 +155,8 @@ object Taskform: TTaskform
       Header.Subtitle.Font.Style = []
       Caption = 'Template'
       OnEnterPage = TemplateEnterPage
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object TEView: TListView
         Left = 0
         Top = 70
@@ -192,6 +196,8 @@ object Taskform: TTaskform
       Caption = 'Details1'
       OnEnterPage = Details1EnterPage
       OnFinishButtonClick = Details1FinishButtonClick
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Label2: TLabel
         Left = 19
         Top = 85

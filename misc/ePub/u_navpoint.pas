@@ -2,7 +2,7 @@ unit u_navpoint;
 
 interface
 
-uses System.Classes, Xml.XMLDoc, Xml.XmlIntf, System.Generics.Collections;
+uses System.Classes, Xml.XmlIntf, System.Generics.Collections;
 
 type
   NavPoint = class

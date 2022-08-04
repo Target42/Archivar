@@ -4,8 +4,8 @@ interface
 
 uses
   System.SysUtils, System.Classes, Web.HTTPApp, Web.HTTPProd, xsd_TaskData,
-  JvComponentBase, JvRichEditToHtml, i_taskEdit, SHDocVw, Data.DB,
-  Datasnap.DBClient, Datasnap.DSConnect, System.Generics.Collections;
+  JvRichEditToHtml, i_taskEdit, SHDocVw, Data.DB,
+  System.Generics.Collections, JvComponentBase;
 
 type
   THtmlMod = class(TDataModule)

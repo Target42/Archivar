@@ -58,7 +58,7 @@ var
 implementation
 
 uses
-  u_DataFieldImpl, m_glob_client, win.comObj, f_tableField_editor,
+  m_glob_client, win.comObj, f_tableField_editor,
   u_DataField2XML;
 
 {$R *.dfm}

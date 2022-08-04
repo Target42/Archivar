@@ -6,13 +6,13 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
   System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Data.DB,
-  Datasnap.DBClient, Datasnap.DSConnect, Vcl.Grids, Vcl.DBGrids, Vcl.ExtCtrls,
-  Vcl.DBCtrls, Vcl.StdCtrls, Vcl.Mask, JvExComCtrls, JvDBTreeView, Vcl.Menus,
+  Vcl.ExtCtrls,
+  Vcl.DBCtrls, Vcl.StdCtrls, Vcl.Menus,
   System.Actions, Vcl.ActnList, f_gremiumList, JvDateTimePicker,
-  JvDBDateTimePicker, Vcl.Buttons, f_titel_edit, xsd_protocol,
-  fr_chapter, xsd_chapter, i_personen, i_chapter, System.ImageList, Vcl.ImgList,
-  Vcl.OleCtrls, SHDocVw, m_taskLoader, System.Generics.Collections,
-  i_beschluss, m_html, u_renderer, u_teilnehmer, fr_protocol;
+  Vcl.Buttons,
+  i_chapter,
+  Vcl.OleCtrls, SHDocVw, System.Generics.Collections,
+  u_teilnehmer, fr_protocol, JvExComCtrls;
 
 type
   TProtokollForm = class(TForm)
@@ -112,11 +112,12 @@ var
 implementation
 
 uses
-  m_glob_client, Xml.XMLIntf, Xml.XMLDoc, u_bookmark, m_BookMarkHandler,
+  m_glob_client, u_bookmark, m_BookMarkHandler,
   u_berTypes, System.JSON, u_json,
-  m_WindowHandler, f_chapter_content, u_gremium, System.UITypes,
-  u_ChapterImpl, u_ProtocolImpl, u_speedbutton, f_abwesenheit,
-  f_besucher, f_bechlus, f_personen_list;
+  m_WindowHandler, System.UITypes,
+  u_ProtocolImpl, u_speedbutton, f_abwesenheit,
+  f_besucher, f_personen_list,
+  CodeSiteLogging;
 
 {$R *.dfm}
 { TProtokollForm }
@@ -435,18 +436,22 @@ end;
 
 procedure TProtokollForm.reload;
 begin
+  CodeSite.EnterMethod(self, 'reload');
   if Assigned(m_proto) then begin
 
+    CodeSite.SendMsg('Altes Protokoll löschen');
     ProtocolFrame1.Protocol := NIL;
 
     m_proto.release;
     m_proto := nil;
   end;
 
+  CodeSite.SendFmtMsg('Versuche Protokoll %d zu Laden', [m_prid]);
   m_proto := TProtocolImpl.create;
-
   if m_proto.load(m_prid) then
   begin
+    CodeSite.SendFmtMsg('Laden Protokoll %d erfolgreich', [m_prid]);
+
     Caption       := m_proto.Title;
     DBEdit1.Text  := m_proto.Title;
     DBEdit2.Text  := IntToStr(m_proto.Nr);
@@ -459,7 +464,10 @@ begin
 
     WebBrowser1.Navigate('about:blank');
   end;
+  CodeSite.SendAssigned('m_proto', pointer(m_proto));
+
   m_proto.Modified := false;
+  CodeSite.ExitMethod(self, 'reload');
 end;
 
 procedure TProtokollForm.RollChange(Sender: TObject);
@@ -584,7 +592,6 @@ begin
   btnEdit.Click;
 end;
 
-
 procedure TProtokollForm.UpdateTG;
 var
   i: integer;
@@ -615,8 +622,9 @@ var
   t: ITeilnehmer;
   Item: TListItem;
   sum: array of integer;
+  st : TTeilnehmerStatus;
 begin
-  SetLength(sum, integer(tsLast));
+  SetLength(sum, integer(tsLast)+1);
   TN.Items.BeginUpdate;
   TN.Items.Clear;
 
@@ -635,8 +643,8 @@ begin
 
     sum[integer(t.Status)] := sum[integer(t.Status)] + 1;
   end;
-  for i := 0 to pred(TN.Groups.Count) do
-    TN.Groups.Items[i].Footer := 'Anzahl:' + IntToStr(sum[i]);
+  for st := tsUnbekannt to tsLast do
+    TN.Groups.Items[integer(st)].Footer := Format( 'Anzahl: %d', [sum[integer(st)]]);
 
   TN.Items.EndUpdate;
   SetLength(sum, 0);

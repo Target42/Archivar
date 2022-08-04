@@ -3,8 +3,9 @@ unit m_http;
 interface
 
 uses
-  System.SysUtils, System.Classes, IdBaseComponent, IdComponent,
-  IdCustomTCPServer, IdCustomHTTPServer, IdHTTPServer, IdContext, IdTCPServer;
+  System.SysUtils, System.Classes, IdBaseComponent,
+  IdCustomTCPServer, IdCustomHTTPServer, IdHTTPServer, IdContext, IdTCPServer,
+  IdComponent;
 
 type
   THttpMod = class(TDataModule)
@@ -33,7 +34,7 @@ var
 implementation
 
 uses
-  m_glob_client, System.StrUtils, Vcl.Dialogs, IdSocketHandle, IdException;
+  m_glob_client, System.StrUtils, Vcl.Dialogs, IdException;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 

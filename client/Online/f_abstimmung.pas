@@ -4,9 +4,9 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.ExtCtrls, u_stub,
-  System.JSON, Vcl.StdCtrls, System.Generics.Collections, System.ImageList,
-  Vcl.ImgList, Vcl.Buttons, Vcl.ShellAnimations;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.ExtCtrls,
+  System.JSON, Vcl.StdCtrls, System.Generics.Collections,
+  Vcl.Buttons, Vcl.ShellAnimations, System.ImageList, Vcl.ImgList;
 
 type
   TVoteFunc = procedure( vote : integer ) of Object;

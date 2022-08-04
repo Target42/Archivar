@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Grids, Vcl.ValEdit,
-  Vcl.ExtCtrls, i_taskEdit, Vcl.StdCtrls, i_datafields;
+  Vcl.ExtCtrls, i_taskEdit, i_datafields;
 
 type
   TPropertyChanged = procedure of object;

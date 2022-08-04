@@ -4,8 +4,8 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
-  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.AppEvnts, Vcl.StdCtrls,
-  Data.DB, Datasnap.DBClient, Datasnap.DSConnect, Vcl.Grids, Vcl.DBGrids,
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.AppEvnts,
+  Data.DB, Datasnap.DBClient, Datasnap.DSConnect,
   Vcl.Menus, System.Actions, Vcl.ActnList, System.Generics.Collections,
   Vcl.ComCtrls;
 
@@ -96,7 +96,7 @@ type
 implementation
 
 uses
-  m_glob_client, f_taskEdit, m_WindowHandler, f_gremiumList, u_stub, u_Konst,
+  m_glob_client, m_WindowHandler, f_gremiumList, u_stub, u_Konst,
   System.JSON, System.UITypes, u_json, System.Generics.Defaults, u_kategorie;
 
 {$R *.dfm}

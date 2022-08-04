@@ -120,6 +120,7 @@
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsImage'
+    Connected = True
     SQLConnection = GM.SQLConnection1
     Left = 64
     Top = 40

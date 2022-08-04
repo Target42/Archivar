@@ -64,8 +64,8 @@ type
 implementation
 
 uses
-  System.SysUtils, u_ChapterListImpl,
-  u_ChapterImpl, Xml.XMLIntf, Xml.XMLDoc, i_beschluss;
+  System.SysUtils,
+  u_ChapterImpl, i_beschluss;
 
 
 procedure TChapterTitleImpl.buildTree;

@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Data.DB,
   Datasnap.DBClient, Datasnap.DSConnect, System.Generics.Collections, u_taskEntry,
-  Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Buttons, Vcl.Menus;
+  Vcl.ExtCtrls, Vcl.Buttons, Vcl.Menus;
 
 type
   TTaskList2Frame = class(TFrame)

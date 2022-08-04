@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_base, Vcl.StdCtrls, Vcl.Buttons,
-  Data.DB, Datasnap.DBClient, Datasnap.DSConnect, Vcl.Grids, Vcl.DBGrids;
+  Data.DB, Datasnap.DBClient, Datasnap.DSConnect, Vcl.DBGrids, Vcl.Grids;
 
 type
   TPersonenForm = class(TForm)

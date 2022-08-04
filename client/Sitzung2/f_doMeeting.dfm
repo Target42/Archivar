@@ -103,7 +103,7 @@
           end
           inherited ImageList1: TImageList
             Bitmap = {
-              494C010106001001FC0110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+              494C010106001001000210001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
               0000000000003600000028000000400000002000000001002000000000000020
               0000000000000000000000000000000000000000000000000000000000000000
               0000000000000000000000000000000000000000000000000000000000000000
@@ -515,7 +515,6 @@
                   ExplicitLeft = 945
                 end
                 inherited GroupBox7: TGroupBox
-                  Width = 176
                   ExplicitWidth = 176
                   inherited BitBtn4: TBitBtn
                     OnClick = BeschlussFrame1BitBtn4Click
@@ -530,6 +529,10 @@
     object TabSheet2: TTabSheet
       Caption = 'Onlineabstimung'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GroupBox2: TGroupBox
         Left = 0
         Top = 670
@@ -729,6 +732,10 @@
         object TabSheet6: TTabSheet
           Caption = 'G'#228'ste'
           ImageIndex = 2
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
         end
       end
     end

@@ -3,7 +3,7 @@ unit u_taskCtrlDateTimePicker;
 interface
 
 uses
-  u_TaskCtrlImpl, i_taskEdit, Vcl.Controls, System.Classes, i_datafields,
+  u_TaskCtrlImpl, i_taskEdit, Vcl.Controls, System.Classes,
   System.SysUtils;
 
 type

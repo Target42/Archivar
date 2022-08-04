@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_chapter, fr_base,
-  Datasnap.DSConnect, i_chapter;
+  i_chapter;
 
 type
   TChapterContentForm = class(TForm)

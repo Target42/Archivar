@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
-  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, xsd_chapter,
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs,
   Datasnap.DBClient, Data.DB, Datasnap.DSConnect, Vcl.ComCtrls, Vcl.ExtCtrls,
   Vcl.StdCtrls, Vcl.Buttons, System.Generics.Collections,
   fr_taskList2, u_taskEntry, i_chapter, Data.SqlExpr, System.Actions,
@@ -129,8 +129,8 @@ type
 implementation
 
 uses
-  m_glob_client, Xml.XMLIntf, Xml.XMLDoc,
-  f_chapterEdit, u_gremium, f_chapterTask, u_ChapterImpl, f_bechlus,
+  m_glob_client,
+  f_chapterEdit, u_gremium, f_chapterTask, f_bechlus,
   system.UITypes;
 
 {$R *.dfm}

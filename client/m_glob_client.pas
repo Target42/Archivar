@@ -6,13 +6,13 @@ uses
   System.SysUtils, System.Classes, Data.DBXDataSnap, Data.DBXCommon,
   IPPeerClient, Data.DB, Data.SqlExpr, Winapi.Messages, Datasnap.DBClient,
   FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
-  FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
+  FireDAC.Stan.Error, FireDAC.DatS,
   FireDAC.Comp.DataSet, FireDAC.Comp.Client,
   System.Generics.Collections, u_gremium, u_stub, System.JSON, JvComponentBase,
-  JvComputerInfoEx, IdBaseComponent, IdComponent, IdIPWatch, Datasnap.DSCommon,
+  JvComputerInfoEx, Datasnap.DSCommon,
   Data.DBXJSON, pngimage, System.ImageList, Vcl.ImgList, Vcl.Controls,
   u_berTypes, Datasnap.DSConnect, i_personen, Vcl.Dialogs, JvBaseDlg,
-  JvSHFileOperation, System.Notification;
+  JvSHFileOperation, System.Notification, FireDAC.Phys.Intf, FireDAC.DApt.Intf;
 
 const
   WMUSER            = WM_USER + 25;
@@ -175,7 +175,16 @@ var
   GM: TGM;
 
 var
-  arrRolls : TArray<String> = ['', 'Vorsitz', 'Stellvertretung', 'Schriftführung', 'Ersatz', 'Berater', 'Praktikant', 'Auszubildender'];
+  arrRolls : TArray<String> =
+    ['',
+    'Vorsitz',
+    'Stellvertretung',
+    'Schriftführung',
+    'Ersatz',
+    'Berater',
+    'Praktikant',
+    'Auszubildender'
+    ];
 
 function ShowResult( res : TJSONObject; positiv : Boolean = false ) : boolean;
 
@@ -185,7 +194,7 @@ uses
   Vcl.Forms, Winapi.Windows, u_json,
   System.UITypes, system.IOUtils, FireDAC.Stan.Storagebin,
   System.Win.ComObj, m_WindowHandler, m_BookMarkHandler, IdHashMessageDigest,
-  Vcl.Graphics, u_PersonenListeImpl, u_PersonImpl, m_cache, f_login, u_kategorie,
+  Vcl.Graphics, u_PersonenListeImpl, m_cache, f_login, u_kategorie,
   u_onlineUser, m_http, f_doMeeting, u_eventHandler, u_Konst, IdStack, m_fileCache, m_crypt;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}

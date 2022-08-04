@@ -6,9 +6,11 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.ComCtrls, fr_file, System.Actions,
   Vcl.ActnList, Vcl.Menus, i_taskEdit, Data.DB, Datasnap.DBClient,
-  Datasnap.DSConnect, JvExMask, JvToolEdit, JvMaskEdit, JvCheckedMaskEdit,
-  JvDatePickerEdit, JvDBDatePickerEdit, Vcl.StdCtrls, Vcl.Mask, Vcl.DBCtrls,
-  Vcl.OleCtrls, SHDocVw, JvExStdCtrls, JvCombobox, JvColorCombo, fr_form, fr_log;
+  Datasnap.DSConnect,
+  JvDBDatePickerEdit, Vcl.StdCtrls, Vcl.DBCtrls,
+  Vcl.OleCtrls, SHDocVw, JvColorCombo, fr_form, fr_log, JvExStdCtrls,
+  JvCombobox, JvExMask, JvToolEdit, JvMaskEdit, JvCheckedMaskEdit,
+  JvDatePickerEdit, Vcl.Mask;
 
 type
   TTaskEditForm = class(TForm)

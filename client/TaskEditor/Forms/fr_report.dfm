@@ -1,13 +1,14 @@
 object ReportFrame: TReportFrame
   Left = 0
   Top = 0
-  Width = 941
+  Width = 451
   Height = 601
   Align = alTop
   AutoSize = True
   TabOrder = 0
+  ExplicitWidth = 941
   object Splitter1: TSplitter
-    Left = 606
+    Left = 116
     Top = 0
     Width = 5
     Height = 601
@@ -17,14 +18,13 @@ object ReportFrame: TReportFrame
     ExplicitLeft = 845
   end
   object GroupBox5: TGroupBox
-    Left = 611
+    Left = 121
     Top = 0
     Width = 330
     Height = 601
     Align = alRight
     Caption = 'Hilfe'
     TabOrder = 0
-    ExplicitLeft = 121
     object WebBrowser2: TWebBrowser
       Left = 2
       Top = 15
@@ -45,18 +45,17 @@ object ReportFrame: TReportFrame
   object Panel2: TPanel
     Left = 0
     Top = 0
-    Width = 606
+    Width = 116
     Height = 601
     Align = alClient
     BevelOuter = bvNone
     Caption = 'Panel2'
     ShowCaption = False
     TabOrder = 1
-    ExplicitWidth = 116
     object Splitter2: TSplitter
       Left = 0
       Top = 105
-      Width = 606
+      Width = 116
       Height = 5
       Cursor = crVSplit
       Align = alTop
@@ -67,14 +66,13 @@ object ReportFrame: TReportFrame
     object Panel8: TPanel
       Left = 0
       Top = 0
-      Width = 606
+      Width = 116
       Height = 105
       Align = alTop
       BevelOuter = bvNone
       Caption = 'Panel8'
       ShowCaption = False
       TabOrder = 0
-      ExplicitWidth = 116
       object Splitter5: TSplitter
         Left = 113
         Top = 0
@@ -733,16 +731,17 @@ object ReportFrame: TReportFrame
     object PageControl1: TPageControl
       Left = 0
       Top = 110
-      Width = 606
+      Width = 116
       Height = 491
       ActivePage = TabSheet3
       Align = alClient
       TabOrder = 1
-      ExplicitWidth = 116
       object TabSheet3: TTabSheet
         Caption = 'Preview'
         ImageIndex = 2
-        ExplicitWidth = 108
+        ExplicitLeft = 0
+        ExplicitTop = 0
+        ExplicitHeight = 0
         object WebBrowser1: TWebBrowser
           Left = 0
           Top = 41

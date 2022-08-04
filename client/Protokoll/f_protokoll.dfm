@@ -103,7 +103,7 @@ object ProtokollForm: TProtokollForm
             Width = 217
             Height = 306
             ExplicitWidth = 217
-            ExplicitHeight = 306
+            ExplicitHeight = 39
             inherited TV: TTreeView
               Width = 213
               Height = 289
@@ -116,22 +116,13 @@ object ProtokollForm: TProtokollForm
             Width = 217
             ExplicitTop = 306
             ExplicitWidth = 217
-            inherited TabSheet4: TTabSheet
-              ExplicitLeft = 4
-              ExplicitTop = 24
-              ExplicitWidth = 443
-              ExplicitHeight = 38
-            end
             inherited TabSheet5: TTabSheet
-              ExplicitLeft = 4
-              ExplicitTop = 24
               ExplicitWidth = 209
-              ExplicitHeight = 38
             end
           end
           inherited ImageList1: TImageList
             Bitmap = {
-              494C010106001001700110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+              494C0101060010018C0110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
               0000000000003600000028000000400000002000000001002000000000000020
               0000000000000000000000000000000000000000000000000000000000000000
               0000000000000000000000000000000000000000000000000000000000000000
@@ -408,6 +399,10 @@ object ProtokollForm: TProtokollForm
     object TabSheet2: TTabSheet
       Caption = 'Teilnehmer'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Panel1: TPanel
         Left = 0
         Top = 331
@@ -556,6 +551,10 @@ object ProtokollForm: TProtokollForm
     object TabSheet3: TTabSheet
       Caption = 'G'#228'ste'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Panel3: TPanel
         Left = 0
         Top = 331

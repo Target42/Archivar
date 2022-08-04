@@ -38,17 +38,17 @@ object AbwesenForm: TAbwesenForm
     AutoSize = True
     TabOrder = 0
     ExplicitTop = 114
-    ExplicitWidth = 248
+    ExplicitWidth = 256
     inherited StatusBar1: TStatusBar
       Width = 256
-      ExplicitWidth = 255
+      ExplicitWidth = 256
     end
     inherited Panel1: TPanel
       Width = 256
-      ExplicitWidth = 248
+      ExplicitWidth = 256
       inherited OKBtn: TBitBtn
         Left = 157
-        ExplicitLeft = 149
+        ExplicitLeft = 157
       end
     end
   end

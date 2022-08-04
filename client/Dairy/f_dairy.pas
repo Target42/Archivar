@@ -5,8 +5,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Datasnap.DBClient,
-  Datasnap.DSConnect, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.Grids, Vcl.DBGrids,
-  Vcl.ExtCtrls;
+  Datasnap.DSConnect, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.DBGrids,
+  Vcl.ExtCtrls, Vcl.Grids;
 
 type
   TDairyForm = class(TForm)
@@ -43,7 +43,7 @@ var
 implementation
 
 uses
-  m_glob_client, m_WindowHandler;
+  m_WindowHandler;
 
 {$R *.dfm}
 
@@ -58,7 +58,9 @@ end;
 procedure TDairyForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   if DITab.UpdatesPending then
-  DITab.ApplyUpdates(0);
+    DITab.ApplyUpdates(0);
+
+  Action := caFree;
 end;
 
 procedure TDairyForm.FormCreate(Sender: TObject);

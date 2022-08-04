@@ -5,10 +5,10 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_base, Vcl.ExtCtrls, Vcl.StdCtrls,
-  Vcl.DBCtrls, Data.DB, Datasnap.DBClient, Datasnap.DSConnect, Vcl.Mask,
-  u_gremium, Vcl.ComCtrls, JvExComCtrls, JvDateTimePicker, JvDBDateTimePicker,
+  Vcl.DBCtrls, Data.DB, Datasnap.DBClient, Datasnap.DSConnect,
+  u_gremium, Vcl.ComCtrls, JvDBDateTimePicker,
   i_chapter, Vcl.Buttons, System.JSON, VirtualTrees, fr_editForm, fr_to,
-  Vcl.Grids, Vcl.DBGrids;
+  Vcl.DBGrids, Vcl.Grids, Vcl.Mask, JvExComCtrls, JvDateTimePicker;
 
 type
   TMeetingForm = class(TForm)
@@ -121,8 +121,8 @@ function invite( id : integer ) : boolean;
 implementation
 
 uses
-  m_glob_client, system.DateUtils, u_stub, u_json, System.Generics.Collections,
-  f_abwesenheit, u_teilnehmer, f_meeting_person;
+  m_glob_client, system.DateUtils, u_stub, u_json,
+  u_teilnehmer, f_meeting_person;
 
 {$R *.dfm}
 

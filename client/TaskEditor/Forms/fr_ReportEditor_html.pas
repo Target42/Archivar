@@ -4,7 +4,7 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_ReportEditor, Vcl.StdCtrls,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_ReportEditor,
   Vcl.ExtCtrls, SynEditHighlighter, SynHighlighterHtml, SynEdit, Vcl.Buttons,
   i_taskEdit, Vcl.Menus, SynHighlighterCSS, SynCompletionProposal;
 

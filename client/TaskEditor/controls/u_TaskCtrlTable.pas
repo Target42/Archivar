@@ -4,7 +4,7 @@ interface
 
 uses
   u_TaskCtrlImpl, i_taskEdit, Vcl.Controls, System.Classes,
-  System.Generics.Collections, Vcl.Grids, Vcl.StdCtrls;
+  System.Generics.Collections, Vcl.Grids;
 
 type
   TaskCtrlTable = class(TaskCtrlImpl, ITaskCtrlTable)

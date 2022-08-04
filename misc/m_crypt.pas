@@ -4,8 +4,8 @@ interface
 
 uses
   System.SysUtils, System.Classes, uTPLb_Hash, uTPLb_Signatory,
-  uTPLb_CryptographicLibrary, uTPLb_BaseNonVisualComponent, uTPLb_Codec,
-  uTPLb_Asymetric;
+  uTPLb_CryptographicLibrary, uTPLb_Codec,
+  uTPLb_Asymetric, uTPLb_BaseNonVisualComponent;
 
 type
   TCryptMod = class(TDataModule)
@@ -72,7 +72,7 @@ var
 implementation
 
 uses
-  System.IOUtils, uTPLb_StreamUtils, f_main, uTPLb_Constants, System.StrUtils,
+  System.IOUtils, uTPLb_StreamUtils, System.StrUtils,
   Vcl.Forms, system.UITypes, f_passwd;
 
 

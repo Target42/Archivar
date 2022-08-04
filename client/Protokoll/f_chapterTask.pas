@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_base, Data.DB,
-  Datasnap.DBClient, Datasnap.DSConnect, Vcl.StdCtrls, Vcl.ExtCtrls, fr_form,
+  Vcl.StdCtrls, Vcl.ExtCtrls, fr_form,
   i_chapter;
 
 type
@@ -32,8 +32,7 @@ var
 
 implementation
 
-uses
-  m_glob_client;
+
 
 {$R *.dfm}
 

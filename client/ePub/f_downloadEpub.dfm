@@ -23,7 +23,7 @@ object DownloadEpubform: TDownloadEpubform
     Align = alBottom
     AutoSize = True
     TabOrder = 0
-    ExplicitTop = 239
+    ExplicitTop = 353
     ExplicitWidth = 792
     inherited StatusBar1: TStatusBar
       Width = 792
@@ -87,7 +87,6 @@ object DownloadEpubform: TDownloadEpubform
     Align = alBottom
     Caption = 'Suche'
     TabOrder = 2
-    ExplicitTop = 184
     object Edit1: TEdit
       Left = 16
       Top = 28
@@ -100,6 +99,7 @@ object DownloadEpubform: TDownloadEpubform
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsEpub'
+    Connected = True
     SQLConnection = GM.SQLConnection1
     Left = 64
     Top = 16

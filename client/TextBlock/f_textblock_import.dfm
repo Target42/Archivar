@@ -77,8 +77,6 @@ object TextblockImportForm: TTextblockImportForm
     Align = alBottom
     Caption = 'Aktionen'
     TabOrder = 2
-    ExplicitLeft = 64
-    ExplicitTop = 194
     DesignSize = (
       635
       47)

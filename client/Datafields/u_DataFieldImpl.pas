@@ -59,7 +59,7 @@ type
 implementation
 
 uses
-  Win.ComObj, xsd_DataField, Xml.XMLIntf, Xml.XMLDoc, u_PropertyImpl,
+  Win.ComObj, u_PropertyImpl,
   u_DataFieldLislImpl;
 
 const

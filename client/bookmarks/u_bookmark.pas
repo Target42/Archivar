@@ -3,7 +3,7 @@ unit u_bookmark;
 interface
 
 uses
-  System.JSON, u_json, m_glob_client, u_berTypes;
+  System.JSON, u_json, u_berTypes;
 
 type
   TBookmark = class( TObject )

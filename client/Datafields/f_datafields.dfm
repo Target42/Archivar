@@ -24,7 +24,7 @@ object DataFieldForm: TDataFieldForm
     Align = alBottom
     AutoSize = True
     TabOrder = 0
-    ExplicitTop = 239
+    ExplicitTop = 531
     ExplicitWidth = 635
     inherited StatusBar1: TStatusBar
       Width = 635
@@ -87,7 +87,6 @@ object DataFieldForm: TDataFieldForm
     Align = alBottom
     Caption = 'Aktionen'
     TabOrder = 2
-    ExplicitTop = 184
     DesignSize = (
       635
       55)

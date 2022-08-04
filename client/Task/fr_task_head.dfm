@@ -1,23 +1,20 @@
 object TaskHeaderFrame: TTaskHeaderFrame
   Left = 0
   Top = 0
-  Width = 660
+  Width = 451
   Height = 123
   Align = alTop
   TabOrder = 0
-  ExplicitWidth = 451
   object GroupBox1: TGroupBox
     Left = 0
     Top = 0
-    Width = 660
+    Width = 451
     Height = 123
     Align = alClient
     Caption = 'Aufgabe'
     TabOrder = 0
-    ExplicitWidth = 451
-    ExplicitHeight = 127
     DesignSize = (
-      660
+      451
       123)
     object Label1: TLabel
       Left = 11
@@ -62,7 +59,6 @@ object TaskHeaderFrame: TTaskHeaderFrame
       Anchors = [akLeft, akTop, akRight]
       DataField = 'TA_NAME'
       TabOrder = 0
-      ExplicitWidth = 578
     end
     object DBEdit2: TDBEdit
       Left = 11

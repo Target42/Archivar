@@ -4,10 +4,12 @@ program Archivar;
 
 uses
   Vcl.Forms,
+{$ifdef RELEASE}
   JclAppInst,
+{$endif}
   u_eventHandler in 'Events\u_eventHandler.pas',
-  f_main in 'f_main.pas' {MainForm},
   m_glob_client in 'm_glob_client.pas' {GM: TDataModule},
+  f_main in 'f_main.pas' {MainForm},
   u_stub in 'u_stub.pas',
   f_gremiumForm in 'Gremium\f_gremiumForm.pas' {GremiumForm},
   fr_base in '..\misc\fr_base.pas' {BaseFrame: TFrame},
@@ -209,11 +211,18 @@ uses
   f_file_info in 'dws\f_file_info.pas' {FileInfoForm},
   fr_storages in 'dms\fr_storages.pas' {StoragesFrame: TFrame},
   f_storages in 'dms\f_storages.pas' {StoragesForm},
-  f_personen_list in 'Personen\f_personen_list.pas' {PersonenListForm};
+  f_personen_list in 'Personen\f_personen_list.pas', CodeSiteLogging {PersonenListForm};
 
 {$R *.res}
 
 begin
+{$IFDEF DEBUG}
+  CodeSite.Enabled := True;
+  CodeSite.Clear;
+{$ELSE}
+  CodeSite.Enabled := False;
+{$ENDIF}
+
 {$ifdef RELEASE}
   JclAppInstances.CheckSingleInstance;
 {$else}

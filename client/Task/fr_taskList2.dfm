@@ -1,17 +1,15 @@
 object TaskList2Frame: TTaskList2Frame
   Left = 0
   Top = 0
-  Width = 874
-  Height = 358
+  Width = 451
+  Height = 305
   Align = alClient
   TabOrder = 0
-  ExplicitWidth = 451
-  ExplicitHeight = 305
   object LV: TListView
     Left = 41
     Top = 0
-    Width = 833
-    Height = 358
+    Width = 410
+    Height = 305
     Align = alClient
     Columns = <
       item
@@ -45,20 +43,17 @@ object TaskList2Frame: TTaskList2Frame
     TabOrder = 0
     ViewStyle = vsReport
     OnDblClick = LVDblClick
-    ExplicitWidth = 410
-    ExplicitHeight = 305
   end
   object Panel2: TPanel
     Left = 0
     Top = 0
     Width = 41
-    Height = 358
+    Height = 305
     Align = alLeft
     BevelOuter = bvNone
     Caption = 'Panel2'
     ShowCaption = False
     TabOrder = 1
-    ExplicitHeight = 305
     object SpeedButton1: TSpeedButton
       Left = 12
       Top = 48
@@ -146,6 +141,7 @@ object TaskList2Frame: TTaskList2Frame
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsChapter'
+    Connected = True
     SQLConnection = GM.SQLConnection1
     Left = 128
     Top = 24

@@ -33,7 +33,7 @@ object ProtocollListForm: TProtocollListForm
     Align = alBottom
     AutoSize = True
     TabOrder = 0
-    ExplicitTop = 239
+    ExplicitTop = 415
     ExplicitWidth = 635
     inherited StatusBar1: TStatusBar
       Width = 635
@@ -56,7 +56,6 @@ object ProtocollListForm: TProtocollListForm
     Align = alTop
     Caption = 'Gremium'
     TabOrder = 1
-    ExplicitWidth = 304
     inline GremiumFrame1: TGremiumFrame
       Left = 2
       Top = 15
@@ -66,7 +65,7 @@ object ProtocollListForm: TProtocollListForm
       TabOrder = 0
       ExplicitLeft = 2
       ExplicitTop = 15
-      ExplicitWidth = 300
+      ExplicitWidth = 631
       ExplicitHeight = 168
       inherited TV: TTreeView
         Width = 631
@@ -74,7 +73,7 @@ object ProtocollListForm: TProtocollListForm
         OnChange = GremiumFrame1TVChange
         ExplicitLeft = 0
         ExplicitTop = 0
-        ExplicitWidth = 300
+        ExplicitWidth = 631
         ExplicitHeight = 168
       end
     end
@@ -87,10 +86,6 @@ object ProtocollListForm: TProtocollListForm
     Align = alClient
     Caption = 'Protokolle'
     TabOrder = 2
-    ExplicitLeft = 32
-    ExplicitTop = 224
-    ExplicitWidth = 185
-    ExplicitHeight = 105
     object DBGrid1: TDBGrid
       Left = 2
       Top = 15

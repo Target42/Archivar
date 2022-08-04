@@ -31,8 +31,6 @@ object AbstimmungsForm: TAbstimmungsForm
     Align = alClient
     Caption = 'Teilnehmer'
     TabOrder = 1
-    ExplicitTop = 57
-    ExplicitHeight = 315
     object LV: TListView
       Left = 2
       Top = 15
@@ -93,7 +91,6 @@ object AbstimmungsForm: TAbstimmungsForm
       ReadOnly = True
       TabOrder = 0
       ViewStyle = vsReport
-      ExplicitHeight = 298
     end
   end
   object GroupBox2: TGroupBox
@@ -104,9 +101,6 @@ object AbstimmungsForm: TAbstimmungsForm
     Align = alRight
     Caption = 'Aktionen'
     TabOrder = 2
-    ExplicitLeft = 576
-    ExplicitTop = 51
-    ExplicitHeight = 315
     object BitBtn1: TBitBtn
       Left = 40
       Top = 32
@@ -347,8 +341,6 @@ object AbstimmungsForm: TAbstimmungsForm
     Align = alTop
     Caption = 'Ergebnis'
     TabOrder = 3
-    ExplicitLeft = 2
-    ExplicitTop = -6
     object LabZustimmung: TLabel
       Left = 16
       Top = 24
@@ -423,16 +415,13 @@ object AbstimmungsForm: TAbstimmungsForm
       CommonAVI = aviFindFolder
       StopFrame = 27
       Visible = False
-      ExplicitLeft = 568
-      ExplicitTop = 8
-      ExplicitHeight = 50
     end
   end
   object ImageList1: TImageList
     Left = 232
     Top = 153
     Bitmap = {
-      494C010104000800140010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010104000800180010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

@@ -94,6 +94,8 @@ type
     m_sel_type  : TEntryType;
     m_sel_id    : integer;
 
+    m_inUpdate  : boolean;
+
     FBrowser: TWebBrowser;
     FonBeschlusChange: TBeschlusChange;
     FMeetingMode: boolean;
@@ -133,7 +135,7 @@ implementation
 
 uses
   f_chapter_content, f_bechlus, system.UITypes, m_glob_client, u_speedbutton,
-  f_chapterEdit, f_chapterTask;
+  f_chapterEdit, f_chapterTask, CodeSiteLogging;
 {$R *.dfm}
 
 { TProtocolFrame }
@@ -534,6 +536,7 @@ begin
 
   for i := 0 to pred(tv.Items.Count) do begin
     if m_map.TryGetValue(tv.Items.Item[i], en ) then begin
+
       if en.Typ = m_sel_type then begin
         case en.Typ of
           etNothing:      TV.Selected := tv.Items.Item[i];
@@ -591,15 +594,21 @@ end;
 
 procedure TProtocolFrame.SetProtocol(const Value: IProtocol);
 begin
+  CodeSite.EnterMethod(self, 'SetProtocol');
   if not Assigned(value) then
     TV.Selected := NIL;
 
+  m_inUpdate := true;
   saveSelected;
 
   m_proto := value;
+  CodeSite.SendAssigned('m_proto', pointer(m_proto) );
 
   updateCpList;
   restoreSelected;
+
+  m_inUpdate := false;
+  CodeSite.ExitMethod(self, 'SetProtocol');
 end;
 
 procedure TProtocolFrame.SetReadOnly(const Value: boolean);
@@ -653,6 +662,8 @@ var
       FonBeschlusChange(cp.Votes.Item[0]);
   end;
 begin
+  if m_inUpdate then exit;
+
   if not m_map.TryGetValue(Tv.Selected, en) then exit;
   if Assigned(FonBeschlusChange) and FMeetingMode then
     FonBeschlusChange(nil);
@@ -714,6 +725,7 @@ begin
   old   := NIL;
   root  := NIL;
 
+  CodeSite.EnterMethod(self, 'updateCpList');
   Screen.Cursor := crHourGlass;
 
   TV.Items.BeginUpdate;
@@ -725,12 +737,14 @@ begin
     end;
 
     clearTree;
+
     if Assigned(m_proto) then begin
       en   := TEntry.create;
       root := TV.Items.AddChild(NIL, 'Dokument');
       m_map.Add(root, en);
       setIndex(root, 7);
 
+      CodeSite.SendFmtMsg('Anzahl Kapitel %d', [m_proto.Chapter.Count]);
       for i := 0 to pred(m_proto.Chapter.Count) do
       begin
         cp := m_proto.Chapter.Items[i];
@@ -751,8 +765,10 @@ begin
     TV.Items.EndUpdate;
     Screen.Cursor := crDefault;
   end;
+  CodeSite.SendAssigned('root', root);
   if Assigned(root) then
     root.Expand(true);
+  CodeSite.ExitMethod(self, 'updateCpList');
 end;
 
 { TProtocolFrame.TEntry }

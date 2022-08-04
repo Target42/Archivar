@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, SynHighlighterXML, SynHighlighterDWS,
   SynHighlighterJSON, SynHighlighterHtml, SynEditHighlighter, SynHighlighterCSS,
-  SynEdit, fr_base, Vcl.StdCtrls, Vcl.ExtCtrls;
+  SynEdit, fr_base, Vcl.ExtCtrls;
 
 type
   TWebEditorForm = class(TForm)

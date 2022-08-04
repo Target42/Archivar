@@ -29,8 +29,7 @@ var
 
 implementation
 
-uses
-  m_glob_client;
+
 
 {$R *.dfm}
 

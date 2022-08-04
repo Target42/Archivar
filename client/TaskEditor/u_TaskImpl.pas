@@ -146,6 +146,7 @@ procedure TTask.release;
 var
   i : integer;
 begin
+
   if Assigned(m_fields) then begin
     m_fields.release;
     m_fields := NIL;

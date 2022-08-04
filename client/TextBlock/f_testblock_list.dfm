@@ -74,6 +74,7 @@ object TestBlockListForm: TTestBlockListForm
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsTextBlock'
+    Connected = True
     SQLConnection = GM.SQLConnection1
     Left = 88
     Top = 40

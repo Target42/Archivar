@@ -247,6 +247,10 @@ object TaskEditForm: TTaskEditForm
         object TabSheet4: TTabSheet
           Caption = 'Vorschau'
           ImageIndex = 1
+          ExplicitLeft = 0
+          ExplicitTop = 0
+          ExplicitWidth = 0
+          ExplicitHeight = 0
           object WebBrowser1: TWebBrowser
             Left = 0
             Top = 0
@@ -319,7 +323,7 @@ object TaskEditForm: TTaskEditForm
         end
         inherited ImageList1: TImageList
           Bitmap = {
-            494C010102000800440010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+            494C010102000800480010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
             0000000000003600000028000000400000001000000001002000000000000010
             000000000000000000000000000000000000000000FF078DBE00078DBE00078D
             BE00078DBE00078DBE00078DBE00078DBE00078DBE00078DBE00078DBE00078D
@@ -494,14 +498,14 @@ object TaskEditForm: TTaskEditForm
         inherited Panel1: TPanel
           Width = 532
           Height = 392
-          ExplicitWidth = 532
-          ExplicitHeight = 392
+          ExplicitWidth = 111
+          ExplicitHeight = 154
           inherited GroupBox1: TGroupBox
             Width = 532
-            ExplicitWidth = 532
+            ExplicitWidth = 111
             inherited EditFrame1: TEditFrame
               Width = 528
-              ExplicitWidth = 528
+              ExplicitWidth = 107
               inherited RE: TRichEdit
                 Width = 528
                 OnKeyPress = DBEdit1KeyPress

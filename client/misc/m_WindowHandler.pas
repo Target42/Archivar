@@ -46,7 +46,7 @@ var
 implementation
 
 uses
-  Vcl.Dialogs, u_json, m_glob_client;
+  Vcl.Dialogs, u_json;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 

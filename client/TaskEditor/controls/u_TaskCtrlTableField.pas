@@ -22,7 +22,7 @@ type
 implementation
 
 uses
-  u_TaskCtrlPropImpl, Vcl.StdCtrls, System.SysUtils, Winapi.Windows;
+  u_TaskCtrlPropImpl, System.SysUtils, Winapi.Windows;
 
 
 { TaskCtrlTableField }

@@ -5,8 +5,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Datasnap.DBClient,
-  Datasnap.DSConnect, JvBaseDlg, JvBrowseFolder, Vcl.Buttons, Vcl.StdCtrls,
-  fr_base, Vcl.Grids, Vcl.DBGrids, Vcl.ExtCtrls;
+  Datasnap.DSConnect, JvBrowseFolder, Vcl.Buttons, Vcl.StdCtrls,
+  fr_base, Vcl.DBGrids, Vcl.ExtCtrls, JvBaseDlg, Vcl.Grids;
 
 type
   TTextBlockExportForm = class(TForm)

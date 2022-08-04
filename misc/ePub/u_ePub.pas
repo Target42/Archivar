@@ -2,7 +2,7 @@ unit u_ePub;
 
 interface
 
-uses u_navpoint, System.Generics.Collections, System.Classes;
+uses u_navpoint, System.Classes;
 
 type
   ePub = class

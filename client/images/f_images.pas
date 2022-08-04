@@ -5,8 +5,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, m_glob_client, Data.DB,
-  Datasnap.DBClient, Datasnap.DSConnect, Vcl.Grids, Vcl.DBGrids, fr_base,
-  Vcl.ExtDlgs, Vcl.StdCtrls, Vcl.Buttons, Vcl.DBCtrls, Vcl.ExtCtrls;
+  Datasnap.DBClient, Datasnap.DSConnect, Vcl.DBGrids, fr_base,
+  Vcl.ExtDlgs, Vcl.Buttons, Vcl.DBCtrls, Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Grids;
 
 type
   TImagesForm = class(TForm)
