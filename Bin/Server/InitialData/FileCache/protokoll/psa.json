@@ -1,0 +1,68 @@
+{
+  "chapter":
+  [
+    {
+      "titel":"Eröffnung",
+      "kapitel":
+      [
+        {
+          "titel":"Die Anwesenheit wird festgestellt"
+        },
+        {
+          "titel":"Protokoll" 
+        }
+      ]
+    },
+    {
+      "titel":"Einstellungen, Versetzungen, Änderungen",
+      "kapitel":
+      [
+        {
+          "titel":"Einstellungen"
+        },
+        {
+          "titel":"Versetzungen"
+        },
+        {
+          "titel":"Änderungen"
+        }
+      ]
+    },
+    {
+      "titel":"Sonderarbeitsverhältnisse",
+      "kapitel":
+      [
+        {
+          "titel":" Auszubildende"
+        },
+        {
+          "titel":"Praktikanten"
+        },
+        {
+          "titel":"Praxisstudenten"
+        },
+        {
+          "titel":"Praxisstudenten"
+        },
+        {
+          "titel":"Verschiedenes"
+      }
+      ]
+    },
+    {
+      "titel":"Änderungen",
+      "kapitel":
+      [
+        {
+          "titel":" Arbeitszeit"
+        },
+        {
+          "titel":"Mutterschutz"
+        }
+      ]
+    },
+    {
+      "titel":"Sonstiges"
+    }    
+  ]
+}

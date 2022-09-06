@@ -1,0 +1,35 @@
+{
+  "chapter":
+  [
+    {
+      "titel":"Eröffnung",
+      "kapitel":
+      [
+        {
+          "titel":"Die Anwesenheit wird festgestellt"
+        },
+        {
+          "titel":"Protokoll"
+        }
+      ]
+    },
+    {
+      "titel":"PSA",
+      "kapitel":
+      [
+        {
+          "titel":"Einstellungen, Versetzungen, Änderungen"
+        },
+        {
+          "titel":"Einstellung Auszubildende"
+        },
+        {
+          "titel":"Praktikanten"
+        },
+        {
+          "titel":"Praxisstudenten"
+        }
+      ]
+    }
+  ]
+}
