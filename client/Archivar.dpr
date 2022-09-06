@@ -4,15 +4,14 @@ program Archivar;
 
 uses
   Vcl.Forms,
-{$ifdef RELEASE}
+  {$ifdef RELEASE}
   JclAppInst,
-{$endif}
+  {$endif }
   u_eventHandler in 'Events\u_eventHandler.pas',
   m_glob_client in 'm_glob_client.pas' {GM: TDataModule},
   f_main in 'f_main.pas' {MainForm},
   u_stub in 'u_stub.pas',
   f_gremiumForm in 'Gremium\f_gremiumForm.pas' {GremiumForm},
-  fr_base in '..\misc\fr_base.pas' {BaseFrame: TFrame},
   u_misc in 'u_misc.pas',
   f_gremium_edit in 'Gremium\f_gremium_edit.pas' {GremiumEditForm},
   f_personen in 'Personen\f_personen.pas' {PersonenForm},
@@ -161,7 +160,6 @@ uses
   f_task_filter in 'Task\f_task_filter.pas' {TaskFilterForm},
   fr_to in 'Sitzung\fr_to.pas' {TOFrame: TFrame},
   f_meeting_select in 'Sitzung\f_meeting_select.pas' {SelectMeetingForm},
-  fr_gremium in 'Gremium\fr_gremium.pas' {GremiumFrame: TFrame},
   f_meeting_proto in 'Sitzung\f_meeting_proto.pas' {MeetingProtoForm},
   f_login in 'misc\f_login.pas' {LoginForm},
   fr_meeting in 'Sitzung\fr_meeting.pas' {MeetingFrame: TFrame},
@@ -211,7 +209,11 @@ uses
   f_file_info in 'dws\f_file_info.pas' {FileInfoForm},
   fr_storages in 'dms\fr_storages.pas' {StoragesFrame: TFrame},
   f_storages in 'dms\f_storages.pas' {StoragesForm},
-  f_personen_list in 'Personen\f_personen_list.pas', CodeSiteLogging {PersonenListForm};
+  f_personen_list in 'Personen\f_personen_list.pas' {PersonenListForm},
+  CodeSiteLogging {PersonenListForm},
+  f_protokoll_new in 'Protokoll\f_protokoll_new.pas' {ProtokollNewForm},
+  fr_base in '..\misc\fr_base.pas' {BaseFrame: TFrame},
+  fr_gremium in 'Gremium\fr_gremium.pas' {GremiumFrame: TFrame};
 
 {$R *.res}
 

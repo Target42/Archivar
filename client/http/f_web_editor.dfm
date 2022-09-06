@@ -71,6 +71,7 @@ object WebEditorForm: TWebEditorForm
     Lines.Strings = (
       'SynEdit1')
     FontSmoothing = fsmNone
+    ExplicitTop = 2
   end
   object SynCssSyn1: TSynCssSyn
     Options.AutoDetectEnabled = False
@@ -93,6 +94,28 @@ object WebEditorForm: TWebEditorForm
     Left = 112
     Top = 8
   end
+  object SynXMLSyn1: TSynXMLSyn
+    Options.AutoDetectEnabled = False
+    Options.AutoDetectLineLimit = 0
+    Options.Visible = False
+    WantBracesParsed = False
+    Left = 272
+    Top = 8
+  end
+  object SynIniSyn1: TSynIniSyn
+    Options.AutoDetectEnabled = False
+    Options.AutoDetectLineLimit = 0
+    Options.Visible = False
+    Left = 64
+    Top = 8
+  end
+  object SynJScriptSyn1: TSynJScriptSyn
+    Options.AutoDetectEnabled = False
+    Options.AutoDetectLineLimit = 0
+    Options.Visible = False
+    Left = 160
+    Top = 8
+  end
   object SynDWSSyn1: TSynDWSSyn
     DefaultFilter = 'DWScript Files (*.dws;*.pas;*.inc)|*.dws;*.pas;*.inc'
     Options.AutoDetectEnabled = False
@@ -101,12 +124,18 @@ object WebEditorForm: TWebEditorForm
     Left = 192
     Top = 8
   end
-  object SynXMLSyn1: TSynXMLSyn
+  object SynPythonSyn1: TSynPythonSyn
     Options.AutoDetectEnabled = False
     Options.AutoDetectLineLimit = 0
     Options.Visible = False
-    WantBracesParsed = False
-    Left = 272
+    Left = 224
+    Top = 8
+  end
+  object SynSTSyn1: TSynSTSyn
+    Options.AutoDetectEnabled = False
+    Options.AutoDetectLineLimit = 0
+    Options.Visible = False
+    Left = 320
     Top = 8
   end
 end

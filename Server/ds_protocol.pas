@@ -209,7 +209,9 @@ begin
     end;
     PEQry.close;
     TNTab.Close;
+
     IBTransaction1.commit;
+
     JResult( Result, true, 'Das Protokoll wurde erfolgreich angelegt.');
     GrijjyLog.Send('new protocol', id);
   except

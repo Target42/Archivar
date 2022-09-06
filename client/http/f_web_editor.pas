@@ -6,7 +6,8 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, SynHighlighterXML, SynHighlighterDWS,
   SynHighlighterJSON, SynHighlighterHtml, SynEditHighlighter, SynHighlighterCSS,
-  SynEdit, fr_base, Vcl.ExtCtrls;
+  SynEdit, fr_base, Vcl.ExtCtrls, SynHighlighterST, SynHighlighterPython,
+  SynEditCodeFolding, SynHighlighterJScript, SynHighlighterIni;
 
 type
   TWebEditorForm = class(TForm)
@@ -15,8 +16,12 @@ type
     SynCssSyn1: TSynCssSyn;
     SynHTMLSyn1: TSynHTMLSyn;
     SynJSONSyn1: TSynJSONSyn;
-    SynDWSSyn1: TSynDWSSyn;
     SynXMLSyn1: TSynXMLSyn;
+    SynIniSyn1: TSynIniSyn;
+    SynJScriptSyn1: TSynJScriptSyn;
+    SynDWSSyn1: TSynDWSSyn;
+    SynPythonSyn1: TSynPythonSyn;
+    SynSTSyn1: TSynSTSyn;
     procedure BaseFrame1OKBtnClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -71,11 +76,16 @@ var
 begin
   ext := LowerCase(ExtractFileExt(fname));
 
-  Result := Contains( ext, SynCssSyn1.DefaultFilter)  or
-            Contains( ext, SynHTMLSyn1.DefaultFilter) or
-            Contains( ext, SynJSONSyn1.DefaultFilter) or
-            Contains( ext, SynDWSSyn1.DefaultFilter)  or
-            Contains( ext, SynXMLSyn1.DefaultFilter);
+  Result := Contains( ext, SynCssSyn1.DefaultFilter)      or
+            Contains( ext, SynHTMLSyn1.DefaultFilter)     or
+            Contains( ext, SynJSONSyn1.DefaultFilter)     or
+            Contains( ext, SynDWSSyn1.DefaultFilter)      or
+            Contains( ext, SynXMLSyn1.DefaultFilter)      or
+            Contains( ext, SynIniSyn1.DefaultFilter)      or
+            Contains( ext, SynJScriptSyn1.DefaultFilter)  or
+            Contains( ext, SynDWSSyn1.DefaultFilter)      or
+            Contains( ext, SynPythonSyn1.DefaultFilter)   or
+            Contains( ext, SynSTSyn1.DefaultFilter);
 end;
 
 procedure TWebEditorForm.FormCreate(Sender: TObject);
@@ -114,11 +124,15 @@ begin
   m_fname := value;
   ext := LowerCase(ExtractFileExt(m_fname));
 
-  if      contains( ext, SynCssSyn1.DefaultFilter)    then SynEdit1.Highlighter := SynCssSyn1
-  else if contains( ext, SynHTMLSyn1.DefaultFilter)   then SynEdit1.Highlighter := SynHTMLSyn1
-  else if contains( ext, SynJSONSyn1.DefaultFilter)   then SynEdit1.Highlighter := SynJSONSyn1
-  else if contains( ext, SynDWSSyn1.DefaultFilter)    then SynEdit1.Highlighter := SynDWSSyn1
-  else if contains( ext, SynXMLSyn1.DefaultFilter)    then SynEdit1.Highlighter := SynXMLSyn1;
+  if      contains( ext, SynCssSyn1.DefaultFilter)      then SynEdit1.Highlighter := SynCssSyn1
+  else if contains( ext, SynHTMLSyn1.DefaultFilter)     then SynEdit1.Highlighter := SynHTMLSyn1
+  else if contains( ext, SynJSONSyn1.DefaultFilter)     then SynEdit1.Highlighter := SynJSONSyn1
+  else if contains( ext, SynDWSSyn1.DefaultFilter)      then SynEdit1.Highlighter := SynDWSSyn1
+  else if contains( ext, SynXMLSyn1.DefaultFilter)      then SynEdit1.Highlighter := SynXMLSyn1
+  else if contains( ext, SynIniSyn1.DefaultFilter)      then SynEdit1.Highlighter := SynIniSyn1
+  else if contains( ext, SynJScriptSyn1.DefaultFilter)  then SynEdit1.Highlighter := SynJScriptSyn1
+  else if contains( ext, SynPythonSyn1.DefaultFilter)   then SynEdit1.Highlighter := SynPythonSyn1
+  else if contains( ext, SynSTSyn1.DefaultFilter)       then SynEdit1.Highlighter := SynSTSyn1;
 
   SynEdit1.Lines.LoadFromFile(m_fname);
   FNeedUpload := false;

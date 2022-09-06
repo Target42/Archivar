@@ -250,7 +250,7 @@ uses
   f_meeting_new, f_meeting_select, f_meeting_proto, f_login,
   system.UITypes, f_protocol_sec, u_onlineUser, f_doMeeting, f_task_type,
   f_flieCacheForm, f_keys, f_dairy, f_textblock_export, f_textblock_import,
-  f_storages;
+  f_storages, f_protokoll_new;
 
 {$R *.dfm}
 
@@ -548,6 +548,12 @@ var
   data, req       : TJSONObject;
   prid            : integer;
 begin
+  Application.CreateForm(TProtokollNewForm, ProtokollNewForm);
+  ProtokollNewForm.ShowModal;
+  ProtokollNewForm.free;
+
+  exit;
+
   Application.CreateForm(TGremiumListForm, GremiumListForm);
   if GremiumListForm.ShowModal = mrOk then
   begin

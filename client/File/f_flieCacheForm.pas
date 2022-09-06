@@ -16,13 +16,18 @@ type
     BitBtn2: TBitBtn;
     BitBtn3: TBitBtn;
     BitBtn4: TBitBtn;
+    BitBtn5: TBitBtn;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
     procedure BitBtn3Click(Sender: TObject);
     procedure BitBtn4Click(Sender: TObject);
+    procedure BitBtn5Click(Sender: TObject);
   private
+    function lockDocument( fc_id, us_id : integer; showResult : boolean = true ) : boolean;
+    function unlocDocument( fc_id, us_id : integer; showResult : boolean = true ) : boolean;
+
     procedure updateList(Sender : TObject );
   public
     { Public-Deklarationen }
@@ -34,7 +39,8 @@ var
 implementation
 
 uses
-  m_fileCache, f_fileuploadform, u_stub, System.JSON, u_json, system.IOUtils;
+  m_fileCache, f_fileuploadform, u_stub, System.JSON, u_json, system.IOUtils,
+  f_web_editor;
 
 {$R *.dfm}
 
@@ -98,54 +104,58 @@ end;
 
 procedure TFileCacheForm.BitBtn3Click(Sender: TObject);
 var
-  client  : TdsFileCacheClient;
   ptr     : TFileCacheMod.TPEntry;
-  req     : TJSONObject;
-  res     : TJSONObject;
 begin
   if not Assigned(LV.Selected) then
     exit;
 
   ptr := TFileCacheMod.TPEntry( LV.Selected.Data );
-
-  try
-    req := TJSONObject.Create;
-    JReplace( req, 'fcid', ptr^.id);
-    JReplace( req, 'usid', GM.UserID );
-    client := TdsFileCacheClient.Create(GM.SQLConnection1.DBXConnection);
-    res := client.Lock(req);
-    ShowResult( res );
-    client.Free;
-
-  except
-
-  end;
-
+  lockDocument(ptr^.id, GM.UserID );
 end;
 
 procedure TFileCacheForm.BitBtn4Click(Sender: TObject);
 var
-  client  : TdsFileCacheClient;
   ptr     : TFileCacheMod.TPEntry;
-  req     : TJSONObject;
-  res     : TJSONObject;
+begin
+  if not Assigned(LV.Selected) then
+    exit;
+
+  ptr := TFileCacheMod.TPEntry( LV.Selected.Data );
+  unlocDocument( ptr^.id, GM.UserID);
+end;
+
+procedure TFileCacheForm.BitBtn5Click(Sender: TObject);
+var
+  ptr   : TFileCacheMod.TPEntry;
+  fname : string;
 begin
   if not Assigned(LV.Selected) then
     exit;
 
   ptr := TFileCacheMod.TPEntry( LV.Selected.Data );
 
+  Application.CreateForm(TWebEditorForm, WebEditorForm);
+  if not WebEditorForm.canEdit(ptr^.name) then begin
+    ShowMessage('Das Dokument kann mit dem internen Editor nioht bearbeitet werden.');
+    WebEditorForm.Free;
+
+    exit;
+  end;
+  fname := FileCacheMod.getFile(ptr^.cache, ptr^.name);
+
   try
-    req := TJSONObject.Create;
-    JReplace( req, 'fcid', ptr^.id);
-    JReplace( req, 'usid', GM.UserID );
-    client := TdsFileCacheClient.Create(GM.SQLConnection1.DBXConnection);
-    res := client.unlock(req);
-    ShowResult( res );
-    client.Free;
+    if lockDocument(ptr^.id, GM.UserID, false) then begin
+      WebEditorForm.FileName := fname;
+      if WebEditorForm.ShowModal = mrOk then begin
+        FileCacheMod.upload(ptr^.cache, ptr^.name, fname);
+      end;
+      unlocDocument(ptr^.id, GM.UserID, false);
+    end else
+      ShowMessage('Das Dokument konnte nicht gesperrt werden!');
   except
 
   end;
+  WebEditorForm.Free;
 
 end;
 
@@ -157,6 +167,54 @@ end;
 procedure TFileCacheForm.FormDestroy(Sender: TObject);
 begin
   FileCacheMod.Listner := NIL;
+end;
+
+function TFileCacheForm.lockDocument(fc_id, us_id: integer;
+  showResult: boolean): boolean;
+var
+  client  : TdsFileCacheClient;
+  req     : TJSONObject;
+  res     : TJSONObject;
+begin
+  Result := false;
+  try
+    req := TJSONObject.Create;
+    JReplace( req, 'fcid', fc_id);
+    JReplace( req, 'usid', us_id );
+    client := TdsFileCacheClient.Create(GM.SQLConnection1.DBXConnection);
+    res := client.Lock(req);
+    if showResult then
+      m_glob_client.ShowResult( res );
+    Result := JBool( res, 'result', false);
+    client.Free;
+  except
+
+  end;
+end;
+
+function TFileCacheForm.unlocDocument(fc_id, us_id: integer;
+  showResult: boolean): boolean;
+var
+  client  : TdsFileCacheClient;
+  req     : TJSONObject;
+  res     : TJSONObject;
+begin
+  Result := false;
+
+  try
+    req := TJSONObject.Create;
+    JReplace( req, 'fcid', fc_id);
+    JReplace( req, 'usid', us_id );
+    client := TdsFileCacheClient.Create(GM.SQLConnection1.DBXConnection);
+    res := client.unlock(req);
+    if showResult then
+      m_glob_client.ShowResult( res );
+    Result := JBool( res, 'result', false);
+    client.Free;
+  except
+
+  end;
+
 end;
 
 procedure TFileCacheForm.updateList(Sender : TObject );

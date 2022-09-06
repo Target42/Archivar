@@ -111,10 +111,11 @@ type
     procedure buildTree(root: TTreeNode; ct: IChapterTitle);
 
     procedure clearTree;
-    function findNode(Node: TTreeNode; Typ: TEntryType): TEntry;
+    function  findNode(Node: TTreeNode; Typ: TEntryType): TEntry;
 
     procedure saveSelected;
     procedure restoreSelected;
+
   public
     procedure init;
     procedure release;

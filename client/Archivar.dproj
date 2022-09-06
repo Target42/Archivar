@@ -132,10 +132,6 @@
         <DCCReference Include="Gremium\f_gremiumForm.pas">
             <Form>GremiumForm</Form>
         </DCCReference>
-        <DCCReference Include="..\misc\fr_base.pas">
-            <Form>BaseFrame</Form>
-            <DesignClass>TFrame</DesignClass>
-        </DCCReference>
         <DCCReference Include="u_misc.pas"/>
         <DCCReference Include="Gremium\f_gremium_edit.pas">
             <Form>GremiumEditForm</Form>
@@ -468,10 +464,6 @@
         <DCCReference Include="Sitzung\f_meeting_select.pas">
             <Form>SelectMeetingForm</Form>
         </DCCReference>
-        <DCCReference Include="Gremium\fr_gremium.pas">
-            <Form>GremiumFrame</Form>
-            <DesignClass>TFrame</DesignClass>
-        </DCCReference>
         <DCCReference Include="Sitzung\f_meeting_proto.pas">
             <Form>MeetingProtoForm</Form>
         </DCCReference>
@@ -592,6 +584,20 @@
         </DCCReference>
         <DCCReference Include="Personen\f_personen_list.pas">
             <Form>PersonenListForm</Form>
+        </DCCReference>
+        <DCCReference Include="Protokoll\f_protokoll_new.pas">
+            <Form>ProtokollNewForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="..\misc\fr_base.pas">
+            <Form>BaseFrame</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="Gremium\fr_gremium.pas">
+            <Form>GremiumFrame</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <None Include="Datafields\ERA-NS.txt"/>
         <RcItem Include="dws\dws.html">

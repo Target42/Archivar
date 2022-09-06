@@ -56,6 +56,7 @@ type
 
     function getID( cache, name : string ) : integer;
 
+    procedure fillList( cache : string; list : TStrings );
     function getFiles( cache : string ) : TList<TPEntry>;
     function getFile( ptr : TPEntry ) : string; overload;
     function getFile( cache, name : string ) : string; overload;
@@ -168,6 +169,16 @@ begin
   end;
 end;
 
+procedure TFileCacheMod.fillList(cache: string; list: TStrings);
+var
+  ptr : TPEntry;
+begin
+  for ptr in m_files do begin
+    if SameText(cache, ptr^.cache) then
+      list.Add(ptr^.name);
+  end;
+end;
+
 function TFileCacheMod.getFile(ptr: TPEntry): string;
 
 begin
@@ -175,13 +186,13 @@ begin
   if not Assigned(ptr) then  exit;
 
   Result := TPath.Combine( GM.Cache, Format('%s\%s', [ptr^.cache, ptr^.name]));
-  if not FileExists(Result) then  Result := '';
+//  if not FileExists(Result) then  Result := '';
 end;
 
 function TFileCacheMod.getFile(cache, name: string): string;
 begin
   Result := TPath.Combine( GM.Cache, Format('%s\%s', [cache, name]));
-  if not FileExists(Result) then  Result := '';
+//  if not FileExists(Result) then  Result := '';
 end;
 
 function TFileCacheMod.getFiles(cache: string): TList<TPEntry>;
@@ -288,7 +299,6 @@ begin
 
   fname       := getFile(ptr);
 
-
   if not FileExists(fname) or (ptr^.md5 <> GM.md5(fname)) then begin
     client      := TdsFileCacheClient.Create(GM.SQLConnection1.DBXConnection);
     try
@@ -296,6 +306,7 @@ begin
       JReplace( req, 'id', ptr^.id);
 
       st := client.download(req);
+
       GM.download(fname, st);
     finally
       client.Free;
