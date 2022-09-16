@@ -542,46 +542,50 @@ end;
 
 procedure TMainForm.ac_pr_newExecute(Sender: TObject);
 var
-  GremiumListForm : TGremiumListForm;
   client          : TdsProtocolClient;
   gr              : TGremium;
+  obj             : TJSONObject;
   data, req       : TJSONObject;
   prid            : integer;
 begin
+  gr := NIL;
+  obj := nil;
+
   Application.CreateForm(TProtokollNewForm, ProtokollNewForm);
-  ProtokollNewForm.ShowModal;
+  if ProtokollNewForm.ShowModal = mrok then begin
+    gr := ProtokollNewForm.Gremium;
+    obj:= ProtokollNewForm.Template;
+  end;
   ProtokollNewForm.free;
 
-  exit;
 
-  Application.CreateForm(TGremiumListForm, GremiumListForm);
-  if GremiumListForm.ShowModal = mrOk then
+  if Assigned(gr) then
   begin
-    gr := GremiumListForm.Gremium;
-    if Assigned(gr) then
+    prid := -1;
+    client := TdsProtocolClient.Create(GM.SQLConnection1.DBXConnection);
+    try
+      req := TJSONObject.Create;
+      JReplace( req, 'grid', gr.ID );
+      JReplace( req, 'short', gr.ShortName);
+      if Assigned(obj) then
+        JReplace( req, 'template', obj);
+
+      data := client.newProtocol(req);
+      prid := JInt( data, 'id', -1);
+    except
+
+    end;
+    client.Free;
+
+    if prid <> -1 then
     begin
-      prid := -1;
-      client := TdsProtocolClient.Create(GM.SQLConnection1.DBXConnection);
-      try
-        req := TJSONObject.Create;
-        JReplace( req, 'grid', gr.ID );
-        JReplace( req, 'short', gr.ShortName);
-
-        data := client.newProtocol(req);
-        prid := JInt( data, 'id', -1);
-      except
-
-      end;
-      client.Free;
-
-      if prid <> -1 then
-      begin
-        GM.LockDocument(prid, integer(ltProtokoll));
-        WindowHandler.openProtoCclWindow(prid, false);
-      end;
+      GM.LockDocument(prid, integer(ltProtokoll));
+      WindowHandler.openProtoCclWindow(prid, false);
     end;
   end;
-  GremiumListForm.Free;
+
+  if Assigned(obj) then
+    obj.Free;
 end;
 
 procedure TMainForm.ac_pr_openExecute(Sender: TObject);

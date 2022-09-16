@@ -201,6 +201,8 @@ object dsProtocol: TdsProtocol
     IndexName = 'CP_CHAPTER_SEC'
     Connection = DBMod.ArchivarConnection
     Transaction = IBTransaction1
+    UpdateOptions.AssignedValues = [uvUpdateMode]
+    UpdateOptions.UpdateMode = upWhereChanged
     UpdateOptions.UpdateTableName = 'CP_CHAPTER'
     TableName = 'CP_CHAPTER'
     Left = 24
@@ -215,9 +217,11 @@ object dsProtocol: TdsProtocol
     ObjectView = False
     Connection = DBMod.ArchivarConnection
     Transaction = IBTransaction1
+    UpdateOptions.AssignedValues = [uvUpdateMode]
+    UpdateOptions.UpdateMode = upWhereChanged
     UpdateOptions.UpdateTableName = 'CT_CHAPTER_TEXT'
     TableName = 'CT_CHAPTER_TEXT'
-    Left = 200
+    Left = 208
     Top = 264
   end
   object ListPr: TFDQuery
@@ -304,7 +308,7 @@ object dsProtocol: TdsProtocol
     SQL.Strings = (
       'delete from CP_CHAPTER'
       'where CP_ID = :CP_ID')
-    Left = 16
+    Left = 24
     Top = 272
     ParamData = <
       item

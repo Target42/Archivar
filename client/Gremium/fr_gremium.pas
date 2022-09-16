@@ -19,10 +19,13 @@ type
     function getGremiumID : Integer;
 
     function getGremium : TGremium;
+    function GetShortGremium: string;
+    procedure SetShortGremium(const Value: string);
 
   public
     property GremiumID : integer read getGremiumId write setGremiumID;
     property Gremium : TGremium read getGremium;
+    property ShortGremium: string read GetShortGremium write SetShortGremium;
 
     procedure init;
     procedure release;
@@ -90,6 +93,19 @@ begin
   Result := gr.ID;
 end;
 
+function TGremiumFrame.GetShortGremium: string;
+var
+  gr : TGremium;
+begin
+  Result := '';
+
+  gr := getGremium;
+  if Assigned(gr) then begin
+    Result := gr.ShortName;
+  end;
+
+end;
+
 procedure TGremiumFrame.init;
 var
   i : integer;
@@ -149,6 +165,25 @@ begin
         break;
       end;
     end;
+end;
+
+procedure TGremiumFrame.SetShortGremium(const Value: string);
+var
+  gr : TGremium;
+  node : TTreeNode;
+begin
+  node := TV.Items.GetFirstNode;
+  while Assigned(node) do begin
+    gr := TGremium(node.Data);
+    if Assigned(gr) then begin
+      if SameText(value, gr.ShortName) then begin
+        TV.Selected := node;
+        break;
+      end;
+    end;
+    node := node.GetNext;
+  end;
+
 end;
 
 end.

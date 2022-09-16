@@ -67,18 +67,16 @@ object WebEditorForm: TWebEditorForm
     Gutter.Font.Height = -11
     Gutter.Font.Name = 'Courier New'
     Gutter.Font.Style = []
-    Highlighter = SynCssSyn1
     Lines.Strings = (
       'SynEdit1')
     FontSmoothing = fsmNone
-    ExplicitTop = 2
   end
   object SynCssSyn1: TSynCssSyn
     Options.AutoDetectEnabled = False
     Options.AutoDetectLineLimit = 0
     Options.Visible = False
-    Left = 32
-    Top = 8
+    Left = 96
+    Top = 40
   end
   object SynHTMLSyn1: TSynHTMLSyn
     Options.AutoDetectEnabled = False
@@ -88,54 +86,61 @@ object WebEditorForm: TWebEditorForm
     Top = 104
   end
   object SynJSONSyn1: TSynJSONSyn
-    Options.AutoDetectEnabled = False
+    Options.AutoDetectEnabled = True
     Options.AutoDetectLineLimit = 0
     Options.Visible = False
-    Left = 112
-    Top = 8
+    Left = 48
+    Top = 200
   end
   object SynXMLSyn1: TSynXMLSyn
     Options.AutoDetectEnabled = False
     Options.AutoDetectLineLimit = 0
     Options.Visible = False
     WantBracesParsed = False
-    Left = 272
-    Top = 8
+    Left = 408
+    Top = 152
   end
   object SynIniSyn1: TSynIniSyn
     Options.AutoDetectEnabled = False
     Options.AutoDetectLineLimit = 0
     Options.Visible = False
-    Left = 64
-    Top = 8
+    Left = 144
+    Top = 40
   end
   object SynJScriptSyn1: TSynJScriptSyn
     Options.AutoDetectEnabled = False
     Options.AutoDetectLineLimit = 0
     Options.Visible = False
-    Left = 160
-    Top = 8
-  end
-  object SynDWSSyn1: TSynDWSSyn
-    DefaultFilter = 'DWScript Files (*.dws;*.pas;*.inc)|*.dws;*.pas;*.inc'
-    Options.AutoDetectEnabled = False
-    Options.AutoDetectLineLimit = 0
-    Options.Visible = False
-    Left = 192
-    Top = 8
+    Left = 176
+    Top = 40
   end
   object SynPythonSyn1: TSynPythonSyn
     Options.AutoDetectEnabled = False
     Options.AutoDetectLineLimit = 0
     Options.Visible = False
-    Left = 224
-    Top = 8
+    Left = 296
+    Top = 128
   end
   object SynSTSyn1: TSynSTSyn
     Options.AutoDetectEnabled = False
     Options.AutoDetectLineLimit = 0
     Options.Visible = False
-    Left = 320
-    Top = 8
+    Left = 376
+    Top = 40
+  end
+  object SynPasSyn1: TSynPasSyn
+    Options.AutoDetectEnabled = False
+    Options.AutoDetectLineLimit = 0
+    Options.Visible = False
+    CommentAttri.Foreground = clGreen
+    DirectiveAttri.Foreground = clFuchsia
+    IdentifierAttri.Foreground = clBlack
+    KeyAttri.Foreground = clBlue
+    NumberAttri.Foreground = clRed
+    HexAttri.Foreground = clMoneyGreen
+    StringAttri.Foreground = clGreen
+    SymbolAttri.Foreground = clOlive
+    Left = 296
+    Top = 272
   end
 end

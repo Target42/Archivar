@@ -167,6 +167,55 @@ end;
 function TdsProtocol.newProtocol(data: TJSONObject): TJSONObject;
 var
   id : integer;
+  obj: TJSONObject;
+
+  procedure addKapitel( cp_id : integer; kapitel : TJSONArray );
+  var
+    i : integer;
+    row : TJSONObject;
+  begin
+    if not Assigned(kapitel) then exit;
+
+    for i := 0 to pred(kapitel.Count) do begin
+      row := getRow(kapitel, i);
+
+      CPText.Append;
+      CPText.FieldByName('cp_id').AsInteger       := cp_id;
+      CPText.FieldByName('ct_id').AsInteger       := AutoInc('gen_ct_id');
+      CPText.FieldByName('ct_parent').AsInteger   := 0;
+      CPText.FieldByName('CT_TITLE').AsString     := JString( row, 'titel');
+      CPText.FieldByName('ct_pos').AsInteger      := i + 1;
+      CPText.FieldByName('ct_number').AsInteger   := i + 1;
+      CPText.FieldByName('ct_created').AsDateTime := now;
+      CPText.Post;
+    end;
+  end;
+
+  procedure AddTemplate;
+  var
+    i : integer;
+    arr : TJSONArray;
+    row : TJSONObject;
+    cp_id  : integer;
+  begin
+    arr := JArray(obj, 'chapter');
+    if not Assigned(arr) then  exit;
+
+    for i := 0 to pred(arr.Count) do begin
+      row := getRow(arr, i);
+      cp_id := AutoInc('gen_cp_id');
+      CPTab.Append;
+      CPTab.FieldByName('pr_id').AsInteger        := id;
+      CPTab.FieldByName('cp_id').AsInteger        := cp_id;
+      CPTab.FieldByName('cp_title').AsString      := JString( row, 'titel' );
+      CPTab.FieldByName('cp_nr').AsInteger        := i + 1;
+      CPTab.FieldByName('cp_created').AsDateTime  := now;
+      CPTab.post;
+
+      addKapitel(cp_id, JArray( row, 'kapitel'));
+    end;
+
+  end;
 begin
   Result := TJSONObject.create;
 
@@ -188,7 +237,6 @@ begin
     PRTab.FieldByName('PR_STATUS').AsString  := 'E';
     PRTab.post;
 
-    PRTab.close;
 
     PEQry.ParamByName('GR_ID').AsInteger := JInt( data, 'grid' );
     PEQry.Open;
@@ -207,10 +255,26 @@ begin
       TNTab.Post;
       PEQry.next;
     end;
+
+    PRTab.close;
     PEQry.close;
     TNTab.Close;
 
-    IBTransaction1.commit;
+    obj := JObject( data, 'template');
+    if Assigned( obj ) then begin
+      CPTab.Open;
+      CPText.Open;
+
+      AddTemplate;
+
+      CPTab.close;
+      CPText.close;
+    end;
+
+    if IBTransaction1.Active then
+      IBTransaction1.commit;
+
+
 
     JResult( Result, true, 'Das Protokoll wurde erfolgreich angelegt.');
     GrijjyLog.Send('new protocol', id);

@@ -35,6 +35,9 @@ procedure getText( obj : TJSONObject; name : string ; list : TStringList ); over
 
 function  getIntNumbers( obj : TJSONObject; name : string ) : Tlist<integer>;
 
+function loadJSON( var obj : TJSONObject; st : TStream ) : boolean; overload;
+function loadJSON( var obj : TJSONObject; fileName : string ) : boolean; overload;
+
 function loadJSON( st : TStream ) : TJSONObject; overload;
 function loadJSON( fileName : string ) : TJSONObject; overload;
 function JFromText( text : string) : TJSONObject;
@@ -408,6 +411,25 @@ begin
   end;
 
 end;
+
+function loadJSON( var obj : TJSONObject; st : TStream ) : boolean;
+begin
+  if Assigned(obj) then
+    obj.Free;
+  obj := loadJSON( st );
+
+  Result := Assigned(obj);
+end;
+
+function loadJSON( var obj : TJSONObject; fileName : string ) : boolean;
+begin
+  if Assigned(obj) then
+    obj.Free;
+  obj := loadJSON( fileName );
+
+  Result := Assigned(obj);
+end;
+
 
 {*******************************************************************************
 *                   ac_ru_runExecute

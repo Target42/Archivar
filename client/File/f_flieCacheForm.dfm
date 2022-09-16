@@ -76,6 +76,8 @@ object FileCacheForm: TFileCacheForm
     SortType = stText
     TabOrder = 1
     ViewStyle = vsReport
+    OnClick = BitBtn5Click
+    ExplicitTop = -6
   end
   object GroupBox1: TGroupBox
     Left = 0
@@ -85,7 +87,6 @@ object FileCacheForm: TFileCacheForm
     Align = alBottom
     Caption = 'Aktionen'
     TabOrder = 2
-    ExplicitTop = 362
     object BitBtn1: TBitBtn
       Left = 24
       Top = 24
