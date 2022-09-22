@@ -30,8 +30,6 @@ object ProtocolFrame: TProtocolFrame
       OnChange = TVChange
       OnCollapsing = TVCollapsing
       OnDblClick = TVDblClick
-      ExplicitLeft = 4
-      ExplicitTop = 14
     end
   end
   object PageControl2: TPageControl
@@ -47,7 +45,7 @@ object ProtocolFrame: TProtocolFrame
       object SpeedButton1: TSpeedButton
         Tag = 1
         Left = 4
-        Top = 6
+        Top = 3
         Width = 22
         Height = 22
         Action = ac_add
@@ -230,7 +228,7 @@ object ProtocolFrame: TProtocolFrame
     Left = 100
     Top = 25
     Bitmap = {
-      494C010106001001BC0110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010106001001C00110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
