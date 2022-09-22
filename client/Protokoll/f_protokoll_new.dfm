@@ -83,8 +83,6 @@ object ProtokollNewForm: TProtokollNewForm
         Width = 221
         Height = 414
         OnClick = GremiumFrame1TVClick
-        ExplicitLeft = 0
-        ExplicitTop = 0
         ExplicitWidth = 221
         ExplicitHeight = 414
       end

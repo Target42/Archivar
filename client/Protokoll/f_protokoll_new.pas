@@ -148,8 +148,7 @@ begin
   if name = '' then exit;
   GremiumFrame1.ShortGremium := name;
 
-
-  BaseFrame1.OKBtn.Enabled := Assigned(TV.Selected);
+  BaseFrame1.OKBtn.Enabled := Assigned(GremiumFrame1.Gremium);
 end;
 
 procedure TProtokollNewForm.updateTree;
