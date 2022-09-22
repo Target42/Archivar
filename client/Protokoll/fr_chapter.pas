@@ -308,10 +308,15 @@ end;
 procedure TChapterFrame.ac_del_chapterExecute(Sender: TObject);
 var
   cp : IChapter;
+  en : TEntry;
 begin
   if not Assigned(TV.Selected) then
     exit;
-  cp := IChapter(TV.Selected.Data);
+  en := TEntry(TV.Selected.Data);
+
+  if en.Typ = etBeschluss then exit;
+
+  cp := IChapter(en.ptr);
   cp.Parent.remove(cp);
   cp.release;
   updateTree;

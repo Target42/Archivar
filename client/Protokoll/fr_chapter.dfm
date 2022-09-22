@@ -49,24 +49,17 @@ object ChapterFrame: TChapterFrame
       OnDblClick = TVDblClick
       OnDragDrop = TVDragDrop
       OnDragOver = TVDragOver
-      ExplicitLeft = 3
-      ExplicitTop = 25
-      ExplicitHeight = 447
     end
     object PageControl1: TPageControl
       Left = 2
       Top = 233
       Width = 247
       Height = 70
-      ActivePage = TabSheet3
+      ActivePage = TabSheet1
       Align = alBottom
       TabOrder = 1
       object TabSheet1: TTabSheet
         Caption = 'Bearbeiten'
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object SpeedButton1: TSpeedButton
           Tag = 1
           Left = 3
@@ -111,10 +104,6 @@ object ChapterFrame: TChapterFrame
       object TabSheet2: TTabSheet
         Caption = 'Verschieben'
         ImageIndex = 1
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object SpeedButton4: TSpeedButton
           Tag = 1
           Left = 3
@@ -159,10 +148,6 @@ object ChapterFrame: TChapterFrame
       object TabSheet3: TTabSheet
         Caption = 'Beschluss'
         ImageIndex = 2
-        ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 0
-        ExplicitHeight = 0
         object SpeedButton9: TSpeedButton
           Tag = 1
           Left = 3
@@ -248,8 +233,8 @@ object ChapterFrame: TChapterFrame
       inherited LV: TListView
         Width = 152
         Height = 247
-        ExplicitWidth = 574
-        ExplicitHeight = 492
+        ExplicitWidth = 152
+        ExplicitHeight = 247
       end
       inherited Panel2: TPanel
         Height = 247
@@ -346,7 +331,7 @@ object ChapterFrame: TChapterFrame
     Left = 208
     Top = 144
     Bitmap = {
-      494C010108002800840010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C0101080028008C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000003000000001002000000000000030
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
