@@ -46,6 +46,7 @@ type
     SpeedButton9: TSpeedButton;
     TV: TTreeView;
     ac_edit_task: TAction;
+    N3: TMenuItem;
     procedure TVChange(Sender: TObject; Node: TTreeNode);
     procedure TVDblClick(Sender: TObject);
     procedure ac_addExecute(Sender: TObject);
