@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Datasnap.DBClient,
   Datasnap.DSConnect, fr_base, Vcl.ExtCtrls, Vcl.DBGrids, u_stub,
-  Vcl.Menus, Vcl.Buttons, Vcl.Grids;
+  Vcl.Menus, Vcl.Buttons, Vcl.Grids, Vcl.StdCtrls;
 
 type
   TGremiumMAForm = class(TForm)
@@ -17,8 +17,6 @@ type
     Panel1: TPanel;
     Panel3: TPanel;
     Splitter1: TSplitter;
-    Panel2: TDBGrid;
-    Panel4: TDBGrid;
     AllUserSrc: TDataSource;
     GremiumSrc: TDataSource;
     PopupMenu1: TPopupMenu;
@@ -26,6 +24,10 @@ type
     SpeedButton2: TSpeedButton;
     SpeedButton3: TSpeedButton;
     SpeedButton4: TSpeedButton;
+    GroupBox1: TGroupBox;
+    Panel4: TDBGrid;
+    GroupBox2: TGroupBox;
+    Panel2: TDBGrid;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure Panel2DblClick(Sender: TObject);

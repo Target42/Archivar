@@ -2,8 +2,8 @@ object GremiumMAForm: TGremiumMAForm
   Left = 0
   Top = 0
   Caption = 'Gremium'
-  ClientHeight = 512
-  ClientWidth = 919
+  ClientHeight = 575
+  ClientWidth = 968
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,17 +17,17 @@ object GremiumMAForm: TGremiumMAForm
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter
-    Left = 436
+    Left = 468
     Top = 41
-    Height = 411
+    Height = 474
     ExplicitLeft = 360
     ExplicitTop = 72
     ExplicitHeight = 100
   end
   inline BaseFrame1: TBaseFrame
     Left = 0
-    Top = 452
-    Width = 919
+    Top = 515
+    Width = 968
     Height = 60
     Align = alBottom
     AutoSize = True
@@ -35,14 +35,14 @@ object GremiumMAForm: TGremiumMAForm
     ExplicitTop = 452
     ExplicitWidth = 919
     inherited StatusBar1: TStatusBar
-      Width = 919
-      ExplicitWidth = 919
+      Width = 968
+      ExplicitWidth = 973
     end
     inherited Panel1: TPanel
-      Width = 919
+      Width = 968
       ExplicitWidth = 919
       inherited OKBtn: TBitBtn
-        Left = 831
+        Left = 880
         ExplicitLeft = 831
       end
     end
@@ -50,22 +50,26 @@ object GremiumMAForm: TGremiumMAForm
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 919
+    Width = 968
     Height = 41
     Align = alTop
+    BevelOuter = bvNone
     Caption = 'Panel1'
     TabOrder = 1
+    ExplicitWidth = 919
   end
   object Panel3: TPanel
-    Left = 393
+    Left = 425
     Top = 41
     Width = 43
-    Height = 411
+    Height = 474
     Align = alLeft
     BevelOuter = bvNone
     Caption = 'Panel3'
     ShowCaption = False
-    TabOrder = 3
+    TabOrder = 2
+    ExplicitLeft = 542
+    ExplicitTop = 35
     object SpeedButton1: TSpeedButton
       Left = 6
       Top = 48
@@ -271,114 +275,138 @@ object GremiumMAForm: TGremiumMAForm
       OnClick = SpeedButton4Click
     end
   end
-  object Panel2: TDBGrid
+  object GroupBox1: TGroupBox
+    Left = 471
+    Top = 41
+    Width = 497
+    Height = 474
+    Align = alClient
+    Caption = 'Mitglieder'
+    TabOrder = 3
+    ExplicitLeft = 464
+    ExplicitTop = 62
+    ExplicitWidth = 473
+    ExplicitHeight = 387
+    object Panel4: TDBGrid
+      AlignWithMargins = True
+      Left = 5
+      Top = 18
+      Width = 487
+      Height = 451
+      TabStop = False
+      Align = alClient
+      BorderStyle = bsNone
+      Color = clBtnFace
+      DataSource = GremiumSrc
+      Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgMultiSelect, dgTitleClick, dgTitleHotTrack]
+      PopupMenu = PopupMenu1
+      ReadOnly = True
+      TabOrder = 0
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -11
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = []
+      Columns = <
+        item
+          Expanded = False
+          FieldName = 'PE_NAME'
+          Title.Caption = 'Name'
+          Width = 100
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'PE_VORNAME'
+          Title.Caption = 'Vorname'
+          Width = 100
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'PE_DEPARTMENT'
+          Title.Caption = 'Abteilung'
+          Width = 75
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'PE_NET'
+          Title.Caption = 'Login'
+          Width = 75
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'GP_ROLLE'
+          Title.Caption = 'Rolle'
+          Width = 100
+          Visible = True
+        end>
+    end
+  end
+  object GroupBox2: TGroupBox
     Left = 0
     Top = 41
-    Width = 393
-    Height = 411
-    TabStop = False
+    Width = 425
+    Height = 474
     Align = alLeft
-    BorderStyle = bsNone
-    Color = clBtnFace
-    DataSource = AllUserSrc
-    Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgMultiSelect, dgTitleClick, dgTitleHotTrack]
-    ReadOnly = True
-    TabOrder = 2
-    TitleFont.Charset = DEFAULT_CHARSET
-    TitleFont.Color = clWindowText
-    TitleFont.Height = -11
-    TitleFont.Name = 'Tahoma'
-    TitleFont.Style = []
-    OnDblClick = Panel2DblClick
-    Columns = <
-      item
-        Expanded = False
-        FieldName = 'PE_NAME'
-        Title.Caption = 'Name'
-        Width = 100
-        Visible = True
-      end
-      item
-        Expanded = False
-        FieldName = 'PE_VORNAME'
-        Title.Caption = 'Vorname'
-        Width = 100
-        Visible = True
-      end
-      item
-        Expanded = False
-        FieldName = 'PE_DEPARTMENT'
-        Title.Caption = 'abteilung'
-        Width = 75
-        Visible = True
-      end
-      item
-        Expanded = False
-        FieldName = 'PE_NET'
-        Title.Caption = 'Login'
-        Width = 75
-        Visible = True
-      end>
-  end
-  object Panel4: TDBGrid
-    Left = 439
-    Top = 41
-    Width = 480
-    Height = 411
-    TabStop = False
-    Align = alClient
-    BorderStyle = bsNone
-    Color = clBtnFace
-    DataSource = GremiumSrc
-    Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgMultiSelect, dgTitleClick, dgTitleHotTrack]
-    PopupMenu = PopupMenu1
-    ReadOnly = True
+    Caption = 'Personen'
     TabOrder = 4
-    TitleFont.Charset = DEFAULT_CHARSET
-    TitleFont.Color = clWindowText
-    TitleFont.Height = -11
-    TitleFont.Name = 'Tahoma'
-    TitleFont.Style = []
-    Columns = <
-      item
-        Expanded = False
-        FieldName = 'PE_NAME'
-        Title.Caption = 'Name'
-        Width = 100
-        Visible = True
-      end
-      item
-        Expanded = False
-        FieldName = 'PE_VORNAME'
-        Title.Caption = 'Vorname'
-        Width = 100
-        Visible = True
-      end
-      item
-        Expanded = False
-        FieldName = 'PE_DEPARTMENT'
-        Title.Caption = 'Abteilung'
-        Width = 75
-        Visible = True
-      end
-      item
-        Expanded = False
-        FieldName = 'PE_NET'
-        Title.Caption = 'Login'
-        Width = 75
-        Visible = True
-      end
-      item
-        Expanded = False
-        FieldName = 'GP_ROLLE'
-        Title.Caption = 'Rolle'
-        Width = 100
-        Visible = True
-      end>
+    object Panel2: TDBGrid
+      AlignWithMargins = True
+      Left = 5
+      Top = 18
+      Width = 415
+      Height = 451
+      TabStop = False
+      Align = alClient
+      BorderStyle = bsNone
+      Color = clBtnFace
+      DataSource = AllUserSrc
+      Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgMultiSelect, dgTitleClick, dgTitleHotTrack]
+      ReadOnly = True
+      TabOrder = 0
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -11
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = []
+      OnDblClick = Panel2DblClick
+      Columns = <
+        item
+          Expanded = False
+          FieldName = 'PE_NAME'
+          Title.Caption = 'Name'
+          Width = 100
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'PE_VORNAME'
+          Title.Caption = 'Vorname'
+          Width = 100
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'PE_DEPARTMENT'
+          Title.Caption = 'abteilung'
+          Width = 75
+          Visible = True
+        end
+        item
+          Expanded = False
+          FieldName = 'PE_NET'
+          Title.Caption = 'Login'
+          Width = 75
+          Visible = True
+        end>
+    end
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsGremium'
-    Left = 40
+    Left = 160
   end
   object AllUsers: TClientDataSet
     Aggregates = <>
