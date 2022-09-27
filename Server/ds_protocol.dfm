@@ -59,10 +59,11 @@ object dsProtocol: TdsProtocol
   end
   object deleteTNQry: TFDQuery
     ObjectView = False
+    Connection = DBMod.ArchivarConnection
     SQL.Strings = (
       'delete from TN_TEILNEHMER'
       'where  PR_ID = :PR_ID')
-    Left = 752
+    Left = 760
     Top = 72
     ParamData = <
       item
@@ -73,6 +74,7 @@ object dsProtocol: TdsProtocol
   end
   object deleteTGQry: TFDQuery
     ObjectView = False
+    Connection = DBMod.ArchivarConnection
     SQL.Strings = (
       'delete from TG_GAESTE'
       'where PR_ID = :PR_ID')
@@ -87,6 +89,7 @@ object dsProtocol: TdsProtocol
   end
   object deletePR: TFDQuery
     ObjectView = False
+    Connection = DBMod.ArchivarConnection
     SQL.Strings = (
       'delete from PR_PROTOKOL'
       'where PR_ID = :PR_ID')
@@ -101,6 +104,7 @@ object dsProtocol: TdsProtocol
   end
   object DeleteChapter: TFDQuery
     ObjectView = False
+    Connection = DBMod.ArchivarConnection
     SQL.Strings = (
       'delete from CP_CHAPTER'
       'where PR_ID = :PR_ID')
@@ -115,6 +119,7 @@ object dsProtocol: TdsProtocol
   end
   object SelectChapterQry: TFDQuery
     ObjectView = False
+    Connection = DBMod.ArchivarConnection
     SQL.Strings = (
       'select * from CP_CHAPTER'
       'where PR_ID = :PR_ID')
@@ -129,6 +134,7 @@ object dsProtocol: TdsProtocol
   end
   object SelectChapterTextQry: TFDQuery
     ObjectView = False
+    Connection = DBMod.ArchivarConnection
     SQL.Strings = (
       'select * from CT_CHAPTER_TEXT'
       'where CP_ID = :CP_ID')
@@ -143,20 +149,22 @@ object dsProtocol: TdsProtocol
   end
   object deleteBEQry: TFDQuery
     ObjectView = False
+    Connection = DBMod.ArchivarConnection
     SQL.Strings = (
       'delete from BE_BESCHLUS'
-      'where BE_ID = :BE_ID')
+      'where ct_id = :ct_id')
     Left = 872
     Top = 376
     ParamData = <
       item
-        Name = 'BE_ID'
+        Name = 'CT_ID'
         DataType = ftInteger
         ParamType = ptInput
       end>
   end
   object deleteCT: TFDQuery
     ObjectView = False
+    Connection = DBMod.ArchivarConnection
     SQL.Strings = (
       'delete from CT_CHAPTER_TEXT'
       'where CP_ID = :CP_ID')
@@ -343,7 +351,7 @@ object dsProtocol: TdsProtocol
     Transaction = IBTransaction1
     UpdateOptions.UpdateTableName = 'TN_TEILNEHMER'
     TableName = 'TN_TEILNEHMER'
-    Left = 192
+    Left = 200
     Top = 128
   end
 end

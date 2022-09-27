@@ -99,7 +99,7 @@ end;
 function TdsProtocol.deleteProtocol(data: TJSONObject): TJSONObject;
 var
   id  : integer;
-  be  : integer;
+  ct  : integer;
 begin
   Result := TJSONObject.create;
   id := JInt( data, 'id', -1);
@@ -127,11 +127,12 @@ begin
       SelectChapterTextQry.Open;
       while not SelectChapterTextQry.Eof do
       begin
+
         // beschlüsse
-        be := SelectChapterTextQry.FieldByName('BE_ID').AsInteger;
-        if be <> 0 then
+        ct := SelectChapterTextQry.FieldByName('CT_ID').AsInteger;
+        if ct <> 0 then
         begin
-          deleteBEQry.ParamByName('BE_ID').AsInteger := be;
+          deleteBEQry.ParamByName('CT_ID').AsInteger := ct;
           deleteBEQry.ExecSQL;
         end;
         // chapter content
@@ -156,8 +157,9 @@ begin
     JResult( Result, true, 'Es wurde gelöscht.');
     DeleteTrans.commit;
   except
+    on e : exception do
     begin
-      JResult( Result, false, 'Es ist ein Fehler beim Löschen aufgetreten.');
+      JResult( Result, false, 'Es ist ein Fehler beim Löschen aufgetreten. ' + e.toString);
       DeleteTrans.rollBack;
     end;
   end;
