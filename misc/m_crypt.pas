@@ -230,21 +230,24 @@ begin
   try
     if FPassword = '' then begin
       Application.CreateForm(TPassWdform, PassWdform);
-      if PassWdform.ShowModal = mrOk then
+      Result := PassWdform.ShowModal = mrOk;
+      if  Result then
         FPassword := PassWdform.Password;
       PassWdform.Free;
     end;
 
-    Result := load( partPublic);
-
-    if FPassword <> '' then
-       Result := Result and load(partPrivate);
+    if Result then begin
+      Result := load( partPublic);
+      Result := Result and load(partPrivate);
+    end;
   except
     begin
       Result := false;
-      ShowMessage( 'Fehler beim Entschlüsseln!' );
-      FPassword := '';
     end;
+  end;
+  if not Result then begin
+    ShowMessage( 'Fehler beim Entschlüsseln!' );
+    FPassword := '';
   end;
 end;
 

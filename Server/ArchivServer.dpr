@@ -85,7 +85,10 @@ begin
 
       if s = 'o' then ServerContainer1.dumpOnlineUser;
       if s = 's' then ServerContainer1.dumpSessions;
-      if s = 'l' then ServerContainer1.startLogging;
+      if s = 'l' then begin
+        Writeln('start logging');
+        ServerContainer1.startLogging;
+      end;
 
     until s = 'q';
 

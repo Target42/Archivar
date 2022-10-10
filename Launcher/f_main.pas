@@ -129,7 +129,7 @@ var
 begin
   Result := true;
   for i := low(m_files) to high(m_files) do begin
-    fname := TPath.combine( ExtractFilePath(Application.ExeName), m_files[i].name );
+    fname := TPath.combine( m_root, m_files[i].name );
     if FileExists( fname ) then begin
       StatusBar1.SimpleText := 'Check:'+m_files[i].name;
 
@@ -219,7 +219,7 @@ var
 begin
   Result := true;
 
-  path := ExtractFilePath(Application.ExeName);
+  path := m_root;
 
   for i := low(m_files) to high(m_files) do begin
     if m_files[i].needUpdate then begin
@@ -246,16 +246,16 @@ var
   fname : string;
 begin
   m_client := NIL;
+  IniOptions.LoadFromFile(ParamStr(0)+'.ini');
 
   fname := paramStr(0)+'.ini';
   if FileExists(fname) then
     IniOptions.LoadFromFile(fname);
 
-
   self.Root := 'c:\BerOffice\';
 
   if IniOptions.launcherimage <> '' then begin
-    fname := TPath.Combine( ExtractFilePath(paramStr(0)), IniOptions.launcherimage);
+    fname := TPath.Combine( m_root, IniOptions.launcherimage);
 
     if FileExists(fname) then
       Image1.Picture.LoadFromFile(fname);
@@ -326,7 +326,7 @@ procedure TMainForm.startProgram;
 var
   fname : string;
 begin
-  fname := TPath.Combine( ExtractFilePath(Application.ExeName), IniOptions.runprg);
+  fname := TPath.Combine( m_root, IniOptions.runprg);
   if FileExists( fname ) then begin
     JvCreateProcess1.CurrentDirectory := ExtractFilePath(fname);
     JvCreateProcess1.CommandLine := fname;
@@ -348,6 +348,9 @@ begin
   zip := TZipFile.Create;
   zip.Open(RS, zmRead);
 
+  // aktuelle lage des Launchers ...
+  zip.ExtractAll(ExtractFilePath(ParamStr(0)));
+  // ziel des Launchers
   zip.ExtractAll(m_root);
 
   zip.Free;
