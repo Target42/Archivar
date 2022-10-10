@@ -20,11 +20,13 @@ type
     FDTransaction2: TFDTransaction;
     AutoIncQry: TFDQuery;
     PETab: TFDTable;
+    GetPrivateQry: TFDQuery;
   private
     function AutoInc( gen : string ) : integer;
   public
     function uploadKeys( net : string; pub, priv : TStream ) : TJSONObject;
     function getPublicKey( net : string; stamp : TDateTime ) : TStream;
+    function getPrivateKey : TStream;
     function hasValidKey ( net : string; stamp : TDateTime ) : Boolean;
   end;
 
@@ -45,6 +47,29 @@ begin
   AutoIncQry.Open;
   Result := AutoIncQry.FieldByName('GEN_ID').AsInteger;
   AutoIncQry.Close;
+end;
+
+function TdsPKI.getPrivateKey: TStream;
+var
+  st      : TStream;
+  Session : TDSSession;
+begin
+  Result := TMemoryStream.Create;
+  Session := TDSSessionManager.GetThreadSession;
+
+  GetPrivateQry.ParamByName('name').AsString  := Session.GetData('user');
+
+  GetPrivateQry.Open;
+  if not GetPrivateQry.IsEmpty then begin
+    st := GetPrivateQry.CreateBlobStream(GetPrivateQry.FieldByName('PE_KEY'), bmRead);
+    Result.CopyFrom(st, -1);
+    st.Free;
+    Result.Position := 0;
+  end;
+  GetPrivateQry.Close;
+
+  if GetPrivateQry.Transaction.Active then
+    GetPrivateQry.Transaction.Commit;
 end;
 
 function TdsPKI.getPublicKey(net: string; stamp: TDateTime): TStream;

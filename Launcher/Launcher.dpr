@@ -1,5 +1,7 @@
 program Launcher;
 
+{$R *.dres}
+
 uses
   Vcl.Forms,
   f_main in 'f_main.pas' {MainForm},

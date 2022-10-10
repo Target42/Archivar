@@ -2,8 +2,8 @@ object Keysform: TKeysform
   Left = 0
   Top = 0
   Caption = 'Schl'#252'sselerzeugung'
-  ClientHeight = 707
-  ClientWidth = 518
+  ClientHeight = 399
+  ClientWidth = 529
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -15,41 +15,15 @@ object Keysform: TKeysform
   OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
-  object GroupBox1: TGroupBox
-    Left = 0
-    Top = 72
-    Width = 518
-    Height = 185
-    Align = alTop
-    Caption = #214'ffentlicher Schl'#252'ssel'
-    TabOrder = 0
-    object Memo1: TMemo
-      Left = 2
-      Top = 15
-      Width = 514
-      Height = 168
-      Align = alClient
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Courier New'
-      Font.Style = []
-      Lines.Strings = (
-        'Memo1')
-      ParentFont = False
-      ReadOnly = True
-      ScrollBars = ssVertical
-      TabOrder = 0
-    end
-  end
   object GroupBox2: TGroupBox
     Left = 0
     Top = 0
-    Width = 518
+    Width = 529
     Height = 72
     Align = alTop
     Caption = 'Passwort privater Schl'#252'ssel'
-    TabOrder = 1
+    TabOrder = 0
+    ExplicitWidth = 518
     object LabeledEdit1: TLabeledEdit
       Left = 16
       Top = 32
@@ -82,31 +56,73 @@ object Keysform: TKeysform
       OnClick = BitBtn1Click
     end
   end
-  object GroupBox3: TGroupBox
+  object PageControl1: TPageControl
     Left = 0
-    Top = 257
-    Width = 518
-    Height = 450
+    Top = 72
+    Width = 529
+    Height = 327
+    ActivePage = TabSheet1
     Align = alClient
-    Caption = 'Privater Schl'#252'ssel'
-    TabOrder = 2
-    object Memo2: TMemo
-      Left = 2
-      Top = 15
-      Width = 514
-      Height = 433
-      Align = alClient
-      Font.Charset = ANSI_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Courier New'
-      Font.Style = []
-      Lines.Strings = (
-        'Memo1')
-      ParentFont = False
-      ReadOnly = True
-      ScrollBars = ssVertical
-      TabOrder = 0
+    TabOrder = 1
+    ExplicitLeft = 64
+    ExplicitTop = 112
+    ExplicitWidth = 289
+    ExplicitHeight = 193
+    object TabSheet1: TTabSheet
+      Caption = #214'ffentlicher Schl'#252'ssel'
+      ExplicitLeft = 12
+      ExplicitWidth = 281
+      ExplicitHeight = 165
+      object Memo1: TMemo
+        Left = 0
+        Top = 0
+        Width = 521
+        Height = 299
+        Align = alClient
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Courier New'
+        Font.Style = []
+        Lines.Strings = (
+          'Memo1')
+        ParentFont = False
+        ReadOnly = True
+        ScrollBars = ssVertical
+        TabOrder = 0
+        ExplicitLeft = 2
+        ExplicitTop = 15
+        ExplicitWidth = 514
+        ExplicitHeight = 168
+      end
+    end
+    object TabSheet2: TTabSheet
+      Caption = 'Privater Schl'#252'ssel'
+      ImageIndex = 1
+      ExplicitWidth = 281
+      ExplicitHeight = 165
+      object Memo2: TMemo
+        Left = 0
+        Top = 0
+        Width = 521
+        Height = 299
+        Align = alClient
+        Font.Charset = ANSI_CHARSET
+        Font.Color = clWindowText
+        Font.Height = -11
+        Font.Name = 'Courier New'
+        Font.Style = []
+        Lines.Strings = (
+          'Memo1')
+        ParentFont = False
+        ReadOnly = True
+        ScrollBars = ssVertical
+        TabOrder = 0
+        ExplicitLeft = 2
+        ExplicitTop = 15
+        ExplicitWidth = 514
+        ExplicitHeight = 328
+      end
     end
   end
 end

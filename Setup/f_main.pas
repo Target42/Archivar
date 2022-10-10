@@ -354,7 +354,6 @@ end;
 procedure TMainSetupForm.importFileCache;
 var
   item  : TListItem;
-  fname : string;
   path  : String;
   subs  : TStringDynArray;
   arr   : TStringDynArray;

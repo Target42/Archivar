@@ -46,6 +46,7 @@ type
     DeleteCPQry: TFDQuery;
     ListTasksQry: TFDQuery;
     TNTab: TFDTable;
+    NextNrQry: TFDQuery;
   private
     { Private-Deklarationen }
   public
@@ -218,6 +219,8 @@ var
     end;
 
   end;
+var
+  nr : integer;
 begin
   Result := TJSONObject.create;
 
@@ -229,6 +232,12 @@ begin
     id := AutoInc('gen_pr_id');
     JReplace( Result, 'id', id);
 
+    NextNrQry.ParamByName('GR_ID').AsInteger := JInt( data, 'grid' );
+    NextNrQry.Open;
+    nr := NextNrQry.FieldByName('max').AsInteger + 1;
+    NextNrQry.Close;
+
+
     PRTab.Open;
     PRTab.Append;
     PRTab.FieldByName('PR_ID').AsInteger     := id;
@@ -237,6 +246,7 @@ begin
     PRTab.FieldByName('PR_NAME').AsString    := JString( data, 'short')+'_'+FormatDateTime('yyyyMMdd', now);
     PRTab.FieldByName('PR_CLID').AsString    := createClassID;
     PRTab.FieldByName('PR_STATUS').AsString  := 'E';
+    PRTab.FieldByName('PR_NR').AsInteger     := nr;
     PRTab.post;
 
 

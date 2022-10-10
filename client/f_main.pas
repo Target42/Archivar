@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.Menus, System.Actions,
   Vcl.ActnList, Vcl.AppEvnts, fr_gremiumTree, Vcl.ExtCtrls, Vcl.StdCtrls,
   fr_taskList, Vcl.StdActns, u_bookmark, fr_bookmark, fr_epub, fr_meeting,
-  JvCombobox, JvColorCombo, fr_storages, JvExStdCtrls;
+  JvCombobox, JvColorCombo, fr_storages, JvExStdCtrls, MidasLib;
 
 type
   TStatusInx = (stStatus = 0, stHost, stLogin, stUser );
@@ -553,7 +553,8 @@ begin
 
   Application.CreateForm(TProtokollNewForm, ProtokollNewForm);
   if ProtokollNewForm.ShowModal = mrok then begin
-    gr := ProtokollNewForm.Gremium;
+    if Assigned(ProtokollNewForm.Gremium) then
+      gr := ProtokollNewForm.Gremium.clone;
     obj:= ProtokollNewForm.Template;
   end;
   ProtokollNewForm.free;
@@ -583,6 +584,9 @@ begin
       WindowHandler.openProtoCclWindow(prid, false);
     end;
   end;
+
+  if Assigned(gr) then
+    gr.Free;
 
   if Assigned(obj) then
     obj.Free;
@@ -694,9 +698,7 @@ end;
 
 procedure TMainForm.ac_to_keysExecute(Sender: TObject);
 begin
-  Application.CreateForm(TKeysform, Keysform);
-  Keysform.ShowModal;
-  Keysform.free;
+  ShowKeysform;
 end;
 
 procedure TMainForm.ac_to_pdriveExecute(Sender: TObject);

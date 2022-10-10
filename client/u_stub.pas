@@ -1,13 +1,13 @@
 //
 // Erzeugt vom DataSnap-Proxy-Generator.
-// 30.12.2021 19:51:02
+// 09.10.2022 19:46:41
 //
 
 unit u_stub;
 
 interface
 
-uses System.JSON, Data.DBXCommon, Data.DBXClient, Data.DBXDataSnap, Datasnap.DSProxy, System.Classes, System.SysUtils, Data.DB, Data.DBXDBReaders, Data.DBXJSONReflect;
+uses System.JSON, Data.DBXCommon, Data.DBXClient, Data.DBXDataSnap, Data.DBXJSON, Datasnap.DSProxy, System.Classes, System.SysUtils, Data.DB, Data.SqlExpr, Data.DBXDBReaders, Data.DBXCDSReaders, Data.DBXJSONReflect;
 
 type
   TAdminModClient = class(TDSAdminClient)
@@ -328,6 +328,7 @@ type
   private
     FuploadKeysCommand: TDBXCommand;
     FgetPublicKeyCommand: TDBXCommand;
+    FgetPrivateKeyCommand: TDBXCommand;
     FhasValidKeyCommand: TDBXCommand;
   public
     constructor Create(ADBXConnection: TDBXConnection); overload;
@@ -335,6 +336,7 @@ type
     destructor Destroy; override;
     function uploadKeys(net: string; pub: TStream; priv: TStream): TJSONObject;
     function getPublicKey(net: string; stamp: TDateTime): TStream;
+    function getPrivateKey: TStream;
     function hasValidKey(net: string; stamp: TDateTime): Boolean;
   end;
 
@@ -1914,6 +1916,19 @@ begin
   Result := FgetPublicKeyCommand.Parameters[2].Value.GetStream(FInstanceOwner);
 end;
 
+function TdsPKIClient.getPrivateKey: TStream;
+begin
+  if FgetPrivateKeyCommand = nil then
+  begin
+    FgetPrivateKeyCommand := FDBXConnection.CreateCommand;
+    FgetPrivateKeyCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FgetPrivateKeyCommand.Text := 'TdsPKI.getPrivateKey';
+    FgetPrivateKeyCommand.Prepare;
+  end;
+  FgetPrivateKeyCommand.ExecuteUpdate;
+  Result := FgetPrivateKeyCommand.Parameters[0].Value.GetStream(FInstanceOwner);
+end;
+
 function TdsPKIClient.hasValidKey(net: string; stamp: TDateTime): Boolean;
 begin
   if FhasValidKeyCommand = nil then
@@ -1943,6 +1958,7 @@ destructor TdsPKIClient.Destroy;
 begin
   FuploadKeysCommand.DisposeOf;
   FgetPublicKeyCommand.DisposeOf;
+  FgetPrivateKeyCommand.DisposeOf;
   FhasValidKeyCommand.DisposeOf;
   inherited;
 end;

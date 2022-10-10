@@ -64,6 +64,7 @@ type
     function hasKeyFiles : boolean;
     function hasKeysLoaded : boolean;
 
+    procedure clearKeys;
   end;
 
 var
@@ -73,7 +74,7 @@ implementation
 
 uses
   System.IOUtils, uTPLb_StreamUtils, System.StrUtils,
-  Vcl.Forms, system.UITypes, f_passwd;
+  Vcl.Forms, system.UITypes, f_passwd, Vcl.Dialogs;
 
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
@@ -81,6 +82,11 @@ uses
 {$R *.dfm}
 
 { TCryptMod }
+
+procedure TCryptMod.clearKeys;
+begin
+  Signatory1.Burn;
+end;
 
 procedure TCryptMod.DataModuleCreate(Sender: TObject);
 begin
@@ -200,8 +206,12 @@ begin
     end;
 
     if not error then begin
-      Signatory1.LoadKeysFromStream(mem, [part]);
-      Result := true;
+      try
+        Signatory1.LoadKeysFromStream(mem, [part]);
+        Result := true;
+      except
+        Result := false;
+      end;
     end;
   except
     Result := false;
@@ -225,10 +235,16 @@ begin
       PassWdform.Free;
     end;
 
-    if FPassword <> '' then
-      Result := load( partPublic) and load(partPrivate);
-  except
+    Result := load( partPublic);
 
+    if FPassword <> '' then
+       Result := Result and load(partPrivate);
+  except
+    begin
+      Result := false;
+      ShowMessage( 'Fehler beim Entschlüsseln!' );
+      FPassword := '';
+    end;
   end;
 end;
 
@@ -250,7 +266,6 @@ begin
       if list[i][1] = '-' then
         list.Delete(i);
     end;
-
 
 
     s := trim(ReplaceStr(list.Text, #10, ''));

@@ -100,6 +100,8 @@ type
     function handle_newmeeting( const Arg: TJSONObject ) : boolean;
     function handle_updatemeeting( const Arg: TJSONObject ) : boolean;
 
+    procedure checkOrDownloadKeys;
+
   public
 
     function Connect : boolean;
@@ -301,6 +303,43 @@ begin
   except
   end;
   client.Free;
+end;
+
+procedure TGM.checkOrDownloadKeys;
+  procedure saveToFile( st : TStream; fname : string );
+  var
+    fi : TFileStream;
+  begin
+    if st.Size > 0 then begin
+      fi := TFileStream.Create(fname, fmCreate + fmShareDenyNone);
+      fi.CopyFrom(st, -1);
+      fi.Free;
+    end;
+  end;
+var
+  client  : TdsPKIClient;
+  priv    : TStream;
+  pub     : TStream;
+begin
+
+  CryptMod.PrivateKeyFile := TPath.Combine(Home, 'key.pri');
+  CryptMod.PublicKeyFile  := TPath.Combine(Home, 'key.pub');
+
+  if not FileExists(CryptMod.PrivateKeyFile) or not FileExists(CryptMod.PublicKeyFile) then begin
+    client := TdsPKIClient.Create(SQLConnection1.DBXConnection);
+
+    priv := client.getPrivateKey;
+    if priv.size > 0 then begin
+      saveToFile(priv, CryptMod.PrivateKeyFile);
+
+      pub := client.getPublicKey('', now);
+      saveToFile(pub, CryptMod.PublicKeyFile);
+    end;
+    client.Free;
+  end;
+  // Keine Key's, also neue anlegen
+  if not FileExists(CryptMod.PrivateKeyFile) or not FileExists(CryptMod.PublicKeyFile) then
+    PostMessage( Application.MainFormHandle, msgNeedKeys, 0, 0 );
 end;
 
 procedure TGM.clearGrmien;
@@ -881,19 +920,13 @@ begin
 
   requestUser;
 
-
   fname :=  FileCacheMod.getFile('data', 'Kategorie.json');
   Kategorien.load(fname);
 
   PostMessage( Application.MainFormHandle, msgLoadLogo,       0, 0 );
   PostMessage( Application.MainFormHandle, msgUpdateMeetings, 0, 0 );
 
-
-  CryptMod.PrivateKeyFile := TPath.Combine(Home, 'key.pri');
-  CryptMod.PublicKeyFile  := TPath.Combine(Home, 'key.pub');
-
-  if not FileExists(CryptMod.PrivateKeyFile) or not FileExists(CryptMod.PublicKeyFile) then
-    PostMessage( Application.MainFormHandle, msgNeedKeys, 0, 0 );
+  checkOrDownloadKeys;
 end;
 
 procedure TGM.SQLConnection1AfterDisconnect(Sender: TObject);

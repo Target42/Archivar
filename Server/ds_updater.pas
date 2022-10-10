@@ -60,7 +60,7 @@ begin
     row := TJSONObject.Create;
 
     JReplace(row, 'name', Copy(arr[i], len));
-    JReplace(row, 'md5', GM.md5(arr[i]));
+    JReplace(row, 'md5',  GM.md5(arr[i]));
     JReplace(row, 'size', FileSizeByName( arr[i] ));
 
     list.Add(row)

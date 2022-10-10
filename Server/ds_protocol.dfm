@@ -354,4 +354,24 @@ object dsProtocol: TdsProtocol
     Left = 200
     Top = 128
   end
+  object NextNrQry: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
+    SQL.Strings = (
+      'select max( pr_nr )'
+      'from ('
+      'SELECT first 10 pr_nr    '
+      'FROM PR_PROTOKOL r'
+      'where gr_id = :gr_id'
+      'order by pr_id desc'
+      ')')
+    Left = 504
+    Top = 48
+    ParamData = <
+      item
+        Name = 'GR_ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+  end
 end

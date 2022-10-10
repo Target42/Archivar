@@ -93,4 +93,20 @@ object dsPKI: TdsPKI
     Left = 456
     Top = 88
   end
+  object GetPrivateQry: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Transaction = FDTransaction1
+    SQL.Strings = (
+      'SELECT r.PE_KEY'
+      'FROM PE_PERSON r'
+      'where pe_net = :name')
+    Left = 184
+    Top = 192
+    ParamData = <
+      item
+        Name = 'NAME'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+  end
 end

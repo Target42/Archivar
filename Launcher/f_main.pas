@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Data.DBXDataSnap,
   Data.DBXCommon, IPPeerClient, Vcl.StdCtrls, Vcl.Buttons, Data.DB, Data.SqlExpr,
   u_stub, System.JSON, u_ini, JvComponentBase, JvCreateProcess, JvBaseDlg,
-  JvBrowseFolder, Vcl.ExtCtrls, pngimage;
+  JvBrowseFolder, Vcl.ExtCtrls, pngimage, MidasLib;
 
 type
   TMainForm = class(TForm)
@@ -50,6 +50,9 @@ type
     procedure startProgram;
 
     procedure setRoot( value : string );
+    function copyInstaller : boolean;
+
+    function unpackSSL : boolean;
   public
     property Root : string read m_root write setRoot;
   end;
@@ -60,7 +63,7 @@ var
 implementation
 
 uses
-  IdHashMessageDigest, u_json, System.IOUtils;
+  IdHashMessageDigest, u_json, System.IOUtils, system.zip;
 
 {$R *.dfm}
 
@@ -71,6 +74,19 @@ var
   arr     : TJSONArray;
   i       : integer;
 begin
+  // check the Path
+  if not SameText(m_root, LabeledEdit1.Text) then begin
+    m_root := Trim(LabeledEdit1.Text);
+  end;
+
+  if not ForceDirectories(m_root) then begin
+    ShowMessage('Das Verzeichniss'+sLineBreak+m_root+sLineBreak+'ungültig');
+    exit;
+  end;
+
+  unpackSSL;
+  copyInstaller;
+
   try
     StatusBar1.SimpleText := 'Connect .... ';
     SQLConnection1.Open;
@@ -146,6 +162,25 @@ begin
   end;
 end;
 
+function TMainForm.copyInstaller: boolean;
+var
+  src : string;
+  dest: string;
+begin
+  Result := true;
+  src  := ParamStr(0);
+  dest := TPath.Combine(m_root, ExtractFileName(ParamStr(0)));
+
+  if SameText( src, dest ) then exit;
+
+  try
+    TFile.Copy(src, dest, true);
+  except
+    Result := false;
+
+  end;
+end;
+
 function TMainForm.download(fname: string; st: TStream; size : int64): boolean;
 const
   BSize = 1024 * 4;
@@ -199,7 +234,7 @@ begin
       Result := download(fname, st, m_files[i].size) and Result;
     end;
   end;
-  StatusBar1.SimpleText := 'Ferting';
+  StatusBar1.SimpleText := 'Fertig';
 
   if Result then
     startProgram;
@@ -216,7 +251,8 @@ begin
   if FileExists(fname) then
     IniOptions.LoadFromFile(fname);
 
-  self.Root := ExtractFilePath(ParamStr(0));
+
+  self.Root := 'c:\BerOffice\';
 
   if IniOptions.launcherimage <> '' then begin
     fname := TPath.Combine( ExtractFilePath(paramStr(0)), IniOptions.launcherimage);
@@ -235,8 +271,6 @@ procedure TMainForm.setRoot(value: string);
 begin
   m_root := value;
   LabeledEdit1.Text := m_root;
-  if not DirectoryExists(m_root) then
-    ShowMessage('Das Verzeichniss'+sLineBreak+m_root+sLineBreak+'ungültig');
 end;
 
 function TMainForm.CalcMd5(st: TStream): string;
@@ -302,6 +336,24 @@ begin
     Close;
 end;
 
+
+function TMainForm.unpackSSL: boolean;
+var
+  RS: TResourceStream;
+  zip : TZipFile;
+begin
+  Result := true;
+
+  RS := TResourceStream.Create(HInstance, 'ssl_zip', RT_RCDATA);
+  zip := TZipFile.Create;
+  zip.Open(RS, zmRead);
+
+  zip.ExtractAll(m_root);
+
+  zip.Free;
+  rs.Free;
+
+end;
 
 end.
 

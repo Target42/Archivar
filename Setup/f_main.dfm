@@ -355,6 +355,8 @@ object MainSetupForm: TMainSetupForm
         4E44AE426082}
       Image.Transparent = True
       Caption = 'WelcomePage'
+      ExplicitWidth = 0
+      ExplicitHeight = 0
     end
     object SearchGDS: TJvWizardInteriorPage
       Header.Title.Color = clNone
@@ -375,6 +377,8 @@ object MainSetupForm: TMainSetupForm
       Header.Subtitle.Font.Style = []
       Caption = 'SearchGDS'
       OnEnterPage = SearchGDSEnterPage
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Memo1: TMemo
         Left = 0
         Top = 70
