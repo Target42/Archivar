@@ -10,7 +10,8 @@ uses
   u_ePub in '..\misc\ePub\u_ePub.pas',
   u_navpoint in '..\misc\ePub\u_navpoint.pas',
   u_xml in '..\misc\ePub\u_xml.pas',
-  xsd_TextBlock in '..\misc\xsd_TextBlock.pas';
+  xsd_TextBlock in '..\misc\xsd_TextBlock.pas',
+  u_json in '..\misc\u_json.pas';
 
 {$R *.res}
 

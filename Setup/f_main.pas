@@ -52,6 +52,8 @@ type
     ProgressBar1: TProgressBar;
     TBTab: TFDTable;
     FCTab: TFDTable;
+    Label1: TLabel;
+    ComboBox1: TComboBox;
     procedure SearchGDSEnterPage(Sender: TObject;
       const FromPage: TJvWizardCustomPage);
     procedure ServerInfoEnterPage(Sender: TObject;
@@ -85,6 +87,8 @@ type
 
     procedure updateLV;
 
+    function combineDrivePath( drv, path : string ) : string;
+
     function progress( name : string ) : TListItem;
     procedure initPGBar( count : integer );
 
@@ -102,7 +106,8 @@ implementation
 uses
   System.IOUtils, System.Types, IdHashMessageDigest, xsd_TaskType,
   xsd_Betriebsrat, xsd_DataField, FireDAC.Phys.IBWrapper,
-  System.Win.ComObj, System.Hash, u_ePub, xsd_TextBlock;
+  System.Win.ComObj, System.Hash, u_ePub, xsd_TextBlock,
+  System.Zip, Xml.XMLIntf, Xml.XMLDoc, System.JSON, u_json;
 
 {$R *.dfm}
 
@@ -135,7 +140,15 @@ var
   db    : TFDConnection;
   dbok  : boolean;
   fname : string;
+  dbname: string;
 begin
+
+  dbName := combineDrivePath(ComboBox1.Items[ComboBox1.ItemIndex], edDatabase.Text);
+
+  if not ForceDirectories(ExtractFilePath(dbname)) then begin
+    ShowMessage(Format('Der Pfad "%s" kann nicht erzeugt werden!', [ExtractFilePath(dbname)]));
+    exit;
+  end;
 
   db := TFDConnection.Create(NIL);
   dbok := false;
@@ -145,19 +158,20 @@ begin
     with db.Params as TFDPhysFBConnectionDefParams do begin
       Protocol  := ipTCPIP;
       Server    := edHostname.Text;
-      Database  := edDatabase.Text;
+      Database  := dbname;
       UserName  := edDBUser.Text;
       Password  := edDBPwd.Text;
       SQLDialect:= 3;
       PageSize  := ps4096;
     end;
 
+
     Screen.Cursor := crSQLWait;
     with CreateDB do begin
       SQLScripts.Clear;
       SQLScripts.Add;
       with SQLScripts[0].SQL do begin
-        add( format('CREATE DATABASE ''%s'' ',      [edDatabase.Text]));
+        add( format('CREATE DATABASE ''%s'' ',      [dbname]));
         add( format('USER ''%s'' PASSWORD ''%s'' ', [edDBUser.Text, edDBPwd.Text]));
         add( format('PAGE_SIZE %d',                 [4096]));
         add( 'DEFAULT CHARACTER SET NONE;');
@@ -188,7 +202,7 @@ begin
 
     Protocol  := ipTCPIP;
     Server    := edHostname.Text;
-    Database  := edDatabase.Text;
+    Database  := dbname;
     UserName  := edDBUser.Text;
     Password  := edDBPwd.Text;
     SQLDialect:= 3;
@@ -218,7 +232,7 @@ begin
     ServerInfo.VisibleButtons := [TJvWizardButtonKind.bkBack, TJvWizardButtonKind.bkNext, TJvWizardButtonKind.bkCancel];
 
     m_ini.WriteString('DB', 'host', edHostname.Text);
-    m_ini.WriteString('DB', 'db',   edDatabase.Text);
+    m_ini.WriteString('DB', 'db',   dbname);
     m_ini.WriteString('DB', 'user', edDBUser.Text);
     m_ini.WriteString('DB', 'pwd',  edDBPwd.Text);
 
@@ -231,6 +245,20 @@ begin
     end;
   end;
   ArchivarConnection.Close;
+end;
+
+function TMainSetupForm.combineDrivePath(drv, path: string): string;
+begin
+  Result := '';
+  if drv = '' then
+    drv := 'c:\';
+
+  if path = '' then
+    Path := '\db\archivar.fdb';
+
+   Result := drv + '\'+ path;
+   Result := StringReplace(Result, '\\', '\', [rfReplaceAll]);
+   Result := StringReplace(Result, '\\', '\', [rfReplaceAll]);
 end;
 
 procedure TMainSetupForm.FormCreate(Sender: TObject);
@@ -360,30 +388,36 @@ var
   i, j  : integer;
   st    : TStream;
   fi    : TStream;
+  function subFolder : string;
+  begin
+    Result := copy( subs[i], length(path)+1 + 1); // inkl \
+  end;
 begin
   item := progress('Filecache');
   path := TPath.Combine(m_home, 'FileCache');
 
   FCTab.Open;
+
   subs := TDirectory.GetDirectories(path);
   initPGBar( high(subs));
+
   for i := low(subs) to high(subs) do begin
     arr := TDirectory.GetFiles(subs[i]);
     for j:= Low(arr) to High(arr) do begin
-      FDTab.Append;
-      FDTab.FieldByName('FC_ID').AsInteger    := AutoInc('gen_fc_id');
-      FDTab.FieldByName('FC_NAME').AsString   := ExtractFileName(arr[j]);
-      FDTab.FieldByName('FC_CACHE').AsString  := ExtractFileName(subs[i]);
-      FDTab.FieldByName('FC_STAMP').AsDateTime:= now;
-      FDTab.FieldByName('FC_MD5').AsString    := md5(arr[i]);
+      FCTab.Append;
+      FCTab.FieldByName('FC_ID').AsInteger    := AutoInc('gen_fc_id');
+      FCTab.FieldByName('FC_NAME').AsString   := ExtractFileName(arr[j]);
+      FCTab.FieldByName('FC_CACHE').AsString  := subFolder;
+      FCTab.FieldByName('FC_STAMP').AsDateTime:= now;
+      FCTab.FieldByName('FC_MD5').AsString    := md5(arr[j]);
 
-      st  := FDTab.CreateBlobStream(FDTab.FieldByName('FC_DATA'), bmWrite);
-      fi  := TFileStream.Create(arr[i], fmOpenRead + fmShareDenyNone);
+      st  := FCTab.CreateBlobStream(FCTab.FieldByName('FC_DATA'), bmWrite);
+      fi  := TFileStream.Create(arr[j], fmOpenRead + fmShareDenyNone);
       st.CopyFrom(fi, -1);
       fi.Free;
       st.Free;
 
-      FDTab.Post;
+      FCTab.Post;
 
       ProgressBar1.Position := i;
     end;
@@ -466,43 +500,92 @@ begin
 end;
 
 procedure TMainSetupForm.importTasks;
+  procedure getTaskInfo( fname : string ; var clid : string ) ;
+  var
+    zip : TZipFile;
+    mem : TSTream;
+    he  : TZipHeader;
+    xml : IXmlDocument;
+  begin
+    clid  := '';
+
+    mem   := TMemoryStream.Create;
+    zip   := TZipFile.Create;
+    zip.Open(fname, zmRead);
+
+    zip.Read('task.xml', mem, he);
+
+    mem.Position := 0;
+
+    if mem.Size > 0 then begin
+      xml := TXMLDocument.create(NIL);
+      xml.LoadFromStream(mem);
+
+      if xml.DocumentElement.HasAttribute('clid') then
+        clid := xml.DocumentElement.Attributes['clid'];
+    end;
+    zip.Close;
+    mem.Free;
+  end;
 var
-  item : TListItem;
-  path : string;
-  fi : TStringDynArray;
-  i  : integer;
-  bs : TStream;
-  st : TStream;
+  clid, path, fname : string;
+  item              : TListItem;
+  i                 : integer;
+  bs, st            : TStream;
+  obj, row          : TJSONObject;
+  arr               : TJSONArray;
 begin
   item := progress('Vorlagen');
 
   TETab.Open;
   path := TPath.Combine(m_home, 'Templates');
-  fi := TDirectory.GetFiles(path, '*.task');
-  initPGBar(Length(fi)-1);
-  for i := 0 to Length(fi)-1 do
+
+  fname := TPath.Combine(path, 'list.json');
+  obj := LoadJSON(fname);
+  arr := JArray(obj, 'files');
+
+  if not Assigned(arr) or ( arr.Count = 0 ) then begin
+    item.SubItems.Strings[0] := 'Importfehler!';
+    updateLV;
+    exit;
+  end;
+
+  initPGBar(arr.Count-1);
+  for i := 0 to pred(arr.Count) do
   begin
+    row := getRow(arr, i);
+    fname := TPath.Combine(path, JString(row, 'file'));
+
+    getTaskInfo(fname, clid);
 
     TETab.Append;
-    TETab.FieldByName('TE_ID').AsInteger := AutoInc('gen_TE_id');
-    TETab.FieldByName('TE_NAME').AsString:= ExtractFileName(fi[i]);
-    TETab.FieldByName('TE_SYSTEM').AsString := '';
-    TETab.FieldByName('TE_TAGS').AsString := '';
-    TETab.FieldByName('TE_SHORT').AsString := '';
-    TETab.FieldByName('TE_STATE').AsString := '';
-    TETab.FieldByName('TE_VERISON').AsString := '';
-    TETab.FieldByName('TE_CLID').AsString := '';
-    st := TFileStream.Create(fi[i], fmOpenRead + fmShareDenyNone);
+    TETab.FieldByName('TE_ID').AsInteger      := AutoInc('gen_TE_id');
+    TETab.FieldByName('TE_NAME').AsString     := JString(row, 'name');
+    if JBool(row, 'system') then
+      TETab.FieldByName('TE_SYSTEM').AsString   := 'T'
+    else
+      TETab.FieldByName('TE_SYSTEM').AsString   := 'F';
+    TETab.FieldByName('TE_TAGS').AsString     := JString(row, 'tags');
+    TETab.FieldByName('TE_SHORT').AsString    := JString(row, 'titel');
+    TETab.FieldByName('TE_STATE').AsString    := 'E';
+    TETab.FieldByName('TE_VERSION').AsString  := '1';
+    TETab.FieldByName('TE_CLID').AsString     := clid;
+
+    if JInt(row, 'type') > 0 then
+      TETab.FieldByName('TY_ID').AsInteger := JInt(row, 'type');
+
+    st := TFileStream.Create(fname, fmOpenRead + fmShareDenyNone);
     bs := TETab.CreateBlobStream(TETab.FieldByName('TE_DATA'), bmWrite );
     bs.CopyFrom(st, st.Size);
     bs.Free;
     st.Free;
 
     TETab.Post;
+
     ProgressBar1.Position := i;
   end;
   TETab.Close;
-  SetLength(fi, 0);
+
   item.SubItems.Strings[0] := 'Abgeschlossen';
   updateLV;
 end;
@@ -516,7 +599,7 @@ var
 begin
   item := progress('Aufgabentypen');
 
-  fname := TPath.Combine(m_home, 'TaskTypes.xml');
+  fname := TPath.Combine(m_home, 'Templates\TaskTypes.xml');
   xml := LoadTaskTypes(fname);
   initPGBar(xml.Count);
 
@@ -564,7 +647,7 @@ begin
     st := TBtab.CreateBlobStream(TBtab.FieldByName('TB_TEXT'), bmWrite);
     xBlock.OwnerDocument.SaveToStream(st);
     st.Free;
-    TETab.Post;
+    TBTab.Post;
     ProgressBar1.Position := i;
   end;
   TBTab.Close;
@@ -707,7 +790,22 @@ end;
 
 procedure TMainSetupForm.ServerInfoEnterPage(Sender: TObject;
   const FromPage: TJvWizardCustomPage);
+var
+  drv : string;
+  arr : TStringDynArray;
+  s   : string;
 begin
+  drv := ExtractFileDrive(edDatabase.Text);
+  arr := TDirectory.GetLogicalDrives;
+  ComboBox1.Items.Clear;
+  for s in arr do
+    ComboBox1.Items.Add(s);
+  ComboBox1.Text := 'c:\';
+
+  setLength(arr, 0);
+  edDatabase.Hint := combineDrivePath(ComboBox1.Text, edDatabase.Text);
+  edDatabase.ShowHint := true;
+
   ServerInfo.VisibleButtons := [TJvWizardButtonKind.bkBack, TJvWizardButtonKind.bkCancel];
 end;
 

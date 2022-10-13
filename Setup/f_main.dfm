@@ -377,8 +377,6 @@ object MainSetupForm: TMainSetupForm
       Header.Subtitle.Font.Style = []
       Caption = 'SearchGDS'
       OnEnterPage = SearchGDSEnterPage
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Memo1: TMemo
         Left = 0
         Top = 70
@@ -410,8 +408,13 @@ object MainSetupForm: TMainSetupForm
       Header.Subtitle.Font.Style = []
       Caption = 'ServerInfo'
       OnEnterPage = ServerInfoEnterPage
-      ExplicitWidth = 0
-      ExplicitHeight = 0
+      object Label1: TLabel
+        Left = 159
+        Top = 80
+        Width = 44
+        Height = 13
+        Caption = 'Laufwerk'
+      end
       object edHostname: TLabeledEdit
         Left = 16
         Top = 96
@@ -424,15 +427,15 @@ object MainSetupForm: TMainSetupForm
         Text = 'localhost'
       end
       object edDatabase: TLabeledEdit
-        Left = 168
-        Top = 96
+        Left = 224
+        Top = 99
         Width = 193
         Height = 21
         EditLabel.Width = 52
         EditLabel.Height = 13
         EditLabel.Caption = 'Datenbank'
         TabOrder = 1
-        Text = 'd:\db\archivar.fdb'
+        Text = '\db\archivar.fdb'
       end
       object edDBUser: TLabeledEdit
         Left = 16
@@ -446,7 +449,7 @@ object MainSetupForm: TMainSetupForm
         Text = 'sysdba'
       end
       object edDBPwd: TLabeledEdit
-        Left = 168
+        Left = 159
         Top = 144
         Width = 121
         Height = 21
@@ -466,7 +469,7 @@ object MainSetupForm: TMainSetupForm
         OnClick = btnCreateClick
       end
       object esDSServer: TLabeledEdit
-        Left = 376
+        Left = 304
         Top = 144
         Width = 41
         Height = 21
@@ -476,6 +479,15 @@ object MainSetupForm: TMainSetupForm
         NumbersOnly = True
         TabOrder = 5
         Text = '211'
+      end
+      object ComboBox1: TComboBox
+        Left = 159
+        Top = 99
+        Width = 44
+        Height = 21
+        MaxLength = 3
+        TabOrder = 6
+        Text = 'c:\'
       end
     end
     object Sicherheit: TJvWizardInteriorPage
@@ -600,7 +612,6 @@ object MainSetupForm: TMainSetupForm
       'Password=masterkey'
       'Database=d:\db\archivar.fdb'
       'DriverID=FB')
-    Connected = True
     LoginPrompt = False
     Transaction = IBTransaction1
     Left = 46
@@ -611,21 +622,21 @@ object MainSetupForm: TMainSetupForm
     Transaction = IBTransaction1
     SQL.Strings = (
       'SELECT * FROM TE_TEMPLATE')
-    Left = 406
-    Top = 100
+    Left = 270
+    Top = 204
   end
   object PITab: TFDQuery
     Connection = ArchivarConnection
     Transaction = IBTransaction1
     SQL.Strings = (
       'SELECT * FROM PI_PIC')
-    Left = 483
-    Top = 99
+    Left = 227
+    Top = 251
   end
   object IBTransaction1: TFDTransaction
     Connection = ArchivarConnection
-    Left = 40
-    Top = 160
+    Left = 24
+    Top = 208
   end
   object IBScript1: TFDScript
     SQLScripts = <>
@@ -633,46 +644,46 @@ object MainSetupForm: TMainSetupForm
     Transaction = IBTransaction1
     Params = <>
     Macros = <>
-    Left = 408
-    Top = 48
+    Left = 448
+    Top = 192
   end
   object AutoIncQry: TFDQuery
     Connection = ArchivarConnection
     Transaction = IBTransaction1
-    Left = 496
-    Top = 48
+    Left = 512
+    Top = 80
   end
   object FDTab: TFDQuery
     Connection = ArchivarConnection
     Transaction = IBTransaction1
     SQL.Strings = (
       'SELECT * FROM FD_DELETE')
-    Left = 402
-    Top = 159
+    Left = 138
+    Top = 255
   end
   object TYTab: TFDQuery
     Connection = ArchivarConnection
     Transaction = IBTransaction1
     SQL.Strings = (
       'SELECT * FROM TY_TASKTYPE')
-    Left = 486
-    Top = 159
+    Left = 190
+    Top = 255
   end
   object GRTab: TFDQuery
     Connection = ArchivarConnection
     Transaction = IBTransaction1
     SQL.Strings = (
       'SELECT * FROM GR_GREMIUM')
-    Left = 255
-    Top = 108
+    Left = 15
+    Top = 252
   end
   object DATab: TFDQuery
     Connection = ArchivarConnection
     Transaction = IBTransaction1
     SQL.Strings = (
       'SELECT * FROM DA_DATAFIELD')
-    Left = 223
-    Top = 167
+    Left = 143
+    Top = 207
   end
   object CreateDB: TFDScript
     SQLScripts = <>
@@ -680,8 +691,8 @@ object MainSetupForm: TMainSetupForm
     Transaction = IBTransaction1
     Params = <>
     Macros = <>
-    Left = 192
-    Top = 88
+    Left = 504
+    Top = 176
   end
   object SetPwdQry: TFDQuery
     Connection = ArchivarConnection
@@ -690,8 +701,8 @@ object MainSetupForm: TMainSetupForm
       'UPDATE PE_PERSON '
       'SET PE_PWD = :pwd'
       'WHERE PE_ID = 1;')
-    Left = 152
-    Top = 168
+    Left = 88
+    Top = 208
     ParamData = <
       item
         Name = 'PWD'
@@ -704,31 +715,31 @@ object MainSetupForm: TMainSetupForm
     Transaction = IBTransaction1
     UpdateOptions.UpdateTableName = 'HC_HTTP'
     TableName = 'HC_HTTP'
-    Left = 320
-    Top = 192
+    Left = 224
+    Top = 208
   end
   object EPTab: TFDTable
     Connection = ArchivarConnection
     Transaction = IBTransaction1
     UpdateOptions.UpdateTableName = 'EP_EPUB'
     TableName = 'EP_EPUB'
-    Left = 312
-    Top = 72
+    Left = 504
+    Top = 128
   end
   object TBTab: TFDTable
     Connection = ArchivarConnection
     Transaction = IBTransaction1
     UpdateOptions.UpdateTableName = 'TB_TEXT'
     TableName = 'TB_TEXT'
-    Left = 440
-    Top = 192
+    Left = 88
+    Top = 256
   end
   object FCTab: TFDTable
     Connection = ArchivarConnection
     Transaction = IBTransaction1
     UpdateOptions.UpdateTableName = 'FC_FILE_CACHE'
     TableName = 'FC_FILE_CACHE'
-    Left = 256
-    Top = 216
+    Left = 184
+    Top = 208
   end
 end
