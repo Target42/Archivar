@@ -14,6 +14,7 @@
 			</xs:sequence>
 			<xs:attribute name="name" type="xs:string"/>
 			<xs:attribute name="clid" type="xs:string"/>
+			<xs:attribute name="system" type="xs:string"/>
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="Rem"/>

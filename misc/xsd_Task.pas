@@ -3,7 +3,7 @@
 {                                                     }
 {                  XML-Datenbindung                   }
 {                                                     }
-{         Generiert am: 19.04.2020 08:30:30           }
+{         Generiert am: 12.10.2022 16:40:22           }
 {       Generiert von: D:\git\ber.git\misc\Task.xsd   }
 {                                                     }
 {*****************************************************}
@@ -33,19 +33,22 @@ type
 { IXMLTask }
 
   IXMLTask = interface(IXMLNode)
-    ['{428FC9F3-1659-461A-BF99-A8D4EECA08A9}']
+    ['{D8BAB42F-AC86-41D0-8EFA-74A1F5F86D37}']
     { Eigenschaftszugriff }
     function Get_Name: UnicodeString;
     function Get_Clid: UnicodeString;
+    function Get_System: UnicodeString;
     function Get_Rem: UnicodeString;
     function Get_Datafields: IXMLDatafields;
     function Get_Forms: IXMLForms;
     procedure Set_Name(Value: UnicodeString);
     procedure Set_Clid(Value: UnicodeString);
+    procedure Set_System(Value: UnicodeString);
     procedure Set_Rem(Value: UnicodeString);
     { Methoden & Eigenschaften }
     property Name: UnicodeString read Get_Name write Set_Name;
     property Clid: UnicodeString read Get_Clid write Set_Clid;
+    property System: UnicodeString read Get_System write Set_System;
     property Rem: UnicodeString read Get_Rem write Set_Rem;
     property Datafields: IXMLDatafields read Get_Datafields;
     property Forms: IXMLForms read Get_Forms;
@@ -54,7 +57,7 @@ type
 { IXMLDatafields }
 
   IXMLDatafields = interface(IXMLNodeCollection)
-    ['{FD3E1772-7A98-4515-AA6C-73A531968F3D}']
+    ['{A43508C9-AD03-4615-A43A-2FDB96496625}']
     { Eigenschaftszugriff }
     function Get_DataField(Index: Integer): IXMLDataField;
     { Methoden & Eigenschaften }
@@ -66,13 +69,14 @@ type
 { IXMLDataField }
 
   IXMLDataField = interface(IXMLNode)
-    ['{CF3DAA32-3076-48BD-83E9-D93B02F48469}']
+    ['{01042466-B2C0-45EB-A416-7C8F8936527F}']
     { Eigenschaftszugriff }
     function Get_Name: UnicodeString;
     function Get_Datatype: UnicodeString;
     function Get_Clid: UnicodeString;
     function Get_IsGlobal: Boolean;
     function Get_Required: Boolean;
+    function Get_Globalname: UnicodeString;
     function Get_Properties: IXMLProperties;
     function Get_Childs: IXMLChilds;
     function Get_Text: UnicodeString;
@@ -81,6 +85,7 @@ type
     procedure Set_Clid(Value: UnicodeString);
     procedure Set_IsGlobal(Value: Boolean);
     procedure Set_Required(Value: Boolean);
+    procedure Set_Globalname(Value: UnicodeString);
     procedure Set_Text(Value: UnicodeString);
     { Methoden & Eigenschaften }
     property Name: UnicodeString read Get_Name write Set_Name;
@@ -88,6 +93,7 @@ type
     property Clid: UnicodeString read Get_Clid write Set_Clid;
     property IsGlobal: Boolean read Get_IsGlobal write Set_IsGlobal;
     property Required: Boolean read Get_Required write Set_Required;
+    property Globalname: UnicodeString read Get_Globalname write Set_Globalname;
     property Properties: IXMLProperties read Get_Properties;
     property Childs: IXMLChilds read Get_Childs;
     property Text: UnicodeString read Get_Text write Set_Text;
@@ -96,7 +102,7 @@ type
 { IXMLProperties }
 
   IXMLProperties = interface(IXMLNodeCollection)
-    ['{50A7E1DA-9B8D-4B90-B4C8-5F5DA59516DA}']
+    ['{C22E4CE0-CCAA-4B3C-B5F5-9B7CD9838EBB}']
     { Eigenschaftszugriff }
     function Get_Property_(Index: Integer): IXMLProperty_;
     { Methoden & Eigenschaften }
@@ -108,7 +114,7 @@ type
 { IXMLProperty_ }
 
   IXMLProperty_ = interface(IXMLNode)
-    ['{98AC447E-26A2-4C46-9473-EB732F155B8E}']
+    ['{BF6299C5-5D07-4097-85A7-6CC99DA50A89}']
     { Eigenschaftszugriff }
     function Get_Name: UnicodeString;
     function Get_Typ: UnicodeString;
@@ -125,7 +131,7 @@ type
 { IXMLProperty_List }
 
   IXMLProperty_List = interface(IXMLNodeCollection)
-    ['{906ADA13-06BD-472E-9900-0E3933DCB891}']
+    ['{FE4FDCF3-2130-4407-AEAD-58B506F4A8FC}']
     { Methoden & Eigenschaften }
     function Add: IXMLProperty_;
     function Insert(const Index: Integer): IXMLProperty_;
@@ -137,7 +143,7 @@ type
 { IXMLChilds }
 
   IXMLChilds = interface(IXMLNodeCollection)
-    ['{5F61C221-EE53-4E4C-B4D2-76C88ADEB2F5}']
+    ['{622BD4D4-9CCF-4F70-A634-99AD021E6F02}']
     { Eigenschaftszugriff }
     function Get_DataField(Index: Integer): IXMLDataField;
     { Methoden & Eigenschaften }
@@ -149,7 +155,7 @@ type
 { IXMLForms }
 
   IXMLForms = interface(IXMLNodeCollection)
-    ['{2025700F-8CE6-4070-8368-1F475B46FA62}']
+    ['{D6B1E6AB-A860-4BD8-97E9-21B755DC6CC5}']
     { Eigenschaftszugriff }
     function Get_Form(Index: Integer): IXMLForm;
     { Methoden & Eigenschaften }
@@ -161,7 +167,7 @@ type
 { IXMLForm }
 
   IXMLForm = interface(IXMLNodeCollection)
-    ['{1F602E87-FB0F-4E7C-B82A-E5C1887326E0}']
+    ['{F7D4F059-540B-47E6-B137-A2F3856BDBFA}']
     { Eigenschaftszugriff }
     function Get_Name: UnicodeString;
     function Get_Mainform: Boolean;
@@ -182,7 +188,7 @@ type
 { IXMLControl }
 
   IXMLControl = interface(IXMLNode)
-    ['{EA6E352F-524E-4430-932B-741E88079221}']
+    ['{06E94D87-41F9-4A15-BFFF-0CE25C47E564}']
     { Eigenschaftszugriff }
     function Get_Clid: UnicodeString;
     function Get_CtrlType: UnicodeString;
@@ -206,7 +212,7 @@ type
 { IXMLControlList }
 
   IXMLControlList = interface(IXMLNodeCollection)
-    ['{9EA1BC26-B658-4A65-98E9-1521BF8C0BAE}']
+    ['{8B893E07-D963-4AD1-BC19-9FC18FF6D16B}']
     { Methoden & Eigenschaften }
     function Add: IXMLControl;
     function Insert(const Index: Integer): IXMLControl;
@@ -236,11 +242,13 @@ type
     { IXMLTask }
     function Get_Name: UnicodeString;
     function Get_Clid: UnicodeString;
+    function Get_System: UnicodeString;
     function Get_Rem: UnicodeString;
     function Get_Datafields: IXMLDatafields;
     function Get_Forms: IXMLForms;
     procedure Set_Name(Value: UnicodeString);
     procedure Set_Clid(Value: UnicodeString);
+    procedure Set_System(Value: UnicodeString);
     procedure Set_Rem(Value: UnicodeString);
   public
     procedure AfterConstruction; override;
@@ -268,6 +276,7 @@ type
     function Get_Clid: UnicodeString;
     function Get_IsGlobal: Boolean;
     function Get_Required: Boolean;
+    function Get_Globalname: UnicodeString;
     function Get_Properties: IXMLProperties;
     function Get_Childs: IXMLChilds;
     function Get_Text: UnicodeString;
@@ -276,6 +285,7 @@ type
     procedure Set_Clid(Value: UnicodeString);
     procedure Set_IsGlobal(Value: Boolean);
     procedure Set_Required(Value: Boolean);
+    procedure Set_Globalname(Value: UnicodeString);
     procedure Set_Text(Value: UnicodeString);
   public
     procedure AfterConstruction; override;
@@ -403,7 +413,7 @@ const
 
 implementation
 
-
+uses Xml.xmlutil;
 
 { Globale Funktionen }
 
@@ -449,6 +459,16 @@ end;
 procedure TXMLTask.Set_Clid(Value: UnicodeString);
 begin
   SetAttribute('clid', Value);
+end;
+
+function TXMLTask.Get_System: UnicodeString;
+begin
+  Result := AttributeNodes['system'].Text;
+end;
+
+procedure TXMLTask.Set_System(Value: UnicodeString);
+begin
+  SetAttribute('system', Value);
 end;
 
 function TXMLTask.Get_Rem: UnicodeString;
@@ -553,6 +573,16 @@ end;
 procedure TXMLDataField.Set_Required(Value: Boolean);
 begin
   SetAttribute('required', Value);
+end;
+
+function TXMLDataField.Get_Globalname: UnicodeString;
+begin
+  Result := AttributeNodes['globalname'].Text;
+end;
+
+procedure TXMLDataField.Set_Globalname(Value: UnicodeString);
+begin
+  SetAttribute('globalname', Value);
 end;
 
 function TXMLDataField.Get_Properties: IXMLProperties;
