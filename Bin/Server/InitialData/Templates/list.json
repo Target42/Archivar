@@ -1,0 +1,47 @@
+﻿{
+  "rem":[
+    "Die Type-ID kommt aus der TaksTypes.xml"
+  ],
+  "files": [
+    {
+      "file":"einstellung.task",
+      "system":false,
+      "type":1,
+	  "name":"Einstellung",
+	  "titel":"Normale Einstellung MA",
+	  "tags":"einstellung §99"
+    },
+    {
+      "file":"protokoll.task",
+      "system":true,
+      "type":0,
+	  "name":"Protokoll",
+	  "titel":"",
+	  "tags":""
+    },
+    {
+      "file":"Überstunden.task",
+      "system":false,
+      "type":2,
+	  "name":"Überstunden",
+	  "titel":"Überstundenantrag",
+	  "tags":"mehrarbeit samstag"
+    },
+    {
+      "file":"versetzung.task",
+      "system":false,
+      "type":1,
+	  "name":"Versetzung",
+	  "titel":"Interne Versetzuing von Kollegen",
+	  "tags":"versetzung"
+    },
+    {
+      "file":"beschluss.task",
+      "system":true,
+      "type":0,
+	  "name":"Beschluss",
+	  "titel":"Ein Beschluss",
+	  "tags":""
+    }
+  ]
+}

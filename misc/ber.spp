@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project>
+	<Folder FolderName="XML Files" ExtStr="xml;cml;math;mtx;rdf;smil;svg;wml"/>
+	<Folder FolderName="XSL Files" ExtStr="xsl;xslt"/>
+	<Folder FolderName="HTML Files" ExtStr="html;htm;xhtml;asp"/>
+	<Folder FolderName="DTD/Schemas" ExtStr="dtd;dcd;xdr;biz;xsd">
+		<File FilePath=".\beschlus.xsd" HomeFolder="Yes"/>
+		<File FilePath=".\Betriebsrat.xsd" HomeFolder="Yes"/>
+		<File FilePath=".\chapter.xsd" HomeFolder="Yes"/>
+		<File FilePath=".\data.xsd" HomeFolder="Yes"/>
+		<File FilePath=".\DataField.xsd" HomeFolder="Yes"/>
+		<File FilePath=".\protocol.xsd" HomeFolder="Yes"/>
+		<File FilePath=".\StoreLimits.xsd" HomeFolder="Yes"/>
+		<File FilePath=".\Styles.xsd" HomeFolder="Yes"/>
+		<File FilePath=".\Task.xsd" HomeFolder="Yes"/>
+		<File FilePath=".\TaskData.xsd" HomeFolder="Yes"/>
+		<File FilePath=".\TaskType.xsd" HomeFolder="Yes"/>
+		<File FilePath=".\TextBlock.xsd" HomeFolder="Yes"/>
+	</Folder>
+	<Folder FolderName="Entities" ExtStr="ent"/>
+</Project>
