@@ -366,7 +366,8 @@ begin
 
   if te_id > -1 then begin
     Application.CreateForm(TTaksEditorForm, frm);
-    frm.TEID := te_id;
+    frm.System  := false;
+    frm.TEID    := te_id;
     frm.Show;
   end;
 end;
@@ -976,6 +977,7 @@ begin
 
   if te_id <> -1  then begin
     Application.CreateForm(TTaksEditorForm, frm);
+    frm.System := sys;
     frm.TEID := te_id;
     frm.Show;
   end;

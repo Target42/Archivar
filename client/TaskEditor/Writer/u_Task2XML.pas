@@ -60,10 +60,11 @@ var
   xw  : TaskDataField2XML;
   i   : integer;
 begin
-  Result      := TTask.create;
-  Result.Name := m_xTask.Name;
-  Result.CLID := m_xTask.Clid;
-  Result.Rem  := m_xTask.Rem;
+  Result        := TTask.create;
+  Result.Name   := m_xTask.Name;
+  Result.CLID   := m_xTask.Clid;
+  Result.Rem    := m_xTask.Rem;
+  Result.System := SameText( m_xTask.System, 'true' );
 
   m_task      := Result;
 
@@ -91,6 +92,10 @@ begin
   m_xTask.Name  := task.Name;
   m_xTask.Clid  := task.CLID;
   m_xTask.Rem   := task.Rem;
+  if task.System then
+    m_xTask.System:= 'true'
+  else
+    m_xTask.System:= 'false';
 
   xw := TaskDataField2XML.create;
   try

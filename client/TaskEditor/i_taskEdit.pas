@@ -51,14 +51,17 @@ type
     function  getOwner : ITaskContainer;
     procedure setRem( value : string );
     function  getRem : string;
+    function  getSystem : boolean;
+    procedure setSystem( value : boolean );
 
   //public
-    property Owner  : ITaskContainer read getOwner write setOwner;
-    property Name   : string read getName write setName;
-    property CLID   : string read getCLID write setCLID;
-    property Fields : IDataFieldList read getFields;
-    property Forms  : TList<ITaskForm> read getForms;
-    property Rem    : string read getRem write setRem;
+    property Owner  : ITaskContainer    read getOwner   write setOwner;
+    property Name   : string            read getName    write setName;
+    property CLID   : string            read getCLID    write setCLID;
+    property Fields : IDataFieldList    read getFields;
+    property Forms  : TList<ITaskForm>  read getForms;
+    property Rem    : string            read getRem     write setRem;
+    property System : boolean           read getSystem  write setSystem;
 
     function getMainForm : ITaskForm;
     function NewForm : ITaskForm;
@@ -88,15 +91,15 @@ type
 
     function getdfm : TMemoryStream;
   //public
-    property Name  : string read getName write setName;
+    property Name     : string        read getName      write setName;
 
-    property Owner    : ITask read getOwner;
-    property CLID     : string read getCLID write setCLID;
-    property MainForm : boolean read getMainForm write setMainForm;
-    property Base     : ITaskCtrl read getBase;
+    property Owner    : ITask         read getOwner;
+    property CLID     : string        read getCLID      write setCLID;
+    property MainForm : boolean       read getMainForm  write setMainForm;
+    property Base     : ITaskCtrl     read getBase;
 
-    property Changed  : boolean read getChanged write setChanged;
-    property ReadOnly : boolean read getReadOnly write setReadOnly;
+    property Changed  : boolean       read getChanged   write setChanged;
+    property ReadOnly : boolean       read getReadOnly  write setReadOnly;
 
     property DFM      : TMemoryStream read getdfm;
 

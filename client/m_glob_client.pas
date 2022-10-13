@@ -12,7 +12,8 @@ uses
   JvComputerInfoEx, Datasnap.DSCommon,
   Data.DBXJSON, pngimage, System.ImageList, Vcl.ImgList, Vcl.Controls,
   u_berTypes, Datasnap.DSConnect, i_personen, Vcl.Dialogs, JvBaseDlg,
-  JvSHFileOperation, System.Notification, FireDAC.Phys.Intf, FireDAC.DApt.Intf;
+  JvSHFileOperation, System.Notification, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
+  DbxCompressionFilter;
 
 const
   WMUSER            = WM_USER + 25;

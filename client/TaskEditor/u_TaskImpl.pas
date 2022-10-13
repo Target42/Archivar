@@ -14,6 +14,7 @@ type
     m_rem     : string;
     m_fields  : IDataFieldList;
     m_forms   : TList<ITaskForm>;
+    m_system  : boolean;
 
     m_workDir : string;
 
@@ -29,6 +30,8 @@ type
     function  getOwner : ITaskContainer;
     procedure setRem( value : string );
     function  getRem : string;
+    function  getSystem : boolean;
+    procedure setSystem( value : boolean );
 
   public
     constructor create;
@@ -59,6 +62,7 @@ begin
   m_fields  := TDataFieldList.create(NIL);
   m_forms   := TList<ITaskForm>.create;
   m_clid    := CreateClassID;
+  m_system  := false;
 end;
 
 destructor TTask.Destroy;
@@ -131,6 +135,11 @@ begin
   Result := m_rem;
 end;
 
+function TTask.getSystem: boolean;
+begin
+  Result := m_system;
+end;
+
 function TTask.getWorkDir: string;
 begin
   Result := m_workDir;
@@ -177,6 +186,11 @@ end;
 procedure TTask.setRem(value: string);
 begin
   m_rem := value;
+end;
+
+procedure TTask.setSystem(value: boolean);
+begin
+  m_system := value;
 end;
 
 procedure TTask.setWorkDir(value: string);

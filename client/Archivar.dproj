@@ -263,7 +263,6 @@
             <Form>PropertyFrame</Form>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
-        <DCCReference Include="..\misc\xsd_Task.pas"/>
         <DCCReference Include="TaskEditor\controls\u_TaskControlFactory.pas"/>
         <DCCReference Include="TaskEditor\controls\u_TaskCtrlLabel.pas"/>
         <DCCReference Include="TaskEditor\controls\u_TaskCtrlEdit.pas"/>
@@ -597,6 +596,7 @@
             <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
+        <DCCReference Include="..\misc\xsd_Task.pas"/>
         <None Include="Datafields\ERA-NS.txt"/>
         <RcItem Include="dws\dws.html">
             <ContainerId>ResourceItem</ContainerId>

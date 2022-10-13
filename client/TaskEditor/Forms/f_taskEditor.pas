@@ -65,6 +65,7 @@ type
   private
     m_teid : integer;
     m_tc   : ITaskContainer;
+    FSystem: boolean;
 
     procedure setTEID( value : integer );
     procedure setTaskContainer( value : ITaskContainer);
@@ -74,8 +75,9 @@ type
     procedure saveToStream;
     procedure CheckDefaultStype;
   public
-    property TaskContainer : ITaskContainer read m_tc   write setTaskContainer;
-    property TEID          : integer        read m_teid write setTEID;
+    property TaskContainer  : ITaskContainer  read m_tc     write setTaskContainer;
+    property TEID           : integer         read m_teid   write setTEID;
+    property System         : boolean         read FSystem  write FSystem;
 
     procedure load;
     procedure new;
@@ -248,6 +250,8 @@ begin
 
   ReportFrame1.init;
   EditorFrame1.OnNewForm := ReportFrame1.doNewForm;
+
+  FSystem := false;
 end;
 
 procedure TTaksEditorForm.FormDestroy(Sender: TObject);
@@ -302,8 +306,9 @@ var
   clid : String;
 begin
   if Assigned(m_tc.Task) then begin
-    m_tc.Task.Rem  := EditFrame1.Text;
-    m_tc.Task.Name := TETab.FieldByName('TE_NAME').AsString;
+    m_tc.Task.Rem     := EditFrame1.Text;
+    m_tc.Task.Name    := TETab.FieldByName('TE_NAME').AsString;
+    m_tc.Task.System  := FSystem;
   end;
 
   EditorFrame1.saveCurrentForm;

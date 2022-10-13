@@ -69,7 +69,6 @@ uses
   u_TaskCtrlImpl in 'TaskEditor\u_TaskCtrlImpl.pas',
   u_TaskCtrlPropImpl in 'TaskEditor\u_TaskCtrlPropImpl.pas',
   fr_propertyEditor in 'TaskEditor\Forms\fr_propertyEditor.pas' {PropertyFrame: TFrame},
-  xsd_Task in '..\misc\xsd_Task.pas',
   u_TaskControlFactory in 'TaskEditor\controls\u_TaskControlFactory.pas',
   u_TaskCtrlLabel in 'TaskEditor\controls\u_TaskCtrlLabel.pas',
   u_TaskCtrlEdit in 'TaskEditor\controls\u_TaskCtrlEdit.pas',
@@ -213,7 +212,8 @@ uses
   CodeSiteLogging {PersonenListForm},
   f_protokoll_new in 'Protokoll\f_protokoll_new.pas' {ProtokollNewForm},
   fr_base in '..\misc\fr_base.pas' {BaseFrame: TFrame},
-  fr_gremium in 'Gremium\fr_gremium.pas' {GremiumFrame: TFrame};
+  fr_gremium in 'Gremium\fr_gremium.pas' {GremiumFrame: TFrame},
+  xsd_Task in '..\misc\xsd_Task.pas';
 
 {$R *.res}
 
