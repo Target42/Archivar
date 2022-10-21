@@ -4,10 +4,10 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_file;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_file, u_ForceClose;
 
 type
-  TStorageForm = class(TForm)
+  TStorageForm = class(TForm, IForceClose)
     FileFrame1: TFileFrame;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -22,6 +22,8 @@ type
   public
     property Header: string read GetHeader write SetHeader;
     property DirID: integer read GetDirID write SetDirID;
+
+    procedure ForceClose( force : boolean);
   end;
 
 var
@@ -35,6 +37,11 @@ uses
 {$R *.dfm}
 
 { TStorageForm }
+
+procedure TStorageForm.ForceClose(force: boolean);
+begin
+  self.close;
+end;
 
 procedure TStorageForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin

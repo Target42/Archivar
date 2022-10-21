@@ -12,10 +12,10 @@ uses
   Vcl.Buttons,
   i_chapter,
   Vcl.OleCtrls, SHDocVw, System.Generics.Collections,
-  u_teilnehmer, fr_protocol, JvExComCtrls;
+  u_teilnehmer, fr_protocol, JvExComCtrls, u_ForceClose;
 
 type
-  TProtokollForm = class(TForm)
+  TProtokollForm = class(TForm, IForceClose)
     StatusBar1: TStatusBar;
     PageControl1: TPageControl;
     TabSheet1: TTabSheet;
@@ -104,6 +104,8 @@ type
   public
     property ID: integer read getID write setID;
     property RO: Boolean read m_ro write setRO;
+
+    procedure ForceClose( force : boolean);
   end;
 
 var
@@ -345,6 +347,16 @@ begin
   inx := 0;
   for st := tsUnbekannt to tsLast do
     addGrp(st, TeilnehmerStatusToString(st));
+end;
+
+procedure TProtokollForm.ForceClose(force: boolean);
+begin
+  if force then begin
+    if m_proto.Modified then
+      save;
+  end;
+
+  self.close;
 end;
 
 procedure TProtokollForm.FormClose(Sender: TObject; var Action: TCloseAction);

@@ -15,6 +15,9 @@
         <Projects Include="Launcher\Launcher.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="d:\Users\steph\Documents\Embarcadero\Studio\Projekte\guard.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -59,14 +62,23 @@
     <Target Name="Launcher:Make">
         <MSBuild Projects="Launcher\Launcher.dproj" Targets="Make"/>
     </Target>
+    <Target Name="guard">
+        <MSBuild Projects="d:\Users\steph\Documents\Embarcadero\Studio\Projekte\guard.dproj"/>
+    </Target>
+    <Target Name="guard:Clean">
+        <MSBuild Projects="d:\Users\steph\Documents\Embarcadero\Studio\Projekte\guard.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="guard:Make">
+        <MSBuild Projects="d:\Users\steph\Documents\Embarcadero\Studio\Projekte\guard.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="Setup;ArchivServer;Archivar;Launcher"/>
+        <CallTarget Targets="Setup;ArchivServer;Archivar;Launcher;guard"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="Setup:Clean;ArchivServer:Clean;Archivar:Clean;Launcher:Clean"/>
+        <CallTarget Targets="Setup:Clean;ArchivServer:Clean;Archivar:Clean;Launcher:Clean;guard:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="Setup:Make;ArchivServer:Make;Archivar:Make;Launcher:Make"/>
+        <CallTarget Targets="Setup:Make;ArchivServer:Make;Archivar:Make;Launcher:Make;guard:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

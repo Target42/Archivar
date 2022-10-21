@@ -32,6 +32,8 @@ const
 
 const
   BRD_CHANNEL         : string = 'storage';
+
+  BRD_ADMIN           : string = 'admin';
   BRD_TASK_MOVE       : string = 'task_move';       // taskmove
   BRD_TASK_DELETE     : string = 'task_delete';     // taskdelete
   BRD_MEETING_NEW     : string = 'meeting_new';     // newmeeting
@@ -56,6 +58,12 @@ const
   BRD_STORE_UPDATE    : string = 'store_update';
   BRD_FILE_LOCK       : string = 'fi_lock';
 
+
+// admin actions
+  BRD_ADMIN_REBOOT    : string = 'reboot';
+  BRD_ADMIN_MSG       : string = 'messeage';
+  BRD_ADMIN_CLOSE_EDIT: string = 'closeedits';
+  BRD_ADMIN_TERMINATE : string = 'terminate';
 
 const
   VOTE_YES      =  1;

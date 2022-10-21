@@ -13,7 +13,7 @@ uses
   System.SyncObjs, System.Generics.Collections, FireDAC.Stan.Intf,
   FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
   FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
-  FireDAC.Comp.DataSet, FireDAC.Comp.Client, MidasLib;
+  FireDAC.Comp.DataSet, FireDAC.Comp.Client, MidasLib, u_serverTimer;
 
 type
   TServerContainer1 = class(TService)
@@ -108,16 +108,20 @@ type
     const
       MaxUserNameLength = 25;
   private
+    m_timer : TServerTimer;
     m_secret : string;
     m_Lock : TCriticalSection;
     m_sessions : TThreadList<String>;
 
     procedure removeUser( Session: TDSSession );
+    procedure createTimer;
+    procedure execShutdown( sender : TObject );
   protected
     function DoStop: Boolean; override;
     function DoPause: Boolean; override;
     function DoContinue: Boolean; override;
     procedure DoInterrogate; override;
+
   public
     function GetServiceController: TServiceController; override;
 
@@ -127,6 +131,8 @@ type
     procedure dumpSessions;
 
     procedure startLogging;
+
+    procedure Shutdown( value : integer );
   end;
 
 var
@@ -146,7 +152,8 @@ uses
   ds_taks, ds_file, ds_misc, ds_protocol, ds_image, ds_chapter,
   ds_taskEdit, ds_template, ds_taskView, ds_textblock, ds_fileCache, ds_epub,
   ds_meeting, System.Hash, u_json, ds_sitzung, m_hell, Grijjy.sysUtils, u_ini,
-  m_fileServer, ds_updater, ds_stamm, ds_pki, ds_dairy, ds_storage;
+  m_fileServer, ds_updater, ds_stamm, ds_pki, ds_dairy, ds_storage, WinApi.WinSvc,
+  u_Konst, Winapi.Messages;
 
 procedure TServerContainer1.dsAdminGetClass(
   DSServerClass: TDSServerClass; var PersistentClass: TPersistentClass);
@@ -320,6 +327,54 @@ begin
   ServerContainer1.Controller(CtrlCode);
 end;
 
+procedure SimKeyEvent(VirtualKey : Integer; Flags : LongWord);
+var
+  KeybdInput : TagKeybdInput;
+  Input : TagInput;
+begin
+  KeybdInput.wVk := VirtualKey;
+  KeybdInput.dwFlags := Flags;
+  KeybdInput.dwExtraInfo := 0;
+  KeybdInput.wScan := 0;
+  KeybdInput.time := 0;
+
+  Input.Itype := INPUT_KEYBOARD;
+  Input.ki := KeybdInput;
+
+  SendInput(1, Input, SizeOf(Input));
+end;
+
+procedure TServerContainer1.execShutdown(sender: TObject);
+{$ifdef DEBUG}
+var
+  obj  : TJSONObject;
+  hnd  : HWND;
+{$endif}
+begin
+  // Send close Edits
+  obj  := TJSONObject.Create;
+  JReplace( obj, 'action', BRD_ADMIN);
+  JReplace( obj, 'cmd',    BRD_ADMIN_CLOSE_EDIT);
+  BroadcastMessage(BRD_CHANNEL, obj);
+
+  // Send terminate !!
+  obj  := TJSONObject.Create;
+  JReplace( obj, 'action',  BRD_ADMIN);
+  JReplace( obj, 'cmd',     BRD_ADMIN_TERMINATE);
+  BroadcastMessage(BRD_CHANNEL, obj);
+
+
+{$ifdef DEBUG}
+  hnd := FindWindow('ConsoleWindowClass', PWideChar(ParamStr(0))) ;
+  PostMessage( hnd, WM_CLOSE, 0, 0 );
+
+//  SimKeyEvent(VkKeyScan('q'), KEYEVENTF_KEYUP );
+//  SimKeyEvent(VK_RETURN, 0 );
+{$else}
+  ServiceController(SERVICE_CONTROL_STOP);
+{$endif}
+end;
+
 function TServerContainer1.GetServiceController: TServiceController;
 begin
   Result := ServiceController;
@@ -367,6 +422,13 @@ begin
 
   DSServer1.BroadcastMessage(id, data);
   GrijjyLog.ExitMethod(self, 'BroadcastMessage');
+end;
+
+procedure TServerContainer1.createTimer;
+begin
+  if not Assigned(m_timer) then begin
+    m_timer := TServerTimer.Create;
+  end;
 end;
 
 function TServerContainer1.DoContinue: Boolean;
@@ -508,7 +570,11 @@ begin
         if valid then begin
           Session.PutData('user',     userName);
           Session.PutData('ID',       QueryUser.FieldByName('PE_ID').AsString );
-          Session.PutData('DRID',     QueryUser.FieldByName('DR_ID').AsString );
+          if not  QueryUser.FieldByName('DR_ID').IsNull then
+            Session.PutData('DRID',     QueryUser.FieldByName('DR_ID').AsString )
+          else
+            Session.PutData('DRID',     '0' );
+
           Session.PutData('name',     QueryUser.FieldByName('pe_name').AsString);
           Session.PutData('vorname',  QueryUser.FieldByName('pe_vorname').AsString);
           Session.PutData('dept',     QueryUser.FieldByName('PE_DEPARTMENT').AsString);
@@ -657,6 +723,7 @@ end;
 
 procedure TServerContainer1.ServiceCreate(Sender: TObject);
 begin
+
   GrijjyLog.Service := 'Archivar';
   GrijjyLog.SetLogLevel(TgoLogLevel.Info);
 
@@ -669,7 +736,7 @@ begin
   m_sessions  := TThreadList<String>.create;
 
   m_secret    := IniOptions.SecretName;
-
+  m_timer     := NIL;
 
   FileServer.createUpdaterZIP;
   DSTCPServerTransport1.Port := IniOptions.DSport;
@@ -712,12 +779,15 @@ end;
 procedure TServerContainer1.ServiceDestroy(Sender: TObject);
 begin
 //  m_Lock.
+  if Assigned(m_timer) then
+    m_timer.Terminate;
   m_sessions.Free;
 end;
 
 procedure TServerContainer1.ServiceStart(Sender: TService; var Started: Boolean);
 begin
   GrijjyLog.EnterMethod(self, 'ServiceStart');
+  createTimer;
   try
     DBMod.startDB;
     FileServer.start;
@@ -739,8 +809,17 @@ begin
   DSServer1.Stop;
   FileServer.stop;
   DBMod.stopDB;
+
+  m_timer.Terminate;
+  m_timer := NIL;
+
   Stopped := true;
   GrijjyLog.ExitMethod( self, 'ServiceStop');
+end;
+
+procedure TServerContainer1.Shutdown(value: integer);
+begin
+  m_timer.newTimer( value * 1000, false, execShutdown);
 end;
 
 procedure TServerContainer1.startLogging;

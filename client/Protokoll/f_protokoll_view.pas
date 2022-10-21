@@ -6,10 +6,10 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.OleCtrls, SHDocVw, Vcl.ComCtrls,
   u_renderer, m_taskLoader, i_chapter, Vcl.Buttons, Vcl.ExtCtrls,
-  Vcl.Menus;
+  Vcl.Menus, u_ForceClose;
 
 type
-  TProtokollViewForm = class(TForm)
+  TProtokollViewForm = class(TForm, IForceClose)
     StatusBar1: TStatusBar;
     WebBrowser1: TWebBrowser;
     PrintDialog1: TPrintDialog;
@@ -34,6 +34,7 @@ type
     procedure action( cmd : string );
   public
     property ID: integer read GetID write SetID;
+    procedure ForceClose( force : boolean = true );
   end;
 
 var
@@ -62,6 +63,11 @@ end;
 procedure TProtokollViewForm.Drucken1Click(Sender: TObject);
 begin
   action('print');
+end;
+
+procedure TProtokollViewForm.ForceClose(force: boolean);
+begin
+  self.close;
 end;
 
 procedure TProtokollViewForm.FormClose(Sender: TObject;

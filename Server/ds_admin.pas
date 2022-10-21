@@ -23,6 +23,8 @@ type
     function getUserInfo( data : TJSONObject) : TJSONObject;
     function getGremiumList : TJSONObject;
     function getDeleteTimes : TJSONObject;
+    [TRoleAuth('admin')]
+    function ServiceAction( data : TJSONObject ) : TJSONObject;
   end;
 
 implementation
@@ -33,7 +35,8 @@ implementation
 
 
 uses
-  Grijjy.CloudLogging, System.StrUtils, u_json, m_db, m_glob_server;
+  Grijjy.CloudLogging, System.StrUtils, u_json, m_db, m_glob_server,
+  ServerContainerUnit1, u_Konst;
 
 { TAdminMod }
 
@@ -117,6 +120,53 @@ begin
 
   GrijjyLog.ExitMethod(self, 'getUserInfo');
 
+end;
+
+
+function TAdminMod.ServiceAction(data: TJSONObject): TJSONObject;
+var
+  cmd : string;
+  obj : TJSONObject;
+
+  procedure sendShutdown;
+  var
+    val : integer;
+  begin
+    val := JInt(data, 'counter', 120);
+    JReplace( obj, 'counter', val);
+    setText(  obj, 'text', Format('Der Server wird in %d Sekunden runtergefahren', [val]));
+
+    ServerContainer1.BroadcastMessage(BRD_CHANNEL, obj);
+    ServerContainer1.Shutdown( val );
+  end;
+  procedure sendMessage;
+  begin
+    setText(  obj, 'text', getText( data, 'text' ));
+    ServerContainer1.BroadcastMessage(BRD_CHANNEL, obj);
+  end;
+  procedure sendCloseEdits;
+  begin
+    ServerContainer1.BroadcastMessage(BRD_CHANNEL, obj);
+  end;
+
+begin
+  GrijjyLog.EnterMethod(self, 'ServiceAction');
+  Result := TJSONObject.Create;
+
+  obj := TJSONObject.Create;
+  JAction( obj, BRD_ADMIN);
+  cmd := JString(data, 'cmd');
+
+  JReplace( obj, 'cmd', cmd );
+
+       if SameText(cmd, BRD_ADMIN_REBOOT)     then sendShutdown
+  else if SameText(cmd, BRD_ADMIN_MSG)        then sendMessage
+  else if SameText(cmd, BRD_ADMIN_CLOSE_EDIT) then sendCloseEdits;
+
+
+
+  JResult(Result, true, '');
+  GrijjyLog.ExitMethod(self, 'ServiceAction');
 end;
 
 end.

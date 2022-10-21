@@ -213,7 +213,10 @@ uses
   f_protokoll_new in 'Protokoll\f_protokoll_new.pas' {ProtokollNewForm},
   fr_base in '..\misc\fr_base.pas' {BaseFrame: TFrame},
   fr_gremium in 'Gremium\fr_gremium.pas' {GremiumFrame: TFrame},
-  xsd_Task in '..\misc\xsd_Task.pas';
+  xsd_Task in '..\misc\xsd_Task.pas',
+  u_ShowMessageTimeOut in 'misc\u_ShowMessageTimeOut.pas',
+  f_admin in 'admin\f_admin.pas' {AdminForm},
+  u_ForceClose in 'misc\u_ForceClose.pas';
 
 {$R *.res}
 

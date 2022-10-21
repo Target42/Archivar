@@ -13,7 +13,7 @@ uses
   Data.DBXJSON, pngimage, System.ImageList, Vcl.ImgList, Vcl.Controls,
   u_berTypes, Datasnap.DSConnect, i_personen, Vcl.Dialogs, JvBaseDlg,
   JvSHFileOperation, System.Notification, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
-  DbxCompressionFilter;
+  DbxCompressionFilter, u_ShowMessageTimeOut;
 
 const
   WMUSER            = WM_USER + 25;
@@ -96,10 +96,11 @@ type
     function downloadimage( name : string;client : TdsImageClient) :  boolean;
     procedure CreateDirs;
 
-    function handle_taskmove( const Arg: TJSONObject ) : boolean;
-    function handle_taskdelete( const Arg: TJSONObject ) : boolean;
-    function handle_newmeeting( const Arg: TJSONObject ) : boolean;
-    function handle_updatemeeting( const Arg: TJSONObject ) : boolean;
+    function handle_admin         ( const Arg: TJSONObject ) : boolean;
+    function handle_taskmove      ( const Arg: TJSONObject ) : boolean;
+    function handle_taskdelete    ( const Arg: TJSONObject ) : boolean;
+    function handle_newmeeting    ( const Arg: TJSONObject ) : boolean;
+    function handle_updatemeeting ( const Arg: TJSONObject ) : boolean;
 
     procedure checkOrDownloadKeys;
 
@@ -198,7 +199,8 @@ uses
   System.UITypes, system.IOUtils, FireDAC.Stan.Storagebin,
   System.Win.ComObj, m_WindowHandler, m_BookMarkHandler, IdHashMessageDigest,
   Vcl.Graphics, u_PersonenListeImpl, m_cache, f_login, u_kategorie,
-  u_onlineUser, m_http, f_doMeeting, u_eventHandler, u_Konst, IdStack, m_fileCache, m_crypt;
+  u_onlineUser, m_http, f_doMeeting, u_eventHandler, u_Konst, IdStack, m_fileCache, m_crypt,
+  CodeSiteLogging, f_main;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -339,7 +341,7 @@ begin
     client.Free;
   end;
   // Keine Key's, also neue anlegen
-  if not FileExists(CryptMod.PrivateKeyFile) or not FileExists(CryptMod.PublicKeyFile) then
+  if not CryptMod.hasKeyFiles then
     PostMessage( Application.MainFormHandle, msgNeedKeys, 0, 0 );
 end;
 
@@ -403,7 +405,8 @@ begin
         err := (e as TDBXError).ErrorCode;
         case err of
           0 : begin
-                ShowMessage('Benutzername oder Passwort ist falsch.');
+                ShowMessageTimeout('Login', 'Benutzername oder Passwort ist falsch.');
+                //ShowMessage('Benutzername oder Passwort ist falsch.');
                 inc(m_LoginFailCount);
                 if m_LoginFailCount < 3 then
                   PostMessage(Application.MainFormHandle, msgRetryLogin, 0, 0 )
@@ -474,6 +477,7 @@ begin
     FUserName := ParamStr(1);
 {$endif}
 
+  EventHandler.Register( self, handle_admin,        BRD_ADMIN);
   EventHandler.Register( self, handle_taskmove,     BRD_TASK_MOVE);
   EventHandler.Register( self, handle_taskdelete,   BRD_TASK_DELETE);
   EventHandler.Register( self, handle_newmeeting,   BRD_MEETING_NEW );
@@ -700,6 +704,37 @@ begin
   end;
 end;
 
+function TGM.handle_admin(const Arg: TJSONObject): boolean;
+var
+  cmd  : string;
+
+  procedure SendMsg;
+  var
+    list : TStringList;
+  begin
+    list := TStringList.Create;
+    getText(arg, 'text', list );
+
+    if list.Count > 0 then begin
+      MainForm.AdminMsg(DateTimeToStr(now)+':'+list[0]);
+      list.Insert(0, DateTimeToStr(now));
+      ShowMessageTimeout('Admin', list.Text );
+    end;
+    list.Free;
+  end;
+  procedure CloseEdit;
+  begin
+    WindowHandler.closeAll;
+  end;
+begin
+  cmd := JString( Arg, 'cmd');
+       if SameText(cmd, BRD_ADMIN_MSG)        then SendMsg
+  else if SameText(cmd, BRD_ADMIN_CLOSE_EDIT) then CloseEdit
+  else if SameText(cmd, BRD_ADMIN_TERMINATE)  then Application.Terminate;
+
+  Result := true;
+end;
+
 function TGM.handle_newmeeting(const Arg: TJSONObject): boolean;
 begin
   PostMessage(Application.MainFormHandle, msgNewMeeting, 0, JInt(Arg, 'id'));
@@ -727,7 +762,6 @@ end;
 
 function TGM.handle_updatemeeting(const Arg: TJSONObject): boolean;
 begin
-
   PostMessage(Application.MainFormHandle, msgUpdateMeetings, 0, 0 );
 
   Result := true;
@@ -967,7 +1001,9 @@ function TMyCallback.Execute(const Arg: TJSONValue): TJSONValue;
 var
   msg : TJSONObject;
 begin
+  CodeSite.EnterMethod(self, 'Execute');
   msg := arg.Clone as TJSONObject;
+  CodeSite.SendMsg(msg.ToString);
 
   TThread.Queue(nil,
     procedure
@@ -977,6 +1013,7 @@ begin
     end
   );
   Result := TJSONBool.Create(true);
+  CodeSite.ExitMethod(self, 'Execute');
 end;
 
 end.

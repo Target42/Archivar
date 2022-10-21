@@ -39,7 +39,7 @@ uses
 procedure ShowKeysform;
 begin
   if not CryptMod.hasKeysLoaded then begin
-    if not CryptMod.loadKeys then begin
+    if CryptMod.hasKeyFiles and not CryptMod.loadKeys then begin
       // Unload key's
       CryptMod.clearKeys;
       CryptMod.Password := '';

@@ -71,6 +71,7 @@ object Keysform: TKeysform
     object TabSheet1: TTabSheet
       Caption = #214'ffentlicher Schl'#252'ssel'
       ExplicitLeft = 12
+      ExplicitTop = 0
       ExplicitWidth = 281
       ExplicitHeight = 165
       object Memo1: TMemo
@@ -90,15 +91,13 @@ object Keysform: TKeysform
         ReadOnly = True
         ScrollBars = ssVertical
         TabOrder = 0
-        ExplicitLeft = 2
-        ExplicitTop = 15
-        ExplicitWidth = 514
-        ExplicitHeight = 168
       end
     end
     object TabSheet2: TTabSheet
       Caption = 'Privater Schl'#252'ssel'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
       ExplicitWidth = 281
       ExplicitHeight = 165
       object Memo2: TMemo
@@ -118,10 +117,6 @@ object Keysform: TKeysform
         ReadOnly = True
         ScrollBars = ssVertical
         TabOrder = 0
-        ExplicitLeft = 2
-        ExplicitTop = 15
-        ExplicitWidth = 514
-        ExplicitHeight = 328
       end
     end
   end

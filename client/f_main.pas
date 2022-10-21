@@ -10,7 +10,7 @@ uses
   JvCombobox, JvColorCombo, fr_storages, JvExStdCtrls, MidasLib;
 
 type
-  TStatusInx = (stStatus = 0, stHost, stLogin, stUser );
+  TStatusInx = (stStatus = 0, stHost, stLogin, stUser, stMsg );
 
 type
   TMainForm = class(TForm)
@@ -175,6 +175,9 @@ type
     ac_ad_storages: TAction;
     N19: TMenuItem;
     N20: TMenuItem;
+    ac_ad_action: TAction;
+    Aktionen1: TMenuItem;
+    N21: TMenuItem;
     procedure ac_prg_closeExecute(Sender: TObject);
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure ac_prg_disconExecute(Sender: TObject);
@@ -219,6 +222,9 @@ type
     procedure ac_tb_importExecute(Sender: TObject);
     procedure ac_to_pdriveExecute(Sender: TObject);
     procedure ac_ad_storagesExecute(Sender: TObject);
+    procedure ac_ad_actionExecute(Sender: TObject);
+    procedure StatusBar1DrawPanel(StatusBar: TStatusBar; Panel: TStatusPanel;
+      const Rect: TRect);
   private
     m_noStatChange : boolean;
 
@@ -233,7 +239,7 @@ type
 
     procedure UpdateUserView( sender : TObject );
   public
-    { Public declarations }
+    procedure AdminMsg( text : string );
   end;
 
 var
@@ -250,9 +256,14 @@ uses
   f_meeting_new, f_meeting_select, f_meeting_proto, f_login,
   system.UITypes, f_protocol_sec, u_onlineUser, f_doMeeting, f_task_type,
   f_flieCacheForm, f_keys, f_dairy, f_textblock_export, f_textblock_import,
-  f_storages, f_protokoll_new;
+  f_storages, f_protokoll_new, f_admin;
 
 {$R *.dfm}
+
+procedure TMainForm.ac_ad_actionExecute(Sender: TObject);
+begin
+  ShowAdminform;
+end;
 
 procedure TMainForm.ac_ad_datafieldsExecute(Sender: TObject);
 begin
@@ -722,6 +733,11 @@ begin
   Splitter2.Visible     := ac_view_task.Checked;
 end;
 
+procedure TMainForm.AdminMsg(text: string);
+begin
+  setPanel(integer(stMsg), text);
+end;
+
 procedure TMainForm.ApplicationEvents1Message(var Msg: tagMSG;
   var Handled: Boolean);
   procedure showAdmin;
@@ -958,6 +974,17 @@ begin
   MeetingForm.Free;
 end;
 
+procedure TMainForm.StatusBar1DrawPanel(StatusBar: TStatusBar;
+  Panel: TStatusPanel; const Rect: TRect);
+begin
+  if Panel = StatusBar1.Panels[integer(stMsg)] then
+  begin
+   StatusBar.Canvas.FillRect(Rect);
+   StatusBar1.Font.Color := clRed;
+
+   StatusBar1.Canvas.TextRect(Rect, Rect.Left + 1, Rect.Top, StatusBar1.Panels[integer(stMsg)].Text);
+  end;
+end;
 procedure TMainForm.templateEdit(sys: boolean);
 var
   te_id : integer;

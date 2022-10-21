@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Data.DBXDataSnap,
   Data.DBXCommon, IPPeerClient, Vcl.StdCtrls, Vcl.Buttons, Data.DB, Data.SqlExpr,
   u_stub, System.JSON, u_ini, JvComponentBase, JvCreateProcess, JvBaseDlg,
-  JvBrowseFolder, Vcl.ExtCtrls, pngimage, MidasLib;
+  JvBrowseFolder, Vcl.ExtCtrls, pngimage, MidasLib, Vcl.Samples.Spin;
 
 type
   TMainForm = class(TForm)
@@ -21,6 +21,10 @@ type
     SpeedButton1: TSpeedButton;
     JvBrowseForFolderDialog1: TJvBrowseForFolderDialog;
     Image1: TImage;
+    LabeledEdit2: TLabeledEdit;
+    CheckBox1: TCheckBox;
+    Label1: TLabel;
+    SpinEdit1: TSpinEdit;
     procedure FormCreate(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
     procedure SQLConnection1AfterConnect(Sender: TObject);
@@ -83,6 +87,9 @@ begin
     ShowMessage('Das Verzeichniss'+sLineBreak+m_root+sLineBreak+'ungültig');
     exit;
   end;
+
+  SQLConnection1.Params.Values['HostName']  := LabeledEdit2.Text;
+  SQLConnection1.Params.Values['Port']      := IntToStr(SpinEdit1.Value);
 
   unpackSSL;
   copyInstaller;
@@ -253,6 +260,10 @@ begin
     IniOptions.LoadFromFile(fname);
 
   self.Root := 'c:\BerOffice\';
+
+  LabeledEdit2.Text := IniOptions.serverhost;
+  CheckBox1.Checked := ( IniOptions.runprg <> '' );
+  SpinEdit1.Value   := IniOptions.serverport;
 
   if IniOptions.launcherimage <> '' then begin
     fname := TPath.Combine( m_root, IniOptions.launcherimage);

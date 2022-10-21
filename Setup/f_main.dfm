@@ -69,7 +69,9 @@ object MainSetupForm: TMainSetupForm
       Header.Title.Font.Name = 'Tahoma'
       Header.Title.Font.Style = [fsBold]
       Header.Subtitle.Color = clNone
-      Header.Subtitle.Text = 'Installation und Initialisierung der Datenbank'
+      Header.Subtitle.Text = 
+        'Installation und Initialisierung der Datenbank und des ARchiv-Se' +
+        'rvers'
       Header.Subtitle.Anchors = [akLeft, akTop, akRight, akBottom]
       Header.Subtitle.Font.Charset = DEFAULT_CHARSET
       Header.Subtitle.Font.Color = clWindowText
@@ -355,8 +357,6 @@ object MainSetupForm: TMainSetupForm
         4E44AE426082}
       Image.Transparent = True
       Caption = 'WelcomePage'
-      ExplicitWidth = 0
-      ExplicitHeight = 0
     end
     object SearchGDS: TJvWizardInteriorPage
       Header.Title.Color = clNone
@@ -381,12 +381,40 @@ object MainSetupForm: TMainSetupForm
         Left = 0
         Top = 70
         Width = 558
-        Height = 168
-        Align = alClient
+        Height = 115
         Lines.Strings = (
           'Memo1')
         ScrollBars = ssBoth
         TabOrder = 0
+      end
+      object BitBtn2: TBitBtn
+        Left = 3
+        Top = 191
+        Width = 86
+        Height = 25
+        Caption = 'Erneut suchen'
+        TabOrder = 1
+        OnClick = BitBtn2Click
+      end
+      object LinkLabel1: TLinkLabel
+        Left = 120
+        Top = 199
+        Width = 40
+        Height = 17
+        Caption = 
+          '<a href="https://firebirdsql.org/en/server-packages/">Firebird</' +
+          'a>'
+        TabOrder = 2
+        OnLinkClick = LinkLabel1LinkClick
+      end
+      object LinkLabel2: TLinkLabel
+        Left = 166
+        Top = 199
+        Width = 62
+        Height = 17
+        Caption = '<a href="http://www.flamerobin.org/">Flame Robin</a>'
+        TabOrder = 3
+        OnLinkClick = LinkLabel1LinkClick
       end
     end
     object ServerInfo: TJvWizardInteriorPage
@@ -510,8 +538,6 @@ object MainSetupForm: TMainSetupForm
       Caption = 'Sicherheit'
       OnEnterPage = SicherheitEnterPage
       OnExitPage = SicherheitExitPage
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object LabeledEdit1: TLabeledEdit
         Left = 24
         Top = 96
@@ -553,8 +579,6 @@ object MainSetupForm: TMainSetupForm
       Header.Subtitle.Font.Style = []
       Caption = 'InitData'
       OnEnterPage = InitDataEnterPage
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel1: TPanel
         Left = 0
         Top = 197
@@ -605,6 +629,130 @@ object MainSetupForm: TMainSetupForm
         TabOrder = 2
       end
     end
+    object Import: TJvWizardInteriorPage
+      Header.Title.Color = clNone
+      Header.Title.Text = 'Import'
+      Header.Title.Anchors = [akLeft, akTop, akRight]
+      Header.Title.Font.Charset = DEFAULT_CHARSET
+      Header.Title.Font.Color = clWindowText
+      Header.Title.Font.Height = -16
+      Header.Title.Font.Name = 'Tahoma'
+      Header.Title.Font.Style = [fsBold]
+      Header.Subtitle.Color = clNone
+      Header.Subtitle.Text = 
+        'Importieren von Benutzern aus einer CSV-Datei:'#13#10'Felder: Login, N' +
+        'ame, Vorname, Abteilung, eMail'
+      Header.Subtitle.Anchors = [akLeft, akTop, akRight, akBottom]
+      Header.Subtitle.Font.Charset = DEFAULT_CHARSET
+      Header.Subtitle.Font.Color = clWindowText
+      Header.Subtitle.Font.Height = -11
+      Header.Subtitle.Font.Name = 'Tahoma'
+      Header.Subtitle.Font.Style = []
+      Caption = 'Benutzerimport'
+      object Panel2: TPanel
+        Left = 0
+        Top = 197
+        Width = 558
+        Height = 41
+        Align = alBottom
+        BevelOuter = bvNone
+        Caption = 'Panel2'
+        ShowCaption = False
+        TabOrder = 0
+        DesignSize = (
+          558
+          41)
+        object CheckBox1: TCheckBox
+          Left = 97
+          Top = 12
+          Width = 113
+          Height = 17
+          Caption = '1. Zeile '#220'berschrift'
+          Checked = True
+          State = cbChecked
+          TabOrder = 0
+        end
+        object Button1: TButton
+          Left = 16
+          Top = 6
+          Width = 75
+          Height = 25
+          Caption = 'Laden'
+          TabOrder = 1
+          OnClick = Button1Click
+        end
+        object DBNavigator1: TDBNavigator
+          Left = 304
+          Top = 6
+          Width = 240
+          Height = 25
+          DataSource = DataSource1
+          Anchors = [akTop, akRight]
+          ParentShowHint = False
+          ShowHint = True
+          TabOrder = 2
+        end
+        object Button2: TButton
+          Left = 216
+          Top = 6
+          Width = 75
+          Height = 25
+          Caption = 'Import'
+          TabOrder = 3
+          OnClick = Button2Click
+        end
+      end
+      object DBGrid1: TDBGrid
+        Left = 0
+        Top = 70
+        Width = 558
+        Height = 127
+        Align = alClient
+        DataSource = DataSource1
+        TabOrder = 1
+        TitleFont.Charset = DEFAULT_CHARSET
+        TitleFont.Color = clWindowText
+        TitleFont.Height = -11
+        TitleFont.Name = 'Tahoma'
+        TitleFont.Style = []
+        Columns = <
+          item
+            Expanded = False
+            FieldName = 'PE_NET'
+            Title.Caption = 'Login'
+            Width = 75
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'PE_NAME'
+            Title.Caption = 'Name'
+            Width = 100
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'PE_VORNAME'
+            Title.Caption = 'Vorname'
+            Width = 100
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'PE_DEPARTMENT'
+            Title.Caption = 'Abteilung'
+            Width = 75
+            Visible = True
+          end
+          item
+            Expanded = False
+            FieldName = 'PE_MAIL'
+            Title.Caption = 'Mail'
+            Width = 200
+            Visible = True
+          end>
+      end
+    end
   end
   object ArchivarConnection: TFDConnection
     Params.Strings = (
@@ -614,8 +762,8 @@ object MainSetupForm: TMainSetupForm
       'DriverID=FB')
     LoginPrompt = False
     Transaction = IBTransaction1
-    Left = 46
-    Top = 20
+    Left = 238
+    Top = 84
   end
   object TETab: TFDQuery
     Connection = ArchivarConnection
@@ -699,7 +847,8 @@ object MainSetupForm: TMainSetupForm
     Transaction = IBTransaction1
     SQL.Strings = (
       'UPDATE PE_PERSON '
-      'SET PE_PWD = :pwd'
+      'SET PE_PWD = :pwd,'
+      'DR_ID = :drid'
       'WHERE PE_ID = 1;')
     Left = 88
     Top = 208
@@ -707,6 +856,11 @@ object MainSetupForm: TMainSetupForm
       item
         Name = 'PWD'
         DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'DRID'
+        DataType = ftInteger
         ParamType = ptInput
       end>
   end
@@ -741,5 +895,95 @@ object MainSetupForm: TMainSetupForm
     TableName = 'FC_FILE_CACHE'
     Left = 184
     Top = 208
+  end
+  object DRTab: TFDTable
+    Connection = ArchivarConnection
+    Transaction = IBTransaction1
+    UpdateOptions.UpdateTableName = 'DR_DIR'
+    TableName = 'DR_DIR'
+    Left = 344
+    Top = 192
+  end
+  object FDMemTable1: TFDMemTable
+    Active = True
+    FetchOptions.AssignedValues = [evMode]
+    FetchOptions.Mode = fmAll
+    ResourceOptions.AssignedValues = [rvSilentMode]
+    ResourceOptions.SilentMode = True
+    UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
+    UpdateOptions.CheckRequired = False
+    UpdateOptions.AutoCommitUpdates = True
+    Left = 192
+    Top = 136
+    object FDMemTable1PE_NET: TStringField
+      FieldName = 'PE_NET'
+      Size = 25
+    end
+    object FDMemTable1PE_NAME: TStringField
+      FieldName = 'PE_NAME'
+      Size = 100
+    end
+    object FDMemTable1PE_VORNAME: TStringField
+      FieldName = 'PE_VORNAME'
+      Size = 100
+    end
+    object FDMemTable1PE_DEPARTMENT: TStringField
+      FieldName = 'PE_DEPARTMENT'
+      Size = 25
+    end
+    object FDMemTable1PE_MAIL: TStringField
+      FieldName = 'PE_MAIL'
+      Size = 200
+    end
+  end
+  object DataSource1: TDataSource
+    DataSet = FDMemTable1
+    Left = 368
+    Top = 80
+  end
+  object FDBatchMoveTextReader1: TFDBatchMoveTextReader
+    DataDef.Fields = <>
+    DataDef.WithFieldNames = True
+    Left = 80
+    Top = 80
+  end
+  object FDBatchMoveDataSetWriter1: TFDBatchMoveDataSetWriter
+    DataSet = FDMemTable1
+    Left = 80
+    Top = 136
+  end
+  object FDBatchMove1: TFDBatchMove
+    Reader = FDBatchMoveTextReader1
+    Writer = FDBatchMoveDataSetWriter1
+    Options = [poIdentityInsert, poCreateDest]
+    Mappings = <>
+    LogFileName = 'Data.log'
+    Left = 176
+    Top = 72
+  end
+  object FileOpenDialog1: TFileOpenDialog
+    DefaultExtension = '.csv'
+    FavoriteLinks = <>
+    FileTypes = <
+      item
+        DisplayName = 'CSV (*.csv)'
+        FileMask = '*.csv'
+      end
+      item
+        DisplayName = 'Alle Dateien (*.*)'
+        FileMask = '*.*'
+      end>
+    Options = [fdoFileMustExist]
+    Title = 'Benutzer laden'
+    Left = 280
+    Top = 168
+  end
+  object PETab: TFDTable
+    Connection = ArchivarConnection
+    Transaction = IBTransaction1
+    UpdateOptions.UpdateTableName = 'PE_PERSON'
+    TableName = 'PE_PERSON'
+    Left = 320
+    Top = 136
   end
 end

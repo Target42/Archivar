@@ -69,7 +69,13 @@
       end
       item
         Width = 50
+      end
+      item
+        Style = psOwnerDraw
+        Width = 250
       end>
+    OnDrawPanel = StatusBar1DrawPanel
+    ExplicitTop = 661
   end
   object PageControl1: TPageControl
     Left = 0
@@ -550,6 +556,12 @@
       object N19: TMenuItem
         Action = ac_ad_storages
       end
+      object N21: TMenuItem
+        Caption = '-'
+      end
+      object Aktionen1: TMenuItem
+        Action = ac_ad_action
+      end
     end
     object Fenster1: TMenuItem
       Caption = 'Fenster'
@@ -856,6 +868,11 @@
       Category = 'Admin'
       Caption = 'Datenablagen'
       OnExecute = ac_ad_storagesExecute
+    end
+    object ac_ad_action: TAction
+      Category = 'Admin'
+      Caption = 'Aktionen'
+      OnExecute = ac_ad_actionExecute
     end
   end
   object ApplicationEvents1: TApplicationEvents

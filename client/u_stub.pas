@@ -1,6 +1,6 @@
 //
 // Erzeugt vom DataSnap-Proxy-Generator.
-// 09.10.2022 19:46:41
+// 19.10.2022 20:04:31
 //
 
 unit u_stub;
@@ -16,6 +16,7 @@ type
     FgetUserInfoCommand: TDBXCommand;
     FgetGremiumListCommand: TDBXCommand;
     FgetDeleteTimesCommand: TDBXCommand;
+    FServiceActionCommand: TDBXCommand;
   public
     constructor Create(ADBXConnection: TDBXConnection); overload;
     constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
@@ -24,6 +25,7 @@ type
     function getUserInfo(data: TJSONObject): TJSONObject;
     function getGremiumList: TJSONObject;
     function getDeleteTimes: TJSONObject;
+    function ServiceAction(data: TJSONObject): TJSONObject;
   end;
 
   TdsGremiumClient = class(TDSAdminClient)
@@ -433,6 +435,20 @@ begin
   Result := TJSONObject(FgetDeleteTimesCommand.Parameters[0].Value.GetJSONValue(FInstanceOwner));
 end;
 
+function TAdminModClient.ServiceAction(data: TJSONObject): TJSONObject;
+begin
+  if FServiceActionCommand = nil then
+  begin
+    FServiceActionCommand := FDBXConnection.CreateCommand;
+    FServiceActionCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FServiceActionCommand.Text := 'TAdminMod.ServiceAction';
+    FServiceActionCommand.Prepare;
+  end;
+  FServiceActionCommand.Parameters[0].Value.SetJSONValue(data, FInstanceOwner);
+  FServiceActionCommand.ExecuteUpdate;
+  Result := TJSONObject(FServiceActionCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
+end;
+
 constructor TAdminModClient.Create(ADBXConnection: TDBXConnection);
 begin
   inherited Create(ADBXConnection);
@@ -449,6 +465,7 @@ begin
   FgetUserInfoCommand.DisposeOf;
   FgetGremiumListCommand.DisposeOf;
   FgetDeleteTimesCommand.DisposeOf;
+  FServiceActionCommand.DisposeOf;
   inherited;
 end;
 

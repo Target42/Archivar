@@ -6,10 +6,10 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Datasnap.DBClient,
   Datasnap.DSConnect, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.DBGrids,
-  Vcl.ExtCtrls, Vcl.Grids;
+  Vcl.ExtCtrls, Vcl.Grids, u_ForceClose;
 
 type
-  TDairyForm = class(TForm)
+  TDairyForm = class(TForm, IForceClose)
     StatusBar1: TStatusBar;
     DSProviderConnection1: TDSProviderConnection;
     DITab: TClientDataSet;
@@ -34,7 +34,7 @@ type
   private
     { Private-Deklarationen }
   public
-    { Public-Deklarationen }
+    procedure ForceClose( force : boolean);
   end;
 
 var
@@ -53,6 +53,15 @@ begin
   Text := '';
   if Sender.AsString = 'T' then
     Text := 'Ja';
+end;
+
+procedure TDairyForm.ForceClose(force: boolean);
+begin
+  if force then begin
+    if DITab.UpdatesPending then
+      DITab.ApplyUpdates(0);
+  end;
+  Self.Close;
 end;
 
 procedure TDairyForm.FormClose(Sender: TObject; var Action: TCloseAction);

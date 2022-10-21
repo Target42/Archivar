@@ -12,7 +12,9 @@ uses
   FireDAC.Stan.Async, FireDAC.Phys, FireDAC.Phys.FB, FireDAC.Phys.FBDef,
   FireDAC.VCLUI.Wait, FireDAC.Stan.Param, FireDAC.DatS, FireDAC.DApt.Intf,
   FireDAC.DApt, FireDAC.Comp.ScriptCommands, FireDAC.Stan.Util,
-  FireDAC.Comp.Script, FireDAC.Comp.Client, FireDAC.Comp.DataSet;
+  FireDAC.Comp.Script, FireDAC.Comp.Client, FireDAC.Comp.DataSet,
+  FireDAC.Comp.BatchMove, FireDAC.Comp.BatchMove.DataSet,
+  FireDAC.Comp.BatchMove.Text, Vcl.Grids, Vcl.DBGrids, Vcl.DBCtrls;
 
 type
   TMainSetupForm = class(TForm)
@@ -54,6 +56,29 @@ type
     FCTab: TFDTable;
     Label1: TLabel;
     ComboBox1: TComboBox;
+    DRTab: TFDTable;
+    Import: TJvWizardInteriorPage;
+    Panel2: TPanel;
+    DBGrid1: TDBGrid;
+    FDMemTable1: TFDMemTable;
+    DataSource1: TDataSource;
+    FDBatchMoveTextReader1: TFDBatchMoveTextReader;
+    FDMemTable1PE_NET: TStringField;
+    FDMemTable1PE_NAME: TStringField;
+    FDMemTable1PE_VORNAME: TStringField;
+    FDMemTable1PE_DEPARTMENT: TStringField;
+    FDMemTable1PE_MAIL: TStringField;
+    FDBatchMoveDataSetWriter1: TFDBatchMoveDataSetWriter;
+    FDBatchMove1: TFDBatchMove;
+    CheckBox1: TCheckBox;
+    Button1: TButton;
+    FileOpenDialog1: TFileOpenDialog;
+    DBNavigator1: TDBNavigator;
+    Button2: TButton;
+    PETab: TFDTable;
+    BitBtn2: TBitBtn;
+    LinkLabel1: TLinkLabel;
+    LinkLabel2: TLinkLabel;
     procedure SearchGDSEnterPage(Sender: TObject;
       const FromPage: TJvWizardCustomPage);
     procedure ServerInfoEnterPage(Sender: TObject;
@@ -70,6 +95,11 @@ type
     procedure SicherheitExitPage(Sender: TObject;
       const FromPage: TJvWizardCustomPage);
     procedure JvWizard1CancelButtonClick(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure BitBtn2Click(Sender: TObject);
+    procedure LinkLabel1LinkClick(Sender: TObject; const Link: string;
+      LinkType: TSysLinkType);
   private
     m_home  : string;
     m_ini   : TiniFile;
@@ -87,6 +117,7 @@ type
 
     procedure updateLV;
 
+    function getNewDir : integer;
     function combineDrivePath( drv, path : string ) : string;
 
     function progress( name : string ) : TListItem;
@@ -107,7 +138,7 @@ uses
   System.IOUtils, System.Types, IdHashMessageDigest, xsd_TaskType,
   xsd_Betriebsrat, xsd_DataField, FireDAC.Phys.IBWrapper,
   System.Win.ComObj, System.Hash, u_ePub, xsd_TextBlock,
-  System.Zip, Xml.XMLIntf, Xml.XMLDoc, System.JSON, u_json;
+  System.Zip, Xml.XMLIntf, Xml.XMLDoc, System.JSON, u_json, ShellApi;
 
 {$R *.dfm}
 
@@ -132,7 +163,53 @@ begin
   importTextblock;
   importFileCache;
 
-  InitData.VisibleButtons := [TJvWizardButtonKind.bkFinish];
+  InitData.VisibleButtons := [TJvWizardButtonKind.bkNext, TJvWizardButtonKind.bkFinish];
+end;
+
+procedure TMainSetupForm.BitBtn2Click(Sender: TObject);
+var
+  list : TStringList;
+  i    : integer;
+  fname: string;
+  found: boolean;
+begin
+  SearchGDS.Subtitle.Text := 'Suche fbclient.dll';
+  SearchGDS.VisibleButtons := [TJvWizardButtonKind.bkBack, TJvWizardButtonKind.bkCancel];
+  // search gds32.dll
+  Memo1.Lines.Clear;
+  List := TStringList.Create;
+  list.StrictDelimiter := true;
+  list.Delimiter := ';';
+  list.DelimitedText := GetEnvironmentVariable('PATH');
+  list.Sort;
+  found := false;
+  for i := 0 to pred(list.Count) do
+  begin
+    if trim(list[i]) = '' then
+      Continue;
+
+    fname :=  TPath.Combine(list[i], 'fbclient.dll');
+    if FileExists(fname) then
+    begin
+      found := true;
+      Memo1.Lines.Add('ok  :'+List[i]);
+    end
+    else
+      Memo1.Lines.Add('fail:'+List[i]);
+  end;
+  if found then
+  begin
+    SearchGDS.Subtitle.font.Color := clGreen;
+    SearchGDS.Subtitle.Text := SearchGDS.Subtitle.Text + sLineBreak+'Erfolgreich!';
+    SearchGDS.VisibleButtons := [TJvWizardButtonKind.bkBack, TJvWizardButtonKind.bkNext, TJvWizardButtonKind.bkCancel];
+  end
+  else
+  begin
+      SearchGDS.Subtitle.Font.Color := clRed;
+      SearchGDS.Subtitle.Text := SearchGDS.Subtitle.Text + sLineBreak+'Nicht gefunden!';
+  end;
+
+  list.Free;
 end;
 
 procedure TMainSetupForm.btnCreateClick(Sender: TObject);
@@ -247,6 +324,53 @@ begin
   ArchivarConnection.Close;
 end;
 
+procedure TMainSetupForm.Button1Click(Sender: TObject);
+begin
+  FileOpenDialog1.DefaultFolder := ExtractFilePath(TPath.Combine(m_home, 'InitialData'));
+
+  if FileOpenDialog1.Execute then begin
+    FDMemTable1.EmptyDataSet;
+    FDBatchMoveTextReader1.DataDef.WithFieldNames := CheckBox1.Checked;
+    FDBatchMoveTextReader1.FileName := FileOpenDialog1.FileName;
+    FDBatchMove1.GuessFormat;
+    FDBatchMove1.Execute;
+  end;
+end;
+
+procedure TMainSetupForm.Button2Click(Sender: TObject);
+begin
+  if IBTransaction1.Active then
+    IBTransaction1.Commit;
+
+  FDMemTable1.DisableControls;
+  try
+  PETab.Open;
+  FDMemTable1.First;
+  while not FDMemTable1.Eof do begin
+    PETab.Append;
+    PETab.FieldByName('PE_ID').AsInteger        := AutoInc('gen_pe_id');
+    PETab.FieldByName('DR_ID').AsInteger        := getNewDir;
+    PETab.FieldByName('PE_NAME').AsString       := FDMemTable1.FieldByName('PE_NAME').AsString;
+    PETab.FieldByName('PE_VORNAME').AsString    := FDMemTable1.FieldByName('PE_VORNAME').AsString;
+    PETab.FieldByName('PE_NET').AsString        := FDMemTable1.FieldByName('PE_NET').AsString;
+    PETab.FieldByName('PE_MAIL').AsString       := FDMemTable1.FieldByName('PE_MAIL').AsString;
+    PETab.FieldByName('PE_DEPARTMENT').AsString := FDMemTable1.FieldByName('PE_DEPARTMENT').AsString;
+    PETab.Post;
+    FDMemTable1.Next;
+  end;
+  FDMemTable1.EmptyDataSet;
+  PETab.Close;
+  except
+    IBTransaction1.Rollback;
+  end;
+  FDMemTable1.EnableControls;
+
+  if IBTransaction1.Active then
+    IBTransaction1.Commit;
+
+  Import.VisibleButtons := [TJvWizardButtonKind.bkFinish];
+end;
+
 function TMainSetupForm.combineDrivePath(drv, path: string): string;
 begin
   Result := '';
@@ -266,11 +390,26 @@ begin
   m_home := TPath.Combine(ExtractFileDir(Application.ExeName), 'InitialData');
   DeleteFile('d:\db\ARCHIVAR.GDB');
   m_ini   := TiniFile.Create(TPath.Combine(ExtractFileDir(Application.ExeName), 'ArchivServer.exe.ini'));
+
+//  JvWizard1.ActivePage := Import;
 end;
 
 procedure TMainSetupForm.FormDestroy(Sender: TObject);
 begin
   m_ini.Free;
+end;
+
+function TMainSetupForm.getNewDir: integer;
+begin
+  Result := AutoInc('gen_dr_id');
+
+  DRTab.Open;
+  DRTab.Append;
+  DRTab.FieldByName('DR_ID').AsInteger    := Result;
+  DRTab.FieldByName('DR_GROUP').AsInteger := Result;
+  DRTab.Post;
+  DRTab.Close;
+
 end;
 
 procedure TMainSetupForm.importDataTypes;
@@ -713,6 +852,12 @@ begin
   Close;
 end;
 
+procedure TMainSetupForm.LinkLabel1LinkClick(Sender: TObject;
+  const Link: string; LinkType: TSysLinkType);
+begin
+  ShellExecute(Handle, 'open', PWideChar(link), '', '', SW_SHOWNORMAL);
+end;
+
 function TMainSetupForm.md5(fname: string): string;
 var
   IdMD5: TIdHashMessageDigest5;
@@ -734,7 +879,7 @@ end;
 
 function TMainSetupForm.progress(name: string): TListItem;
 begin
-  Result := LV.Items.Add;
+  Result := LV.Items.Insert(0);
 
   Result.Caption := name;
   Result.SubItems.Add('einfügen');
@@ -743,49 +888,8 @@ end;
 
 procedure TMainSetupForm.SearchGDSEnterPage(Sender: TObject;
   const FromPage: TJvWizardCustomPage);
-var
-  list : TStringList;
-  i    : integer;
-  fname: string;
-  found: boolean;
 begin
-
-  SearchGDS.VisibleButtons := [TJvWizardButtonKind.bkBack, TJvWizardButtonKind.bkCancel];
-  // search gds32.dll
-  Memo1.Lines.Clear;
-  List := TStringList.Create;
-  list.StrictDelimiter := true;
-  list.Delimiter := ';';
-  list.DelimitedText := GetEnvironmentVariable('PATH');
-  list.Sort;
-  found := false;
-  for i := 0 to pred(list.Count) do
-  begin
-    if trim(list[i]) = '' then
-      Continue;
-
-    fname :=  TPath.Combine(list[i], 'fbclient.dll');
-    if FileExists(fname) then
-    begin
-      found := true;
-      Memo1.Lines.Add('ok  :'+List[i]);
-    end
-    else
-      Memo1.Lines.Add('fail:'+List[i]);
-  end;
-  if found then
-  begin
-    SearchGDS.Subtitle.font.Color := clGreen;
-    SearchGDS.Subtitle.Text := SearchGDS.Subtitle.Text + sLineBreak+'Erfolgreich!';
-    SearchGDS.VisibleButtons := [TJvWizardButtonKind.bkBack, TJvWizardButtonKind.bkNext, TJvWizardButtonKind.bkCancel];
-  end
-  else
-  begin
-      SearchGDS.Subtitle.Font.Color := clRed;
-      SearchGDS.Subtitle.Text := SearchGDS.Subtitle.Text + sLineBreak+'Nicht gefunden!';
-  end;
-
-  list.Free;
+  BitBtn2.Click;
 end;
 
 procedure TMainSetupForm.ServerInfoEnterPage(Sender: TObject;
@@ -833,8 +937,16 @@ begin
   m_ini.WriteString('secret', 'name', LabeledEdit2.Text);
 
   s  := THashSHA2.GetHashString( 'admin'+LabeledEdit2.Text+LabeledEdit1.Text);
-  SetPwdQry.ParamByName('pwd').AsString := s;
-  SetPwdQry.ExecSQL;
+  try
+    SetPwdQry.ParamByName('pwd').AsString := s;
+    SetPwdQry.ParamByName('drid').AsInteger := getNewDir;
+    SetPwdQry.ExecSQL;
+  except
+    on e : exception do begin
+      ShowMessage( e.ToString);
+      IBTransaction1.Rollback;
+    end;
+  end;
 
   if IBTransaction1.Active then
     IBTransaction1.Commit;

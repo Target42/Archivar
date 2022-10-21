@@ -10,10 +10,10 @@ uses
   JvDBDatePickerEdit, Vcl.StdCtrls, Vcl.DBCtrls,
   Vcl.OleCtrls, SHDocVw, JvColorCombo, fr_form, fr_log, JvExStdCtrls,
   JvCombobox, JvExMask, JvToolEdit, JvMaskEdit, JvCheckedMaskEdit,
-  JvDatePickerEdit, Vcl.Mask;
+  JvDatePickerEdit, Vcl.Mask, u_ForceClose;
 
 type
-  TTaskEditForm = class(TForm)
+  TTaskEditForm = class(TForm, IForceClose)
     StatusBar1: TStatusBar;
     PageControl1: TPageControl;
     TabSheet1: TTabSheet;
@@ -139,6 +139,8 @@ type
     procedure LockCheck;
 
     procedure resizeForm;
+
+    procedure ForceClose( force : boolean);
   end;
 
 var
@@ -276,6 +278,16 @@ begin
   m_changed := true;
 end;
 
+procedure TTaskEditForm.ForceClose(force: boolean);
+begin
+  if force then begin
+    if changed and (TaskTab.State  = dsEdit) then begin
+      save;
+    end;
+  end;
+  self.Close;
+end;
+
 procedure TTaskEditForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   Action := caFree;
@@ -313,6 +325,7 @@ procedure TTaskEditForm.FormCreate(Sender: TObject);
 var
   i : integer;
 begin
+
   FormFrame1.prepare;
   LogFrame1.prepare;
   FileFrame1.prepare;

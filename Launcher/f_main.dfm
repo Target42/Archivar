@@ -2,7 +2,7 @@ object MainForm: TMainForm
   Left = 0
   Top = 0
   Caption = 'Launcher Archivar'
-  ClientHeight = 275
+  ClientHeight = 310
   ClientWidth = 610
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -20,7 +20,7 @@ object MainForm: TMainForm
     Left = 0
     Top = 0
     Width = 610
-    Height = 190
+    Height = 184
     Align = alClient
     Picture.Data = {
       0954506E67496D61676589504E470D0A1A0A0000000D49484452000002F40000
@@ -365,32 +365,34 @@ object MainForm: TMainForm
       023D0000009030023D0000009030023D00000090B0FF0F685E5EF464C0654400
       00000049454E44AE426082}
     Stretch = True
-    ExplicitLeft = 120
-    ExplicitTop = 88
-    ExplicitWidth = 105
-    ExplicitHeight = 105
+    ExplicitLeft = 3
+    ExplicitTop = -6
+    ExplicitHeight = 213
   end
   object StatusBar1: TStatusBar
     Left = 0
-    Top = 256
+    Top = 291
     Width = 610
     Height = 19
     Panels = <>
     SimplePanel = True
+    ExplicitTop = 256
   end
   object Panel1: TPanel
     Left = 0
-    Top = 190
+    Top = 184
     Width = 610
-    Height = 66
+    Height = 107
     Align = alBottom
     BevelOuter = bvNone
     Caption = 'Panel1'
     ShowCaption = False
     TabOrder = 1
+    ExplicitLeft = 48
+    ExplicitTop = 190
     DesignSize = (
       610
-      66)
+      107)
     object SpeedButton1: TSpeedButton
       Left = 500
       Top = 18
@@ -401,14 +403,22 @@ object MainForm: TMainForm
       OnClick = SpeedButton1Click
       ExplicitLeft = 479
     end
+    object Label1: TLabel
+      Left = 191
+      Top = 46
+      Width = 20
+      Height = 13
+      Caption = 'Port'
+    end
     object ProgressBar1: TProgressBar
       AlignWithMargins = True
       Left = 3
-      Top = 46
+      Top = 87
       Width = 604
       Height = 17
       Align = alBottom
       TabOrder = 0
+      ExplicitTop = 46
     end
     object BitBtn1: TBitBtn
       Left = 532
@@ -430,6 +440,37 @@ object MainForm: TMainForm
       EditLabel.Height = 13
       EditLabel.Caption = 'Installationspfad'
       TabOrder = 2
+    end
+    object LabeledEdit2: TLabeledEdit
+      Left = 3
+      Top = 60
+      Width = 182
+      Height = 21
+      EditLabel.Width = 48
+      EditLabel.Height = 13
+      EditLabel.Caption = 'Hostname'
+      TabOrder = 3
+      Text = 'localhost'
+    end
+    object CheckBox1: TCheckBox
+      Left = 263
+      Top = 64
+      Width = 121
+      Height = 17
+      Caption = 'Automatischer Start'
+      Checked = True
+      State = cbChecked
+      TabOrder = 4
+    end
+    object SpinEdit1: TSpinEdit
+      Left = 191
+      Top = 59
+      Width = 66
+      Height = 22
+      MaxValue = 0
+      MinValue = 0
+      TabOrder = 5
+      Value = 0
     end
   end
   object SQLConnection1: TSQLConnection

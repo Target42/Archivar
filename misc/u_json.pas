@@ -29,6 +29,7 @@ function JDate  ( obj : TJSONObject; name : string ) : TDate;
 function getRow( arr : TJSONArray ; inx : integer ) : TJSONObject;
 
 procedure setText( obj : TJSONObject; name : string ; text : string ); overload;
+procedure setText( obj : TJSONObject; name : string ; list : TStrings ); overload;
 procedure setText( obj : TJSONObject; name : string ; list : TStringList ); overload;
 function  getText( obj : TJSONObject; name : string ) : String; overload;
 procedure getText( obj : TJSONObject; name : string ; list : TStringList ); overload;
@@ -492,7 +493,7 @@ end;
 {*******************************************************************************
 *                   setText
 *******************************************************************************}
-procedure setText( obj : TJSONObject; name : string ; list : TStringList );
+procedure setText( obj : TJSONObject; name : string ; list : TStrings );
 var
   arr : TJSONArray;
   i    : integer;
@@ -503,6 +504,11 @@ begin
       arr.Add( JQuote(list.Strings[i]));
     end;
   JReplace( obj, name, arr);
+end;
+
+procedure setText( obj : TJSONObject; name : string ; list : TStringList );
+begin
+  setText( obj, name, TSTrings(list));
 end;
 
 {*******************************************************************************

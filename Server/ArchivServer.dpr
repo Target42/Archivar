@@ -53,7 +53,8 @@ uses
   ds_dairy in 'ds_dairy.pas' {dsDairy: TDSServerModule},
   u_ini in 'u_ini.pas',
   u_folder in 'u_folder.pas',
-  ds_storage in 'ds_storage.pas' {dsStorage: TDSServerModule};
+  ds_storage in 'ds_storage.pas' {dsStorage: TDSServerModule},
+  u_serverTimer in 'u_serverTimer.pas';
 
 var
   MyDummyBoolean  : Boolean;
@@ -105,6 +106,7 @@ begin
 {$else}
   if not Application.DelayInitialize or Application.Installing then
     Application.Initialize;
+
   Application.CreateForm(TServerContainer1, ServerContainer1);
   Application.Run;
 {$endif}

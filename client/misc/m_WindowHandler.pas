@@ -3,8 +3,8 @@ unit m_WindowHandler;
 interface
 
 uses
-  System.SysUtils, System.Classes, System.Generics.Collections, Vcl.Forms, f_taskEdit,
-  f_protokoll, f_protokoll_view, f_storage;
+  System.SysUtils, System.Generics.Collections, Vcl.Forms, f_taskEdit,
+  f_protokoll, f_protokoll_view, f_storage, u_ForceClose, System.Classes;
 
 type
   TWindowHandler = class(TDataModule)
@@ -17,10 +17,12 @@ type
     m_storages    : TDictionary<integer, TStorageForm >;
     m_forms       : TList<TForm>;
 
+    m_list        : TList<IForceClose>;
+
   public
     procedure openTaskWindow( id, typeID : integer; ro : boolean; modal : boolean = false );
     procedure closeTaskWindow( id : integer );
-    function isTaskOpen( id : integer ) : Boolean;
+    function  isTaskOpen( id : integer ) : Boolean;
     procedure closeTaksWindowMsg( id : integer; text : string );
 
     procedure openProtoCclWindow( id : integer ; ro : Boolean );
@@ -34,10 +36,10 @@ type
     procedure openStorage( id : integer; caption : string );
     procedure closeStorage(id : integer );
 
-    procedure closeAll;
     procedure registerForm( frm : TForm );
     procedure unregisterForm( frm : TForm );
 
+    procedure closeAll;
   end;
 
 var
@@ -53,7 +55,12 @@ uses
 {$R *.dfm}
 
 procedure TWindowHandler.closeTaskWindow(id: integer);
+var
+  frm : TTaskEditForm;
 begin
+  if m_taskMap.TryGetValue(id, frm) then
+    m_list.Remove(frm);
+
   m_taskMap.Remove(id);
 end;
 
@@ -61,23 +68,40 @@ procedure TWindowHandler.closeAll;
 var
   arr : TArray<TForm>;
   i   : integer;
+  fr  : IForceClose;
+
 begin
-  arr := m_forms.ToArray;
-  for i := low(arr) to High(arr) do begin
-    arr[i].Close;
-    arr[i].Free;
+  for i := 0 to pred(m_forms.Count) do begin
+    if Supports( m_forms[i], StringToGUID('{09DB420A-2669-4E82-B537-D8866479642F}')) then
+      m_list.Remove(m_forms[i] as IForceClose);
+
+    m_forms[i].Close;
+    m_forms[i].Free;
   end;
 
-  setLength(arr, 0);
+  m_forms.Clear;
+
+  for fr in m_list do
+    fr.ForceClose(true);
 end;
 
 procedure TWindowHandler.closeProtoclView(id: integer);
+var
+  frm : TProtokollViewForm;
 begin
+  if m_protoView.TryGetValue(id, frm) then
+    m_list.Remove(frm);
+
   m_protoView.Remove(id);
 end;
 
 procedure TWindowHandler.closeProtoclWindow(id: integer);
+var
+  frm : TProtokollForm;
 begin
+  if m_protocolMap.TryGetValue(id, frm) then
+    m_list.Remove(frm);
+
   m_protocolMap.Remove(id);
 end;
 
@@ -85,16 +109,21 @@ procedure TWindowHandler.closeProtocolWindowMsg(id: integer; text: string);
 var
   frm : TProtokollForm;
 begin
-  if m_protocolMap.ContainsKey(id) then
+  if m_protocolMap.TryGetValue(id, frm) then
   begin
-    frm := m_protocolMap[id];
+    m_list.Remove(frm);
     frm.Close;
     ShowMessage(text);
   end;
 end;
 
 procedure TWindowHandler.closeStorage(id: integer);
+var
+  frm : TStorageForm;
 begin
+  if m_storages.TryGetValue(id, frm) then
+    m_list.Remove(frm);
+
   m_storages.Remove(id);
 end;
 
@@ -102,9 +131,9 @@ procedure TWindowHandler.closeTaksWindowMsg(id: integer; text: string);
 var
   frm : TTaskEditForm;
 begin
-  if m_taskMap.ContainsKey(id) then
+  if m_taskMap.TryGetValue(id, frm) then
   begin
-    frm := m_taskMap[id];
+    m_list.Remove(frm);
     frm.Close;
     ShowMessage( text );
   end;
@@ -115,8 +144,9 @@ begin
   m_taskMap     := TDictionary<integer,TTaskEditForm>.create;
   m_protocolMap := TDictionary<integer,TProtokollForm>.Create;
   m_protoView   := TDictionary<integer,TProtokollViewForm>.create;
-  m_storages    := TDictionary<integer, TStorageForm >.create;
+  m_storages    := TDictionary<integer,TStorageForm >.create;
   m_forms       := TList<TForm>.create;
+  m_list        := TList<IForceClose>.create;
 end;
 
 procedure TWindowHandler.DataModuleDestroy(Sender: TObject);
@@ -126,6 +156,7 @@ begin
   m_protoView.free;
   m_storages.free;
   m_forms.Free;
+  m_list.free;
 end;
 
 function TWindowHandler.isProtocolOpen(id: integer): boolean;
@@ -153,6 +184,9 @@ begin
     Application.CreateForm(TProtokollForm, frm);
     frm.ID := id;
     frm.Show;
+
+    m_protocolMap.AddOrSetValue(id, frm);
+    m_list.Add(frm);
   end;
   frm.RO := ro;
   frm.Show;
@@ -174,6 +208,7 @@ begin
     frm.ID := id;
     frm.Show;
     m_protoView.AddOrSetValue( id, frm);
+    m_list.Add(frm);
   end;
   frm.Show;
 end;
@@ -192,6 +227,8 @@ begin
     frm.Header := caption;
     frm.DirID  := id;
     frm.Show;
+    m_storages.AddOrSetValue(id, frm);
+    m_list.Add(frm);
   end else begin
     frm := m_storages[id];
     frm.BringToFront;
@@ -227,9 +264,10 @@ begin
     else
     begin
       Application.CreateForm(TTaskEditForm, TaskEditForm);
-      m_taskMap.Add(id, TaskEditForm);
-
       TaskEditForm.setID( id, typeID );
+
+      m_taskMap.Add(id, TaskEditForm);
+      m_list.Add(TaskEditForm);
     end;
     TaskEditForm.RO := ro;
     TaskEditForm.Show;
@@ -242,11 +280,16 @@ begin
   if not m_forms.Contains(frm) then
     m_forms.Add(frm);
 
+  if Supports( frm, StringToGUID('{09DB420A-2669-4E82-B537-D8866479642F}')) then
+    m_list.Add(frm as IForceClose);
+
 end;
 
 procedure TWindowHandler.unregisterForm(frm: TForm);
 begin
   m_forms.Remove(frm);
+  if Supports( frm, StringToGUID('{09DB420A-2669-4E82-B537-D8866479642F}')) then
+    m_list.Remove(frm as IForceClose);
 end;
 
 end.
