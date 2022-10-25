@@ -13,7 +13,8 @@ uses
   System.SyncObjs, System.Generics.Collections, FireDAC.Stan.Intf,
   FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
   FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
-  FireDAC.Comp.DataSet, FireDAC.Comp.Client, MidasLib, u_serverTimer;
+  FireDAC.Comp.DataSet, FireDAC.Comp.Client, MidasLib, u_serverTimer,
+  Datasnap.DSHTTP;
 
 type
   TServerContainer1 = class(TService)
@@ -45,6 +46,7 @@ type
     dsPKI: TDSServerClass;
     dsDairy: TDSServerClass;
     dsStorage: TDSServerClass;
+    DSHTTPService1: TDSHTTPService;
     procedure dsAdminGetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
     procedure ServiceStart(Sender: TService; var Started: Boolean);
@@ -153,7 +155,7 @@ uses
   ds_taskEdit, ds_template, ds_taskView, ds_textblock, ds_fileCache, ds_epub,
   ds_meeting, System.Hash, u_json, ds_sitzung, m_hell, Grijjy.sysUtils, u_ini,
   m_fileServer, ds_updater, ds_stamm, ds_pki, ds_dairy, ds_storage, WinApi.WinSvc,
-  u_Konst, Winapi.Messages;
+  u_Konst, Winapi.Messages, m_http;
 
 procedure TServerContainer1.dsAdminGetClass(
   DSServerClass: TDSServerClass; var PersistentClass: TPersistentClass);
@@ -723,10 +725,10 @@ end;
 
 procedure TServerContainer1.ServiceCreate(Sender: TObject);
 begin
-
   GrijjyLog.Service := 'Archivar';
   GrijjyLog.SetLogLevel(TgoLogLevel.Info);
 
+  HttpMod     := THttpMod.Create(self);
   LockMod     := TLockMod.create(self);
   GM          := TGM.Create(self);
   FileServer  := TFileServer.create(self);
@@ -774,6 +776,7 @@ begin
         m_sessions.UnlockList;
       end;
     end);
+    HttpMod.start(8090);
 end;
 
 procedure TServerContainer1.ServiceDestroy(Sender: TObject);

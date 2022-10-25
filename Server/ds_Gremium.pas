@@ -28,6 +28,10 @@ type
     changeRollQry: TFDQuery;
     SelectAllUserQry: TFDQuery;
     SelectGrUserQry: TFDQuery;
+    TY: TFDTable;
+    TYTab: TDataSetProvider;
+    GRTY: TFDTable;
+    GRTYTab: TDataSetProvider;
     procedure GremiumTabBeforePost(DataSet: TDataSet);
   private
 

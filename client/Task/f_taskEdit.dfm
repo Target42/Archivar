@@ -50,10 +50,6 @@ object TaskEditForm: TTaskEditForm
     TabOrder = 1
     object TabSheet1: TTabSheet
       Caption = 'Daten'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GroupBox1: TGroupBox
         Left = 0
         Top = 0
@@ -231,10 +227,6 @@ object TaskEditForm: TTaskEditForm
         OnChange = PageControl2Change
         object TabSheet3: TTabSheet
           Caption = 'Details'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           inline FormFrame1: TFormFrame
             Left = 0
             Top = 0
@@ -331,7 +323,7 @@ object TaskEditForm: TTaskEditForm
         end
         inherited ImageList1: TImageList
           Bitmap = {
-            494C0101020008004C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+            494C010102000800540010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
             0000000000003600000028000000400000001000000001002000000000000010
             000000000000000000000000000000000000000000FF078DBE00078DBE00078D
             BE00078DBE00078DBE00078DBE00078DBE00078DBE00078DBE00078DBE00078D
@@ -475,8 +467,6 @@ object TaskEditForm: TTaskEditForm
     object TabSheet5: TTabSheet
       Caption = 'Log-buch'
       ImageIndex = 2
-      ExplicitWidth = 296
-      ExplicitHeight = 154
       inline LogFrame1: TLogFrame
         Left = 0
         Top = 0
@@ -484,8 +474,8 @@ object TaskEditForm: TTaskEditForm
         Height = 392
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 296
-        ExplicitHeight = 154
+        ExplicitWidth = 717
+        ExplicitHeight = 392
         inherited GroupBox3: TGroupBox
           Left = 532
           Height = 392
@@ -508,18 +498,18 @@ object TaskEditForm: TTaskEditForm
         inherited Panel1: TPanel
           Width = 532
           Height = 392
-          ExplicitWidth = 111
-          ExplicitHeight = 154
+          ExplicitWidth = 532
+          ExplicitHeight = 392
           inherited GroupBox1: TGroupBox
             Width = 532
-            ExplicitWidth = 111
+            ExplicitWidth = 532
             inherited EditFrame1: TEditFrame
               Width = 528
-              ExplicitWidth = 107
+              ExplicitWidth = 528
               inherited RE: TRichEdit
                 Width = 528
                 OnKeyPress = DBEdit1KeyPress
-                ExplicitWidth = 107
+                ExplicitWidth = 528
               end
             end
           end

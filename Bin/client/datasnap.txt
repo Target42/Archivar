@@ -1,0 +1,14 @@
+DriverUnit=Data.DBXDataSnap
+HostName=target42.de
+Port=8088
+CommunicationProtocol=http
+DatasnapContext=datasnap/
+DriverAssemblyLoader=Borland.Data.TDBXClientDriverLoader,Borland.Data.DbxClientDriver,Version=24.0.0.0,Culture=neutral,PublicKeyToken=91d62ebb5b0d1b1b
+Filters={}
+DSAuthenticationUser=admin
+DSProxyHost=stygia
+DSProxyPassword=proxy1969
+Password=proxy1969
+DSProxyPort=3128
+DSProxyUsername=proxy_user
+User_Name=proxy_user

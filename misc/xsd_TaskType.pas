@@ -3,7 +3,7 @@
 {                                                         }
 {                    XML-Datenbindung                     }
 {                                                         }
-{         Generiert am: 29.07.2020 09:00:09               }
+{         Generiert am: 22.10.2022 19:29:24               }
 {       Generiert von: D:\git\ber.git\misc\TaskType.xsd   }
 {                                                         }
 {*********************************************************}
@@ -24,7 +24,7 @@ type
 { IXMLTaskTypes }
 
   IXMLTaskTypes = interface(IXMLNodeCollection)
-    ['{80921437-3BEA-4866-801F-64D0E012DDD1}']
+    ['{BDE16BFC-36E4-456D-9007-F7DD8D18F8A8}']
     { Eigenschaftszugriff }
     function Get_TaskType(Index: Integer): IXMLTaskType;
     { Methoden & Eigenschaften }
@@ -36,15 +36,18 @@ type
 { IXMLTaskType }
 
   IXMLTaskType = interface(IXMLNode)
-    ['{7E7865E2-EAB7-4241-8796-DF36A2A4E965}']
+    ['{2E91C88F-C462-4621-A88D-CD84CE1604B1}']
     { Eigenschaftszugriff }
     function Get_Name: UnicodeString;
     function Get_Tage: Integer;
+    function Get_Id: Integer;
     procedure Set_Name(Value: UnicodeString);
     procedure Set_Tage(Value: Integer);
+    procedure Set_Id(Value: Integer);
     { Methoden & Eigenschaften }
     property Name: UnicodeString read Get_Name write Set_Name;
     property Tage: Integer read Get_Tage write Set_Tage;
+    property Id: Integer read Get_Id write Set_Id;
   end;
 
 { Forward-Deklarationen }
@@ -71,8 +74,10 @@ type
     { IXMLTaskType }
     function Get_Name: UnicodeString;
     function Get_Tage: Integer;
+    function Get_Id: Integer;
     procedure Set_Name(Value: UnicodeString);
     procedure Set_Tage(Value: Integer);
+    procedure Set_Id(Value: Integer);
   end;
 
 { Globale Funktionen }
@@ -150,6 +155,16 @@ end;
 procedure TXMLTaskType.Set_Tage(Value: Integer);
 begin
   SetAttribute('tage', Value);
+end;
+
+function TXMLTaskType.Get_Id: Integer;
+begin
+  Result := AttributeNodes['id'].NodeValue;
+end;
+
+procedure TXMLTaskType.Set_Id(Value: Integer);
+begin
+  SetAttribute('id', Value);
 end;
 
 end.

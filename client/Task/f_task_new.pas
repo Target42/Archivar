@@ -125,8 +125,6 @@ begin
   finally
     client.Free;
   end;
-
-  GM.LockDocument( m_id, integer(ltTask));
   WindowHandler.openTaskWindow(m_id, integer(ltTask), false);
 end;
 

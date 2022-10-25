@@ -176,7 +176,7 @@ object ServerContainer1: TServerContainer1
   end
   object IBTransaction1: TFDTransaction
     Connection = DBMod.ArchivarConnection
-    Left = 120
+    Left = 136
     Top = 328
   end
   object QueryUser: TFDQuery
@@ -237,5 +237,13 @@ object ServerContainer1: TServerContainer1
     LifeCycle = 'Invocation'
     Left = 328
     Top = 576
+  end
+  object DSHTTPService1: TDSHTTPService
+    HttpPort = 8088
+    Server = DSServer1
+    Filters = <>
+    AuthenticationManager = DSAuthenticationManager1
+    Left = 48
+    Top = 200
   end
 end

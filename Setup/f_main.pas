@@ -153,15 +153,17 @@ end;
 procedure TMainSetupForm.BitBtn1Click(Sender: TObject);
 begin
   importImages;
-  importTaskTypes;
   importDelTimes;
-  importDataTypes;
-  importGremium;
-  importTasks;
-  importWWW;
-  importEPub;
   importTextblock;
   importFileCache;
+  importWWW;
+  importEPub;
+
+  importGremium;
+  importTaskTypes;
+
+  importDataTypes;
+  importTasks;
 
   InitData.VisibleButtons := [TJvWizardButtonKind.bkNext, TJvWizardButtonKind.bkFinish];
 end;
@@ -746,7 +748,7 @@ begin
   for i := 0 to pred(xml.Count) do
   begin
     TYTab.Append;
-    TYTab.FieldByName('TY_ID').AsInteger    := AutoInc('gen_ty_id');
+    TYTab.FieldByName('TY_ID').AsInteger    := xml.TaskType[i].Id;
     TYTab.FieldByName('TY_NAME').AsString   := xml.TaskType[i].Name;
     TYTab.FieldByName('TY_TAGE').AsInteger  := xml.TaskType[i].Tage;
     TYTab.post;

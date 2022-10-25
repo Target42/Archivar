@@ -1,6 +1,7 @@
-﻿{
+{
   "rem":[
-    "Die Type-ID kommt aus der TaksTypes.xml"
+    "Die Type-ID kommt aus der TaksTypes.xml",
+    "0 = system vorlage"
   ],
   "files": [
     {
@@ -20,11 +21,11 @@
 	  "tags":""
     },
     {
-      "file":"Überstunden.task",
+      "file":"mehrarbeit.task",
       "system":false,
       "type":2,
-	  "name":"Überstunden",
-	  "titel":"Überstundenantrag",
+	  "name":"Mehrarbeit",
+	  "titel":"Mehrarbeitsantrag",
 	  "tags":"mehrarbeit samstag"
     },
     {

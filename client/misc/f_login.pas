@@ -4,18 +4,20 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_base, Vcl.StdCtrls, Vcl.ExtCtrls;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_base, Vcl.StdCtrls, Vcl.ExtCtrls,
+  Vcl.Buttons;
 
 type
   TLoginForm = class(TForm)
     LabeledEdit2: TLabeledEdit;
     BaseFrame1: TBaseFrame;
     LabeledEdit1: TComboBox;
-    Label1: TLabel;
     LabeledEdit3: TComboBox;
     Label2: TLabel;
     Label3: TLabel;
+    SpeedButton1: TSpeedButton;
     procedure FormCreate(Sender: TObject);
+    procedure SpeedButton1Click(Sender: TObject);
   private
     function GetUserName: string;
     procedure SetUserName(const Value: string);
@@ -39,7 +41,7 @@ var
 implementation
 
 uses
-  m_glob_client;
+  m_glob_client, f_proxy;
 
 {$R *.dfm}
 
@@ -95,6 +97,29 @@ end;
 procedure TLoginForm.SetUserName(const Value: string);
 begin
   LabeledEdit1.Text := Trim(value);
+end;
+
+procedure TLoginForm.SpeedButton1Click(Sender: TObject);
+begin
+  if not Assigned(ProxyForm) then begin
+    Application.CreateForm(TProxyForm, ProxyForm);
+    if GM.ProxyInfo.host <> '' then ProxyForm.ProxyServer := GM.ProxyInfo.host;
+    if GM.ProxyInfo.port <> 0  then ProxyForm.ProxyPort   := GM.ProxyInfo.port;
+    if GM.ProxyInfo.user <> '' then ProxyForm.ProxyUser   := GM.ProxyInfo.user;
+    if GM.ProxyInfo.pwd <> ''  then ProxyForm.ProxyPwd    := GM.ProxyInfo.pwd;
+  end;
+
+  if ProxyForm.ShowModal = mrOk then begin
+    GM.ProxyInfo.host := ProxyForm.ProxyServer;
+    GM.ProxyInfo.port := ProxyForm.ProxyPort;
+    GM.ProxyInfo.user := ProxyForm.ProxyUser;
+    GM.ProxyInfo.pwd  := ProxyForm.ProxyPwd;
+  end else begin
+    GM.ProxyInfo.host := '';
+    GM.ProxyInfo.port := 0;
+    GM.ProxyInfo.user := '';
+    GM.ProxyInfo.pwd  := '';
+  end;
 end;
 
 initialization

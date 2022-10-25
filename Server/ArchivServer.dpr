@@ -54,7 +54,8 @@ uses
   u_ini in 'u_ini.pas',
   u_folder in 'u_folder.pas',
   ds_storage in 'ds_storage.pas' {dsStorage: TDSServerModule},
-  u_serverTimer in 'u_serverTimer.pas';
+  u_serverTimer in 'u_serverTimer.pas',
+  m_http in 'm_http.pas' {HttpMod: TDataModule};
 
 var
   MyDummyBoolean  : Boolean;

@@ -1,7 +1,7 @@
 /* ============================================================ */
 /*   Database name:  MODEL_2                                    */
 /*   DBMS name:      InterBase                                  */
-/*   Created on:     11.10.2022  20:25                          */
+/*   Created on:     22.10.2022  20:00                          */
 /* ============================================================ */
 
 create generator gen_be_id;
@@ -642,6 +642,16 @@ create table DR_EV
     constraint PK_DR_EV primary key (DR_ID, PE_ID)
 );
 
+/* ============================================================ */
+/*   Table: GR_TY                                               */
+/* ============================================================ */
+create table GR_TY
+(
+    GR_ID                           INTEGER                not null,
+    TY_ID                           INTEGER                not null,
+    constraint PK_GR_TY primary key (GR_ID, TY_ID)
+);
+
 alter table TE_TEMPLATE
     add constraint FK_REF_3353 foreign key  (TY_ID)
        references TY_TASKTYPE;
@@ -762,6 +772,14 @@ alter table DR_EV
     add constraint FK_REF_11566 foreign key  (DR_ID)
        references DR_DIR;
 
+alter table GR_TY
+    add constraint FK_REF_12252 foreign key  (GR_ID)
+       references GR_GREMIUM;
+
+alter table GR_TY
+    add constraint FK_REF_12256 foreign key  (TY_ID)
+       references TY_TASKTYPE;
+
 
 set term /;
 CREATE TRIGGER SET_TA_TASK_NEW FOR TA_TASK
@@ -810,4 +828,6 @@ VALUES (
     'admin'
 );
 
-set generator gen_pe_id to 10;
+set generator gen_pe_id to 100;
+set generator gen_te_id to 100;
+set generator gen_ty_id to 100;

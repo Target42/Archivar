@@ -75,7 +75,6 @@
         Width = 250
       end>
     OnDrawPanel = StatusBar1DrawPanel
-    ExplicitTop = 661
   end
   object PageControl1: TPageControl
     Left = 0
@@ -110,6 +109,10 @@
     object TabSheet2: TTabSheet
       Caption = 'Lesezeichen'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       inline BookmarkFrame1: TBookmarkFrame
         Left = 0
         Top = 0
@@ -170,6 +173,10 @@
     object TabSheet6: TTabSheet
       Caption = 'Online'
       ImageIndex = 3
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object UserView: TListView
         Left = 0
         Top = 0

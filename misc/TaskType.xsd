@@ -15,6 +15,7 @@
 		<xs:complexType>
 			<xs:attribute name="name" type="xs:string"/>
 			<xs:attribute name="tage" type="xs:integer"/>
+			<xs:attribute name="id" type="xs:integer"/>
 		</xs:complexType>
 	</xs:element>
 </xs:schema>

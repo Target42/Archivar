@@ -13,7 +13,7 @@ uses
   Data.DBXJSON, pngimage, System.ImageList, Vcl.ImgList, Vcl.Controls,
   u_berTypes, Datasnap.DSConnect, i_personen, Vcl.Dialogs, JvBaseDlg,
   JvSHFileOperation, System.Notification, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
-  DbxCompressionFilter, u_ShowMessageTimeOut;
+  DbxCompressionFilter, u_ShowMessageTimeOut, Data.DbxHTTPLayer;
 
 const
   WMUSER            = WM_USER + 25;
@@ -104,7 +104,18 @@ type
 
     procedure checkOrDownloadKeys;
 
+    procedure setProxy;
+
   public
+    Type
+      rProxyInfo = record
+        host  : string;
+        port  : integer;
+        user  : string;
+        pwd   : string;
+      end;
+  public
+    ProxyInfo : rProxyInfo;
 
     function Connect : boolean;
     procedure Disconnect;
@@ -134,6 +145,7 @@ type
     function  LockDocument(   id, typ : integer; subid : integer = 0 ) : TJSONObject;
     function  UnLockDocument( id, typ : integer; subid : integer = 0 ) : TJSONObject;
     function  isLocked(       id, typ : integer; subid : integer = 0 ) : TJSONObject;
+    function  LockedFlag(     id, typ : integer ) : boolean;
     procedure ShowLockInfo(   data    : TJSONObject);
 
     function  GremiumName( id : integer ) : string;
@@ -267,8 +279,10 @@ begin
   name := JString( obj, 'name');
   fname := TPath.Combine( m_images, name );
 
-  if JString(obj, 'md5', 'xxx') <> md5(fname) then
+  if JString(obj, 'md5', 'xxx') <> md5(fname) then  begin
+    CodeSite.SendFmtMsg('download : %s', [fname]);
     downloadimage( name, client );
+  end;
 
   png := TPNGImage.Create;
   bmp := TBitmap.Create;
@@ -289,6 +303,7 @@ var
   arr    : TJSONArray;
   i      : integer;
 begin
+  CodeSite.EnterMethod(Self, 'checkimages');
   client := TdsImageClient.Create(SQLConnection1.DBXConnection);
   try
     m_imageNames.Clear;
@@ -306,6 +321,7 @@ begin
   except
   end;
   client.Free;
+  CodeSite.ExitMethod(Self, 'checkimages');
 end;
 
 procedure TGM.checkOrDownloadKeys;
@@ -358,25 +374,103 @@ function TGM.Connect: boolean;
 var
   inx : integer;
   err : integer;
+  host : string;
+  procedure setHost( s : string );
+  var
+    host  : string;
+    port  : string;
+
+    procedure findPort;
+    var
+      inx : integer;
+    begin
+      inx := LastDelimiter(':', host);
+      if inx <> 0 then begin
+        port := host.Substring(   inx);
+        host := host.Substring(0, inx-1);
+      end;
+
+    end;
+  begin
+    s := trim(s);
+    // default ohne protokll und port
+    host := s;
+    port := '211';
+    SQLConnection1.Params.Values['CommunicationProtocol'] := 'tcp/ip';
+
+    if SameText('ds://', s.Substring(0, 5)) then begin
+      SQLConnection1.Params.Values['CommunicationProtocol'] := 'tcp/ip';
+      Host := s.Substring(5);
+    end
+    else if SameText('http://', s.SubString(0, 7)) then begin
+      SQLConnection1.Params.Values['CommunicationProtocol'] := 'http';
+      Host := s.Substring(7);
+    end
+    else if SameText('https://', s.SubString(0, 8)) then begin
+      SQLConnection1.Params.Values['CommunicationProtocol'] := 'https';
+      Host := s.Substring(8);
+    end;
+
+    findPort;
+
+    SQLConnection1.Params.Values['HostName']  := host;
+    SQLConnection1.Params.Values['Port']      := port;
+  end;
+
+  procedure setupProxy;
+  begin
+    SQLConnection1.Params.Values['DSProxyHost']     := '';
+    SQLConnection1.Params.Values['DSProxyPassword'] := '';
+    SQLConnection1.Params.Values['DSProxyPort']     := '';
+    SQLConnection1.Params.Values['DSProxyUsername'] := '';
+    SQLConnection1.Params.Values['User_Name']       := '';
+    SQLConnection1.Params.Values['Password']        := '';
+
+    if ProxyInfo.host <> '' then
+      SQLConnection1.Params.Values['DSProxyHost']     := ProxyInfo.host;
+
+    if ProxyInfo.pwd <> '' then begin
+      SQLConnection1.Params.Values['DSProxyPassword'] := ProxyInfo.pwd;
+      SQLConnection1.Params.Values['Password']        := ProxyInfo.pwd;
+    end;
+    if ProxyInfo.port <> 0 then
+      SQLConnection1.Params.Values['DSProxyPort']     := IntToStr(ProxyInfo.port);
+    if ProxyInfo.user <> '' then begin
+      SQLConnection1.Params.Values['DSProxyUsername'] := ProxyInfo.user;
+      SQLConnection1.Params.Values['User_Name']       := ProxyInfo.user;
+    end;
+end;
+
 begin
+  CodeSite.EnterMethod(Self, 'connect');
   Result := false;
   if not Assigned(LoginForm) then
   begin
     Application.CreateForm(TLoginForm, LoginForm);
+    if FindCmdLineSwitch('host', host) then begin
+      inx := m_hostList.IndexOf(host);
+      if inx <> -1 then
+        m_hostList.Delete(inx);
+      m_hostList.Insert(0, host);
+    end;
   end;
 
   LoginForm.setUserlist(m_userList );
   LoginForm.setHostList(m_hostList);
+
   if LoginForm.ShowModal <> mrOk then
     exit;
 
   SQLConnection1.Params.Values['DSAuthenticationUser']      := LoginForm.UserName;
   SQLConnection1.Params.Values['DSAuthenticationPassword']  := LoginForm.Password;
-  SQLConnection1.Params.Values['HostName']                  := LoginForm.HostName;
+
+  setHost(LoginForm.HostName);
+  setupProxy;
 
   DSClientCallbackChannelManager1.UserName  := '*'+LoginForm.UserName;
   DSClientCallbackChannelManager1.Password  := LoginForm.Password;
 
+  SQLConnection1.Params.SaveToFile('datasnap.txt');
   try
     SQLConnection1.Open;
     Result := SQLConnection1.Connected;
@@ -413,8 +507,10 @@ begin
                 else
                   m_LoginFailCount := 0;
               end;
-        else
+        else begin
+          CodeSite.SendError(e.ToString);
           ShowMessage(e.ToString);
+          end;
         end;
       end else if (e is EIdSocketError) then  begin
         err := (e as EIdSocketError).LastError;
@@ -427,6 +523,7 @@ begin
         ShowMessage( e.ClassName );
     end;
   end;
+  CodeSite.ExitMethod(Self, 'connect');
 end;
 
 procedure TGM.CreateDirs;
@@ -487,6 +584,8 @@ begin
   loadUserlist;
 
   m_LoginFailCount := 0;
+
+  setProxy;
 end;
 
 procedure TGM.DataModuleDestroy(Sender: TObject);
@@ -718,7 +817,10 @@ var
     if list.Count > 0 then begin
       MainForm.AdminMsg(DateTimeToStr(now)+':'+list[0]);
       list.Insert(0, DateTimeToStr(now));
-      ShowMessageTimeout('Admin', list.Text );
+      if JBool(arg, 'urgend') then
+        ShowMessage( list.Text )
+      else
+        ShowMessageTimeout('Admin', list.Text );
     end;
     list.Free;
   end;
@@ -726,11 +828,22 @@ var
   begin
     WindowHandler.closeAll;
   end;
-begin
+  procedure ShowShutdown;
+  begin
+    ShowMessage( JString( arg, 'text' ) );
+  end;
+  procedure doTerminate;
+  begin
+    Application.Terminate;
+  end;
+
+  begin
   cmd := JString( Arg, 'cmd');
        if SameText(cmd, BRD_ADMIN_MSG)        then SendMsg
   else if SameText(cmd, BRD_ADMIN_CLOSE_EDIT) then CloseEdit
-  else if SameText(cmd, BRD_ADMIN_TERMINATE)  then Application.Terminate;
+  else if SameText(cmd, BRD_ADMIN_TERMINATE)  then doTerminate
+  else if SameText(cmd, BRD_ADMIN_REBOOT)     then ShowShutdown;
+
 
   Result := true;
 end;
@@ -819,6 +932,15 @@ begin
   Result := m_misc.LockDocument(req);
 end;
 
+function TGM.LockedFlag(id, typ: integer): boolean;
+var
+  res : TJSONObject;
+begin
+  res := isLocked(id, typ);
+
+  Result := JBool( res, 'result');
+end;
+
 function TGM.md5(st: TStream): string;
 var
   IdMD5: TIdHashMessageDigest5;
@@ -887,6 +1009,16 @@ begin
     PostMessage( Application.MainFormHandle, msgStatus, 1, 0 )
   else
     PostMessage( Application.MainFormHandle, msgStatus, 0, 0 )
+end;
+
+procedure TGM.setProxy;
+var
+  val : string;
+begin
+  if FindCmdLineSwitch('proxyhost', val) then ProxyInfo.host := val;
+  if FindCmdLineSwitch('proxypwd', val)  then ProxyInfo.pwd  := val;
+  if FindCmdLineSwitch('proxyport', val) then ProxyInfo.port := StrToIntDef(val, 8080);
+  if FindCmdLineSwitch('proxyuser', val) then ProxyInfo.user := val;
 end;
 
 procedure TGM.ShowLockInfo(data: TJSONObject);

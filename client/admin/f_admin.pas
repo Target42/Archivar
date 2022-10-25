@@ -21,11 +21,13 @@ type
     SpinEdit1: TSpinEdit;
     LabeledEdit1: TLabeledEdit;
     BitBtn2: TBitBtn;
+    BitBtn3: TBitBtn;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure SendenClick(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
+    procedure BitBtn3Click(Sender: TObject);
   private
     client : TAdminModClient;
   public
@@ -75,6 +77,17 @@ begin
   client.ServiceAction(req);
 end;
 
+
+procedure TAdminForm.BitBtn3Click(Sender: TObject);
+var
+  req : TJSONObject;
+begin
+  req := TJSONObject.Create;
+  JReplace( req, 'action',  BRD_ADMIN);
+  JReplace( req, 'cmd',     BRD_ADMIN_TERMINATE);
+
+  client.ServiceAction(req);
+end;
 
 procedure TAdminForm.FormCreate(Sender: TObject);
 begin

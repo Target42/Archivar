@@ -103,6 +103,7 @@
         <DCC_ExeOutput>D:\git\ber.git\Bin\Server\Launcher\</DCC_ExeOutput>
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
+        <Debugger_RunParams>&quot;-proxypwd:Schweden 2023&quot;</Debugger_RunParams>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">
@@ -115,6 +116,15 @@
         <DCCReference Include="..\client\u_stub.pas"/>
         <DCCReference Include="..\misc\u_json.pas"/>
         <DCCReference Include="u_ini.pas"/>
+        <DCCReference Include="..\misc\fr_base.pas">
+            <Form>BaseFrame</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="..\misc\f_proxy.pas">
+            <Form>ProxyForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <None Include="Win32\Debug\bin\Launcher.exe.ini"/>
         <RcItem Include="ssl.zip">
             <ContainerId>ResourceItem</ContainerId>
@@ -149,7 +159,7 @@
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">
-                <DeployFile LocalName="Win32\Debug\bin\Launcher.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="..\Bin\Server\Launcher\Launcher.exe" Configuration="Release" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>Launcher.exe</RemoteName>
                         <Overwrite>true</Overwrite>
@@ -164,6 +174,24 @@
                 <DeployFile LocalName="ssl.zip" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="Win32\Debug\bin\Launcher.exe.ini" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="ssl.zip" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="Win32\Debug\bin\Launcher.exe" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win32">
+                        <RemoteName>Launcher.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

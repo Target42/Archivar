@@ -7,7 +7,9 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Data.DBXDataSnap,
   Data.DBXCommon, IPPeerClient, Vcl.StdCtrls, Vcl.Buttons, Data.DB, Data.SqlExpr,
   u_stub, System.JSON, u_ini, JvComponentBase, JvCreateProcess, JvBaseDlg,
-  JvBrowseFolder, Vcl.ExtCtrls, pngimage, MidasLib, Vcl.Samples.Spin;
+  JvBrowseFolder, Vcl.ExtCtrls, pngimage, MidasLib, Vcl.Samples.Spin,
+  Data.DbxHTTPLayer, IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient,
+  IdHTTP;
 
 type
   TMainForm = class(TForm)
@@ -23,14 +25,16 @@ type
     Image1: TImage;
     LabeledEdit2: TLabeledEdit;
     CheckBox1: TCheckBox;
-    Label1: TLabel;
-    SpinEdit1: TSpinEdit;
+    CheckBox2: TCheckBox;
+    BitBtn2: TBitBtn;
     procedure FormCreate(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
     procedure SQLConnection1AfterConnect(Sender: TObject);
     procedure SQLConnection1AfterDisconnect(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure SpeedButton1Click(Sender: TObject);
+    procedure CheckBox2Click(Sender: TObject);
+    procedure BitBtn2Click(Sender: TObject);
   private
     type rFile = record
       name        : string;
@@ -67,7 +71,7 @@ var
 implementation
 
 uses
-  IdHashMessageDigest, u_json, System.IOUtils, system.zip;
+  IdHashMessageDigest, u_json, System.IOUtils, system.zip, f_proxy;
 
 {$R *.dfm}
 
@@ -77,6 +81,48 @@ var
   row     : TJSONObject;
   arr     : TJSONArray;
   i       : integer;
+
+  procedure setHost( s : string );
+  var
+    host  : string;
+    port  : string;
+
+    procedure findPort;
+    var
+      inx : integer;
+    begin
+      inx := LastDelimiter(':', host);
+      if inx <> 0 then begin
+        port := host.Substring(   inx);
+        host := host.Substring(0, inx-1);
+      end;
+
+    end;
+  begin
+    s := trim(s);
+    // default ohne protokll und port
+    host := s;
+    port := '211';
+    SQLConnection1.Params.Values['CommunicationProtocol'] := 'tcp/ip';
+
+    if SameText('ds://', s.Substring(0, 5)) then begin
+      SQLConnection1.Params.Values['CommunicationProtocol'] := 'tcp/ip';
+      Host := s.Substring(5);
+    end
+    else if SameText('http://', s.SubString(0, 7)) then begin
+      SQLConnection1.Params.Values['CommunicationProtocol'] := 'http';
+      Host := s.Substring(7);
+    end
+    else if SameText('https://', s.SubString(0, 8)) then begin
+      SQLConnection1.Params.Values['CommunicationProtocol'] := 'https';
+      Host := s.Substring(8);
+    end;
+
+    findPort;
+
+    SQLConnection1.Params.Values['HostName']  := host;
+    SQLConnection1.Params.Values['Port']      := port;
+  end;
 begin
   // check the Path
   if not SameText(m_root, LabeledEdit1.Text) then begin
@@ -87,13 +133,17 @@ begin
     ShowMessage('Das Verzeichniss'+sLineBreak+m_root+sLineBreak+'ungültig');
     exit;
   end;
+  if Trim(LabeledEdit2.Text) = '' then begin
+    ShowMessage('Bitte einene gültigen Host eingeben.');
+    exit;
+  end;
 
-  SQLConnection1.Params.Values['HostName']  := LabeledEdit2.Text;
-  SQLConnection1.Params.Values['Port']      := IntToStr(SpinEdit1.Value);
+  setHost( LabeledEdit2.Text );
 
   unpackSSL;
   copyInstaller;
 
+  Screen.Cursor := crHourGlass;
   try
     StatusBar1.SimpleText := 'Connect .... ';
     SQLConnection1.Open;
@@ -120,10 +170,19 @@ begin
     end;
     if CheckFiles then
       DownloadFiles;
+    Screen.Cursor := crDefault;
   except
-    on e : exception do
+    on e : exception do begin
+      Screen.Cursor := crDefault;
+      StatusBar1.SimpleText := 'Fehler : ' + e.ToString;
       ShowMessage( e.ToString );
+    end;
   end;
+end;
+
+procedure TMainForm.CheckBox2Click(Sender: TObject);
+begin
+  BitBtn2.Enabled := CheckBox2.Checked;
 end;
 
 function TMainForm.CheckFiles : boolean;
@@ -205,7 +264,8 @@ begin
     repeat
       bytes := st.Read( buffer[0], BSize);
       ProgressBar1.Position := ProgressBar1.Position + bytes;
-      fout.Write(buffer[0], bytes)
+      fout.Write(buffer[0], bytes);
+      Application.ProcessMessages;
     until bytes <> BSize;
     FreeAndNil(fout);
   except
@@ -263,7 +323,6 @@ begin
 
   LabeledEdit2.Text := IniOptions.serverhost;
   CheckBox1.Checked := ( IniOptions.runprg <> '' );
-  SpinEdit1.Value   := IniOptions.serverport;
 
   if IniOptions.launcherimage <> '' then begin
     fname := TPath.Combine( m_root, IniOptions.launcherimage);
@@ -294,6 +353,12 @@ begin
   finally
     IdMD5.Free;
   end;
+end;
+
+procedure TMainForm.BitBtn2Click(Sender: TObject);
+begin
+  ProxyForm.SQLConnection := SQLConnection1;
+  ProxyForm.ShowModal;
 end;
 
 function TMainForm.CalcMd5(fname: string): string;
@@ -336,11 +401,28 @@ end;
 procedure TMainForm.startProgram;
 var
   fname : string;
+  cmd   : string;
 begin
   fname := TPath.Combine( m_root, IniOptions.runprg);
   if FileExists( fname ) then begin
+
     JvCreateProcess1.CurrentDirectory := ExtractFilePath(fname);
-    JvCreateProcess1.CommandLine := fname;
+
+    cmd := Format('"%s" /host:%s', [fname, LabeledEdit2.Text]);
+
+    if SQLConnection1.Params.Values['DSProxyHost'] <> '' then
+      cmd := cmd + ' /proxyhost:'+SQLConnection1.Params.Values['DSProxyHost'];
+
+    if SQLConnection1.Params.Values['DSProxyPassword'] <> '' then
+      cmd := cmd + format(' "/proxypwd:%s"', [SQLConnection1.Params.Values['DSProxyPassword']]);
+
+    if SQLConnection1.Params.Values['DSProxyPort'] <> '' then
+      cmd := cmd + ' /proxyport:'+SQLConnection1.Params.Values['DSProxyPort'];
+
+    if SQLConnection1.Params.Values['DSProxyUsername'] <> '' then
+      cmd := cmd + format(' "/proxyuser:%s"', [SQLConnection1.Params.Values['DSProxyUsername']]);
+
+    JvCreateProcess1.CommandLine := cmd;
     JvCreateProcess1.Run;
   end;
   if SameText(IniOptions.launcherterminate, 'true') then

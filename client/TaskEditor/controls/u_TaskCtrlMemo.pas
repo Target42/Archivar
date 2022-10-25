@@ -13,6 +13,7 @@ type
       procedure doSetMouse( md : TControlMouseDown; mv : TControlMouseMove; mu : TControlMouseUp ); override;
 
       function CtrlValue : string; override;
+      procedure setCtrlValue( value : string ); override;
       procedure setReadOnly( value : boolean ); override;
       function  getReadOnly : boolean; override;
     private
@@ -101,6 +102,14 @@ begin
   inherited;
   m_props.Add(TaskCtrlPropImpl.create(self, 'Text',       'string'));
   m_props.Add(TaskCtrlPropImpl.create(self, 'Datafield',  'TaskDataField'));
+end;
+
+procedure TaskCtrlMemo.setCtrlValue(value: string);
+begin
+
+  if Assigned(m_ctrl) then
+    (m_ctrl as TMemo).Text := value;
+
 end;
 
 procedure TaskCtrlMemo.setReadOnly(value: boolean);

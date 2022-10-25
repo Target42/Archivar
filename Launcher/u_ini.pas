@@ -63,8 +63,7 @@ begin
   if Ini <> nil then
   begin
     {Section: server}
-    Fserverhost := Ini.ReadString(csIniserverSection, csIniserverhost, 'localhost');
-    Fserverport := Ini.ReadInteger(csIniserverSection, csIniserverport, 211);
+    Fserverhost := Ini.ReadString(csIniserverSection, csIniserverhost, 'ds://localhost:211');
 
     {Section: run}
     Frunprg := Ini.ReadString(csInirunSection, csInirunprg, 'Archivar.exe');

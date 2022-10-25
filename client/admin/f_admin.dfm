@@ -2,7 +2,7 @@ object AdminForm: TAdminForm
   Left = 0
   Top = 0
   Caption = 'Admin'
-  ClientHeight = 299
+  ClientHeight = 254
   ClientWidth = 635
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -18,7 +18,7 @@ object AdminForm: TAdminForm
   TextHeight = 13
   object StatusBar1: TStatusBar
     Left = 0
-    Top = 280
+    Top = 235
     Width = 635
     Height = 19
     Panels = <>
@@ -27,13 +27,13 @@ object AdminForm: TAdminForm
     Left = 0
     Top = 0
     Width = 635
-    Height = 105
-    Align = alTop
+    Height = 113
+    Align = alClient
     Caption = 'Nachricht'
     TabOrder = 1
     DesignSize = (
       635
-      105)
+      113)
     object CheckBox1: TCheckBox
       Left = 16
       Top = 24
@@ -46,8 +46,8 @@ object AdminForm: TAdminForm
       Left = 79
       Top = 22
       Width = 442
-      Height = 62
-      Anchors = [akLeft, akTop, akRight]
+      Height = 75
+      Anchors = [akLeft, akTop, akRight, akBottom]
       Lines.Strings = (
         'Memo1')
       ScrollBars = ssVertical
@@ -67,33 +67,40 @@ object AdminForm: TAdminForm
   end
   object GroupBox2: TGroupBox
     Left = 0
-    Top = 105
+    Top = 171
     Width = 635
     Height = 64
-    Align = alTop
-    Caption = 'GroupBox2'
+    Align = alBottom
+    Caption = 'Aktionen'
     TabOrder = 2
+    ExplicitTop = 165
     object BitBtn1: TBitBtn
       Left = 24
       Top = 24
-      Width = 75
+      Width = 121
       Height = 25
-      Caption = 'BitBtn1'
+      Caption = 'Editoren schlie'#223'en'
       TabOrder = 0
       OnClick = BitBtn1Click
+    end
+    object BitBtn3: TBitBtn
+      Left = 151
+      Top = 24
+      Width = 138
+      Height = 25
+      Caption = 'Alle Clients schlie'#223'en'
+      TabOrder = 1
+      OnClick = BitBtn3Click
     end
   end
   object GroupBox3: TGroupBox
     Left = 0
-    Top = 169
+    Top = 113
     Width = 635
-    Height = 105
-    Align = alTop
+    Height = 58
+    Align = alBottom
     Caption = 'Reboot'
     TabOrder = 3
-    ExplicitLeft = 80
-    ExplicitTop = 168
-    ExplicitWidth = 185
     object Label1: TLabel
       Left = 16
       Top = 24

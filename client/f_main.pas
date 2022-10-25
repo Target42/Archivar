@@ -238,6 +238,7 @@ type
     procedure doMeeting( id : integer );
 
     procedure UpdateUserView( sender : TObject );
+    procedure ParseCmdLine;
   public
     procedure AdminMsg( text : string );
   end;
@@ -890,6 +891,7 @@ begin
   loadLogo;
 
   ApplicationSetMenu( false );
+  ParseCmdLine;
 end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
@@ -940,6 +942,11 @@ begin
     if FileExists( fname ) then
       Image1.Picture.LoadFromFile(fname);
   end;
+end;
+
+procedure TMainForm.ParseCmdLine;
+begin
+
 end;
 
 procedure TMainForm.setGremiumName(id: integer);

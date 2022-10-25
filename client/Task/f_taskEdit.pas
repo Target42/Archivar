@@ -136,11 +136,13 @@ type
     procedure setID( ta_id, ty_id: integer );
     property RO : Boolean read getRO write setRO;
 
-    procedure LockCheck;
+    function LockCheck : boolean;
 
     procedure resizeForm;
 
     procedure ForceClose( force : boolean);
+
+    procedure edit;
   end;
 
 var
@@ -206,8 +208,11 @@ begin
     exit;
 
   save;
+
   reload;
-  TaskTab.Edit;
+  if not m_ro then
+    TaskTab.Edit;
+
 end;
 
 procedure TTaskEditForm.ac_unlockExecute(Sender: TObject);
@@ -276,6 +281,14 @@ end;
 procedure TTaskEditForm.DBEdit1KeyPress(Sender: TObject; var Key: Char);
 begin
   m_changed := true;
+end;
+
+procedure TTaskEditForm.edit;
+begin
+  if LockCheck then begin
+    self.RO := false;
+    TaskTab.Edit;
+  end;
 end;
 
 procedure TTaskEditForm.ForceClose(force: boolean);
@@ -473,12 +486,13 @@ begin
 end;
 {$endif}
 
-procedure TTaskEditForm.LockCheck;
+function TTaskEditForm.LockCheck : boolean;
 var
   data : TJSONObject;
 begin
   data := GM.isLocked(m_ta_id, integer(ltTask));
-  if JBool( data, 'result') then
+  Result := JBool( data, 'result');
+  if  Result then
   begin
     if not JBool( data, 'self') then
       ShowMessage( JString( data, 'text'));

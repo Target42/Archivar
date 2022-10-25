@@ -173,4 +173,30 @@ object dsGremium: TdsGremium
         ParamType = ptInput
       end>
   end
+  object TY: TFDTable
+    Connection = DBMod.ArchivarConnection
+    Transaction = FDTransaction1
+    UpdateOptions.UpdateTableName = 'TY_TASKTYPE'
+    TableName = 'TY_TASKTYPE'
+    Left = 608
+    Top = 192
+  end
+  object TYTab: TDataSetProvider
+    DataSet = TY
+    Left = 616
+    Top = 248
+  end
+  object GRTY: TFDTable
+    Connection = DBMod.ArchivarConnection
+    Transaction = FDTransaction1
+    UpdateOptions.UpdateTableName = 'GR_TY'
+    TableName = 'GR_TY'
+    Left = 704
+    Top = 200
+  end
+  object GRTYTab: TDataSetProvider
+    DataSet = GRTY
+    Left = 712
+    Top = 272
+  end
 end

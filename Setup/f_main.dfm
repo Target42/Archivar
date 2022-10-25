@@ -1,7 +1,7 @@
 object MainSetupForm: TMainSetupForm
   Left = 0
   Top = 0
-  ActiveControl = WelcomePage
+  ActiveControl = BitBtn1
   Caption = 'Setup'
   ClientHeight = 299
   ClientWidth = 558
@@ -29,7 +29,7 @@ object MainSetupForm: TMainSetupForm
     Top = 0
     Width = 558
     Height = 280
-    ActivePage = WelcomePage
+    ActivePage = InitData
     ButtonBarHeight = 42
     ButtonStart.Caption = 'To &Start Page'
     ButtonStart.NumGlyphs = 1

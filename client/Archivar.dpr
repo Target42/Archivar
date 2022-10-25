@@ -216,7 +216,8 @@ uses
   xsd_Task in '..\misc\xsd_Task.pas',
   u_ShowMessageTimeOut in 'misc\u_ShowMessageTimeOut.pas',
   f_admin in 'admin\f_admin.pas' {AdminForm},
-  u_ForceClose in 'misc\u_ForceClose.pas';
+  u_ForceClose in 'misc\u_ForceClose.pas',
+  f_proxy in '..\misc\f_proxy.pas' {ProxyForm};
 
 {$R *.res}
 

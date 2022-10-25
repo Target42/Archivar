@@ -251,6 +251,11 @@
             <DesignClass>TDSServerModule</DesignClass>
         </DCCReference>
         <DCCReference Include="u_serverTimer.pas"/>
+        <DCCReference Include="m_http.pas">
+            <Form>HttpMod</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
         <RcItem Include="system.json">
             <ContainerId>ResourceItem</ContainerId>
             <ResourceType>RCDATA</ResourceType>

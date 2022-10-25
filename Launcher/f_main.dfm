@@ -376,7 +376,6 @@ object MainForm: TMainForm
     Height = 19
     Panels = <>
     SimplePanel = True
-    ExplicitTop = 256
   end
   object Panel1: TPanel
     Left = 0
@@ -388,8 +387,6 @@ object MainForm: TMainForm
     Caption = 'Panel1'
     ShowCaption = False
     TabOrder = 1
-    ExplicitLeft = 48
-    ExplicitTop = 190
     DesignSize = (
       610
       107)
@@ -403,13 +400,6 @@ object MainForm: TMainForm
       OnClick = SpeedButton1Click
       ExplicitLeft = 479
     end
-    object Label1: TLabel
-      Left = 191
-      Top = 46
-      Width = 20
-      Height = 13
-      Caption = 'Port'
-    end
     object ProgressBar1: TProgressBar
       AlignWithMargins = True
       Left = 3
@@ -418,11 +408,10 @@ object MainForm: TMainForm
       Height = 17
       Align = alBottom
       TabOrder = 0
-      ExplicitTop = 46
     end
     object BitBtn1: TBitBtn
-      Left = 532
-      Top = 15
+      Left = 529
+      Top = 14
       Width = 75
       Height = 25
       Anchors = [akTop, akRight]
@@ -450,10 +439,10 @@ object MainForm: TMainForm
       EditLabel.Height = 13
       EditLabel.Caption = 'Hostname'
       TabOrder = 3
-      Text = 'localhost'
+      Text = 'http://localhost:8088'
     end
     object CheckBox1: TCheckBox
-      Left = 263
+      Left = 199
       Top = 64
       Width = 121
       Height = 17
@@ -462,15 +451,24 @@ object MainForm: TMainForm
       State = cbChecked
       TabOrder = 4
     end
-    object SpinEdit1: TSpinEdit
-      Left = 191
-      Top = 59
-      Width = 66
-      Height = 22
-      MaxValue = 0
-      MinValue = 0
+    object CheckBox2: TCheckBox
+      Left = 344
+      Top = 64
+      Width = 49
+      Height = 17
+      Caption = 'Proy'
       TabOrder = 5
-      Value = 0
+      OnClick = CheckBox2Click
+    end
+    object BitBtn2: TBitBtn
+      Left = 399
+      Top = 56
+      Width = 124
+      Height = 25
+      Caption = 'Proxyeinstellungen'
+      Enabled = False
+      TabOrder = 6
+      OnClick = BitBtn2Click
     end
   end
   object SQLConnection1: TSQLConnection
@@ -488,7 +486,9 @@ object MainForm: TMainForm
         'Token=91d62ebb5b0d1b1b'
       'Filters={}'
       'DSAuthenticationPassword=qwertzuiopmnbvcxy1234'
-      'DSAuthenticationUser=qwertzuiopmnbvcxy1234')
+      'DSAuthenticationUser=qwertzuiopmnbvcxy1234'
+      'User_Name=uname'
+      'Password=pwd')
     AfterConnect = SQLConnection1AfterConnect
     AfterDisconnect = SQLConnection1AfterDisconnect
     Left = 424

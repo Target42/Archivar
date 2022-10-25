@@ -48,7 +48,7 @@ var
 implementation
 
 uses
-  Vcl.Dialogs, u_json;
+  Vcl.Dialogs, u_json, m_glob_client, u_berTypes;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -66,7 +66,6 @@ end;
 
 procedure TWindowHandler.closeAll;
 var
-  arr : TArray<TForm>;
   i   : integer;
   fr  : IForceClose;
 
@@ -269,9 +268,13 @@ begin
       m_taskMap.Add(id, TaskEditForm);
       m_list.Add(TaskEditForm);
     end;
-    TaskEditForm.RO := ro;
+    TaskEditForm.RO := false;
     TaskEditForm.Show;
-    TaskEditForm.LockCheck;
+    if not ro then begin
+      GM.LockDocument( id, integer(ltTask));
+      if Gm.LockedFlag (id,integer(ltTask))  then
+        TaskEditForm.edit;
+    end;
   end;
 end;
 

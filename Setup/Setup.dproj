@@ -108,7 +108,6 @@
             <Form>MainSetupForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
-        <DCCReference Include="..\misc\xsd_TaskType.pas"/>
         <DCCReference Include="..\misc\xsd_StoreLimits.pas"/>
         <DCCReference Include="..\misc\xsd_Betriebsrat.pas"/>
         <DCCReference Include="..\misc\xsd_DataField.pas"/>
@@ -117,6 +116,7 @@
         <DCCReference Include="..\misc\ePub\u_xml.pas"/>
         <DCCReference Include="..\misc\xsd_TextBlock.pas"/>
         <DCCReference Include="..\misc\u_json.pas"/>
+        <DCCReference Include="..\misc\xsd_TaskType.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>
