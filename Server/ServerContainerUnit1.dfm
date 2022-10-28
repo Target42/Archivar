@@ -12,7 +12,7 @@ object ServerContainer1: TServerContainer1
     OnDisconnect = DSServer1Disconnect
     OnError = DSServer1Error
     AutoStart = False
-    Left = 56
+    Left = 64
     Top = 11
   end
   object DSTCPServerTransport1: TDSTCPServerTransport
@@ -240,10 +240,42 @@ object ServerContainer1: TServerContainer1
   end
   object DSHTTPService1: TDSHTTPService
     HttpPort = 8088
-    Server = DSServer1
     Filters = <>
     AuthenticationManager = DSAuthenticationManager1
     Left = 48
     Top = 200
+  end
+  object DSHTTPService2: TDSHTTPService
+    HttpPort = 8089
+    CertFiles = DSCertFiles1
+    Filters = <
+      item
+        FilterId = 'PC1'
+        Properties.Strings = (
+          'Key=Vtdh4O6FLcF7Zthf')
+      end
+      item
+        FilterId = 'RSA'
+        Properties.Strings = (
+          'UseGlobalKey=true'
+          'KeyLength=1024'
+          'KeyExponent=3')
+      end
+      item
+        FilterId = 'ZLibCompression'
+        Properties.Strings = (
+          'CompressMoreThan=1024')
+      end>
+    AuthenticationManager = DSAuthenticationManager1
+    Left = 144
+    Top = 208
+  end
+  object DSCertFiles1: TDSCertFiles
+    RootCertFile = 'D:\git\ber.git\Bin\Server\cert\BEROffice.pem'
+    CertFile = 'D:\git\ber.git\Bin\Server\cert\BEROffice.crt'
+    KeyFile = 'D:\git\ber.git\Bin\Server\cert\keyl.pem'
+    OnGetPEMFilePasskey = DSCertFiles1GetPEMFilePasskey
+    Left = 144
+    Top = 264
   end
 end

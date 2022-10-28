@@ -217,7 +217,8 @@ uses
   u_ShowMessageTimeOut in 'misc\u_ShowMessageTimeOut.pas',
   f_admin in 'admin\f_admin.pas' {AdminForm},
   u_ForceClose in 'misc\u_ForceClose.pas',
-  f_proxy in '..\misc\f_proxy.pas' {ProxyForm};
+  f_proxy in '..\misc\f_proxy.pas' {ProxyForm},
+  f_gremium_task in 'Gremium\f_gremium_task.pas' {GremiumTaskForm};
 
 {$R *.res}
 

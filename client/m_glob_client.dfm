@@ -11,7 +11,7 @@ object GM: TGM
       'DriverUnit=Data.DBXDataSnap'
       'HostName=localhost'
       'Port=211'
-      'CommunicationProtocol=https'
+      'CommunicationProtocol=tcp/ip'
       'DatasnapContext=datasnap/'
       
         'DriverAssemblyLoader=Borland.Data.TDBXClientDriverLoader,Borland' +
@@ -73,7 +73,7 @@ object GM: TGM
     Left = 296
     Top = 32
     Bitmap = {
-      494C010108007801580210001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010108007801640210001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000003000000001002000000000000030
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -504,5 +504,12 @@ object GM: TGM
   object NotificationCenter1: TNotificationCenter
     Left = 336
     Top = 168
+  end
+  object PingTimer: TTimer
+    Enabled = False
+    Interval = 60000
+    OnTimer = PingTimerTimer
+    Left = 408
+    Top = 24
   end
 end

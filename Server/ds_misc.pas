@@ -53,6 +53,8 @@ type
     function getPublicKey( net : string; stamp : TDateTime ) : TStream;
 
     function getStorageList : TJSONObject;
+
+    function ping( value : integer ) : integer;
   end;
 
 implementation
@@ -209,6 +211,11 @@ end;
 function TdsMisc.LockDocument(req : TJSONObject): TJSONObject;
 begin
   Result := LockMod.LockDocument( req );
+end;
+
+function TdsMisc.ping(value: integer): integer;
+begin
+  Result := value;
 end;
 
 function TdsMisc.UnLockDocument(req : TJSONObject): TJSONObject;

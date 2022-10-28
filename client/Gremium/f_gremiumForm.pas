@@ -21,6 +21,7 @@ type
     BitBtn2: TBitBtn;
     BitBtn3: TBitBtn;
     Button1: TBitBtn;
+    BitBtn4: TBitBtn;
     procedure FormCreate(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
@@ -28,6 +29,7 @@ type
     procedure DBGrid1DblClick(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
+    procedure BitBtn4Click(Sender: TObject);
   private
     procedure refeshDB;
   public
@@ -40,7 +42,8 @@ var
 implementation
 
 uses
-  u_stub, System.JSON, u_json, f_gremium_edit, f_gremium_MA_form;
+  u_stub, System.JSON, u_json, f_gremium_edit, f_gremium_MA_form,
+  f_gremium_task;
 
 
 {$R *.dfm}
@@ -108,6 +111,17 @@ begin
     refeshDB;
 end;
 
+
+procedure TGremiumForm.BitBtn4Click(Sender: TObject);
+begin
+  //
+  if GRTab.IsEmpty then exit;
+
+  Application.CreateForm(TGremiumTaskForm, GremiumTaskForm);
+  GremiumTaskForm.ID := GRTab.FieldByName('GR_ID').AsInteger;
+  GremiumTaskForm.ShowModal;
+  GremiumTaskForm.free;
+end;
 
 procedure TGremiumForm.Button1Click(Sender: TObject);
 begin

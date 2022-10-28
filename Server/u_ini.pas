@@ -11,7 +11,7 @@ const
   csIniclientSection = 'client';
   csIniDNLSection = 'DNL';
   csInisecretSection = 'secret';
-  csInipathSection = 'path';
+  csInisslSection = 'ssl';
 
   {Section: DB}
   csIniDBhost = 'host';
@@ -20,23 +20,28 @@ const
   csIniDBpwd = 'pwd';
 
   {Section: DS}
-  csIniDSport = 'port';
+  csIniDStcpport = 'tcpport';
+  csIniDShttpport = 'httpport';
+  csIniDShttpsport = 'httpsport';
 
   {Section: client}
   csIniclientactive = 'active';
-  csIniclientport = 'port';
   csIniclientdir = 'dir';
 
   {Section: DNL}
   csIniDNLactive = 'active';
   csIniDNLport = 'port';
   csIniDNLwwwroot = 'wwwroot';
+  csIniDNLlauncher = 'launcher';
 
   {Section: secret}
   csInisecretname = 'name';
 
-  {Section: path}
-  csInipathdatadir = 'datadir';
+  {Section: ssl}
+  csInisslcrt = 'crt';
+  csInisslkey = 'key';
+  csInisslrootcrt = 'rootcrt';
+  csInisslpassword = 'password';
 
 type
   TIniOptions = class(TObject)
@@ -48,26 +53,31 @@ type
     FDBpwd: string;
 
     {Section: DS}
-    FDSport: Integer;
+    FDStcpport: Integer;
+    FDShttpport: Integer;
+    FDShttpsport: Integer;
 
     {Section: client}
     Fclientactive: string;
-    Fclientport: Integer;
     Fclientdir: string;
 
     {Section: DNL}
     FDNLactive: string;
     FDNLport: Integer;
     FDNLwwwroot: string;
+    FDNLlauncher: string;
 
     {Section: secret}
     Fsecretname: string;
 
-    {Section: path}
-    Fpathdatadir: string;
+    {Section: ssl}
+    Fsslcrt: string;
+    Fsslkey: string;
+    Fsslrootcrt: string;
+    Fsslpassword: string;
   public
-    procedure LoadSettings(Ini: TIniFile);
-    procedure SaveSettings(Ini: TIniFile);
+    procedure LoadSettings(Ini: TMemIniFile);
+    procedure SaveSettings(Ini: TMemIniFile);
     
     procedure LoadFromFile(const FileName: string);
     procedure SaveToFile(const FileName: string);
@@ -79,23 +89,28 @@ type
     property DBpwd: string read FDBpwd write FDBpwd;
 
     {Section: DS}
-    property DSport: Integer read FDSport write FDSport;
+    property DStcpport: Integer read FDStcpport write FDStcpport;
+    property DShttpport: Integer read FDShttpport write FDShttpport;
+    property DShttpsport: Integer read FDShttpsport write FDShttpsport;
 
     {Section: client}
     property clientactive: string read Fclientactive write Fclientactive;
-    property clientport: Integer read Fclientport write Fclientport;
     property clientdir: string read Fclientdir write Fclientdir;
 
     {Section: DNL}
     property DNLactive: string read FDNLactive write FDNLactive;
     property DNLport: Integer read FDNLport write FDNLport;
     property DNLwwwroot: string read FDNLwwwroot write FDNLwwwroot;
+    property DNLlauncher: string read FDNLlauncher write FDNLlauncher;
 
     {Section: secret}
     property secretname: string read Fsecretname write Fsecretname;
 
-    {Section: path}
-    property pathdatadir: string read Fpathdatadir write Fpathdatadir;
+    {Section: ssl}
+    property sslcrt: string read Fsslcrt write Fsslcrt;
+    property sslkey: string read Fsslkey write Fsslkey;
+    property sslrootcrt: string read Fsslrootcrt write Fsslrootcrt;
+    property sslpassword: string read Fsslpassword write Fsslpassword;
   end;
 
 var
@@ -103,7 +118,7 @@ var
 
 implementation
 
-procedure TIniOptions.LoadSettings(Ini: TIniFile);
+procedure TIniOptions.LoadSettings(Ini: TMemIniFile);
 begin
   if Ini <> nil then
   begin
@@ -114,27 +129,32 @@ begin
     FDBpwd := Ini.ReadString(csIniDBSection, csIniDBpwd, 'masterkey');
 
     {Section: DS}
-    FDSport := Ini.ReadInteger(csIniDSSection, csIniDSport, 211);
+    FDStcpport := Ini.ReadInteger(csIniDSSection, csIniDStcpport, 211);
+    FDShttpport := Ini.ReadInteger(csIniDSSection, csIniDShttpport, 8088);
+    FDShttpsport := Ini.ReadInteger(csIniDSSection, csIniDShttpsport, 8080);
 
     {Section: client}
     Fclientactive := Ini.ReadString(csIniclientSection, csIniclientactive, 'true');
-    Fclientport := Ini.ReadInteger(csIniclientSection, csIniclientport, 42000);
     Fclientdir := Ini.ReadString(csIniclientSection, csIniclientdir, '.\client\latest\');
 
     {Section: DNL}
     FDNLactive := Ini.ReadString(csIniDNLSection, csIniDNLactive, 'true');
-    FDNLport := Ini.ReadInteger(csIniDNLSection, csIniDNLport, 42001);
+    FDNLport := Ini.ReadInteger(csIniDNLSection, csIniDNLport, 8090);
     FDNLwwwroot := Ini.ReadString(csIniDNLSection, csIniDNLwwwroot, '.\www_dnl\');
+    FDNLlauncher := Ini.ReadString(csIniDNLSection, csIniDNLlauncher, '.\Launcher\');
 
     {Section: secret}
-    Fsecretname := Ini.ReadString(csInisecretSection, csInisecretname, '');
+    Fsecretname := Ini.ReadString(csInisecretSection, csInisecretname, 'A9B5DD6E818D19B6704F64ED2B335D3E');
 
-    {Section: path}
-    Fpathdatadir := Ini.ReadString(csInipathSection, csInipathdatadir, '.\data\');
+    {Section: ssl}
+    Fsslcrt := Ini.ReadString(csInisslSection, csInisslcrt, 'D:\git\ber.git\Bin\Server\cert\BEROffice.crt');
+    Fsslkey := Ini.ReadString(csInisslSection, csInisslkey, 'D:\git\ber.git\Bin\Server\cert\keyl.pem');
+    Fsslrootcrt := Ini.ReadString(csInisslSection, csInisslrootcrt, 'D:\git\ber.git\Bin\Server\cert\BEROffice.pem');
+    Fsslpassword := Ini.ReadString(csInisslSection, csInisslpassword, 'snoopy');
   end;
 end;
 
-procedure TIniOptions.SaveSettings(Ini: TIniFile);
+procedure TIniOptions.SaveSettings(Ini: TMemIniFile);
 begin
   if Ini <> nil then
   begin
@@ -145,31 +165,36 @@ begin
     Ini.WriteString(csIniDBSection, csIniDBpwd, FDBpwd);
 
     {Section: DS}
-    Ini.WriteInteger(csIniDSSection, csIniDSport, FDSport);
+    Ini.WriteInteger(csIniDSSection, csIniDStcpport, FDStcpport);
+    Ini.WriteInteger(csIniDSSection, csIniDShttpport, FDShttpport);
+    Ini.WriteInteger(csIniDSSection, csIniDShttpsport, FDShttpsport);
 
     {Section: client}
     Ini.WriteString(csIniclientSection, csIniclientactive, Fclientactive);
-    Ini.WriteInteger(csIniclientSection, csIniclientport, Fclientport);
     Ini.WriteString(csIniclientSection, csIniclientdir, Fclientdir);
 
     {Section: DNL}
     Ini.WriteString(csIniDNLSection, csIniDNLactive, FDNLactive);
     Ini.WriteInteger(csIniDNLSection, csIniDNLport, FDNLport);
     Ini.WriteString(csIniDNLSection, csIniDNLwwwroot, FDNLwwwroot);
+    Ini.WriteString(csIniDNLSection, csIniDNLlauncher, FDNLlauncher);
 
     {Section: secret}
     Ini.WriteString(csInisecretSection, csInisecretname, Fsecretname);
 
-    {Section: path}
-    Ini.WriteString(csInipathSection, csInipathdatadir, Fpathdatadir);
+    {Section: ssl}
+    Ini.WriteString(csInisslSection, csInisslcrt, Fsslcrt);
+    Ini.WriteString(csInisslSection, csInisslkey, Fsslkey);
+    Ini.WriteString(csInisslSection, csInisslrootcrt, Fsslrootcrt);
+    Ini.WriteString(csInisslSection, csInisslpassword, Fsslpassword);
   end;
 end;
 
 procedure TIniOptions.LoadFromFile(const FileName: string);
 var
-  Ini: TIniFile;
+  Ini: TMemIniFile;
 begin
-  Ini := TIniFile.Create(FileName);
+  Ini := TMemIniFile.Create(FileName);
   try
     LoadSettings(Ini);
   finally
@@ -179,11 +204,12 @@ end;
 
 procedure TIniOptions.SaveToFile(const FileName: string);
 var
-  Ini: TIniFile;
+  Ini: TMemIniFile;
 begin
-  Ini := TIniFile.Create(FileName);
+  Ini := TMemIniFile.Create(FileName);
   try
     SaveSettings(Ini);
+    Ini.UpdateFile;
   finally
     Ini.Free;
   end;

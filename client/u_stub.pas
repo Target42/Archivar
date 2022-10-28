@@ -1,6 +1,6 @@
 //
 // Erzeugt vom DataSnap-Proxy-Generator.
-// 19.10.2022 20:04:31
+// 26.10.2022 20:37:29
 //
 
 unit u_stub;
@@ -134,6 +134,7 @@ type
     FchangeOnlineStatusCommand: TDBXCommand;
     FgetPublicKeyCommand: TDBXCommand;
     FgetStorageListCommand: TDBXCommand;
+    FpingCommand: TDBXCommand;
   public
     constructor Create(ADBXConnection: TDBXConnection); overload;
     constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
@@ -148,6 +149,7 @@ type
     function changeOnlineStatus(req: TJSONObject): TJSONObject;
     function getPublicKey(net: string; stamp: TDateTime): TStream;
     function getStorageList: TJSONObject;
+    function ping(value: Integer): Integer;
   end;
 
   TdsProtocolClient = class(TDSAdminClient)
@@ -1146,6 +1148,20 @@ begin
   Result := TJSONObject(FgetStorageListCommand.Parameters[0].Value.GetJSONValue(FInstanceOwner));
 end;
 
+function TdsMiscClient.ping(value: Integer): Integer;
+begin
+  if FpingCommand = nil then
+  begin
+    FpingCommand := FDBXConnection.CreateCommand;
+    FpingCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FpingCommand.Text := 'TdsMisc.ping';
+    FpingCommand.Prepare;
+  end;
+  FpingCommand.Parameters[0].Value.SetInt32(value);
+  FpingCommand.ExecuteUpdate;
+  Result := FpingCommand.Parameters[1].Value.GetInt32;
+end;
+
 constructor TdsMiscClient.Create(ADBXConnection: TDBXConnection);
 begin
   inherited Create(ADBXConnection);
@@ -1168,6 +1184,7 @@ begin
   FchangeOnlineStatusCommand.DisposeOf;
   FgetPublicKeyCommand.DisposeOf;
   FgetStorageListCommand.DisposeOf;
+  FpingCommand.DisposeOf;
   inherited;
 end;
 

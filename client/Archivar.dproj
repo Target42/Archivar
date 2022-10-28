@@ -608,6 +608,10 @@
             <Form>ProxyForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="Gremium\f_gremium_task.pas">
+            <Form>GremiumTaskForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <None Include="Datafields\ERA-NS.txt"/>
         <RcItem Include="dws\dws.html">
             <ContainerId>ResourceItem</ContainerId>

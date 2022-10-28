@@ -19,9 +19,11 @@ type
     BaseFrame1: TBaseFrame;
     Label1: TLabel;
     SpinEdit1: TSpinEdit;
+    BitBtn2: TBitBtn;
     procedure BitBtn1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure BaseFrame1OKBtnClick(Sender: TObject);
+    procedure BitBtn2Click(Sender: TObject);
   private
     m_sql : TSQLConnection;
     function GetProxyServer: string;
@@ -90,6 +92,22 @@ begin
       BaseFrame1.OKBtn.Enabled := false;
     end;
   end;
+end;
+
+procedure TProxyForm.BitBtn2Click(Sender: TObject);
+var
+  fname : string;
+  ini   : TIniFile;
+begin
+  fname := TPath.Combine(ExtractFilePath(ParamStr(0)), 'proxy.dat');
+
+  ini := TIniFile.Create(fname);
+  ini.WriteString('proxy', 'host', LabeledEdit1.Text);
+  ini.WriteString('proxy', 'user', LabeledEdit2.Text);
+  ini.WriteString('proxy', 'pwd', LabeledEdit3.Text);
+  ini.WriteInteger('proxy','port', SpinEdit1.Value);
+  ini.Free;
+
 end;
 
 procedure TProxyForm.FormCreate(Sender: TObject);

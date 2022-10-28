@@ -15,9 +15,13 @@ type
     LabeledEdit3: TComboBox;
     Label2: TLabel;
     Label3: TLabel;
-    SpeedButton1: TSpeedButton;
+    CheckBox1: TCheckBox;
+    BitBtn1: TBitBtn;
     procedure FormCreate(Sender: TObject);
     procedure SpeedButton1Click(Sender: TObject);
+    procedure CheckBox1Click(Sender: TObject);
+    procedure BaseFrame1OKBtnClick(Sender: TObject);
+    procedure BaseFrame1AbortBtnClick(Sender: TObject);
   private
     function GetUserName: string;
     procedure SetUserName(const Value: string);
@@ -47,8 +51,27 @@ uses
 
 { TLoginForm }
 
+procedure TLoginForm.BaseFrame1AbortBtnClick(Sender: TObject);
+begin
+  GM.clearProxy;
+end;
+
+procedure TLoginForm.BaseFrame1OKBtnClick(Sender: TObject);
+begin
+  if not CheckBox1.Checked then begin
+    GM.clearProxy;
+  end;
+end;
+
+procedure TLoginForm.CheckBox1Click(Sender: TObject);
+begin
+  BitBtn1.Enabled := CheckBox1.Checked;
+end;
+
 procedure TLoginForm.FormCreate(Sender: TObject);
 begin
+  BitBtn1.Enabled := false;
+
   LabeledEdit1.Text := GM.UserName;
   LabeledEdit2.Text := '';
 end;
@@ -103,6 +126,7 @@ procedure TLoginForm.SpeedButton1Click(Sender: TObject);
 begin
   if not Assigned(ProxyForm) then begin
     Application.CreateForm(TProxyForm, ProxyForm);
+
     if GM.ProxyInfo.host <> '' then ProxyForm.ProxyServer := GM.ProxyInfo.host;
     if GM.ProxyInfo.port <> 0  then ProxyForm.ProxyPort   := GM.ProxyInfo.port;
     if GM.ProxyInfo.user <> '' then ProxyForm.ProxyUser   := GM.ProxyInfo.user;
@@ -114,12 +138,8 @@ begin
     GM.ProxyInfo.port := ProxyForm.ProxyPort;
     GM.ProxyInfo.user := ProxyForm.ProxyUser;
     GM.ProxyInfo.pwd  := ProxyForm.ProxyPwd;
-  end else begin
-    GM.ProxyInfo.host := '';
-    GM.ProxyInfo.port := 0;
-    GM.ProxyInfo.user := '';
-    GM.ProxyInfo.pwd  := '';
-  end;
+  end else
+    GM.clearProxy;
 end;
 
 initialization

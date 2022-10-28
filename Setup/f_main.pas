@@ -14,7 +14,11 @@ uses
   FireDAC.DApt, FireDAC.Comp.ScriptCommands, FireDAC.Stan.Util,
   FireDAC.Comp.Script, FireDAC.Comp.Client, FireDAC.Comp.DataSet,
   FireDAC.Comp.BatchMove, FireDAC.Comp.BatchMove.DataSet,
-  FireDAC.Comp.BatchMove.Text, Vcl.Grids, Vcl.DBGrids, Vcl.DBCtrls;
+  FireDAC.Comp.BatchMove.Text, Vcl.Grids, Vcl.DBGrids, Vcl.DBCtrls,
+  IdBaseComponent, IdComponent, IdCustomTCPServer, IdTCPServer, IdContext,
+  Vcl.Imaging.pngimage, IdIOHandler, IdIOHandlerSocket, IdIOHandlerStack, IdSSL,
+  IdSSLOpenSSL, IdTCPConnection, IdTCPClient, IdHTTP, IdServerIOHandler,
+  IdCustomHTTPServer, IdHTTPServer;
 
 type
   TMainSetupForm = class(TForm)
@@ -23,17 +27,10 @@ type
     WelcomePage: TJvWizardWelcomePage;
     SearchGDS: TJvWizardInteriorPage;
     ServerInfo: TJvWizardInteriorPage;
-    Memo1: TMemo;
-    edHostname: TLabeledEdit;
-    edDatabase: TLabeledEdit;
-    edDBUser: TLabeledEdit;
-    edDBPwd: TLabeledEdit;
-    btnCreate: TBitBtn;
     InitData: TJvWizardInteriorPage;
     Panel1: TPanel;
     LV: TListView;
     BitBtn1: TBitBtn;
-    esDSServer: TLabeledEdit;
     ArchivarConnection: TFDConnection;
     TETab: TFDQuery;
     PITab: TFDQuery;
@@ -46,16 +43,12 @@ type
     DATab: TFDQuery;
     CreateDB: TFDScript;
     Sicherheit: TJvWizardInteriorPage;
-    LabeledEdit1: TLabeledEdit;
-    LabeledEdit2: TLabeledEdit;
     SetPwdQry: TFDQuery;
     HCTab: TFDTable;
     EPTab: TFDTable;
     ProgressBar1: TProgressBar;
     TBTab: TFDTable;
     FCTab: TFDTable;
-    Label1: TLabel;
-    ComboBox1: TComboBox;
     DRTab: TFDTable;
     Import: TJvWizardInteriorPage;
     Panel2: TPanel;
@@ -76,9 +69,46 @@ type
     DBNavigator1: TDBNavigator;
     Button2: TButton;
     PETab: TFDTable;
+    Panel3: TPanel;
     BitBtn2: TBitBtn;
     LinkLabel1: TLinkLabel;
     LinkLabel2: TLinkLabel;
+    GroupBox1: TGroupBox;
+    edHostname: TLabeledEdit;
+    ComboBox1: TComboBox;
+    Label1: TLabel;
+    edDatabase: TLabeledEdit;
+    edDBPwd: TLabeledEdit;
+    edDBUser: TLabeledEdit;
+    btnCreate: TBitBtn;
+    GroupBox2: TGroupBox;
+    esDSServer: TLabeledEdit;
+    Label2: TLabel;
+    LabeledEdit3: TLabeledEdit;
+    LabeledEdit4: TLabeledEdit;
+    BitBtn3: TBitBtn;
+    LabeledEdit5: TLabeledEdit;
+    GroupBox3: TGroupBox;
+    Splitter1: TSplitter;
+    DBGrid2: TDBGrid;
+    GrSrc: TDataSource;
+    GRPATab: TFDTable;
+    IdTCPServer1: TIdTCPServer;
+    Image1: TImage;
+    RE: TRichEdit;
+    GroupBox4: TGroupBox;
+    LabeledEdit1: TLabeledEdit;
+    LabeledEdit2: TLabeledEdit;
+    GroupBox5: TGroupBox;
+    LabeledEdit6: TLabeledEdit;
+    IdHTTPServer1: TIdHTTPServer;
+    IdServerIOHandlerSSLOpenSSL1: TIdServerIOHandlerSSLOpenSSL;
+    IdHTTP1: TIdHTTP;
+    IdSSLIOHandlerSocketOpenSSL1: TIdSSLIOHandlerSocketOpenSSL;
+    LabeledEdit7: TLabeledEdit;
+    LabeledEdit8: TLabeledEdit;
+    LabeledEdit9: TLabeledEdit;
+    BitBtn4: TBitBtn;
     procedure SearchGDSEnterPage(Sender: TObject;
       const FromPage: TJvWizardCustomPage);
     procedure ServerInfoEnterPage(Sender: TObject;
@@ -100,6 +130,16 @@ type
     procedure BitBtn2Click(Sender: TObject);
     procedure LinkLabel1LinkClick(Sender: TObject; const Link: string;
       LinkType: TSysLinkType);
+    procedure ImportEnterPage(Sender: TObject;
+      const FromPage: TJvWizardCustomPage);
+    procedure BitBtn3Click(Sender: TObject);
+    procedure IdTCPServer1Execute(AContext: TIdContext);
+    procedure ServerInfoExitPage(Sender: TObject;
+      const FromPage: TJvWizardCustomPage);
+    procedure IdHTTPServer1CommandGet(AContext: TIdContext;
+      ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
+    procedure BitBtn4Click(Sender: TObject);
+    procedure IdServerIOHandlerSSLOpenSSL1GetPassword(var Password: string);
   private
     m_home  : string;
     m_ini   : TiniFile;
@@ -138,7 +178,8 @@ uses
   System.IOUtils, System.Types, IdHashMessageDigest, xsd_TaskType,
   xsd_Betriebsrat, xsd_DataField, FireDAC.Phys.IBWrapper,
   System.Win.ComObj, System.Hash, u_ePub, xsd_TextBlock,
-  System.Zip, Xml.XMLIntf, Xml.XMLDoc, System.JSON, u_json, ShellApi;
+  System.Zip, Xml.XMLIntf, Xml.XMLDoc, System.JSON, u_json, ShellApi,
+  system.UITypes;
 
 {$R *.dfm}
 
@@ -174,11 +215,21 @@ var
   i    : integer;
   fname: string;
   found: boolean;
+  procedure AddColoredString(AText: string; AColor: TColor);
+  begin
+    AText := AText + #13;
+    with RE do
+    begin
+      SelStart := Length(Text);
+      SelAttributes.Color := AColor;
+      SelText := AText;
+    end;
+  end;
 begin
   SearchGDS.Subtitle.Text := 'Suche fbclient.dll';
   SearchGDS.VisibleButtons := [TJvWizardButtonKind.bkBack, TJvWizardButtonKind.bkCancel];
   // search gds32.dll
-  Memo1.Lines.Clear;
+  RE.Lines.Clear;
   List := TStringList.Create;
   list.StrictDelimiter := true;
   list.Delimiter := ';';
@@ -194,10 +245,10 @@ begin
     if FileExists(fname) then
     begin
       found := true;
-      Memo1.Lines.Add('ok  :'+List[i]);
+      AddColoredString('ok  :'+List[i], clGreen);
     end
     else
-      Memo1.Lines.Add('fail:'+List[i]);
+      AddColoredString('fail:'+List[i], clRed);
   end;
   if found then
   begin
@@ -212,6 +263,76 @@ begin
   end;
 
   list.Free;
+end;
+
+procedure TMainSetupForm.BitBtn3Click(Sender: TObject);
+var
+  msg : string;
+  function testPort( port : integer ) : boolean;
+  var
+    srv : TIdTCPServer;
+  begin
+    Result := (port = 0 );
+    srv := TIdTCPServer.Create(self);
+    srv.OnExecute := self.IdTCPServer1Execute;
+
+    try
+      if not Result then begin
+        srv.DefaultPort := port;
+        srv.Active := true;
+        Result := srv.Active;
+      end;
+    except
+      begin
+        msg := msg + IntToStr(port)+#13;
+      end;
+    end;
+    srv.Active := false;
+    srv.Free;
+  end;
+var
+  flag : boolean;
+begin
+  msg := 'Folgende Ports werden benutzt:'#13;
+
+  screen.Cursor := crHourGlass;
+  flag := testport( StrToIntDef( esDSServer.Text, 0 ));
+  flag := testport( StrToIntDef( LabeledEdit3.Text, 0 )) and flag;
+  flag := testport( StrToIntDef( LabeledEdit4.Text, 0 )) and flag;
+  flag := testport( StrToIntDef( LabeledEdit5.Text, 0 )) and flag;
+  screen.Cursor := crDefault;
+
+  if not flag then
+    ShowMessage( msg )
+  else
+    showMessage('Test erfolgreich');
+end;
+
+procedure TMainSetupForm.BitBtn4Click(Sender: TObject);
+var
+  url, res : string;
+begin
+  IdServerIOHandlerSSLOpenSSL1.SSLOptions.CertFile      := ExpandFileName(LabeledEdit6.Text);
+  IdServerIOHandlerSSLOpenSSL1.SSLOptions.KeyFile       := ExpandFileName(LabeledEdit7.Text);
+  IdServerIOHandlerSSLOpenSSL1.SSLOptions.RootCertFile  := ExpandFileName(LabeledEdit8.Text);
+  IdHTTPServer1.DefaultPort := StrToIntDef(LabeledEdit4.Text, 0 );
+
+  if IdHTTPServer1.DefaultPort <> 0 then begin
+
+    url := Format('https://localhost:%d/index.html', [IdHTTPServer1.DefaultPort]);
+    try
+      IdHTTPServer1.Active := true;
+      res := IdHTTP1.Get(url);
+      ShowMessage( res );
+    except
+      on e : exception do begin
+        ShowMessage( e.ToString );
+      end;
+    end;
+    IdHTTPServer1.Active := false;
+
+  end else
+    ShowMessage('HTTPS ist deaktiviert!');
 end;
 
 procedure TMainSetupForm.btnCreateClick(Sender: TObject);
@@ -315,7 +436,6 @@ begin
     m_ini.WriteString('DB', 'user', edDBUser.Text);
     m_ini.WriteString('DB', 'pwd',  edDBPwd.Text);
 
-    m_ini.WriteString('DS', 'port', esDSServer.Text);
   except
     on e : exception do
     begin
@@ -340,13 +460,23 @@ begin
 end;
 
 procedure TMainSetupForm.Button2Click(Sender: TObject);
+var
+  s  : string;
+  id : integer;
 begin
+  s := format('Sollen diese Personen dem Gremium:'#13'%s'#13'zugewiesen werden?', [GRTab.FieldByName('GR_NAME').AsString]);
+  if not (MessageDlg(s, mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
+    exit;
+
   if IBTransaction1.Active then
     IBTransaction1.Commit;
+
+  id := GRTab.FieldByName('GR_ID').AsInteger;
 
   FDMemTable1.DisableControls;
   try
   PETab.Open;
+  GRPATab.Open;
   FDMemTable1.First;
   while not FDMemTable1.Eof do begin
     PETab.Append;
@@ -357,11 +487,18 @@ begin
     PETab.FieldByName('PE_NET').AsString        := FDMemTable1.FieldByName('PE_NET').AsString;
     PETab.FieldByName('PE_MAIL').AsString       := FDMemTable1.FieldByName('PE_MAIL').AsString;
     PETab.FieldByName('PE_DEPARTMENT').AsString := FDMemTable1.FieldByName('PE_DEPARTMENT').AsString;
+    PETab.FieldByName('PE_ROLS').AsString       := 'user';
     PETab.Post;
+
+    GRPATab.Append;
+    GRPATab.FieldByName('GR_ID').AsInteger      := id;
+    GRPATab.FieldByName('PE_ID').AsInteger      := PETab.FieldByName('PE_ID').AsInteger;
+    GRPATab.Post;
     FDMemTable1.Next;
   end;
   FDMemTable1.EmptyDataSet;
   PETab.Close;
+  GRPATab.Close;
   except
     IBTransaction1.Rollback;
   end;
@@ -390,10 +527,9 @@ end;
 procedure TMainSetupForm.FormCreate(Sender: TObject);
 begin
   m_home := TPath.Combine(ExtractFileDir(Application.ExeName), 'InitialData');
-  DeleteFile('d:\db\ARCHIVAR.GDB');
   m_ini   := TiniFile.Create(TPath.Combine(ExtractFileDir(Application.ExeName), 'ArchivServer.exe.ini'));
 
-//  JvWizard1.ActivePage := Import;
+//  JvWizard1.ActivePage := Sicherheit;
 end;
 
 procedure TMainSetupForm.FormDestroy(Sender: TObject);
@@ -412,6 +548,23 @@ begin
   DRTab.Post;
   DRTab.Close;
 
+end;
+
+procedure TMainSetupForm.IdHTTPServer1CommandGet(AContext: TIdContext;
+  ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
+begin
+  AResponseInfo.ContentText := 'ok';
+end;
+
+procedure TMainSetupForm.IdServerIOHandlerSSLOpenSSL1GetPassword(
+  var Password: string);
+begin
+  Password := LabeledEdit9.Text;
+end;
+
+procedure TMainSetupForm.IdTCPServer1Execute(AContext: TIdContext);
+begin
+  //
 end;
 
 procedure TMainSetupForm.importDataTypes;
@@ -482,6 +635,14 @@ begin
 
   item.SubItems.Strings[0] := 'Abgeschlossen';
   updateLV;
+end;
+
+procedure TMainSetupForm.ImportEnterPage(Sender: TObject;
+  const FromPage: TJvWizardCustomPage);
+begin
+  GRTab.Open;
+
+  Panel2.Enabled := not GRTab.IsEmpty;
 end;
 
 procedure TMainSetupForm.importEPub;
@@ -915,6 +1076,17 @@ begin
   ServerInfo.VisibleButtons := [TJvWizardButtonKind.bkBack, TJvWizardButtonKind.bkCancel];
 end;
 
+procedure TMainSetupForm.ServerInfoExitPage(Sender: TObject;
+  const FromPage: TJvWizardCustomPage);
+begin
+  // ini daten schreiben
+  m_ini.WriteString('DS', 'port',         esDSServer.Text);
+  m_ini.WriteString('DS', 'httpport',     LabeledEdit3.Text);
+  m_ini.WriteString('DS', 'httpsport',    LabeledEdit4.Text);
+
+  m_ini.WriteString('dnl', 'port',        LabeledEdit5.Text);
+end;
+
 procedure TMainSetupForm.SicherheitEnterPage(Sender: TObject;
   const FromPage: TJvWizardCustomPage);
 var
@@ -937,6 +1109,12 @@ var
   s : string;
 begin
   m_ini.WriteString('secret', 'name', LabeledEdit2.Text);
+
+  m_ini.WriteString('ssl', 'crt',     ExpandFileName(LabeledEdit6.Text));
+  m_ini.WriteString('ssl', 'key',     ExpandFileName(LabeledEdit7.Text));
+  m_ini.WriteString('ssl', 'rootcrt', ExpandFileName(LabeledEdit8.Text));
+  m_ini.WriteString('ssl', 'password',LabeledEdit9.Text);
+
 
   s  := THashSHA2.GetHashString( 'admin'+LabeledEdit2.Text+LabeledEdit1.Text);
   try

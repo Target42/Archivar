@@ -47,6 +47,8 @@ type
     dsDairy: TDSServerClass;
     dsStorage: TDSServerClass;
     DSHTTPService1: TDSHTTPService;
+    DSHTTPService2: TDSHTTPService;
+    DSCertFiles1: TDSCertFiles;
     procedure dsAdminGetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
     procedure ServiceStart(Sender: TService; var Started: Boolean);
@@ -106,6 +108,8 @@ type
       var PersistentClass: TPersistentClass);
     procedure dsStorageGetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
+    procedure DSCertFiles1GetPEMFilePasskey(ASender: TObject;
+      var APasskey: AnsiString);
   private
     const
       MaxUserNameLength = 25;
@@ -154,7 +158,7 @@ uses
   ds_taks, ds_file, ds_misc, ds_protocol, ds_image, ds_chapter,
   ds_taskEdit, ds_template, ds_taskView, ds_textblock, ds_fileCache, ds_epub,
   ds_meeting, System.Hash, u_json, ds_sitzung, m_hell, Grijjy.sysUtils, u_ini,
-  m_fileServer, ds_updater, ds_stamm, ds_pki, ds_dairy, ds_storage, WinApi.WinSvc,
+  ds_updater, ds_stamm, ds_pki, ds_dairy, ds_storage, WinApi.WinSvc,
   u_Konst, Winapi.Messages, m_http;
 
 procedure TServerContainer1.dsAdminGetClass(
@@ -473,12 +477,20 @@ var
   begin
     Result := false;
     GrijjyLog.EnterMethod(self, 'DSAuthenticationManager1UserAuthenticate.CheckUser');
+    GrijjyLog.Send(Format('username:%s', [username]));
+    if Password = '' then
+      GrijjyLog.Send('leeres Password');
+
 
     QueryUser.ParamByName('net').AsString := userName;
     QueryUser.Open;
     if QueryUser.RecordCount = 1 then
     begin
-      Result := (Password = '' ) and QueryUser.FieldByName('pe_pwd').AsString.IsEmpty;
+      Result := (Password = '' ) and
+        ( QueryUser.FieldByName('pe_pwd').IsNull or
+          (QueryUser.FieldByName('pe_pwd').AsString = '')
+        );
+
       if not Result then
         Result := SameText( ph, QueryUser.FieldByName('pe_pwd').AsString)
     end;
@@ -512,103 +524,112 @@ var
   end;
 
 begin
-  GrijjyLog.EnterMethod(self, 'DSAuthenticationManager1UserAuthenticate');
-  valid   := false;
-  userName:= LowerCase(User);
-
-  if Length(userName) > MaxUserNameLength then begin
-    GrijjyLog.Send('Exceed MaxUserNameLength', Length(userName));
-    GrijjyLog.ExitMethod(self, 'DSAuthenticationManager1UserAuthenticate');
-    exit;
-  end;
-
-  ph      := THashSHA2.GetHashString(Password);
-
-  if IBTransaction1.Active then
-    IBTransaction1.Rollback;
+  m_Lock.Acquire;
   try
-    IBTransaction1.StartTransaction;
+    GrijjyLog.EnterMethod(self, 'DSAuthenticationManager1UserAuthenticate');
+    valid   := false;
+    userName:= LowerCase(User);
 
-    Session := TDSSessionManager.GetThreadSession;
+    if Length(userName) > MaxUserNameLength then begin
+      GrijjyLog.Send('Exceed MaxUserNameLength', Length(userName));
+      GrijjyLog.ExitMethod(self, 'DSAuthenticationManager1UserAuthenticate');
+      m_Lock.Release;
+      exit;
+    end;
 
-    GrijjyLog.send('thread id', GetCurrentThreadID );
-    GrijjyLog.Send('user name', userName );
+    ph      := THashSHA2.GetHashString(Password);
 
-    if (userName = 'qwertzuiopmnbvcxy1234') and
-       ( ph = '912f5ed6722678ad07c807a443f54982b11bdc0b43993c50411422c8a6c0bcda') then begin
-      // download user ..
-      downloadUser;
-    end else if pos('*', userName) > 0 then begin
-      // callback channel ...
-      broadcastUser( userName);
-    end else begin
-      ph      := THashSHA2.GetHashString( LowerCase(userName)+m_secret+Password);
-      // normal user
-      GrijjyLog.send('session id', Session.Id );
-      GrijjyLog.Send('session name', Session.UserName );
+    if IBTransaction1.Active then
+      IBTransaction1.Rollback;
+    try
+      IBTransaction1.StartTransaction;
 
-      // user exists ....
-      valid := checkUser(userName);
-      if valid then
-      begin
-        // is user admin?
-        if QueryUser.FieldByName('PE_ID').AsInteger = 1 then
+      Session := TDSSessionManager.GetThreadSession;
+
+      GrijjyLog.send('thread id', GetCurrentThreadID );
+      GrijjyLog.Send('user name', userName );
+
+      if (userName = 'qwertzuiopmnbvcxy1234') and
+         ( ph = '912f5ed6722678ad07c807a443f54982b11bdc0b43993c50411422c8a6c0bcda') then begin
+        // download user ..
+        downloadUser;
+      end else if pos('*', userName) > 0 then begin
+        // callback channel ...
+        broadcastUser( userName);
+      end else begin
+        ph      := THashSHA2.GetHashString( LowerCase(userName)+m_secret+Password);
+        // normal user
+        GrijjyLog.send('session id', Session.Id );
+        GrijjyLog.Send('session name', Session.UserName );
+
+        // user exists ....
+        valid := checkUser(userName);
+        if valid then
         begin
-          Session.PutData('admin', 'true');
-          Session.PutData('ID', '1' );
-          addUserRols(QueryUser.FieldByName('PE_ROLS').AsString);
-          Session.PutData('fullname', 'admin');
-        end
-        else begin
-          //is user in, at least, one concile?
-          GRPEQry.ParamByName('PE_ID').AsInteger := QueryUser.FieldByName('PE_ID').AsInteger;
-          GRPEQry.Open();
-          valid := GRPEQry.FieldByName('count').AsInteger > 0;
-          GRPEQry.Close;
-
-          Session.PutData('admin', 'false');
-        end;
-
-        if valid then begin
-          Session.PutData('user',     userName);
-          Session.PutData('ID',       QueryUser.FieldByName('PE_ID').AsString );
-          if not  QueryUser.FieldByName('DR_ID').IsNull then
-            Session.PutData('DRID',     QueryUser.FieldByName('DR_ID').AsString )
-          else
-            Session.PutData('DRID',     '0' );
-
-          Session.PutData('name',     QueryUser.FieldByName('pe_name').AsString);
-          Session.PutData('vorname',  QueryUser.FieldByName('pe_vorname').AsString);
-          Session.PutData('dept',     QueryUser.FieldByName('PE_DEPARTMENT').AsString);
-
-          Session.PutData('fullname', Format('%s %s (%s)',
-          [QueryUser.FieldByName('pe_vorname').AsString,
-           QueryUser.FieldByName('pe_name').AsString,
-           QueryUser.FieldByName('PE_DEPARTMENT').AsString]));
-
-          addUserRols(QueryUser.FieldByName('PE_ROLS').AsString);
-          if UserRoles.IndexOf('admin') >-1 then
+          // is user admin?
+          if QueryUser.FieldByName('PE_ID').AsInteger = 1 then
+          begin
             Session.PutData('admin', 'true');
+            Session.PutData('ID', '1' );
+            addUserRols(QueryUser.FieldByName('PE_ROLS').AsString);
+            Session.PutData('fullname', 'admin');
+          end
+          else begin
+            //is user in, at least, one concile?
+            GRPEQry.ParamByName('PE_ID').AsInteger := QueryUser.FieldByName('PE_ID').AsInteger;
+            GRPEQry.Open();
+            valid := GRPEQry.FieldByName('count').AsInteger > 0;
+            GRPEQry.Close;
+            GrijjyLog.send('Check ob in Gremium:', valid );
+
+            Session.PutData('admin', 'false');
+          end;
+
+          if valid then begin
+            Session.PutData('user',     userName);
+            Session.PutData('ID',       QueryUser.FieldByName('PE_ID').AsString );
+            if not  QueryUser.FieldByName('DR_ID').IsNull then
+              Session.PutData('DRID',     QueryUser.FieldByName('DR_ID').AsString )
+            else
+              Session.PutData('DRID',     '0' );
+
+            Session.PutData('name',     QueryUser.FieldByName('pe_name').AsString);
+            Session.PutData('vorname',  QueryUser.FieldByName('pe_vorname').AsString);
+            Session.PutData('dept',     QueryUser.FieldByName('PE_DEPARTMENT').AsString);
+
+            Session.PutData('fullname', Format('%s %s (%s)',
+            [QueryUser.FieldByName('pe_vorname').AsString,
+             QueryUser.FieldByName('pe_name').AsString,
+             QueryUser.FieldByName('PE_DEPARTMENT').AsString]));
+
+            addUserRols(QueryUser.FieldByName('PE_ROLS').AsString);
+            if UserRoles.IndexOf('admin') >-1 then
+              Session.PutData('admin', 'true');
+          end;
         end;
+      end;
+
+      QueryUser.Close;
+      IBTransaction1.Commit;
+    except
+      on e : exception do begin
+        GrijjyLog.Send( e.ToString, Error);
+        QueryUser.Close;
       end;
     end;
 
-    QueryUser.Close;
-    IBTransaction1.Commit;
-  except
-    on e : exception do begin
-      GrijjyLog.Send( e.ToString, Error);
-      QueryUser.Close;
+    if IBTransaction1.Active then begin
+      IBTransaction1.Rollback;
+      GrijjyLog.Send('Emergency rollback', Error);
     end;
-  end;
-  if IBTransaction1.Active then begin
-    IBTransaction1.Rollback;
-    GrijjyLog.Send('Emergency rollback', Error);
-  end;
-  GrijjyLog.Send('user authenticate', valid);
-  GrijjyLog.Send('user rols', UserRoles);
+    GrijjyLog.Send('user authenticate', valid);
+    GrijjyLog.Send('user rols', UserRoles);
 
-  GrijjyLog.ExitMethod(self, 'DSAuthenticationManager1UserAuthenticate');
+    GrijjyLog.ExitMethod(self, 'DSAuthenticationManager1UserAuthenticate');
+  finally
+    m_Lock.Release;
+  end;
+
 end;
 
 procedure TServerContainer1.DSAuthenticationManager1UserAuthorize(
@@ -649,6 +670,12 @@ begin
 
   GrijjyLog.Send('Authorisation', valid );
   GrijjyLog.ExitMethod(self, 'UserAuthorize');}
+end;
+
+procedure TServerContainer1.DSCertFiles1GetPEMFilePasskey(ASender: TObject;
+  var APasskey: AnsiString);
+begin
+  APasskey := AnsiString(IniOptions.sslpassword);
 end;
 
 procedure TServerContainer1.dsChapterGetClass(DSServerClass: TDSServerClass;
@@ -728,10 +755,9 @@ begin
   GrijjyLog.Service := 'Archivar';
   GrijjyLog.SetLogLevel(TgoLogLevel.Info);
 
-  HttpMod     := THttpMod.Create(self);
   LockMod     := TLockMod.create(self);
   GM          := TGM.Create(self);
-  FileServer  := TFileServer.create(self);
+  HttpMod     := THttpMod.Create(self);
   DBMod       := TDBMod.Create(self);
   HellMod     := THellMod.create(self );
   m_lock      := TCriticalSection.Create;
@@ -740,8 +766,14 @@ begin
   m_secret    := IniOptions.SecretName;
   m_timer     := NIL;
 
-  FileServer.createUpdaterZIP;
-  DSTCPServerTransport1.Port := IniOptions.DSport;
+  DSTCPServerTransport1.Port  := IniOptions.DStcpport;
+  DSHTTPService1.HttpPort     := IniOptions.DShttpport;
+  DSHTTPService2.HttpPort     := IniOptions.DShttpsport;
+
+  DSCertFiles1.CertFile       := IniOptions.sslcrt;
+  DSCertFiles1.KeyFile        := IniOptions.sslkey;
+  DSCertFiles1.RootCertFile   := IniOptions.sslrootcrt;
+
 
   TDSSessionManager.Instance.AddSessionEvent(
     procedure(Sender: TObject;
@@ -776,12 +808,11 @@ begin
         m_sessions.UnlockList;
       end;
     end);
-    HttpMod.start(8090);
+
 end;
 
 procedure TServerContainer1.ServiceDestroy(Sender: TObject);
 begin
-//  m_Lock.
   if Assigned(m_timer) then
     m_timer.Terminate;
   m_sessions.Free;
@@ -793,9 +824,40 @@ begin
   createTimer;
   try
     DBMod.startDB;
-    FileServer.start;
-    DSServer1.Start;
-    Started := true;
+    try
+      DSServer1.Start;
+    except
+      on e : exception do
+        GrijjyLog.Send('DSServer:'+e.ToString, TgoLogLevel.Error );
+    end;
+
+    if SameText(IniOptions.DNLactive, 'true') and (IniOptions.DNLport >0 ) then
+      HttpMod.start(IniOptions.DNLport);
+
+    if DSHTTPService1.HttpPort > 0 then begin
+      try
+        DSHTTPService1.Server := DSServer1;
+        DSHTTPService1.Active := true;
+        GrijjyLog.Send('Http-Service:', DSHTTPService1.Active );
+      except
+        on e : exception do begin
+          GrijjyLog.Send('Http-Service:'+e.ToString, TgoLogLevel.Error );
+        end;
+      end;
+    end;
+    if DSHTTPService2.HttpPort > 0 then begin
+      try
+        DSHTTPService2.Server := DSServer1;
+        DSHTTPService2.Active := true;
+        GrijjyLog.Send('Https-Service:', DSHTTPService2.Active );
+      except
+        on e : exception do begin
+          GrijjyLog.Send('Https-Service:'+e.ToString, TgoLogLevel.Error );
+        end;
+      end;
+    end;
+    Started := DSServer1.Started and DBMod.Started;
+
   except
     on e : exception do begin
       GrijjyLog.Send('exception:', e.ToString, TgoLogLevel.Error);
@@ -810,8 +872,8 @@ procedure TServerContainer1.ServiceStop(Sender: TService; var Stopped: Boolean);
 begin
   GrijjyLog.EnterMethod(self, 'ServiceStop');
   DSServer1.Stop;
-  FileServer.stop;
   DBMod.stopDB;
+  HttpMod.ende;
 
   m_timer.Terminate;
   m_timer := NIL;
@@ -831,4 +893,3 @@ begin
 end;
 
 end.
-

@@ -216,11 +216,6 @@
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
         <DCCReference Include="hell\u_meeting.pas"/>
-        <DCCReference Include="fileServer\m_fileServer.pas">
-            <Form>FileServer</Form>
-            <FormType>dfm</FormType>
-            <DesignClass>TDataModule</DesignClass>
-        </DCCReference>
         <DCCReference Include="ds_updater.pas">
             <Form>dsUpdater</Form>
             <FormType>dfm</FormType>
@@ -243,7 +238,6 @@
             <FormType>dfm</FormType>
             <DesignClass>TDSServerModule</DesignClass>
         </DCCReference>
-        <DCCReference Include="u_ini.pas"/>
         <DCCReference Include="u_folder.pas"/>
         <DCCReference Include="ds_storage.pas">
             <Form>dsStorage</Form>
@@ -256,6 +250,7 @@
             <FormType>dfm</FormType>
             <DesignClass>TDataModule</DesignClass>
         </DCCReference>
+        <DCCReference Include="u_ini.pas"/>
         <RcItem Include="system.json">
             <ContainerId>ResourceItem</ContainerId>
             <ResourceType>RCDATA</ResourceType>

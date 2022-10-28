@@ -13,7 +13,7 @@ uses
   Data.DBXJSON, pngimage, System.ImageList, Vcl.ImgList, Vcl.Controls,
   u_berTypes, Datasnap.DSConnect, i_personen, Vcl.Dialogs, JvBaseDlg,
   JvSHFileOperation, System.Notification, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
-  DbxCompressionFilter, u_ShowMessageTimeOut, Data.DbxHTTPLayer;
+  DbxCompressionFilter, u_ShowMessageTimeOut, Data.DbxHTTPLayer, Vcl.ExtCtrls;
 
 const
   WMUSER            = WM_USER + 25;
@@ -52,11 +52,13 @@ type
     GremiumMA: TClientDataSet;
     JvSHFileOperation1: TJvSHFileOperation;
     NotificationCenter1: TNotificationCenter;
+    PingTimer: TTimer;
     procedure SQLConnection1AfterConnect(Sender: TObject);
     procedure SQLConnection1AfterDisconnect(Sender: TObject);
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
     procedure SQLConnection1BeforeDisconnect(Sender: TObject);
+    procedure PingTimerTimer(Sender: TObject);
   private
     FIsAdmin  : boolean;
     FUserID   : integer;
@@ -180,6 +182,8 @@ type
     function calcSize( size : int64 ) : string;
 
     function getStorageList : TJSONObject;
+
+    procedure clearProxy;
   end;
 
   TMyCallback = class(TDBXCallback)
@@ -370,6 +374,14 @@ begin
   m_gremien.Clear;
 end;
 
+procedure TGM.clearProxy;
+begin
+  ProxyInfo.host  := '';
+  ProxyInfo.port  := 0;
+  ProxyInfo.user  := '';
+  ProxyInfo.pwd   := '';
+end;
+
 function TGM.Connect: boolean;
 var
   inx : integer;
@@ -411,6 +423,8 @@ var
       Host := s.Substring(8);
     end;
 
+    DSClientCallbackChannelManager1.CommunicationProtocol := SQLConnection1.Params.Values['CommunicationProtocol'];
+
     findPort;
 
     SQLConnection1.Params.Values['HostName']  := host;
@@ -426,18 +440,29 @@ var
     SQLConnection1.Params.Values['User_Name']       := '';
     SQLConnection1.Params.Values['Password']        := '';
 
-    if ProxyInfo.host <> '' then
+    DSClientCallbackChannelManager1.ProxyHost       := '';
+    DSClientCallbackChannelManager1.ProxyPassword   := '';
+    DSClientCallbackChannelManager1.ProxyPort       := 0;
+    DSClientCallbackChannelManager1.ProxyUsername   := '';
+
+    if ProxyInfo.host <> '' then begin
       SQLConnection1.Params.Values['DSProxyHost']     := ProxyInfo.host;
+      DSClientCallbackChannelManager1.ProxyHost       := ProxyInfo.host;
+    end;
 
     if ProxyInfo.pwd <> '' then begin
       SQLConnection1.Params.Values['DSProxyPassword'] := ProxyInfo.pwd;
       SQLConnection1.Params.Values['Password']        := ProxyInfo.pwd;
+      DSClientCallbackChannelManager1.ProxyPassword   := ProxyInfo.pwd;
     end;
-    if ProxyInfo.port <> 0 then
+    if ProxyInfo.port <> 0 then begin
       SQLConnection1.Params.Values['DSProxyPort']     := IntToStr(ProxyInfo.port);
+      DSClientCallbackChannelManager1.ProxyPort       := ProxyInfo.port;
+    end;
     if ProxyInfo.user <> '' then begin
       SQLConnection1.Params.Values['DSProxyUsername'] := ProxyInfo.user;
       SQLConnection1.Params.Values['User_Name']       := ProxyInfo.user;
+      DSClientCallbackChannelManager1.ProxyUsername   := ProxyInfo.user;
     end;
 end;
 
@@ -986,6 +1011,18 @@ begin
   end;
 end;
 
+procedure TGM.PingTimerTimer(Sender: TObject);
+var
+  val : integer;
+begin
+  CodeSite.EnterMethod(Self, 'PingTimerTimer');
+  if Assigned(m_misc) then begin
+    val := m_misc.ping( GetTickCount );
+    CodeSite.SendFmtMsg('ping:%d', [GetTickCount - val]);
+  end;
+  CodeSite.ExitMethod(Self, 'PingTimerTimer');
+end;
+
 procedure TGM.saveHostList;
 var
   fname : string;
@@ -1094,10 +1131,16 @@ begin
   PostMessage( Application.MainFormHandle, msgUpdateMeetings, 0, 0 );
 
   checkOrDownloadKeys;
+
+  if SQLConnection1.Params.Values['CommunicationProtocol'] <> 'tcp/ip' then
+    PingTimer.Enabled := true;
+
 end;
 
 procedure TGM.SQLConnection1AfterDisconnect(Sender: TObject);
 begin
+  PingTimer.Enabled := false;
+
   if Assigned(LoginForm) then
     LoginForm.Password := '';
 

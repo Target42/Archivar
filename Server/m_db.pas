@@ -21,6 +21,8 @@ type
   public
     function startDB: boolean;
     procedure stopDB;
+
+    function Started : boolean;
   end;
 
 var
@@ -83,6 +85,11 @@ begin
     end;
   end;
   GrijjyLog.ExitMethod(self, 'startDB');
+end;
+
+function TDBMod.Started: boolean;
+begin
+  result := ArchivarConnection.Connected;
 end;
 
 procedure TDBMod.stopDB;

@@ -15,7 +15,7 @@
         <Projects Include="Launcher\Launcher.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="d:\Users\steph\Documents\Embarcadero\Studio\Projekte\guard.dproj">
+        <Projects Include="Guard\guard.dproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -63,13 +63,13 @@
         <MSBuild Projects="Launcher\Launcher.dproj" Targets="Make"/>
     </Target>
     <Target Name="guard">
-        <MSBuild Projects="d:\Users\steph\Documents\Embarcadero\Studio\Projekte\guard.dproj"/>
+        <MSBuild Projects="Guard\guard.dproj"/>
     </Target>
     <Target Name="guard:Clean">
-        <MSBuild Projects="d:\Users\steph\Documents\Embarcadero\Studio\Projekte\guard.dproj" Targets="Clean"/>
+        <MSBuild Projects="Guard\guard.dproj" Targets="Clean"/>
     </Target>
     <Target Name="guard:Make">
-        <MSBuild Projects="d:\Users\steph\Documents\Embarcadero\Studio\Projekte\guard.dproj" Targets="Make"/>
+        <MSBuild Projects="Guard\guard.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
         <CallTarget Targets="Setup;ArchivServer;Archivar;Launcher;guard"/>

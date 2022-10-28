@@ -1,15 +1,16 @@
 object HttpMod: THttpMod
   OldCreateOrder = False
   OnCreate = DataModuleCreate
-  Height = 268
-  Width = 215
+  OnDestroy = DataModuleDestroy
+  Height = 399
+  Width = 514
   object IdHTTPServer1: TIdHTTPServer
     Bindings = <>
     IOHandler = IdServerIOHandlerStack1
     Scheduler = IdSchedulerOfThreadDefault1
     OnCommandGet = IdHTTPServer1CommandGet
-    Left = 80
-    Top = 48
+    Left = 72
+    Top = 32
   end
   object IdSchedulerOfThreadDefault1: TIdSchedulerOfThreadDefault
     MaxThreads = 0
@@ -61,6 +62,7 @@ object HttpMod: THttpMod
       ''
       '</body>'
       '</html>')
+    OnHTMLTag = PageProducer1HTMLTag
     Left = 152
     Top = 24
   end

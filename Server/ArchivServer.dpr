@@ -44,18 +44,17 @@ uses
   ds_sitzung in 'ds_sitzung.pas' {dsSitzung: TDSServerModule},
   m_hell in 'hell\m_hell.pas' {HellMod: TDataModule},
   u_meeting in 'hell\u_meeting.pas',
-  m_fileServer in 'fileServer\m_fileServer.pas' {FileServer: TDataModule},
   ds_updater in 'ds_updater.pas' {dsUpdater: TDSServerModule},
   u_vote in 'hell\u_vote.pas',
   ds_stamm in 'ds_stamm.pas' {StammMod: TDSServerModule},
   u_broadcastMsg in 'u_broadcastMsg.pas',
   ds_pki in 'ds_pki.pas' {dsPKI: TDSServerModule},
   ds_dairy in 'ds_dairy.pas' {dsDairy: TDSServerModule},
-  u_ini in 'u_ini.pas',
   u_folder in 'u_folder.pas',
   ds_storage in 'ds_storage.pas' {dsStorage: TDSServerModule},
   u_serverTimer in 'u_serverTimer.pas',
-  m_http in 'm_http.pas' {HttpMod: TDataModule};
+  m_http in 'm_http.pas' {HttpMod: TDataModule},
+  u_ini in 'u_ini.pas';
 
 var
   MyDummyBoolean  : Boolean;
