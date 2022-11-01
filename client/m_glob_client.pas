@@ -429,6 +429,8 @@ var
 
     findPort;
 
+    CodeSite.SendFmtMsg('%s://%s:%s', [SQLConnection1.Params.Values['CommunicationProtocol'], host, port]);
+
     SQLConnection1.Params.Values['HostName']  := host;
     SQLConnection1.Params.Values['Port']      := port;
   end;
