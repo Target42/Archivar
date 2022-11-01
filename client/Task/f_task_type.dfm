@@ -82,8 +82,6 @@ object TaskTypeForm: TTaskTypeForm
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TStammMod'
-    Connected = True
-    SQLConnection = GM.SQLConnection1
     Left = 48
     Top = 16
   end

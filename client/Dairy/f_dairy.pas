@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Datasnap.DBClient,
   Datasnap.DSConnect, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.DBGrids,
-  Vcl.ExtCtrls, Vcl.Grids, u_ForceClose;
+  Vcl.ExtCtrls, u_ForceClose, Vcl.Grids;
 
 type
   TDairyForm = class(TForm, IForceClose)

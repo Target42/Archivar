@@ -73,7 +73,6 @@ object MeetingProtoForm: TMeetingProtoForm
         Height = 200
         OnChange = GremiumFrame1TVChange
         ExplicitLeft = 0
-        ExplicitTop = 0
         ExplicitWidth = 631
         ExplicitHeight = 200
       end
@@ -126,8 +125,6 @@ object MeetingProtoForm: TMeetingProtoForm
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsMeeing'
-    Connected = True
-    SQLConnection = GM.SQLConnection1
     Left = 56
     Top = 32
   end

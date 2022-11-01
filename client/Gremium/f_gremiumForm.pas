@@ -43,7 +43,7 @@ implementation
 
 uses
   u_stub, System.JSON, u_json, f_gremium_edit, f_gremium_MA_form,
-  f_gremium_task;
+  f_gremium_task, u_dataset_to_list;
 
 
 {$R *.dfm}
@@ -118,7 +118,7 @@ begin
   if GRTab.IsEmpty then exit;
 
   Application.CreateForm(TGremiumTaskForm, GremiumTaskForm);
-  GremiumTaskForm.ID := GRTab.FieldByName('GR_ID').AsInteger;
+  GremiumTaskForm.RecordSet := DatasetToList( GRTab );;
   GremiumTaskForm.ShowModal;
   GremiumTaskForm.free;
 end;

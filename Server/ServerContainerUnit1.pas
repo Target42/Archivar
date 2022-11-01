@@ -6,15 +6,16 @@ uses
   Grijjy.CloudLogging, System.SysUtils, System.Classes,
   Datasnap.DSTCPServerTransport,
   Datasnap.DSServer, Datasnap.DSCommonServer,
-  IPPeerServer, IPPeerAPI, Datasnap.DSAuth, DbxSocketChannelNative,
+  IPPeerServer, Datasnap.DSAuth, DbxSocketChannelNative,
   DbxCompressionFilter, Vcl.SvcMgr, m_glob_server, Data.DB,
   m_lockMod, Datasnap.DSSession, i_user,
-  System.JSON, IdBaseComponent, IdComponent, IdCustomTCPServer, IdTCPServer,
+  System.JSON,
   System.SyncObjs, System.Generics.Collections, FireDAC.Stan.Intf,
   FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
-  FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
+  FireDAC.Stan.Async, FireDAC.DApt,
   FireDAC.Comp.DataSet, FireDAC.Comp.Client, MidasLib, u_serverTimer,
-  Datasnap.DSHTTP;
+  Datasnap.DSHTTP, Data.DBXCommon, Data.DBCommonTypes, FireDAC.Phys.Intf,
+  FireDAC.DApt.Intf;
 
 type
   TServerContainer1 = class(TService)
@@ -110,6 +111,7 @@ type
       var PersistentClass: TPersistentClass);
     procedure DSCertFiles1GetPEMFilePasskey(ASender: TObject;
       var APasskey: AnsiString);
+    function DSServer1Trace(TraceInfo: TDBXTraceInfo): CBRType;
   private
     const
       MaxUserNameLength = 25;
@@ -118,6 +120,7 @@ type
     m_secret : string;
     m_Lock : TCriticalSection;
     m_sessions : TThreadList<String>;
+    m_log : string;
 
     procedure removeUser( Session: TDSSession );
     procedure createTimer;
@@ -171,7 +174,9 @@ procedure TServerContainer1.DSServer1Connect(
   DSConnectEventObject: TDSConnectEventObject);
 var
   Session : TDSSession;
+  f : TextFile;
 begin
+
   GrijjyLog.EnterMethod(self, 'DSServer1Connect');
   Session := TDSSessionManager.GetThreadSession;
 
@@ -179,6 +184,20 @@ begin
   GrijjyLog.Send('session id',                          session.id);
   GrijjyLog.Send('session name',                        session.UserName);
   GrijjyLog.Send('remote host',                         DSConnectEventObject.ChannelInfo.ClientInfo.IpAddress);
+
+  AssignFile(f, m_log);
+  Append(f);
+  try
+    WriteLN(f, Format('connect: IP:%s Port:%s Protocol:%s App:%s',
+      [
+       DSConnectEventObject.ChannelInfo.ClientInfo.IpAddress,
+       DSConnectEventObject.ChannelInfo.ClientInfo.ClientPort,
+       DSConnectEventObject.ChannelInfo.ClientInfo.Protocol,
+       DSConnectEventObject.ChannelInfo.ClientInfo.AppName
+      ]));
+  finally
+    CloseFile(f);
+  end;
 
   GrijjyLog.ExitMethod(self, 'DSServer1Connect');
 end;
@@ -212,7 +231,16 @@ begin
   GrijjyLog.Send('session name',                        session.UserName);
   GrijjyLog.Send('Error',                               DSErrorEventObject.Error.ToString, TgoLogLevel.Error);
 
+  if IBTransaction1.Active then
+     IBTransaction1.Rollback;
+
   GrijjyLog.ExitMethod(self, 'DSServer1Error');
+
+end;
+
+function TServerContainer1.DSServer1Trace(TraceInfo: TDBXTraceInfo): CBRType;
+begin
+  Result := cbrCONTINUE;
 end;
 
 procedure TServerContainer1.dsTextBlockGetClass(
@@ -267,9 +295,11 @@ procedure TServerContainer1.DSTCPServerTransport1Connect(
   Event: TDSTCPConnectEventObject);
 begin
   GrijjyLog.EnterMethod(self, 'DSTCPServerTransport1Connect');
-  Event.Channel.EnableKeepAlive(1000);
 
+  Event.Channel.EnableKeepAlive(1000);
   GrijjyLog.Send('session', Event.Channel.SessionId);
+  GrijjyLog.Send('connection', Event.Connection );
+
   GrijjyLog.ExitMethod(self, 'DSTCPServerTransport1Connect');
 end;
 
@@ -277,6 +307,7 @@ procedure TServerContainer1.DSTCPServerTransport1Disconnect(
   Event: TDSTCPDisconnectEventObject);
 begin
   GrijjyLog.EnterMethod(self, 'DSTCPServerTransport1Disconnect');
+  GrijjyLog.Send('connection', Event.Connection );
   GrijjyLog.ExitMethod(self, 'DSTCPServerTransport1Disconnect');
 end;
 
@@ -351,11 +382,9 @@ begin
 end;
 
 procedure TServerContainer1.execShutdown(sender: TObject);
-{$ifdef DEBUG}
 var
   obj  : TJSONObject;
   hnd  : HWND;
-{$endif}
 begin
   // Send close Edits
   obj  := TJSONObject.Create;
@@ -524,9 +553,9 @@ var
   end;
 
 begin
-  m_Lock.Acquire;
   try
     GrijjyLog.EnterMethod(self, 'DSAuthenticationManager1UserAuthenticate');
+    m_Lock.Acquire;
     valid   := false;
     userName:= LowerCase(User);
 
@@ -624,11 +653,10 @@ begin
     end;
     GrijjyLog.Send('user authenticate', valid);
     GrijjyLog.Send('user rols', UserRoles);
-
-    GrijjyLog.ExitMethod(self, 'DSAuthenticationManager1UserAuthenticate');
   finally
     m_Lock.Release;
   end;
+  GrijjyLog.ExitMethod(self, 'DSAuthenticationManager1UserAuthenticate');
 
 end;
 
@@ -675,7 +703,7 @@ end;
 procedure TServerContainer1.DSCertFiles1GetPEMFilePasskey(ASender: TObject;
   var APasskey: AnsiString);
 begin
-  APasskey := AnsiString(IniOptions.sslpassword);
+  APasskey := AnsiString(IniOptions.sslpassword)+'.';
 end;
 
 procedure TServerContainer1.dsChapterGetClass(DSServerClass: TDSServerClass;
@@ -751,6 +779,8 @@ begin
 end;
 
 procedure TServerContainer1.ServiceCreate(Sender: TObject);
+var
+  f : TExtFile;
 begin
   GrijjyLog.Service := 'Archivar';
   GrijjyLog.SetLogLevel(TgoLogLevel.Info);
@@ -766,13 +796,28 @@ begin
   m_secret    := IniOptions.SecretName;
   m_timer     := NIL;
 
+  m_log       := ExpandFileName(IniOptions.pathlog);
+  ForceDirectories(m_log);
+
+  m_log       := TPath.Combine(m_log, 'ds.log');
+  AssignFile(f, m_log);
+  if not FileExists(m_log) then
+    Rewrite(f)
+  else
+    Append(f);
+  try
+    WriteLN(f, Format('started at : %s', [DateTimeToStr(now)]));
+  finally
+    CloseFile(f);
+  end;
+
   DSTCPServerTransport1.Port  := IniOptions.DStcpport;
   DSHTTPService1.HttpPort     := IniOptions.DShttpport;
   DSHTTPService2.HttpPort     := IniOptions.DShttpsport;
 
-  DSCertFiles1.CertFile       := IniOptions.sslcrt;
-  DSCertFiles1.KeyFile        := IniOptions.sslkey;
-  DSCertFiles1.RootCertFile   := IniOptions.sslrootcrt;
+  DSCertFiles1.CertFile       := ExpandFileName(IniOptions.sslcrt);
+  DSCertFiles1.KeyFile        := ExpandFileName(IniOptions.sslkey);
+  DSCertFiles1.RootCertFile   := ExpandFileName(IniOptions.sslrootcrt);
 
 
   TDSSessionManager.Instance.AddSessionEvent(
@@ -783,7 +828,8 @@ begin
       list  : TList<String>;
       inx   : integer;
     begin
-
+      grijjyLog.EnterMethod(self, 'AddSessionEvent');
+      grijjyLog.Send('Session', Session);
       list := m_sessions.LockList;
       try
         case EventType of
@@ -807,6 +853,7 @@ begin
       finally
         m_sessions.UnlockList;
       end;
+      grijjyLog.ExitMethod(self, 'AddSessionEvent');
     end);
 
 end;

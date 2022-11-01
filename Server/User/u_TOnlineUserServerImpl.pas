@@ -40,7 +40,7 @@ type
 implementation
 
 uses
-  u_TServerUserImpl, System.JSON, u_json, m_glob_server, ServerContainerUnit1,
+  u_TServerUserImpl, System.JSON, u_json, ServerContainerUnit1,
   System.SysUtils, u_Konst;
 
 { TOnlineUserServerImpl }

@@ -5,9 +5,9 @@ interface
 uses
   System.SysUtils, System.Classes, FireDAC.Phys,
   FireDAC.Phys.FB, FireDAC.Phys.FBDef, FireDAC.Stan.Intf, FireDAC.Stan.Option,
-  FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def,
+  FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Stan.Def,
   FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.VCLUI.Wait, FireDAC.Comp.Client,
-  Data.DB;
+  Data.DB, FireDAC.Phys.Intf;
 
 type
   TDBMod = class(TDataModule)
@@ -31,7 +31,7 @@ var
 implementation
 
 uses
-  Grijjy.CloudLogging, m_glob_server, u_ini, FireDAC.Phys.IBWrapper;
+  Grijjy.CloudLogging, u_ini, FireDAC.Phys.IBWrapper;
 
 {%CLASSGROUP 'System.Classes.TPersistent'}
 
@@ -69,11 +69,12 @@ begin
     Password  := IniOptions.DBpwd;
     SQLDialect:= 3;
     PageSize  := ps4096;
-//    Pooled    := true;
+    Pooled    := true;
   end;
+  FDManager.AddConnectionDef('FirebirdPooled', 'FB', ArchivarConnection.Params );
 
   try
-
+    ArchivarConnection.ConnectionDefName := 'FirebirdPooled';
     ArchivarConnection.Open;
     Result := ArchivarConnection.Connected;
     GrijjyLog.Send('database connected');

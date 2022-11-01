@@ -12,6 +12,10 @@ const
   csIniDNLSection = 'DNL';
   csInisecretSection = 'secret';
   csInisslSection = 'ssl';
+  csIniPathSection = 'path';
+
+  {Section: path }
+  csIniPathLog = 'log';
 
   {Section: DB}
   csIniDBhost = 'host';
@@ -75,6 +79,9 @@ type
     Fsslkey: string;
     Fsslrootcrt: string;
     Fsslpassword: string;
+
+    {Section: path }
+    FPathIni : string;
   public
     procedure LoadSettings(Ini: TMemIniFile);
     procedure SaveSettings(Ini: TMemIniFile);
@@ -111,6 +118,9 @@ type
     property sslkey: string read Fsslkey write Fsslkey;
     property sslrootcrt: string read Fsslrootcrt write Fsslrootcrt;
     property sslpassword: string read Fsslpassword write Fsslpassword;
+
+    {Section:path}
+    property pathlog : string read FPathIni write FPathIni;
   end;
 
 var
@@ -147,10 +157,14 @@ begin
     Fsecretname := Ini.ReadString(csInisecretSection, csInisecretname, 'A9B5DD6E818D19B6704F64ED2B335D3E');
 
     {Section: ssl}
-    Fsslcrt := Ini.ReadString(csInisslSection, csInisslcrt, 'D:\git\ber.git\Bin\Server\cert\BEROffice.crt');
-    Fsslkey := Ini.ReadString(csInisslSection, csInisslkey, 'D:\git\ber.git\Bin\Server\cert\keyl.pem');
-    Fsslrootcrt := Ini.ReadString(csInisslSection, csInisslrootcrt, 'D:\git\ber.git\Bin\Server\cert\BEROffice.pem');
-    Fsslpassword := Ini.ReadString(csInisslSection, csInisslpassword, 'snoopy');
+    Fsslcrt := Ini.ReadString(csInisslSection, csInisslcrt, '.\cert\BEROffice.crt');
+    Fsslkey := Ini.ReadString(csInisslSection, csInisslkey, '.\cert\keyl.pem');
+    Fsslrootcrt := Ini.ReadString(csInisslSection, csInisslrootcrt, '.\BEROffice.pem');
+    Fsslpassword := Ini.ReadString(csInisslSection, csInisslpassword, '');
+
+    {section: path}
+    FPathIni := ini.ReadString(csIniPathSection, csIniPathSection, '.\log');
+
   end;
 end;
 
@@ -187,6 +201,9 @@ begin
     Ini.WriteString(csInisslSection, csInisslkey, Fsslkey);
     Ini.WriteString(csInisslSection, csInisslrootcrt, Fsslrootcrt);
     Ini.WriteString(csInisslSection, csInisslpassword, Fsslpassword);
+
+    {Section: path}
+    ini.WriteString(csIniPathSection, csIniPathSection, '.\log');
   end;
 end;
 

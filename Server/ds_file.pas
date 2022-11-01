@@ -7,9 +7,9 @@ uses
   Datasnap.DSAuth, Datasnap.DSProviderDataModuleAdapter, Datasnap.Provider,
   Data.DB,
   System.JSON, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
-  FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
+  FireDAC.Stan.Error, FireDAC.DatS,
   FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.Client, FireDAC.Comp.DataSet,
-  System.Generics.Collections;
+  System.Generics.Collections, FireDAC.Phys.Intf, FireDAC.DApt.Intf;
 
 type
   [TRoleAuth('user,admin', 'download')]
@@ -67,7 +67,7 @@ type
 implementation
 
 uses
-  m_db, Variants, u_json, m_glob_server, Datasnap.DBClient, u_Konst,
+  Variants, u_json, m_glob_server, u_Konst,
   ServerContainerUnit1, u_folder, Datasnap.DSSession, Grijjy.CloudLogging;
 
 {%CLASSGROUP 'System.Classes.TPersistent'}

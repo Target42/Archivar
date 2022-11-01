@@ -39,7 +39,7 @@ implementation
 {$R *.dfm}
 
 uses
-  IOUtils, m_db, IniFiles, u_ini, IdHashMessageDigest, Datasnap.DSSession;
+  IOUtils, u_ini, IdHashMessageDigest, Datasnap.DSSession;
 
 procedure DebugMsg( text : string );
 begin

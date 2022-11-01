@@ -101,13 +101,10 @@ object DairyForm: TDairyForm
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsDairy'
-    Connected = True
-    SQLConnection = GM.SQLConnection1
     Left = 280
     Top = 40
   end
   object DITab: TClientDataSet
-    Active = True
     Aggregates = <>
     Params = <>
     ProviderName = 'DISrc'

@@ -7,7 +7,7 @@ unit u_stub;
 
 interface
 
-uses System.JSON, Data.DBXCommon, Data.DBXClient, Data.DBXDataSnap, Data.DBXJSON, Datasnap.DSProxy, System.Classes, System.SysUtils, Data.DB, Data.SqlExpr, Data.DBXDBReaders, Data.DBXCDSReaders, Data.DBXJSONReflect;
+uses System.JSON, Data.DBXCommon, Data.DBXClient, Data.DBXDataSnap, Datasnap.DSProxy, System.Classes, System.SysUtils, Data.DB, Data.DBXDBReaders, Data.DBXJSONReflect;
 
 type
   TAdminModClient = class(TDSAdminClient)

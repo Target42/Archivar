@@ -3,13 +3,14 @@ unit ds_misc;
 interface
 
 uses
-  System.SysUtils, System.Classes, Datasnap.DSServer, 
+  System.SysUtils, System.Classes, Datasnap.DSServer,
   Datasnap.DSAuth, Datasnap.DSProviderDataModuleAdapter, Datasnap.Provider,
   Data.DB, System.JSON,
-  Datasnap.DSSession, u_lockInfo, u_json, FireDAC.Stan.Intf,
+  Datasnap.DSSession, u_json, FireDAC.Stan.Intf,
   FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
-  FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
-  FireDAC.Comp.Client, FireDAC.Comp.DataSet;
+  FireDAC.Stan.Async, FireDAC.DApt,
+  FireDAC.Comp.Client, FireDAC.Comp.DataSet, FireDAC.Phys.Intf,
+  FireDAC.DApt.Intf;
 
 type
   [TRoleAuth('user,admin', 'download')]
@@ -60,7 +61,7 @@ type
 implementation
 
 uses
-  Grijjy.CloudLogging, m_db, m_glob_server, m_lockMod, System.Generics.Collections,
+  Grijjy.CloudLogging, m_lockMod,
   u_berTypes, i_user;
 {%CLASSGROUP 'System.Classes.TPersistent'}
 

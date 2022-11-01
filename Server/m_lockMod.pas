@@ -35,7 +35,7 @@ var
 implementation
 
 uses
-  Grijjy.CloudLogging, u_json, Datasnap.DSSession, m_glob_server;
+  Grijjy.CloudLogging, u_json, Datasnap.DSSession;
 
 {%CLASSGROUP 'System.Classes.TPersistent'}
 

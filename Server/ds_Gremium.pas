@@ -4,11 +4,12 @@ interface
 
 uses
   System.SysUtils, System.Classes, Datasnap.DSServer,
-  Datasnap.DSAuth, Datasnap.DSProviderDataModuleAdapter, System.JSON, m_glob_server, m_db,
+  Datasnap.DSAuth, Datasnap.DSProviderDataModuleAdapter, System.JSON, m_glob_server,
   Datasnap.Provider, Data.DB,
   FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
-  FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
-  FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.Client, FireDAC.Comp.DataSet;
+  FireDAC.Stan.Error, FireDAC.DatS,
+  FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.Client, FireDAC.Comp.DataSet,
+  FireDAC.Phys.Intf, FireDAC.DApt.Intf;
 
 type
   [TRoleAuth('user,admin', 'download')]

@@ -12,6 +12,7 @@ object ServerContainer1: TServerContainer1
     OnDisconnect = DSServer1Disconnect
     OnError = DSServer1Error
     AutoStart = False
+    OnTrace = DSServer1Trace
     Left = 64
     Top = 11
   end
@@ -242,7 +243,7 @@ object ServerContainer1: TServerContainer1
     HttpPort = 8088
     Filters = <>
     AuthenticationManager = DSAuthenticationManager1
-    Left = 48
+    Left = 56
     Top = 200
   end
   object DSHTTPService2: TDSHTTPService

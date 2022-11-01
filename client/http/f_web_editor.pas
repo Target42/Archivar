@@ -7,8 +7,8 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, SynHighlighterXML, SynHighlighterDWS,
   SynHighlighterJSON, SynHighlighterHtml, SynEditHighlighter, SynHighlighterCSS,
   SynEdit, fr_base, Vcl.ExtCtrls, SynHighlighterST, SynHighlighterPython,
-  SynEditCodeFolding, SynHighlighterJScript, SynHighlighterIni,
-  SynHighlighterGeneral, SynHighlighterPas;
+  SynHighlighterJScript, SynHighlighterIni,
+  SynHighlighterGeneral, SynHighlighterPas, SynEditCodeFolding;
 
 type
   TWebEditorForm = class(TForm)
@@ -50,8 +50,7 @@ implementation
 
 {$R *.dfm}
 
-uses
-  StrUtils;
+
 { TWebEditorForm }
 
 procedure TWebEditorForm.BaseFrame1AbortBtnClick(Sender: TObject);

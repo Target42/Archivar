@@ -20,6 +20,7 @@ object DBMod: TDBMod
     Top = 80
   end
   object FDManager1: TFDManager
+    ConnectionDefFileAutoLoad = False
     ConnectionDefFileName = 'D:\git\ber.git\Bin\Server\FDConnectionDefs.ini'
     FormatOptions.AssignedValues = [fvMapRules]
     FormatOptions.OwnMapRules = True

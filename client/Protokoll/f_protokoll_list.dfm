@@ -72,7 +72,6 @@ object ProtocollListForm: TProtocollListForm
         Height = 168
         OnChange = GremiumFrame1TVChange
         ExplicitLeft = 0
-        ExplicitTop = 0
         ExplicitWidth = 631
         ExplicitHeight = 168
       end

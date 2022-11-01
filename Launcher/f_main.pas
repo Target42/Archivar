@@ -6,10 +6,9 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Data.DBXDataSnap,
   Data.DBXCommon, IPPeerClient, Vcl.StdCtrls, Vcl.Buttons, Data.DB, Data.SqlExpr,
-  u_stub, System.JSON, u_ini, JvComponentBase, JvCreateProcess, JvBaseDlg,
-  JvBrowseFolder, Vcl.ExtCtrls, pngimage, MidasLib, Vcl.Samples.Spin,
-  Data.DbxHTTPLayer, IdBaseComponent, IdComponent, IdTCPConnection, IdTCPClient,
-  IdHTTP;
+  u_stub, System.JSON, u_ini, JvCreateProcess,
+  JvBrowseFolder, Vcl.ExtCtrls, pngimage, MidasLib,
+  Data.DbxHTTPLayer, JvBaseDlg, JvComponentBase;
 
 type
   TMainForm = class(TForm)

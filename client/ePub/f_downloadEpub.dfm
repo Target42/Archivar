@@ -99,8 +99,6 @@ object DownloadEpubform: TDownloadEpubform
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsEpub'
-    Connected = True
-    SQLConnection = GM.SQLConnection1
     Left = 64
     Top = 16
   end

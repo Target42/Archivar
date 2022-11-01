@@ -4,11 +4,11 @@ interface
 
 uses
   System.SysUtils, System.Classes, Datasnap.DSServer,
-  Datasnap.DSAuth, Datasnap.DSProviderDataModuleAdapter, System.JSON,
+  Datasnap.DSProviderDataModuleAdapter, System.JSON,
   FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
-  FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
+  FireDAC.Stan.Error, FireDAC.DatS,
   FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.Client, Data.DB,
-  FireDAC.Comp.DataSet;
+  FireDAC.Comp.DataSet, FireDAC.Phys.Intf, FireDAC.DApt.Intf;
 
 type
   TdsPKI = class(TDSServerModule)
@@ -33,7 +33,7 @@ type
 implementation
 
 uses
-  m_db, Datasnap.DSSession, u_json, m_glob_server, System.Variants;
+  Datasnap.DSSession, u_json, m_glob_server, System.Variants;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 

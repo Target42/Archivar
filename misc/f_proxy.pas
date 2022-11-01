@@ -4,9 +4,10 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_base, IdBaseComponent, IdComponent,
-  IdTCPConnection, IdTCPClient, IdHTTP, Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls,
-  Vcl.Samples.Spin, Data.SqlExpr;
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_base,
+  IdHTTP, Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls,
+  Vcl.Samples.Spin, Data.SqlExpr, IdBaseComponent, IdComponent, IdTCPConnection,
+  IdTCPClient;
 
 type
   TProxyForm = class(TForm)

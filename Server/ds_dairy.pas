@@ -3,12 +3,12 @@ unit ds_dairy;
 interface
 
 uses
-  System.SysUtils, System.Classes, Datasnap.DSServer, 
-  Datasnap.DSAuth, Datasnap.DSProviderDataModuleAdapter, FireDAC.Stan.Intf,
+  System.SysUtils, System.Classes, Datasnap.DSServer,
+  Datasnap.DSProviderDataModuleAdapter, FireDAC.Stan.Intf,
   FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
-  FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Stan.Async, FireDAC.DApt,
+  FireDAC.Stan.Async, FireDAC.DApt,
   Data.DB, FireDAC.Comp.DataSet, FireDAC.Comp.Client, Datasnap.DSSession,
-  Datasnap.Provider;
+  Datasnap.Provider, FireDAC.Phys.Intf, FireDAC.DApt.Intf;
 
 type
   TdsDairy = class(TDSServerModule)
@@ -25,8 +25,7 @@ type
 
 implementation
 
-uses
-  m_db;
+
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 

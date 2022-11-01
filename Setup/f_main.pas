@@ -8,17 +8,19 @@ uses
   JvExControls, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.Buttons,
   xsd_StoreLimits,
   Inifiles, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Error,
-  FireDAC.UI.Intf, FireDAC.Phys.Intf, FireDAC.Stan.Def, FireDAC.Stan.Pool,
+  FireDAC.UI.Intf, FireDAC.Stan.Def, FireDAC.Stan.Pool,
   FireDAC.Stan.Async, FireDAC.Phys, FireDAC.Phys.FB, FireDAC.Phys.FBDef,
-  FireDAC.VCLUI.Wait, FireDAC.Stan.Param, FireDAC.DatS, FireDAC.DApt.Intf,
+  FireDAC.VCLUI.Wait, FireDAC.Stan.Param, FireDAC.DatS,
   FireDAC.DApt, FireDAC.Comp.ScriptCommands, FireDAC.Stan.Util,
   FireDAC.Comp.Script, FireDAC.Comp.Client, FireDAC.Comp.DataSet,
   FireDAC.Comp.BatchMove, FireDAC.Comp.BatchMove.DataSet,
-  FireDAC.Comp.BatchMove.Text, Vcl.Grids, Vcl.DBGrids, Vcl.DBCtrls,
-  IdBaseComponent, IdComponent, IdCustomTCPServer, IdTCPServer, IdContext,
-  Vcl.Imaging.pngimage, IdIOHandler, IdIOHandlerSocket, IdIOHandlerStack, IdSSL,
-  IdSSLOpenSSL, IdTCPConnection, IdTCPClient, IdHTTP, IdServerIOHandler,
-  IdCustomHTTPServer, IdHTTPServer;
+  FireDAC.Comp.BatchMove.Text, Vcl.DBGrids, Vcl.DBCtrls,
+  IdBaseComponent, IdCustomTCPServer, IdTCPServer, IdContext,
+  Vcl.Imaging.pngimage, IdIOHandler, IdIOHandlerStack, IdSSL,
+  IdSSLOpenSSL, IdHTTP,
+  IdCustomHTTPServer, IdHTTPServer, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
+  IdIOHandlerSocket, IdTCPConnection, IdTCPClient, IdServerIOHandler,
+  IdComponent, Vcl.Grids;
 
 type
   TMainSetupForm = class(TForm)

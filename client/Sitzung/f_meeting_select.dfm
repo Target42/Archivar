@@ -72,7 +72,6 @@ object SelectMeetingForm: TSelectMeetingForm
         Height = 232
         OnChange = GremiumFrame1TVChange
         ExplicitLeft = 0
-        ExplicitTop = 0
         ExplicitWidth = 495
         ExplicitHeight = 232
       end

@@ -86,8 +86,6 @@ object SelectTemplateForm: TSelectTemplateForm
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsTemplate'
-    Connected = True
-    SQLConnection = GM.SQLConnection1
     Left = 56
     Top = 24
   end

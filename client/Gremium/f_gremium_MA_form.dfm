@@ -32,18 +32,18 @@ object GremiumMAForm: TGremiumMAForm
     Align = alBottom
     AutoSize = True
     TabOrder = 0
-    ExplicitTop = 452
-    ExplicitWidth = 919
+    ExplicitTop = 515
+    ExplicitWidth = 968
     inherited StatusBar1: TStatusBar
       Width = 968
-      ExplicitWidth = 973
+      ExplicitWidth = 968
     end
     inherited Panel1: TPanel
       Width = 968
-      ExplicitWidth = 919
+      ExplicitWidth = 968
       inherited OKBtn: TBitBtn
         Left = 880
-        ExplicitLeft = 831
+        ExplicitLeft = 880
       end
     end
   end
@@ -56,7 +56,6 @@ object GremiumMAForm: TGremiumMAForm
     BevelOuter = bvNone
     Caption = 'Panel1'
     TabOrder = 1
-    ExplicitWidth = 919
   end
   object Panel3: TPanel
     Left = 425
@@ -68,8 +67,6 @@ object GremiumMAForm: TGremiumMAForm
     Caption = 'Panel3'
     ShowCaption = False
     TabOrder = 2
-    ExplicitLeft = 542
-    ExplicitTop = 35
     object SpeedButton1: TSpeedButton
       Left = 6
       Top = 48
@@ -283,10 +280,6 @@ object GremiumMAForm: TGremiumMAForm
     Align = alClient
     Caption = 'Mitglieder'
     TabOrder = 3
-    ExplicitLeft = 464
-    ExplicitTop = 62
-    ExplicitWidth = 473
-    ExplicitHeight = 387
     object Panel4: TDBGrid
       AlignWithMargins = True
       Left = 5

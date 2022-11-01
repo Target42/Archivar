@@ -80,6 +80,8 @@ object MainSetupForm: TMainSetupForm
       Header.Subtitle.Font.Style = []
       Caption = 'WelcomePage'
       WaterMark.Visible = False
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Image1: TImage
         Left = 0
         Top = 70
@@ -455,6 +457,8 @@ object MainSetupForm: TMainSetupForm
       Header.Subtitle.Font.Style = []
       Caption = 'SearchGDS'
       OnEnterPage = SearchGDSEnterPage
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Panel3: TPanel
         Left = 0
         Top = 489
@@ -531,6 +535,8 @@ object MainSetupForm: TMainSetupForm
       Header.Subtitle.Font.Style = []
       OnEnterPage = ServerInfoEnterPage
       OnExitPage = ServerInfoExitPage
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GroupBox1: TGroupBox
         Left = 0
         Top = 153
@@ -714,6 +720,8 @@ object MainSetupForm: TMainSetupForm
       Header.Subtitle.Font.Style = []
       OnEnterPage = SicherheitEnterPage
       OnExitPage = SicherheitExitPage
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GroupBox4: TGroupBox
         Left = 0
         Top = 70
@@ -825,6 +833,8 @@ object MainSetupForm: TMainSetupForm
       Header.Subtitle.Font.Style = []
       Caption = 'InitData'
       OnEnterPage = InitDataEnterPage
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Panel1: TPanel
         Left = 0
         Top = 489
@@ -896,6 +906,8 @@ object MainSetupForm: TMainSetupForm
       Header.Subtitle.Font.Style = []
       Caption = 'Benutzerimport'
       OnEnterPage = ImportEnterPage
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Splitter1: TSplitter
         Left = 0
         Top = 161

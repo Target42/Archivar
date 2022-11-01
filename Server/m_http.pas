@@ -3,11 +3,13 @@ unit m_http;
 interface
 
 uses
-  System.SysUtils, System.Classes, IdBaseComponent, IdComponent,
+  System.SysUtils, System.Classes,
   IdCustomTCPServer, IdCustomHTTPServer, IdHTTPServer, Web.HTTPApp, IdContext,
-  Web.HTTPProd, IdServerIOHandler, IdServerIOHandlerSocket,
-  IdServerIOHandlerStack, IdScheduler, IdSchedulerOfThread,
-  IdSchedulerOfThreadDefault, IdSSL, IdSSLOpenSSL;
+  Web.HTTPProd,
+  IdServerIOHandlerStack,
+  IdSchedulerOfThreadDefault, IdSSL, IdSSLOpenSSL, IdServerIOHandler,
+  IdServerIOHandlerSocket, IdScheduler, IdSchedulerOfThread, IdBaseComponent,
+  IdComponent;
 
 type
   THttpMod = class(TDataModule)
@@ -87,15 +89,22 @@ procedure THttpMod.DataModuleCreate(Sender: TObject);
 var
   fname : string;
 begin
+  GrijjyLog.EnterMethod(self, 'DataModuleCreate');
   m_config  := TStringList.Create;
+
   fname := ExpandFileName(TPath.Combine( IniOptions.DNLwwwroot, 'index.html'));
   PageProducer1.HTMLFile := fname;
+  GrijjyLog.Send('page producer:', fname);
 
   fname := ExpandFileName(TPath.Combine( IniOptions.DNLwwwroot, 'config.txt'));
   if FileExists(fname) then
     m_config.LoadFromFile(fname);
+  GrijjyLog.Send('config file:', fname);
 
   m_dataDir := ExpandFileName(IniOptions.DNLlauncher);
+  GrijjyLog.Send('data dir:', m_dataDir);
+
+  GrijjyLog.ExitMethod(self, 'DataModuleCreate');
 end;
 
 procedure THttpMod.DataModuleDestroy(Sender: TObject);
@@ -110,14 +119,27 @@ end;
 
 procedure THttpMod.IdHTTPServer1CommandGet(AContext: TIdContext;
   ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
+var
+  s :string;
 begin
+  GrijjyLog.EnterMethod(self, 'IdHTTPServer1CommandGet(');
+  GrijjyLog.send( 'get:', ARequestInfo.Document );
+  GrijjyLog.send( 'IP :', ARequestInfo.RemoteIP );
+
 
   if SameText(ARequestInfo.Document, '/launcher.zip') then
   begin
+    GrijjyLog.send( 'buildZip');
     buildZip( AResponseInfo );
   end else begin
-    AResponseInfo.ContentText := PageProducer1.Content;
+    GrijjyLog.send( 'page procducer');
+    s := PageProducer1.Content;
+    AResponseInfo.ContentText := s;
+    GrijjyLog.Send('content:', s );
+    AResponseInfo.ResponseNo := 200;
   end;
+  GrijjyLog.Send('response code:', AResponseInfo.ResponseNo);
+  GrijjyLog.ExitMethod(self, 'IdHTTPServer1CommandGet(');
 end;
 
 function THttpMod.isActive: boolean;
@@ -145,6 +167,8 @@ begin
     IdHTTPServer1.Active      := false;
     IdHTTPServer1.DefaultPort := port;
     IdHTTPServer1.Active      := true;
+
+    GrijjyLog.Send('active:', IdHTTPServer1.Active );
   except
     on e : exception do
       GrijjyLog.Send('fail start http-server:'+e.ToString, TgoLogLevel.Error );

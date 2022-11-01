@@ -3,13 +3,13 @@ unit ds_textblock;
 interface
 
 uses
-  System.SysUtils, System.Classes, Datasnap.DSServer, 
+  System.SysUtils, System.Classes, Datasnap.DSServer,
   Datasnap.DSAuth, Datasnap.DSProviderDataModuleAdapter, Datasnap.Provider,
-  Data.DB, IBX.IBCustomDataSet, IBX.IBTable, IBX.IBDatabase, IBX.IBQuery,
+  Data.DB, IBX.IBCustomDataSet, IBX.IBDatabase,
   FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
-  FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
-  FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.Client, FireDAC.Comp.DataSet,
-  System.JSON;
+  FireDAC.Stan.Error, FireDAC.DatS,
+  FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.Client,
+  System.JSON, FireDAC.Phys.Intf, FireDAC.DApt.Intf, FireDAC.Comp.DataSet;
 
 type
   [TRoleAuth('user,admin', 'download')]
@@ -30,7 +30,7 @@ type
 implementation
 
 uses
-  m_db, u_json;
+  u_json;
 
 {%CLASSGROUP 'System.Classes.TPersistent'}
 

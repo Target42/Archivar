@@ -12,7 +12,7 @@ uses
   Vcl.Buttons,
   i_chapter,
   Vcl.OleCtrls, SHDocVw, System.Generics.Collections,
-  u_teilnehmer, fr_protocol, JvExComCtrls, u_ForceClose;
+  u_teilnehmer, fr_protocol, u_ForceClose, JvExComCtrls;
 
 type
   TProtokollForm = class(TForm, IForceClose)

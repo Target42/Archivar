@@ -8,12 +8,14 @@ uses
   FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
   FireDAC.Stan.Error, FireDAC.DatS,
   FireDAC.Comp.DataSet, FireDAC.Comp.Client,
-  System.Generics.Collections, u_gremium, u_stub, System.JSON, JvComponentBase,
+  System.Generics.Collections, u_gremium, u_stub, System.JSON,
   JvComputerInfoEx, Datasnap.DSCommon,
-  Data.DBXJSON, pngimage, System.ImageList, Vcl.ImgList, Vcl.Controls,
-  u_berTypes, Datasnap.DSConnect, i_personen, Vcl.Dialogs, JvBaseDlg,
-  JvSHFileOperation, System.Notification, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
-  DbxCompressionFilter, u_ShowMessageTimeOut, Data.DbxHTTPLayer, Vcl.ExtCtrls;
+  Data.DBXJSON, pngimage, Vcl.ImgList, Vcl.Controls,
+  u_berTypes, Datasnap.DSConnect, i_personen, Vcl.Dialogs,
+  JvSHFileOperation, System.Notification,
+  DbxCompressionFilter, u_ShowMessageTimeOut, Data.DbxHTTPLayer, Vcl.ExtCtrls,
+  FireDAC.Phys.Intf, FireDAC.DApt.Intf, JvBaseDlg, System.ImageList,
+  JvComponentBase;
 
 const
   WMUSER            = WM_USER + 25;
@@ -525,7 +527,6 @@ begin
         case err of
           0 : begin
                 ShowMessageTimeout('Login', 'Benutzername oder Passwort ist falsch.');
-                //ShowMessage('Benutzername oder Passwort ist falsch.');
                 inc(m_LoginFailCount);
                 if m_LoginFailCount < 3 then
                   PostMessage(Application.MainFormHandle, msgRetryLogin, 0, 0 )

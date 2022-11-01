@@ -5,10 +5,11 @@ interface
 uses System.SysUtils, System.Classes,
     DataSnap.DSProviderDataModuleAdapter,
     Datasnap.DSServer, Datasnap.DSAuth, System.JSON, Datasnap.DSSession,
-  IBX.IBDatabase, Data.DB, IBX.IBCustomDataSet, IBX.IBQuery, Datasnap.Provider,
+  IBX.IBDatabase, Data.DB, IBX.IBCustomDataSet,
   FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
-  FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
-  FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet, FireDAC.Comp.Client;
+  FireDAC.Stan.Error, FireDAC.DatS,
+  FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.Client, FireDAC.Phys.Intf,
+  FireDAC.DApt.Intf, FireDAC.Comp.DataSet;
 
 type
   [TRoleAuth('user,admin')]
@@ -35,7 +36,7 @@ implementation
 
 
 uses
-  Grijjy.CloudLogging, System.StrUtils, u_json, m_db, m_glob_server,
+  Grijjy.CloudLogging, u_json,
   ServerContainerUnit1, u_Konst, DateUtils;
 
 { TAdminMod }

@@ -55,7 +55,7 @@ var
 implementation
 
 uses
-  Grijjy.CloudLogging, m_db, u_json, ServerContainerUnit1, m_glob_server, u_Konst,
+  Grijjy.CloudLogging, u_json, ServerContainerUnit1, u_Konst,
   u_vote;
 
 {%CLASSGROUP 'System.Classes.TPersistent'}

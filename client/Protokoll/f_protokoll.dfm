@@ -46,8 +46,6 @@ object ProtokollForm: TProtokollForm
     TabOrder = 1
     object TabSheet1: TTabSheet
       Caption = 'Allgemines'
-      ExplicitWidth = 296
-      ExplicitHeight = 105
       object Splitter1: TSplitter
         Left = 217
         Top = 0
@@ -92,7 +90,6 @@ object ProtokollForm: TProtokollForm
         Caption = 'Panel2'
         ShowCaption = False
         TabOrder = 1
-        ExplicitHeight = 105
         inline ProtocolFrame1: TProtocolFrame
           Left = 0
           Top = 0
@@ -101,17 +98,17 @@ object ProtokollForm: TProtokollForm
           Align = alClient
           TabOrder = 0
           ExplicitWidth = 217
-          ExplicitHeight = 105
+          ExplicitHeight = 372
           inherited GroupBox1: TGroupBox
             Width = 217
             Height = 306
             ExplicitWidth = 217
-            ExplicitHeight = 39
+            ExplicitHeight = 306
             inherited TV: TTreeView
               Width = 213
               Height = 289
               ExplicitWidth = 213
-              ExplicitHeight = 22
+              ExplicitHeight = 289
             end
           end
           inherited PageControl2: TPageControl
@@ -120,12 +117,15 @@ object ProtokollForm: TProtokollForm
             ExplicitTop = 306
             ExplicitWidth = 217
             inherited TabSheet4: TTabSheet
+              ExplicitLeft = 4
+              ExplicitTop = 24
               ExplicitWidth = 209
+              ExplicitHeight = 38
             end
           end
           inherited ImageList1: TImageList
             Bitmap = {
-              494C010106001001980110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+              494C0101060010019C0110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
               0000000000003600000028000000400000002000000001002000000000000020
               0000000000000000000000000000000000000000000000000000000000000000
               0000000000000000000000000000000000000000000000000000000000000000

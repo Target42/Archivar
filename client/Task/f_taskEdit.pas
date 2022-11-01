@@ -8,9 +8,10 @@ uses
   Vcl.ActnList, Vcl.Menus, i_taskEdit, Data.DB, Datasnap.DBClient,
   Datasnap.DSConnect,
   JvDBDatePickerEdit, Vcl.StdCtrls, Vcl.DBCtrls,
-  Vcl.OleCtrls, SHDocVw, JvColorCombo, fr_form, fr_log, JvExStdCtrls,
-  JvCombobox, JvExMask, JvToolEdit, JvMaskEdit, JvCheckedMaskEdit,
-  JvDatePickerEdit, Vcl.Mask, u_ForceClose;
+  Vcl.OleCtrls, SHDocVw, JvColorCombo, fr_form, fr_log,
+
+  u_ForceClose, JvExStdCtrls, JvCombobox, JvExMask, JvToolEdit, JvMaskEdit,
+  JvCheckedMaskEdit, JvDatePickerEdit, Vcl.Mask;
 
 type
   TTaskEditForm = class(TForm, IForceClose)

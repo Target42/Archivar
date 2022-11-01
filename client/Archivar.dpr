@@ -218,7 +218,8 @@ uses
   f_admin in 'admin\f_admin.pas' {AdminForm},
   u_ForceClose in 'misc\u_ForceClose.pas',
   f_proxy in '..\misc\f_proxy.pas' {ProxyForm},
-  f_gremium_task in 'Gremium\f_gremium_task.pas' {GremiumTaskForm};
+  f_gremium_task in 'Gremium\f_gremium_task.pas' {GremiumTaskForm},
+  u_dataset_to_list in '..\misc\u_dataset_to_list.pas';
 
 {$R *.res}
 
