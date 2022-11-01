@@ -703,7 +703,7 @@ end;
 procedure TServerContainer1.DSCertFiles1GetPEMFilePasskey(ASender: TObject;
   var APasskey: AnsiString);
 begin
-  APasskey := AnsiString(IniOptions.sslpassword)+'.';
+  APasskey := AnsiString(IniOptions.sslpassword);
 end;
 
 procedure TServerContainer1.dsChapterGetClass(DSServerClass: TDSServerClass;
@@ -819,6 +819,10 @@ begin
   DSCertFiles1.KeyFile        := ExpandFileName(IniOptions.sslkey);
   DSCertFiles1.RootCertFile   := ExpandFileName(IniOptions.sslrootcrt);
 
+  grijjyLog.Send('CertFile:', DSCertFiles1.CertFile);
+  grijjyLog.Send('KeyFile:', DSCertFiles1.KeyFile);
+  grijjyLog.Send('RootCrtFile:', DSCertFiles1.RootCertFile);
+
 
   TDSSessionManager.Instance.AddSessionEvent(
     procedure(Sender: TObject;
@@ -875,7 +879,6 @@ begin
     if DSHTTPService1.HttpPort > 0 then begin
       try
         DSHTTPService1.Server := DSServer1;
-        GrijjyLog.Send('Http-Service:', DSHTTPService1.Active );
       except
         on e : exception do begin
           GrijjyLog.Send('Http-Service:'+e.ToString, TgoLogLevel.Error );
@@ -885,7 +888,6 @@ begin
     if DSHTTPService2.HttpPort > 0 then begin
       try
         DSHTTPService2.Server := DSServer1;
-        GrijjyLog.Send('Https-Service:', DSHTTPService2.Active );
       except
         on e : exception do begin
           GrijjyLog.Send('Https-Service:'+e.ToString, TgoLogLevel.Error );
@@ -899,6 +901,8 @@ begin
       on e : exception do
         GrijjyLog.Send('DSServer:'+e.ToString, TgoLogLevel.Error );
     end;
+    GrijjyLog.Send('Http-Service:', DSHTTPService1.Active );
+    GrijjyLog.Send('Https-Service:', DSHTTPService2.Active );
 
     if SameText(IniOptions.DNLactive, 'true') and (IniOptions.DNLport >0 ) then
       HttpMod.start(IniOptions.DNLport);

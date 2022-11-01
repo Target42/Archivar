@@ -257,9 +257,6 @@ object ServerContainer1: TServerContainer1
     Top = 200
   end
   object DSCertFiles1: TDSCertFiles
-    RootCertFile = 'D:\git\ber.git\Bin\Server\cert\BEROffice.pem'
-    CertFile = 'D:\git\ber.git\Bin\Server\cert\BEROffice.crt'
-    KeyFile = 'D:\git\ber.git\Bin\Server\cert\keyl.pem'
     OnGetPEMFilePasskey = DSCertFiles1GetPEMFilePasskey
     Left = 144
     Top = 264
