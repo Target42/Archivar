@@ -871,20 +871,10 @@ begin
   createTimer;
   try
     DBMod.startDB;
-    try
-      DSServer1.Start;
-    except
-      on e : exception do
-        GrijjyLog.Send('DSServer:'+e.ToString, TgoLogLevel.Error );
-    end;
-
-    if SameText(IniOptions.DNLactive, 'true') and (IniOptions.DNLport >0 ) then
-      HttpMod.start(IniOptions.DNLport);
 
     if DSHTTPService1.HttpPort > 0 then begin
       try
         DSHTTPService1.Server := DSServer1;
-        DSHTTPService1.Active := true;
         GrijjyLog.Send('Http-Service:', DSHTTPService1.Active );
       except
         on e : exception do begin
@@ -895,7 +885,6 @@ begin
     if DSHTTPService2.HttpPort > 0 then begin
       try
         DSHTTPService2.Server := DSServer1;
-        DSHTTPService2.Active := true;
         GrijjyLog.Send('Https-Service:', DSHTTPService2.Active );
       except
         on e : exception do begin
@@ -903,6 +892,17 @@ begin
         end;
       end;
     end;
+
+    try
+      DSServer1.Start;
+    except
+      on e : exception do
+        GrijjyLog.Send('DSServer:'+e.ToString, TgoLogLevel.Error );
+    end;
+
+    if SameText(IniOptions.DNLactive, 'true') and (IniOptions.DNLport >0 ) then
+      HttpMod.start(IniOptions.DNLport);
+
     Started := DSServer1.Started and DBMod.Started;
 
   except
