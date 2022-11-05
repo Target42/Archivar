@@ -68,7 +68,8 @@ implementation
 
 uses
   Variants, u_json, m_glob_server, u_Konst,
-  ServerContainerUnit1, u_folder, Datasnap.DSSession, Grijjy.CloudLogging;
+  ServerContainerUnit1, u_folder, Datasnap.DSSession, Grijjy.CloudLogging,
+  m_del_files;
 
 {%CLASSGROUP 'System.Classes.TPersistent'}
 
@@ -155,8 +156,35 @@ begin
 end;
 
 function TdsFile.deleteFolder(data: TJSONObject): TJSONObject;
+var
+  grid  : integer;
+  drid  : integer;
+  df    : TDeleteFilesMod;
+  msg   : TJSONObject;
 begin
-  Result := NIL;
+  Result := TJSONObject.Create;
+  grid  := JInt( data, 'grid');
+  drid  := JInt( data, 'drid');
+
+  df := TDeleteFilesMod.Create(self);
+  try
+
+    df.DeleteFolderExecute(drid, grid);
+
+    msg := TJSONObject.Create;
+    JAction(  msg, BRD_FOLDER_DEL);
+    JReplace( msg, 'id',   drid);
+    JReplace( msg, 'grid', grid);
+
+    ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg);
+
+    JResult( Result, true, 'Das Verzeichnis wurde gelöscht');
+  except
+    on e : exception do begin
+      JResult( Result, false, e.ToString);
+    end;
+  end;
+  df.Free;
 end;
 
 function TdsFile.findFile(dr_id : integer; fname: string): integer;
@@ -182,6 +210,7 @@ var
   list  : TList<TFolder>;
   fld   : TFolder;
   root  : TFolder;
+
   procedure fillList;
   begin
     with FolderList do begin
@@ -211,6 +240,7 @@ var
       end;
     end;
   end;
+
   procedure findChilds;
   var
     fld : TFolder;
@@ -222,6 +252,7 @@ var
         pfld.add(fld);
     end;
   end;
+
   procedure listFolder( root : TFolder );
   var
     fld : TFolder;
@@ -231,6 +262,7 @@ var
     for fld in root.Childs do
       listFolder(fld);
   end;
+
 begin
   Result  := TList<integer>.create;
   list    := TList<TFolder>.create;

@@ -109,10 +109,6 @@
     object TabSheet2: TTabSheet
       Caption = 'Lesezeichen'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       inline BookmarkFrame1: TBookmarkFrame
         Left = 0
         Top = 0
@@ -145,8 +141,6 @@
         inherited GroupBox1: TGroupBox
           Width = 221
           Height = 394
-          ExplicitLeft = 0
-          ExplicitTop = 0
           ExplicitWidth = 221
           ExplicitHeight = 394
           inherited DBGrid1: TDBGrid
@@ -173,10 +167,6 @@
     object TabSheet6: TTabSheet
       Caption = 'Online'
       ImageIndex = 3
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object UserView: TListView
         Left = 0
         Top = 0
@@ -248,7 +238,7 @@
     Top = 472
     Width = 1126
     Height = 187
-    ActivePage = TabSheet5
+    ActivePage = TabSheet4
     Align = alBottom
     TabOrder = 2
     Visible = False

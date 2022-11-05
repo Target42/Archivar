@@ -43,6 +43,8 @@ type
     BitBtn1: TBitBtn;
     BitBtn2: TBitBtn;
     BitBtn3: TBitBtn;
+    SpeedButton1: TSpeedButton;
+    N1: TMenuItem;
     procedure Button1Click(Sender: TObject);
     procedure JvDragDrop1Drop(Sender: TObject; Pos: TPoint; Value: TStrings);
     procedure Button2Click(Sender: TObject);
@@ -92,6 +94,8 @@ type
     m_list    : TList<PTFolderRec>;
     m_root    : PTFolderRec;
 
+    m_inupdate: boolean;
+
     procedure addChild( root, child : PTFolderRec );
     function getParent( pid : integer ) : PTFolderRec;
 
@@ -111,6 +115,7 @@ type
     function getFrame(ctrl : TControl ) : TFileFrame;
 
     procedure move( req : TJSONObject );
+
   public
     procedure prepare;
     property RootID   : integer read m_grid write setID;
@@ -143,9 +148,10 @@ var
   client : TdsFileClient;
   res, req : TJSONObject;
 begin
-  if not Assigned(vst.GetFirstSelected()) then exit;
 
-  ptr := PTFolderRec(vst.GetFirstSelected.GetData);
+  if not Assigned(VST.FocusedNode) then exit;
+
+  ptr := PTFolderRec(VST.FocusedNode.GetData);
 
   if ptr^.id = m_grid then begin
     ShowMessage('Dieser Ordner kann nicht gelöscht werden!');
@@ -155,15 +161,16 @@ begin
   client := TdsFileClient.Create( GM.SQLConnection1.DBXConnection);
   try
     req := TJSONObject.Create;
-    JReplace( req, 'id', ptr^.id);
+
+    JReplace( req, 'drid', ptr^.id);
+    JReplace( req, 'grid', m_grid);
 
     res := client.deleteFolder(req);
+
     ShowResult(res);
   finally
     client.Free;
   end;
-
-
 end;
 
 procedure TFileFrame.ac_editExecute(Sender: TObject);
@@ -334,6 +341,9 @@ begin
   if not JvBrowseForFolderDialog1.Execute then  exit;
   path := JvBrowseForFolderDialog1.Directory;
 
+  if not ListFilesQry.Active then
+    ListFilesQry.Open;
+
   for i := 0 to pred(LV.Items.Count) do
   begin
     if LV.Items.Item[i].Checked then begin
@@ -343,6 +353,8 @@ begin
        [LV.Items.Item[i].Caption]));
     end;
   end;
+  ListFilesQry.close;
+
   ShellExecute(Handle, 'explore', PWideChar(path), '', '', SW_SHOWNORMAL);
 end;
 
@@ -508,6 +520,8 @@ begin
   if m_grid <> grp then
     exit;
 
+  updateTree;
+
   Result := true;
 end;
 
@@ -528,6 +542,8 @@ begin
   ptr^.id   := JInt(    arg, 'id');
   ptr^.pid  := Jint(    arg, 'pid');
   ptr^.Stamp:= JDouble( arg, 'stamp');
+  ptr^.next := nil;
+  ptr^.child:= nil;
 
   pptr := getParent(ptr^.pid);
   if Assigned(pptr) then begin
@@ -611,12 +627,15 @@ begin
   m_root    := NIL;
   m_curDir  := -1;
   vst.NodeDataSize := sizeof(TFolderRec);
+  m_inupdate:= false;
 
   EventHandler.Register( self, handle_folder_new,   BRD_FOLDER_NEW );
   EventHandler.Register( self, handle_folder_del,   BRD_FOLDER_DEL );
   EventHandler.Register( self, handle_folder_ren,   BRD_FOLDER_REN );
   EventHandler.Register( self, handle_folder_upd,   BRD_FOLDER_UPDATE );
   EventHandler.Register( self, handle_file_lock,    BRD_FILE_LOCK);
+
+  SpeedButton1.Caption := '';
 end;
 
 procedure TFileFrame.release;
@@ -704,6 +723,7 @@ var
   size  : Int64;
 
 begin
+  Screen.Cursor := crSQLWait;
   LV.Items.BeginUpdate;
   LV.Items.Clear;
   with ListFilesQry do begin
@@ -727,10 +747,12 @@ begin
       item.Data := Pointer(FieldByName('FI_ID').AsInteger);
 
       next;
+      Application.ProcessMessages;
     end;
     close;
   end;
   LV.Items.EndUpdate;
+  Screen.Cursor := crDefault;
 end;
 
 procedure TFileFrame.updateTree;
@@ -811,18 +833,27 @@ var
 var
   ptr : PVirtualNode;
 begin
-  id := -1;
-  if Assigned(VST.FocusedNode) then
-    id := PTFolderRec(VST.FocusedNode.GetData)^.id;
+  if m_inupdate then exit;
 
-  VST.Clear;
-  ptr := vst.AddChild( NIL);
-  clone( PTFolderRec(ptr.GetData), m_root);
-  addChild( ptr, m_root.child);
+  m_inupdate := true;
 
-  vst.FullExpand;
-  if not Assigned(vst.FocusedNode) then
-    vst.FocusedNode := vst.GetFirst();
+  try
+    id := -1;
+    if Assigned(VST.FocusedNode) then
+      id := PTFolderRec(VST.FocusedNode.GetData)^.id;
+
+    VST.Clear;
+    ptr := vst.AddChild( NIL);
+    clone( PTFolderRec(ptr.GetData), m_root);
+    addChild( ptr, m_root.child);
+
+    vst.FullExpand;
+    if not Assigned(vst.FocusedNode) then
+      vst.FocusedNode := vst.GetFirst();
+
+  finally
+    m_inupdate := false;
+  end;
 
   VSTChange(VST, vst.FocusedNode);
 

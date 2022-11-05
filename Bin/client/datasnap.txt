@@ -1,5 +1,5 @@
 DriverUnit=Data.DBXDataSnap
-HostName=localhost
+HostName=target42.de
 Port=211
 CommunicationProtocol=tcp/ip
 DatasnapContext=datasnap/

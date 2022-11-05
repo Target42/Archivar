@@ -248,7 +248,7 @@ end;
 
 function TMainForm.download(fname: string; st: TStream; size : int64): boolean;
 const
-  BSize = 1024 * 4;
+  BSize = 1024 * 16;
 var bytes : integer;
    buffer : array  of byte;
    fout   : TFileStream;

@@ -9,16 +9,31 @@ type
   TServerTimer = class(TThread)
   private
     type
+      TimerType = (shortTimer, dayTimer);
       PTTimerEntry = ^TTimerEntry;
       TTimerEntry = record
-        id       : integer;
-        CallBack : TNotifyEvent;
-        interval : boolean;
-        start    : cardinal;
-        timeout  : cardinal;
-        ende     : cardinal;
-        counter  : cardinal;
+        typ       : TimerType;
+        id        : integer;
+        CallBack  : TNotifyEvent;
+
+        interval  : boolean;
+
+        Timer     : record
+          start   : cardinal;
+          timeout : cardinal;
+          ende    : cardinal;
+          counter : cardinal;
+        end;
+
+        Day       : record
+          Time    : TTime;
+          NextDay : TDate;
+          Hour    : word;
+          Minute  : word;
+        end;
+
       end;
+
     private
       m_id    : integer;
       m_list  : TList<PTTimerEntry>;
@@ -32,11 +47,16 @@ type
     procedure Execute; override;
 
   public
-    function newTimer( timeout : cardinal; interval : boolean; callback : TNotifyEvent ) : integer;
+    constructor create;
+    function newTimer( timeout : cardinal;  interval : boolean; callback : TNotifyEvent ) : integer; overload;
+    function newTimer( hour, minute : word; interval : boolean; callback : TNotifyEvent ) : integer; overload;
   end;
 
 implementation
 
+
+uses
+  System.DateUtils, System.SysUtils;
 
 { TServerTimer }
 
@@ -48,14 +68,31 @@ begin
   st := GetTickCount;
   for i := pred(m_list.Count) downto 0 do begin
 
-    if st > m_list[i]^.ende  then begin
+    case m_list[i].typ of
+      shortTimer : begin
+        if st > m_list[i]^.Timer.ende  then begin
 
-      m_list[i]^.CallBack(self);
+          m_list[i]^.CallBack(self);
 
-      if not m_list[i]^.interval then begin
-        remove(m_list[i]^.id);
-      end else
-        setEnd(m_list[i]);
+          if not m_list[i]^.interval then begin
+            remove(m_list[i]^.id);
+          end else
+            setEnd(m_list[i]);
+        end;
+      end;
+      dayTimer : begin
+        if IsSameDay(m_list[i].Day.NextDay, Date) then begin
+          if ( HourOfTheDay( time) = m_list[i]^.Day.Hour) and
+             ( MinuteOfTheHour(time) = m_list[i]^.Day.Minute )
+          then begin
+            m_list[i]^.CallBack(self);
+            if not m_list[i]^.interval then begin
+              remove(m_list[i]^.id);
+            end else
+              setEnd(m_list[i]);
+          end;
+        end;
+      end;
     end;
   end;
 
@@ -70,9 +107,15 @@ begin
   m_list.Free;
 end;
 
-procedure TServerTimer.Execute;
+constructor TServerTimer.create;
 begin
   prepare;
+  inherited create(false);
+end;
+
+procedure TServerTimer.Execute;
+begin
+//  prepare;
   while not Terminated do begin
     Sleep(250);
     CheckTimeOuts;
@@ -89,13 +132,37 @@ begin
   inc(m_id);
 
   ptr^.id       := m_id;
-  ptr^.start    := GetTickCount;
-  ptr^.timeout  := timeout;
+  ptr^.typ      := shortTimer;
   ptr^.CallBack := callback;
-  ptr^.counter  := 1;
+  ptr^.interval := interval;
+
+  ptr^.Timer.start    := GetTickCount;
+  ptr^.Timer.timeout  := timeout;
+  ptr^.Timer.counter  := 1;
   setEnd(ptr);
+
   m_list.Add(ptr);
 
+  Result := ptr^.id;
+end;
+
+function TServerTimer.newTimer( hour, minute : word; interval : boolean; callback : TNotifyEvent ) : integer;
+var
+  ptr : PTTimerEntry;
+begin
+  new(ptr);
+  inc(m_id);
+
+  ptr^.id         := m_id;
+  ptr^.typ        := dayTimer;
+  ptr^.CallBack   := callback;
+  ptr^.interval   := interval;
+
+  ptr^.Day.Hour   := hour;
+  ptr^.Day.Minute := minute;
+  setEnd(ptr);
+
+  m_list.Add(ptr);
   Result := ptr^.id;
 end;
 
@@ -121,8 +188,20 @@ end;
 
 procedure TServerTimer.setEnd(ptr: PTTimerEntry);
 begin
-  ptr^.ende    := ptr^.start + ptr^.counter * ptr^.timeout;
-  ptr^.counter := ptr^.counter + 1;
+  case ptr^.typ of
+    shortTimer : begin
+      ptr^.Timer.ende    := ptr^.Timer.start + ptr^.Timer.counter * ptr^.Timer.timeout;
+      ptr^.Timer.counter := ptr^.Timer.counter + 1;
+    end;
+    dayTimer : begin
+      if (HourOfTheDay(time) <= ptr^.Day.Hour) and
+         ( MinuteOfTheHour(time) < ptr.Day.Minute )
+      then
+        ptr^.Day.NextDay := date
+      else
+        ptr^.Day.NextDay := IncDay(date);
+    end;
+  end;
 end;
 
 end.

@@ -67,11 +67,19 @@ end;
 
 procedure TePupFrame.Download1Click(Sender: TObject);
 begin
-  Application.CreateForm(TDownloadEpubform, DownloadEpubform);
-  DownloadEpubform.setDataset(EpubTab);
-  if DownloadEpubform.ShowModal = mrOk then
-    saveTab;
-  DownloadEpubform.Free;
+  try
+    Screen.Cursor := crHourGlass;
+    Application.CreateForm(TDownloadEpubform, DownloadEpubform);
+    DownloadEpubform.setDataset(EpubTab);
+    Screen.Cursor := crDefault;
+
+    if DownloadEpubform.ShowModal = mrOk then
+      saveTab;
+
+  finally
+    DownloadEpubform.Free;
+    Screen.Cursor := crDefault;
+  end;
 end;
 
 procedure TePupFrame.init;

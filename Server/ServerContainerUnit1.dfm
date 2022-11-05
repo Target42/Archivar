@@ -20,23 +20,21 @@ object ServerContainer1: TServerContainer1
     Server = DSServer1
     Filters = <
       item
-        FilterId = 'RSA'
-        Properties.Strings = (
-          'UseGlobalKey=true'
-          'KeyLength=1024'
-          'KeyExponent=3')
-      end
-      item
-        FilterId = 'RSA'
-        Properties.Strings = (
-          'UseGlobalKey=true'
-          'KeyLength=1024'
-          'KeyExponent=3')
-      end
-      item
         FilterId = 'ZLibCompression'
         Properties.Strings = (
           'CompressMoreThan=1024')
+      end
+      item
+        FilterId = 'RSA'
+        Properties.Strings = (
+          'UseGlobalKey=true'
+          'KeyLength=1024'
+          'KeyExponent=3')
+      end
+      item
+        FilterId = 'PC1'
+        Properties.Strings = (
+          'Key=ZLEnCSOPql7fX1Em')
       end>
     AuthenticationManager = DSAuthenticationManager1
     OnConnect = DSTCPServerTransport1Connect
@@ -243,7 +241,24 @@ object ServerContainer1: TServerContainer1
   end
   object DSHTTPService1: TDSHTTPService
     HttpPort = 8088
-    Filters = <>
+    Filters = <
+      item
+        FilterId = 'ZLibCompression'
+        Properties.Strings = (
+          'CompressMoreThan=1024')
+      end
+      item
+        FilterId = 'RSA'
+        Properties.Strings = (
+          'UseGlobalKey=true'
+          'KeyLength=1024'
+          'KeyExponent=3')
+      end
+      item
+        FilterId = 'PC1'
+        Properties.Strings = (
+          'Key=ai7ggYdY!fJ6eFB4')
+      end>
     AuthenticationManager = DSAuthenticationManager1
     Left = 56
     Top = 200
@@ -251,7 +266,24 @@ object ServerContainer1: TServerContainer1
   object DSHTTPService2: TDSHTTPService
     HttpPort = 8089
     CertFiles = DSCertFiles1
-    Filters = <>
+    Filters = <
+      item
+        FilterId = 'ZLibCompression'
+        Properties.Strings = (
+          'CompressMoreThan=1024')
+      end
+      item
+        FilterId = 'RSA'
+        Properties.Strings = (
+          'UseGlobalKey=true'
+          'KeyLength=1024'
+          'KeyExponent=3')
+      end
+      item
+        FilterId = 'PC1'
+        Properties.Strings = (
+          'Key=XUgQukpi8QcJXasj')
+      end>
     AuthenticationManager = DSAuthenticationManager1
     Left = 144
     Top = 200

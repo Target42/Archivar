@@ -750,6 +750,7 @@ begin
   begin
     GRTab.Append;
     GRTab.FieldByName('GR_ID').AsInteger            := AutoInc('gen_gr_id');
+    GRTab.FieldByName('DR_ID').AsInteger            := getNewDir;
     GRTab.FieldByName('GR_NAME').AsString           := xml.Gremium[i].Name;
     GRTab.FieldByName('GR_SHORT').AsString          := xml.Gremium[i].Kurz;
     GRTab.FieldByName('GR_PARENT_SHORT').AsString   := xml.Gremium[i].Pkurz;

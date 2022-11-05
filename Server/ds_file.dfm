@@ -4,6 +4,7 @@ object dsFile: TdsFile
   Width = 819
   object ListFilesQry: TDataSetProvider
     DataSet = ListFiles
+    Options = [poFetchBlobsOnDemand, poUseQuoteChar]
     Left = 40
     Top = 328
   end
@@ -81,8 +82,8 @@ object dsFile: TdsFile
     Transaction = FDTransaction1
     UpdateOptions.UpdateTableName = 'DR_DIR'
     TableName = 'DR_DIR'
-    Left = 104
-    Top = 136
+    Left = 112
+    Top = 184
   end
   object ListChilds: TFDQuery
     Connection = DBMod.ArchivarConnection
@@ -136,7 +137,7 @@ object dsFile: TdsFile
       '    a.FI_ID = :id'
       'and'
       '  a.FI_VERSION = :version')
-    Left = 304
+    Left = 320
     Top = 232
     ParamData = <
       item
@@ -162,7 +163,7 @@ object dsFile: TdsFile
       ')'
       'where dr_id = :id')
     Left = 320
-    Top = 112
+    Top = 128
     ParamData = <
       item
         Name = 'ID'

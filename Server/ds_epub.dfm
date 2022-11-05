@@ -4,6 +4,7 @@ object dsEpub: TdsEpub
   Width = 381
   object ePubTab: TDataSetProvider
     DataSet = ePub
+    Options = [poFetchBlobsOnDemand, poUseQuoteChar]
     Left = 40
     Top = 120
   end

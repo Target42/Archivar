@@ -3,12 +3,15 @@ unit m_glob_server;
 interface
 
 uses
-  System.SysUtils, System.Classes;
+  System.SysUtils, System.Classes, JvScheduledEvents;
 
 type
   TGM = class(TDataModule)
+    JvScheduledEvents1: TJvScheduledEvents;
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
+    procedure JvScheduledEvents1Events0Execute(Sender: TJvEventCollectionItem;
+      const IsSnoozeEvent: Boolean);
   private
     { Private declarations }
   public
@@ -39,7 +42,7 @@ implementation
 {$R *.dfm}
 
 uses
-  IOUtils, u_ini, IdHashMessageDigest, Datasnap.DSSession;
+  IOUtils, u_ini, IdHashMessageDigest, Datasnap.DSSession, m_del_files;
 
 procedure DebugMsg( text : string );
 begin
@@ -70,6 +73,7 @@ end;
 procedure TGM.DataModuleCreate(Sender: TObject);
 begin
   LoadIni;
+  JvScheduledEvents1.Events[0].Start;
 end;
 
 procedure TGM.DataModuleDestroy(Sender: TObject);
@@ -160,6 +164,17 @@ begin
     Result := user
   else
     Result := Format('%s %s (%s)', [vorname, name, dept]);
+end;
+
+procedure TGM.JvScheduledEvents1Events0Execute(Sender: TJvEventCollectionItem;
+  const IsSnoozeEvent: Boolean);
+begin
+  try
+    DeleteFilesMod := TDeleteFilesMod.Create(self);
+    DeleteFilesMod.TimeToDie;
+  finally
+    DeleteFilesMod.Free;
+  end;
 end;
 
 procedure TGM.LoadIni;

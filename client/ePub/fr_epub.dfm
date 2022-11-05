@@ -13,10 +13,6 @@ object ePupFrame: TePupFrame
     Align = alClient
     Caption = 'Lokale Dateien'
     TabOrder = 0
-    ExplicitLeft = 192
-    ExplicitTop = 32
-    ExplicitWidth = 185
-    ExplicitHeight = 105
     object DBGrid1: TDBGrid
       Left = 2
       Top = 15
@@ -66,7 +62,6 @@ object ePupFrame: TePupFrame
     Align = alBottom
     Caption = 'Server'
     TabOrder = 1
-    ExplicitTop = 244
     object BitBtn1: TBitBtn
       Left = 16
       Top = 24
@@ -189,8 +184,9 @@ object ePupFrame: TePupFrame
         FilterOptions = [ekNoCase]
       end>
     IndexName = 'title'
-    FetchOptions.AssignedValues = [evMode]
+    FetchOptions.AssignedValues = [evMode, evAutoFetchAll]
     FetchOptions.Mode = fmAll
+    FetchOptions.AutoFetchAll = afDisable
     ResourceOptions.AssignedValues = [rvSilentMode]
     ResourceOptions.SilentMode = True
     UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]

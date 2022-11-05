@@ -1016,7 +1016,7 @@ end;
 
 procedure TGM.PingTimerTimer(Sender: TObject);
 var
-  val : integer;
+  val : cardinal;
 begin
   CodeSite.EnterMethod(Self, 'PingTimerTimer');
   if Assigned(m_misc) then begin

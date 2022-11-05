@@ -253,7 +253,6 @@ begin
       TaskEditForm.Free;
   end
   else begin
-
     if m_taskMap.ContainsKey(id) then
     begin
       TaskEditForm := m_taskMap[id];
@@ -268,7 +267,7 @@ begin
       m_taskMap.Add(id, TaskEditForm);
       m_list.Add(TaskEditForm);
     end;
-    TaskEditForm.RO := false;
+    TaskEditForm.RO := ro;
     TaskEditForm.Show;
     if not ro then begin
       GM.LockDocument( id, integer(ltTask));

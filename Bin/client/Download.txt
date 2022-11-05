@@ -1,5 +1,5 @@
 Archivar.exe
 hosts.dat
 libeay32.dll
-midas.dll
 ssleay32.dll
+logo.png

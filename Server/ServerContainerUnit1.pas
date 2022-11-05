@@ -125,6 +125,7 @@ type
     procedure removeUser( Session: TDSSession );
     procedure createTimer;
     procedure execShutdown( sender : TObject );
+    procedure execTimeToDie( sender : TObject );
   protected
     function DoStop: Boolean; override;
     function DoPause: Boolean; override;
@@ -162,7 +163,7 @@ uses
   ds_taskEdit, ds_template, ds_taskView, ds_textblock, ds_fileCache, ds_epub,
   ds_meeting, System.Hash, u_json, ds_sitzung, m_hell, Grijjy.sysUtils, u_ini,
   ds_updater, ds_stamm, ds_pki, ds_dairy, ds_storage, WinApi.WinSvc,
-  u_Konst, Winapi.Messages, m_http;
+  u_Konst, Winapi.Messages, m_http, m_del_files, system.DateUtils;
 
 procedure TServerContainer1.dsAdminGetClass(
   DSServerClass: TDSServerClass; var PersistentClass: TPersistentClass);
@@ -402,12 +403,22 @@ begin
 {$ifdef DEBUG}
   hnd := FindWindow('ConsoleWindowClass', PWideChar(ParamStr(0))) ;
   PostMessage( hnd, WM_CLOSE, 0, 0 );
-
-//  SimKeyEvent(VkKeyScan('q'), KEYEVENTF_KEYUP );
-//  SimKeyEvent(VK_RETURN, 0 );
 {$else}
   ServiceController(SERVICE_CONTROL_STOP);
 {$endif}
+end;
+
+procedure TServerContainer1.execTimeToDie(sender: TObject);
+var
+  DeleteFilesMod : TDeleteFilesMod;
+begin
+  DeleteFilesMod := TDeleteFilesMod.create(self);
+  try
+    DeleteFilesMod.TimeToDie;
+  finally
+
+  end;
+  DeleteFilesMod.Free;
 end;
 
 function TServerContainer1.GetServiceController: TServiceController;
@@ -873,6 +884,9 @@ procedure TServerContainer1.ServiceStart(Sender: TService; var Started: Boolean)
 begin
   GrijjyLog.EnterMethod(self, 'ServiceStart');
   createTimer;
+
+  m_timer.newTimer(3, 1, true, execTimeToDie);
+
   try
     DBMod.startDB;
 
