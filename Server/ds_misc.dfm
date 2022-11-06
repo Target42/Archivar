@@ -152,8 +152,8 @@ object dsMisc: TdsMisc
       'r.PE_ID = b.PE_ID and'
       ':da >= pk_start and '
       ':da <= pk_end')
-    Left = 520
-    Top = 152
+    Left = 424
+    Top = 176
     ParamData = <
       item
         Name = 'NAME'
@@ -168,8 +168,8 @@ object dsMisc: TdsMisc
   end
   object FDTransaction1: TFDTransaction
     Connection = DBMod.ArchivarConnection
-    Left = 584
-    Top = 152
+    Left = 488
+    Top = 176
   end
   object ListStoragesQry: TFDQuery
     Connection = DBMod.ArchivarConnection
@@ -178,5 +178,29 @@ object dsMisc: TdsMisc
       'SELECT * FROM ST_STORAGE')
     Left = 224
     Top = 152
+  end
+  object GRTab: TFDTable
+    Connection = DBMod.ArchivarConnection
+    Transaction = FDTransaction1
+    UpdateOptions.UpdateTableName = 'GR_GREMIUM'
+    TableName = 'GR_GREMIUM'
+    Left = 616
+    Top = 24
+  end
+  object PETab: TFDTable
+    Connection = DBMod.ArchivarConnection
+    Transaction = FDTransaction1
+    UpdateOptions.UpdateTableName = 'PE_PERSON'
+    TableName = 'PE_PERSON'
+    Left = 616
+    Top = 80
+  end
+  object DRTab: TFDTable
+    Connection = DBMod.ArchivarConnection
+    Transaction = FDTransaction1
+    UpdateOptions.UpdateTableName = 'DR_DIR'
+    TableName = 'DR_DIR'
+    Left = 616
+    Top = 136
   end
 end

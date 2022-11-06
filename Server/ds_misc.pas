@@ -34,6 +34,9 @@ type
     FDTransaction1: TFDTransaction;
     ListStoragesQry: TFDQuery;
     PEQryDR_ID: TIntegerField;
+    GRTab: TFDTable;
+    PETab: TFDTable;
+    DRTab: TFDTable;
     procedure DSServerModuleCreate(Sender: TObject);
   private
   private
@@ -56,14 +59,16 @@ type
     function getStorageList : TJSONObject;
 
     function ping( value : integer ) : integer;
+
+    function checkFolder( data : TJSONObject ) : TJSONObject;
   end;
 
 implementation
 
 uses
   Grijjy.CloudLogging, m_lockMod,
-  u_berTypes, i_user;
-{%CLASSGROUP 'System.Classes.TPersistent'}
+  u_berTypes, i_user, m_db, System.Variants;
+{%CLASSGROUP 'Vcl.Controls.TControl'}
 
 {$R *.dfm}
 
@@ -115,6 +120,68 @@ begin
 
     end;
   end;
+end;
+
+function TdsMisc.checkFolder(data: TJSONObject): TJSONObject;
+var
+  typ : string;
+  id  : integer;
+  drid: integer;
+
+  function getNewDir : integer;
+  begin
+    Result := AutoInc('gen_dr_id');
+
+    DRTab.Open;
+    DRTab.Append;
+    DRTab.FieldByName('DR_ID').AsInteger      := Result;
+    DRTab.FieldByName('DR_GROUP').AsInteger  := Result;
+    DRTab.Post;
+    DRTab.Close;
+  end;
+begin
+  Result := TJSONObject.Create;
+
+  typ := JString( data, 'typ' );
+  id  := JInt( data, 'id' );
+  drid:= -1;
+
+  if SameText( typ, 'Gremium' )  then begin
+    GRTab.Open;
+    if GRTab.Locate('GR_ID', VarArrayOf([id]), []) then begin
+      drid := GRTab.FieldByName('DR_ID').AsInteger;
+      if  drid = 0 then begin
+        drid := getNewDir;
+        GRTab.Edit;
+        GRTab.FieldByName('DR_ID').AsInteger := drid;
+        GRTab.Post;
+      end;
+    end;
+    GRTab.Close;
+
+    JResult(Result, true, '');
+  end else if SameText( typ, 'person') then begin
+    PETab.Open;
+    if PETab.Locate('PE_ID', VarArrayOf([id]), []) then begin
+      drid := PETab.FieldByName('DR_ID').AsInteger;
+      if  drid = 0 then begin
+        drid := getNewDir;
+        PETab.Edit;
+        PETab.FieldByName('DR_ID').AsInteger := drid;
+        PETab.Post;
+      end;
+    end;
+    PETab.Close;
+
+    JResult(Result, true, '');
+  end else begin
+    JResult( Result, false, 'Unbekannter Typ:'+typ);
+  end;
+  JReplace(Result, 'drid', drid);
+
+  if FDTransaction1.Active then
+    FDTransaction1.Commit;
+
 end;
 
 procedure TdsMisc.DSServerModuleCreate(Sender: TObject);

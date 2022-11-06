@@ -1,13 +1,13 @@
 //
 // Erzeugt vom DataSnap-Proxy-Generator.
-// 26.10.2022 20:37:29
+// 06.11.2022 12:18:34
 //
 
 unit u_stub;
 
 interface
 
-uses System.JSON, Data.DBXCommon, Data.DBXClient, Data.DBXDataSnap, Datasnap.DSProxy, System.Classes, System.SysUtils, Data.DB, Data.DBXDBReaders, Data.DBXJSONReflect;
+uses System.JSON, Data.DBXCommon, Data.DBXClient, Data.DBXDataSnap, Data.DBXJSON, Datasnap.DSProxy, System.Classes, System.SysUtils, Data.DB, Data.SqlExpr, Data.DBXDBReaders, Data.DBXCDSReaders, Data.DBXJSONReflect;
 
 type
   TAdminModClient = class(TDSAdminClient)
@@ -135,6 +135,7 @@ type
     FgetPublicKeyCommand: TDBXCommand;
     FgetStorageListCommand: TDBXCommand;
     FpingCommand: TDBXCommand;
+    FcheckFolderCommand: TDBXCommand;
   public
     constructor Create(ADBXConnection: TDBXConnection); overload;
     constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
@@ -150,6 +151,7 @@ type
     function getPublicKey(net: string; stamp: TDateTime): TStream;
     function getStorageList: TJSONObject;
     function ping(value: Integer): Integer;
+    function checkFolder(data: TJSONObject): TJSONObject;
   end;
 
   TdsProtocolClient = class(TDSAdminClient)
@@ -1162,6 +1164,20 @@ begin
   Result := FpingCommand.Parameters[1].Value.GetInt32;
 end;
 
+function TdsMiscClient.checkFolder(data: TJSONObject): TJSONObject;
+begin
+  if FcheckFolderCommand = nil then
+  begin
+    FcheckFolderCommand := FDBXConnection.CreateCommand;
+    FcheckFolderCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FcheckFolderCommand.Text := 'TdsMisc.checkFolder';
+    FcheckFolderCommand.Prepare;
+  end;
+  FcheckFolderCommand.Parameters[0].Value.SetJSONValue(data, FInstanceOwner);
+  FcheckFolderCommand.ExecuteUpdate;
+  Result := TJSONObject(FcheckFolderCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
+end;
+
 constructor TdsMiscClient.Create(ADBXConnection: TDBXConnection);
 begin
   inherited Create(ADBXConnection);
@@ -1185,6 +1201,7 @@ begin
   FgetPublicKeyCommand.DisposeOf;
   FgetStorageListCommand.DisposeOf;
   FpingCommand.DisposeOf;
+  FcheckFolderCommand.DisposeOf;
   inherited;
 end;
 

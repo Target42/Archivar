@@ -6,9 +6,10 @@ object DBMod: TDBMod
   Width = 364
   object ArchivarConnection: TFDConnection
     Params.Strings = (
-      'DriverID=FB'
       'User_Name=sysdba'
-      'Password=masterkey')
+      'Password=masterkey'
+      'Database=D:\db\ARCHIVAR.FDB'
+      'DriverID=FB')
     LoginPrompt = False
     Transaction = FDTransaction1
     Left = 38

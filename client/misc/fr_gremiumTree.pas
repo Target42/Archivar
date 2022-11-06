@@ -54,6 +54,9 @@ begin
 
   gr := TGremium(TV.Selected.Data);
 
+  if gr.StorageID = 0 then begin
+    gr.StorageID := GM.CheckStorage('gremium', gr.ID);
+  end;
   WindowHandler.openStorage( gr.StorageID, Format('Ablage : %s', [gr.Name]));
 end;
 

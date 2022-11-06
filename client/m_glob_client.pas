@@ -186,6 +186,8 @@ type
     function getStorageList : TJSONObject;
 
     procedure clearProxy;
+
+    function CheckStorage( typ : string; id : integer ) : integer;
   end;
 
   TMyCallback = class(TDBXCallback)
@@ -365,6 +367,18 @@ begin
   // Keine Key's, also neue anlegen
   if not CryptMod.hasKeyFiles then
     PostMessage( Application.MainFormHandle, msgNeedKeys, 0, 0 );
+end;
+
+function TGM.CheckStorage(typ: string; id: integer): integer;
+var
+  req, res : TJSONObject;
+begin
+  req := TJSONObject.Create;
+  JReplace(req, 'typ', 'gremium');
+  JReplace(req, 'id', id);
+
+  res := m_misc.checkFolder(req);
+  Result := JInt(res, 'drid', -1);
 end;
 
 procedure TGM.clearGrmien;
