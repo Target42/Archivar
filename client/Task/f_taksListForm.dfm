@@ -33,7 +33,7 @@ object TaskListForm: TTaskListForm
     Align = alBottom
     AutoSize = True
     TabOrder = 0
-    ExplicitTop = 239
+    ExplicitTop = 449
     ExplicitWidth = 635
     inherited StatusBar1: TStatusBar
       Width = 635
@@ -66,16 +66,15 @@ object TaskListForm: TTaskListForm
       TabOrder = 0
       ExplicitLeft = 2
       ExplicitTop = 15
-      ExplicitWidth = 451
-      ExplicitHeight = 305
+      ExplicitWidth = 631
+      ExplicitHeight = 216
       inherited TV: TTreeView
         Width = 631
         Height = 216
         OnChange = GremiumFrame1TVChange
         ExplicitLeft = 0
-        ExplicitTop = 0
-        ExplicitWidth = 451
-        ExplicitHeight = 305
+        ExplicitWidth = 631
+        ExplicitHeight = 216
       end
     end
   end
@@ -86,14 +85,17 @@ object TaskListForm: TTaskListForm
     Height = 213
     Align = alClient
     TabOrder = 2
-    ExplicitTop = 233
+    ExplicitTop = 236
     ExplicitWidth = 635
-    ExplicitHeight = 239
+    ExplicitHeight = 213
     inherited LV: TListView
       Width = 635
       Height = 213
       ExplicitWidth = 635
       ExplicitHeight = 213
+    end
+    inherited Tasks: TClientDataSet
+      Left = 200
     end
   end
 end

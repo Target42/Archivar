@@ -9,6 +9,16 @@ type
   TServerTimer = class(TThread)
   private
     type
+      TRunThread = class(TThread)
+        private
+          m_event : TNotifyEvent;
+        protected
+          procedure Execute; override;
+        public
+          constructor create( event : TNotifyEvent);
+      end;
+
+    type
       TimerType = (shortTimer, dayTimer);
       PTTimerEntry = ^TTimerEntry;
       TTimerEntry = record
@@ -26,7 +36,7 @@ type
         end;
 
         Day       : record
-          Time    : TTime;
+          Times   : TTime;
           NextDay : TDate;
           Hour    : word;
           Minute  : word;
@@ -58,6 +68,21 @@ implementation
 uses
   System.DateUtils, System.SysUtils;
 
+{TServerTimer.TRunThread}
+constructor TServerTimer.TRunThread.create( event : TNotifyEvent);
+begin
+  m_event := event;
+  inherited create;
+end;
+
+procedure TServerTimer.TRunThread.Execute;
+begin
+  FreeOnTerminate := true;
+  if Assigned(m_event) then
+    m_event(self);
+end;
+
+
 { TServerTimer }
 
 procedure TServerTimer.CheckTimeOuts;
@@ -85,7 +110,9 @@ begin
           if ( HourOfTheDay( time) = m_list[i]^.Day.Hour) and
              ( MinuteOfTheHour(time) = m_list[i]^.Day.Minute )
           then begin
-            m_list[i]^.CallBack(self);
+
+            TRunThread.create(m_list[i]^.CallBack);
+
             if not m_list[i]^.interval then begin
               remove(m_list[i]^.id);
             end else

@@ -164,12 +164,12 @@ object dsTask: TdsTask
         ParamType = ptInput
       end>
   end
-  object DeleteFITA: TFDQuery
+  object DeleteTaskLog: TFDQuery
     ObjectView = False
     Connection = DBMod.ArchivarConnection
     Transaction = DeleteTrans
     SQL.Strings = (
-      'delete from FI_TA'
+      'delete from LT_TASK_LOG'
       'where TA_ID = :TA_ID')
     Left = 512
     Top = 368
@@ -372,5 +372,37 @@ object dsTask: TdsTask
     DataSet = TaskLogTab
     Left = 920
     Top = 152
+  end
+  object Unused: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
+    SQL.Strings = (
+      
+        'SELECT a.TA_ID, a.TA_NAME,a.TA_TERMIN, a.TA_CREATED, a.TA_STARTE' +
+        'D, a.TA_FLAGS, a.TA_CREATED_BY, a.ta_status, a.ta_color, c.TY_NA' +
+        'ME '
+      'FROM TO_open b, TA_TASK a, TY_TASKTYPE c'
+      'where  gr_id = :gr_id'
+      'and a.ta_id = b.TA_ID'
+      'and a.TY_ID = c.TY_ID'
+      'and not b.TA_ID in '
+      '('
+      '  select TA_ID from CT_CHAPTER_TEXT'
+      '  where not ta_id is NULL'
+      ')'
+      'order by ty_name')
+    Left = 768
+    Top = 320
+    ParamData = <
+      item
+        Name = 'GR_ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+  end
+  object UnusedQry: TDataSetProvider
+    DataSet = Unused
+    Left = 768
+    Top = 368
   end
 end

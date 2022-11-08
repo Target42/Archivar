@@ -219,7 +219,9 @@ uses
   u_ForceClose in 'misc\u_ForceClose.pas',
   f_proxy in '..\misc\f_proxy.pas' {ProxyForm},
   f_gremium_task in 'Gremium\f_gremium_task.pas' {GremiumTaskForm},
-  u_dataset_to_list in '..\misc\u_dataset_to_list.pas';
+  u_dataset_to_list in '..\misc\u_dataset_to_list.pas',
+  f_task_delete in 'Task\f_task_delete.pas' {TaskDeleteForm},
+  fr_tasklist_delete in 'Task\fr_tasklist_delete.pas' {UnusedTaskListFrame: TFrame};
 
 {$R *.res}
 

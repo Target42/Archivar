@@ -15,6 +15,5 @@ object GremiumFrame: TGremiumFrame
     Indent = 19
     ReadOnly = True
     TabOrder = 0
-    ExplicitLeft = 3
   end
 end

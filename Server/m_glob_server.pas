@@ -28,6 +28,7 @@ type
     function md5( st    : TStream ) : string; overload;
 
     function getNameFromSession : string;
+    function getIDFromSession : integer;
 
   end;
 
@@ -146,6 +147,16 @@ begin
     Result := NIL;
   end;
 end;
+
+function TGM.getIDFromSession: integer;
+var
+  Session : TDSSession;
+begin
+  Session := TDSSessionManager.GetThreadSession;
+
+  Result := StrToIntDef( Session.GetData('ID'), 0);
+end;
+
 
 function TGM.getNameFromSession: string;
 var

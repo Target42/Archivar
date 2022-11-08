@@ -412,6 +412,7 @@ procedure TServerContainer1.execTimeToDie(sender: TObject);
 var
   DeleteFilesMod : TDeleteFilesMod;
 begin
+  GrijjyLog.EnterMethod(self, 'execTimeToDie');
   DeleteFilesMod := TDeleteFilesMod.create(self);
   try
     DeleteFilesMod.TimeToDie;
@@ -419,6 +420,7 @@ begin
 
   end;
   DeleteFilesMod.Free;
+  GrijjyLog.ExitMethod(self, 'execTimeToDie');
 end;
 
 function TServerContainer1.GetServiceController: TServiceController;
@@ -885,7 +887,8 @@ begin
   GrijjyLog.EnterMethod(self, 'ServiceStart');
   createTimer;
 
-  m_timer.newTimer(3, 1, true, execTimeToDie);
+//  m_timer.newTimer(3, 1, true, execTimeToDie);
+  m_timer.newTimer(15, 15, true, execTimeToDie);
 
   try
     DBMod.startDB;

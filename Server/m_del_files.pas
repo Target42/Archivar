@@ -24,7 +24,7 @@ type
   public
     property UserID: integer read FUserID write FUserID;
 
-    procedure DeleteFolderExecute( drid, grid : integer );
+    procedure DeleteFolderExecute( drid, grid : integer; trans : TFDTransaction = NIL  );
 
     procedure TimeToDie;
 
@@ -44,7 +44,7 @@ uses
 
 { TDeleteFilesMod }
 
-procedure TDeleteFilesMod.DeleteFolderExecute( drid, grid : integer );
+procedure TDeleteFilesMod.DeleteFolderExecute( drid, grid : integer; trans : TFDTransaction );
 type
   TData = record
     id : integer;
@@ -71,6 +71,12 @@ var
 begin
   m_folder.Clear;
 
+  if Assigned(trans) then begin
+    GetFolderQry.Transaction := trans;
+    DeleteFolder.Transaction := trans;
+  end;
+
+
   GetFolderQry.ParamByName('grid').AsInteger := grid;
 
   GetFolderQry.Open;
@@ -93,8 +99,8 @@ begin
 
   SetLength(list, 0);
 
-  if not FDTransaction1.Active then
-    FDTransaction1.StartTransaction;
+  if not GetFolderQry.Transaction.Active then
+    GetFolderQry.Transaction.StartTransaction;
 
 
   DeleteFolder.ValidateAll;
@@ -104,14 +110,17 @@ begin
       DeleteFolder.ExecuteAll;
     end;
 
-    if FDTransaction1.Active then
-      FDTransaction1.Commit;
+    if not Assigned(trans) then begin
+      if FDTransaction1.Active then
+        FDTransaction1.Commit;
+    end;
   except
-    if FDTransaction1.Active then
-      FDTransaction1.Rollback;
+    if not Assigned(trans) then begin
+      if FDTransaction1.Active then
+        FDTransaction1.Rollback;
+    end;
   end;
   m_folder.Clear;
-
 end;
 
 procedure TDeleteFilesMod.DataModuleCreate(Sender: TObject);

@@ -29,7 +29,7 @@ type
     AddTask: TFDQuery;
     SetFlagQry: TFDQuery;
     DeleteOpenTA: TFDQuery;
-    DeleteFITA: TFDQuery;
+    DeleteTaskLog: TFDQuery;
     DeleteFiles: TFDQuery;
     DeleteTaskQry: TFDQuery;
     FindTask: TFDQuery;
@@ -46,6 +46,8 @@ type
     Templates: TFDQuery;
     TaskLogTab: TFDTable;
     TaskLogSrc: TDataSetProvider;
+    Unused: TFDQuery;
+    UnusedQry: TDataSetProvider;
     procedure TaskLogTabBeforePost(DataSet: TDataSet);
   private
     { Private declarations }
@@ -68,7 +70,7 @@ implementation
 
 uses
   Grijjy.CloudLogging, u_json, Variants, u_Konst, m_lockMod, ServerContainerUnit1,
-  u_berTypes, Datasnap.DSSession;
+  u_berTypes, Datasnap.DSSession, m_del_files;
 
 {%CLASSGROUP 'System.Classes.TPersistent'}
 
@@ -176,8 +178,11 @@ function TdsTask.deleteTask(ta_id : integer): TJSONObject;
 var
   msg : TJSONObject;
   clid: string;
+  dr_id : integer;
+  delFiles : TDeleteFilesMod;
 begin
   GrijjyLog.EnterMethod(self, 'deleteTask');
+
   Result := LockMod.isLockedByID( ta_id, integer(ltTask ));
   if Jbool( Result, 'result') then
   begin
@@ -193,38 +198,43 @@ begin
   DeleteTrans.StartTransaction;
 
   try
+    dr_id := -1;
     TaskClidQry.ParamByName('TA_ID').AsInteger := ta_id;
     TaskClidQry.Open;
     if not TaskClidQry.Eof then
     begin
       clid := TaskClidQry.FieldByName('TA_CLID').AsString;
+      dr_id:=  TaskClidQry.FieldByName('DR_ID').AsInteger;
     end;
     TaskClidQry.Close;
 
-    DeleteOpenTA.ParamByName('TA_ID').AsInteger := ta_id;
-    DeleteOpenTA.ExecSQL;
+    if dr_id > -1 then begin
+      DeleteOpenTA.ParamByName('TA_ID').AsInteger := ta_id;
+      DeleteOpenTA.ExecSQL;
 
-    DeleteFiles.ParamByName('TA_ID').AsInteger := ta_id;
-    DeleteFiles.ExecSQL;
+      delFiles := TDeleteFilesMod.Create(self);
+      delFiles.DeleteFolderExecute(dr_id, dr_id, DeleteTrans);
+      delFiles.Free;
 
-    DeleteFITA.ParamByName('TA_ID').AsInteger := ta_id;
-    DeleteFITA.ExecSQL;
+      DeleteTaskLog.ParamByName('TA_ID').AsInteger := ta_id;
+      DeleteTaskLog.ExecSQL;
 
-    DeleteTaskQry.ParamByName('TA_ID').AsInteger := ta_id;
-    DeleteTaskQry.ExecSQL;
+      DeleteTaskQry.ParamByName('TA_ID').AsInteger := ta_id;
+      DeleteTaskQry.ExecSQL;
 
-    JResult(Result, true, 'Die Aufgabe wurde gelöscht!');
-    DeleteTrans.Commit;
-    try
-      msg := TJSONObject.Create;
-      JAction(  msg, BRD_TASK_DELETE);
-      JReplace( msg, 'taid', ta_id);
-      JReplace( msg, 'clid', clid);
-      ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg);
-    except
-      on e : exception do
-      begin
-        GrijjyLog.Send('error', e.ToString, TgoLogLevel.Error);
+      JResult(Result, true, 'Die Aufgabe wurde gelöscht!');
+      DeleteTrans.Commit;
+      try
+        msg := TJSONObject.Create;
+        JAction(  msg, BRD_TASK_DELETE);
+        JReplace( msg, 'taid', ta_id);
+        JReplace( msg, 'clid', clid);
+        ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg);
+      except
+        on e : exception do
+        begin
+          GrijjyLog.Send('error', e.ToString, TgoLogLevel.Error);
+        end;
       end;
     end;
 

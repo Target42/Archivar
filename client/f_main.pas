@@ -178,6 +178,8 @@ type
     ac_ad_action: TAction;
     Aktionen1: TMenuItem;
     N21: TMenuItem;
+    ac_ta_delete: TAction;
+    asklschen1: TMenuItem;
     procedure ac_prg_closeExecute(Sender: TObject);
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure ac_prg_disconExecute(Sender: TObject);
@@ -225,6 +227,7 @@ type
     procedure ac_ad_actionExecute(Sender: TObject);
     procedure StatusBar1DrawPanel(StatusBar: TStatusBar; Panel: TStatusPanel;
       const Rect: TRect);
+    procedure ac_ta_deleteExecute(Sender: TObject);
   private
     m_noStatChange : boolean;
 
@@ -257,7 +260,7 @@ uses
   f_meeting_new, f_meeting_select, f_meeting_proto, f_login,
   system.UITypes, f_protocol_sec, u_onlineUser, f_doMeeting, f_task_type,
   f_flieCacheForm, f_keys, f_dairy, f_textblock_export, f_textblock_import,
-  f_storages, f_protokoll_new, f_admin;
+  f_storages, f_protokoll_new, f_admin, f_task_delete;
 
 {$R *.dfm}
 
@@ -625,6 +628,11 @@ begin
   ProtocollListForm.Free;
 end;
 
+procedure TMainForm.ac_ta_deleteExecute(Sender: TObject);
+begin
+  execTaskDeleteForm;
+end;
+
 procedure TMainForm.ac_ta_loadExecute(Sender: TObject);
 begin
   Application.CreateForm(TTaskListForm, TaskListForm);
@@ -813,6 +821,7 @@ begin
 
   ac_ta_neu.Enabled       := flag;
   ac_ta_load.Enabled      := flag;
+  ac_ta_delete.Enabled    := flag;
 
   ac_pr_new.Enabled       := flag;
   ac_pr_open.Enabled      := flag;

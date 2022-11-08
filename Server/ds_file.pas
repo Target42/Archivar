@@ -765,6 +765,7 @@ begin
       FileData.FieldByName('FI_VERSION').AsInteger   := 1;
       FileData.FieldByName('FI_CREATED_BY').AsString := GM.getNameFromSession;
       FileData.FieldByName('FI_SIZE').AsLargeInt     := JInt64( data, 'size');
+      FileData.FieldByName('PE_ID').AsInteger        := GM.getIDFromSession;
 
       bst := FileData.CreateBlobStream( FileData.FieldByName('FI_DATA'), bmWrite);
       GM.CopyStream( st, bst);

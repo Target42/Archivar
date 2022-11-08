@@ -353,6 +353,10 @@
         object N10: TMenuItem
           Caption = '-'
         end
+        object asklschen1: TMenuItem
+          Action = ac_ta_delete
+          Enabled = False
+        end
       end
       object Proptokoll1: TMenuItem
         Caption = 'Protokoll'
@@ -870,6 +874,11 @@
       Category = 'Admin'
       Caption = 'Aktionen'
       OnExecute = ac_ad_actionExecute
+    end
+    object ac_ta_delete: TAction
+      Category = 'Task'
+      Caption = 'Task l'#246'schen'
+      OnExecute = ac_ta_deleteExecute
     end
   end
   object ApplicationEvents1: TApplicationEvents

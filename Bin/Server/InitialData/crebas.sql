@@ -1,7 +1,7 @@
 /* ============================================================ */
 /*   Database name:  MODEL_2                                    */
 /*   DBMS name:      InterBase                                  */
-/*   Created on:     22.10.2022  20:00                          */
+/*   Created on:     07.11.2022  19:23                          */
 /* ============================================================ */
 
 create generator gen_be_id;
@@ -326,6 +326,11 @@ create table CT_CHAPTER_TEXT
 );
 
 /* ============================================================ */
+/*   Index: CT_CHAPTER_TEXT_TA                                  */
+/* ============================================================ */
+create ASC index CT_CHAPTER_TEXT_TA on CT_CHAPTER_TEXT (TA_ID, CT_ID);
+
+/* ============================================================ */
 /*   Table: FI_FILE                                             */
 /* ============================================================ */
 create table FI_FILE
@@ -341,6 +346,7 @@ create table FI_FILE
     FI_CREATED_BY                   VARCHAR(200)                   ,
     FI_SIZE                         BIGINT                         ,
     FI_LOCKED                       CHAR(1)                        ,
+    PE_ID                           INTEGER                        ,
     constraint PK_FI_FILE primary key (FI_ID)
 );
 
