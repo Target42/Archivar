@@ -19,6 +19,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure GremiumFrame1TVChange(Sender: TObject; Node: TTreeNode);
+    procedure BitBtn1Click(Sender: TObject);
   private
     m_gremium : TGremium;
     procedure setGremium( value : TGremium);
@@ -34,6 +35,9 @@ procedure execTaskDeleteForm;
 
 implementation
 
+uses
+  System.Generics.Collections, u_stub, m_glob_client, System.JSON, u_json;
+
 {$R *.dfm}
 procedure execTaskDeleteForm;
 begin
@@ -44,6 +48,31 @@ begin
 
   end;
   TaskDeleteForm.Free;
+end;
+
+procedure TTaskDeleteForm.BitBtn1Click(Sender: TObject);
+var
+  list    : TList<integer>;
+  id      : integer;
+  client  : TdsTaskClient;
+  data    : TJSONObject;
+begin
+  list := UnusedTaskListFrame1.Checked;
+  if list.Count = 0 then exit;
+
+  client := TdsTaskClient.Create(GM.SQLConnection1.DBXConnection);
+  for id in list do begin
+    try
+      data := client.deleteTask(id);
+      if not JBool( data, 'result') then
+        ShowMessage( JString(data, 'text'));
+    except
+
+    end;
+  end;
+  client.Free;
+
+  setGremium(m_gremium);
 end;
 
 procedure TTaskDeleteForm.FormCreate(Sender: TObject);

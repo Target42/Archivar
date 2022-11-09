@@ -2,7 +2,7 @@ object MySettingsForm: TMySettingsForm
   Left = 0
   Top = 0
   Caption = 'Einstellungen'
-  ClientHeight = 253
+  ClientHeight = 269
   ClientWidth = 451
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -17,7 +17,7 @@ object MySettingsForm: TMySettingsForm
   TextHeight = 13
   inline BaseFrame1: TBaseFrame
     Left = 0
-    Top = 193
+    Top = 209
     Width = 451
     Height = 60
     Align = alBottom
@@ -34,32 +34,36 @@ object MySettingsForm: TMySettingsForm
     Left = 0
     Top = 0
     Width = 451
-    Height = 193
-    ActivePage = TabSheet2
+    Height = 209
+    ActivePage = TabSheet3
     Align = alClient
     TabOrder = 1
+    ExplicitHeight = 193
     object TabSheet1: TTabSheet
       Caption = 'Server'
+      ExplicitHeight = 165
       object LB: TListBox
         Left = 0
         Top = 0
         Width = 443
-        Height = 124
+        Height = 140
         Align = alClient
         Columns = 2
         ItemHeight = 13
         TabOrder = 0
         OnClick = LBClick
+        ExplicitHeight = 124
       end
       object Panel1: TPanel
         Left = 0
-        Top = 124
+        Top = 140
         Width = 443
         Height = 41
         Align = alBottom
         Caption = 'Panel1'
         ShowCaption = False
         TabOrder = 1
+        ExplicitTop = 124
         object SpeedButton1: TSpeedButton
           Left = 203
           Top = 6
@@ -207,25 +211,28 @@ object MySettingsForm: TMySettingsForm
     object TabSheet2: TTabSheet
       Caption = 'Benutzer'
       ImageIndex = 1
+      ExplicitHeight = 165
       object UserLB: TListBox
         Left = 0
         Top = 0
         Width = 443
-        Height = 124
+        Height = 140
         Align = alClient
         Columns = 4
         ItemHeight = 13
         TabOrder = 0
+        ExplicitHeight = 124
       end
       object Panel2: TPanel
         Left = 0
-        Top = 124
+        Top = 140
         Width = 443
         Height = 41
         Align = alBottom
         Caption = 'Panel2'
         ShowCaption = False
         TabOrder = 1
+        ExplicitTop = 124
         object SpeedButton4: TSpeedButton
           Left = 203
           Top = 6
@@ -370,5 +377,140 @@ object MySettingsForm: TMySettingsForm
         end
       end
     end
+    object TabSheet3: TTabSheet
+      Caption = 'Proxy'
+      ImageIndex = 2
+      ExplicitLeft = 8
+      ExplicitTop = 22
+      ExplicitHeight = 222
+      object Label1: TLabel
+        Left = 200
+        Top = 32
+        Width = 48
+        Height = 13
+        Caption = 'Proxyport'
+      end
+      object LabeledEdit1: TLabeledEdit
+        Left = 24
+        Top = 48
+        Width = 169
+        Height = 21
+        EditLabel.Width = 28
+        EditLabel.Height = 13
+        EditLabel.Caption = 'Proxy'
+        TabOrder = 0
+      end
+      object SpinEdit1: TSpinEdit
+        Left = 199
+        Top = 48
+        Width = 74
+        Height = 22
+        MaxValue = 0
+        MinValue = 0
+        TabOrder = 1
+        Value = 8080
+      end
+      object LabeledEdit2: TLabeledEdit
+        Left = 24
+        Top = 88
+        Width = 121
+        Height = 21
+        EditLabel.Width = 22
+        EditLabel.Height = 13
+        EditLabel.Caption = 'User'
+        TabOrder = 2
+      end
+      object LabeledEdit3: TLabeledEdit
+        Left = 151
+        Top = 88
+        Width = 122
+        Height = 21
+        EditLabel.Width = 44
+        EditLabel.Height = 13
+        EditLabel.Caption = 'Passwort'
+        PasswordChar = '*'
+        TabOrder = 3
+      end
+      object LabeledEdit4: TLabeledEdit
+        Left = 24
+        Top = 128
+        Width = 249
+        Height = 21
+        EditLabel.Width = 19
+        EditLabel.Height = 13
+        EditLabel.Caption = 'URL'
+        TabOrder = 4
+        Text = 'http://www.google.de'
+      end
+      object BitBtn1: TBitBtn
+        Left = 288
+        Top = 126
+        Width = 75
+        Height = 25
+        Caption = 'Test'
+        Glyph.Data = {
+          36040000424D3604000000000000360000002800000010000000100000000100
+          20000000000000040000C40E0000C40E00000000000000000000FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00B2299B38B0279DABB1269D72FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00B1279C55B0279CFFB0279DABFFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00AD249B1CB1279C55B2299B38FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00B2299B38B0279CAAB1269D72FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00B1279D41B0279CFFB0279CBEFFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00AE28A113B0279BF6B0279CFBAE26
+          9D3CFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00B0279C84B0279CFFB027
+          9CF1AF269C36FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00AA00AA03B0279CA8B027
+          9CFFB0279CEEB0289F2DFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00AA00AA03AF27
+          9CA3B0279CFFB0289BBBFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00AF269C43B0269E4480008002FFFFFF00FFFFFF00AA22
+          990FB0279CFFB0279CF3FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00B0279DE9B0279CFFAF289B33FFFFFF00FFFFFF00B028
+          9F2DB0279CFFB0279CE6FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00B1269D99B0279CFFB0279CDCB1269D65AF289B66B127
+          9CDDB0279CFFB1279C96FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00AA2B9C12B0279CC9B0279CFFB0279CFFB0279CFFB027
+          9CFFB0289CC8AF209F10FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF0080008002AF289B59AF279C9DB1279B9CB126
+          9C5880008002FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
+        TabOrder = 5
+        OnClick = BitBtn1Click
+      end
+      object CheckBox1: TCheckBox
+        Left = 24
+        Top = 3
+        Width = 97
+        Height = 17
+        Caption = 'Aktiv'
+        TabOrder = 6
+      end
+    end
+  end
+  object IdHTTP1: TIdHTTP
+    AllowCookies = True
+    ProxyParams.BasicAuthentication = True
+    ProxyParams.ProxyPort = 0
+    Request.ContentLength = -1
+    Request.ContentRangeEnd = -1
+    Request.ContentRangeStart = -1
+    Request.ContentRangeInstanceLength = -1
+    Request.Accept = 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+    Request.BasicAuthentication = False
+    Request.UserAgent = 'Mozilla/3.0 (compatible; Indy Library)'
+    Request.Ranges.Units = 'bytes'
+    Request.Ranges = <>
+    HTTPOptions = [hoForceEncodeParams]
+    Left = 112
+    Top = 144
   end
 end

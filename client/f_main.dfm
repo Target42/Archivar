@@ -49,7 +49,7 @@
     Height = 467
     Align = alClient
     Center = True
-    ExplicitLeft = 255
+    ExplicitLeft = 251
     ExplicitTop = -1
   end
   object StatusBar1: TStatusBar
@@ -877,7 +877,7 @@
     end
     object ac_ta_delete: TAction
       Category = 'Task'
-      Caption = 'Task l'#246'schen'
+      Caption = 'Aufgabe l'#246'schen'
       OnExecute = ac_ta_deleteExecute
     end
   end

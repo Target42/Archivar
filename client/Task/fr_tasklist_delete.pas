@@ -56,16 +56,21 @@ type
     m_grid : integer;
     m_list : TList<DataRec>;
 
+    m_checkList : TList<integer>;
+
     function GetGR_ID: integer;
     procedure SetGR_ID(const Value: integer);
     procedure clearList;
     procedure fillList;
     procedure UpdateView;
+
+    function getCheckt : TList<integer>;
   public
     procedure prepare;
     procedure release;
 
     property GR_ID: integer read GetGR_ID write SetGR_ID;
+    property Checked : TList<Integer> read getCheckt;
   end;
 
 implementation
@@ -92,6 +97,7 @@ var
   data : DataRec;
 begin
   clearList;
+  m_checkList.Clear;
 
   UnusedQry.ParamByName('GR_ID').AsInteger := m_grid;
   UnusedQry.Open;
@@ -116,6 +122,22 @@ begin
   UnusedQry.Close;
 
   UpdateView;
+end;
+
+function TUnusedTaskListFrame.getCheckt: TList<integer>;
+var
+  i : integer;
+  da : DataRec;
+begin
+  m_checkList.Clear;
+
+  for i := 0 to pred(LV.Items.Count) do begin
+    if LV.Items.Item[i].Checked then begin
+      da := LV.Items.Item[i].Data;
+      m_checkList.Add(da.id);
+    end;
+  end;
+  Result := m_checkList;
 end;
 
 function TUnusedTaskListFrame.GetGR_ID: integer;
@@ -158,12 +180,15 @@ procedure TUnusedTaskListFrame.prepare;
 begin
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
   m_list := TList<DataRec>.create;
+  m_checkList := TList<integer>.create;
 end;
 
 procedure TUnusedTaskListFrame.release;
 begin
   clearList;
   m_list.Free;
+
+  m_checkList.Free;
 end;
 
 procedure TUnusedTaskListFrame.SetGR_ID(const Value: integer);

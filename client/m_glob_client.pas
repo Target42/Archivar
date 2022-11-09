@@ -113,6 +113,7 @@ type
   public
     Type
       rProxyInfo = record
+        use   : boolean;
         host  : string;
         port  : integer;
         user  : string;
@@ -220,7 +221,7 @@ uses
   System.Win.ComObj, m_WindowHandler, m_BookMarkHandler, IdHashMessageDigest,
   Vcl.Graphics, u_PersonenListeImpl, m_cache, f_login, u_kategorie,
   u_onlineUser, m_http, f_doMeeting, u_eventHandler, u_Konst, IdStack, m_fileCache, m_crypt,
-  CodeSiteLogging, f_main;
+  CodeSiteLogging, f_main, System.IniFiles;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -392,6 +393,7 @@ end;
 
 procedure TGM.clearProxy;
 begin
+  ProxyInfo.use   := false;
   ProxyInfo.host  := '';
   ProxyInfo.port  := 0;
   ProxyInfo.user  := '';
@@ -463,21 +465,17 @@ var
     DSClientCallbackChannelManager1.ProxyPort       := 0;
     DSClientCallbackChannelManager1.ProxyUsername   := '';
 
-    if ProxyInfo.host <> '' then begin
+    if ProxyInfo.use then begin
       SQLConnection1.Params.Values['DSProxyHost']     := ProxyInfo.host;
       DSClientCallbackChannelManager1.ProxyHost       := ProxyInfo.host;
-    end;
 
-    if ProxyInfo.pwd <> '' then begin
       SQLConnection1.Params.Values['DSProxyPassword'] := ProxyInfo.pwd;
       SQLConnection1.Params.Values['Password']        := ProxyInfo.pwd;
       DSClientCallbackChannelManager1.ProxyPassword   := ProxyInfo.pwd;
-    end;
-    if ProxyInfo.port <> 0 then begin
+
       SQLConnection1.Params.Values['DSProxyPort']     := IntToStr(ProxyInfo.port);
       DSClientCallbackChannelManager1.ProxyPort       := ProxyInfo.port;
-    end;
-    if ProxyInfo.user <> '' then begin
+
       SQLConnection1.Params.Values['DSProxyUsername'] := ProxyInfo.user;
       SQLConnection1.Params.Values['User_Name']       := ProxyInfo.user;
       DSClientCallbackChannelManager1.ProxyUsername   := ProxyInfo.user;
@@ -513,7 +511,6 @@ begin
   DSClientCallbackChannelManager1.UserName  := '*'+LoginForm.UserName;
   DSClientCallbackChannelManager1.Password  := LoginForm.Password;
 
-  SQLConnection1.Params.SaveToFile('datasnap.txt');
   try
     SQLConnection1.Open;
     Result := SQLConnection1.Connected;
@@ -1067,12 +1064,37 @@ end;
 
 procedure TGM.setProxy;
 var
-  val : string;
+  val   : string;
+  ini   : TIniFile;
+  fname : string;
 begin
-  if FindCmdLineSwitch('proxyhost', val) then ProxyInfo.host := val;
-  if FindCmdLineSwitch('proxypwd', val)  then ProxyInfo.pwd  := val;
-  if FindCmdLineSwitch('proxyport', val) then ProxyInfo.port := StrToIntDef(val, 8080);
-  if FindCmdLineSwitch('proxyuser', val) then ProxyInfo.user := val;
+  fname := TPath.Combine(ExtractFilePath(ParamStr(0)), 'proxy.dat');
+  if FindCmdLineSwitch('proxyhost', val) then begin
+
+    if FindCmdLineSwitch('proxyhost', val) then ProxyInfo.host := val;
+    if FindCmdLineSwitch('proxypwd', val)  then ProxyInfo.pwd  := val;
+    if FindCmdLineSwitch('proxyport', val) then ProxyInfo.port := StrToIntDef(val, 8080);
+    if FindCmdLineSwitch('proxyuser', val) then ProxyInfo.user := val;
+    ProxyInfo.use := ProxyInfo.host <> '';
+
+    ini := TIniFile.Create(fname);
+    ini.WriteBool('proxy', 'active', ProxyInfo.use);
+    ini.WriteString('proxy', 'host', ProxyInfo.host);
+    ini.WriteString('proxy', 'user', ProxyInfo.user);
+    ini.WriteString('proxy', 'pwd',  ProxyInfo.pwd);
+    ini.WriteInteger('proxy','port', ProxyInfo.port );
+    ini.Free;
+  end else begin
+    if FileExists(fname) then begin
+      ini := TIniFile.Create(fname);
+      ProxyInfo.use   := ini.ReadBool('proxy', 'active', false);
+      ProxyInfo.host  := ini.ReadString('proxy', 'host', '');
+      ProxyInfo.user  := ini.ReadString('proxy', 'user', '');
+      ProxyInfo.pwd   := ini.ReadString('proxy', 'pwd',  '');
+      ProxyInfo.port  := ini.ReadInteger('proxy','port',  8088);
+      ini.Free;
+    end;
+  end;
 end;
 
 procedure TGM.ShowLockInfo(data: TJSONObject);

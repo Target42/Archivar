@@ -107,6 +107,7 @@ object TaskDeleteForm: TTaskDeleteForm
         FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
         FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
       TabOrder = 0
+      OnClick = BitBtn1Click
     end
   end
   object GroupBox2: TGroupBox
@@ -124,13 +125,15 @@ object TaskDeleteForm: TTaskDeleteForm
       Height = 230
       Align = alClient
       TabOrder = 0
-      ExplicitLeft = 4
-      ExplicitTop = 17
+      ExplicitLeft = 2
+      ExplicitTop = 15
       ExplicitWidth = 700
       ExplicitHeight = 230
       inherited LV: TListView
         Width = 700
         Height = 230
+        ExplicitWidth = 700
+        ExplicitHeight = 230
       end
     end
   end

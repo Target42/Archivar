@@ -887,8 +887,7 @@ begin
   GrijjyLog.EnterMethod(self, 'ServiceStart');
   createTimer;
 
-//  m_timer.newTimer(3, 1, true, execTimeToDie);
-  m_timer.newTimer(15, 15, true, execTimeToDie);
+  m_timer.newTimer(3, 1, true, execTimeToDie);
 
   try
     DBMod.startDB;
