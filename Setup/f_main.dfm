@@ -455,8 +455,6 @@ object MainSetupForm: TMainSetupForm
       Header.Subtitle.Font.Style = []
       Caption = 'SearchGDS'
       OnEnterPage = SearchGDSEnterPage
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel3: TPanel
         Left = 0
         Top = 489
@@ -533,8 +531,6 @@ object MainSetupForm: TMainSetupForm
       Header.Subtitle.Font.Style = []
       OnEnterPage = ServerInfoEnterPage
       OnExitPage = ServerInfoExitPage
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GroupBox1: TGroupBox
         Left = 0
         Top = 153
@@ -718,8 +714,6 @@ object MainSetupForm: TMainSetupForm
       Header.Subtitle.Font.Style = []
       OnEnterPage = SicherheitEnterPage
       OnExitPage = SicherheitExitPage
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GroupBox4: TGroupBox
         Left = 0
         Top = 70
@@ -800,6 +794,7 @@ object MainSetupForm: TMainSetupForm
           EditLabel.Height = 13
           EditLabel.Caption = 'Passwort'
           TabOrder = 3
+          Text = 'BEROffice'
         end
         object BitBtn4: TBitBtn
           Left = 168
@@ -831,8 +826,6 @@ object MainSetupForm: TMainSetupForm
       Header.Subtitle.Font.Style = []
       Caption = 'InitData'
       OnEnterPage = InitDataEnterPage
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel1: TPanel
         Left = 0
         Top = 489
@@ -904,8 +897,6 @@ object MainSetupForm: TMainSetupForm
       Header.Subtitle.Font.Style = []
       Caption = 'Benutzerimport'
       OnEnterPage = ImportEnterPage
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Splitter1: TSplitter
         Left = 0
         Top = 161
@@ -1074,7 +1065,7 @@ object MainSetupForm: TMainSetupForm
       'DriverID=FB')
     LoginPrompt = False
     Transaction = IBTransaction1
-    Left = 398
+    Left = 406
     Top = 132
   end
   object TETab: TFDQuery
@@ -1360,5 +1351,13 @@ object MainSetupForm: TMainSetupForm
     SSLOptions.VerifyDepth = 0
     Left = 424
     Top = 368
+  end
+  object GRTyTab: TFDTable
+    Connection = ArchivarConnection
+    Transaction = IBTransaction1
+    UpdateOptions.UpdateTableName = 'GR_TY'
+    TableName = 'GR_TY'
+    Left = 400
+    Top = 336
   end
 end

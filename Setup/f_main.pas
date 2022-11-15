@@ -20,7 +20,7 @@ uses
   IdSSLOpenSSL, IdHTTP,
   IdCustomHTTPServer, IdHTTPServer, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
   IdIOHandlerSocket, IdTCPConnection, IdTCPClient, IdServerIOHandler,
-  IdComponent, Vcl.Grids;
+  IdComponent, Vcl.Grids, System.Generics.Collections;
 
 type
   TMainSetupForm = class(TForm)
@@ -111,6 +111,7 @@ type
     LabeledEdit8: TLabeledEdit;
     LabeledEdit9: TLabeledEdit;
     BitBtn4: TBitBtn;
+    GRTyTab: TFDTable;
     procedure SearchGDSEnterPage(Sender: TObject;
       const FromPage: TJvWizardCustomPage);
     procedure ServerInfoEnterPage(Sender: TObject;
@@ -145,6 +146,7 @@ type
   private
     m_home  : string;
     m_ini   : TiniFile;
+    m_berMap : TDictionary<string, integer>;
 
     procedure importImages;
     procedure importTaskTypes;
@@ -156,6 +158,7 @@ type
     procedure importEPub;
     procedure importTextblock;
     procedure importFileCache;
+    procedure importGremiumTask;
 
     procedure updateLV;
 
@@ -204,6 +207,7 @@ begin
 
   importGremium;
   importTaskTypes;
+  importGremiumTask;
 
   importDataTypes;
   importTasks;
@@ -531,11 +535,13 @@ begin
   m_home := TPath.Combine(ExtractFileDir(Application.ExeName), 'InitialData');
   m_ini   := TiniFile.Create(TPath.Combine(ExtractFileDir(Application.ExeName), 'ArchivServer.exe.ini'));
 
+  m_berMap := TDictionary<string, integer>.create;
 //  JvWizard1.ActivePage := Sicherheit;
 end;
 
 procedure TMainSetupForm.FormDestroy(Sender: TObject);
 begin
+  m_berMap.Free;
   m_ini.Free;
 end;
 
@@ -739,8 +745,10 @@ var
   fname : string;
   i     : integer;
   xml   : IXMLBER;
+  id    : integer;
 begin
   item := progress('Gremium');
+  m_berMap.Clear;
 
   fname := TPath.Combine(m_home, 'gremium.xml');
   xml   := LoadBER(fname);
@@ -748,14 +756,16 @@ begin
   GRTab.Open;
   for i := 0 to pred(xml.Count) do
   begin
+    id  := AutoInc('gen_gr_id');
     GRTab.Append;
-    GRTab.FieldByName('GR_ID').AsInteger            := AutoInc('gen_gr_id');
+    GRTab.FieldByName('GR_ID').AsInteger            := id;
     GRTab.FieldByName('DR_ID').AsInteger            := getNewDir;
     GRTab.FieldByName('GR_NAME').AsString           := xml.Gremium[i].Name;
     GRTab.FieldByName('GR_SHORT').AsString          := xml.Gremium[i].Kurz;
     GRTab.FieldByName('GR_PARENT_SHORT').AsString   := xml.Gremium[i].Pkurz;
     GRTab.FieldByName('GR_PIC_NAME').AsString       := xml.Gremium[i].Pic;
     GRTab.Post;
+    m_berMap.AddOrSetValue(UpperCase(xml.Gremium[i].Kurz), id);
     ProgressBar1.Position := i;
   end;
 
@@ -763,6 +773,52 @@ begin
 
   item.SubItems.Strings[0] := 'Abgeschlossen';
   updateLV;
+end;
+
+procedure TMainSetupForm.importGremiumTask;
+var
+  item : TListItem;
+  fname : string;
+  path  : string;
+  obj   : TJSONObject;
+  i     : integer;
+  row   : TJSONObject;
+  arr   : TJSONArray;
+  id    : integer;
+  list  : TList<integer>;
+  val   : integer;
+begin
+  item := progress('Gremium- und Aufgabeverknüpfung');
+  path := TPath.Combine(m_home, 'Templates');
+
+  fname := TPath.Combine(path, 'gremium_task.json');
+  obj := LoadJSON(fname);
+
+  GRTyTab.Open;
+  arr := JArray( obj, 'list');
+  if Assigned(arr) then begin
+    for i := 0 to pred(arr.Count) do begin
+      row := getRow(arr, i);
+      if m_berMap.TryGetValue(UpperCase(Jstring(row, 'name')), id) then begin
+        list := JArrayToInteger( JArray(row, 'typen'));
+        if Assigned(list) then begin
+          for val in list do begin
+            GRTyTab.Append;
+            GRTyTab.FieldByName('GR_ID').AsInteger := id;
+            GRTyTab.FieldByName('TY_ID').AsInteger := val;
+            GRTyTab.Post;
+          end;
+          list.Free;
+        end;
+      end;
+    end;
+    item.SubItems.Strings[0] := 'Abgeschlossen';
+  end else
+    item.SubItems.Strings[0] := 'Fehler: Keine Verknüpfungen fehlen';
+
+  GRTyTab.Close;
+  updateLV;
+
 end;
 
 procedure TMainSetupForm.importImages;
