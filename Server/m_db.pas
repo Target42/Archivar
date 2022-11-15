@@ -55,6 +55,9 @@ begin
 
   db := IniOptions.DBhost+':'+IniOptions.DBdb;
   GrijjyLog.Send('db name', db);
+{$ifdef DEBUG}
+  Writeln( 'DB:'+db);
+{$endif}
 
 //  ArchivarConnection.ConnectionDefName := 'Archivar_pooled';
   ArchivarConnection.Params.Clear;
