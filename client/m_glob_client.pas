@@ -118,6 +118,8 @@ type
         port  : integer;
         user  : string;
         pwd   : string;
+
+        procedure clear;
       end;
   public
     ProxyInfo : rProxyInfo;
@@ -185,8 +187,6 @@ type
     function calcSize( size : int64 ) : string;
 
     function getStorageList : TJSONObject;
-
-    procedure clearProxy;
 
     function CheckStorage( typ : string; id : integer ) : integer;
   end;
@@ -389,15 +389,6 @@ begin
   for i := 0 to pred(m_gremien.Count) do
     m_gremien[i].Free;
   m_gremien.Clear;
-end;
-
-procedure TGM.clearProxy;
-begin
-  ProxyInfo.use   := false;
-  ProxyInfo.host  := '';
-  ProxyInfo.port  := 0;
-  ProxyInfo.user  := '';
-  ProxyInfo.pwd   := '';
 end;
 
 function TGM.Connect: boolean;
@@ -1228,6 +1219,17 @@ begin
   );
   Result := TJSONBool.Create(true);
   CodeSite.ExitMethod(self, 'Execute');
+end;
+
+{ TGM.rProxyInfo }
+
+procedure TGM.rProxyInfo.clear;
+begin
+  use   := false;
+  host  := '';
+  port  := 8088;
+  user  := '';
+  pwd   := '';
 end;
 
 end.

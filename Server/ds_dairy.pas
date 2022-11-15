@@ -15,6 +15,8 @@ type
     DITab: TFDTable;
     FDTransaction1: TFDTransaction;
     DISrc: TDataSetProvider;
+    DataQry: TFDQuery;
+    DataSrc: TDataSetProvider;
     procedure DSServerModuleCreate(Sender: TObject);
     procedure DITabBeforePost(DataSet: TDataSet);
   private

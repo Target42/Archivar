@@ -877,7 +877,7 @@
     end
     object ac_ta_delete: TAction
       Category = 'Task'
-      Caption = 'Aufgabe l'#246'schen'
+      Caption = 'L'#246'schen'
       OnExecute = ac_ta_deleteExecute
     end
   end

@@ -15,6 +15,7 @@ object LoginForm: TLoginForm
   OldCreateOrder = False
   Position = poMainFormCenter
   OnCreate = FormCreate
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object Label2: TLabel
@@ -53,18 +54,16 @@ object LoginForm: TLoginForm
     Align = alBottom
     AutoSize = True
     TabOrder = 2
-    ExplicitTop = 218
+    ExplicitTop = 162
     ExplicitWidth = 240
     inherited StatusBar1: TStatusBar
       Width = 240
+      SimplePanel = True
       ExplicitWidth = 240
     end
     inherited Panel1: TPanel
       Width = 240
       ExplicitWidth = 240
-      inherited AbortBtn: TBitBtn
-        OnClick = BaseFrame1AbortBtnClick
-      end
       inherited OKBtn: TBitBtn
         Left = 141
         ExplicitLeft = 141

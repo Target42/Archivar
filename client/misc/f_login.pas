@@ -16,7 +16,7 @@ type
     Label2: TLabel;
     Label3: TLabel;
     procedure FormCreate(Sender: TObject);
-    procedure BaseFrame1AbortBtnClick(Sender: TObject);
+    procedure FormShow(Sender: TObject);
   private
     function GetUserName: string;
     procedure SetUserName(const Value: string);
@@ -46,15 +46,20 @@ uses
 
 { TLoginForm }
 
-procedure TLoginForm.BaseFrame1AbortBtnClick(Sender: TObject);
-begin
-  GM.clearProxy;
-end;
-
 procedure TLoginForm.FormCreate(Sender: TObject);
 begin
   LabeledEdit1.Text := GM.UserName;
   LabeledEdit2.Text := '';
+end;
+
+procedure TLoginForm.FormShow(Sender: TObject);
+begin
+  if GM.ProxyInfo.use then
+    BaseFrame1.StatusBar1.SimpleText := Format('%s:%d',
+      [GM.ProxyInfo.host, GM.ProxyInfo.port])
+    else
+      BaseFrame1.StatusBar1.SimpleText := 'Kein Proxy';
+
 end;
 
 function TLoginForm.GetHostName: string;

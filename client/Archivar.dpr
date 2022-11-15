@@ -221,7 +221,8 @@ uses
   f_gremium_task in 'Gremium\f_gremium_task.pas' {GremiumTaskForm},
   u_dataset_to_list in '..\misc\u_dataset_to_list.pas',
   f_task_delete in 'Task\f_task_delete.pas' {TaskDeleteForm},
-  fr_tasklist_delete in 'Task\fr_tasklist_delete.pas' {UnusedTaskListFrame: TFrame};
+  fr_tasklist_delete in 'Task\fr_tasklist_delete.pas' {UnusedTaskListFrame: TFrame},
+  f_dairy_entry in 'Dairy\f_dairy_entry.pas' {DairyEntryForm};
 
 {$R *.res}
 
