@@ -51,7 +51,7 @@ object Taskform: TTaskform
     DesignSize = (
       362
       285)
-    object AufgabenTypen: TJvWizardInteriorPage
+    object Gremium: TJvWizardInteriorPage
       Header.Title.Color = clNone
       Header.Title.Text = 'Aufgabentypen'
       Header.Title.Anchors = [akLeft, akTop, akRight]
@@ -61,47 +61,7 @@ object Taskform: TTaskform
       Header.Title.Font.Name = 'Tahoma'
       Header.Title.Font.Style = [fsBold]
       Header.Subtitle.Color = clNone
-      Header.Subtitle.Text = 'Was ist es f'#252'r eine Aufgabe?'
-      Header.Subtitle.Anchors = [akLeft, akTop, akRight, akBottom]
-      Header.Subtitle.Font.Charset = DEFAULT_CHARSET
-      Header.Subtitle.Font.Color = clWindowText
-      Header.Subtitle.Font.Height = -11
-      Header.Subtitle.Font.Name = 'Tahoma'
-      Header.Subtitle.Font.Style = []
-      Caption = 'AufgabenTypen'
-      object LVType: TListView
-        Left = 0
-        Top = 70
-        Width = 362
-        Height = 173
-        Align = alClient
-        Columns = <
-          item
-            Caption = 'Name'
-            Width = 150
-          end
-          item
-            Caption = 'Frist'
-          end>
-        ReadOnly = True
-        RowSelect = True
-        SortType = stText
-        TabOrder = 0
-        ViewStyle = vsReport
-        OnClick = LVTypeClick
-      end
-    end
-    object Gremium: TJvWizardInteriorPage
-      Header.Title.Color = clNone
-      Header.Title.Text = 'Gremium'
-      Header.Title.Anchors = [akLeft, akTop, akRight]
-      Header.Title.Font.Charset = DEFAULT_CHARSET
-      Header.Title.Font.Color = clWindowText
-      Header.Title.Font.Height = -16
-      Header.Title.Font.Name = 'Tahoma'
-      Header.Title.Font.Style = [fsBold]
-      Header.Subtitle.Color = clNone
-      Header.Subtitle.Text = 'Welches Gremium soll die aufgabe bearbeiten?'
+      Header.Subtitle.Text = 'Welches Gremium soll es bearbeiten?'
       Header.Subtitle.Anchors = [akLeft, akTop, akRight, akBottom]
       Header.Subtitle.Font.Charset = DEFAULT_CHARSET
       Header.Subtitle.Font.Color = clWindowText
@@ -109,9 +69,7 @@ object Taskform: TTaskform
       Header.Subtitle.Font.Name = 'Tahoma'
       Header.Subtitle.Font.Style = []
       Caption = 'Gremium'
-      OnEnterPage = GremiumEnterPage
-      ExplicitWidth = 0
-      ExplicitHeight = 0
+      OnNextButtonClick = GremiumNextButtonClick
       object LV: TListView
         Left = 0
         Top = 70
@@ -134,6 +92,52 @@ object Taskform: TTaskform
         TabOrder = 0
         ViewStyle = vsReport
         OnClick = LVClick
+        ExplicitTop = 78
+        ExplicitHeight = 67
+      end
+    end
+    object AufgabenTypen: TJvWizardInteriorPage
+      Header.Title.Color = clNone
+      Header.Title.Text = 'Gremium'
+      Header.Title.Anchors = [akLeft, akTop, akRight]
+      Header.Title.Font.Charset = DEFAULT_CHARSET
+      Header.Title.Font.Color = clWindowText
+      Header.Title.Font.Height = -16
+      Header.Title.Font.Name = 'Tahoma'
+      Header.Title.Font.Style = [fsBold]
+      Header.Subtitle.Color = clNone
+      Header.Subtitle.Text = 'Welches Gremium soll die Aufgabe bearbeiten?'
+      Header.Subtitle.Anchors = [akLeft, akTop, akRight, akBottom]
+      Header.Subtitle.Font.Charset = DEFAULT_CHARSET
+      Header.Subtitle.Font.Color = clWindowText
+      Header.Subtitle.Font.Height = -11
+      Header.Subtitle.Font.Name = 'Tahoma'
+      Header.Subtitle.Font.Style = []
+      Caption = 'AufgabenTypen'
+      OnEnterPage = AufgabenTypenEnterPage
+      OnNextButtonClick = AufgabenTypenNextButtonClick
+      object LVType: TListView
+        Left = 0
+        Top = 70
+        Width = 362
+        Height = 173
+        Align = alClient
+        Columns = <
+          item
+            Caption = 'Name'
+            Width = 150
+          end
+          item
+            Caption = 'Frist'
+          end>
+        ReadOnly = True
+        RowSelect = True
+        SortType = stText
+        TabOrder = 0
+        ViewStyle = vsReport
+        OnClick = LVTypeClick
+        ExplicitTop = 118
+        ExplicitHeight = 75
       end
     end
     object Template: TJvWizardInteriorPage
@@ -155,8 +159,6 @@ object Taskform: TTaskform
       Header.Subtitle.Font.Style = []
       Caption = 'Template'
       OnEnterPage = TemplateEnterPage
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object TEView: TListView
         Left = 0
         Top = 70
@@ -196,8 +198,6 @@ object Taskform: TTaskform
       Caption = 'Details1'
       OnEnterPage = Details1EnterPage
       OnFinishButtonClick = Details1FinishButtonClick
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label2: TLabel
         Left = 19
         Top = 85
@@ -289,16 +289,22 @@ object Taskform: TTaskform
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsTask'
+    SQLConnection = GM.SQLConnection1
     Left = 48
     Top = 8
   end
   object TaskTypes: TClientDataSet
     Aggregates = <>
-    Params = <>
+    Params = <
+      item
+        DataType = ftInteger
+        Name = 'GR_ID'
+        ParamType = ptInput
+      end>
     ProviderName = 'TaskTypes'
     RemoteServer = DSProviderConnection1
-    Left = 136
-    Top = 8
+    Left = 120
+    Top = 136
   end
   object Task: TClientDataSet
     Aggregates = <>

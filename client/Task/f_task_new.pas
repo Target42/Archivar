@@ -24,21 +24,21 @@ type
     Label6: TLabel;
     JvDBDateTimePicker2: TJvDBDateTimePicker;
     Label7: TLabel;
-    LV: TListView;
     JvWizard1: TJvWizard;
-    AufgabenTypen: TJvWizardInteriorPage;
     Gremium: TJvWizardInteriorPage;
-    LVType: TListView;
+    AufgabenTypen: TJvWizardInteriorPage;
     Template: TJvWizardInteriorPage;
     Details1: TJvWizardInteriorPage;
     TEQry: TClientDataSet;
     TEView: TListView;
     Edit1: TEdit;
+    LVType: TListView;
+    LV: TListView;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure JvDBDateTimePicker1Change(Sender: TObject);
     procedure LVTypeClick(Sender: TObject);
-    procedure GremiumEnterPage(Sender: TObject;
+    procedure AufgabenTypenEnterPage(Sender: TObject;
       const FromPage: TJvWizardCustomPage);
     procedure LVClick(Sender: TObject);
     procedure TemplateEnterPage(Sender: TObject;
@@ -47,6 +47,8 @@ type
     procedure Details1FinishButtonClick(Sender: TObject; var Stop: Boolean);
     procedure Details1EnterPage(Sender: TObject;
       const FromPage: TJvWizardCustomPage);
+    procedure GremiumNextButtonClick(Sender: TObject; var Stop: Boolean);
+    procedure AufgabenTypenNextButtonClick(Sender: TObject; var Stop: Boolean);
   private
     m_id   : integer;
     m_grid : integer;
@@ -69,6 +71,12 @@ uses
   System.DateUtils, u_berTypes;
 
 {$R *.dfm}
+
+procedure TTaskform.AufgabenTypenNextButtonClick(Sender: TObject;
+  var Stop: Boolean);
+begin
+  Stop := not Assigned(LVType.Selected);
+end;
 
 procedure TTaskform.Details1EnterPage(Sender: TObject;
   const FromPage: TJvWizardCustomPage);
@@ -147,19 +155,6 @@ begin
   end;
   LV.Items.EndUpdate;
 
-  TaskTypes.Open;
-  LVType.Items.BeginUpdate;
-  while not TaskTypes.Eof do
-  begin
-    item := LVType.items.add;
-    item.Caption := TaskTypes.FieldByName('TY_NAME').AsString;
-    item.SubItems.Add(TaskTypes.FieldByName('TY_TAGE').AsString);
-    item.Data := pointer( TaskTypes.FieldByName('TY_ID').AsInteger );
-    TaskTypes.Next;
-  end;
-  LVType.Items.EndUpdate;
-  TaskTypes.Close;
-
   AufgabenTypen.VisibleButtons := [TJvWizardButtonKind.bkBack, TJvWizardButtonKind.bkCancel];
 end;
 
@@ -182,13 +177,37 @@ begin
   Result := TGremium(LV.Selected.Data).ID;
 end;
 
-procedure TTaskform.GremiumEnterPage(Sender: TObject;
-  const FromPage: TJvWizardCustomPage);
+procedure TTaskform.GremiumNextButtonClick(Sender: TObject; var Stop: Boolean);
 begin
-  if not Assigned(LV.Selected) then
-    Gremium.VisibleButtons := [TJvWizardButtonKind.bkBack, TJvWizardButtonKind.bkCancel]
-  else
-    Gremium.VisibleButtons := [TJvWizardButtonKind.bkBack, TJvWizardButtonKind.bkNext, TJvWizardButtonKind.bkCancel]
+  Stop := not Assigned(LV.Selected);
+end;
+
+procedure TTaskform.AufgabenTypenEnterPage(Sender: TObject;
+  const FromPage: TJvWizardCustomPage);
+
+var
+    item : TListItem;
+    gr : TGremium;
+begin
+  Gremium.VisibleButtons := [TJvWizardButtonKind.bkBack, TJvWizardButtonKind.bkNext, TJvWizardButtonKind.bkCancel];
+
+  gr := TGremium(LV.Selected.Data);
+  TaskTypes.ParamByName('GR_ID').AsInteger := gr.ID;
+
+  TaskTypes.Open;
+  LVType.Items.BeginUpdate;
+  LVType.Clear;
+  while not TaskTypes.Eof do
+  begin
+    item := LVType.items.add;
+    item.Caption := TaskTypes.FieldByName('TY_NAME').AsString;
+    item.SubItems.Add(TaskTypes.FieldByName('TY_TAGE').AsString);
+    item.Data := pointer( TaskTypes.FieldByName('TY_ID').AsInteger );
+    TaskTypes.Next;
+  end;
+  LVType.Items.EndUpdate;
+  TaskTypes.Close;
+
 end;
 
 procedure TTaskform.JvDBDateTimePicker1Change(Sender: TObject);

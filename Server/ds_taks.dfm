@@ -4,8 +4,8 @@ object dsTask: TdsTask
   Width = 1026
   object TaskTypes: TDataSetProvider
     DataSet = TaskTypesQry
-    Left = 40
-    Top = 128
+    Left = 96
+    Top = 136
   end
   object Task: TDataSetProvider
     DataSet = TaskTab
@@ -14,8 +14,8 @@ object dsTask: TdsTask
   end
   object GremiumList: TDataSetProvider
     DataSet = GremiumQry
-    Left = 104
-    Top = 128
+    Left = 40
+    Top = 144
   end
   object TemplatesQry: TDataSetProvider
     DataSet = Templates
@@ -293,10 +293,18 @@ object dsTask: TdsTask
     Connection = DBMod.ArchivarConnection
     Transaction = IBTransaction1
     SQL.Strings = (
-      'select * from TY_TASKTYPE'
-      'order by TY_NAME')
-    Left = 48
-    Top = 80
+      'SELECT b.*'
+      'FROM GR_TY a, ty_tasktype b'
+      'where GR_ID = :gr_id'
+      'and a.TY_ID = b.ty_id')
+    Left = 104
+    Top = 88
+    ParamData = <
+      item
+        Name = 'GR_ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
   end
   object AutoIncQry: TFDQuery
     ObjectView = False
@@ -312,8 +320,8 @@ object dsTask: TdsTask
     SQL.Strings = (
       'select * from GR_GREMIUM'
       'order by GR_NAME')
-    Left = 104
-    Top = 80
+    Left = 40
+    Top = 96
   end
   object SetStatusQry: TFDQuery
     ObjectView = False
