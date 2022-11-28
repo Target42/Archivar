@@ -1,7 +1,7 @@
 object Taskform: TTaskform
   Left = 0
   Top = 0
-  ActiveControl = LVType
+  ActiveControl = LV
   Caption = 'Aufgabe'
   ClientHeight = 285
   ClientWidth = 362
@@ -22,7 +22,7 @@ object Taskform: TTaskform
     Top = 0
     Width = 362
     Height = 285
-    ActivePage = AufgabenTypen
+    ActivePage = Gremium
     ButtonBarHeight = 42
     ButtonStart.Caption = 'To &Start Page'
     ButtonStart.NumGlyphs = 1
@@ -70,6 +70,8 @@ object Taskform: TTaskform
       Header.Subtitle.Font.Style = []
       Caption = 'Gremium'
       OnNextButtonClick = GremiumNextButtonClick
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object LV: TListView
         Left = 0
         Top = 70
@@ -116,6 +118,8 @@ object Taskform: TTaskform
       Caption = 'AufgabenTypen'
       OnEnterPage = AufgabenTypenEnterPage
       OnNextButtonClick = AufgabenTypenNextButtonClick
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object LVType: TListView
         Left = 0
         Top = 70
@@ -159,6 +163,8 @@ object Taskform: TTaskform
       Header.Subtitle.Font.Style = []
       Caption = 'Template'
       OnEnterPage = TemplateEnterPage
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object TEView: TListView
         Left = 0
         Top = 70
@@ -198,6 +204,8 @@ object Taskform: TTaskform
       Caption = 'Details1'
       OnEnterPage = Details1EnterPage
       OnFinishButtonClick = Details1FinishButtonClick
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Label2: TLabel
         Left = 19
         Top = 85
@@ -289,7 +297,6 @@ object Taskform: TTaskform
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsTask'
-    SQLConnection = GM.SQLConnection1
     Left = 48
     Top = 8
   end

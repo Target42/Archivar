@@ -2,3 +2,4 @@
 /guard.stat
 *.identcache
 /guard.identcache
+/guard.dproj.local
