@@ -10,7 +10,7 @@ type
   [TRoleAuth('download,admin', 'user')]
   TdsUpdater = class(TDSServerModule)
   private
-    { Private-Deklarationen }
+    function ScanPath(base: string): TJSONObject;
   public
     function download( obj : TJSONObject ) : TStream;
     function getFileList : TJSONObject;
@@ -35,41 +35,95 @@ begin
   Result := NIL;
   if not SameText(IniOptions.DNLactive, 'true') then exit;
 
-  path    := TPath.Combine( ExtractFilePath(paramStr(0)), IniOptions.clientdir );
-  fname   := TPath.Combine( path, JString(obj, 'name'));
-  if FileExists(fname) then begin
-    Result := TFileStream.Create(fname, fmOpenRead + fmShareDenyNone);
+  path    := ExpandUNCFileName(TPath.Combine( ExtractFilePath(paramStr(0)), IniOptions.clientdir ));
+  fname   := ExpandUNCFileName(TPath.Combine( path, JString(obj, 'name')));
+
+  if pos( path, fname) = 1 then begin
+    if FileExists(fname) then begin
+      Result := TFileStream.Create(fname, fmOpenRead + fmShareDenyNone);
+    end;
   end;
 end;
 
 function TdsUpdater.getFileList: TJSONObject;
 var
   path    : string;
-  arr     : TStringDynArray;
-  len, i  : integer;
-  list    : TJSONArray;
-  row     : TJSONObject;
 begin
-  Result  := TJSONObject.Create;
-  list    := TJSONArray.Create;
 
   if SameText(IniOptions.DNLactive, 'true') then begin
     path    := TPath.Combine( ExtractFilePath(paramStr(0)), IniOptions.clientdir );
-    len     := Length( path ) + 1;
-    arr     := TDirectory.GetFiles( path );
+    Result  := ScanPath(path);
+  end else
+    Result := TJSONObject.Create;
+end;
 
-    for i := low(arr) to high(arr) do begin
-      row := TJSONObject.Create;
+function TdsUpdater.ScanPath(base: string): TJSONObject;
+var
+  len : integer;
+  function addFolder( path : string ) : TJSONObject;
+  var
+    arr : TStringDynArray;
+    items : TJSONArray;
 
-      JReplace(row, 'name', Copy(arr[i], len));
-      JReplace(row, 'md5',  GM.md5(arr[i]));
-      JReplace(row, 'size', FileSizeByName( arr[i] ));
+    procedure addFiles;
+    var
+      i : integer;
+      s : string;
+      obj : TJSONObject;
+    begin
+      arr := TDirectory.GetFiles(path);
+      if Length(arr) > 0 then begin
+        items := TJSONArray.Create;
+        for i := low(arr) to High(arr) do begin
+          s := ExtractFileName(arr[i]);
+          if s[1] <> '.' then begin
+            obj := TJSONObject.Create;
+            JReplace( obj, 'name', s);
+            JReplace( obj, 'size', FileSizeByName( arr[i] ));
+            JReplace( obj, 'md5',  GM.md5(arr[i]));
 
-      list.Add(row)
+            items.AddElement(obj);
+          end;
+        end;
+
+        JReplace(Result, 'files', items);
+        SetLength(arr, 0);
+      end;
     end;
-  end;
 
-  JReplace( Result, 'items', list);
+    procedure AddSubFolder;
+    var
+      i : integer;
+    begin
+      items := TJSONArray.Create;
+      arr := TDirectory.GetDirectories(path);
+      if length(arr) > 0 then begin
+        for i := low(arr) to high(arr) do begin
+          items.AddElement( addFolder(arr[i]));
+        end;
+        JReplace( Result, 'childs', items);
+        setLength(arr, 0);
+      end;
+    end;
+  begin
+    Result := TJSONObject.Create;
+    JReplace(Result, 'path', copy( path, len));
+    // Files
+    AddFiles;
+
+    // SubFolder
+    AddSubFolder;
+  end;
+begin
+  Result := TJSONObject.Create;
+  base := Trim(base);
+
+  if base[length(base)] <> '\' then
+    base := base+ '\';
+
+  len := Length(base)+1;
+
+  JReplace( Result, 'folder', AddFolder( base ));
 end;
 
 end.

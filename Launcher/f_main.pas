@@ -8,7 +8,7 @@ uses
   Data.DBXCommon, IPPeerClient, Vcl.StdCtrls, Vcl.Buttons, Data.DB, Data.SqlExpr,
   u_stub, System.JSON, u_ini, JvCreateProcess,
   JvBrowseFolder, Vcl.ExtCtrls, pngimage, MidasLib,
-  Data.DbxHTTPLayer, JvBaseDlg, JvComponentBase;
+  Data.DbxHTTPLayer, JvBaseDlg, JvComponentBase, System.Generics.Collections;
 
 type
   TMainForm = class(TForm)
@@ -35,7 +35,10 @@ type
     procedure CheckBox2Click(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
   private
-    type rFile = record
+
+    type
+      prFile = ^rFile;
+      rFile = record
       name        : string;
       md5         : string;
       size        : int64;
@@ -44,7 +47,7 @@ type
     end;
   private
     m_client : TdsUpdaterClient;
-    m_files  : array of rFile;
+    m_files  : TList<prFile>;
     m_root   : string;
 
     function CheckFiles : boolean;
@@ -60,6 +63,9 @@ type
     function copyInstaller : boolean;
 
     function unpackSSL : boolean;
+
+    procedure clearFiles;
+    procedure FillFiles( obj : TJSONObject );
   public
     property Root : string read m_root write setRoot;
   end;
@@ -77,9 +83,6 @@ uses
 procedure TMainForm.BitBtn1Click(Sender: TObject);
 var
   obj     : TJSONObject;
-  row     : TJSONObject;
-  arr     : TJSONArray;
-  i       : integer;
 
   procedure setHost( s : string );
   var
@@ -137,6 +140,7 @@ begin
     exit;
   end;
 
+  clearFiles;
   setHost( LabeledEdit2.Text );
 
   unpackSSL;
@@ -150,21 +154,8 @@ begin
 
     if Assigned(m_client) then begin
       obj := m_client.getFileList;
-
-      arr := JArray( obj, 'items');
-      setLength( m_files, arr.Count);
-
-      if Assigned(arr) then begin
-        for i := 0 to pred(arr.Count) do begin
-          row := getRow( arr, i);
-
-          m_files[i].name := JString( row, 'name');
-          m_files[i].md5  := JString( row, 'md5');
-          m_files[i].size := JInt64(  row, 'size');
-
-          m_files[i].needUpdate := true;
-          m_files[i].locked     := false;
-        end;
+      if Assigned(obj) then begin
+        FillFiles(obj);
       end;
     end;
     if CheckFiles then
@@ -193,8 +184,8 @@ var
   s     : string;
 begin
   Result := true;
-  for i := low(m_files) to high(m_files) do begin
-    fname := TPath.combine( m_root, m_files[i].name );
+  for i := 0 to pred(m_files.Count) do begin
+    fname := TPath.combine( m_root, m_files[i]^.name );
     if FileExists( fname ) then begin
       StatusBar1.SimpleText := 'Check:'+m_files[i].name;
 
@@ -219,12 +210,22 @@ begin
   if not Result then begin
     s := 'Die folgenden Datein sind noch in Benutzung:'+sLineBreak;
 
-    for i := low(m_files) to high(m_files) do begin
-      if m_files[i].locked and m_files[i].needUpdate then
-        s := s + m_files[i].name;
+    for i := 0 to pred(m_files.Count) do begin
+      if m_files[i]^.locked and m_files[i]^.needUpdate then
+        s := s + m_files[i]^.name;
     end;
     ShowMessage(s);
   end;
+end;
+
+procedure TMainForm.clearFiles;
+var
+  ptr : prFile;
+begin
+  for ptr in m_files do
+    Dispose(ptr);
+  m_files.Clear;
+
 end;
 
 function TMainForm.copyInstaller: boolean;
@@ -287,15 +288,17 @@ begin
 
   path := m_root;
 
-  for i := low(m_files) to high(m_files) do begin
-    if m_files[i].needUpdate then begin
+  for i := 0 to pred(m_files.count) do begin
+    if m_files[i]^.needUpdate then begin
 
-      fname := TPath.Combine( path, m_files[i].name);
+      fname := TPath.Combine( path, m_files[i]^.name);
+      ForceDirectories(ExtractFilePath(fname));
+
       if FileExists( fname ) then
         DeleteFile(fname);
 
       req := TJSONObject.Create;
-      JReplace( req, 'name', m_files[i].name);
+      JReplace( req, 'name', m_files[i]^.name);
       st := m_client.download(req);
       Result := download(fname, st, m_files[i].size) and Result;
     end;
@@ -307,10 +310,52 @@ begin
 
 end;
 
+procedure TMainForm.FillFiles(obj: TJSONObject);
+var
+  ptr : prFile;
+
+  procedure AddFolder( data : TJSONObject );
+  var
+    arr   : TJSONArray;
+    i     : integer;
+    row   : TJSonObject;
+    path  : string;
+  begin
+    if not Assigned(data) then exit;
+
+    path := JSTring(data, 'path');
+    arr := JArray(Data, 'files' );
+
+    if Assigned(arr) and (arr.Count > 0) then begin
+      for i := 0 to pred(arr.Count) do begin
+        row := getRow(arr, i);
+        new(ptr);
+        m_files.Add(ptr);
+        ptr^.name := TPath.Combine( path, JString( row, 'name'));
+        ptr^.md5  := JString( row, 'md5');
+        ptr^.size := JInt64(  row, 'size');
+
+        ptr^.needUpdate := true;
+        ptr^.locked     := false;
+      end;
+    end;
+
+    arr := JArray( data, 'childs');
+    if Assigned(arr) then begin
+      for i := 0 to pred(arr.Count) do begin
+        AddFolder(getRow(arr, i));
+      end;
+    end;
+  end;
+begin
+  AddFolder( JObject(obj, 'folder') );
+end;
+
 procedure TMainForm.FormCreate(Sender: TObject);
 var
   fname : string;
 begin
+  m_files  := TList<prFile>.create;
   m_client := NIL;
   IniOptions.LoadFromFile(ParamStr(0)+'.ini');
 
@@ -333,7 +378,8 @@ end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
 begin
-  SetLength( m_files, 0 );
+  clearFiles;
+  m_files.Free;
 end;
 
 procedure TMainForm.setRoot(value: string);

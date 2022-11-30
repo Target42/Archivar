@@ -626,6 +626,19 @@
             <Form>DairyEntryForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
+        <DCCReference Include="nhunspell\f_correctForm.pas">
+            <Form>CorrectForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="nhunspell\f_select_dictinonary.pas">
+            <Form>SelectDictionaryForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="nhunspell\NHunspell.pas"/>
+        <DCCReference Include="nhunspell\NHunXml.pas"/>
+        <DCCReference Include="nhunspell\PasZip.pas"/>
+        <DCCReference Include="nhunspell\u_nhunhspell.pas"/>
+        <DCCReference Include="nhunspell\u_SpellChecker.pas"/>
         <None Include="Datafields\ERA-NS.txt"/>
         <RcItem Include="dws\dws.html">
             <ContainerId>ResourceItem</ContainerId>

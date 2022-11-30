@@ -222,7 +222,14 @@ uses
   u_dataset_to_list in '..\misc\u_dataset_to_list.pas',
   f_task_delete in 'Task\f_task_delete.pas' {TaskDeleteForm},
   fr_tasklist_delete in 'Task\fr_tasklist_delete.pas' {UnusedTaskListFrame: TFrame},
-  f_dairy_entry in 'Dairy\f_dairy_entry.pas' {DairyEntryForm};
+  f_dairy_entry in 'Dairy\f_dairy_entry.pas' {DairyEntryForm},
+  f_correctForm in 'nhunspell\f_correctForm.pas' {CorrectForm},
+  f_select_dictinonary in 'nhunspell\f_select_dictinonary.pas' {SelectDictionaryForm},
+  NHunspell in 'nhunspell\NHunspell.pas',
+  NHunXml in 'nhunspell\NHunXml.pas',
+  PasZip in 'nhunspell\PasZip.pas',
+  u_nhunhspell in 'nhunspell\u_nhunhspell.pas',
+  u_SpellChecker in 'nhunspell\u_SpellChecker.pas';
 
 {$R *.res}
 
@@ -251,5 +258,7 @@ begin
   Application.CreateForm(TFileCacheMod, FileCacheMod);
   Application.CreateForm(TCryptMod, CryptMod);
   Application.CreateForm(TMainForm, MainForm);
+  Application.CreateForm(TCorrectForm, CorrectForm);
+  Application.CreateForm(TSelectDictionaryForm, SelectDictionaryForm);
   Application.Run;
 end.
