@@ -96,6 +96,7 @@ end;
 procedure TLogFrame.prepare;
 begin
   m_dataset := NIL;
+  EditFrame1.prepare;
   EditFrame1.Text := '';
   EditFrame1.Modified  := false;
 
@@ -105,6 +106,7 @@ end;
 
 procedure TLogFrame.release;
 begin
+  EditFrame1.Release;
   m_dataset := NIL;
   TextBlockFrame1.release;
 end;

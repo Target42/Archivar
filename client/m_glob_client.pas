@@ -15,7 +15,7 @@ uses
   JvSHFileOperation, System.Notification,
   DbxCompressionFilter, u_ShowMessageTimeOut, Data.DbxHTTPLayer, Vcl.ExtCtrls,
   FireDAC.Phys.Intf, FireDAC.DApt.Intf, JvBaseDlg, System.ImageList,
-  JvComponentBase;
+  JvComponentBase, u_SpellChecker;
 
 const
   WMUSER            = WM_USER + 25;
@@ -111,19 +111,6 @@ type
     procedure setProxy;
 
   public
-    Type
-      rProxyInfo = record
-        use   : boolean;
-        host  : string;
-        port  : integer;
-        user  : string;
-        pwd   : string;
-
-        procedure clear;
-      end;
-  public
-    ProxyInfo : rProxyInfo;
-
     function Connect : boolean;
     procedure Disconnect;
 
@@ -221,7 +208,7 @@ uses
   System.Win.ComObj, m_WindowHandler, m_BookMarkHandler, IdHashMessageDigest,
   Vcl.Graphics, u_PersonenListeImpl, m_cache, f_login, u_kategorie,
   u_onlineUser, m_http, f_doMeeting, u_eventHandler, u_Konst, IdStack, m_fileCache, m_crypt,
-  CodeSiteLogging, f_main, System.IniFiles;
+  CodeSiteLogging, f_main, u_ini;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -456,20 +443,20 @@ var
     DSClientCallbackChannelManager1.ProxyPort       := 0;
     DSClientCallbackChannelManager1.ProxyUsername   := '';
 
-    if ProxyInfo.use then begin
-      SQLConnection1.Params.Values['DSProxyHost']     := ProxyInfo.host;
-      DSClientCallbackChannelManager1.ProxyHost       := ProxyInfo.host;
+    if IniObject.ProxyActive then begin
+      SQLConnection1.Params.Values['DSProxyHost']     := IniObject.ProxyHost;
+      DSClientCallbackChannelManager1.ProxyHost       := IniObject.ProxyHost;
 
-      SQLConnection1.Params.Values['DSProxyPassword'] := ProxyInfo.pwd;
-      SQLConnection1.Params.Values['Password']        := ProxyInfo.pwd;
-      DSClientCallbackChannelManager1.ProxyPassword   := ProxyInfo.pwd;
+      SQLConnection1.Params.Values['DSProxyPassword'] := IniObject.ProxyPwd;
+      SQLConnection1.Params.Values['Password']        := IniObject.ProxyPwd;
+      DSClientCallbackChannelManager1.ProxyPassword   := IniObject.ProxyPwd;
 
-      SQLConnection1.Params.Values['DSProxyPort']     := IntToStr(ProxyInfo.port);
-      DSClientCallbackChannelManager1.ProxyPort       := ProxyInfo.port;
+      SQLConnection1.Params.Values['DSProxyPort']     := IntToStr(IniObject.ProxyPort);
+      DSClientCallbackChannelManager1.ProxyPort       := IniObject.ProxyPort;
 
-      SQLConnection1.Params.Values['DSProxyUsername'] := ProxyInfo.user;
-      SQLConnection1.Params.Values['User_Name']       := ProxyInfo.user;
-      DSClientCallbackChannelManager1.ProxyUsername   := ProxyInfo.user;
+      SQLConnection1.Params.Values['DSProxyUsername'] := IniObject.ProxyUser;
+      SQLConnection1.Params.Values['User_Name']       := IniObject.ProxyUser;
+      DSClientCallbackChannelManager1.ProxyUsername   := IniObject.ProxyUser;
     end;
 end;
 
@@ -1056,35 +1043,17 @@ end;
 procedure TGM.setProxy;
 var
   val   : string;
-  ini   : TIniFile;
-  fname : string;
 begin
   fname := TPath.Combine(ExtractFilePath(ParamStr(0)), 'proxy.dat');
   if FindCmdLineSwitch('proxyhost', val) then begin
 
-    if FindCmdLineSwitch('proxyhost', val) then ProxyInfo.host := val;
-    if FindCmdLineSwitch('proxypwd', val)  then ProxyInfo.pwd  := val;
-    if FindCmdLineSwitch('proxyport', val) then ProxyInfo.port := StrToIntDef(val, 8080);
-    if FindCmdLineSwitch('proxyuser', val) then ProxyInfo.user := val;
-    ProxyInfo.use := ProxyInfo.host <> '';
+    if FindCmdLineSwitch('proxyhost', val) then IniObject.ProxyHost := val;
+    if FindCmdLineSwitch('proxypwd', val)  then IniObject.ProxyPwd  := val;
+    if FindCmdLineSwitch('proxyport', val) then IniObject.ProxyPort := StrToIntDef(val, 8080);
+    if FindCmdLineSwitch('proxyuser', val) then IniObject.ProxyUser := val;
 
-    ini := TIniFile.Create(fname);
-    ini.WriteBool('proxy', 'active', ProxyInfo.use);
-    ini.WriteString('proxy', 'host', ProxyInfo.host);
-    ini.WriteString('proxy', 'user', ProxyInfo.user);
-    ini.WriteString('proxy', 'pwd',  ProxyInfo.pwd);
-    ini.WriteInteger('proxy','port', ProxyInfo.port );
-    ini.Free;
-  end else begin
-    if FileExists(fname) then begin
-      ini := TIniFile.Create(fname);
-      ProxyInfo.use   := ini.ReadBool('proxy', 'active', false);
-      ProxyInfo.host  := ini.ReadString('proxy', 'host', '');
-      ProxyInfo.user  := ini.ReadString('proxy', 'user', '');
-      ProxyInfo.pwd   := ini.ReadString('proxy', 'pwd',  '');
-      ProxyInfo.port  := ini.ReadInteger('proxy','port',  8088);
-      ini.Free;
-    end;
+    IniObject.ProxyActive := IniObject.ProxyHost <> '';
+    IniObject.save;
   end;
 end;
 
@@ -1219,17 +1188,6 @@ begin
   );
   Result := TJSONBool.Create(true);
   CodeSite.ExitMethod(self, 'Execute');
-end;
-
-{ TGM.rProxyInfo }
-
-procedure TGM.rProxyInfo.clear;
-begin
-  use   := false;
-  host  := '';
-  port  := 8088;
-  user  := '';
-  pwd   := '';
 end;
 
 end.

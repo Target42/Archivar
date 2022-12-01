@@ -4,12 +4,17 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
-  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ComCtrls;
+  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ComCtrls,
+  u_SpellChecker, Vcl.Buttons;
 
 type
   TEditFrame = class(TFrame)
     RE: TRichEdit;
+    GroupBox1: TGroupBox;
+    SpeedButton1: TSpeedButton;
+    procedure SpeedButton1Click(Sender: TObject);
   private
+    m_check : TSpellChecker;
     procedure setText( text : string);
     function getText : string;
 
@@ -19,6 +24,9 @@ type
     function getchanged : boolean;
     procedure setChanged( value : boolean );
   public
+    procedure prepare;
+    procedure Release;
+
     property Text     : string  read getText  write setText;
     property ReadOnly : boolean read getRO    write setRO;
 
@@ -31,6 +39,9 @@ type
   end;
 
 implementation
+
+uses
+  m_glob_client, NHunspell, u_ini;
 
 {$R *.dfm}
 
@@ -62,6 +73,22 @@ begin
   setChanged( false );
 end;
 
+procedure TEditFrame.prepare;
+begin
+  m_check := TSpellChecker.create;
+  m_check.Edit := RE;
+
+  m_check.selectSpell(IniObject.SpellDict);
+  m_check.selectHypen(IniObject.SpellHyphen);
+
+  Hunspell.UpdateAndLoadDictionaries();
+end;
+
+procedure TEditFrame.Release;
+begin
+  m_check.Free;
+end;
+
 procedure TEditFrame.saveToStream(st: TStream);
 begin
   RE.Lines.SaveToStream(st);
@@ -88,6 +115,11 @@ begin
   st.Free;
 
   RE.Modified := false;
+end;
+
+procedure TEditFrame.SpeedButton1Click(Sender: TObject);
+begin
+  m_check.show;
 end;
 
 end.

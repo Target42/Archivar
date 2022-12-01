@@ -50,12 +50,17 @@ object BeschlussFrame: TBeschlussFrame
       ExplicitHeight = 106
       inherited RE: TRichEdit
         Width = 190
-        Height = 106
+        Height = 57
         PopupMenu = PopupMenu1
         OnDragDrop = EditFrame1REDragDrop
         OnDragOver = EditFrame1REDragOver
+        ExplicitLeft = 0
+        ExplicitTop = 49
         ExplicitWidth = 190
-        ExplicitHeight = 106
+        ExplicitHeight = 57
+      end
+      inherited GroupBox1: TGroupBox
+        Width = 190
       end
     end
     object Groupbox4: TGroupBox

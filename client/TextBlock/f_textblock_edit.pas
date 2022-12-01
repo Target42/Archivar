@@ -202,10 +202,12 @@ begin
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
   Application.CreateForm(TTextBlockPreviewForm, TextBlockPreviewForm);
   Application.CreateForm(TTagListForm, TagListForm);
+  EditFrame1.prepare;
 end;
 
 procedure TTextBlockEditForm.FormDestroy(Sender: TObject);
 begin
+  EditFrame1.Release;
   if (TBtab.State = dsInsert) or ( TBtab.State = dsEdit)  then
   begin
     TBtab.Cancel;

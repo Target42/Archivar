@@ -346,9 +346,14 @@ object TaksEditorForm: TTaksEditorForm
           ExplicitHeight = 91
           inherited RE: TRichEdit
             Width = 1003
-            Height = 91
-            ExplicitWidth = 1003
-            ExplicitHeight = 91
+            Height = 42
+            ExplicitLeft = 0
+            ExplicitTop = 49
+            ExplicitWidth = 292
+            ExplicitHeight = 42
+          end
+          inherited GroupBox1: TGroupBox
+            Width = 1003
           end
         end
       end
@@ -414,6 +419,8 @@ object TaksEditorForm: TTaksEditorForm
     object TabSheet2: TTabSheet
       Caption = 'Formulare'
       ImageIndex = 1
+      ExplicitWidth = 296
+      ExplicitHeight = 154
       inline EditorFrame1: TEditorFrame
         Left = 0
         Top = 0
@@ -421,8 +428,8 @@ object TaksEditorForm: TTaksEditorForm
         Height = 452
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1007
-        ExplicitHeight = 452
+        ExplicitWidth = 296
+        ExplicitHeight = 154
         inherited Splitter2: TSplitter
           Height = 452
           ExplicitHeight = 452
@@ -459,7 +466,7 @@ object TaksEditorForm: TTaksEditorForm
         end
         inherited Panel2: TPanel
           Height = 452
-          ExplicitHeight = 452
+          ExplicitHeight = 154
           inherited GroupBox2: TGroupBox
             Height = 254
             ExplicitHeight = 254
@@ -475,7 +482,7 @@ object TaksEditorForm: TTaksEditorForm
         end
         inherited ImageList1: TImageList
           Bitmap = {
-            494C01010D001800080110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+            494C01010D0018000C0110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
             0000000000003600000028000000400000004000000001002000000000000040
             0000000000000000000000000000000000000000000000000000000000000000
             0000000000000000000000000000000000000000000000000000000000000000
@@ -1015,6 +1022,8 @@ object TaksEditorForm: TTaksEditorForm
     object TabSheet3: TTabSheet
       Caption = 'Report'
       ImageIndex = 2
+      ExplicitWidth = 296
+      ExplicitHeight = 154
       inline ReportFrame1: TReportFrame
         Left = 0
         Top = 0
@@ -1023,8 +1032,8 @@ object TaksEditorForm: TTaksEditorForm
         Align = alClient
         AutoSize = True
         TabOrder = 0
-        ExplicitWidth = 1007
-        ExplicitHeight = 452
+        ExplicitWidth = 296
+        ExplicitHeight = 154
         inherited Splitter1: TSplitter
           Left = 611
           Height = 452

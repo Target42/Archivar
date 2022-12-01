@@ -89,11 +89,13 @@ end;
 procedure TChapterEditForm.FormCreate(Sender: TObject);
 begin
   TextBlockFrame1.init(false);
+  EditFrame1.prepare;
 end;
 
 procedure TChapterEditForm.FormDestroy(Sender: TObject);
 begin
   TextBlockFrame1.release;
+  EditFrame1.Release;
 end;
 
 procedure TChapterEditForm.setCP(value: IChapter);

@@ -82,10 +82,11 @@ type
 
     {Section: path }
     FPathIni : string;
+
   public
     procedure LoadSettings(Ini: TMemIniFile);
     procedure SaveSettings(Ini: TMemIniFile);
-    
+
     procedure LoadFromFile(const FileName: string);
     procedure SaveToFile(const FileName: string);
 
@@ -121,6 +122,7 @@ type
 
     {Section:path}
     property pathlog : string read FPathIni write FPathIni;
+
   end;
 
 var
@@ -164,7 +166,6 @@ begin
 
     {section: path}
     FPathIni := ini.ReadString(csIniPathSection, csIniPathSection, '.\log');
-
   end;
 end;
 
@@ -204,6 +205,7 @@ begin
 
     {Section: path}
     ini.WriteString(csIniPathSection, csIniPathSection, '.\log');
+
   end;
 end;
 

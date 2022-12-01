@@ -183,6 +183,7 @@ begin
 
   TextBlockFrame1.init();
   setBeschluss(NIL);
+  EditFrame1.prepare;
 end;
 
 procedure TBeschlussFrame.LabeledEdit1Exit(Sender: TObject);
@@ -207,6 +208,7 @@ end;
 
 procedure TBeschlussFrame.release;
 begin
+  EditFrame1.release;
   if Assigned(m_be) then
     m_be.release;
 

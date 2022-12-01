@@ -217,9 +217,14 @@ object MeetingForm: TMeetingForm
           ExplicitHeight = 104
           inherited RE: TRichEdit
             Width = 665
-            Height = 104
-            ExplicitWidth = 665
-            ExplicitHeight = 104
+            Height = 55
+            ExplicitLeft = 0
+            ExplicitTop = 49
+            ExplicitWidth = 292
+            ExplicitHeight = 55
+          end
+          inherited GroupBox1: TGroupBox
+            Width = 665
           end
         end
       end
@@ -377,6 +382,10 @@ object MeetingForm: TMeetingForm
     object TabSheet3: TTabSheet
       Caption = 'G'#228'ste'
       ImageIndex = 2
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object DBGrid2: TDBGrid
         Left = 0
         Top = 0

@@ -13,6 +13,8 @@ object TextBlockPreviewForm: TTextBlockPreviewForm
   OldCreateOrder = False
   Position = poOwnerFormCenter
   OnClose = FormClose
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
   object StatusBar1: TStatusBar
@@ -33,10 +35,16 @@ object TextBlockPreviewForm: TTextBlockPreviewForm
     ExplicitHeight = 280
     inherited RE: TRichEdit
       Width = 635
-      Height = 280
+      Height = 231
       ReadOnly = True
+      ExplicitLeft = 0
+      ExplicitTop = 49
       ExplicitWidth = 635
-      ExplicitHeight = 280
+      ExplicitHeight = 231
+    end
+    inherited GroupBox1: TGroupBox
+      Width = 635
+      ExplicitWidth = 635
     end
   end
 end

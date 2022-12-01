@@ -31,7 +31,7 @@ type
     function startPosition : boolean;
     function nextWord : boolean;
 
-    procedure config;
+    function config : boolean;
     procedure show;
     function check( word : UnicodeString ) : boolean;
     procedure suggest( word : UnicodeString; list : TStrings);
@@ -43,6 +43,9 @@ type
 
     property SpellDictionary : TNHSpellDictionary read m_dict write m_dict;
     property HyphenDictionary:TNHHyphenDictionary read m_hyph write m_hyph;
+
+    procedure selectSpell( name : string );
+    procedure selectHypen( name : string );
   end;
 
 implementation
@@ -76,12 +79,14 @@ begin
     	Result := m_dict.Spell(word);
 end;
 
-procedure TSpellChecker.config;
+function TSpellChecker.config : boolean;
 begin
+  Result := false;
   if ShowSelectDictionary then begin
     Hunspell.UpdateAndLoadDictionaries;
     m_dict  := Hunspell.SpellDictionary;
     m_hyph  := Hunspell.HyphenDictionary;
+    Result := true;
   end;
 end;
 
@@ -189,6 +194,32 @@ begin
     if SameText( defDict, Hunspell.HyphenDictionaries[i].LanguageName) then begin
       Hunspell.SelectHyphenDictionary(i);
       m_hyph := Hunspell.HyphenDictionaries[i];
+      break;
+    end;
+  end;
+end;
+
+procedure TSpellChecker.selectHypen(name: string);
+var
+  i : integer;
+begin
+  for i := 0 to pred(Hunspell.HyphenDictionaryCount) do begin
+    if SameText( defDict, Hunspell.HyphenDictionaries[i].LanguageName) then begin
+      Hunspell.SelectHyphenDictionary(i);
+      m_hyph := Hunspell.HyphenDictionaries[i];
+      break;
+    end;
+  end;
+end;
+
+procedure TSpellChecker.selectSpell(name: string);
+var
+  i : integer;
+begin
+  for i := 0 to pred(Hunspell.SpellDictionaryCount) do begin
+    if SameText( name, Hunspell.SpellDictionaries[i].LanguageName) then begin
+      Hunspell.SelectSpellDictionary(i);
+      m_dict := Hunspell.SpellDictionaries[i];
       break;
     end;
   end;

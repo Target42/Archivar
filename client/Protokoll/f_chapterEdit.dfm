@@ -152,11 +152,16 @@ object ChapterEditForm: TChapterEditForm
     ExplicitHeight = 273
     inherited RE: TRichEdit
       Width = 517
-      Height = 273
+      Height = 224
       OnDragDrop = EditFrame1REDragDrop
       OnDragOver = EditFrame1REDragOver
+      ExplicitLeft = 0
+      ExplicitTop = 49
       ExplicitWidth = 517
       ExplicitHeight = 273
+    end
+    inherited GroupBox1: TGroupBox
+      Width = 517
     end
   end
   object GroupBox1: TGroupBox

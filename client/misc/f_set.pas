@@ -36,6 +36,8 @@ type
     BitBtn1: TBitBtn;
     IdHTTP1: TIdHTTP;
     CheckBox1: TCheckBox;
+    TabSheet4: TTabSheet;
+    BitBtn2: TBitBtn;
     procedure SpeedButton1Click(Sender: TObject);
     procedure LBClick(Sender: TObject);
     procedure SpeedButton2Click(Sender: TObject);
@@ -46,6 +48,7 @@ type
     procedure SpeedButton5Click(Sender: TObject);
     procedure SpeedButton6Click(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
+    procedure BitBtn2Click(Sender: TObject);
   private
     { Private-Deklarationen }
   public
@@ -58,14 +61,11 @@ var
 implementation
 
 uses
-  m_glob_client, System.IniFiles, System.IOUtils;
+  m_glob_client, u_ini, System.IOUtils, u_SpellChecker;
 
 {$R *.dfm}
 
 procedure TMySettingsForm.BaseFrame1OKBtnClick(Sender: TObject);
-var
-  fname : string;
-  ini   : TIniFile;
 begin
   GM.saveHostList;
   GM.Hostlist.Assign(LB.Items);
@@ -73,22 +73,12 @@ begin
   GM.UserList.Assign(UserLB.Items);
   GM.saveUserList;
 
-  fname := TPath.Combine(ExtractFilePath(ParamStr(0)), 'proxy.dat');
-
-  ini := TIniFile.Create(fname);
-  ini.WriteBool('proxy', 'active', CheckBox1.Checked );
-  ini.WriteString('proxy', 'host', LabeledEdit1.Text);
-  ini.WriteString('proxy', 'user', LabeledEdit2.Text);
-  ini.WriteString('proxy', 'pwd', LabeledEdit3.Text);
-  ini.WriteInteger('proxy','port', SpinEdit1.Value);
-  ini.Free;
-
-  GM.ProxyInfo.use  := CheckBox1.Checked;
-  GM.ProxyInfo.host := LabeledEdit1.Text;
-  GM.ProxyInfo.port := SpinEdit1.Value;
-  GM.ProxyInfo.user := LabeledEdit2.Text;
-  GM.ProxyInfo.pwd  := LabeledEdit3.Text;
-
+  IniObject.ProxyActive := CheckBox1.Checked;
+  IniObject.ProxyHost   := LabeledEdit1.Text;
+  IniObject.ProxyPort   := SpinEdit1.Value;
+  IniObject.ProxyUser   := LabeledEdit2.Text;
+  IniObject.ProxyPwd    := LabeledEdit3.Text;
+  IniObject.save;
 end;
 
 procedure TMySettingsForm.BitBtn1Click(Sender: TObject);
@@ -116,6 +106,17 @@ begin
   end;
 end;
 
+procedure TMySettingsForm.BitBtn2Click(Sender: TObject);
+var
+  check : TSpellChecker;
+begin
+  check := TSpellChecker.create;
+  if check.config then begin
+
+  end;
+  check.Free;
+end;
+
 procedure TMySettingsForm.FormCreate(Sender: TObject);
 begin
   PageControl1.ActivePage := TabSheet1;
@@ -123,11 +124,11 @@ begin
   LB.Items.Assign(GM.Hostlist);
   UserLB.Items.Assign(GM.UserList);
 
-  CheckBox1.Checked   := GM.ProxyInfo.use;
-  LabeledEdit1.Text   := GM.ProxyInfo.host;
-  SpinEdit1.Value     := GM.ProxyInfo.port;
-  LabeledEdit2.Text   := GM.ProxyInfo.user;
-  LabeledEdit3.Text   := GM.ProxyInfo.pwd;
+  CheckBox1.Checked   := IniObject.ProxyActive;
+  LabeledEdit1.Text   := IniObject.ProxyHost;
+  SpinEdit1.Value     := IniObject.ProxyPort;
+  LabeledEdit2.Text   := IniObject.ProxyUser;
+  LabeledEdit3.Text   := IniObject.ProxyPwd;
 end;
 
 procedure TMySettingsForm.LBClick(Sender: TObject);

@@ -188,10 +188,12 @@ begin
   TNFrame1.init;
 
   TextBlockFrame1.init(true);
+  EditFrame2.prepare;
 end;
 
 procedure TBeschlusform.FormDestroy(Sender: TObject);
 begin
+  EditFrame2.Release;
   TNFrame1.release;
   TextBlockFrame1.release;
 end;

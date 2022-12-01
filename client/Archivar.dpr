@@ -8,6 +8,7 @@ uses
   JclAppInst,
   {$endif }
   u_eventHandler in 'Events\u_eventHandler.pas',
+  u_ini in 'misc\u_ini.pas',
   m_glob_client in 'm_glob_client.pas' {GM: TDataModule},
   f_main in 'f_main.pas' {MainForm},
   u_stub in 'u_stub.pas',
@@ -228,8 +229,8 @@ uses
   NHunspell in 'nhunspell\NHunspell.pas',
   NHunXml in 'nhunspell\NHunXml.pas',
   PasZip in 'nhunspell\PasZip.pas',
-  u_nhunhspell in 'nhunspell\u_nhunhspell.pas',
   u_SpellChecker in 'nhunspell\u_SpellChecker.pas';
+
 
 {$R *.res}
 

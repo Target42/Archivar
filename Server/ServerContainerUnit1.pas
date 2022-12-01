@@ -385,7 +385,9 @@ end;
 procedure TServerContainer1.execShutdown(sender: TObject);
 var
   obj  : TJSONObject;
-  hnd  : HWND;
+{$ifdef DEBUG}
+  hnd : HWND;
+{$endif}
 begin
   // Send close Edits
   obj  := TJSONObject.Create;

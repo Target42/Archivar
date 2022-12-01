@@ -11,6 +11,8 @@ type
     StatusBar1: TStatusBar;
     EditFrame1: TEditFrame;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
   private
     function GetText: string;
     procedure SetText(const Value: string);
@@ -34,6 +36,16 @@ begin
   Action := caHide;
 end;
 
+
+procedure TTextBlockPreviewForm.FormCreate(Sender: TObject);
+begin
+  EditFrame1.prepare;
+end;
+
+procedure TTextBlockPreviewForm.FormDestroy(Sender: TObject);
+begin
+  EditFrame1.Release;
+end;
 
 function TTextBlockPreviewForm.GetText: string;
 begin

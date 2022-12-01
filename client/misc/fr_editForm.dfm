@@ -7,9 +7,9 @@ object EditFrame: TEditFrame
   TabOrder = 0
   object RE: TRichEdit
     Left = 0
-    Top = 0
+    Top = 49
     Width = 451
-    Height = 305
+    Height = 256
     Align = alClient
     Font.Charset = ANSI_CHARSET
     Font.Color = clWindowText
@@ -20,5 +20,21 @@ object EditFrame: TEditFrame
     ScrollBars = ssVertical
     TabOrder = 0
     Zoom = 100
+  end
+  object GroupBox1: TGroupBox
+    Left = 0
+    Top = 0
+    Width = 451
+    Height = 49
+    Align = alTop
+    Caption = 'Aktionen'
+    TabOrder = 1
+    object SpeedButton1: TSpeedButton
+      Left = 3
+      Top = 21
+      Width = 23
+      Height = 22
+      OnClick = SpeedButton1Click
+    end
   end
 end

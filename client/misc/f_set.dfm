@@ -23,7 +23,7 @@ object MySettingsForm: TMySettingsForm
     Align = alBottom
     AutoSize = True
     TabOrder = 0
-    ExplicitTop = 193
+    ExplicitTop = 209
     inherited Panel1: TPanel
       inherited OKBtn: TBitBtn
         OnClick = BaseFrame1OKBtnClick
@@ -35,13 +35,11 @@ object MySettingsForm: TMySettingsForm
     Top = 0
     Width = 451
     Height = 209
-    ActivePage = TabSheet3
+    ActivePage = TabSheet4
     Align = alClient
     TabOrder = 1
-    ExplicitHeight = 193
     object TabSheet1: TTabSheet
       Caption = 'Server'
-      ExplicitHeight = 165
       object LB: TListBox
         Left = 0
         Top = 0
@@ -52,7 +50,6 @@ object MySettingsForm: TMySettingsForm
         ItemHeight = 13
         TabOrder = 0
         OnClick = LBClick
-        ExplicitHeight = 124
       end
       object Panel1: TPanel
         Left = 0
@@ -63,7 +60,6 @@ object MySettingsForm: TMySettingsForm
         Caption = 'Panel1'
         ShowCaption = False
         TabOrder = 1
-        ExplicitTop = 124
         object SpeedButton1: TSpeedButton
           Left = 203
           Top = 6
@@ -211,7 +207,6 @@ object MySettingsForm: TMySettingsForm
     object TabSheet2: TTabSheet
       Caption = 'Benutzer'
       ImageIndex = 1
-      ExplicitHeight = 165
       object UserLB: TListBox
         Left = 0
         Top = 0
@@ -221,7 +216,6 @@ object MySettingsForm: TMySettingsForm
         Columns = 4
         ItemHeight = 13
         TabOrder = 0
-        ExplicitHeight = 124
       end
       object Panel2: TPanel
         Left = 0
@@ -232,7 +226,6 @@ object MySettingsForm: TMySettingsForm
         Caption = 'Panel2'
         ShowCaption = False
         TabOrder = 1
-        ExplicitTop = 124
         object SpeedButton4: TSpeedButton
           Left = 203
           Top = 6
@@ -380,9 +373,6 @@ object MySettingsForm: TMySettingsForm
     object TabSheet3: TTabSheet
       Caption = 'Proxy'
       ImageIndex = 2
-      ExplicitLeft = 8
-      ExplicitTop = 22
-      ExplicitHeight = 222
       object Label1: TLabel
         Left = 200
         Top = 32
@@ -493,6 +483,19 @@ object MySettingsForm: TMySettingsForm
         Height = 17
         Caption = 'Aktiv'
         TabOrder = 6
+      end
+    end
+    object TabSheet4: TTabSheet
+      Caption = 'Verschiedenes'
+      ImageIndex = 3
+      object BitBtn2: TBitBtn
+        Left = 8
+        Top = 8
+        Width = 113
+        Height = 25
+        Caption = 'Sprache Einstellen'
+        TabOrder = 0
+        OnClick = BitBtn2Click
       end
     end
   end

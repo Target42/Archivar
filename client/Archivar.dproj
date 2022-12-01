@@ -5,7 +5,7 @@
         <FrameworkType>VCL</FrameworkType>
         <MainSource>Archivar.dpr</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">Release</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>1</TargetedPlatforms>
         <AppType>Application</AppType>
@@ -120,6 +120,7 @@
             <MainSource>MainSource</MainSource>
         </DelphiCompile>
         <DCCReference Include="Events\u_eventHandler.pas"/>
+        <DCCReference Include="misc\u_ini.pas"/>
         <DCCReference Include="m_glob_client.pas">
             <Form>GM</Form>
             <DesignClass>TDataModule</DesignClass>
@@ -585,59 +586,47 @@
         </DCCReference>
         <DCCReference Include="Protokoll\f_protokoll_new.pas">
             <Form>ProtokollNewForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\misc\fr_base.pas">
             <Form>BaseFrame</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="Gremium\fr_gremium.pas">
             <Form>GremiumFrame</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="..\misc\xsd_Task.pas"/>
         <DCCReference Include="misc\u_ShowMessageTimeOut.pas"/>
         <DCCReference Include="admin\f_admin.pas">
             <Form>AdminForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="misc\u_ForceClose.pas"/>
         <DCCReference Include="..\misc\f_proxy.pas">
             <Form>ProxyForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Gremium\f_gremium_task.pas">
             <Form>GremiumTaskForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\misc\u_dataset_to_list.pas"/>
         <DCCReference Include="Task\f_task_delete.pas">
             <Form>TaskDeleteForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="Task\fr_tasklist_delete.pas">
             <Form>UnusedTaskListFrame</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <DCCReference Include="Dairy\f_dairy_entry.pas">
             <Form>DairyEntryForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="nhunspell\f_correctForm.pas">
             <Form>CorrectForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="nhunspell\f_select_dictinonary.pas">
             <Form>SelectDictionaryForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="nhunspell\NHunspell.pas"/>
         <DCCReference Include="nhunspell\NHunXml.pas"/>
         <DCCReference Include="nhunspell\PasZip.pas"/>
-        <DCCReference Include="nhunspell\u_nhunhspell.pas"/>
         <DCCReference Include="nhunspell\u_SpellChecker.pas"/>
         <None Include="Datafields\ERA-NS.txt"/>
         <RcItem Include="dws\dws.html">

@@ -40,7 +40,7 @@ var
 implementation
 
 uses
-  m_glob_client, f_proxy;
+  m_glob_client, u_ini, f_proxy;
 
 {$R *.dfm}
 
@@ -54,12 +54,11 @@ end;
 
 procedure TLoginForm.FormShow(Sender: TObject);
 begin
-  if GM.ProxyInfo.use then
+  if IniObject.ProxyActive then
     BaseFrame1.StatusBar1.SimpleText := Format('%s:%d',
-      [GM.ProxyInfo.host, GM.ProxyInfo.port])
+      [IniObject.ProxyHost, IniObject.ProxyPort])
     else
       BaseFrame1.StatusBar1.SimpleText := 'Kein Proxy';
-
 end;
 
 function TLoginForm.GetHostName: string;

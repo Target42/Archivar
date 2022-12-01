@@ -63,6 +63,8 @@ object Beschlusform: TBeschlusform
     object TabSheet2: TTabSheet
       Caption = 'Beschlustext'
       ImageIndex = 1
+      ExplicitWidth = 296
+      ExplicitHeight = 113
       object Splitter1: TSplitter
         Left = 448
         Top = 0
@@ -290,6 +292,8 @@ object Beschlusform: TBeschlusform
         Align = alClient
         Caption = 'Erweiterter Text'
         TabOrder = 2
+        ExplicitWidth = 26
+        ExplicitHeight = 30
         inline EditFrame2: TEditFrame
           Left = 2
           Top = 15
@@ -299,15 +303,20 @@ object Beschlusform: TBeschlusform
           TabOrder = 0
           ExplicitLeft = 2
           ExplicitTop = 15
-          ExplicitWidth = 444
-          ExplicitHeight = 236
+          ExplicitWidth = 22
+          ExplicitHeight = 13
           inherited RE: TRichEdit
             Width = 444
-            Height = 236
+            Height = 187
             OnDragDrop = EditFrame2REDragDrop
             OnDragOver = EditFrame2REDragOver
-            ExplicitWidth = 444
+            ExplicitLeft = 0
+            ExplicitTop = 49
+            ExplicitWidth = 22
             ExplicitHeight = 236
+          end
+          inherited GroupBox1: TGroupBox
+            Width = 444
           end
         end
       end
@@ -384,7 +393,7 @@ object Beschlusform: TBeschlusform
     Left = 559
     Top = 208
     Bitmap = {
-      494C010101000800900010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010101000800940010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       000000000000000000000000000000000000000000FF000000FF000000FF0000
       00FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF0000

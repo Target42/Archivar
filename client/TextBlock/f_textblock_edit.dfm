@@ -121,11 +121,16 @@ object TextBlockEditForm: TTextBlockEditForm
     ExplicitHeight = 161
     inherited RE: TRichEdit
       Width = 629
-      Height = 161
+      Height = 112
       PopupMenu = PopupMenu1
       OnKeyPress = EditFrame1REKeyPress
+      ExplicitLeft = 0
+      ExplicitTop = 49
       ExplicitWidth = 629
       ExplicitHeight = 161
+    end
+    inherited GroupBox1: TGroupBox
+      Width = 629
     end
   end
   object GroupBox1: TGroupBox

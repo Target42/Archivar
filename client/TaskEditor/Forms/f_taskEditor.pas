@@ -252,12 +252,15 @@ begin
   EditorFrame1.OnNewForm := ReportFrame1.doNewForm;
 
   FSystem := false;
+
+  EditFrame1.prepare;
 end;
 
 procedure TTaksEditorForm.FormDestroy(Sender: TObject);
 begin
   EditorFrame1.release;
   ReportFrame1.release;
+  EditFrame1.release;
 
   m_tc.release;
 end;

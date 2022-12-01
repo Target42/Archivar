@@ -400,10 +400,12 @@ begin
 
   RadioButton1.Checked := true;
   BaseFrame1.OKBtn.Enabled := false;
+  EditFrame1.prepare;
 end;
 
 procedure TMeetingForm.FormDestroy(Sender: TObject);
 begin
+  EditFrame1.release;
   if m_needUpdate then
     SendUpdate;
 
