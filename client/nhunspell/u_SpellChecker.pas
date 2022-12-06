@@ -3,10 +3,11 @@ unit u_SpellChecker;
 interface
 
 uses
-  Vcl.ComCtrls, NHunspell, System.Classes, Winapi.Windows, Vcl.Forms;
+  Vcl.ComCtrls, NHunspell, System.Classes, Winapi.Windows, Vcl.Forms,
+  Vcl.Controls;
 
 type
-  TSpellChecker = class
+  TSpellChecker = class( TObject )
   private
     m_edit      : TRichEdit;
     m_startPos  : integer;
@@ -33,6 +34,9 @@ type
 
     function config : boolean;
     procedure show;
+    procedure exec;
+    procedure test( ctrl : TWinControl );
+
     function check( word : UnicodeString ) : boolean;
     procedure suggest( word : UnicodeString; list : TStrings);
     procedure replaceText( text : UnicodeString  );
@@ -51,7 +55,8 @@ type
 implementation
 
 uses
-  f_select_dictinonary, f_correctForm, System.SysUtils, RichEdit;
+  f_select_dictinonary, f_correctForm, System.SysUtils, RichEdit,
+  f_connect_form2, Vcl.StdCtrls, Vcl.ExtCtrls, Vcl.DBCtrls;
 
 { TSpellChecker }
 
@@ -122,6 +127,22 @@ begin
 	m_correct.Free;
 
   inherited;
+end;
+
+procedure TSpellChecker.exec;
+var
+  ed : TRichEdit;
+begin
+  ed := m_edit;
+  Application.CreateForm(TFullCorrectForm, FullCorrectForm);
+
+  FullCorrectForm.Checker := self;
+  FullCorrectForm.Text.Assign(m_edit.Lines);
+
+  if FullCorrectForm.ShowModal = mrOk then
+    m_edit.Lines.Assign(FullCorrectForm.Text);
+  FullCorrectForm.Free;
+  m_edit := ed;
 end;
 
 function TSpellChecker.nextWord: boolean;
@@ -265,6 +286,39 @@ procedure TSpellChecker.suggest(word: UnicodeString; list: TStrings);
 begin
   if Assigned(m_dict) then
     m_dict.Suggest(word, list);
+end;
+
+procedure TSpellChecker.test(ctrl: TWinControl);
+var
+  run : boolean;
+begin
+  run := true;
+
+
+  Application.CreateForm(TFullCorrectForm, FullCorrectForm);
+  FullCorrectForm.Checker := self;
+
+  m_edit := FullCorrectForm.RichEdit1;
+
+       if ctrl is TRichEdit     then FullCorrectForm.Text.Assign((ctrl as TRichEdit).Lines)
+  else if ctrl is TMemo         then FullCorrectForm.Text.Assign((ctrl as TMemo).Lines)
+  else if ctrl is TEdit         then FullCorrectForm.Text.Text :=(ctrl as TEdit).text
+  else if ctrl is TLabeledEdit  then FullCorrectForm.Text.Text :=(ctrl as TLabeledEdit).text
+  else if ctrl is TDBEdit       then FullCorrectForm.Text.Text :=(ctrl as TDBEdit).text
+  else    run := false;
+
+
+
+  if run and (FullCorrectForm.ShowModal = mrOk) then begin
+         if ctrl is TRichEdit     then (ctrl as TRichEdit).Lines.Assign(FullCorrectForm.Text)
+    else if ctrl is TMemo         then (ctrl as TMemo).Lines.Assign(FullCorrectForm.Text)
+    else if ctrl is TEdit         then (ctrl as TEdit).Text := Trim(FullCorrectForm.Text.Text)
+    else if ctrl is TLabeledEdit  then (ctrl as TLabeledEdit).Text := Trim(FullCorrectForm.Text.Text)
+    else if ctrl is TDBEdit       then (ctrl as TDBEdit).Text := Trim(FullCorrectForm.Text.Text);
+
+  end;
+
+  FullCorrectForm.Free;
 end;
 
 end.

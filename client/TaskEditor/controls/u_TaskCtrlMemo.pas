@@ -53,7 +53,7 @@ begin
   Result := '';
 
   if Assigned( m_ctrl) then
-    Result := trim( ( m_ctrl as TMemo).Text)
+    Result := trim( ( m_ctrl as TMemo).Lines.Text)
   else
     Result := self.propertyValue('Text');
 end;
@@ -106,9 +106,8 @@ end;
 
 procedure TaskCtrlMemo.setCtrlValue(value: string);
 begin
-
   if Assigned(m_ctrl) then
-    (m_ctrl as TMemo).Text := value;
+    (m_ctrl as TMemo).Lines.Text := value;
 
 end;
 

@@ -112,7 +112,17 @@ var
 begin
   check := TSpellChecker.create;
   if check.config then begin
+     if Assigned(check.SpellDictionary)  then
+       IniObject.SpellDict := check.SpellDictionary.LanguageName
+     else
+       IniObject.SpellDict := '';
 
+     if Assigned(check.HyphenDictionary) then
+        IniObject.SpellHyphen := check.HyphenDictionary.LanguageName
+     else
+       IniObject.SpellHyphen := '';
+
+     IniObject.save;
   end;
   check.Free;
 end;

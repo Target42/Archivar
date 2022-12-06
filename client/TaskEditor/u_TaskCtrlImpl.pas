@@ -27,6 +27,7 @@ type
 
     m_validator       : IValidator;
 
+
     procedure setControlTypeProps; virtual;
     function  newControl(parent : TWinControl; x, y : Integer) :  TControl; virtual;
     procedure doSetMouse( md : TControlMouseDown; mv : TControlMouseMove; mu : TControlMouseUp ); virtual;
@@ -673,6 +674,7 @@ begin
 
   colorRequired;
 end;
+
 
 procedure TaskCtrlImpl.sortProps;
 begin

@@ -247,10 +247,6 @@ object TaskEditForm: TTaskEditForm
         object TabSheet4: TTabSheet
           Caption = 'Vorschau'
           ImageIndex = 1
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           object WebBrowser1: TWebBrowser
             Left = 0
             Top = 0
@@ -298,6 +294,17 @@ object TaskEditForm: TTaskEditForm
           inherited VST: TVirtualStringTree
             Height = 318
             ExplicitHeight = 318
+            Columns = <
+              item
+                Position = 0
+                Text = 'Verzeichnis'
+                Width = 150
+              end
+              item
+                Position = 1
+                Text = 'Datum'
+                Width = 91
+              end>
           end
         end
         inherited GroupBox3: TGroupBox
@@ -323,7 +330,7 @@ object TaskEditForm: TTaskEditForm
         end
         inherited ImageList1: TImageList
           Bitmap = {
-            494C010102000800580010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+            494C010102000800600010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
             0000000000003600000028000000400000001000000001002000000000000010
             000000000000000000000000000000000000000000FF078DBE00078DBE00078D
             BE00078DBE00078DBE00078DBE00078DBE00078DBE00078DBE00078DBE00078D
@@ -498,17 +505,21 @@ object TaskEditForm: TTaskEditForm
         inherited Panel1: TPanel
           Width = 532
           Height = 392
-          ExplicitWidth = 111
-          ExplicitHeight = 154
+          ExplicitWidth = 532
+          ExplicitHeight = 392
           inherited GroupBox1: TGroupBox
             Width = 532
-            ExplicitWidth = 111
+            ExplicitWidth = 532
             inherited EditFrame1: TEditFrame
               Width = 528
-              ExplicitWidth = 107
+              ExplicitWidth = 528
               inherited RE: TRichEdit
                 Width = 528
                 OnKeyPress = DBEdit1KeyPress
+                ExplicitWidth = 528
+              end
+              inherited GroupBox1: TGroupBox
+                Width = 528
                 ExplicitWidth = 528
               end
             end
@@ -565,11 +576,14 @@ object TaskEditForm: TTaskEditForm
       object Aktualisieren1: TMenuItem
         Action = ac_refresh
       end
+      object N4: TMenuItem
+        Action = ac_spell
+      end
     end
   end
   object ActionList1: TActionList
-    Left = 436
-    Top = 152
+    Left = 484
+    Top = 160
     object ac_bearbeiten: TAction
       Caption = 'Bearbeiten'
       ShortCut = 114
@@ -594,6 +608,11 @@ object TaskEditForm: TTaskEditForm
       Caption = 'Leesezeichen erstellen'
       ShortCut = 120
       OnExecute = ac_bookmarkExecute
+    end
+    object ac_spell: TAction
+      Caption = 'Rechtschreibung'
+      ShortCut = 122
+      OnExecute = ac_spellExecute
     end
   end
   object TaskSrc: TDataSource

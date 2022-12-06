@@ -21,6 +21,8 @@ type
     av_delete: TAction;
     Lschen1: TMenuItem;
     LV: TListView;
+    N1: TMenuItem;
+    fnnen1: TMenuItem;
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure TaskscalcCreatedGetText(Sender: TField; var Text: string;
       DisplayText: Boolean);
@@ -38,6 +40,7 @@ type
       State: TCustomDrawState; var DefaultDraw: Boolean);
     procedure LVCustomDrawSubItem(Sender: TCustomListView; Item: TListItem;
       SubItem: Integer; State: TCustomDrawState; var DefaultDraw: Boolean);
+    procedure fnnen1Click(Sender: TObject);
   private
     type
       DataRec = class
@@ -302,6 +305,11 @@ begin
   SortData;
 
   UpdateView;
+end;
+
+procedure TTaskListFrame.fnnen1Click(Sender: TObject);
+begin
+  doOpen;
 end;
 
 procedure TTaskListFrame.LVColumnClick(Sender: TObject; Column: TListColumn);

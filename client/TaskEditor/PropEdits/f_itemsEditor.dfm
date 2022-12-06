@@ -22,17 +22,18 @@ object ItemsEditorForm: TItemsEditorForm
     Align = alBottom
     AutoSize = True
     TabOrder = 0
-    ExplicitLeft = -99
-    ExplicitTop = 72
+    ExplicitTop = 150
+    ExplicitWidth = 321
     inherited StatusBar1: TStatusBar
       Width = 321
       ExplicitWidth = 321
     end
     inherited Panel1: TPanel
       Width = 321
+      ExplicitWidth = 321
       inherited OKBtn: TBitBtn
         Left = 233
-        ExplicitLeft = 363
+        ExplicitLeft = 233
       end
     end
   end
@@ -43,9 +44,5 @@ object ItemsEditorForm: TItemsEditorForm
     Height = 150
     Align = alClient
     TabOrder = 1
-    ExplicitLeft = 24
-    ExplicitTop = 8
-    ExplicitWidth = 185
-    ExplicitHeight = 89
   end
 end

@@ -11,7 +11,7 @@ uses
   Vcl.OleCtrls, SHDocVw, JvColorCombo, fr_form, fr_log,
 
   u_ForceClose, JvExStdCtrls, JvCombobox, JvExMask, JvToolEdit, JvMaskEdit,
-  JvCheckedMaskEdit, JvDatePickerEdit, Vcl.Mask;
+  JvCheckedMaskEdit, JvDatePickerEdit, Vcl.Mask, u_SpellChecker;
 
 type
   TTaskEditForm = class(TForm, IForceClose)
@@ -85,6 +85,8 @@ type
     LogTab: TClientDataSet;
     LogFrame1: TLogFrame;
     JvColorComboBox1: TJvColorComboBox;
+    ac_spell: TAction;
+    N4: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -109,6 +111,7 @@ type
     procedure StatusBar1DrawPanel(StatusBar: TStatusBar; Panel: TStatusPanel;
       const Rect: TRect);
     procedure JvColorComboBox1Change(Sender: TObject);
+    procedure ac_spellExecute(Sender: TObject);
   private
     m_ta_id : integer;
     m_ty_id : integeR;
@@ -119,6 +122,7 @@ type
 
     m_ro    : boolean;
     m_changed : boolean;
+    m_spell : TSpellChecker;
 
     procedure setRO( value : boolean );
     function  getRO : boolean;
@@ -214,6 +218,13 @@ begin
   if not m_ro then
     TaskTab.Edit;
 
+end;
+
+procedure TTaskEditForm.ac_spellExecute(Sender: TObject);
+begin
+  if m_ro or not Assigned(Self.ActiveControl ) then exit;
+
+  m_spell.test(Self.ActiveControl);
 end;
 
 procedure TTaskEditForm.ac_unlockExecute(Sender: TObject);
@@ -361,6 +372,8 @@ begin
   begin
     JvColorComboBox1.AddColor( Kategorien.Items[i].Color, Kategorien.Items[i].Name );
   end;
+
+  m_spell := TSpellChecker.create;
 end;
 
 procedure TTaskEditForm.FormDestroy(Sender: TObject);
@@ -381,6 +394,8 @@ begin
 
   WindowHandler.closeTaskWindow(m_ta_id);
   PostMessage(Application.MainFormHandle, msgFilterTasks, 1, 0);
+
+  m_spell.Free;
 end;
 
 function TTaskEditForm.getRO: boolean;

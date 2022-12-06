@@ -16,6 +16,7 @@ object EditFrame: TEditFrame
     Font.Height = -11
     Font.Name = 'Tahoma'
     Font.Style = []
+    HideSelection = False
     ParentFont = False
     ScrollBars = ssVertical
     TabOrder = 0

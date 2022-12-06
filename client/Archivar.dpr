@@ -229,8 +229,8 @@ uses
   NHunspell in 'nhunspell\NHunspell.pas',
   NHunXml in 'nhunspell\NHunXml.pas',
   PasZip in 'nhunspell\PasZip.pas',
-  u_SpellChecker in 'nhunspell\u_SpellChecker.pas';
-
+  u_SpellChecker in 'nhunspell\u_SpellChecker.pas',
+  f_connect_form2 in 'nhunspell\f_connect_form2.pas' {FullCorrectForm};
 
 {$R *.res}
 
@@ -259,7 +259,5 @@ begin
   Application.CreateForm(TFileCacheMod, FileCacheMod);
   Application.CreateForm(TCryptMod, CryptMod);
   Application.CreateForm(TMainForm, MainForm);
-  Application.CreateForm(TCorrectForm, CorrectForm);
-  Application.CreateForm(TSelectDictionaryForm, SelectDictionaryForm);
   Application.Run;
 end.
