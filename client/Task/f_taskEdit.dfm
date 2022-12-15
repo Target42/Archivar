@@ -330,7 +330,7 @@ object TaskEditForm: TTaskEditForm
         end
         inherited ImageList1: TImageList
           Bitmap = {
-            494C010102000800600010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+            494C010102000800700010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
             0000000000003600000028000000400000001000000001002000000000000010
             000000000000000000000000000000000000000000FF078DBE00078DBE00078D
             BE00078DBE00078DBE00078DBE00078DBE00078DBE00078DBE00078DBE00078D
@@ -493,7 +493,6 @@ object TaskEditForm: TTaskEditForm
             ExplicitHeight = 375
             inherited Panel1: TPanel
               Top = 319
-              ExplicitLeft = 0
               ExplicitTop = 319
             end
             inherited LV: TListView
@@ -513,29 +512,39 @@ object TaskEditForm: TTaskEditForm
             inherited EditFrame1: TEditFrame
               Width = 528
               ExplicitWidth = 528
+              ExplicitHeight = 104
               inherited RE: TRichEdit
                 Width = 528
                 OnKeyPress = DBEdit1KeyPress
                 ExplicitWidth = 528
+                ExplicitHeight = 70
               end
-              inherited GroupBox1: TGroupBox
+              inherited Panel1: TPanel
                 Width = 528
                 ExplicitWidth = 528
+                inherited JvColorComboBox1: TJvColorComboBox
+                  Height = 20
+                  ExplicitHeight = 20
+                end
               end
             end
           end
           inherited GroupBox2: TGroupBox
             Width = 532
-            Height = 295
+            Height = 271
+            ExplicitLeft = 0
+            ExplicitTop = 121
             ExplicitWidth = 532
-            ExplicitHeight = 295
+            ExplicitHeight = 271
             inherited WebBrowser1: TWebBrowser
               Width = 522
-              Height = 272
-              ExplicitWidth = 175
-              ExplicitHeight = 82
+              Height = 248
+              ExplicitLeft = 5
+              ExplicitTop = 18
+              ExplicitWidth = 522
+              ExplicitHeight = 272
               ControlData = {
-                4C000000F33500001D1C00000000000000000000000000000000000000000000
+                4C000000F3350000A21900000000000000000000000000000000000000000000
                 000000004C000000000000000000000001000000E0D057007335CF11AE690800
                 2B2E126208000000000000004C0000000114020000000000C000000000000046
                 8000000000000000000000000000000000000000000000000000000000000000
@@ -579,6 +588,12 @@ object TaskEditForm: TTaskEditForm
       object N4: TMenuItem
         Action = ac_spell
       end
+      object N5: TMenuItem
+        Caption = '-'
+      end
+      object Zuweisungen1: TMenuItem
+        Action = ac_assignment
+      end
     end
   end
   object ActionList1: TActionList
@@ -613,6 +628,10 @@ object TaskEditForm: TTaskEditForm
       Caption = 'Rechtschreibung'
       ShortCut = 122
       OnExecute = ac_spellExecute
+    end
+    object ac_assignment: TAction
+      Caption = 'Zuweisungen'
+      OnExecute = ac_assignmentExecute
     end
   end
   object TaskSrc: TDataSource

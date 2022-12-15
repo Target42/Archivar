@@ -107,32 +107,6 @@ object TextBlockEditForm: TTextBlockEditForm
       TabOrder = 1
     end
   end
-  inline EditFrame1: TEditFrame
-    AlignWithMargins = True
-    Left = 3
-    Top = 116
-    Width = 629
-    Height = 161
-    Align = alClient
-    TabOrder = 2
-    ExplicitLeft = 3
-    ExplicitTop = 116
-    ExplicitWidth = 629
-    ExplicitHeight = 161
-    inherited RE: TRichEdit
-      Width = 629
-      Height = 112
-      PopupMenu = PopupMenu1
-      OnKeyPress = EditFrame1REKeyPress
-      ExplicitLeft = 0
-      ExplicitTop = 49
-      ExplicitWidth = 629
-      ExplicitHeight = 161
-    end
-    inherited GroupBox1: TGroupBox
-      Width = 629
-    end
-  end
   object GroupBox1: TGroupBox
     Left = 0
     Top = 338
@@ -140,7 +114,7 @@ object TextBlockEditForm: TTextBlockEditForm
     Height = 263
     Align = alBottom
     Caption = 'Variablen'
-    TabOrder = 3
+    TabOrder = 2
     object Panel2: TPanel
       Left = 2
       Top = 136
@@ -431,6 +405,7 @@ object TextBlockEditForm: TTextBlockEditForm
           Caption = 'Reschreibung'
           Width = 250
         end>
+      DragMode = dmAutomatic
       ReadOnly = True
       RowSelect = True
       SortType = stText
@@ -446,7 +421,7 @@ object TextBlockEditForm: TTextBlockEditForm
     Height = 58
     Align = alBottom
     Caption = 'Aktionen'
-    TabOrder = 4
+    TabOrder = 3
     object BitBtn1: TBitBtn
       Left = 16
       Top = 27
@@ -455,6 +430,34 @@ object TextBlockEditForm: TTextBlockEditForm
       Caption = 'Testbaustein testen'
       TabOrder = 0
       OnClick = BitBtn1Click
+    end
+  end
+  inline EditFrame1: TEditFrame
+    Left = 0
+    Top = 113
+    Width = 635
+    Height = 167
+    Align = alClient
+    TabOrder = 4
+    ExplicitTop = 113
+    ExplicitWidth = 635
+    ExplicitHeight = 167
+    inherited RE: TRichEdit
+      Width = 635
+      Height = 133
+      OnDragDrop = EditFrame1REDragDrop
+      OnDragOver = EditFrame1REDragOver
+      OnKeyPress = EditFrame1REKeyPress
+      ExplicitWidth = 635
+      ExplicitHeight = 133
+    end
+    inherited Panel1: TPanel
+      Width = 635
+      ExplicitWidth = 635
+      inherited JvColorComboBox1: TJvColorComboBox
+        Height = 20
+        ExplicitHeight = 20
+      end
     end
   end
   object DSProviderConnection1: TDSProviderConnection

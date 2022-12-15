@@ -41,7 +41,7 @@ begin
     exit;
   end;
   case mark.DocType of
-    dtTask      : WindowHandler.openTaskWindow(mark.ID, mark.TypeID, true);
+    dtTask      : WindowHandler.openTaskWindow(mark.ID, mark.TypeID, mark.GremiumID, true);
     dtProtokoll :
      begin
        if m_doEdit then

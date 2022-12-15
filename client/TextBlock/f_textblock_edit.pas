@@ -13,7 +13,6 @@ type
     BaseFrame1: TBaseFrame;
     Panel1: TPanel;
     Label1: TLabel;
-    EditFrame1: TEditFrame;
     GroupBox1: TGroupBox;
     Panel2: TPanel;
     LV: TListView;
@@ -39,6 +38,7 @@ type
     LabeledEdit6: TComboBox;
     Label5: TLabel;
     SpeedButton1: TSpeedButton;
+    EditFrame1: TEditFrame;
     procedure btnNeuClick(Sender: TObject);
     procedure btnEditClick(Sender: TObject);
     procedure btnSaveClick(Sender: TObject);
@@ -55,6 +55,9 @@ type
     procedure BitBtn1Click(Sender: TObject);
     procedure SpeedButton1Click(Sender: TObject);
     procedure LabeledEdit1KeyPress(Sender: TObject; var Key: Char);
+    procedure EditFrame1REDragOver(Sender, Source: TObject; X, Y: Integer;
+      State: TDragState; var Accept: Boolean);
+    procedure EditFrame1REDragDrop(Sender, Source: TObject; X, Y: Integer);
   private
     m_id        : integeR;
     x_block     : IXMLBlock;
@@ -189,6 +192,23 @@ begin
   item.SubItems.Strings[2] := trim(LabeledEdit6.Text);
   item.SubItems.Strings[3] := trim(LabeledEdit5.Text);
   m_modified := true;
+end;
+
+procedure TTextBlockEditForm.EditFrame1REDragDrop(Sender, Source: TObject; X,
+  Y: Integer);
+var
+  s : string;
+begin
+  if not (Source = LV) or not Assigned(LV.Selected)  then exit;
+
+  s := '%%'+LV.Selected.Caption+'%%';
+  EditFrame1.RE.SelText := s;
+end;
+
+procedure TTextBlockEditForm.EditFrame1REDragOver(Sender, Source: TObject; X,
+  Y: Integer; State: TDragState; var Accept: Boolean);
+begin
+  Accept := Source = Lv;
 end;
 
 procedure TTextBlockEditForm.EditFrame1REKeyPress(Sender: TObject;

@@ -11,7 +11,7 @@ uses
   Vcl.OleCtrls, SHDocVw, JvColorCombo, fr_form, fr_log,
 
   u_ForceClose, JvExStdCtrls, JvCombobox, JvExMask, JvToolEdit, JvMaskEdit,
-  JvCheckedMaskEdit, JvDatePickerEdit, Vcl.Mask, u_SpellChecker;
+  JvCheckedMaskEdit, JvDatePickerEdit, Vcl.Mask, u_SpellChecker, System.JSON;
 
 type
   TTaskEditForm = class(TForm, IForceClose)
@@ -87,6 +87,9 @@ type
     JvColorComboBox1: TJvColorComboBox;
     ac_spell: TAction;
     N4: TMenuItem;
+    N5: TMenuItem;
+    ac_assignment: TAction;
+    Zuweisungen1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -112,6 +115,7 @@ type
       const Rect: TRect);
     procedure JvColorComboBox1Change(Sender: TObject);
     procedure ac_spellExecute(Sender: TObject);
+    procedure ac_assignmentExecute(Sender: TObject);
   private
     m_ta_id : integer;
     m_ty_id : integeR;
@@ -123,6 +127,7 @@ type
     m_ro    : boolean;
     m_changed : boolean;
     m_spell : TSpellChecker;
+    FGremiumID: integer;
 
     procedure setRO( value : boolean );
     function  getRO : boolean;
@@ -137,9 +142,13 @@ type
     procedure renderPreview;
 
     procedure reload;
+
+    function handle_task_assign( const arg : TJSONObject ) : boolean;
   public
     procedure setID( ta_id, ty_id: integer );
+
     property RO : Boolean read getRO write setRO;
+    property GremiumID: integer read FGremiumID write FGremiumID;
 
     function LockCheck : boolean;
 
@@ -156,11 +165,24 @@ var
 implementation
 
 uses
-  m_WindowHandler, Vcl.Dialogs, m_glob_client, System.UITypes,
-  System.JSON, u_json, u_bookmark, u_berTypes, m_BookMarkHandler, DateUtils,
-  u_taskForm2XML, u_konst, m_html, xsd_TaskData, u_templateCache, u_kategorie;
+  m_WindowHandler, Vcl.Dialogs, m_glob_client, System.UITypes, u_json, u_bookmark, u_berTypes, m_BookMarkHandler, DateUtils,
+  u_taskForm2XML, u_konst, m_html, xsd_TaskData, u_templateCache, u_kategorie,
+  f_task_assigment, u_eventHandler;
 
 {$R *.dfm}
+
+procedure TTaskEditForm.ac_assignmentExecute(Sender: TObject);
+begin
+  if not m_ro then begin
+    ShowMessage('Das Dokuemnt muss zuvor gespeichert und freigegeben werden.');
+    exit;
+  end;
+  Application.CreateForm(TTaskAssignmentForm, TaskAssignmentForm);
+  TaskAssignmentForm.GremiumID := FGremiumID;
+  TaskAssignmentForm.TA_ID := m_ta_id;
+  TaskAssignmentForm.ShowModal;
+  TaskAssignmentForm.free;
+end;
 
 procedure TTaskEditForm.ac_bearbeitenExecute(Sender: TObject);
 var
@@ -199,6 +221,7 @@ begin
   mark.Internal   := false;
   mark.TypeID     := integer(dstEinstellung);
   mark.DocType    := dtTask;
+  mark.GremiumID  := FGremiumID;
  PostMessage( Application.MainFormHandle, msgNewBookMark, 0, 0 );
 end;
 
@@ -331,7 +354,6 @@ begin
                      mtConfirmation, [mbYes, mbNo, mbCancel], 0) of
       mrYes :
       begin
-        LogFrame1.AddLogEntry(m_ta_id);
         save;
         CanClose := true;
       end;
@@ -374,10 +396,14 @@ begin
   end;
 
   m_spell := TSpellChecker.create;
+
+  EventHandler.Register( self, handle_task_assign,   BRD_TASK_ASSIGN );
 end;
 
 procedure TTaskEditForm.FormDestroy(Sender: TObject);
 begin
+  EventHandler.Unregister(self, BRD_TASK_ASSIGN);
+
   if not m_ro then
     GM.UnLockDocument(m_ta_id, integer(ltTask));
 
@@ -401,6 +427,17 @@ end;
 function TTaskEditForm.getRO: boolean;
 begin
   Result := m_ro;
+end;
+
+function TTaskEditForm.handle_task_assign(const arg: TJSONObject): boolean;
+var
+  id : integer;
+begin
+  id := JInt(arg, 'taid');
+  if id = m_ta_id then begin
+    reload;
+  end;
+  Result := false;
 end;
 
 procedure TTaskEditForm.JvColorComboBox1Change(Sender: TObject);
@@ -635,6 +672,9 @@ begin
   st.free;
 
   mem.Free;
+
+  LogFrame1.AddLogEntry(m_ta_id);
+
   if ComboBox1.ItemIndex > -1 then
     TaskTab.FieldByName('TA_FLAGS').AsInteger := integer(ComboBox1.Items.Objects[ComboBox1.ItemIndex]);
 

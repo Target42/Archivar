@@ -65,6 +65,7 @@ object EditorFrame: TEditorFrame
             Caption = 'Name'
             Width = 200
           end>
+        HideSelection = False
         GroupView = True
         ReadOnly = True
         RowSelect = True
@@ -74,6 +75,8 @@ object EditorFrame: TEditorFrame
         ViewStyle = vsReport
         OnClick = LVClick
         OnKeyPress = LVKeyPress
+        ExplicitLeft = 3
+        ExplicitTop = 16
       end
     end
     object GroupBox4: TGroupBox
@@ -157,6 +160,7 @@ object EditorFrame: TEditorFrame
         Height = 49
         Align = alClient
         DragMode = dmAutomatic
+        HideSelection = False
         Indent = 19
         ReadOnly = True
         RowSelect = True
@@ -168,6 +172,7 @@ object EditorFrame: TEditorFrame
         OnDragOver = TVDragOver
         OnEdited = TVEdited
         OnStartDrag = TVStartDrag
+        ExplicitLeft = 3
       end
       object Panel4: TPanel
         Left = 2
@@ -793,7 +798,7 @@ object EditorFrame: TEditorFrame
     Left = 669
     Top = 113
     Bitmap = {
-      494C01010D001800D80010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01010D001800DC0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000004000000001002000000000000040
       000000000000000000000000000000000000000000FF000000FF000000FF0000
       00FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF0000

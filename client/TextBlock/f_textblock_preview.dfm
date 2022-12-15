@@ -35,16 +35,10 @@ object TextBlockPreviewForm: TTextBlockPreviewForm
     ExplicitHeight = 280
     inherited RE: TRichEdit
       Width = 635
-      Height = 231
+      Height = 280
       ReadOnly = True
-      ExplicitLeft = 0
-      ExplicitTop = 49
       ExplicitWidth = 635
-      ExplicitHeight = 231
-    end
-    inherited GroupBox1: TGroupBox
-      Width = 635
-      ExplicitWidth = 635
+      ExplicitHeight = 280
     end
   end
 end

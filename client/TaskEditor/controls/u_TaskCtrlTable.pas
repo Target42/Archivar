@@ -4,7 +4,7 @@ interface
 
 uses
   u_TaskCtrlImpl, i_taskEdit, Vcl.Controls, System.Classes,
-  System.Generics.Collections, Vcl.Grids;
+  System.Generics.Collections, Vcl.Grids, System.Types;
 
 type
   TaskCtrlTable = class(TaskCtrlImpl, ITaskCtrlTable)
@@ -34,6 +34,7 @@ type
       procedure renumber;
       function  getRowCount : integer;
       procedure setRowCount( value : integer );
+      procedure DrawCell(Sender: TObject; ACol, ARow: Integer; Rect: TRect; State: TGridDrawState);
 
       procedure SGAddRow( sender : TObject );
       procedure SGClear( sender : TObject );
@@ -63,7 +64,7 @@ implementation
 
 uses
   u_TaskCtrlPropImpl, System.SysUtils, Winapi.Windows, Vcl.Menus, i_datafields,
-  Vcl.Dialogs;
+  Vcl.Dialogs, Vcl.Graphics;
 { TaskCtrlTable }
 
 function TaskCtrlTable.addRow: integer;
@@ -143,6 +144,32 @@ begin
   ( m_ctrl as TStringGrid).OnMouseUp    := mu;
   ( m_ctrl as TStringGrid).OnMouseMove  := mv;
 
+end;
+
+procedure TaskCtrlTable.DrawCell(Sender: TObject; ACol, ARow: Integer;
+  Rect: TRect; State: TGridDrawState);
+var
+  sg : TStringGrid;
+  can : TCanvas;
+  s   : string;
+begin
+  sg := sender as TStringGrid;
+  can := sg.Canvas;
+
+  if (ACol = 0) or ( ARow = 0 ) then begin
+    can.Brush.Color := clBtnFace;
+    can.Font.Style := [fsBold];
+  end else begin
+    can.Brush.Color := clWhite;
+    can.Font.Style := [];
+  end;
+  can.FillRect(rect);
+
+  s := sg.Cells[ACol, ARow];
+  if ACol <> 0 then
+    Can.TextRect(Rect, s, [tfLeft])
+  else
+    Can.TextRect(Rect, s, [tfCenter]);
 end;
 
 procedure TaskCtrlTable.dropControls;
@@ -252,6 +279,10 @@ begin
   m_sg.OnExit       := SGExit;
   m_sg.OnEnter      := Enter;
 
+  m_sg.OnDrawCell     := DrawCell;
+  m_sg.DefaultDrawing := false;
+
+
   m_sg.Top  := y;
   m_sg.Left := X;
   m_sg.Options := [ goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine,
@@ -268,7 +299,6 @@ begin
   addItem('Inhalt löschen', Self.SGClear );
 
   Result := m_sg;
-
 end;
 
 procedure TaskCtrlTable.renumber;

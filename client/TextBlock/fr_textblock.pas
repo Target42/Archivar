@@ -93,7 +93,6 @@ begin
   end;
   filter.Free;
 
-
   LV.Items.EndUpdate;
   list.Free;
 end;
@@ -102,16 +101,21 @@ function TTextBlockFrame.getBlock: IXMLblock;
 var
   st : TStream;
   xml : IXMLDocument;
+  tbid : integer;
 begin
   Result := NewBlock;
 
-  if TBTab.IsEmpty then
+  if TBTab.IsEmpty or not Assigned(LV.Selected) then
     exit;
-  st := TBtab.CreateBlobStream(TBtab.FieldByName('TB_TEXT'), bmRead);
-  xml := NewXMLDocument;
-  xml.LoadFromStream(st);
-  Result := xml.GetDocBinding('Block', TXMLBlock, TargetNamespace) as IXMLBlock;
-  st.Free;
+
+  tbid := integer(LV.Selected.Data);
+  if TBTab.Locate('TB_ID', VarArrayOf([tbid]), []) then begin
+    st := TBtab.CreateBlobStream(TBtab.FieldByName('TB_TEXT'), bmRead);
+    xml := NewXMLDocument;
+    xml.LoadFromStream(st);
+    Result := xml.GetDocBinding('Block', TXMLBlock, TargetNamespace) as IXMLBlock;
+    st.Free;
+  end;
 end;
 
 function TTextBlockFrame.getContent(var text: string): boolean;
@@ -120,6 +124,8 @@ var
 begin
   Result := false;
   blk := self.getBlock;
+  if not Assigned(blk) then exit;
+
 
   if blk.Fields.Count = 0 then begin
     text:= blk.Content;

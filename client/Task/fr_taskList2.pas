@@ -99,7 +99,7 @@ begin
     exit;
   en := TTaskEntry(LV.Selected.Data);
 
-  WindowHandler.openTaskWindow(en.TaskID, -1, true, true);
+  WindowHandler.openTaskWindow(en.TaskID, -1, m_id, true, true);
 end;
 
 procedure TTaskList2Frame.prepare;

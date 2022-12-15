@@ -89,18 +89,21 @@ object TaskListFrame: TTaskListFrame
   object PopupMenu1: TPopupMenu
     Left = 72
     Top = 112
-    object Verschieben1: TMenuItem
-      Action = av_move
-    end
-    object Lschen1: TMenuItem
-      Action = av_delete
+    object fnnen1: TMenuItem
+      Caption = 'Offnen'
+      OnClick = fnnen1Click
     end
     object N1: TMenuItem
       Caption = '-'
     end
-    object fnnen1: TMenuItem
-      Caption = 'Offnen'
-      OnClick = fnnen1Click
+    object Verschieben1: TMenuItem
+      Action = av_move
+    end
+    object N2: TMenuItem
+      Caption = '-'
+    end
+    object Lschen1: TMenuItem
+      Action = av_delete
     end
   end
   object ActionList1: TActionList

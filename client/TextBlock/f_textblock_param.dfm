@@ -51,9 +51,11 @@ object TextBlockParameterForm: TTextBlockParameterForm
     Height = 239
     Align = alClient
     ColCount = 3
-    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goEditing, goTabs, goAlwaysShowEditor]
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goRangeSelect, goEditing, goTabs, goAlwaysShowEditor]
     TabOrder = 1
     OnKeyPress = SGKeyPress
     OnSelectCell = SGSelectCell
+    ExplicitLeft = 16
+    ExplicitTop = 2
   end
 end

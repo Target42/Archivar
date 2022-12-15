@@ -133,7 +133,7 @@ begin
   finally
     client.Free;
   end;
-  WindowHandler.openTaskWindow(m_id, integer(ltTask), false);
+  WindowHandler.openTaskWindow(m_id, integer(ltTask), m_grid, false);
 end;
 
 procedure TTaskform.FormCreate(Sender: TObject);

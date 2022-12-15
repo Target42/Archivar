@@ -15,6 +15,7 @@ type
       FInternal: boolean;
       FTypeID: integer;
       FDocType : tDocType;
+    FGremiumID: integer;
     public
       constructor create;
       Destructor Destroy; override;
@@ -26,6 +27,7 @@ type
       property Internal: boolean read FInternal write FInternal;
       property TypeID: integer read FTypeID write FTypeID;
       property DocType : tDocType read FDocType write FDocType;
+      property GremiumID: integer read FGremiumID write FGremiumID;
 
       function getJSON: TJSONObject;
       procedure setJSON( obj :  TJSONObject );
@@ -55,6 +57,7 @@ begin
   JReplace( Result, 'group', FGroup);
   JReplace( Result, 'clid', FClID);
   JReplace( Result, 'doctype', integer(FDocType));
+  JReplace( Result, 'gremiumid', FGremiumID);
 end;
 
 procedure TBookmark.setJSON(obj: TJSONObject);
@@ -66,6 +69,7 @@ begin
   FGroup    := JString( obj, 'group');
   FCLID     := JString( obj, 'clid');
   FDocType  := tDocType( JInt( obj, 'doctype'));
+  FGremiumID:= JInt(obj, 'gremiumid');
 end;
 
 end.

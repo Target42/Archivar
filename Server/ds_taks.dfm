@@ -413,4 +413,36 @@ object dsTask: TdsTask
     Left = 768
     Top = 368
   end
+  object ListGrTaQry: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
+    SQL.Strings = (
+      'select b.GR_ID, b.GR_NAME from TO_OPEN a, GR_GREMIUM b'
+      'where a.TA_ID = :ta_id'
+      'and a.GR_ID = b.gr_id')
+    Left = 312
+    Top = 216
+    ParamData = <
+      item
+        Name = 'TA_ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+  end
+  object TOTab: TFDTable
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
+    UpdateOptions.UpdateTableName = 'TO_OPEN'
+    TableName = 'TO_OPEN'
+    Left = 312
+    Top = 280
+  end
+  object LTTab: TFDTable
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
+    UpdateOptions.UpdateTableName = 'LT_TASK_LOG'
+    TableName = 'LT_TASK_LOG'
+    Left = 312
+    Top = 344
+  end
 end

@@ -11,13 +11,16 @@ uses
   u_xml in '..\misc\ePub\u_xml.pas',
   xsd_TextBlock in '..\misc\xsd_TextBlock.pas',
   u_json in '..\misc\u_json.pas',
-  xsd_TaskType in '..\misc\xsd_TaskType.pas';
+  xsd_TaskType in '..\misc\xsd_TaskType.pas',
+  Vcl.Themes,
+  Vcl.Styles;
 
 {$R *.res}
 
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
+  TStyleManager.TrySetStyle('Sapphire Kamri');
   Application.CreateForm(TMainSetupForm, MainSetupForm);
   Application.Run;
 end.

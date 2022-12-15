@@ -48,10 +48,14 @@ type
     TaskLogSrc: TDataSetProvider;
     Unused: TFDQuery;
     UnusedQry: TDataSetProvider;
+    ListGrTaQry: TFDQuery;
+    TOTab: TFDTable;
+    LTTab: TFDTable;
     procedure TaskLogTabBeforePost(DataSet: TDataSet);
   private
-    { Private declarations }
-
+    function getAssignments( taid : integer ) : TJSONArray;
+    procedure addLog( ta_id : integer; text : string );
+    procedure sendNotify( grid, taid : integer; assign : boolean );
   public
     function newTask( data : TJSONObject ) : TJSONObject;
     function deleteTask( ta_id : integer ) : TJSONObject;
@@ -64,6 +68,10 @@ type
 
     function closeTask( ta_id : integer ) : TJSONObject;
     procedure setFlags( taid, flags : integer );
+
+    function Assignments( taid : integer ) : TJSONObject;
+    function AssignToGremium( data : TJSONObject ) : TJSONObject;
+    function AssignmentRemove( data : TJSONObject ) : TJSONObject;
   end;
 
 implementation
@@ -77,6 +85,18 @@ uses
 {$R *.dfm}
 
 { TdsTask }
+
+procedure TdsTask.addLog(ta_id : integer; text: string);
+begin
+  LTTab.Open;
+  LTTab.Append;
+  LTTab.FieldByName('LT_ID').AsInteger      := AutoInc('gen_lt_id');
+  LTTab.FieldByName('TA_ID').AsInteger      := ta_id;
+  LTTab.FieldByName('LT_STAMP').AsDateTime  := now;
+  LTTab.FieldByName('LT_REM').AsString      := text;
+  LTTab.Post;
+  LTTab.Close;
+end;
 
 function TdsTask.AssignGremium(grid, taid: integer; status: string) : TJSONObject;
 var
@@ -126,6 +146,100 @@ begin
   end;
   TATab.Close;
   GrijjyLog.ExitMethod(self, 'AssignGremium');
+end;
+
+function TdsTask.AssignmentRemove(data : TJSONObject): TJSONObject;
+var
+  taid : integer;
+  grid : integer;
+  sendIt : boolean;
+begin
+  Result:= TJSONObject.Create;
+  sendIt := false;
+
+  taid := JInt( data, 'taid');
+  grid := JInt( data, 'grid');
+
+  TOTab.Filter := format('ta_id=%d', [taid]);
+  TOTab.Filtered := true;
+  TOTab.Open;
+  TOTab.Last;
+
+  if TOTab.RecordCount = 1 then begin
+    JResponse(Result, false, 'Die letzte Zuordnung kann nicht aufgehoben werden!');
+  end else if TOTab.RecordCount > 1 then begin
+    if TOTab.Locate('GR_ID;TA_ID', VarArrayOf([grid, taid]), []) then begin
+      TOTab.Delete;
+
+      AddLog( taid, getText(data, 'rem') );
+
+      JReplace( Result, 'items', getAssignments(taid));
+      JResult( Result, true, 'Zuweisung gelöscht');
+      sendIt := true;
+    end else
+      JResponse(Result, false, 'Keine Zuweisung für dieses Gremium gefunden!');
+  end else
+    JResponse(Result, false, 'Keine Zuweisung für diesen Vorgang gefunden!!');
+
+
+  if IBTransaction1.Active then
+    IBTransaction1.Commit;
+
+   TOTab.Close;
+
+   if sendIt then
+    sendNotify(grid, taid, false);
+
+end;
+
+function TdsTask.Assignments(taid: integer): TJSONObject;
+begin
+  Result := TJSONObject.Create;
+
+  JReplace( Result, 'items', getAssignments( taid ));
+
+  if IBTransaction1.Active then
+    IBTransaction1.Commit;
+
+end;
+
+function TdsTask.AssignToGremium(data : TJSONObject): TJSONObject;
+var
+  taid : integer;
+  grid : integer;
+  sendIT : boolean;
+begin
+  Result:= TJSONObject.Create;
+  sendIT := false;
+
+  taid := JInt( data, 'taid');
+  grid := JInt( data, 'grid');
+
+  TOTab.Open;
+
+  if not TOTab.Locate('GR_ID;TA_ID', VarArrayOf([grid, taid]), []) then begin
+    TOTab.Append;
+    TOTab.FieldByName('GR_ID').AsInteger := grid;
+    TOTab.FieldByName('TA_ID').AsInteger := taid;
+    TOTab.Post;
+
+    AddLog( taid, getText(data, 'rem') );
+
+    JReplace( Result, 'items', getAssignments(taid));
+    JResult( Result, true, 'Zuweisung erfolgt');
+
+    sendIt := true;
+  end else begin
+    JResult( Result, true, 'Diesem Gremium ist der Vorgang schon zugewiesen.');
+  end;
+
+  if IBTransaction1.Active then
+    IBTransaction1.Commit;
+
+  TOTab.Close;
+  if sendIT then
+    sendNotify(grid, taid, true);
+
 end;
 
 function TdsTask.AutoInc(gen: string): integer;
@@ -249,6 +363,23 @@ begin
   GrijjyLog.ExitMethod(self, 'deleteTask');
 end;
 
+function TdsTask.getAssignments(taid: integer): TJSONArray;
+var
+  row : TJSONObject;
+begin
+  Result := TJSONArray.Create;
+
+  ListGrTaQry.ParamByName('TA_ID').AsInteger := taid;
+  ListGrTaQry.Open;
+  while not ListGrTaQry.Eof do begin
+    row := TJSONObject.Create;
+    JReplace(row, 'id',   ListGrTaQry.FieldByName('GR_ID').AsInteger );
+    JReplace(row, 'name', ListGrTaQry.FieldByName('GR_NAME').AsString );
+    Result.AddElement(row);
+    ListGrTaQry.Next;
+  end;
+end;
+
 function TdsTask.moveTask(grid, taid: integer) : TJSONObject;
 var
   s : string;
@@ -308,6 +439,19 @@ function TdsTask.newTask(data: TJSONObject): TJSONObject;
 begin
   Result := NIL;
   GrijjyLog.Send('not supported: newTask', TgoLogLevel.Error);
+
+end;
+
+procedure TdsTask.sendNotify(grid, taid: integer; assign: boolean);
+var
+  msg : TJSONObject;
+begin
+  msg := TJSONObject.Create;
+  JAction(  msg, BRD_TASK_ASSIGN);
+  JReplace( msg, 'taid', taid);
+  JReplace( msg, 'grid', grid);
+  JReplace( msg, 'assign', assign );
+  ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg);
 
 end;
 

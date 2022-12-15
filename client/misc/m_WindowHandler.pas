@@ -20,7 +20,7 @@ type
     m_list        : TList<IForceClose>;
 
   public
-    procedure openTaskWindow( id, typeID : integer; ro : boolean; modal : boolean = false );
+    procedure openTaskWindow( id, typeID, grid : integer; ro : boolean; modal : boolean = false );
     procedure closeTaskWindow( id : integer );
     function  isTaskOpen( id : integer ) : Boolean;
     procedure closeTaksWindowMsg( id : integer; text : string );
@@ -48,7 +48,7 @@ var
 implementation
 
 uses
-  Vcl.Dialogs, u_json, m_glob_client, u_berTypes;
+  Vcl.Dialogs, u_json, m_glob_client, u_berTypes, System.UITypes;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -71,7 +71,8 @@ var
 
 begin
   for i := 0 to pred(m_forms.Count) do begin
-    if Supports( m_forms[i], StringToGUID('{09DB420A-2669-4E82-B537-D8866479642F}')) then
+    //if Supports( m_forms[i], StringToGUID('{09DB420A-2669-4E82-B537-D8866479642F}')) then
+    if Supports( m_forms[i], IForceClose) then
       m_list.Remove(m_forms[i] as IForceClose);
 
     m_forms[i].Close;
@@ -235,10 +236,11 @@ begin
   end;
 end;
 
-procedure TWindowHandler.openTaskWindow(id, typeID: integer; ro : boolean ; modal : boolean);
+procedure TWindowHandler.openTaskWindow(id, typeID, grid: integer; ro : boolean ; modal : boolean);
 var
   TaskEditForm : TTaskEditForm;
 begin
+  Screen.Cursor := crHourGlass;
   if modal then
   begin
       Application.CreateForm(TTaskEditForm, TaskEditForm);
@@ -248,6 +250,7 @@ begin
       TaskEditForm.setID( id, typeID );
       TaskEditForm.RO := ro;
       TaskEditForm.LockCheck;
+      TaskEditForm.GremiumID := grid;
       TaskEditForm.resizeForm;
       TaskEditForm.ShowModal;
       TaskEditForm.Free;
@@ -263,18 +266,23 @@ begin
     begin
       Application.CreateForm(TTaskEditForm, TaskEditForm);
       TaskEditForm.setID( id, typeID );
+      TaskEditForm.GremiumID := grid;
+
 
       m_taskMap.Add(id, TaskEditForm);
       m_list.Add(TaskEditForm);
     end;
+
     TaskEditForm.RO := ro;
     TaskEditForm.Show;
+
     if not ro then begin
       GM.LockDocument( id, integer(ltTask));
       if Gm.LockedFlag (id,integer(ltTask))  then
         TaskEditForm.edit;
     end;
   end;
+  Screen.Cursor := crDefault;
 end;
 
 procedure TWindowHandler.registerForm(frm: TForm);

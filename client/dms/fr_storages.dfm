@@ -22,6 +22,7 @@ object StoragesFrame: TStoragesFrame
     SortType = stText
     TabOrder = 0
     ViewStyle = vsReport
+    OnDblClick = LVDblClick
   end
   object PopupMenu1: TPopupMenu
     Left = 264

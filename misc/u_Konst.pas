@@ -36,11 +36,14 @@ const
   BRD_ADMIN           : string = 'admin';
   BRD_TASK_MOVE       : string = 'task_move';       // taskmove
   BRD_TASK_DELETE     : string = 'task_delete';     // taskdelete
+  BRD_TASK_ASSIGN     : string = 'task_assign';
   BRD_MEETING_NEW     : string = 'meeting_new';     // newmeeting
   BRD_MEETING_UPDATE  : string = 'meeting_update';  // updatemeeting
   BRD_MEETING         : string = 'meeting';         // meeting
+
   BRD_ONLINE_USER     : string = 'online_user';     // onlineuser
   BRD_ONLINE_STATE    : string = 'online_state';    // userchangestate
+
   BRD_LEAD_REQ        : string = 'lead_req';        // requestlead
   BRD_LEAD_CHG        : string = 'lead_chg';        // changelead
   BRD_DOC_UPDATE      : string = 'doc_update';      // docupdate'

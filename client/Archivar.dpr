@@ -26,7 +26,6 @@ uses
   u_gremium in 'Gremium\u_gremium.pas',
   fr_taskList in 'Task\fr_taskList.pas' {TaskListFrame: TFrame},
   m_WindowHandler in 'misc\m_WindowHandler.pas' {WindowHandler: TDataModule},
-  fr_editForm in 'misc\fr_editForm.pas' {EditFrame: TFrame},
   u_json in '..\misc\u_json.pas',
   xsd_data in '..\misc\xsd_data.pas',
   u_addInfo in 'misc\u_addInfo.pas',
@@ -132,7 +131,6 @@ uses
   u_ChapterTitleImpl in 'Protokoll\u_ChapterTitleImpl.pas',
   u_ProtocolImpl in 'Protokoll\u_ProtocolImpl.pas',
   u_speedbutton in 'misc\u_speedbutton.pas',
-  fr_textblock in 'TextBlock\fr_textblock.pas' {TextBlockFrame: TFrame},
   f_testblock_list in 'TextBlock\f_testblock_list.pas' {TestBlockListForm},
   f_textblock_param in 'TextBlock\f_textblock_param.pas' {TextBlockParameterForm},
   m_taskLoader in 'Task\m_taskLoader.pas' {TaskLoaderMod: TDataModule},
@@ -212,7 +210,6 @@ uses
   f_personen_list in 'Personen\f_personen_list.pas' {PersonenListForm},
   CodeSiteLogging {PersonenListForm},
   f_protokoll_new in 'Protokoll\f_protokoll_new.pas' {ProtokollNewForm},
-  fr_base in '..\misc\fr_base.pas' {BaseFrame: TFrame},
   fr_gremium in 'Gremium\fr_gremium.pas' {GremiumFrame: TFrame},
   xsd_Task in '..\misc\xsd_Task.pas',
   u_ShowMessageTimeOut in 'misc\u_ShowMessageTimeOut.pas',
@@ -230,7 +227,13 @@ uses
   NHunXml in 'nhunspell\NHunXml.pas',
   PasZip in 'nhunspell\PasZip.pas',
   u_SpellChecker in 'nhunspell\u_SpellChecker.pas',
-  f_connect_form2 in 'nhunspell\f_connect_form2.pas' {FullCorrectForm};
+  f_connect_form2 in 'nhunspell\f_connect_form2.pas' {FullCorrectForm},
+  f_task_assigment in 'TaskEditor\f_task_assigment.pas' {TaskAssignmentForm},
+  fr_textblock in 'TextBlock\fr_textblock.pas' {TextBlockFrame: TFrame},
+  fr_editForm in 'misc\fr_editForm.pas' {EditFrame: TFrame},
+  fr_base in '..\misc\fr_base.pas' {BaseFrame: TFrame},
+  Vcl.Themes,
+  Vcl.Styles;
 
 {$R *.res}
 
@@ -250,7 +253,9 @@ begin
 
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
+  Application.DefaultFont.Size  := 10;
 
+  TStyleManager.TrySetStyle('Sapphire Kamri');
   Application.CreateForm(TGM, GM);
   Application.CreateForm(THttpMod, HttpMod);
   Application.CreateForm(TWindowHandler, WindowHandler);

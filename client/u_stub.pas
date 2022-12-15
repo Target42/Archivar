@@ -1,6 +1,6 @@
 //
 // Erzeugt vom DataSnap-Proxy-Generator.
-// 06.11.2022 12:18:34
+// 11.12.2022 14:05:31
 //
 
 unit u_stub;
@@ -75,6 +75,9 @@ type
     FmoveTaskCommand: TDBXCommand;
     FcloseTaskCommand: TDBXCommand;
     FsetFlagsCommand: TDBXCommand;
+    FAssignmentsCommand: TDBXCommand;
+    FAssignToGremiumCommand: TDBXCommand;
+    FAssignmentRemoveCommand: TDBXCommand;
   public
     constructor Create(ADBXConnection: TDBXConnection); overload;
     constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
@@ -88,6 +91,9 @@ type
     function moveTask(grid: Integer; taid: Integer): TJSONObject;
     function closeTask(ta_id: Integer): TJSONObject;
     procedure setFlags(taid: Integer; flags: Integer);
+    function Assignments(taid: Integer): TJSONObject;
+    function AssignToGremium(data: TJSONObject): TJSONObject;
+    function AssignmentRemove(data: TJSONObject): TJSONObject;
   end;
 
   TdsFileClient = class(TDSAdminClient)
@@ -779,6 +785,48 @@ begin
   FsetFlagsCommand.ExecuteUpdate;
 end;
 
+function TdsTaskClient.Assignments(taid: Integer): TJSONObject;
+begin
+  if FAssignmentsCommand = nil then
+  begin
+    FAssignmentsCommand := FDBXConnection.CreateCommand;
+    FAssignmentsCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FAssignmentsCommand.Text := 'TdsTask.Assignments';
+    FAssignmentsCommand.Prepare;
+  end;
+  FAssignmentsCommand.Parameters[0].Value.SetInt32(taid);
+  FAssignmentsCommand.ExecuteUpdate;
+  Result := TJSONObject(FAssignmentsCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
+end;
+
+function TdsTaskClient.AssignToGremium(data: TJSONObject): TJSONObject;
+begin
+  if FAssignToGremiumCommand = nil then
+  begin
+    FAssignToGremiumCommand := FDBXConnection.CreateCommand;
+    FAssignToGremiumCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FAssignToGremiumCommand.Text := 'TdsTask.AssignToGremium';
+    FAssignToGremiumCommand.Prepare;
+  end;
+  FAssignToGremiumCommand.Parameters[0].Value.SetJSONValue(data, FInstanceOwner);
+  FAssignToGremiumCommand.ExecuteUpdate;
+  Result := TJSONObject(FAssignToGremiumCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
+end;
+
+function TdsTaskClient.AssignmentRemove(data: TJSONObject): TJSONObject;
+begin
+  if FAssignmentRemoveCommand = nil then
+  begin
+    FAssignmentRemoveCommand := FDBXConnection.CreateCommand;
+    FAssignmentRemoveCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FAssignmentRemoveCommand.Text := 'TdsTask.AssignmentRemove';
+    FAssignmentRemoveCommand.Prepare;
+  end;
+  FAssignmentRemoveCommand.Parameters[0].Value.SetJSONValue(data, FInstanceOwner);
+  FAssignmentRemoveCommand.ExecuteUpdate;
+  Result := TJSONObject(FAssignmentRemoveCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
+end;
+
 constructor TdsTaskClient.Create(ADBXConnection: TDBXConnection);
 begin
   inherited Create(ADBXConnection);
@@ -800,6 +848,9 @@ begin
   FmoveTaskCommand.DisposeOf;
   FcloseTaskCommand.DisposeOf;
   FsetFlagsCommand.DisposeOf;
+  FAssignmentsCommand.DisposeOf;
+  FAssignToGremiumCommand.DisposeOf;
+  FAssignmentRemoveCommand.DisposeOf;
   inherited;
 end;
 

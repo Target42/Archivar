@@ -124,17 +124,16 @@ begin
         SG.Cells[1, i+1]:= GM.Vorname+' '+GM.Name
       else
         SG.Cells[1, i+1]:= def;
-
     end;
   end;
 
   setColWidth;
 
-   SG.Row   := 1;
-   SG.Col   := 1;
+  SG.Row   := 1;
+  SG.Col   := 1;
 
-   SG.FixedRows := 1;
-   SG.FixedCols := 1;
+  SG.FixedRows := 1;
+  SG.FixedCols := 1;
 
 end;
 

@@ -23,6 +23,7 @@ type
     LV: TListView;
     N1: TMenuItem;
     fnnen1: TMenuItem;
+    N2: TMenuItem;
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure TaskscalcCreatedGetText(Sender: TField; var Text: string;
       DisplayText: Boolean);
@@ -257,7 +258,7 @@ begin
     Tasks.Refresh;
   end;
 
-  WindowHandler.openTaskWindow(ta_id, data.ty, true);
+  WindowHandler.openTaskWindow(ta_id, data.ty, m_id,  true);
 end;
 
 procedure TTaskListFrame.enableCtrl;

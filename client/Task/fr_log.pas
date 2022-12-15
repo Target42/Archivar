@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Vcl.OleCtrls,
   SHDocVw, Web.HTTPApp, Web.HTTPProd, Vcl.StdCtrls, Vcl.ExtCtrls, fr_textblock,
-  fr_editForm;
+  fr_editForm, Vcl.ComCtrls, JvComponentBase, JvRichEditToHtml;
 
 type
   TLogFrame = class(TFrame)
@@ -18,6 +18,8 @@ type
     WebBrowser1: TWebBrowser;
     TextBlockFrame1: TTextBlockFrame;
     EditFrame1: TEditFrame;
+    JvRichEditToHtml1: TJvRichEditToHtml;
+    RichEdit1: TRichEdit;
     procedure PageProducer1HTMLTag(Sender: TObject; Tag: TTag;
       const TagString: string; TagParams: TStrings; var ReplaceText: string);
     procedure Memo1DragOver(Sender, Source: TObject; X, Y: Integer;
@@ -85,11 +87,24 @@ end;
 
 procedure TLogFrame.PageProducer1HTMLTag(Sender: TObject; Tag: TTag;
   const TagString: string; TagParams: TStrings; var ReplaceText: string);
+var
+  ss : TStringStream;
+  list : TStringList;
 begin
        if SameText('user', TagString) then  ReplaceText := m_dataset.FieldByName('LT_NAME').AsString
   else if SameText('date', TagString) then  ReplaceText := DateToStr(m_dataset.FieldByName('LT_STAMP').AsDateTime)
   else if SameText('time', TagString) then  ReplaceText := timeToStr(m_dataset.FieldByName('LT_STAMP').AsDateTime)
-  else if SameText('rem', TagString) then   ReplaceText := System.StrUtils.ReplaceText( m_dataset.FieldByName('LT_REM').AsString, #$d#$a, '<br>');
+  //else if SameText('rem', TagString) then   ReplaceText := System.StrUtils.ReplaceText( m_dataset.FieldByName('LT_REM').AsString, #$d#$a, '<br>');
+  else if SameText('rem', TagString) then   begin
+    ss := TStringStream.Create(m_dataset.FieldByName('LT_REM').AsString);
+    ss.Position := 0;
+    RichEdit1.Lines.LoadFromStream(ss);
+    ss.Free;
+    list := TSTringList.Create;
+    JvRichEditToHtml1.ConvertToHtmlStrings(RichEdit1, list);
+    ReplaceText := list.Text;
+    list.Free;
+  end;
 
 end;
 
@@ -125,6 +140,7 @@ var
   ss : TStringStream;
 begin
   m_dataset := DataSet;
+
   st    := TMemoryStream.Create;
   list  := TStringList.Create;
   with dataset do begin

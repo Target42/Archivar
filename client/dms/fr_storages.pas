@@ -15,6 +15,7 @@ type
     ac_open: TAction;
     ffnen1: TMenuItem;
     procedure ac_openExecute(Sender: TObject);
+    procedure LVDblClick(Sender: TObject);
   private
     m_data : TJSONObject;
     procedure addNew( const arg : TJSONObject );
@@ -102,6 +103,11 @@ begin
     end;
   end else
     Result := false;
+end;
+
+procedure TStoragesFrame.LVDblClick(Sender: TObject);
+begin
+  ac_open.Execute;
 end;
 
 procedure TStoragesFrame.prepare;
