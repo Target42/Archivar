@@ -1,17 +1,17 @@
 object LogFrame: TLogFrame
   Left = 0
   Top = 0
-  Width = 828
-  Height = 470
+  Width = 1112
+  Height = 548
   Align = alClient
   TabOrder = 0
   ExplicitWidth = 451
   ExplicitHeight = 305
   object GroupBox3: TGroupBox
-    Left = 643
+    Left = 927
     Top = 0
     Width = 185
-    Height = 470
+    Height = 548
     Align = alRight
     Caption = 'Textbausteine'
     TabOrder = 0
@@ -21,7 +21,7 @@ object LogFrame: TLogFrame
       Left = 2
       Top = 15
       Width = 181
-      Height = 453
+      Height = 531
       Align = alClient
       TabOrder = 0
       ExplicitLeft = 2
@@ -29,7 +29,7 @@ object LogFrame: TLogFrame
       ExplicitWidth = 181
       ExplicitHeight = 288
       inherited Panel1: TPanel
-        Top = 397
+        Top = 475
         Width = 181
         ExplicitTop = 232
         ExplicitWidth = 181
@@ -41,7 +41,7 @@ object LogFrame: TLogFrame
       end
       inherited LV: TListView
         Width = 181
-        Height = 397
+        Height = 475
         ExplicitWidth = 181
         ExplicitHeight = 232
       end
@@ -50,8 +50,8 @@ object LogFrame: TLogFrame
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 643
-    Height = 470
+    Width = 927
+    Height = 548
     Align = alClient
     BevelOuter = bvNone
     Caption = 'Panel1'
@@ -62,30 +62,31 @@ object LogFrame: TLogFrame
     object GroupBox1: TGroupBox
       Left = 0
       Top = 0
-      Width = 643
+      Width = 927
       Height = 121
       Align = alTop
       Caption = 'Aktuelle Informationen'
       TabOrder = 0
+      ExplicitWidth = 266
       inline EditFrame1: TEditFrame
         Left = 2
         Top = 15
-        Width = 639
+        Width = 923
         Height = 104
         Align = alClient
         TabOrder = 0
         ExplicitLeft = 2
         ExplicitTop = 15
         ExplicitWidth = 262
-        ExplicitHeight = 80
+        ExplicitHeight = 104
         inherited RE: TRichEdit
-          Width = 639
+          Width = 923
           Height = 70
           ExplicitWidth = 262
-          ExplicitHeight = 46
+          ExplicitHeight = 70
         end
         inherited Panel1: TPanel
-          Width = 639
+          Width = 923
           ExplicitWidth = 262
         end
       end
@@ -93,28 +94,25 @@ object LogFrame: TLogFrame
     object GroupBox2: TGroupBox
       Left = 0
       Top = 121
-      Width = 643
-      Height = 349
+      Width = 927
+      Height = 427
       Align = alClient
       Caption = 'Historie'
       TabOrder = 1
-      ExplicitLeft = 4
-      ExplicitTop = 101
-      ExplicitHeight = 373
+      ExplicitWidth = 266
+      ExplicitHeight = 184
       object WebBrowser1: TWebBrowser
         AlignWithMargins = True
         Left = 5
         Top = 18
-        Width = 633
-        Height = 326
+        Width = 917
+        Height = 404
         Align = alClient
         TabOrder = 0
-        ExplicitLeft = 6
-        ExplicitTop = 20
-        ExplicitWidth = 256
-        ExplicitHeight = 185
+        ExplicitWidth = 633
+        ExplicitHeight = 326
         ControlData = {
-          4C0000006C410000B12100000000000000000000000000000000000000000000
+          4C000000C65E0000C12900000000000000000000000000000000000000000000
           000000004C000000000000000000000001000000E0D057007335CF11AE690800
           2B2E126208000000000000004C0000000114020000000000C000000000000046
           8000000000000000000000000000000000000000000000000000000000000000

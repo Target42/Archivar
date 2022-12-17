@@ -51,10 +51,12 @@ type
     ListGrTaQry: TFDQuery;
     TOTab: TFDTable;
     LTTab: TFDTable;
+    Assigenments: TFDQuery;
+    AssigenmentsQry: TDataSetProvider;
     procedure TaskLogTabBeforePost(DataSet: TDataSet);
   private
     function getAssignments( taid : integer ) : TJSONArray;
-    procedure addLog( ta_id : integer; text : string );
+    procedure addLog( ta_id : integer; text, grName : string );
     procedure sendNotify( grid, taid : integer; assign : boolean );
   public
     function newTask( data : TJSONObject ) : TJSONObject;
@@ -86,7 +88,7 @@ uses
 
 { TdsTask }
 
-procedure TdsTask.addLog(ta_id : integer; text: string);
+procedure TdsTask.addLog(ta_id : integer; text, grName: string);
 begin
   LTTab.Open;
   LTTab.Append;
@@ -94,6 +96,9 @@ begin
   LTTab.FieldByName('TA_ID').AsInteger      := ta_id;
   LTTab.FieldByName('LT_STAMP').AsDateTime  := now;
   LTTab.FieldByName('LT_REM').AsString      := text;
+  if grName <> '' then
+    LTTab.FieldByName('LT_NAME').AsString   :=  grName;
+
   LTTab.Post;
   LTTab.Close;
 end;
@@ -171,7 +176,7 @@ begin
     if TOTab.Locate('GR_ID;TA_ID', VarArrayOf([grid, taid]), []) then begin
       TOTab.Delete;
 
-      AddLog( taid, getText(data, 'rem') );
+      AddLog( taid, getText(data, 'rem'), JString( data, 'grname' ));
 
       JReplace( Result, 'items', getAssignments(taid));
       JResult( Result, true, 'Zuweisung gelöscht');
@@ -223,7 +228,7 @@ begin
     TOTab.FieldByName('TA_ID').AsInteger := taid;
     TOTab.Post;
 
-    AddLog( taid, getText(data, 'rem') );
+    AddLog( taid, getText(data, 'rem'), JString( data, 'grname' ) );
 
     JReplace( Result, 'items', getAssignments(taid));
     JResult( Result, true, 'Zuweisung erfolgt');

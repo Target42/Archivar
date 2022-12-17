@@ -81,7 +81,7 @@
     Top = 0
     Width = 249
     Height = 467
-    ActivePage = TabSheet7
+    ActivePage = TabSheet1
     Align = alLeft
     MultiLine = True
     TabOrder = 1

@@ -60,7 +60,6 @@ uses
 procedure TTaskAssignmentForm.BitBtn1Click(Sender: TObject);
 var
   req, res : TJSONObject;
-  grid     : integer;
 begin
   if ComboBox1.ItemIndex = -1 then begin
     ShowMessage('Es muss ein Gremium ausgewählt werden!');
@@ -75,13 +74,12 @@ begin
     exit;
   end;
 
-  EditFrame1.insert(getGRName(FGremiumID)+':');
-  grid := TGremium(ComboBox1.Items.Objects[ComboBox1.ItemIndex]).ID;
   req := TJSONObject.Create;
 
   JReplace( req, 'taid', FTA_ID);
-  JReplace( req, 'grid', grid);
-  setText(  req, 'rem', EditFrame1.Text);
+  JReplace( req, 'grid', TGremium(ComboBox1.Items.Objects[ComboBox1.ItemIndex]).ID);
+  JReplace( req, 'grname', getGRName(FGremiumID));
+  setText(  req, 'rem',  EditFrame1.Text);
 
   res := m_client.AssignToGremium(req);
 
@@ -127,11 +125,10 @@ begin
     exit;
   end;
 
-  EditFrame1.insert(getGRName(FGremiumID)+':');
-
   req := TJSONObject.Create;
   JReplace( req, 'taid', FTA_ID);
   JReplace( req, 'grid', grid);
+  JReplace( req, 'grname', getGRName(FGremiumID));
   setText(  req, 'rem', EditFrame1.Text);
 
   res := m_client.AssignmentRemove(req);

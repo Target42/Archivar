@@ -38,6 +38,7 @@ const
   msgRetryLogin     = WMUSER + 16;
   msgShowFileCache  = WMUSER + 17;
   msgNeedKeys       = WMUSER + 18;
+  msgUpdateTaskList = WMUSER + 19;
 
 type
   TGM = class(TDataModule)
@@ -105,6 +106,7 @@ type
     function handle_taskdelete    ( const Arg: TJSONObject ) : boolean;
     function handle_newmeeting    ( const Arg: TJSONObject ) : boolean;
     function handle_updatemeeting ( const Arg: TJSONObject ) : boolean;
+    function handle_task_assign   ( const arg: TJSONObject ) : boolean;
 
     procedure checkOrDownloadKeys;
 
@@ -596,6 +598,7 @@ begin
   EventHandler.Register( self, handle_taskdelete,   BRD_TASK_DELETE);
   EventHandler.Register( self, handle_newmeeting,   BRD_MEETING_NEW );
   EventHandler.Register( self, handle_updatemeeting,BRD_MEETING_UPDATE );
+  EventHandler.Register( self, handle_task_assign,  BRD_TASK_ASSIGN);
 
   loadHostList;
   loadUserlist;
@@ -888,6 +891,13 @@ begin
   PostMessage( Application.MainFormHandle, msgFilterTasks, 1, 0 );
 
   Result := true;
+end;
+
+function TGM.handle_task_assign(const arg: TJSONObject): boolean;
+begin
+  PostMessage(Application.MainFormHandle, msgUpdateTaskList, 0, JInt(Arg, 'taid') );
+
+  Result := false
 end;
 
 function TGM.handle_updatemeeting(const Arg: TJSONObject): boolean;

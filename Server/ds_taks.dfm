@@ -438,11 +438,33 @@ object dsTask: TdsTask
     Top = 280
   end
   object LTTab: TFDTable
+    BeforePost = TaskLogTabBeforePost
     Connection = DBMod.ArchivarConnection
     Transaction = IBTransaction1
     UpdateOptions.UpdateTableName = 'LT_TASK_LOG'
     TableName = 'LT_TASK_LOG'
     Left = 312
     Top = 344
+  end
+  object Assigenments: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
+    SQL.Strings = (
+      'SELECT count(TA_ID)'
+      'FROM TO_OPEN '
+      'where ta_id = :ta_id')
+    Left = 320
+    Top = 40
+    ParamData = <
+      item
+        Name = 'TA_ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+  end
+  object AssigenmentsQry: TDataSetProvider
+    DataSet = Assigenments
+    Left = 328
+    Top = 104
   end
 end

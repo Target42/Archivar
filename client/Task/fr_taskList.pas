@@ -124,6 +124,10 @@ begin
         else
           UpdateTaskList(m_id);
 
+      end;
+      msgUpdateTaskList : begin
+        if m_id = Msg.lParam then
+          UpdateTaskList(m_id);
       end
   else
     Handled := false;

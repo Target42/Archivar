@@ -54,13 +54,15 @@ object TaskEditForm: TTaskEditForm
         Left = 0
         Top = 0
         Width = 717
-        Height = 113
+        Height = 145
         Align = alTop
         Caption = 'Allgemeines'
         TabOrder = 0
+        ExplicitLeft = 3
+        ExplicitTop = -6
         object Label1: TLabel
-          Left = 16
-          Top = 27
+          Left = 3
+          Top = 30
           Width = 20
           Height = 13
           Caption = 'Titel'
@@ -80,7 +82,7 @@ object TaskEditForm: TTaskEditForm
           Caption = 'Termin'
         end
         object Label4: TLabel
-          Left = 9
+          Left = 3
           Top = 54
           Width = 34
           Height = 13
@@ -108,18 +110,25 @@ object TaskEditForm: TTaskEditForm
           Caption = 'Style'
         end
         object Label9: TLabel
-          Left = 4
-          Top = 84
+          Left = 3
+          Top = 86
           Width = 54
           Height = 13
           Caption = 'Kommentar'
         end
         object Label10: TLabel
-          Left = 466
-          Top = 80
+          Left = 462
+          Top = 78
           Width = 28
           Height = 13
           Caption = 'Farbe'
+        end
+        object Label6: TLabel
+          Left = 3
+          Top = 108
+          Width = 62
+          Height = 13
+          Caption = 'Antragsteller'
         end
         object DBEdit1: TDBEdit
           Left = 49
@@ -173,6 +182,7 @@ object TaskEditForm: TTaskEditForm
           DataSource = TaskSrc
           ReadOnly = True
           TabOrder = 3
+          StyleElements = [seFont, seBorder]
         end
         object ComboBox1: TComboBox
           Left = 213
@@ -193,9 +203,9 @@ object TaskEditForm: TTaskEditForm
           OnChange = ComboBox2Change
         end
         object DBEdit5: TDBEdit
-          Left = 64
-          Top = 78
-          Width = 380
+          Left = 71
+          Top = 81
+          Width = 378
           Height = 21
           DataField = 'TA_REM'
           DataSource = TaskSrc
@@ -203,55 +213,83 @@ object TaskEditForm: TTaskEditForm
           OnKeyPress = DBEdit1KeyPress
         end
         object JvColorComboBox1: TJvColorComboBox
-          Left = 500
+          Left = 496
           Top = 78
-          Width = 145
+          Width = 133
           Height = 20
           ColorDialogText = 'Custom...'
-          DroppedDownWidth = 145
+          DroppedDownWidth = 133
           NewColorText = 'Custom'
           Options = [coText]
           Sorted = True
           TabOrder = 8
           OnChange = JvColorComboBox1Change
         end
+        object LabeledEdit1: TLabeledEdit
+          Left = 593
+          Top = 51
+          Width = 35
+          Height = 21
+          EditLabel.Width = 56
+          EditLabel.Height = 13
+          EditLabel.Caption = 'Referenzen'
+          LabelPosition = lpLeft
+          ReadOnly = True
+          TabOrder = 9
+          StyleElements = [seFont, seBorder]
+        end
+        object DBEdit6: TDBEdit
+          Left = 71
+          Top = 105
+          Width = 380
+          Height = 21
+          DataField = 'TA_BEARBEITER'
+          DataSource = TaskSrc
+          TabOrder = 10
+          OnKeyPress = DBEdit1KeyPress
+        end
       end
       object PageControl2: TPageControl
         Left = 0
-        Top = 113
+        Top = 145
         Width = 717
-        Height = 279
+        Height = 247
         ActivePage = TabSheet3
         Align = alClient
         TabOrder = 1
         OnChange = PageControl2Change
+        ExplicitTop = 113
+        ExplicitHeight = 279
         object TabSheet3: TTabSheet
           Caption = 'Details'
+          ExplicitHeight = 251
           inline FormFrame1: TFormFrame
             Left = 0
             Top = 0
             Width = 709
-            Height = 251
+            Height = 219
             Align = alClient
             TabOrder = 0
             ExplicitWidth = 709
             ExplicitHeight = 251
             inherited ScrollBox1: TScrollBox
               Width = 709
-              Height = 251
+              Height = 219
+              ExplicitTop = 2
               ExplicitWidth = 709
-              ExplicitHeight = 251
+              ExplicitHeight = 219
             end
           end
         end
         object TabSheet4: TTabSheet
           Caption = 'Vorschau'
           ImageIndex = 1
+          ExplicitHeight = 251
           object WebBrowser1: TWebBrowser
             Left = 0
             Top = 0
             Width = 709
-            Height = 251
+            Height = 219
             Align = alClient
             TabOrder = 0
             ExplicitLeft = 16
@@ -259,7 +297,7 @@ object TaskEditForm: TTaskEditForm
             ExplicitWidth = 300
             ExplicitHeight = 150
             ControlData = {
-              4C00000047490000F11900000000000000000000000000000000000000000000
+              4C00000047490000A21600000000000000000000000000000000000000000000
               000000004C000000000000000000000001000000E0D057007335CF11AE690800
               2B2E126208000000000000004C0000000114020000000000C000000000000046
               8000000000000000000000000000000000000000000000000000000000000000
@@ -330,7 +368,7 @@ object TaskEditForm: TTaskEditForm
         end
         inherited ImageList1: TImageList
           Bitmap = {
-            494C010102000800700010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+            494C010102000800740010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
             0000000000003600000028000000400000001000000001002000000000000010
             000000000000000000000000000000000000000000FF078DBE00078DBE00078D
             BE00078DBE00078DBE00078DBE00078DBE00078DBE00078DBE00078DBE00078D
@@ -512,12 +550,10 @@ object TaskEditForm: TTaskEditForm
             inherited EditFrame1: TEditFrame
               Width = 528
               ExplicitWidth = 528
-              ExplicitHeight = 104
               inherited RE: TRichEdit
                 Width = 528
                 OnKeyPress = DBEdit1KeyPress
                 ExplicitWidth = 528
-                ExplicitHeight = 70
               end
               inherited Panel1: TPanel
                 Width = 528
@@ -532,15 +568,11 @@ object TaskEditForm: TTaskEditForm
           inherited GroupBox2: TGroupBox
             Width = 532
             Height = 271
-            ExplicitLeft = 0
-            ExplicitTop = 121
             ExplicitWidth = 532
             ExplicitHeight = 271
             inherited WebBrowser1: TWebBrowser
               Width = 522
               Height = 248
-              ExplicitLeft = 5
-              ExplicitTop = 18
               ExplicitWidth = 522
               ExplicitHeight = 272
               ControlData = {
@@ -735,9 +767,15 @@ object TaskEditForm: TTaskEditForm
       FixedChar = True
       Size = 1
     end
+    object TaskTabTA_BEARBEITER: TStringField
+      FieldName = 'TA_BEARBEITER'
+      Origin = 'TA_BEARBEITER'
+      Size = 255
+    end
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsTask'
+    SQLConnection = GM.SQLConnection1
     Left = 232
     Top = 152
   end
@@ -755,7 +793,20 @@ object TaskEditForm: TTaskEditForm
     Params = <>
     ProviderName = 'TaskLogSrc'
     RemoteServer = DSProviderConnection1
-    Left = 100
-    Top = 224
+    Left = 84
+    Top = 232
+  end
+  object AssigenmentsQry: TClientDataSet
+    Aggregates = <>
+    Params = <
+      item
+        DataType = ftInteger
+        Name = 'TA_ID'
+        ParamType = ptInput
+      end>
+    ProviderName = 'AssigenmentsQry'
+    RemoteServer = DSProviderConnection1
+    Left = 40
+    Top = 289
   end
 end

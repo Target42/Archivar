@@ -1,7 +1,7 @@
 /* ============================================================ */
 /*   Database name:  MODEL_2                                    */
 /*   DBMS name:      InterBase                                  */
-/*   Created on:     07.11.2022  19:23                          */
+/*   Created on:     16.12.2022  17:10                          */
 /* ============================================================ */
 
 create generator gen_be_id;
@@ -300,6 +300,7 @@ create table TA_TASK
     TA_REM                          VARCHAR(256)                   ,
     TA_COLOR                        INTEGER                        ,
     TA_DELETED                      CHAR(1)                        ,
+    TA_BEARBEITER                   VARCHAR                        ,
     constraint PK_TA_TASK primary key (TA_ID)
 );
 

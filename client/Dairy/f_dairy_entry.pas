@@ -119,7 +119,6 @@ procedure TDairyEntryForm.SetID(const Value: integer);
 var
   st  : TStream;
   mem : TStream;
-  i   : integer;
 begin
   m_id := value;
   if m_id <> -1 then begin

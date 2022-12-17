@@ -11,7 +11,8 @@ uses
   Vcl.OleCtrls, SHDocVw, JvColorCombo, fr_form, fr_log,
 
   u_ForceClose, JvExStdCtrls, JvCombobox, JvExMask, JvToolEdit, JvMaskEdit,
-  JvCheckedMaskEdit, JvDatePickerEdit, Vcl.Mask, u_SpellChecker, System.JSON;
+  JvCheckedMaskEdit, JvDatePickerEdit, Vcl.Mask, u_SpellChecker, System.JSON,
+  Vcl.ExtCtrls;
 
 type
   TTaskEditForm = class(TForm, IForceClose)
@@ -90,6 +91,11 @@ type
     N5: TMenuItem;
     ac_assignment: TAction;
     Zuweisungen1: TMenuItem;
+    AssigenmentsQry: TClientDataSet;
+    LabeledEdit1: TLabeledEdit;
+    Label6: TLabel;
+    DBEdit6: TDBEdit;
+    TaskTabTA_BEARBEITER: TStringField;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -232,15 +238,14 @@ end;
 
 procedure TTaskEditForm.ac_saveExecute(Sender: TObject);
 begin
-  if not changed then
-    exit;
+  if changed then begin
 
-  save;
+    save;
 
-  reload;
-  if not m_ro then
-    TaskTab.Edit;
-
+    reload;
+    if not m_ro then
+      TaskTab.Edit;
+  end;
 end;
 
 procedure TTaskEditForm.ac_spellExecute(Sender: TObject);
@@ -286,7 +291,7 @@ end;
 
 function TTaskEditForm.changed: boolean;
 begin
-  Result := m_changed or TaskTab.Modified or TaskTab.Modified;
+  Result := m_changed or TaskTab.Modified or LogTab.Modified;
   if not Result then
   begin
     if Assigned(m_form) then
@@ -568,10 +573,22 @@ begin
     m_tc.release;
   m_tc := NIL;
 
+
+  AssigenmentsQry.ParamByName('TA_ID').AsInteger := m_ta_id;
+  AssigenmentsQry.Open;
+  if AssigenmentsQry.FieldByName('count').AsInteger > 1 then
+    LabeledEdit1.Font.Color := clRed
+  else
+    LabeledEdit1.font.Color := DBEdit1.Font.Color;
+
+  LabeledEdit1.Text := AssigenmentsQry.FieldByName('count').AsString;
+  AssigenmentsQry.Close;
+
   LogTab.Close;
 
   TaskTab.Close;
   TaskTab.Open;
+
 
   if not TaskTab.Locate('TA_ID', VarArrayOf([m_ta_id]), []) then
   begin
@@ -783,6 +800,7 @@ begin
   else
     DBEdit4.Font.Color := clGreen;
   Text := IntToStr( dif );
+
 end;
 
 end.
