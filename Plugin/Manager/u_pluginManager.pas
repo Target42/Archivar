@@ -9,14 +9,13 @@ type
   TPlugin = class;
   TPluginManager = class
   private
+    m_data : IPluginData;
     m_list : TList<TPlugin>;
-    FItems: TList<TPlugin>;
-    procedure SetItems(const Value: TList<TPlugin>);
   public
     constructor create;
     Destructor Destroy; override;
 
-    property Items : TList<TPlugin> read FItems write SetItems;
+    property Items : TList<TPlugin> read m_list;
 
     procedure scan( path : string );
     procedure loadAll;
@@ -38,7 +37,7 @@ type
     property PluginName: string read FPluginName write FPluginName;
     property Loaded : boolean read FLoaded;
 
-    function load : boolean;
+    function load( data : IPluginData ) : boolean;
 
     procedure execute;
   end;
@@ -48,13 +47,14 @@ implementation
 
 uses
   system.SysUtils, Winapi.Windows, System.IOUtils, System.Types, Vcl.Forms,
-  System.UITypes, System.Generics.Defaults, CodeSiteLogging;
+  System.UITypes, System.Generics.Defaults, CodeSiteLogging, u_PluginData;
 
 { TPluginManager }
 
 constructor TPluginManager.create;
 begin
   m_list :=TList<TPlugin>.create;
+  m_data := TPluginDataImpl.create;
 end;
 
 destructor TPluginManager.Destroy;
@@ -64,6 +64,7 @@ begin
   for plg in m_list do
     plg.Free;
   m_list.Free;
+  m_data := NIL;
 
   inherited;
 end;
@@ -75,8 +76,9 @@ begin
   CodeSite.EnterMethod(Self, 'loadAll');
   Screen.Cursor := crHourGlass;
 
-  for plg in m_list do
-    plg.load;
+  for plg in m_list do begin
+    plg.load(m_data);
+  end;
 
   m_list.Sort(
     TComparer<TPlugin>.Construct(
@@ -107,11 +109,6 @@ begin
   SetLength(arr, 0);
 end;
 
-procedure TPluginManager.SetItems(const Value: TList<TPlugin>);
-begin
-  FItems := Value;
-end;
-
 { TPlugin }
 
 constructor TPlugin.create;
@@ -133,7 +130,7 @@ begin
     m_pif.Execute;
 end;
 
-function TPlugin.load: boolean;
+function TPlugin.load(data : IPluginData): boolean;
 var
   p  : function : IPlugin; stdcall;
 begin
@@ -145,6 +142,7 @@ begin
       if m_hnd <> 0 then begin
         @p := GetProcAddress(m_hnd, PChar('getPIF'));
         m_pif := p;
+        m_pif.config(data);
 
         FPluginName := m_pif.PluginName;
 

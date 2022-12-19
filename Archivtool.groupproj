@@ -18,6 +18,9 @@
         <Projects Include="Guard\guard.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="Packages\Dairy\Dairy.dproj">
+            <Dependencies/>
+        </Projects>
     </ItemGroup>
     <ProjectExtensions>
         <Borland.Personality>Default.Personality.12</Borland.Personality>
@@ -71,14 +74,23 @@
     <Target Name="guard:Make">
         <MSBuild Projects="Guard\guard.dproj" Targets="Make"/>
     </Target>
+    <Target Name="Dairy">
+        <MSBuild Projects="Packages\Dairy\Dairy.dproj"/>
+    </Target>
+    <Target Name="Dairy:Clean">
+        <MSBuild Projects="Packages\Dairy\Dairy.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Dairy:Make">
+        <MSBuild Projects="Packages\Dairy\Dairy.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="Setup;ArchivServer;Archivar;Launcher;guard"/>
+        <CallTarget Targets="Setup;ArchivServer;Archivar;Launcher;guard;Dairy"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="Setup:Clean;ArchivServer:Clean;Archivar:Clean;Launcher:Clean;guard:Clean"/>
+        <CallTarget Targets="Setup:Clean;ArchivServer:Clean;Archivar:Clean;Launcher:Clean;guard:Clean;Dairy:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="Setup:Make;ArchivServer:Make;Archivar:Make;Launcher:Make;guard:Make"/>
+        <CallTarget Targets="Setup:Make;ArchivServer:Make;Archivar:Make;Launcher:Make;guard:Make;Dairy:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

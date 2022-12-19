@@ -24,7 +24,6 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure BaseFrame1OKBtnClick(Sender: TObject);
   private
-    m_crypt : TCryptMod;
     m_pwd   : string;
     m_id    : integer;
     function GetID: integer;
@@ -73,8 +72,8 @@ begin
     RE.Lines.SaveToStream(mem);
     mem.Position := 0;
 
-    m_crypt.Password := LabeledEdit1.Text;
-    m_crypt.Encrypt(mem, st);
+    CryptMod.Password := LabeledEdit1.Text;
+    CryptMod.Encrypt(mem, st);
 
     mem.Free;
   end
@@ -93,7 +92,6 @@ procedure TDairyEntryForm.FormCreate(Sender: TObject);
 begin
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
   m_id := -1;
-  m_crypt := TCryptMod.Create(self);
   RE.Lines.Clear;
 end;
 
@@ -101,8 +99,6 @@ procedure TDairyEntryForm.FormDestroy(Sender: TObject);
 begin
   if DITab.UpdatesPending then
     DITab.CancelUpdates;
-
-  FreeAndNil(m_crypt);
 end;
 
 function TDairyEntryForm.GetID: integer;
@@ -132,8 +128,8 @@ begin
       st.Position := 0;
       (mem as TMemoryStream).Clear;
 
-      m_crypt.Password := m_pwd;
-      if m_crypt.Decrypt(st, mem) then begin
+      CryptMod.Password := m_pwd;
+      if CryptMod.Decrypt(st, mem) then begin
         mem.Position := 0;
         RE.Lines.LoadFromStream(mem);
       end else begin

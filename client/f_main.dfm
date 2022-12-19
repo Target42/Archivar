@@ -469,6 +469,10 @@
         Action = ac_to_pdrive
       end
     end
+    object Plugins1: TMenuItem
+      Caption = 'Plugins'
+      GroupIndex = 200
+    end
     object Admin1: TMenuItem
       Caption = 'Admin'
       GroupIndex = 200
@@ -588,18 +592,6 @@
       end
       object test21: TMenuItem
         Caption = 'test2'
-      end
-    end
-    object est2: TMenuItem
-      Caption = 'Test'
-      GroupIndex = 200
-      object Load1: TMenuItem
-        Caption = 'Load'
-        OnClick = Load1Click
-      end
-      object execute1: TMenuItem
-        Caption = 'execute'
-        OnClick = execute1Click
       end
     end
   end

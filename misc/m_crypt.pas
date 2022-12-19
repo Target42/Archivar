@@ -5,10 +5,10 @@ interface
 uses
   System.SysUtils, System.Classes, uTPLb_Hash, uTPLb_Signatory,
   uTPLb_CryptographicLibrary, uTPLb_Codec,
-  uTPLb_Asymetric, uTPLb_BaseNonVisualComponent;
+  uTPLb_Asymetric, uTPLb_BaseNonVisualComponent, u_ICrypt;
 
 type
-  TCryptMod = class(TDataModule)
+  TCryptMod = class(TDataModule, ICrypt)
     RSAKeyGen: TCodec;
     CryptographicLibrary1: TCryptographicLibrary;
     Signatory1: TSignatory;
@@ -18,52 +18,57 @@ type
     Signatory2: TSignatory;
     RSACrypt: TCodec;
     procedure DataModuleCreate(Sender: TObject);
-  public
-    type TSignInfo = record
-      FileName  : string;
-      FileHash  : string;
-      TimeStamp : TDateTime;
-      user      : string;
+  public type
+    TSignInfo = record
+      FileName: string;
+      FileHash: string;
+      TimeStamp: TDateTime;
+      user: string;
     end;
   private
-    FPassword       : string;
-    FPrivateKeyFile : string;
-    FPublicKeyFile  : string;
+    FPassword: string;
+    FPrivateKeyFile: string;
+    FPublicKeyFile: string;
     FBinaryKeys: boolean;
 
-    function save( part : TKeyStoragePart ) : boolean;
-    function load( part : TKeyStoragePart ) : boolean;
+    procedure setBinaryKeys(value: boolean);
+    function  getBinaryKeys: boolean;
+    procedure setPublicKeyFile(value: string);
+    function  getPublicKeyFile: string;
+    procedure setPrivateKeyFile(value: string);
+    function  getPrivateKeyFile: string;
+    procedure setPassword(value: string);
+    function  getPassword: string;
 
-    function loadToStream( st : TStream; inSt : TStream ) : boolean;
-    function saveToStream( st : TStream; outSt: TSTream ) : Boolean;
+    function save(part: TKeyStoragePart): boolean;
+    function load(part: TKeyStoragePart): boolean;
+    function loadToStream(st: TStream; inSt: TStream): boolean;
+    function saveToStream(st: TStream; outSt: TStream): boolean;
 
   public
-    property BinaryKeys     : boolean read FBinaryKeys        write FBinaryKeys;
 
-    property Password       : string  read FPassword          write FPassword;
-    property PrivateKeyFile : string  read FPrivateKeyFile    write FPrivateKeyFile;
-    property PublicKeyFile  : string  read FPublicKeyFile     write FPublicKeyFile;
+    property BinaryKeys: boolean read getBinaryKeys write setBinaryKeys;
+    property Password: string read getPassword write setPassword;
+    property PrivateKeyFile: string read getPrivateKeyFile
+      write setPrivateKeyFile;
 
-    function generateKeys(hourglass : boolean )   : boolean;
+    property PublicKeyFile: string read getPublicKeyFile write setPublicKeyFile;
 
-    function saveKeys       : boolean;
-    function loadKeys       : boolean;
-
-    function Encrypt( plain : TStream;    crypt : TStream )  : boolean; overload;
-    function Encrypt( plain : string; var crypt : string )   : boolean; overload;
-
-    function Decrypt( crypt : TStream;    plain : TSTream )  : boolean; overload;
-    function Decrypt( crypt : string; var plain : string )   : boolean; overload;
-
-    function Sign( document : TStream; signature : TStream ) : boolean; overload;
-    function Sign( fileName : string;  Signature : String )  : boolean; overload;
-
-    function Verify( document, signature, keyfile : TStream; binKey : boolean ) : boolean; overload;
-    function Verify( document, signature, keyfile : string ; binKey : boolean ) : boolean; overload;
-
-    function hasKeyFiles : boolean;
-    function hasKeysLoaded : boolean;
-
+    function generateKeys(hourglass: boolean): boolean;
+    function saveKeys: boolean;
+    function loadKeys: boolean;
+    function Encrypt(plain: TStream; crypt: TStream): boolean; overload;
+    function Encrypt(plain: string; var crypt: string): boolean; overload;
+    function Decrypt(crypt: TStream; plain: TStream): boolean; overload;
+    function Decrypt(crypt: string; var plain: string): boolean; overload;
+    function Sign(document: TStream; signature: TStream): boolean; overload;
+    function Sign(FileName: string; signature: String): boolean; overload;
+    function Verify(document, signature, keyfile: TStream; binKey: boolean)
+      : boolean; overload;
+    function Verify(document, signature, keyfile: string; binKey: boolean)
+      : boolean; overload;
+    function hasKeyFiles: boolean;
+    function hasKeysLoaded: boolean;
     procedure clearKeys;
   end;
 
@@ -147,6 +152,26 @@ begin
 
   if hourglass then
     Screen.Cursor := crDefault
+end;
+
+function TCryptMod.getBinaryKeys: boolean;
+begin
+  Result := FBinaryKeys;
+end;
+
+function TCryptMod.getPassword: string;
+begin
+  Result := FPassword;
+end;
+
+function TCryptMod.getPrivateKeyFile: string;
+begin
+  Result := FPrivateKeyFile;
+end;
+
+function TCryptMod.getPublicKeyFile: string;
+begin
+  Result := FPublicKeyFile;
 end;
 
 function TCryptMod.hasKeyFiles: boolean;
@@ -362,6 +387,26 @@ begin
     Result := false;
   end;
   list.Free;
+end;
+
+procedure TCryptMod.setBinaryKeys(value: boolean);
+begin
+  FBinaryKeys := value;
+end;
+
+procedure TCryptMod.setPassword(value: string);
+begin
+  FPassword := value;
+end;
+
+procedure TCryptMod.setPrivateKeyFile(value: string);
+begin
+  FPrivateKeyFile := value;
+end;
+
+procedure TCryptMod.setPublicKeyFile(value: string);
+begin
+  FPublicKeyFile := value;
 end;
 
 function TCryptMod.Sign(fileName, Signature: String): boolean;

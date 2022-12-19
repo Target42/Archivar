@@ -235,7 +235,10 @@ uses
   i_plugin in '..\Plugin\i_plugin.pas',
   u_pluginManager in '..\Plugin\Manager\u_pluginManager.pas',
   u_ForceClose in '..\misc\u_ForceClose.pas',
-  f_passwd in '..\misc\f_passwd.pas' {PassWdform};
+  f_passwd in '..\misc\f_passwd.pas' {PassWdform},
+  u_ICrypt in '..\misc\u_ICrypt.pas',
+  u_PluginData in '..\Plugin\Manager\u_PluginData.pas',
+  u_IWindowHandler in '..\misc\u_IWindowHandler.pas';
 
 {$R *.res}
 

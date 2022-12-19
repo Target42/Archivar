@@ -121,32 +121,24 @@
         <DCCReference Include="dsnap.dcp"/>
         <DCCReference Include="dbexpress.dcp"/>
         <DCCReference Include="DataSnapProviderClient.dcp"/>
+        <DCCReference Include="vcldb.dcp"/>
+        <DCCReference Include="LockBox3DR.dcp"/>
         <DCCReference Include="..\..\Plugin\i_plugin.pas"/>
         <DCCReference Include="..\..\Plugin\u_TPluginImpl.pas"/>
         <DCCReference Include="u_TPluginDairy.pas"/>
         <DCCReference Include="f_dairy.pas">
             <Form>DairyForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="f_dairy_entry.pas">
             <Form>DairyEntryForm</Form>
-            <FormType>dfm</FormType>
         </DCCReference>
         <DCCReference Include="..\..\misc\u_ForceClose.pas"/>
-        <DCCReference Include="..\..\misc\m_crypt.pas">
-            <Form>CryptMod</Form>
-            <FormType>dfm</FormType>
-            <DesignClass>TDataModule</DesignClass>
-        </DCCReference>
-        <DCCReference Include="..\..\misc\f_passwd.pas">
-            <Form>PassWdform</Form>
-            <FormType>dfm</FormType>
-        </DCCReference>
         <DCCReference Include="..\..\misc\fr_base.pas">
             <Form>BaseFrame</Form>
-            <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
+        <DCCReference Include="..\..\misc\u_ICrypt.pas"/>
+        <DCCReference Include="..\..\misc\u_IWindowHandler.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

@@ -8,18 +8,18 @@ uses
 type
   TPluginImpl = class(TInterfacedObject, IPlugin )
     private
-
     protected
       m_oldApp : TApplication;
-      m_app : TApplication;
-      m_sql : TSQLConnection;
+      m_data : IPluginData;
 
       function getPluginName : string; virtual;
     public
       constructor create;
       Destructor Destroy; override;
 
-      procedure prepare( App : TApplication; sql : TSQLConnection );
+      property Data : IPluginData read m_data;
+
+      procedure config( data : IPluginData );
       procedure release;
 
       procedure Execute; virtual;
@@ -30,6 +30,12 @@ implementation
 
 
 { TPluginImpl }
+
+procedure TPluginImpl.config(data: IPluginData);
+begin
+  m_data := data;
+  Application := m_data.App;
+end;
 
 constructor TPluginImpl.create;
 begin
@@ -52,12 +58,6 @@ begin
   Result := 'Namen ändern!';
 end;
 
-procedure TPluginImpl.prepare(App: TApplication; sql: TSQLConnection);
-begin
-  m_app := App;
-  m_sql := sql;
-  Application := m_app;
-end;
 
 procedure TPluginImpl.release;
 begin

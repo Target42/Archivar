@@ -40,6 +40,9 @@ const
   msgNeedKeys       = WMUSER + 18;
   msgUpdateTaskList = WMUSER + 19;
 
+  msgAddPlugins     = WMUSER + 20;
+  msgREmovePlugins  = WMUSER + 21;
+
 type
   TGM = class(TDataModule)
     SQLConnection1: TSQLConnection;
@@ -593,6 +596,7 @@ begin
   m_userList    := TStringList.Create;
   FUserName     := GetUsername;
   FUserFolder   := -1;
+  m_plugins     := TPluginManager.create;
 
 {$ifndef RELEASE}
   if ParamStr(1) <> '' then
@@ -613,7 +617,6 @@ begin
 
   setProxy;
 
-  m_plugins := TPluginManager.create;
   m_plugins.scan(TPath.Combine(ExtractFilePath(paramStr(0)), 'Plugins'));
 end;
 
@@ -1156,6 +1159,8 @@ begin
     PingTimer.Enabled := true;
 
   m_plugins.loadAll;
+
+  PostMessage( Application.MainFormHandle, msgAddPlugins, 0, 0 );
 end;
 
 procedure TGM.SQLConnection1AfterDisconnect(Sender: TObject);
@@ -1166,6 +1171,7 @@ begin
     LoginForm.Password := '';
 
   PostMessage( Application.MainFormHandle, msgDisconnected, 0, 0 );
+  PostMessage( Application.MainFormHandle, msgREmovePlugins, 0, 0 );
 end;
 
 procedure TGM.SQLConnection1BeforeDisconnect(Sender: TObject);

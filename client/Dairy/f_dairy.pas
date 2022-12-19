@@ -54,7 +54,6 @@ type
     procedure LabeledEdit1KeyPress(Sender: TObject; var Key: Char);
   private
     m_date      : TDate;
-    m_crypt     : TCryptMod;
     m_inUpdate  : boolean;
     m_mem       : TMemoryStream;
     procedure setMonth( Month : TDate );
@@ -112,12 +111,12 @@ begin
   RE.Lines.Clear;
 
   if SameText(DiQryDI_CRYPTED.AsString, 't') then begin
-    m_crypt.Password := LabeledEdit1.Text;
+    CryptMod.Password := LabeledEdit1.Text;
     crypt := TMemoryStream.Create;
 
     try
       DiQryDI_TEXT.SaveToStream(crypt);
-      m_crypt.Decrypt(crypt, m_mem);
+      CryptMod.Decrypt(crypt, m_mem);
     except
       on e : exception do begin
         ShowMessage(e.ToString);
@@ -157,7 +156,6 @@ procedure TDairyForm.FormCreate(Sender: TObject);
 begin
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
   WindowHandler.registerForm(self);
-  m_crypt := TCryptMod.create(self);
   m_mem   := TMemoryStream.Create;
   RE.Lines.Clear;
   setMonth( date );
@@ -167,7 +165,6 @@ procedure TDairyForm.FormDestroy(Sender: TObject);
 begin
   WindowHandler.unregisterForm(self);
   DairyForm := NIL;
-  FreeAndNil(m_crypt);
   FreeAndNil(m_mem);
 end;
 

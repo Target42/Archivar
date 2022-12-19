@@ -148,7 +148,6 @@ object DairyEntryForm: TDairyEntryForm
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsDairy'
-    SQLConnection = GM.SQLConnection1
     Left = 96
     Top = 56
   end

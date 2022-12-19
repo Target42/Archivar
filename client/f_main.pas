@@ -180,9 +180,7 @@ type
     N21: TMenuItem;
     ac_ta_delete: TAction;
     asklschen1: TMenuItem;
-    est2: TMenuItem;
-    Load1: TMenuItem;
-    execute1: TMenuItem;
+    Plugins1: TMenuItem;
     procedure ac_prg_closeExecute(Sender: TObject);
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure ac_prg_disconExecute(Sender: TObject);
@@ -231,8 +229,6 @@ type
     procedure StatusBar1DrawPanel(StatusBar: TStatusBar; Panel: TStatusPanel;
       const Rect: TRect);
     procedure ac_ta_deleteExecute(Sender: TObject);
-    procedure Load1Click(Sender: TObject);
-    procedure execute1Click(Sender: TObject);
   private
     m_noStatChange : boolean;
 
@@ -247,6 +243,10 @@ type
 
     procedure UpdateUserView( sender : TObject );
     procedure ParseCmdLine;
+
+    procedure PluginsAdd;
+    procedure PluginsRemove;
+    procedure PluginExec( Sender : TObject );
   public
     procedure AdminMsg( text : string );
   end;
@@ -265,10 +265,8 @@ uses
   f_meeting_new, f_meeting_select, f_meeting_proto, f_login,
   system.UITypes, f_protocol_sec, u_onlineUser, f_doMeeting, f_task_type,
   f_flieCacheForm, f_keys, f_dairy, f_textblock_export, f_textblock_import,
-  f_storages, f_protokoll_new, f_admin, f_task_delete, i_plugin;
+  f_storages, f_protokoll_new, f_admin, f_task_delete, i_plugin, u_pluginManager;
 
-var
-  pif: IPlugin;
 {$R *.dfm}
 
 procedure TMainForm.ac_ad_actionExecute(Sender: TObject);
@@ -811,6 +809,8 @@ begin
     msgRetryLogin     : ac_prg_connect.Execute;
     msgShowFileCache  : ac_ad_filecache.Execute;
     msgNeedKeys       : ac_to_keys.Execute;
+    msgAddPlugins     : PluginsAdd;
+    msgREmovePlugins  : PluginsRemove;
     else
       Handled := false;
   end;
@@ -883,11 +883,6 @@ begin
 //  Beschlusform.Free;
 end;
 
-procedure TMainForm.execute1Click(Sender: TObject);
-begin
-  pif.Execute;
-end;
-
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
   PageControl2.ActivePage := TabSheet4;
@@ -934,19 +929,6 @@ begin
   GM.changeStatus(JvColorComboBox1.Items.Strings[inx]);
 end;
 
-procedure TMainForm.Load1Click(Sender: TObject);
-var
-  mod1 : HModule;
-  p  : function : IPlugin; stdcall;
-begin
-  mod1 := LoadPackage('dairy.bpl');
-  if mod1 <> 0 then begin
-    @p := GetProcAddress(mod1, PChar('getDairyPIF'));
-    pif := p;
-    pif.prepare(Application, GM.SQLConnection1);
-  end;
-end;
-
 procedure TMainForm.loadLogo;
 var
   fname : string;
@@ -979,6 +961,36 @@ begin
 end;
 
 procedure TMainForm.ParseCmdLine;
+begin
+
+end;
+
+procedure TMainForm.PluginExec(Sender: TObject);
+begin
+  if not ( Sender is TMenuItem) then exit;
+
+  GM.Plugins.Items[( Sender as TMenuItem).Tag].execute;
+end;
+
+procedure TMainForm.PluginsAdd;
+var
+  plg : TPlugin;
+  i   : integer;
+  en  : TMenuItem;
+begin
+  for i := 0 to pred(GM.Plugins.Items.Count) do begin
+    plg := GM.Plugins.Items[i];
+    en  := TMenuItem.Create(Plugins1);
+
+    Plugins1.Add(en);
+
+    en.Caption  := plg.PluginName;
+    en.Tag      := i;
+    en.OnClick := PluginExec;
+  end;
+end;
+
+procedure TMainForm.PluginsRemove;
 begin
 
 end;

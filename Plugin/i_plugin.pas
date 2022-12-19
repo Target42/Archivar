@@ -3,7 +3,7 @@ unit i_plugin;
 interface
 
 uses
-  Vcl.Forms, Data.SqlExpr;
+  Vcl.Forms, Data.SqlExpr, u_ICrypt, u_IWindowHandler;
 
 type
   IPluginData = interface;
@@ -13,7 +13,6 @@ type
     ['{606A69C2-5137-467E-87C1-15612FD507A4}']
     function getPluginName : string;
 
-    procedure prepare( App : TApplication; sql : TSQLConnection );
     procedure config( data : IPluginData );
     procedure release;
 
@@ -29,11 +28,16 @@ type
     function getUserID : integer;
     function getSqlConnection : TSQLConnection;
     function getApplication : TApplication;
+    function getCrypt : ICrypt;
+    function getWndHandler : IWindowHandler;
 
     property SqlConnection  : TSQLConnection    read getSqlConnection;
-    property Application    : TApplication      read getApplication;
+    property App            : TApplication      read getApplication;
     property UserID         : integer           read getUserID;
     property UserName       : string            read getUserName;
+    property WndHandler     : IWindowHandler    read getWndHandler;
+
+    property Crypt          : ICrypt            read getCrypt;
 
     function AutoInc(name : string ) : integer;
   end;

@@ -14,13 +14,14 @@ type
     procedure Execute; override;
   end;
 
+var
+  PluginDairy : TPluginDairy;
+
 implementation
 
 uses
   i_plugin, Vcl.Forms, f_dairy;
 
-var
-  PluginDairy : TPluginDairy;
 { TPluginDairy }
 
 function getPIF : IPlugin;
@@ -36,14 +37,12 @@ end;
 procedure TPluginDairy.Execute;
 begin
   inherited;
-  if not Assigned(HelloworldForm)then begin
-    HelloworldForm := THelloworldForm.Create(Application);
-    HelloworldForm.SQl := m_sql;
+  if not Assigned(DairyForm)then begin
+    DairyForm := TDairyForm.Create(Application);
   end else begin
-    HelloworldForm.BringToFront;
+    DairyForm.BringToFront;
   end;
-  HelloworldForm.Show;
-
+  DairyForm.Show;
 end;
 
 exports

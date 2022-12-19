@@ -6,8 +6,8 @@ uses
   Winapi.Windows, Winapi.Messages, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Datasnap.DBClient,
   Datasnap.DSConnect, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.DBGrids,
-  Vcl.ExtCtrls, u_ForceClose, Vcl.Grids, Vcl.Buttons, m_crypt, System.Actions,
-  Vcl.ActnList;
+  Vcl.ExtCtrls, u_ForceClose, Vcl.Grids, Vcl.Buttons, System.Actions,
+  Vcl.ActnList, u_ICrypt;
 
 type
   TDairyForm = class(TForm, IForceClose)
@@ -54,7 +54,7 @@ type
     procedure LabeledEdit1KeyPress(Sender: TObject; var Key: Char);
   private
     m_date      : TDate;
-    m_crypt     : TCryptMod;
+    m_crypt     : ICrypt;
     m_inUpdate  : boolean;
     m_mem       : TMemoryStream;
     procedure setMonth( Month : TDate );
@@ -69,7 +69,7 @@ implementation
 
 uses
   System.DateUtils, System.SysUtils,
-  f_dairy_entry;
+  f_dairy_entry, u_TPluginDairy;
 
 {$R *.dfm}
 
@@ -155,9 +155,10 @@ end;
 
 procedure TDairyForm.FormCreate(Sender: TObject);
 begin
-  DSProviderConnection1.SQLConnection := GM.SQLConnection1;
-  WindowHandler.registerForm(self);
-  m_crypt := TCryptMod.create(self);
+  DSProviderConnection1.SQLConnection := PluginDairy.Data.SqlConnection;
+  PluginDairy.Data.WndHandler.registerForm(self);
+
+  m_crypt := PluginDairy.Data.Crypt;
   m_mem   := TMemoryStream.Create;
   RE.Lines.Clear;
   setMonth( date );
@@ -165,10 +166,10 @@ end;
 
 procedure TDairyForm.FormDestroy(Sender: TObject);
 begin
-  WindowHandler.unregisterForm(self);
+  PluginDairy.Data.WndHandler.unregisterForm(self);
   DairyForm := NIL;
-  FreeAndNil(m_crypt);
   FreeAndNil(m_mem);
+  m_crypt := NIL;
 end;
 
 procedure TDairyForm.LabeledEdit1KeyPress(Sender: TObject; var Key: Char);

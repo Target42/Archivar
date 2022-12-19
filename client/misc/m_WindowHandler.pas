@@ -4,10 +4,11 @@ interface
 
 uses
   System.SysUtils, System.Generics.Collections, Vcl.Forms, f_taskEdit,
-  f_protokoll, f_protokoll_view, f_storage, u_ForceClose, System.Classes;
+  f_protokoll, f_protokoll_view, f_storage, u_ForceClose, System.Classes,
+  u_IWindowHandler;
 
 type
-  TWindowHandler = class(TDataModule)
+  TWindowHandler = class(TDataModule, IWindowHandler)
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
   private
@@ -290,7 +291,6 @@ begin
   if not m_forms.Contains(frm) then
     m_forms.Add(frm);
 
-  //if Supports( frm, StringToGUID('{09DB420A-2669-4E82-B537-D8866479642F}')) then
   if Supports( frm, IForceClose) then
     m_list.Add(frm as IForceClose);
 

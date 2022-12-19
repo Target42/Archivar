@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_base, Vcl.Buttons, Vcl.StdCtrls,
   Vcl.ExtCtrls, Data.DB, Datasnap.DBClient, Datasnap.DSConnect, Vcl.ComCtrls,
-  m_crypt;
+  u_ICrypt;
 
 type
   TDairyEntryForm = class(TForm)
@@ -24,7 +24,7 @@ type
     procedure FormDestroy(Sender: TObject);
     procedure BaseFrame1OKBtnClick(Sender: TObject);
   private
-    m_crypt : TCryptMod;
+    m_crypt : ICrypt;
     m_pwd   : string;
     m_id    : integer;
     function GetID: integer;
@@ -41,6 +41,8 @@ var
 
 implementation
 
+uses
+  u_TPluginDairy;
 
 {$R *.dfm}
 
@@ -53,10 +55,10 @@ begin
     DITab.Open;
 
   if m_id = -1 then begin
-    m_id :=  GM.autoInc('gen_di_id');
+    m_id :=  PluginDairy.Data.autoInc('gen_di_id');
     DITab.Append;
     DITab.FieldByName('DI_ID').asInteger := m_id;
-    DITab.FieldByName('PE_ID').asInteger := GM.UserID;
+    DITab.FieldByName('PE_ID').asInteger := PluginDairy.Data.UserID;
     DITab.FieldByName('DI_STAMP').AsDateTime  := now;
   end else
     DITab.Edit;
@@ -89,9 +91,9 @@ end;
 
 procedure TDairyEntryForm.FormCreate(Sender: TObject);
 begin
-  DSProviderConnection1.SQLConnection := GM.SQLConnection1;
+  DSProviderConnection1.SQLConnection := PluginDairy.Data.SqlConnection;
   m_id := -1;
-  m_crypt := TCryptMod.Create(self);
+  m_crypt := PluginDairy.Data.Crypt;
   RE.Lines.Clear;
 end;
 
@@ -100,7 +102,7 @@ begin
   if DITab.UpdatesPending then
     DITab.CancelUpdates;
 
-  FreeAndNil(m_crypt);
+  m_crypt := NIL;
 end;
 
 function TDairyEntryForm.GetID: integer;
@@ -121,7 +123,7 @@ begin
   m_id := value;
   if m_id <> -1 then begin
     DITab.Open;
-    if DITab.Locate('DI_ID;PE_ID', VarArrayOf([m_id, GM.UserID]), []) then begin
+    if DITab.Locate('DI_ID;PE_ID', VarArrayOf([m_id, PluginDairy.Data.UserID]), []) then begin
       LabeledEdit2.Text := DITab.FieldByName('DI_TAGS').AsString;
 
       st := DITab.CreateBlobStream(DITab.FieldByName('DI_TEXT'), bmRead);
