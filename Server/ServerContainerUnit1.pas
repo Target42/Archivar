@@ -916,8 +916,9 @@ begin
     try
       DSServer1.Start;
     except
-      on e : exception do
+      on e : exception do begin
         GrijjyLog.Send('DSServer:'+e.ToString, TgoLogLevel.Error );
+      end;
     end;
     GrijjyLog.Send('Http-Service:', DSHTTPService1.Active );
     GrijjyLog.Send('Https-Service:', DSHTTPService2.Active );

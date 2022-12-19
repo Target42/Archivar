@@ -187,7 +187,6 @@ uses
   f_taglist in 'TextBlock\f_taglist.pas' {TagListForm},
   m_crypt in '..\misc\m_crypt.pas' {CryptMod: TDataModule},
   f_keys in 'crypt\f_keys.pas' {Keysform},
-  f_passwd in 'crypt\f_passwd.pas' {PassWdform},
   f_dairy in 'Dairy\f_dairy.pas' {DairyForm},
   f_textblock_export in 'TextBlock\f_textblock_export.pas' {TextBlockExportForm},
   f_textblock_import in 'TextBlock\f_textblock_import.pas' {TextblockImportForm},
@@ -214,7 +213,6 @@ uses
   xsd_Task in '..\misc\xsd_Task.pas',
   u_ShowMessageTimeOut in 'misc\u_ShowMessageTimeOut.pas',
   f_admin in 'admin\f_admin.pas' {AdminForm},
-  u_ForceClose in 'misc\u_ForceClose.pas',
   f_proxy in '..\misc\f_proxy.pas' {ProxyForm},
   f_gremium_task in 'Gremium\f_gremium_task.pas' {GremiumTaskForm},
   u_dataset_to_list in '..\misc\u_dataset_to_list.pas',
@@ -233,7 +231,11 @@ uses
   fr_editForm in 'misc\fr_editForm.pas' {EditFrame: TFrame},
   fr_base in '..\misc\fr_base.pas' {BaseFrame: TFrame},
   Vcl.Themes,
-  Vcl.Styles;
+  Vcl.Styles,
+  i_plugin in '..\Plugin\i_plugin.pas',
+  u_pluginManager in '..\Plugin\Manager\u_pluginManager.pas',
+  u_ForceClose in '..\misc\u_ForceClose.pas',
+  f_passwd in '..\misc\f_passwd.pas' {PassWdform};
 
 {$R *.res}
 
@@ -264,5 +266,6 @@ begin
   Application.CreateForm(TFileCacheMod, FileCacheMod);
   Application.CreateForm(TCryptMod, CryptMod);
   Application.CreateForm(TMainForm, MainForm);
+  Application.CreateForm(TPassWdform, PassWdform);
   Application.Run;
 end.

@@ -180,6 +180,9 @@ type
     N21: TMenuItem;
     ac_ta_delete: TAction;
     asklschen1: TMenuItem;
+    est2: TMenuItem;
+    Load1: TMenuItem;
+    execute1: TMenuItem;
     procedure ac_prg_closeExecute(Sender: TObject);
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure ac_prg_disconExecute(Sender: TObject);
@@ -228,6 +231,8 @@ type
     procedure StatusBar1DrawPanel(StatusBar: TStatusBar; Panel: TStatusPanel;
       const Rect: TRect);
     procedure ac_ta_deleteExecute(Sender: TObject);
+    procedure Load1Click(Sender: TObject);
+    procedure execute1Click(Sender: TObject);
   private
     m_noStatChange : boolean;
 
@@ -260,8 +265,10 @@ uses
   f_meeting_new, f_meeting_select, f_meeting_proto, f_login,
   system.UITypes, f_protocol_sec, u_onlineUser, f_doMeeting, f_task_type,
   f_flieCacheForm, f_keys, f_dairy, f_textblock_export, f_textblock_import,
-  f_storages, f_protokoll_new, f_admin, f_task_delete;
+  f_storages, f_protokoll_new, f_admin, f_task_delete, i_plugin;
 
+var
+  pif: IPlugin;
 {$R *.dfm}
 
 procedure TMainForm.ac_ad_actionExecute(Sender: TObject);
@@ -876,6 +883,11 @@ begin
 //  Beschlusform.Free;
 end;
 
+procedure TMainForm.execute1Click(Sender: TObject);
+begin
+  pif.Execute;
+end;
+
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
   PageControl2.ActivePage := TabSheet4;
@@ -920,6 +932,19 @@ begin
   if (inx < 0) or ( m_noStatChange) then
     exit;
   GM.changeStatus(JvColorComboBox1.Items.Strings[inx]);
+end;
+
+procedure TMainForm.Load1Click(Sender: TObject);
+var
+  mod1 : HModule;
+  p  : function : IPlugin; stdcall;
+begin
+  mod1 := LoadPackage('dairy.bpl');
+  if mod1 <> 0 then begin
+    @p := GetProcAddress(mod1, PChar('getDairyPIF'));
+    pif := p;
+    pif.prepare(Application, GM.SQLConnection1);
+  end;
 end;
 
 procedure TMainForm.loadLogo;

@@ -539,9 +539,6 @@
         <DCCReference Include="crypt\f_keys.pas">
             <Form>Keysform</Form>
         </DCCReference>
-        <DCCReference Include="crypt\f_passwd.pas">
-            <Form>PassWdform</Form>
-        </DCCReference>
         <DCCReference Include="Dairy\f_dairy.pas">
             <Form>DairyForm</Form>
         </DCCReference>
@@ -591,7 +588,6 @@
         <DCCReference Include="admin\f_admin.pas">
             <Form>AdminForm</Form>
         </DCCReference>
-        <DCCReference Include="misc\u_ForceClose.pas"/>
         <DCCReference Include="..\misc\f_proxy.pas">
             <Form>ProxyForm</Form>
         </DCCReference>
@@ -639,6 +635,13 @@
             <Form>BaseFrame</Form>
             <FormType>dfm</FormType>
             <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="..\Plugin\i_plugin.pas"/>
+        <DCCReference Include="..\Plugin\Manager\u_pluginManager.pas"/>
+        <DCCReference Include="..\misc\u_ForceClose.pas"/>
+        <DCCReference Include="..\misc\f_passwd.pas">
+            <Form>PassWdform</Form>
+            <FormType>dfm</FormType>
         </DCCReference>
         <None Include="Datafields\ERA-NS.txt"/>
         <RcItem Include="dws\dws.html">

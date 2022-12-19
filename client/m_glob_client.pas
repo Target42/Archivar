@@ -15,7 +15,7 @@ uses
   JvSHFileOperation, System.Notification,
   DbxCompressionFilter, u_ShowMessageTimeOut, Data.DbxHTTPLayer, Vcl.ExtCtrls,
   FireDAC.Phys.Intf, FireDAC.DApt.Intf, JvBaseDlg, System.ImageList,
-  JvComponentBase, u_SpellChecker;
+  JvComponentBase, u_SpellChecker, u_pluginManager;
 
 const
   WMUSER            = WM_USER + 25;
@@ -88,6 +88,8 @@ type
     m_LoginFailCount  : integer;
     FUserFolder: integer;
 
+    m_plugins : TPluginManager;
+
     procedure setIsAdmin( value : boolean );
 
     procedure FillTimes( arr :TJSONArray );
@@ -136,6 +138,8 @@ type
     property Hostlist   : TStringList     read m_hostList;
     property UserList   : TStringList     read m_userList;
 
+    property Plugins    : TPluginManager  read m_plugins;
+
     procedure FillGremien( arr :TJSONArray );
 
     function  LockDocument(   id, typ : integer; subid : integer = 0 ) : TJSONObject;
@@ -143,6 +147,8 @@ type
     function  isLocked(       id, typ : integer; subid : integer = 0 ) : TJSONObject;
     function  LockedFlag(     id, typ : integer ) : boolean;
     procedure ShowLockInfo(   data    : TJSONObject);
+
+
 
     function  GremiumName( id : integer ) : string;
 
@@ -606,6 +612,9 @@ begin
   m_LoginFailCount := 0;
 
   setProxy;
+
+  m_plugins := TPluginManager.create;
+  m_plugins.scan(TPath.Combine(ExtractFilePath(paramStr(0)), 'Plugins'));
 end;
 
 procedure TGM.DataModuleDestroy(Sender: TObject);
@@ -626,6 +635,8 @@ begin
 
   m_hostList.Free;
   m_userList.Free;
+
+  m_plugins.Free;
 end;
 
 procedure TGM.Disconnect;
@@ -1144,6 +1155,7 @@ begin
   if SQLConnection1.Params.Values['CommunicationProtocol'] <> 'tcp/ip' then
     PingTimer.Enabled := true;
 
+  m_plugins.loadAll;
 end;
 
 procedure TGM.SQLConnection1AfterDisconnect(Sender: TObject);

@@ -590,6 +590,18 @@
         Caption = 'test2'
       end
     end
+    object est2: TMenuItem
+      Caption = 'Test'
+      GroupIndex = 200
+      object Load1: TMenuItem
+        Caption = 'Load'
+        OnClick = Load1Click
+      end
+      object execute1: TMenuItem
+        Caption = 'execute'
+        OnClick = execute1Click
+      end
+    end
   end
   object ActionList1: TActionList
     Left = 152

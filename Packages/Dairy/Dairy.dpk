@@ -1,0 +1,51 @@
+package Dairy;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$IMPLICITBUILD ON}
+
+requires
+  rtl,
+  vcl,
+  DbxCommonDriver,
+  dbrtl,
+  DbxClientDriver,
+  dsnap,
+  dbexpress,
+  DataSnapProviderClient;
+
+contains
+  i_plugin in '..\..\Plugin\i_plugin.pas',
+  u_TPluginImpl in '..\..\Plugin\u_TPluginImpl.pas',
+  u_TPluginDairy in 'u_TPluginDairy.pas',
+  f_dairy in 'f_dairy.pas' {DairyForm},
+  f_dairy_entry in 'f_dairy_entry.pas' {DairyEntryForm},
+  u_ForceClose in '..\..\misc\u_ForceClose.pas',
+  m_crypt in '..\..\misc\m_crypt.pas' {CryptMod: TDataModule},
+  f_passwd in '..\..\misc\f_passwd.pas' {PassWdform},
+  fr_base in '..\..\misc\fr_base.pas' {BaseFrame: TFrame};
+
+end.

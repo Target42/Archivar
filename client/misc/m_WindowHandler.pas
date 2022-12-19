@@ -290,7 +290,8 @@ begin
   if not m_forms.Contains(frm) then
     m_forms.Add(frm);
 
-  if Supports( frm, StringToGUID('{09DB420A-2669-4E82-B537-D8866479642F}')) then
+  //if Supports( frm, StringToGUID('{09DB420A-2669-4E82-B537-D8866479642F}')) then
+  if Supports( frm, IForceClose) then
     m_list.Add(frm as IForceClose);
 
 end;
@@ -298,7 +299,8 @@ end;
 procedure TWindowHandler.unregisterForm(frm: TForm);
 begin
   m_forms.Remove(frm);
-  if Supports( frm, StringToGUID('{09DB420A-2669-4E82-B537-D8866479642F}')) then
+
+  if Supports( frm, IForceClose) then
     m_list.Remove(frm as IForceClose);
 end;
 
