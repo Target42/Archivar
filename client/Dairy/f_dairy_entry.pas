@@ -56,7 +56,6 @@ begin
   if m_id = -1 then begin
     m_id :=  GM.autoInc('gen_di_id');
     DITab.Append;
-    DITab.FieldByName('DI_ID').asInteger := m_id;
     DITab.FieldByName('PE_ID').asInteger := GM.UserID;
     DITab.FieldByName('DI_STAMP').AsDateTime  := now;
   end else
@@ -84,6 +83,9 @@ begin
   st.Free;
 
   DITab.Post;
+
+  m_id := DITab.FieldByName('DI_ID').asInteger;
+
   if DITab.UpdatesPending then
     DITab.ApplyUpdates(0)
 end;

@@ -13,19 +13,13 @@ type
   TDairyForm = class(TForm, IForceClose)
     StatusBar1: TStatusBar;
     DSProviderConnection1: TDSProviderConnection;
-    DiQry: TClientDataSet;
+    DataQry: TClientDataSet;
     GroupBox1: TGroupBox;
     DBGrid1: TDBGrid;
     DISrc: TDataSource;
     GroupBox2: TGroupBox;
     Splitter1: TSplitter;
-    DiQryDI_ID: TAutoIncField;
-    DiQryPE_ID: TIntegerField;
-    DiQryDI_STAMP: TSQLTimeStampField;
-    DiQryDI_CRYPTED: TStringField;
-    DiQryDI_TEXT: TBlobField;
-    DiQryDI_TAGS: TStringField;
-    DiQryCryptText: TStringField;
+    DataQryCryptText: TStringField;
     GroupBox3: TGroupBox;
     GroupBox4: TGroupBox;
     Label1: TLabel;
@@ -41,14 +35,20 @@ type
     ac_delete: TAction;
     BitBtn2: TBitBtn;
     BitBtn3: TBitBtn;
+    DataQryDI_ID: TIntegerField;
+    DataQryPE_ID: TIntegerField;
+    DataQryDI_STAMP: TSQLTimeStampField;
+    DataQryDI_CRYPTED: TStringField;
+    DataQryDI_TEXT: TBlobField;
+    DataQryDI_TAGS: TStringField;
     procedure FormDestroy(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure DiQryCryptTextGetText(Sender: TField; var Text: string;
+    procedure DataQryCryptTextGetText(Sender: TField; var Text: string;
       DisplayText: Boolean);
     procedure SpeedButton2Click(Sender: TObject);
     procedure SpeedButton1Click(Sender: TObject);
-    procedure DiQryAfterScroll(DataSet: TDataSet);
+    procedure DataQryAfterScroll(DataSet: TDataSet);
     procedure ac_addExecute(Sender: TObject);
     procedure ac_editExecute(Sender: TObject);
     procedure LabeledEdit1KeyPress(Sender: TObject; var Key: Char);
@@ -77,7 +77,7 @@ begin
   Application.CreateForm(TDairyEntryForm, DairyEntryForm);
   try
     if DairyEntryForm.ShowModal = mrOk then
-      DiQry.Refresh;
+      DataQry.Refresh;
   finally
     DairyEntryForm.Free;
   end;
@@ -85,14 +85,14 @@ end;
 
 procedure TDairyForm.ac_editExecute(Sender: TObject);
 begin
-  if DiQry.IsEmpty then exit;
+  if DataQry.IsEmpty then exit;
   Application.CreateForm(TDairyEntryForm, DairyEntryForm);
   try
     DairyEntryForm.Passwort := LabeledEdit1.Text;
     try
-      DairyEntryForm.ID := DiQryDI_ID.AsInteger;
+      DairyEntryForm.ID := DataQryDI_ID.AsInteger;
       if DairyEntryForm.ShowModal = mrOk then
-        DiQry.Refresh;
+        DataQry.Refresh;
     except
       ShowMessage('Falsches Passwort!');
     end;
@@ -102,7 +102,7 @@ begin
 
 end;
 
-procedure TDairyForm.DiQryAfterScroll(DataSet: TDataSet);
+procedure TDairyForm.DataQryAfterScroll(DataSet: TDataSet);
 var
   crypt : TMemoryStream;
 begin
@@ -110,12 +110,12 @@ begin
   m_mem.Clear;
   RE.Lines.Clear;
 
-  if SameText(DiQryDI_CRYPTED.AsString, 't') then begin
+  if SameText( DataQryDI_CRYPTED.AsString, 't') then begin
     CryptMod.Password := LabeledEdit1.Text;
     crypt := TMemoryStream.Create;
 
     try
-      DiQryDI_TEXT.SaveToStream(crypt);
+      DataQryDI_TEXT.SaveToStream(crypt);
       CryptMod.Decrypt(crypt, m_mem);
     except
       on e : exception do begin
@@ -124,7 +124,7 @@ begin
     end;
     crypt.free;
   end else begin
-    DiQryDI_TEXT.SaveToStream(m_mem);
+    DataQryDI_TEXT.SaveToStream(m_mem);
   end;
 
   m_mem.Position := 0;
@@ -132,11 +132,11 @@ begin
   // show text ...
 end;
 
-procedure TDairyForm.DiQryCryptTextGetText(Sender: TField; var Text: string;
+procedure TDairyForm.DataQryCryptTextGetText(Sender: TField; var Text: string;
   DisplayText: Boolean);
 begin
   Text := '';
-  if DiQry.FieldByName('DI_CRYPTED').AsString = 'T' then
+  if DataQry.FieldByName('DI_CRYPTED').AsString = 'T' then
     Text := 'Ja';
 end;
 
@@ -171,8 +171,7 @@ end;
 procedure TDairyForm.LabeledEdit1KeyPress(Sender: TObject; var Key: Char);
 begin
   if key = #13 then
-    DiQryAfterScroll( DiQry );
-
+    DataQryAfterScroll( DataQry );
 end;
 
 procedure TDairyForm.setMonth(Month: TDate);
@@ -183,10 +182,10 @@ begin
   DecodeDate(m_date, y, m, d);
 
   Label1.Caption := FormatDateTime('mmmm yyyy', m_date);
-  DiQry.ParamByName('start').AsDate := EncodeDate(y, m, 1);
-  DiQry.ParamByName('ende').AsDate  := EncodeDate(y, m, DaysInAMonth(y, m));
+  DataQry.ParamByName('start').AsDate := EncodeDate(y, m, 1);
+  DataQry.ParamByName('ende').AsDate  := EncodeDate(y, m, DaysInAMonth(y, m));
   m_inUpdate := true;
-  DiQry.Open;
+  DataQry.Open;
 
   m_inUpdate := false;
 end;

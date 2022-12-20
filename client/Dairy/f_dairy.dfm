@@ -380,10 +380,12 @@ object DairyForm: TDairyForm
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsDairy'
+    Connected = True
+    SQLConnection = GM.SQLConnection1
     Left = 72
     Top = 104
   end
-  object DiQry: TClientDataSet
+  object DataQry: TClientDataSet
     Aggregates = <>
     Params = <
       item
@@ -398,47 +400,40 @@ object DairyForm: TDairyForm
       end>
     ProviderName = 'DataSrc'
     RemoteServer = DSProviderConnection1
-    AfterScroll = DiQryAfterScroll
+    AfterScroll = DataQryAfterScroll
     Left = 264
     Top = 96
-    object DiQryDI_ID: TAutoIncField
+    object DataQryCryptText: TStringField
+      FieldKind = fkCalculated
+      FieldName = 'CryptText'
+      OnGetText = DataQryCryptTextGetText
+      Calculated = True
+    end
+    object DataQryDI_ID: TIntegerField
       FieldName = 'DI_ID'
-      Origin = 'DI_ID'
-      ProviderFlags = [pfInUpdate, pfInWhere, pfInKey]
-      ReadOnly = True
+      Required = True
     end
-    object DiQryPE_ID: TIntegerField
+    object DataQryPE_ID: TIntegerField
       FieldName = 'PE_ID'
-      Origin = 'PE_ID'
     end
-    object DiQryDI_STAMP: TSQLTimeStampField
+    object DataQryDI_STAMP: TSQLTimeStampField
       FieldName = 'DI_STAMP'
-      Origin = 'DI_STAMP'
     end
-    object DiQryDI_CRYPTED: TStringField
+    object DataQryDI_CRYPTED: TStringField
       FieldName = 'DI_CRYPTED'
-      Origin = 'DI_CRYPTED'
       FixedChar = True
       Size = 1
     end
-    object DiQryDI_TEXT: TBlobField
+    object DataQryDI_TEXT: TBlobField
       FieldName = 'DI_TEXT'
-      Origin = 'DI_TEXT'
     end
-    object DiQryDI_TAGS: TStringField
+    object DataQryDI_TAGS: TStringField
       FieldName = 'DI_TAGS'
-      Origin = 'DI_TAGS'
       Size = 255
-    end
-    object DiQryCryptText: TStringField
-      FieldKind = fkCalculated
-      FieldName = 'CryptText'
-      OnGetText = DiQryCryptTextGetText
-      Calculated = True
     end
   end
   object DISrc: TDataSource
-    DataSet = DiQry
+    DataSet = DataQry
     Left = 328
     Top = 112
   end

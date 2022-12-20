@@ -13,7 +13,7 @@ object dsDairy: TdsDairy
     UpdateOptions.UpdateTableName = 'DI_DAIRY'
     UpdateOptions.AutoIncFields = 'DI_ID'
     TableName = 'DI_DAIRY'
-    Left = 88
+    Left = 96
     Top = 40
   end
   object FDTransaction1: TFDTransaction
