@@ -539,9 +539,6 @@
         <DCCReference Include="crypt\f_keys.pas">
             <Form>Keysform</Form>
         </DCCReference>
-        <DCCReference Include="Dairy\f_dairy.pas">
-            <Form>DairyForm</Form>
-        </DCCReference>
         <DCCReference Include="TextBlock\f_textblock_export.pas">
             <Form>TextBlockExportForm</Form>
         </DCCReference>
@@ -601,9 +598,6 @@
         <DCCReference Include="Task\fr_tasklist_delete.pas">
             <Form>UnusedTaskListFrame</Form>
             <DesignClass>TFrame</DesignClass>
-        </DCCReference>
-        <DCCReference Include="Dairy\f_dairy_entry.pas">
-            <Form>DairyEntryForm</Form>
         </DCCReference>
         <DCCReference Include="nhunspell\f_correctForm.pas">
             <Form>CorrectForm</Form>

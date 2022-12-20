@@ -456,9 +456,6 @@
       object Statistik1: TMenuItem
         Action = ac_to_stat
       end
-      object agebuch1: TMenuItem
-        Action = ac_to_dairy
-      end
       object Wiki1: TMenuItem
         Action = ac_to_wiki
       end
@@ -819,11 +816,6 @@
       Category = 'Admin'
       Caption = 'Dateicache'
       OnExecute = ac_ad_filecacheExecute
-    end
-    object ac_to_dairy: TAction
-      Category = 'Tools'
-      Caption = 'Tagebuch'
-      OnExecute = ac_to_dairyExecute
     end
     object ac_to_dms: TAction
       Category = 'Tools'

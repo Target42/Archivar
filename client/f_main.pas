@@ -147,8 +147,6 @@ type
     ac_ad_filecache: TAction;
     N17: TMenuItem;
     Dateicache1: TMenuItem;
-    ac_to_dairy: TAction;
-    agebuch1: TMenuItem;
     ac_to_dms: TAction;
     ac_to_wiki: TAction;
     Dokumentenmanagement1: TMenuItem;
@@ -220,7 +218,6 @@ type
     procedure ac_ad_tasktypeExecute(Sender: TObject);
     procedure ac_ad_filecacheExecute(Sender: TObject);
     procedure ac_to_keysExecute(Sender: TObject);
-    procedure ac_to_dairyExecute(Sender: TObject);
     procedure ac_tb_exportExecute(Sender: TObject);
     procedure ac_tb_importExecute(Sender: TObject);
     procedure ac_to_pdriveExecute(Sender: TObject);
@@ -264,7 +261,7 @@ uses
   f_textblock_edit, f_testblock_list, f_webserver_files, f_epub_mngr,
   f_meeting_new, f_meeting_select, f_meeting_proto, f_login,
   system.UITypes, f_protocol_sec, u_onlineUser, f_doMeeting, f_task_type,
-  f_flieCacheForm, f_keys, f_dairy, f_textblock_export, f_textblock_import,
+  f_flieCacheForm, f_keys, f_textblock_export, f_textblock_import,
   f_storages, f_protokoll_new, f_admin, f_task_delete, i_plugin, u_pluginManager;
 
 {$R *.dfm}
@@ -709,17 +706,6 @@ begin
   TextBlockEditForm.ID := -1;
   TextBlockEditForm.ShowModal;
   TextBlockEditForm.free;
-end;
-
-procedure TMainForm.ac_to_dairyExecute(Sender: TObject);
-begin
-  if not Assigned(DairyForm) then begin
-    Application.CreateForm(TDairyForm, DairyForm);
-    DairyForm.Show;
-  end else begin
-    DairyForm.BringToFront;
-    DairyForm.WindowState := wsMaximized;
-  end;
 end;
 
 procedure TMainForm.ac_to_keysExecute(Sender: TObject);
