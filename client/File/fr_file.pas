@@ -3,21 +3,22 @@ unit fr_file;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
+  Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB,
   Datasnap.DBClient, Datasnap.DSConnect, Vcl.ExtCtrls,
   Vcl.StdCtrls, JvComponentBase, JvDragDrop, Vcl.Buttons, JvBaseDlg,
   JvBrowseFolder, FireDAC.UI.Intf, FireDAC.VCLUI.Async, FireDAC.Stan.Intf,
   FireDAC.Comp.UI, Vcl.ComCtrls, VirtualTrees, System.Generics.Collections,
   System.JSON, System.Actions, Vcl.ActnList, Vcl.Menus, Winapi.ActiveX,
-  System.ImageList, Vcl.ImgList;
+  System.ImageList, Vcl.ImgList, DropTarget, DragDrop, DropSource, DragDropFile,
+  f_uploadForm, Winapi.Windows, Vcl.AppEvnts, DragDropContext, DragDropHandler;
+
 
 type
   TFileFrame = class(TFrame)
     DSProviderConnection1: TDSProviderConnection;
     ListFilesQry: TClientDataSet;
     LitFilesSrc: TDataSource;
-    JvDragDrop1: TJvDragDrop;
     OpenDialog1: TOpenDialog;
     JvBrowseForFolderDialog1: TJvBrowseForFolderDialog;
     FDGUIxAsyncExecuteDialog1: TFDGUIxAsyncExecuteDialog;
@@ -45,8 +46,14 @@ type
     BitBtn3: TBitBtn;
     SpeedButton1: TSpeedButton;
     N1: TMenuItem;
+    DropEmptyTarget1: TDropEmptyTarget;
+    DataFormatAdapterTarget: TDataFormatAdapter;
+    Timer1: TTimer;
+    DropEmptySource1: TDropEmptySource;
+    DataFormatAdapterSource: TDataFormatAdapter;
+    ac_copy: TAction;
+    ac_paste: TAction;
     procedure Button1Click(Sender: TObject);
-    procedure JvDragDrop1Drop(Sender: TObject; Pos: TPoint; Value: TStrings);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
     procedure DBGrid1DragOver(Sender, Source: TObject; X, Y: Integer;
@@ -76,6 +83,17 @@ type
     procedure BitBtn1Click(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
     procedure BitBtn3Click(Sender: TObject);
+    procedure DropEmptyTarget1Enter(Sender: TObject; ShiftState: TShiftState;
+      APoint: TPoint; var Effect: Integer);
+    procedure DropEmptyTarget1Drop(Sender: TObject; ShiftState: TShiftState;
+      APoint: TPoint; var Effect: Integer);
+    procedure DropEmptySource1AfterDrop(Sender: TObject;
+      DragResult: TDragResult; Optimized: Boolean);
+    procedure ac_copyExecute(Sender: TObject);
+    procedure ac_pasteExecute(Sender: TObject);
+    procedure LVMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
+    procedure LVMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
   private
     type
       PTFolderRec = ^TFolderRec;
@@ -95,6 +113,8 @@ type
     m_root    : PTFolderRec;
 
     m_inupdate: boolean;
+
+    m_dropFiles  : TStringList;
 
     procedure addChild( root, child : PTFolderRec );
     function getParent( pid : integer ) : PTFolderRec;
@@ -116,6 +136,11 @@ type
 
     procedure move( req : TJSONObject );
 
+    procedure clearDropList;
+    procedure UploadFiles( list : TStrings );
+
+    procedure OnGetStream(Sender: TFileContentsStreamOnDemandClipboardFormat;
+      Index: integer; out AStream: IStream);
   public
     procedure prepare;
     property RootID   : integer read m_grid write setID;
@@ -134,13 +159,27 @@ type
 implementation
 
 uses
-  m_glob_client, f_uploadForm, u_stub,
+  m_glob_client, u_stub,
   system.IOUtils, System.Win.ComObj, System.Types, ShellApi, u_eventHandler,
-  u_Konst, u_json, f_file_info;
+  u_Konst, u_json, f_file_info, DragDropFormats;
 
 {$R *.dfm}
 
 { TFileFrame }
+
+procedure TFileFrame.ac_copyExecute(Sender: TObject);
+var
+  i: integer;
+begin
+  TVirtualFileStreamDataFormat(DataFormatAdapterSource.DataFormat).FileNames.Clear;
+  for i := 0 to LV.Items.Count-1 do
+    if (LV.Items[i].Selected) then
+      TVirtualFileStreamDataFormat(DataFormatAdapterSource.DataFormat).
+        FileNames.Add(LV.Items[i].Caption);
+
+  // ...and copy data to clipboard.
+  DropEmptySource1.CopyToClipboard;
+end;
 
 procedure TFileFrame.ac_deleteExecute(Sender: TObject);
 var
@@ -215,6 +254,11 @@ begin
   finally
     client.Free;
   end;
+end;
+
+procedure TFileFrame.ac_pasteExecute(Sender: TObject);
+begin
+  DropEmptyTarget1.PasteFromClipboard;
 end;
 
 procedure TFileFrame.addChild(root, child: PTFolderRec);
@@ -321,12 +365,21 @@ begin
 end;
 
 procedure TFileFrame.Button1Click(Sender: TObject);
+var
+  i : integer;
+  mem : TMemoryStream;
 begin
   if ListFilesQry.ReadOnly then
     exit;
 
   if OpenDialog1.Execute then
   begin
+    for i := 0 to pred(OpenDialog1.Files.Count) do begin
+      mem := TMemoryStream.Create;
+      mem.LoadFromFile(OpenDialog1.Files[i]);
+      m_dropFiles.AddObject(OpenDialog1.Files[i], mem)
+    end;
+
     showUploadForm( OpenDialog1.Files );
   end;
 end;
@@ -388,6 +441,17 @@ begin
   updateFiles;
 end;
 
+procedure TFileFrame.clearDropList;
+var
+  i : integer;
+begin
+  for i := 0 to pred(m_dropFiles.Count) do begin
+    if Assigned(m_dropFiles.Objects[i]) then
+      TMemoryStream( m_dropFiles.Objects[i]).Free;
+  end;
+  m_dropFiles.Clear;
+end;
+
 procedure TFileFrame.ClearRecList;
 var
   ptr : PTFolderRec;
@@ -434,6 +498,64 @@ procedure TFileFrame.DBGrid1DragOver(Sender, Source: TObject; X, Y: Integer;
   State: TDragState; var Accept: Boolean);
 begin
   Accept := Assigned(VST.FocusedNode) and (Sender <> Source );
+end;
+
+procedure TFileFrame.DropEmptySource1AfterDrop(Sender: TObject;
+  DragResult: TDragResult; Optimized: Boolean);
+begin
+  //
+end;
+
+procedure TFileFrame.DropEmptyTarget1Drop(Sender: TObject;
+  ShiftState: TShiftState; APoint: TPoint; var Effect: Integer);
+var
+  Buffer    : array of byte;
+  i         : integer;
+  Stream    : IStream;
+  StatStg   : TStatStg;
+  Size      : FixedUInt;
+  st        : TStream;
+const
+  MaxBufferSize = 32*1024; // 32Kb
+begin
+  // Transfer the file names and contents from the data format.
+  if (TVirtualFileStreamDataFormat(DataFormatAdapterTarget.DataFormat).FileNames.Count > 0) then
+  begin
+    try
+      for i := 0 to TVirtualFileStreamDataFormat(DataFormatAdapterTarget.DataFormat).FileNames.Count-1 do
+      begin
+        Stream := TVirtualFileStreamDataFormat(DataFormatAdapterTarget.DataFormat).FileContentsClipboardFormat.GetStream(i);
+        if (Stream <> nil) then
+        begin
+          Stream.Stat(StatStg, STATFLAG_NONAME);
+          Stream.Seek(0, STREAM_SEEK_SET, PULargeinteger(nil)^);
+
+          st    := TMemoryStream.Create;
+          m_dropFiles.AddObject(TVirtualFileStreamDataFormat(DataFormatAdapterTarget.DataFormat).FileNames[i], st);
+          SetLength(buffer, MaxBufferSize );
+          repeat
+            Stream.Read(@Buffer[0], MaxBufferSize, @Size);
+            st.Write(buffer[0], Size);
+          until Size <> MaxBufferSize;
+        end;
+        Stream := NIL;
+      end;
+    finally
+
+    end;
+    showUploadForm(m_dropFiles);
+//    UploadFiles(m_dropFiles);
+  end;
+end;
+
+procedure TFileFrame.DropEmptyTarget1Enter(Sender: TObject;
+  ShiftState: TShiftState; APoint: TPoint; var Effect: Integer);
+begin
+  with TVirtualFileStreamDataFormat(DataFormatAdapterTarget.DataFormat) do
+    if not(FileContentsClipboardFormat.HasValidFormats(DropEmptyTarget1.DataObject) and
+      (AnsiFileGroupDescriptorClipboardFormat.HasValidFormats(DropEmptyTarget1.DataObject) or
+       UnicodeFileGroupDescriptorClipboardFormat.HasValidFormats(DropEmptyTarget1.DataObject))) then
+      Effect := DROPEFFECT_NONE;
 end;
 
 function TFileFrame.getFileList: TJSONObject;
@@ -597,12 +719,35 @@ begin
 
 end;
 
-procedure TFileFrame.JvDragDrop1Drop(Sender: TObject; Pos: TPoint;
-  Value: TStrings);
+procedure TFileFrame.LVMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+var
+  i: integer;
 begin
-  if ListFilesQry.ReadOnly then
-    exit;
-  showUploadForm(value);
+  if (LV.SelCount > 0) and
+    (LV.GetHitTestInfoAt(X, Y) * [htOnItem, htOnIcon, htOnLabel, htOnStateIcon] <> []) and
+    (DragDetectPlus(LV.Handle, Point(X,Y))) then
+  begin
+    // Transfer the file names to the data format. The content will be extracted
+    // by the target on-demand.
+    TVirtualFileStreamDataFormat(DataFormatAdapterSource.DataFormat).FileNames.Clear;
+    for i := 0 to LV.Items.Count-1 do
+      if (LV.Items[i].checked) then
+        TVirtualFileStreamDataFormat(DataFormatAdapterSource.DataFormat).
+          FileNames.Add(LV.Items[i].Caption);
+
+    // ...and let it rip!
+    DropEmptySource1.Execute;
+  end;
+end;
+
+procedure TFileFrame.LVMouseMove(Sender: TObject; Shift: TShiftState; X,
+  Y: Integer);
+begin
+  if (LV.GetHitTestInfoAt(X, Y) * [htOnItem, htOnIcon, htOnLabel, htOnStateIcon] <> []) then
+    Screen.Cursor := crHandPoint
+  else
+    Screen.Cursor := crDefault;
 end;
 
 procedure TFileFrame.move(req: TJSONObject);
@@ -620,14 +765,65 @@ begin
 
 end;
 
+procedure TFileFrame.OnGetStream(
+  Sender: TFileContentsStreamOnDemandClipboardFormat; Index: integer;
+  out AStream: IStream);
+var
+  Stream: TStream;
+  i: integer;
+  SelIndex: integer;
+  id : integer;
+  Found: boolean;
+begin
+  // This event handler is called by TFileContentsStreamOnDemandClipboardFormat
+  // when the drop target requests data from the drop source (that's us).
+  Stream := TMemoryStream.Create;
+  if not ListFilesQry.Active then
+    ListFilesQry.Open;
+
+  try
+    AStream := nil;
+    // Find the listview item which corresponds to the requested data item.
+    SelIndex := 0;
+    Found := False;
+    for i := 0 to LV.Items.Count-1 do
+      if (LV.Items[i].checked) then
+      begin
+        if (SelIndex = Index) then
+        begin
+          // Get the data stored in the listview item and...
+          id := integer(LV.Items[i].Data);
+          if not ListFilesQry.Locate('FI_ID', VarArrayOf([id]), []) then
+            exit;
+
+          Stream := ListFilesQry.CreateBlobStream(ListFilesQry.FieldByName('FI_DATA'), bmRead);
+          Found := True;
+          break;
+        end;
+        inc(SelIndex);
+      end;
+    if (not Found) then
+      exit;
+
+    AStream := TFixedStreamAdapter.Create(Stream, soOwned);
+  except
+    Stream.Free;
+    raise;
+  end;
+  ListFilesQry.Close;
+end;
+
 procedure TFileFrame.prepare;
 begin
+  (DataFormatAdapterSource.DataFormat as TVirtualFileStreamDataFormat).OnGetStream := OnGetStream;
+
   m_tempDir :=  TPath.Combine(TPath.GetTempPath, createClassID );
   m_list    := TList<PTFolderRec>.create;
   m_root    := NIL;
   m_curDir  := -1;
   vst.NodeDataSize := sizeof(TFolderRec);
   m_inupdate:= false;
+  m_dropFiles := TStringList.Create;
 
   EventHandler.Register( self, handle_folder_new,   BRD_FOLDER_NEW );
   EventHandler.Register( self, handle_folder_del,   BRD_FOLDER_DEL );
@@ -650,7 +846,7 @@ begin
     arr := TDirectory.GetFiles(m_tempDir);
     for i := low(arr) to high(arr) do begin
       try
-        DeleteFile(arr[i]);
+        system.sysUtils.DeleteFile(arr[i]);
       except
 
       end;
@@ -659,6 +855,10 @@ begin
   end;
   ClearRecList;
   m_list.free;
+  clearDropList;
+  m_dropFiles.Free;
+
+  DropEmptySource1.FlushClipboard;
 end;
 
 function TFileFrame.saveFile(id : integer; fname: string): boolean;
@@ -696,25 +896,28 @@ end;
 procedure TFileFrame.SetRO(const Value: boolean);
 begin
   ListFilesQry.ReadOnly   := value;
-  JvDragDrop1.AcceptDrag  := not Value;
   GroupBox1.Enabled       := not Value;
 end;
 
 procedure TFileFrame.showUploadForm(list: TStrings);
-var
-  UploadForm : TUploadForm;
+
 begin
-  if not Assigned(VST.FocusedNode) then exit;
+  if not Assigned(VST.FocusedNode) then begin
+    clearDropList;
+    exit;
+  end;
 
   Application.CreateForm(TUploadForm, UploadForm);
 
   UploadForm.Dr_ID := PTFolderRec(VST.FocusedNode.GetData)^.id;
+  UploadForm.AssignFiles( m_dropFiles );
 
-  UploadForm.List := list;
   if UploadForm.ShowModal = mrOk then begin
     updateFiles;
   end;
   UploadForm.Free;
+
+  clearDropList;
 end;
 
 procedure TFileFrame.updateFiles;
@@ -857,6 +1060,32 @@ begin
 
   VSTChange(VST, vst.FocusedNode);
 
+end;
+
+procedure TFileFrame.UploadFiles(list: TStrings);
+var
+  client  : TdsFileClient;
+  i       : integer;
+  req     : TJSONObject;
+  fs      : TStream;
+begin
+  client := TdsFileClient.Create(GM.SQLConnection1.DBXConnection);
+  for i := 0 to pred(list.Count) do begin
+
+    fs := list.Objects[i] as TStream;
+    req := TJSONObject.Create;
+    JReplace( req, 'fname',     ExtractFileName(list[i]));
+    JReplace( req, 'todelete',  6);
+    JReplace( req, 'type',      '');
+    JReplace( req, 'drid',      m_curDir );
+    JReplace( req, 'size',      fs.Size );
+
+    client.upload(req, fs);
+  end;
+  client.free;
+  list.Clear;
+
+  updateFiles;
 end;
 
 procedure TFileFrame.VSTChange(Sender: TBaseVirtualTree; Node: PVirtualNode);

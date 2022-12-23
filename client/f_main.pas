@@ -7,7 +7,8 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.Menus, System.Actions,
   Vcl.ActnList, Vcl.AppEvnts, fr_gremiumTree, Vcl.ExtCtrls, Vcl.StdCtrls,
   fr_taskList, Vcl.StdActns, u_bookmark, fr_bookmark, fr_epub, fr_meeting,
-  JvCombobox, JvColorCombo, fr_storages, MidasLib, JvExStdCtrls, Vcl.Grids;
+  JvCombobox, JvColorCombo, fr_storages, MidasLib, JvExStdCtrls, Vcl.Grids,
+  DragDrop, DropTarget, DragDropFile;
 
 type
   TStatusInx = (stStatus = 0, stHost, stLogin, stUser, stMsg );

@@ -36,13 +36,17 @@ end;
 
 procedure TPluginDairy.Execute;
 begin
-  inherited;
+  m_oldApp := Application;
+  Application := m_data.App;
   if not Assigned(DairyForm)then begin
-    DairyForm := TDairyForm.Create(Application);
+    DairyForm := TDairyForm.create(m_data.App);
+//    DairyForm.Parent := m_data.App.MainForm;
+//    DairyForm.ParentApplication := m_data.App
   end else begin
     DairyForm.BringToFront;
   end;
   DairyForm.Show;
+  Application := m_oldApp;
 end;
 
 exports
@@ -53,3 +57,4 @@ initialization
 finalization
   PluginDairy.Free;
 end.
+

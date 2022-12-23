@@ -42,6 +42,17 @@ object StorageForm: TStorageForm
       inherited VST: TVirtualStringTree
         Height = 272
         ExplicitHeight = 272
+        Columns = <
+          item
+            Position = 0
+            Text = 'Verzeichnis'
+            Width = 150
+          end
+          item
+            Position = 1
+            Text = 'Datum'
+            Width = 95
+          end>
       end
     end
     inherited GroupBox3: TGroupBox
@@ -62,12 +73,9 @@ object StorageForm: TStorageForm
         ExplicitHeight = 272
       end
     end
-    inherited JvDragDrop1: TJvDragDrop
-      DropTarget = FileFrame1
-    end
     inherited ImageList1: TImageList
       Bitmap = {
-        494C0101020008004C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+        494C010102000800580010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
         0000000000003600000028000000400000001000000001002000000000000010
         000000000000000000000000000000000000000000FF078DBE00078DBE00078D
         BE00078DBE00078DBE00078DBE00078DBE00078DBE00078DBE00078DBE00078D

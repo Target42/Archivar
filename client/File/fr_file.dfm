@@ -1,14 +1,16 @@
 object FileFrame: TFileFrame
   Left = 0
   Top = 0
-  Width = 451
-  Height = 305
+  Width = 940
+  Height = 467
   Align = alClient
   TabOrder = 0
+  ExplicitWidth = 451
+  ExplicitHeight = 305
   object Splitter1: TSplitter
     Left = 249
     Top = 0
-    Height = 305
+    Height = 467
     ExplicitLeft = 224
     ExplicitTop = 32
     ExplicitHeight = 100
@@ -17,18 +19,20 @@ object FileFrame: TFileFrame
     Left = 0
     Top = 0
     Width = 249
-    Height = 305
+    Height = 467
     Align = alLeft
     Caption = 'Ordner'
     TabOrder = 0
+    ExplicitHeight = 305
     object GroupBox4: TGroupBox
       Left = 2
-      Top = 246
+      Top = 408
       Width = 245
       Height = 57
       Align = alBottom
       Caption = 'Ordneraktionen'
       TabOrder = 0
+      ExplicitTop = 246
       object SpeedButton1: TSpeedButton
         Left = 11
         Top = 24
@@ -78,7 +82,7 @@ object FileFrame: TFileFrame
       Left = 2
       Top = 15
       Width = 245
-      Height = 231
+      Height = 393
       Align = alClient
       DragMode = dmAutomatic
       Header.AutoSizeIndex = -1
@@ -97,6 +101,7 @@ object FileFrame: TFileFrame
       OnGetCellText = VSTGetCellText
       OnGetImageIndex = VSTGetImageIndex
       OnNewText = VSTNewText
+      ExplicitHeight = 231
       Columns = <
         item
           Position = 0
@@ -113,19 +118,23 @@ object FileFrame: TFileFrame
   object GroupBox3: TGroupBox
     Left = 252
     Top = 0
-    Width = 199
-    Height = 305
+    Width = 688
+    Height = 467
     Align = alClient
     Caption = 'Dateien'
     TabOrder = 1
+    ExplicitLeft = 284
+    ExplicitTop = 3
     object GroupBox1: TGroupBox
       Left = 2
-      Top = 246
-      Width = 195
+      Top = 408
+      Width = 684
       Height = 57
       Align = alBottom
       Caption = 'Dateiaktionen'
       TabOrder = 0
+      ExplicitTop = 246
+      ExplicitWidth = 195
       object Button1: TBitBtn
         Left = 16
         Top = 24
@@ -397,8 +406,8 @@ object FileFrame: TFileFrame
     object LV: TListView
       Left = 2
       Top = 15
-      Width = 195
-      Height = 231
+      Width = 684
+      Height = 393
       Align = alClient
       Checkboxes = True
       Columns = <
@@ -432,6 +441,9 @@ object FileFrame: TFileFrame
       ViewStyle = vsReport
       OnDragDrop = DBGrid1DragDrop
       OnDragOver = DBGrid1DragOver
+      OnMouseDown = LVMouseDown
+      OnMouseMove = LVMouseMove
+      ExplicitLeft = 3
     end
   end
   object DSProviderConnection1: TDSProviderConnection
@@ -456,12 +468,6 @@ object FileFrame: TFileFrame
     DataSet = ListFilesQry
     Left = 144
     Top = 88
-  end
-  object JvDragDrop1: TJvDragDrop
-    DropTarget = LV
-    OnDrop = JvDragDrop1Drop
-    Left = 382
-    Top = 132
   end
   object OpenDialog1: TOpenDialog
     Options = [ofHideReadOnly, ofAllowMultiSelect, ofFileMustExist, ofEnableSizing]
@@ -520,12 +526,20 @@ object FileFrame: TFileFrame
       Caption = 'L'#246'schen'
       OnExecute = ac_deleteExecute
     end
+    object ac_copy: TAction
+      Caption = 'Kopieren'
+      OnExecute = ac_copyExecute
+    end
+    object ac_paste: TAction
+      Caption = 'Einf'#252'gen'
+      OnExecute = ac_pasteExecute
+    end
   end
   object ImageList1: TImageList
     Left = 88
     Top = 360
     Bitmap = {
-      494C010102000800540010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102000800680010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       000000000000000000000000000000000000000000FF078DBE00078DBE00078D
       BE00078DBE00078DBE00078DBE00078DBE00078DBE00078DBE00078DBE00078D
@@ -663,5 +677,38 @@ object FileFrame: TFileFrame
       800F800F00000000C3FFC3FF00000000FFFFFFFF00000000FFFFFFFF00000000
       FFFFFFFF00000000FFFFFFFF0000000000000000000000000000000000000000
       000000000000}
+  end
+  object DropEmptyTarget1: TDropEmptyTarget
+    DragTypes = [dtCopy, dtLink]
+    OnEnter = DropEmptyTarget1Enter
+    OnDrop = DropEmptyTarget1Drop
+    ShowImage = False
+    Target = LV
+    WinTarget = 0
+    Left = 712
+    Top = 84
+  end
+  object DataFormatAdapterTarget: TDataFormatAdapter
+    DragDropComponent = DropEmptyTarget1
+    DataFormatName = 'TVirtualFileStreamDataFormat'
+    Left = 584
+    Top = 76
+  end
+  object Timer1: TTimer
+    Enabled = False
+    Interval = 100
+    Left = 436
+    Top = 248
+  end
+  object DropEmptySource1: TDropEmptySource
+    DragTypes = [dtCopy, dtMove]
+    Left = 712
+    Top = 156
+  end
+  object DataFormatAdapterSource: TDataFormatAdapter
+    DragDropComponent = DropEmptySource1
+    DataFormatName = 'TVirtualFileStreamDataFormat'
+    Left = 592
+    Top = 148
   end
 end

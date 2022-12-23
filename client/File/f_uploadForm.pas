@@ -8,8 +8,8 @@ uses
   FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
   FireDAC.Stan.Error, FireDAC.DatS,
   FireDAC.Stan.StorageBin, Vcl.ExtCtrls, FireDAC.Comp.DataSet,
-  FireDAC.Comp.Client, System.Generics.Collections, FireDAC.Phys.Intf,
-  FireDAC.DApt.Intf, Vcl.Grids;
+  FireDAC.Comp.Client, System.Generics.Collections,
+  Vcl.Grids, FireDAC.Phys.Intf, FireDAC.DApt.Intf;
 
 type
   TUploadForm = class(TForm)
@@ -30,14 +30,14 @@ type
     procedure Button1Click(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
   private
-    m_list : TStrings;
+    m_list : TStringList;
     m_drid : integer;
     m_map   : TDictionary<integer, integer>;
     m_default : integer;
-    procedure setList( value : TStrings );
   public
-    property List : TStrings read m_list write setList;
     property DR_ID : integer read m_drid write m_drid;
+
+    procedure AssignFiles( list : TStringList );
   end;
 
 var
@@ -50,6 +50,22 @@ implementation
 uses
   system.IOUtils, m_glob_client, u_stub, System.JSON, u_json;
 
+
+procedure TUploadForm.AssignFiles(list: TStringList);
+var
+ i : integer;
+begin
+  m_list := list;
+  DataTab.EmptyDataSet;
+  for i := 0 to pred(m_list.Count) do begin
+    DataTab.Append;
+    DataTab.FieldByName('ID').AsInteger := i;
+    DataTab.FieldByName('FNAME').AsString := ExtractFileName(m_list[i]);
+    DataTab.FieldByName('FD_ID').AsInteger := m_default;
+    DataTab.Post;
+  end;
+end;
+
 procedure TUploadForm.Button1Click(Sender: TObject);
 
 var
@@ -58,7 +74,8 @@ var
   req, res   : TJSONObject;
   fs     : TStream;
 begin
-  DBGrid1.Enabled := false;
+  Screen.Cursor := crSQLWait;
+  DataTab.DisableControls;
   // upload ...
   client := NIL;
   try
@@ -69,7 +86,9 @@ begin
       try
         id := DataTab.FieldByName('ID').AsInteger;
         try
-          fs := TFileStream.Create( m_list[id], fmOpenRead + fmShareDenyWrite);
+          //fs := TFileStream.Create( m_list[id], fmOpenRead + fmShareDenyWrite);
+          fs := m_list.Objects[id] as TStream;
+          fs.Position := 0;
         except
           fs := NIL;
         end;
@@ -89,29 +108,29 @@ begin
 
           if not JBool(res, 'result') then
             ShowMessage(JString(res, 'text'));
-        end
-        else
-          ShowMessage(DataTab.FieldByName('NAME').AsString+' kann nicht geöffnet werden!');
+        end;
+        m_list.Objects[id] := NIL;
       except
         begin
         end;
       end;
+
       DataTab.Next;
     end;
 
   finally
     client.Free;
   end;
-  DBGrid1.Enabled := true;
-
+  DataTab.EnableControls;
+  Screen.Cursor := crDefault;
 end;
 
 procedure TUploadForm.FormCreate(Sender: TObject);
 var
   fname : string;
 begin
-  m_map   := TDictionary<integer, integer>.create;
-  m_list := NIL;
+  m_map     := TDictionary<integer, integer>.create;
+  m_list    := NIL;
   m_default := 0;
 
   fname := TPath.Combine(GM.PublicPath, 'deltimes.adb');
@@ -134,25 +153,14 @@ begin
 end;
 
 procedure TUploadForm.FormDestroy(Sender: TObject);
-begin
-  m_map.Free;
-end;
-
-procedure TUploadForm.setList(value: TStrings);
 var
   i : integer;
 begin
-  m_list := value;
-  DataTab.EmptyDataSet;
-  for i := 0 to pred(m_list.Count) do
-  begin
-    DataTab.Append;
-    DataTab.FieldByName('ID').AsInteger := i;
-    DataTab.FieldByName('FNAME').AsString := ExtractFileName(list[i]);
-    DataTab.FieldByName('FD_ID').AsInteger := m_default;
-    DataTab.Post;
-  end;
+  for I := 0 to pred(m_list.Count) do
+    TStream(m_list.Objects[i]).Free;
+  m_list.Clear;
 
+  m_map.Free;
 end;
 
 end.
