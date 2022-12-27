@@ -13,7 +13,8 @@ uses
   u_json in '..\misc\u_json.pas',
   xsd_TaskType in '..\misc\xsd_TaskType.pas',
   Vcl.Themes,
-  Vcl.Styles;
+  Vcl.Styles,
+  m_mail in '..\misc\m_mail.pas' {MailMod: TDataModule};
 
 {$R *.res}
 
@@ -22,5 +23,6 @@ begin
   Application.MainFormOnTaskbar := True;
   TStyleManager.TrySetStyle('Sapphire Kamri');
   Application.CreateForm(TMainSetupForm, MainSetupForm);
+  Application.CreateForm(TMailMod, MailMod);
   Application.Run;
 end.

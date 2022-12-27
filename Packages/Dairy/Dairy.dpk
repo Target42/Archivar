@@ -37,18 +37,13 @@ requires
   dbexpress,
   DataSnapProviderClient,
   vcldb,
-  LockBox3DR;
+  LockBox3DR,
+  Plugin_base;
 
 contains
-  i_plugin in '..\..\Plugin\i_plugin.pas',
-  u_TPluginImpl in '..\..\Plugin\u_TPluginImpl.pas',
   u_TPluginDairy in 'u_TPluginDairy.pas',
   f_dairy in 'f_dairy.pas' {DairyForm},
-  f_dairy_entry in 'f_dairy_entry.pas' {DairyEntryForm},
-  u_ForceClose in '..\..\misc\u_ForceClose.pas',
-  fr_base in '..\..\misc\fr_base.pas' {BaseFrame: TFrame},
-  u_ICrypt in '..\..\misc\u_ICrypt.pas',
-  u_IWindowHandler in '..\..\misc\u_IWindowHandler.pas';
+  f_dairy_entry in 'f_dairy_entry.pas' {DairyEntryForm};
 
 end.
 

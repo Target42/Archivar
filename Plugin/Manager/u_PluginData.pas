@@ -3,7 +3,7 @@ unit u_PluginData;
 interface
 
 uses
-  i_plugin, Data.SqlExpr, Vcl.Forms, u_ICrypt, u_IWindowHandler;
+  i_plugin, Data.SqlExpr, Vcl.Forms, u_ICrypt, u_IWindowHandler, System.JSON;
 
 type
   TPluginDataImpl = class(TInterfacedObject, IPluginData )
@@ -19,12 +19,13 @@ type
       Destructor Destroy; override;
 
       function AutoInc(name : string ) : integer;
+      function getConfigData( req : TJSONObject ) : TJSONObject;
   end;
 
 implementation
 
 uses
-  m_glob_client, m_crypt, m_WindowHandler;
+  m_glob_client, m_crypt, m_WindowHandler, u_json, System.SysUtils;
 
 { TPluginDataImpl }
 
@@ -47,6 +48,16 @@ end;
 function TPluginDataImpl.getApplication: TApplication;
 begin
   Result := Application;
+end;
+
+function TPluginDataImpl.getConfigData(req: TJSONObject): TJSONObject;
+var
+  res : TJSONObject;
+begin
+  Result := NIL;
+  res := GM.MiscIF.getConfigData(req);
+  if Assigned(res) then
+    Result := res.Clone as TJSONObject;
 end;
 
 function TPluginDataImpl.getCrypt: ICrypt;

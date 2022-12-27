@@ -1,6 +1,6 @@
 //
 // Erzeugt vom DataSnap-Proxy-Generator.
-// 11.12.2022 14:05:31
+// 26.12.2022 19:55:48
 //
 
 unit u_stub;
@@ -142,6 +142,7 @@ type
     FgetStorageListCommand: TDBXCommand;
     FpingCommand: TDBXCommand;
     FcheckFolderCommand: TDBXCommand;
+    FgetConfigDataCommand: TDBXCommand;
   public
     constructor Create(ADBXConnection: TDBXConnection); overload;
     constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
@@ -158,6 +159,7 @@ type
     function getStorageList: TJSONObject;
     function ping(value: Integer): Integer;
     function checkFolder(data: TJSONObject): TJSONObject;
+    function getConfigData(req: TJSONObject): TJSONObject;
   end;
 
   TdsProtocolClient = class(TDSAdminClient)
@@ -1229,6 +1231,20 @@ begin
   Result := TJSONObject(FcheckFolderCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
 end;
 
+function TdsMiscClient.getConfigData(req: TJSONObject): TJSONObject;
+begin
+  if FgetConfigDataCommand = nil then
+  begin
+    FgetConfigDataCommand := FDBXConnection.CreateCommand;
+    FgetConfigDataCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FgetConfigDataCommand.Text := 'TdsMisc.getConfigData';
+    FgetConfigDataCommand.Prepare;
+  end;
+  FgetConfigDataCommand.Parameters[0].Value.SetJSONValue(req, FInstanceOwner);
+  FgetConfigDataCommand.ExecuteUpdate;
+  Result := TJSONObject(FgetConfigDataCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
+end;
+
 constructor TdsMiscClient.Create(ADBXConnection: TDBXConnection);
 begin
   inherited Create(ADBXConnection);
@@ -1253,6 +1269,7 @@ begin
   FgetStorageListCommand.DisposeOf;
   FpingCommand.DisposeOf;
   FcheckFolderCommand.DisposeOf;
+  FgetConfigDataCommand.DisposeOf;
   inherited;
 end;
 

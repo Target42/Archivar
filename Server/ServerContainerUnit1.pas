@@ -163,7 +163,7 @@ uses
   ds_taskEdit, ds_template, ds_taskView, ds_textblock, ds_fileCache, ds_epub,
   ds_meeting, System.Hash, u_json, ds_sitzung, m_hell, Grijjy.sysUtils, u_ini,
   ds_updater, ds_stamm, ds_pki, ds_dairy, ds_storage, WinApi.WinSvc,
-  u_Konst, Winapi.Messages, m_http, m_del_files, system.DateUtils;
+  u_Konst, Winapi.Messages, m_http, m_del_files, system.DateUtils, m_mail;
 
 procedure TServerContainer1.dsAdminGetClass(
   DSServerClass: TDSServerClass; var PersistentClass: TPersistentClass);
@@ -807,6 +807,9 @@ begin
   HellMod     := THellMod.create(self );
   m_lock      := TCriticalSection.Create;
   m_sessions  := TThreadList<String>.create;
+  MailMod     := TMailMod.Create(self);
+
+  MailMod.loadSmtp;
 
   m_secret    := IniOptions.SecretName;
   m_timer     := NIL;

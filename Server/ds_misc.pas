@@ -61,13 +61,15 @@ type
     function ping( value : integer ) : integer;
 
     function checkFolder( data : TJSONObject ) : TJSONObject;
+
+    function getConfigData( req : TJSONObject ) : TJSONObject;
   end;
 
 implementation
 
 uses
   Grijjy.CloudLogging, m_lockMod,
-  u_berTypes, i_user, m_db, System.Variants;
+  u_berTypes, i_user, m_db, System.Variants, m_mail;
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
 {$R *.dfm}
@@ -187,6 +189,11 @@ end;
 procedure TdsMisc.DSServerModuleCreate(Sender: TObject);
 begin
   m_Session := TDSSessionManager.GetThreadSession;
+end;
+
+function TdsMisc.getConfigData(req: TJSONObject): TJSONObject;
+begin
+  Result := TMailMod.getMailConfig;
 end;
 
 function TdsMisc.getPublicKey(net : string; stamp: TDateTime): TStream;

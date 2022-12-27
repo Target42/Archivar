@@ -3,7 +3,7 @@ unit i_plugin;
 interface
 
 uses
-  Vcl.Forms, Data.SqlExpr, u_ICrypt, u_IWindowHandler;
+  Vcl.Forms, Data.SqlExpr, u_ICrypt, u_IWindowHandler, System.JSON;
 
 type
   IPluginData = interface;
@@ -40,6 +40,8 @@ type
     property Crypt          : ICrypt            read getCrypt;
 
     function AutoInc(name : string ) : integer;
+
+    function getConfigData( req : TJSONObject ) : TJSONObject;
   end;
 
 implementation

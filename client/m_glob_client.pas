@@ -143,6 +143,9 @@ type
 
     property Plugins    : TPluginManager  read m_plugins;
 
+    property MiscIF    : TdsMiscClient    read m_misc;
+
+
     procedure FillGremien( arr :TJSONArray );
 
     function  LockDocument(   id, typ : integer; subid : integer = 0 ) : TJSONObject;
@@ -150,7 +153,6 @@ type
     function  isLocked(       id, typ : integer; subid : integer = 0 ) : TJSONObject;
     function  LockedFlag(     id, typ : integer ) : boolean;
     procedure ShowLockInfo(   data    : TJSONObject);
-
 
 
     function  GremiumName( id : integer ) : string;
@@ -1172,6 +1174,7 @@ begin
 
   PostMessage( Application.MainFormHandle, msgDisconnected, 0, 0 );
   PostMessage( Application.MainFormHandle, msgREmovePlugins, 0, 0 );
+
 end;
 
 procedure TGM.SQLConnection1BeforeDisconnect(Sender: TObject);

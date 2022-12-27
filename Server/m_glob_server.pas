@@ -7,7 +7,6 @@ uses
 
 type
   TGM = class(TDataModule)
-    JvScheduledEvents1: TJvScheduledEvents;
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
     procedure JvScheduledEvents1Events0Execute(Sender: TJvEventCollectionItem;
@@ -29,7 +28,6 @@ type
 
     function getNameFromSession : string;
     function getIDFromSession : integer;
-
   end;
 
 var
@@ -74,7 +72,6 @@ end;
 procedure TGM.DataModuleCreate(Sender: TObject);
 begin
   LoadIni;
-  JvScheduledEvents1.Events[0].Start;
 end;
 
 procedure TGM.DataModuleDestroy(Sender: TObject);
@@ -156,7 +153,6 @@ begin
 
   Result := StrToIntDef( Session.GetData('ID'), 0);
 end;
-
 
 function TGM.getNameFromSession: string;
 var

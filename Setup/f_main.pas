@@ -112,6 +112,24 @@ type
     LabeledEdit9: TLabeledEdit;
     BitBtn4: TBitBtn;
     GRTyTab: TFDTable;
+    Mail: TJvWizardInteriorPage;
+    GroupBox6: TGroupBox;
+    LabeledEdit10: TLabeledEdit;
+    LabeledEdit11: TLabeledEdit;
+    LabeledEdit12: TLabeledEdit;
+    LabeledEdit13: TLabeledEdit;
+    BitBtn5: TBitBtn;
+    GroupBox7: TGroupBox;
+    LabeledEdit14: TLabeledEdit;
+    LabeledEdit15: TLabeledEdit;
+    LabeledEdit16: TLabeledEdit;
+    LabeledEdit17: TLabeledEdit;
+    BitBtn6: TBitBtn;
+    LabeledEdit18: TLabeledEdit;
+    GroupBox8: TGroupBox;
+    Label3: TLabel;
+    Label4: TLabel;
+    Button3: TButton;
     procedure SearchGDSEnterPage(Sender: TObject;
       const FromPage: TJvWizardCustomPage);
     procedure ServerInfoEnterPage(Sender: TObject;
@@ -143,6 +161,13 @@ type
       ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
     procedure BitBtn4Click(Sender: TObject);
     procedure IdServerIOHandlerSSLOpenSSL1GetPassword(var Password: string);
+    procedure MailEnterPage(Sender: TObject;
+      const FromPage: TJvWizardCustomPage);
+    procedure MailExitPage(Sender: TObject;
+      const FromPage: TJvWizardCustomPage);
+    procedure BitBtn5Click(Sender: TObject);
+    procedure BitBtn6Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
   private
     m_home  : string;
     m_ini   : TiniFile;
@@ -184,7 +209,7 @@ uses
   xsd_Betriebsrat, xsd_DataField, FireDAC.Phys.IBWrapper,
   System.Win.ComObj, System.Hash, u_ePub, xsd_TextBlock,
   System.Zip, Xml.XMLIntf, Xml.XMLDoc, System.JSON, u_json, ShellApi,
-  system.UITypes;
+  system.UITypes, m_mail;
 
 {$R *.dfm}
 
@@ -339,6 +364,40 @@ begin
 
   end else
     ShowMessage('HTTPS ist deaktiviert!');
+end;
+
+procedure TMainSetupForm.BitBtn5Click(Sender: TObject);
+begin
+  MailMod.IMapHost  := Trim(LabeledEdit10.Text);
+  MailMod.ImapPort  := StrToIntDef( LabeledEdit11.Text, 0);
+  MailMod.IMapUser  := Trim(LabeledEdit12.Text);
+  MailMod.IMapPWD   := Trim(LabeledEdit13.Text);
+
+  if MailMod.TestImap then begin
+    ShowMessage('Ok');
+    Label3.Font.Color := clGreen;
+  end else
+    Label3.Font.Color := clRed;
+end;
+
+procedure TMainSetupForm.BitBtn6Click(Sender: TObject);
+begin
+  if trim(LabeledEdit18.Text) = '' then begin
+    ShowMessage('Bitte eine gültige eMail-Adresse angeben.');
+    exit;
+  end;
+
+  MailMod.SmtpHost  := Trim(LabeledEdit14.Text);
+  MailMod.SmtpPort  := StrToIntDef( LabeledEdit15.Text, 0);
+  MailMod.SmtpUser  := Trim(LabeledEdit16.Text);
+  MailMod.SmtpPWD   := Trim(LabeledEdit17.Text);
+
+  if MailMod.TestSmtp( LabeledEdit18.Text) then begin
+    MailMod.saveSmtp;
+    ShowMessage('Bitte Posteingang prüfen!');
+    Label4.Font.Color := clGreen;
+  end else
+    Label4.Font.Color := clRed;
 end;
 
 procedure TMainSetupForm.btnCreateClick(Sender: TObject);
@@ -516,6 +575,11 @@ begin
   Import.VisibleButtons := [TJvWizardButtonKind.bkFinish];
 end;
 
+procedure TMainSetupForm.Button3Click(Sender: TObject);
+begin
+  MailMod.save;
+end;
+
 function TMainSetupForm.combineDrivePath(drv, path: string): string;
 begin
   Result := '';
@@ -536,7 +600,7 @@ begin
   m_ini   := TiniFile.Create(TPath.Combine(ExtractFileDir(Application.ExeName), 'ArchivServer.exe.ini'));
 
   m_berMap := TDictionary<string, integer>.create;
-//  JvWizard1.ActivePage := Sicherheit;
+//  JvWizard1.ActivePage := Mail;
 end;
 
 procedure TMainSetupForm.FormDestroy(Sender: TObject);
@@ -1078,6 +1142,30 @@ procedure TMainSetupForm.LinkLabel1LinkClick(Sender: TObject;
   const Link: string; LinkType: TSysLinkType);
 begin
   ShellExecute(Handle, 'open', PWideChar(link), '', '', SW_SHOWNORMAL);
+end;
+
+procedure TMainSetupForm.MailEnterPage(Sender: TObject;
+  const FromPage: TJvWizardCustomPage);
+begin
+  MailMod:= TMailMod.create(self);
+  MailMod.load;
+
+  LabeledEdit10.Text := MailMod.IMapHost;
+  LabeledEdit11.Text := IntToStr(MailMod.ImapPort);
+  LabeledEdit12.Text := MailMod.IMapUser;
+  LabeledEdit13.Text := MailMod.IMapPWD;
+
+  LabeledEdit14.Text := MailMod.SmtpHost;
+  LabeledEdit15.Text := IntToStr(MailMod.SmtpPort);
+  LabeledEdit16.Text := MailMod.SmtpUser;
+  LabeledEdit17.Text := MailMod.SmtpPwd;
+
+end;
+
+procedure TMainSetupForm.MailExitPage(Sender: TObject;
+  const FromPage: TJvWizardCustomPage);
+begin
+  FreeAndNil(MailMod);
 end;
 
 function TMainSetupForm.md5(fname: string): string;

@@ -1,7 +1,7 @@
 object MainSetupForm: TMainSetupForm
   Left = 0
   Top = 0
-  ActiveControl = WelcomePage
+  ActiveControl = LabeledEdit10
   Caption = 'Setup'
   ClientHeight = 591
   ClientWidth = 558
@@ -29,7 +29,7 @@ object MainSetupForm: TMainSetupForm
     Top = 0
     Width = 558
     Height = 572
-    ActivePage = WelcomePage
+    ActivePage = Mail
     ButtonBarHeight = 42
     ButtonStart.Caption = 'To &Start Page'
     ButtonStart.NumGlyphs = 1
@@ -807,6 +807,202 @@ object MainSetupForm: TMainSetupForm
         end
       end
     end
+    object Mail: TJvWizardInteriorPage
+      Header.Title.Color = clNone
+      Header.Title.Text = 'Mail-Server'
+      Header.Title.Anchors = [akLeft, akTop, akRight]
+      Header.Title.Font.Charset = DEFAULT_CHARSET
+      Header.Title.Font.Color = clWindowText
+      Header.Title.Font.Height = -16
+      Header.Title.Font.Name = 'Tahoma'
+      Header.Title.Font.Style = [fsBold]
+      Header.Subtitle.Color = clNone
+      Header.Subtitle.Text = 'Subtitle'
+      Header.Subtitle.Anchors = [akLeft, akTop, akRight, akBottom]
+      Header.Subtitle.Font.Charset = DEFAULT_CHARSET
+      Header.Subtitle.Font.Color = clWindowText
+      Header.Subtitle.Font.Height = -11
+      Header.Subtitle.Font.Name = 'Tahoma'
+      Header.Subtitle.Font.Style = []
+      OnEnterPage = MailEnterPage
+      OnExitPage = MailExitPage
+      object GroupBox6: TGroupBox
+        Left = 0
+        Top = 70
+        Width = 558
+        Height = 115
+        Align = alTop
+        Caption = 'Abteilungsbriefkasten (IMAP)'
+        TabOrder = 0
+        object LabeledEdit10: TLabeledEdit
+          Left = 16
+          Top = 80
+          Width = 121
+          Height = 21
+          EditLabel.Width = 22
+          EditLabel.Height = 13
+          EditLabel.Caption = 'Host'
+          TabOrder = 0
+        end
+        object LabeledEdit11: TLabeledEdit
+          Left = 143
+          Top = 80
+          Width = 34
+          Height = 21
+          EditLabel.Width = 20
+          EditLabel.Height = 13
+          EditLabel.Caption = 'Port'
+          TabOrder = 1
+        end
+        object LabeledEdit12: TLabeledEdit
+          Left = 16
+          Top = 42
+          Width = 225
+          Height = 21
+          EditLabel.Width = 48
+          EditLabel.Height = 13
+          EditLabel.Caption = 'Username'
+          TabOrder = 2
+        end
+        object LabeledEdit13: TLabeledEdit
+          Left = 247
+          Top = 42
+          Width = 290
+          Height = 21
+          EditLabel.Width = 44
+          EditLabel.Height = 13
+          EditLabel.Caption = 'Passwort'
+          PasswordChar = '*'
+          TabOrder = 3
+        end
+        object BitBtn5: TBitBtn
+          Left = 257
+          Top = 80
+          Width = 75
+          Height = 25
+          Caption = 'Test'
+          TabOrder = 4
+          OnClick = BitBtn5Click
+        end
+      end
+      object GroupBox7: TGroupBox
+        Left = 0
+        Top = 185
+        Width = 558
+        Height = 112
+        Align = alTop
+        Caption = 'SMTP (Server)'
+        TabOrder = 1
+        ExplicitTop = 209
+        object LabeledEdit14: TLabeledEdit
+          Left = 16
+          Top = 80
+          Width = 121
+          Height = 21
+          EditLabel.Width = 22
+          EditLabel.Height = 13
+          EditLabel.Caption = 'Host'
+          TabOrder = 0
+        end
+        object LabeledEdit15: TLabeledEdit
+          Left = 143
+          Top = 80
+          Width = 34
+          Height = 21
+          EditLabel.Width = 20
+          EditLabel.Height = 13
+          EditLabel.Caption = 'Port'
+          TabOrder = 1
+        end
+        object LabeledEdit16: TLabeledEdit
+          Left = 16
+          Top = 32
+          Width = 225
+          Height = 21
+          EditLabel.Width = 48
+          EditLabel.Height = 13
+          EditLabel.Caption = 'Username'
+          TabOrder = 2
+        end
+        object LabeledEdit17: TLabeledEdit
+          Left = 257
+          Top = 32
+          Width = 280
+          Height = 21
+          EditLabel.Width = 44
+          EditLabel.Height = 13
+          EditLabel.Caption = 'Passwort'
+          PasswordChar = '*'
+          TabOrder = 3
+        end
+        object BitBtn6: TBitBtn
+          Left = 462
+          Top = 81
+          Width = 75
+          Height = 25
+          Caption = 'Test'
+          TabOrder = 4
+          OnClick = BitBtn6Click
+        end
+        object LabeledEdit18: TLabeledEdit
+          Left = 183
+          Top = 80
+          Width = 250
+          Height = 21
+          EditLabel.Width = 77
+          EditLabel.Height = 13
+          EditLabel.Caption = 'Test-Empf'#228'nger'
+          TabOrder = 5
+        end
+      end
+      object GroupBox8: TGroupBox
+        Left = 0
+        Top = 297
+        Width = 558
+        Height = 64
+        Align = alTop
+        Caption = 'Aktionen'
+        TabOrder = 2
+        ExplicitTop = 281
+        object Label3: TLabel
+          Left = 30
+          Top = 32
+          Width = 50
+          Height = 13
+          Caption = 'IMAP-Test'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clRed
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          StyleElements = [seBorder]
+        end
+        object Label4: TLabel
+          Left = 86
+          Top = 32
+          Width = 51
+          Height = 13
+          Caption = 'SMTP-Test'
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clRed
+          Font.Height = -11
+          Font.Name = 'Tahoma'
+          Font.Style = []
+          ParentFont = False
+          StyleElements = [seClient, seBorder]
+        end
+        object Button3: TButton
+          Left = 160
+          Top = 24
+          Width = 145
+          Height = 25
+          Caption = 'Einstellungen speichern'
+          TabOrder = 0
+          OnClick = Button3Click
+        end
+      end
+    end
     object InitData: TJvWizardInteriorPage
       Header.Title.Color = clNone
       Header.Title.Text = 'Basisdaten'
@@ -1065,8 +1261,8 @@ object MainSetupForm: TMainSetupForm
       'DriverID=FB')
     LoginPrompt = False
     Transaction = IBTransaction1
-    Left = 406
-    Top = 132
+    Left = 350
+    Top = 28
   end
   object TETab: TFDQuery
     Connection = ArchivarConnection
@@ -1306,8 +1502,8 @@ object MainSetupForm: TMainSetupForm
     Bindings = <>
     DefaultPort = 0
     OnExecute = IdTCPServer1Execute
-    Left = 424
-    Top = 78
+    Left = 440
+    Top = 22
   end
   object IdHTTPServer1: TIdHTTPServer
     Bindings = <>

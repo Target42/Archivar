@@ -3,9 +3,7 @@ unit u_ICrypt;
 interface
 
 uses
-  System.SysUtils, System.Classes, uTPLb_Hash, uTPLb_Signatory,
-  uTPLb_CryptographicLibrary, uTPLb_Codec,
-  uTPLb_Asymetric, uTPLb_BaseNonVisualComponent;
+  System.SysUtils, System.Classes;
 
 type
     ICrypt = interface

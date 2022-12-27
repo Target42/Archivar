@@ -18,7 +18,13 @@
         <Projects Include="Guard\guard.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="Packages\base\Plugin_base.dproj">
+            <Dependencies/>
+        </Projects>
         <Projects Include="Packages\Dairy\Dairy.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Packages\imap\mail_imap.dproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -74,6 +80,15 @@
     <Target Name="guard:Make">
         <MSBuild Projects="Guard\guard.dproj" Targets="Make"/>
     </Target>
+    <Target Name="Plugin_base">
+        <MSBuild Projects="Packages\base\Plugin_base.dproj"/>
+    </Target>
+    <Target Name="Plugin_base:Clean">
+        <MSBuild Projects="Packages\base\Plugin_base.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Plugin_base:Make">
+        <MSBuild Projects="Packages\base\Plugin_base.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Dairy">
         <MSBuild Projects="Packages\Dairy\Dairy.dproj"/>
     </Target>
@@ -83,14 +98,23 @@
     <Target Name="Dairy:Make">
         <MSBuild Projects="Packages\Dairy\Dairy.dproj" Targets="Make"/>
     </Target>
+    <Target Name="mail_imap">
+        <MSBuild Projects="Packages\imap\mail_imap.dproj"/>
+    </Target>
+    <Target Name="mail_imap:Clean">
+        <MSBuild Projects="Packages\imap\mail_imap.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="mail_imap:Make">
+        <MSBuild Projects="Packages\imap\mail_imap.dproj" Targets="Make"/>
+    </Target>
     <Target Name="Build">
-        <CallTarget Targets="Setup;ArchivServer;Archivar;Launcher;guard;Dairy"/>
+        <CallTarget Targets="Setup;ArchivServer;Archivar;Launcher;guard;Plugin_base;Dairy;mail_imap"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="Setup:Clean;ArchivServer:Clean;Archivar:Clean;Launcher:Clean;guard:Clean;Dairy:Clean"/>
+        <CallTarget Targets="Setup:Clean;ArchivServer:Clean;Archivar:Clean;Launcher:Clean;guard:Clean;Plugin_base:Clean;Dairy:Clean;mail_imap:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="Setup:Make;ArchivServer:Make;Archivar:Make;Launcher:Make;guard:Make;Dairy:Make"/>
+        <CallTarget Targets="Setup:Make;ArchivServer:Make;Archivar:Make;Launcher:Make;guard:Make;Plugin_base:Make;Dairy:Make;mail_imap:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

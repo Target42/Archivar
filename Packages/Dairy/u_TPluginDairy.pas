@@ -40,8 +40,6 @@ begin
   Application := m_data.App;
   if not Assigned(DairyForm)then begin
     DairyForm := TDairyForm.create(m_data.App);
-//    DairyForm.Parent := m_data.App.MainForm;
-//    DairyForm.ParentApplication := m_data.App
   end else begin
     DairyForm.BringToFront;
   end;

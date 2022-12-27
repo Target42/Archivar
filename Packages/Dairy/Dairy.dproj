@@ -102,6 +102,7 @@
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <Debugger_HostApplication>D:\git\ber.git\Bin\client\Archivar.exe</Debugger_HostApplication>
+        <DCC_UnitSearchPath>D:\git\ber.git\Plugin;D:\git\ber.git\misc;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -123,8 +124,7 @@
         <DCCReference Include="DataSnapProviderClient.dcp"/>
         <DCCReference Include="vcldb.dcp"/>
         <DCCReference Include="LockBox3DR.dcp"/>
-        <DCCReference Include="..\..\Plugin\i_plugin.pas"/>
-        <DCCReference Include="..\..\Plugin\u_TPluginImpl.pas"/>
+        <DCCReference Include="Plugin_base.dcp"/>
         <DCCReference Include="u_TPluginDairy.pas"/>
         <DCCReference Include="f_dairy.pas">
             <Form>DairyForm</Form>
@@ -132,13 +132,6 @@
         <DCCReference Include="f_dairy_entry.pas">
             <Form>DairyEntryForm</Form>
         </DCCReference>
-        <DCCReference Include="..\..\misc\u_ForceClose.pas"/>
-        <DCCReference Include="..\..\misc\fr_base.pas">
-            <Form>BaseFrame</Form>
-            <DesignClass>TFrame</DesignClass>
-        </DCCReference>
-        <DCCReference Include="..\..\misc\u_ICrypt.pas"/>
-        <DCCReference Include="..\..\misc\u_IWindowHandler.pas"/>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
             <CfgParent>Base</CfgParent>

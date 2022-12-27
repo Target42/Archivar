@@ -55,7 +55,8 @@ uses
   u_serverTimer in 'u_serverTimer.pas',
   m_http in 'm_http.pas' {HttpMod: TDataModule},
   u_ini in 'u_ini.pas',
-  m_del_files in 'm_del_files.pas' {DeleteFilesMod: TDataModule};
+  m_del_files in 'm_del_files.pas' {DeleteFilesMod: TDataModule},
+  m_mail in '..\misc\m_mail.pas' {MailMod: TDataModule};
 
 var
   MyDummyBoolean  : Boolean;
