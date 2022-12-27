@@ -1,0 +1,45 @@
+package Plugin_base;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$IMPLICITBUILD ON}
+
+requires
+  rtl,
+  vcl,
+  DbxCommonDriver,
+  dbrtl,
+  dbexpress;
+
+contains
+  fr_base in '..\..\misc\fr_base.pas' {BaseFrame: TFrame},
+  u_ForceClose in '..\..\misc\u_ForceClose.pas',
+  u_ICrypt in '..\..\misc\u_ICrypt.pas',
+  u_IWindowHandler in '..\..\misc\u_IWindowHandler.pas',
+  i_plugin in '..\..\Plugin\i_plugin.pas',
+  u_TPluginImpl in '..\..\Plugin\u_TPluginImpl.pas';
+
+end.
