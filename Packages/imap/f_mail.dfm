@@ -19,7 +19,7 @@ object MailForm: TMailForm
   PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter
-    Left = 497
+    Left = 417
     Top = 0
     Height = 399
     ExplicitLeft = 576
@@ -29,7 +29,7 @@ object MailForm: TMailForm
   object GroupBox1: TGroupBox
     Left = 0
     Top = 0
-    Width = 497
+    Width = 417
     Height = 399
     Align = alLeft
     Caption = 'GroupBox1'
@@ -37,7 +37,7 @@ object MailForm: TMailForm
     object VST: TVirtualStringTree
       Left = 2
       Top = 56
-      Width = 493
+      Width = 413
       Height = 341
       Align = alClient
       Header.AutoSizeIndex = -1
@@ -47,30 +47,29 @@ object MailForm: TMailForm
       TabOrder = 0
       TreeOptions.MiscOptions = [toAcceptOLEDrop, toFullRepaintOnResize, toInitOnSave, toToggleOnDblClick, toWheelPanning, toVariableNodeHeight, toEditOnClick]
       TreeOptions.SelectionOptions = [toFullRowSelect]
+      OnDblClick = VSTDblClick
       OnDrawText = VSTDrawText
       OnGetText = VSTGetText
       OnPaintText = VSTPaintText
       OnInitNode = VSTInitNode
-      ExplicitLeft = -2
-      ExplicitTop = 55
       Columns = <>
     end
     object Panel1: TPanel
       Left = 2
       Top = 15
-      Width = 493
+      Width = 413
       Height = 41
       Align = alTop
       Caption = 'Panel1'
       ShowCaption = False
       TabOrder = 1
       DesignSize = (
-        493
+        413
         41)
       object ComboBox1: TComboBox
         Left = 8
         Top = 11
-        Width = 473
+        Width = 393
         Height = 21
         Anchors = [akLeft, akTop, akRight]
         TabOrder = 0
@@ -86,11 +85,82 @@ object MailForm: TMailForm
     Height = 19
     Panels = <>
   end
+  object GroupBox2: TGroupBox
+    Left = 420
+    Top = 0
+    Width = 600
+    Height = 399
+    Align = alClient
+    Caption = 'Mail'
+    TabOrder = 2
+    object Splitter2: TSplitter
+      Left = 2
+      Top = 297
+      Width = 596
+      Height = 3
+      Cursor = crVSplit
+      Align = alBottom
+      ExplicitTop = 15
+      ExplicitWidth = 285
+    end
+    object WebBrowser1: TWebBrowser
+      Left = 2
+      Top = 15
+      Width = 596
+      Height = 282
+      Align = alClient
+      TabOrder = 0
+      ExplicitLeft = 3
+      ExplicitTop = 12
+      ControlData = {
+        4C000000993D0000251D00000000000000000000000000000000000000000000
+        000000004C000000000000000000000001000000E0D057007335CF11AE690800
+        2B2E126208000000000000004C0000000114020000000000C000000000000046
+        8000000000000000000000000000000000000000000000000000000000000000
+        00000000000000000100000000000000000000000000000000000000}
+    end
+    object LB: TListBox
+      Left = 2
+      Top = 300
+      Width = 596
+      Height = 97
+      Align = alBottom
+      Columns = 2
+      ItemHeight = 13
+      TabOrder = 1
+      Visible = False
+    end
+  end
   object Timer1: TTimer
     Enabled = False
     Interval = 200
     OnTimer = Timer1Timer
     Left = 96
     Top = 152
+  end
+  object PageProducer1: TPageProducer
+    HTMLDoc.Strings = (
+      '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">'
+      '<html>'
+      '<head>'
+      '  <meta content="text/html; charset=ISO-8859-1"'
+      ' http-equiv="content-type">'
+      '  <title></title>'
+      '</head>'
+      '<body>'
+      '<small><#date></small><br>'
+      '<p>'
+      '<big><#sender></big><br>'
+      '</p>'
+      '<span style="font-weight: bold;"><#subject></span><br>'
+      'An : <#an><br>'
+      '<#cc><br>'
+      '<hr>'
+      '<#text>'
+      '</body>'
+      '</html>')
+    OnHTMLTag = PageProducer1HTMLTag
+    Left = 628
+    Top = 80
   end
 end

@@ -267,6 +267,5 @@ begin
   Application.CreateForm(TFileCacheMod, FileCacheMod);
   Application.CreateForm(TCryptMod, CryptMod);
   Application.CreateForm(TMainForm, MainForm);
-  Application.CreateForm(TPassWdform, PassWdform);
   Application.Run;
 end.

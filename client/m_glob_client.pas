@@ -145,7 +145,6 @@ type
 
     property MiscIF    : TdsMiscClient    read m_misc;
 
-
     procedure FillGremien( arr :TJSONArray );
 
     function  LockDocument(   id, typ : integer; subid : integer = 0 ) : TJSONObject;
@@ -153,7 +152,6 @@ type
     function  isLocked(       id, typ : integer; subid : integer = 0 ) : TJSONObject;
     function  LockedFlag(     id, typ : integer ) : boolean;
     procedure ShowLockInfo(   data    : TJSONObject);
-
 
     function  GremiumName( id : integer ) : string;
 

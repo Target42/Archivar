@@ -3,3 +3,4 @@
 *.identcache
 /guard.identcache
 /guard.dproj.local
+*.dproj.local

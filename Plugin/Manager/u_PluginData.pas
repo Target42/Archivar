@@ -25,7 +25,8 @@ type
 implementation
 
 uses
-  m_glob_client, m_crypt, m_WindowHandler, u_json, System.SysUtils;
+  m_glob_client, m_crypt, m_WindowHandler, u_json, System.SysUtils, m_html,
+  m_http;
 
 { TPluginDataImpl }
 
@@ -53,11 +54,22 @@ end;
 function TPluginDataImpl.getConfigData(req: TJSONObject): TJSONObject;
 var
   res : TJSONObject;
+  cmd : string;
 begin
   Result := NIL;
-  res := GM.MiscIF.getConfigData(req);
-  if Assigned(res) then
-    Result := res.Clone as TJSONObject;
+
+  cmd := JString( req, 'cmd' );
+
+  if SameText( cmd, 'htmlconfig') then begin
+    Result := TJSONObject.Create;
+    JReplace( Result, 'wwwroot', HttpMod.home);
+    JReplace( Result, 'port', HttpMod.Port);
+    req.Free;
+  end else begin
+    res := GM.MiscIF.getConfigData(req);
+    if Assigned(res) then
+      Result := res.Clone as TJSONObject;
+  end;
 end;
 
 function TPluginDataImpl.getCrypt: ICrypt;

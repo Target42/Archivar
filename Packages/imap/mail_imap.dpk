@@ -37,12 +37,15 @@ requires
   IndySystem,
   IndyProtocols,
   IndyCore,
-  VirtualTreesDR;
+  VirtualTreesDR,
+  vclie,
+  inet;
 
 contains
   u_TPluginImap in 'u_TPluginImap.pas',
   f_mail in 'f_mail.pas' {MailForm},
   m_mail in '..\..\misc\m_mail.pas' {MailMod: TDataModule},
-  u_json in '..\..\misc\u_json.pas';
+  u_json in '..\..\misc\u_json.pas',
+  u_mail_decoder in '..\..\misc\u_mail_decoder.pas';
 
 end.
