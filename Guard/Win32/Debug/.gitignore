@@ -1,2 +1,4 @@
 *.dcu
 /guard.exe
+/u_ArchivarGuard.dcu
+Win32
