@@ -9,21 +9,21 @@ package Plugin_base;
 {$EXTENDEDSYNTAX ON}
 {$IMPORTEDDATA ON}
 {$IOCHECKS ON}
-{$LOCALSYMBOLS ON}
+{$LOCALSYMBOLS OFF}
 {$LONGSTRINGS ON}
 {$OPENSTRINGS ON}
-{$OPTIMIZATION OFF}
+{$OPTIMIZATION ON}
 {$OVERFLOWCHECKS OFF}
 {$RANGECHECKS OFF}
-{$REFERENCEINFO ON}
+{$REFERENCEINFO OFF}
 {$SAFEDIVIDE OFF}
-{$STACKFRAMES ON}
+{$STACKFRAMES OFF}
 {$TYPEDADDRESS OFF}
 {$VARSTRINGCHECKS ON}
 {$WRITEABLECONST OFF}
 {$MINENUMSIZE 1}
 {$IMAGEBASE $400000}
-{$DEFINE DEBUG}
+{$DEFINE RELEASE}
 {$ENDIF IMPLICITBUILDING}
 {$IMPLICITBUILD ON}
 
@@ -35,11 +35,13 @@ requires
   dbexpress;
 
 contains
+//  SimpleShareMem,
+  u_TPluginImpl in '..\..\Plugin\u_TPluginImpl.pas',
   fr_base in '..\..\misc\fr_base.pas' {BaseFrame: TFrame},
   u_ForceClose in '..\..\misc\u_ForceClose.pas',
   u_ICrypt in '..\..\misc\u_ICrypt.pas',
   u_IWindowHandler in '..\..\misc\u_IWindowHandler.pas',
-  i_plugin in '..\..\Plugin\i_plugin.pas',
-  u_TPluginImpl in '..\..\Plugin\u_TPluginImpl.pas';
+  i_plugin in '..\..\Plugin\i_plugin.pas';
+
 
 end.

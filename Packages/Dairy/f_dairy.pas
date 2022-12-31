@@ -75,7 +75,7 @@ uses
 
 procedure TDairyForm.ac_addExecute(Sender: TObject);
 begin
-  Application.CreateForm(TDairyEntryForm, DairyEntryForm);
+  DairyEntryForm := TDairyEntryForm.Create(self);
   try
     if DairyEntryForm.ShowModal = mrOk then
       DiQry.Refresh;
@@ -87,7 +87,8 @@ end;
 procedure TDairyForm.ac_editExecute(Sender: TObject);
 begin
   if DiQry.IsEmpty then exit;
-  Application.CreateForm(TDairyEntryForm, DairyEntryForm);
+
+  DairyEntryForm := TDairyEntryForm.Create(self.Owner);
   try
     DairyEntryForm.Passwort := LabeledEdit1.Text;
     try

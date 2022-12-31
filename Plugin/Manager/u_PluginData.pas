@@ -26,7 +26,7 @@ implementation
 
 uses
   m_glob_client, m_crypt, m_WindowHandler, u_json, System.SysUtils, m_html,
-  m_http;
+  m_http, Vcl.Dialogs;
 
 { TPluginDataImpl }
 
@@ -53,22 +53,32 @@ end;
 
 function TPluginDataImpl.getConfigData(req: TJSONObject): TJSONObject;
 var
-  res : TJSONObject;
-  cmd : string;
+  res   : TJSONObject;
+  cmd   : string;
+
+  function convJson( obj : TJSONObject ) : TJSONObject;
+  begin
+    Result := JFromText(formatJSON(obj));
+    if Assigned(obj) then
+      obj.Free;
+
+  end;
 begin
   Result := NIL;
 
+  Req := convJson(req);
   cmd := JString( req, 'cmd' );
 
   if SameText( cmd, 'htmlconfig') then begin
     Result := TJSONObject.Create;
     JReplace( Result, 'wwwroot', HttpMod.home);
     JReplace( Result, 'port', HttpMod.Port);
+
     req.Free;
   end else begin
     res := GM.MiscIF.getConfigData(req);
     if Assigned(res) then
-      Result := res.Clone as TJSONObject;
+      Result := res.clone as TJSONObject;
   end;
 end;
 

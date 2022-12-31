@@ -72,6 +72,7 @@ end;
 procedure TPluginManager.loadAll;
 var
   plg : TPlugin;
+  i   : integer;
 begin
   CodeSite.EnterMethod(Self, 'loadAll');
   Screen.Cursor := crHourGlass;
@@ -79,6 +80,13 @@ begin
   for plg in m_list do begin
     plg.load(m_data);
   end;
+  for i := pred(m_list.Count) downto 0 do begin
+    if not m_list[i].Loaded then begin
+      m_list[i].Free;
+      m_list.Delete(i);
+    end;
+  end;
+
 
   m_list.Sort(
     TComparer<TPlugin>.Construct(
@@ -141,14 +149,16 @@ begin
       m_hnd := LoadPackage(FFileName);
       if m_hnd <> 0 then begin
         @p := GetProcAddress(m_hnd, PChar('getPIF'));
+        if Assigned(p) then begin
         m_pif := p;
-        m_pif.config(data);
+          m_pif.config(data);
 
-        FPluginName := m_pif.PluginName;
+          FPluginName := m_pif.PluginName;
 
-        FLoaded := true;
-        Result  := true;
-        CodeSite.Send(FPluginName);
+          FLoaded := true;
+          Result  := true;
+          CodeSite.Send(FPluginName);
+        end;
       end;
     except
 

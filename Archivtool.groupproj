@@ -19,13 +19,13 @@
             <Dependencies/>
         </Projects>
         <Projects Include="Packages\base\Plugin_base.dproj">
-            <Dependencies/>
+            <Dependencies>client\Archivar.dproj</Dependencies>
         </Projects>
         <Projects Include="Packages\Dairy\Dairy.dproj">
-            <Dependencies/>
+            <Dependencies>client\Archivar.dproj;Packages\base\Plugin_base.dproj</Dependencies>
         </Projects>
         <Projects Include="Packages\imap\mail_imap.dproj">
-            <Dependencies/>
+            <Dependencies>client\Archivar.dproj;Packages\base\Plugin_base.dproj</Dependencies>
         </Projects>
     </ItemGroup>
     <ProjectExtensions>
@@ -80,31 +80,31 @@
     <Target Name="guard:Make">
         <MSBuild Projects="Guard\guard.dproj" Targets="Make"/>
     </Target>
-    <Target Name="Plugin_base">
+    <Target Name="Plugin_base" DependsOnTargets="Archivar">
         <MSBuild Projects="Packages\base\Plugin_base.dproj"/>
     </Target>
-    <Target Name="Plugin_base:Clean">
+    <Target Name="Plugin_base:Clean" DependsOnTargets="Archivar:Clean">
         <MSBuild Projects="Packages\base\Plugin_base.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="Plugin_base:Make">
+    <Target Name="Plugin_base:Make" DependsOnTargets="Archivar:Make">
         <MSBuild Projects="Packages\base\Plugin_base.dproj" Targets="Make"/>
     </Target>
-    <Target Name="Dairy">
+    <Target Name="Dairy" DependsOnTargets="Archivar;Plugin_base">
         <MSBuild Projects="Packages\Dairy\Dairy.dproj"/>
     </Target>
-    <Target Name="Dairy:Clean">
+    <Target Name="Dairy:Clean" DependsOnTargets="Archivar:Clean;Plugin_base:Clean">
         <MSBuild Projects="Packages\Dairy\Dairy.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="Dairy:Make">
+    <Target Name="Dairy:Make" DependsOnTargets="Archivar:Make;Plugin_base:Make">
         <MSBuild Projects="Packages\Dairy\Dairy.dproj" Targets="Make"/>
     </Target>
-    <Target Name="mail_imap">
+    <Target Name="mail_imap" DependsOnTargets="Archivar;Plugin_base">
         <MSBuild Projects="Packages\imap\mail_imap.dproj"/>
     </Target>
-    <Target Name="mail_imap:Clean">
+    <Target Name="mail_imap:Clean" DependsOnTargets="Archivar:Clean;Plugin_base:Clean">
         <MSBuild Projects="Packages\imap\mail_imap.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="mail_imap:Make">
+    <Target Name="mail_imap:Make" DependsOnTargets="Archivar:Make;Plugin_base:Make">
         <MSBuild Projects="Packages\imap\mail_imap.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">

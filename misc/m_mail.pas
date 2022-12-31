@@ -106,21 +106,30 @@ var
 begin
   if not Assigned(data) then exit;
 
-  obj := JObject( data, 'imap');
-  if Assigned(obj) then begin
-    IdIMAP41.Host     := JString( obj, 'host');
-    IdIMAP41.Port     := JInt(    obj, 'port');
-    IdIMAP41.Username := JString( obj, 'user');
-    IdIMAP41.Password := JString( obj, 'pwd' );
+  try
+    obj := JObject( data, 'imap');
+    if Assigned(obj) then begin
+      IdIMAP41.Host     := JString( obj, 'host');
+      IdIMAP41.Port     := JInt(    obj, 'port');
+      IdIMAP41.Username := JString( obj, 'user');
+      IdIMAP41.Password := JString( obj, 'pwd' );
+    end;
+  except
+
   end;
 
-  obj := JObject( data, 'smtp');
-  if Assigned(obj) then begin
-    IdSMTP1.Host     := JString( obj, 'host');
-    IdSMTP1.Port     := JInt(    obj, 'port');
-    IdSMTP1.Username := JString( obj, 'user');
-    IdSMTP1.Password := JString( obj, 'pwd' );
+  try
+    obj := JObject( data, 'smtp');
+    if Assigned(obj) then begin
+      IdSMTP1.Host     := JString( obj, 'host');
+      IdSMTP1.Port     := JInt(    obj, 'port');
+      IdSMTP1.Username := JString( obj, 'user');
+      IdSMTP1.Password := JString( obj, 'pwd' );
+    end;
+  except
+
   end;
+
 end;
 
 function TMailMod.connect: boolean;

@@ -55,9 +55,9 @@ begin
     DITab.Open;
 
   if m_id = -1 then begin
-    m_id :=  PluginDairy.Data.autoInc('gen_di_id');
+//    m_id :=  PluginDairy.Data.autoInc('gen_di_id');
     DITab.Append;
-    DITab.FieldByName('DI_ID').asInteger := m_id;
+//    DITab.FieldByName('DI_ID').asInteger4 := m_id;
     DITab.FieldByName('PE_ID').asInteger := PluginDairy.Data.UserID;
     DITab.FieldByName('DI_STAMP').AsDateTime  := now;
   end else

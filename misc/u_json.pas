@@ -269,8 +269,9 @@ begin
   if not Assigned(obj) then
     exit;
   try
-    Result := obj.Values[ name ] as TJSONObject;
-  finally
+    if obj.Values[ name ] is TJSONObject then //
+      Result := TJSONObject(obj.Values[ name ]);
+  except
 
   end;
 end;

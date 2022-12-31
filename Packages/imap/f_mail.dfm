@@ -133,34 +133,9 @@ object MailForm: TMailForm
   end
   object Timer1: TTimer
     Enabled = False
-    Interval = 200
+    Interval = 50
     OnTimer = Timer1Timer
     Left = 96
     Top = 152
-  end
-  object PageProducer1: TPageProducer
-    HTMLDoc.Strings = (
-      '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">'
-      '<html>'
-      '<head>'
-      '  <meta content="text/html; charset=ISO-8859-1"'
-      ' http-equiv="content-type">'
-      '  <title></title>'
-      '</head>'
-      '<body>'
-      '<small><#date></small><br>'
-      '<p>'
-      '<big><#sender></big><br>'
-      '</p>'
-      '<span style="font-weight: bold;"><#subject></span><br>'
-      'An : <#an><br>'
-      '<#cc><br>'
-      '<hr>'
-      '<#text>'
-      '</body>'
-      '</html>')
-    OnHTMLTag = PageProducer1HTMLTag
-    Left = 628
-    Top = 80
   end
 end

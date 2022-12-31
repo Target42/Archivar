@@ -21,7 +21,7 @@ var
 implementation
 
 uses
-  i_plugin, f_mail, Vcl.Forms;
+  i_plugin, Vcl.Forms, f_mail;
 
 { TPluginImap }
 function getPIF : IPlugin;
@@ -32,10 +32,6 @@ end;
 procedure TPluginImap.Execute;
 begin
   inherited;
-
-  m_oldApp := Application;
-
-  Application := m_data.App;
   if not Assigned(MailForm)then begin
     MailForm := TMailForm.create(m_data.App);
   end else begin
@@ -43,7 +39,6 @@ begin
   end;
   MailForm.Show;
 
-  Application := m_oldApp;
 end;
 
 function TPluginImap.getPluginName: string;

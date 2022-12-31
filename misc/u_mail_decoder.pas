@@ -217,6 +217,7 @@ end;
 function TMailDecoder.SaveToFolder(dir: string): boolean;
 begin
   Result := ForceDirectories(dir);
+
   if Result then begin
     replaceKeys(dir);
     saveFiles( dir );
