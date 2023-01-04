@@ -3,7 +3,7 @@ unit u_TPluginImap;
 interface
 
 uses
-  u_TPluginImpl;
+  i_plugin, u_TPluginImpl;
 
 
 type
@@ -12,21 +12,42 @@ type
     protected
       function getPluginName : string; override;
     public
-    procedure Execute; override;
+      procedure Execute; override;
+
   end;
 
+function getPIF : IPlugin; export;
+procedure release; export;
+
 var
-  PluginImap : TPluginImap;
+  PluginImap : IPlugin = NIL;
+
+exports
+  getPIF,
+  release;
 
 implementation
 
 uses
-  i_plugin, Vcl.Forms, f_mail;
+  Vcl.Forms, f_mail;
 
 { TPluginImap }
 function getPIF : IPlugin;
 begin
-  Result := PluginImap;
+  try
+    PluginImap := TPluginImap.create;
+    Result := PluginImap;
+  except
+    Result := NIL;
+  end;
+end;
+
+procedure release;
+begin
+  if Assigned(PluginImap) then begin
+    PluginImap.restoreOldApplication;
+  end;
+  PluginImap := NIL;
 end;
 
 procedure TPluginImap.Execute;
@@ -46,12 +67,5 @@ begin
   Result := 'Mail(IMAP)';
 end;
 
-exports
-  getPIF;
-
-initialization
-  PluginImap := TPluginImap.create;
-finalization
-  PluginImap.Free;
 end.
 

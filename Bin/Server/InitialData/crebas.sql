@@ -1,7 +1,7 @@
 /* ============================================================ */
 /*   Database name:  MODEL_2                                    */
 /*   DBMS name:      InterBase                                  */
-/*   Created on:     16.12.2022  17:10                          */
+/*   Created on:     02.01.2023  13:18                          */
 /* ============================================================ */
 
 create generator gen_be_id;
@@ -31,6 +31,7 @@ create generator gen_tg_id;
 create generator gen_tn_id;
 create generator gen_ty_id;
 create generator gen_ep_id;
+create generator gen_pl_id;
 /* ============================================================ */
 /*   Table: FD_DELETE                                           */
 /* ============================================================ */
@@ -181,6 +182,23 @@ create table FH_FILE_HIST
     FI_SIZE                         BIGINT                         ,
     constraint PK_FH_FILE_HIST primary key (FI_ID, FI_VERSION)
 );
+
+/* ============================================================ */
+/*   Table: PL_PLUGIN                                           */
+/* ============================================================ */
+create table PL_PLUGIN
+(
+    PL_ID                           INTEGER                not null,
+    PL_NAME                         VARCHAR(150)                   ,
+    PL_DATA                         BLOB                           ,
+    PL_MD5                          VARCHAR(32)                    ,
+    constraint PK_PL_PLUGIN primary key (PL_ID)
+);
+
+/* ============================================================ */
+/*   Index: PL_PLUGIN_NAME                                      */
+/* ============================================================ */
+create unique ASC index PL_PLUGIN_NAME on PL_PLUGIN (PL_NAME);
 
 /* ============================================================ */
 /*   Table: MA_MITAREITER                                       */

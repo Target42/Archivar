@@ -1,4 +1,4 @@
-unit m_crypt;
+﻿unit m_crypt;
 
 interface
 
@@ -44,11 +44,14 @@ type
     function load(part: TKeyStoragePart): boolean;
     function loadToStream(st: TStream; inSt: TStream): boolean;
     function saveToStream(st: TStream; outSt: TStream): boolean;
+    function GetpPassword: pchar;
+    procedure SetpPassword(const Value: pchar);
 
   public
 
-    property BinaryKeys: boolean read getBinaryKeys write setBinaryKeys;
-    property Password: string read getPassword write setPassword;
+    property BinaryKeys: boolean    read getBinaryKeys      write setBinaryKeys;
+    property Password: string       read getPassword        write setPassword;
+    property pPassword: pchar read GetpPassword write SetpPassword;
     property PrivateKeyFile: string read getPrivateKeyFile
       write setPrivateKeyFile;
 
@@ -107,6 +110,7 @@ begin
   except
     REsult := false;
   end;
+  AES.Burn;
 end;
 
 function TCryptMod.Decrypt(crypt: string; var plain: string): boolean;
@@ -118,6 +122,7 @@ begin
   except
     Result := false;
   end;
+  AES.Burn;
 end;
 
 
@@ -130,6 +135,7 @@ begin
   except
     REsult := false;
   end;
+  AES.Password  := '';
 end;
 
 function TCryptMod.Encrypt(plain: string; var crypt: string): boolean;
@@ -141,6 +147,7 @@ begin
   except
     Result := false;
   end;
+  AES.Password  := '';
 end;
 
 function TCryptMod.generateKeys(hourglass : boolean ): boolean;
@@ -162,6 +169,11 @@ end;
 function TCryptMod.getPassword: string;
 begin
   Result := FPassword;
+end;
+
+function TCryptMod.GetpPassword: pchar;
+begin
+  Result := pChar(FPassword);
 end;
 
 function TCryptMod.getPrivateKeyFile: string;
@@ -228,6 +240,7 @@ begin
       end;
       mem.Position := 0;
       plain.Free;
+      AES.Password  := '';
     end;
 
     if not error then begin
@@ -271,7 +284,7 @@ begin
     end;
   end;
   if not Result then begin
-    ShowMessage( 'Fehler beim Entschl�sseln!' );
+    ShowMessage( 'Fehler beim Entschlüsseln');
     FPassword := '';
   end;
 end;
@@ -340,6 +353,7 @@ begin
       mem.Position := 0;
 
       crypt.Free;
+      AES.Password  := '';
     end;
 
     if not FBinaryKeys then begin
@@ -397,6 +411,11 @@ end;
 procedure TCryptMod.setPassword(value: string);
 begin
   FPassword := value;
+end;
+
+procedure TCryptMod.SetpPassword(const Value: pchar);
+begin
+  FPassword := String( value );
 end;
 
 procedure TCryptMod.setPrivateKeyFile(value: string);

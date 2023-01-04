@@ -13,14 +13,16 @@ type
       m_data : IPluginData;
 
       function getPluginName : string; virtual;
+      function getData : IPluginData;
     public
       constructor create;
       Destructor Destroy; override;
 
       property Data : IPluginData read m_data;
 
-      procedure config( data : IPluginData );
-      procedure release;
+      procedure restoreOldApplication;
+
+      procedure config( data : IPluginData ); virtual;
 
       procedure Execute; virtual;
 
@@ -44,7 +46,6 @@ end;
 
 destructor TPluginImpl.Destroy;
 begin
-  Application := m_oldApp;
   inherited;
 end;
 
@@ -53,15 +54,24 @@ begin
 
 end;
 
+function TPluginImpl.getData: IPluginData;
+begin
+  Result := m_data;
+end;
+
 function TPluginImpl.getPluginName: string;
 begin
   Result := 'Namen ändern!';
 end;
 
 
-procedure TPluginImpl.release;
+procedure TPluginImpl.restoreOldApplication;
 begin
-end;
+  if Assigned(m_oldApp) then
+    Application := m_oldApp;
 
+  m_oldApp := NIL;
+  m_data := NIL;
+end;
 
 end.

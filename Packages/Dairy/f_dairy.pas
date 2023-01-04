@@ -88,7 +88,8 @@ procedure TDairyForm.ac_editExecute(Sender: TObject);
 begin
   if DiQry.IsEmpty then exit;
 
-  DairyEntryForm := TDairyEntryForm.Create(self.Owner);
+  DairyEntryForm := TDairyEntryForm.Create(self);
+//  DairyEntryForm.Parent := self;
   try
     DairyEntryForm.Passwort := LabeledEdit1.Text;
     try
@@ -113,7 +114,8 @@ begin
   RE.Lines.Clear;
 
   if SameText(DiQryDI_CRYPTED.AsString, 't') then begin
-    m_crypt.Password := LabeledEdit1.Text;
+    //m_crypt.Password := LabeledEdit1.Text;
+    m_crypt.pPassword := PChar(LabeledEdit1.Text);
     crypt := TMemoryStream.Create;
 
     try

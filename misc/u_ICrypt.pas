@@ -16,11 +16,15 @@ type
     function  getPublicKeyFile: string;
     procedure setBinaryKeys(value: boolean);
     function  getBinaryKeys: boolean;
+    function GetpPassword: pchar;
+    procedure SetpPassword(const Value: pchar);
+
 
     property BinaryKeys: boolean    read getBinaryKeys      write setBinaryKeys;
     property PublicKeyFile: string  read getPublicKeyFile   write setPublicKeyFile;
     property PrivateKeyFile: string read getPrivateKeyFile  write setPrivateKeyFile;
     property Password: string       read getPassword        write setPassword;
+    property pPassword: pchar       read GetpPassword       write SetpPassword;
 
     function generateKeys(hourglass: boolean): boolean;
     function saveKeys: boolean;

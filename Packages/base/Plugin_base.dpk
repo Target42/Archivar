@@ -35,7 +35,7 @@ requires
   dbexpress;
 
 contains
-//  SimpleShareMem,
+  ShareMem,
   u_TPluginImpl in '..\..\Plugin\u_TPluginImpl.pas',
   fr_base in '..\..\misc\fr_base.pas' {BaseFrame: TFrame},
   u_ForceClose in '..\..\misc\u_ForceClose.pas',

@@ -230,7 +230,6 @@ type
   private
     m_noStatChange : boolean;
 
-    procedure ApplicationSetMenu( flag : boolean );
     procedure setPanel( id : integer ; text : string );
     procedure loadLogo;
 
@@ -241,12 +240,9 @@ type
 
     procedure UpdateUserView( sender : TObject );
     procedure ParseCmdLine;
-
-    procedure PluginsAdd;
-    procedure PluginsRemove;
-    procedure PluginExec( Sender : TObject );
   public
     procedure AdminMsg( text : string );
+    procedure ApplicationSetMenu( flag : boolean );
   end;
 
 var
@@ -263,7 +259,8 @@ uses
   f_meeting_new, f_meeting_select, f_meeting_proto, f_login,
   system.UITypes, f_protocol_sec, u_onlineUser, f_doMeeting, f_task_type,
   f_flieCacheForm, f_keys, f_textblock_export, f_textblock_import,
-  f_storages, f_protokoll_new, f_admin, f_task_delete, i_plugin, u_pluginManager;
+  f_storages, f_protokoll_new, f_admin, f_task_delete, i_plugin, u_pluginManager,
+  m_crypt;
 
 {$R *.dfm}
 
@@ -796,8 +793,6 @@ begin
     msgRetryLogin     : ac_prg_connect.Execute;
     msgShowFileCache  : ac_ad_filecache.Execute;
     msgNeedKeys       : ac_to_keys.Execute;
-    msgAddPlugins     : PluginsAdd;
-    msgREmovePlugins  : PluginsRemove;
     else
       Handled := false;
   end;
@@ -845,6 +840,12 @@ begin
   PageControl2.Visible    := flag;
   Splitter2.Visible       := flag;
   Splitter1.Visible       := flag;
+
+  if not flag then begin
+    Admin1.Visible := false;
+    Admin1.Enabled := false;
+  end;
+
 end;
 
 procedure TMainForm.doMeeting(id: integer);
@@ -895,6 +896,7 @@ begin
 
   ApplicationSetMenu( false );
   ParseCmdLine;
+  GM.Plugins.MenuRoot := Plugins1;
 end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
@@ -948,36 +950,6 @@ begin
 end;
 
 procedure TMainForm.ParseCmdLine;
-begin
-
-end;
-
-procedure TMainForm.PluginExec(Sender: TObject);
-begin
-  if not ( Sender is TMenuItem) then exit;
-
-  GM.Plugins.Items[( Sender as TMenuItem).Tag].execute;
-end;
-
-procedure TMainForm.PluginsAdd;
-var
-  plg : TPlugin;
-  i   : integer;
-  en  : TMenuItem;
-begin
-  for i := 0 to pred(GM.Plugins.Items.Count) do begin
-    plg := GM.Plugins.Items[i];
-    en  := TMenuItem.Create(Plugins1);
-
-    Plugins1.Add(en);
-
-    en.Caption  := plg.PluginName;
-    en.Tag      := i;
-    en.OnClick := PluginExec;
-  end;
-end;
-
-procedure TMainForm.PluginsRemove;
 begin
 
 end;

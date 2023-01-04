@@ -3,7 +3,7 @@ unit u_TPluginDairy;
 interface
 
 uses
-  u_TPluginImpl;
+  i_plugin, u_TPluginImpl;
 
 type
   TPluginDairy = class(TPluginImpl)
@@ -15,19 +15,36 @@ type
   end;
 
 var
-  PluginDairy : TPluginDairy;
+  PluginDairy : IPlugin;
 
 implementation
 
 uses
-  i_plugin, Vcl.Forms, f_dairy;
+  Vcl.Forms, f_dairy;
+
 
 { TPluginDairy }
 
 function getPIF : IPlugin;
 begin
-  Result := PluginDairy;
+  try
+    PluginDairy := TPluginDairy.create;
+    Result := PluginDairy;
+  except
+    Result := NIL;
+  end;
 end;
+
+procedure release;
+begin
+  if Assigned(PluginDairy) then begin
+    PluginDairy.restoreOldApplication;
+    //PluginDairy.Free;
+  end;
+  PluginDairy := NIL;
+
+end;
+
 
 function TPluginDairy.getPluginName: string;
 begin
@@ -45,11 +62,10 @@ begin
 end;
 
 exports
-  getPIF;
+  getPIF,
+  release;
 
 initialization
-  PluginDairy := TPluginDairy.create;
-finalization
-  PluginDairy.Free;
+  PluginDairy := NIL;
 end.
 

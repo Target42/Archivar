@@ -39,10 +39,6 @@ const
   msgShowFileCache  = WMUSER + 17;
   msgNeedKeys       = WMUSER + 18;
   msgUpdateTaskList = WMUSER + 19;
-
-  msgAddPlugins     = WMUSER + 20;
-  msgREmovePlugins  = WMUSER + 21;
-
 type
   TGM = class(TDataModule)
     SQLConnection1: TSQLConnection;
@@ -218,8 +214,8 @@ uses
   System.UITypes, system.IOUtils, FireDAC.Stan.Storagebin,
   System.Win.ComObj, m_WindowHandler, m_BookMarkHandler, IdHashMessageDigest,
   Vcl.Graphics, u_PersonenListeImpl, m_cache, f_login, u_kategorie,
-  u_onlineUser, m_http, f_doMeeting, u_eventHandler, u_Konst, IdStack, m_fileCache, m_crypt,
-  CodeSiteLogging, f_main, u_ini;
+  u_onlineUser, m_http, f_doMeeting, u_eventHandler, u_Konst, IdStack, m_fileCache,
+  m_crypt, CodeSiteLogging, f_main, u_ini;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -616,8 +612,6 @@ begin
   m_LoginFailCount := 0;
 
   setProxy;
-
-  m_plugins.scan(TPath.Combine(ExtractFilePath(paramStr(0)), 'Plugins'));
 end;
 
 procedure TGM.DataModuleDestroy(Sender: TObject);
@@ -1160,19 +1154,19 @@ begin
 
   m_plugins.loadAll;
 
-  PostMessage( Application.MainFormHandle, msgAddPlugins, 0, 0 );
 end;
 
 procedure TGM.SQLConnection1AfterDisconnect(Sender: TObject);
 begin
   PingTimer.Enabled := false;
 
+  (Application.MainForm as TMainForm).ApplicationSetMenu(false );
+//  PostMessage( Application.MainFormHandle, msgDisconnected, 0, 0 );
+
+  m_plugins.unloadAll;
+
   if Assigned(LoginForm) then
     LoginForm.Password := '';
-
-  PostMessage( Application.MainFormHandle, msgDisconnected, 0, 0 );
-  PostMessage( Application.MainFormHandle, msgREmovePlugins, 0, 0 );
-
 end;
 
 procedure TGM.SQLConnection1BeforeDisconnect(Sender: TObject);

@@ -3,7 +3,7 @@ program Archivar;
 {$R *.dres}
 
 uses
-//  SimpleShareMem,
+  ShareMem,
   Vcl.Forms,
   {$ifdef RELEASE}
   JclAppInst,

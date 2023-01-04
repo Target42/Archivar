@@ -3,7 +3,7 @@ unit u_pluginManager;
 interface
 
 uses
-  i_plugin, System.Generics.Collections;
+  i_plugin, System.Generics.Collections, Vcl.Menus;
 
 type
   TPlugin = class;
@@ -11,33 +11,47 @@ type
   private
     m_data : IPluginData;
     m_list : TList<TPlugin>;
+    FMenuRoot: TMenuItem;
+    procedure PluginExec(Sender: TObject);
+    procedure clearPlugins;
   public
     constructor create;
     Destructor Destroy; override;
 
+    property MenuRoot: TMenuItem read FMenuRoot write FMenuRoot;
     property Items : TList<TPlugin> read m_list;
 
     procedure scan( path : string );
     procedure loadAll;
+    procedure unloadAll;
   end;
 
   TPlugin = class
     private
+      type
+        Releasefunc = procedure; stdcall;
+    private
       m_pif       : IPlugin;
       m_hnd       : HModule;
+      m_release   : Releasefunc;
+
       FFileName   : string;
       FPluginName : string;
       FLoaded     : boolean;
+      FMenuEntry: TMenuItem;
+
     public
 
     constructor create;
     Destructor Destroy; override;
 
+    property MenuEntry: TMenuItem read FMenuEntry write FMenuEntry;
     property FileName: string read FFileName write FFileName;
     property PluginName: string read FPluginName write FPluginName;
     property Loaded : boolean read FLoaded;
 
     function load( data : IPluginData ) : boolean;
+    procedure unload;
 
     procedure execute;
   end;
@@ -50,6 +64,16 @@ uses
   System.UITypes, System.Generics.Defaults, CodeSiteLogging, u_PluginData;
 
 { TPluginManager }
+
+procedure TPluginManager.clearPlugins;
+var
+  i   : integer;
+begin
+  for I := 0 to pred(m_list.Count) do begin
+    m_list[i].Free;
+  end;
+  m_list.Clear;
+end;
 
 constructor TPluginManager.create;
 begin
@@ -73,9 +97,11 @@ procedure TPluginManager.loadAll;
 var
   plg : TPlugin;
   i   : integer;
+  item: TMenuItem;
 begin
   CodeSite.EnterMethod(Self, 'loadAll');
   Screen.Cursor := crHourGlass;
+  scan( TPath.Combine(ExtractFilePath(paramStr(0)), 'Plugins') );
 
   for plg in m_list do begin
     plg.load(m_data);
@@ -87,7 +113,6 @@ begin
     end;
   end;
 
-
   m_list.Sort(
     TComparer<TPlugin>.Construct(
     function(const Left, Right: TPlugin): Integer
@@ -97,8 +122,30 @@ begin
     )
   );
 
+  // mit dem Menü verbinden
+  for i := 0 to pred(m_list.Count) do begin
+    plg := m_list[i];
+
+    item  := TMenuItem.Create(FMenuRoot);
+    FMenuRoot.Add(item);
+    plg.MenuEntry := item;
+
+    item.Caption  := plg.PluginName;
+    item.Tag      := i;
+    item.OnClick := PluginExec;
+  end;
+
+
   Screen.Cursor := crDefault;
   CodeSite.ExitMethod(Self, 'loadAll');
+end;
+
+procedure TPluginManager.PluginExec(Sender: TObject);
+begin
+  if not ( Sender is TMenuItem) then exit;
+
+  m_list.Items[( Sender as TMenuItem).Tag].execute;
+
 end;
 
 procedure TPluginManager.scan(path: string);
@@ -107,6 +154,8 @@ var
   i   : integer;
   plg : TPlugin;
 begin
+  CodeSite.EnterMethod(Self, 'scan');
+  clearPlugins;
   arr := TDirectory.GetFiles(path, '*.bpl');
 
   for i := low(arr) to High(arr) do begin
@@ -115,6 +164,24 @@ begin
     m_list.Add(plg);
   end;
   SetLength(arr, 0);
+  CodeSite.ExitMethod(Self, 'scan');
+end;
+
+procedure TPluginManager.unloadAll;
+var
+  plg : TPlugin;
+  i   : integer;
+begin
+  for i :=0 to pred(m_list.Count) do begin
+    plg := m_list[i];
+    if Assigned(plg.MenuEntry) then begin
+      FMenuRoot.Remove(plg.MenuEntry);
+      plg.MenuEntry.Free;
+      plg.unload;
+    end;
+    plg.Free;
+  end;
+  m_list.Clear;
 end;
 
 { TPlugin }
@@ -124,11 +191,11 @@ begin
   m_pif   := NIL;
   m_hnd   := 0;
   FLoaded := false;
+  FMenuEntry := NIL;
 end;
 
 destructor TPlugin.Destroy;
 begin
-
   inherited;
 end;
 
@@ -141,6 +208,7 @@ end;
 function TPlugin.load(data : IPluginData): boolean;
 var
   p  : function : IPlugin; stdcall;
+  r  : procedure; stdcall;
 begin
   CodeSite.EnterMethod(Self, 'load');
   Result := false;
@@ -159,12 +227,31 @@ begin
           Result  := true;
           CodeSite.Send(FPluginName);
         end;
+        @r := GetProcAddress(m_hnd, PChar('release'));
+        if Assigned(r) then begin
+          m_release := r;
+        end else
+          Result := false;
       end;
     except
 
     end;
   end;
   CodeSite.ExitMethod(Self, 'load');
+end;
+
+procedure TPlugin.unload;
+begin
+  FMenuEntry := NIL;
+  FPluginName := '';
+
+  m_pif := NIL;
+  if Assigned(m_release) then
+    m_release;
+
+  if m_hnd <> 0 then
+    UnloadPackage(m_hnd);
+  m_hnd := 0;
 end;
 
 end.

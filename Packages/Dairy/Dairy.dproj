@@ -5,7 +5,7 @@
         <ProjectVersion>18.4</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Release</Config>
+        <Config Condition="'$(Config)'==''">Debug</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>1</TargetedPlatforms>
         <AppType>Package</AppType>
@@ -122,7 +122,7 @@
         <VerInfo_Locale>1033</VerInfo_Locale>
         <DCC_UnitSearchPath>D:\git\ber.git\Plugin;D:\git\ber.git\misc;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <DCC_BplOutput>D:\git\ber.git\Bin\Server\client\latest\Plugins</DCC_BplOutput>
-        <Debugger_HostApplication>D:\git\ber.git\Bin\client\Archivar.exe</Debugger_HostApplication>
+        <Debugger_HostApplication>D:\git\ber.git\Bin\Server\client\latest\Archivar.exe</Debugger_HostApplication>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">
