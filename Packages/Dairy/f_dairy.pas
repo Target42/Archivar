@@ -89,7 +89,9 @@ begin
   if DiQry.IsEmpty then exit;
 
   DairyEntryForm := TDairyEntryForm.Create(self);
-//  DairyEntryForm.Parent := self;
+
+  PluginDairy.PosWindow(self, DairyEntryForm);
+  //DairyEntryForm.Parent := self;
   try
     DairyEntryForm.Passwort := LabeledEdit1.Text;
     try
@@ -147,6 +149,7 @@ end;
 procedure TDairyForm.ForceClose(force: boolean);
 begin
   if force then begin
+    m_crypt.pPassword := NIL;
   end;
   Self.Close;
 end;
@@ -169,6 +172,8 @@ end;
 
 procedure TDairyForm.FormDestroy(Sender: TObject);
 begin
+  m_crypt.pPassword := NIL;
+
   PluginDairy.Data.WndHandler.unregisterForm(self);
   DairyForm := NIL;
   FreeAndNil(m_mem);

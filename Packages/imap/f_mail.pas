@@ -109,7 +109,6 @@ end;
 procedure TMailForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   Action := caFree;
-  MailForm := NIL;
 end;
 
 procedure TMailForm.FormCreate(Sender: TObject);
@@ -160,16 +159,13 @@ begin
   ComboBox1.Text := '';
 
   PluginImap.Data.WndHandler.registerForm(self);
-  MailMod := TMailMod.create(self);
+  MailMod := TMailMod.create(NIL);
   m_html  := TStringList.Create;
 
   VST.NodeDataSize := sizeof(TVSTData);
-//  m_wwwRoot := TPath.GetTempPath;
-//  ForceDirectories(m_wwwRoot));
 
   getMailCfg;
   getHttpCfg;
-
   timer1.Enabled := true;
 end;
 
@@ -179,7 +175,6 @@ begin
   PluginImap.Data.WndHandler.unregisterForm(self);
   FreeAndNil(MailMod);
   m_html.free;
-
 end;
 
 function TMailForm.getContent: string;

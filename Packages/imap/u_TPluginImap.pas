@@ -3,7 +3,7 @@ unit u_TPluginImap;
 interface
 
 uses
-  i_plugin, u_TPluginImpl;
+  Vcl.Forms, i_plugin, u_TPluginImpl;
 
 
 type
@@ -15,25 +15,25 @@ type
       procedure Execute; override;
 
   end;
+  pApp = ^TApplication;
 
-function getPIF : IPlugin; export;
-procedure release; export;
 
 var
-  PluginImap : IPlugin = NIL;
-
-exports
-  getPIF,
-  release;
-
+  PluginImap : IPlugin;
 implementation
 
+
 uses
-  Vcl.Forms, f_mail;
+  f_mail;
+
+var
+  oldApp : TApplication;
 
 { TPluginImap }
-function getPIF : IPlugin;
+function getPIF(ptr : pointer) : IPlugin; stdcall;
 begin
+  oldApp := Application;
+  Application := TApplication(ptr);
   try
     PluginImap := TPluginImap.create;
     Result := PluginImap;
@@ -42,30 +42,40 @@ begin
   end;
 end;
 
-procedure release;
+procedure release; stdcall;
 begin
   if Assigned(PluginImap) then begin
     PluginImap.restoreOldApplication;
   end;
   PluginImap := NIL;
+  Application := oldApp;
 end;
+
+exports
+  getPif,
+  release;
 
 procedure TPluginImap.Execute;
 begin
   inherited;
+
   if not Assigned(MailForm)then begin
     MailForm := TMailForm.create(m_data.App);
   end else begin
     MailForm.BringToFront;
   end;
   MailForm.Show;
-
 end;
 
 function TPluginImap.getPluginName: string;
 begin
   Result := 'Mail(IMAP)';
 end;
+
+
+
+initialization
+  PluginImap := NIL;
 
 end.
 

@@ -21,6 +21,7 @@ type
 
     procedure Execute;
     procedure restoreOldApplication;
+    procedure PosWindow( owner, form : TForm );
   end;
 
   IPluginData = interface

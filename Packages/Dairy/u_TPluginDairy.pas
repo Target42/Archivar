@@ -22,11 +22,16 @@ implementation
 uses
   Vcl.Forms, f_dairy;
 
+var
+  oldApp : TApplication;
 
 { TPluginDairy }
 
-function getPIF : IPlugin;
+
+function getPIF(ptr : pointer) : IPlugin; stdcall;
 begin
+  oldApp := Application;
+  Application := TApplication(ptr);
   try
     PluginDairy := TPluginDairy.create;
     Result := PluginDairy;
@@ -35,16 +40,14 @@ begin
   end;
 end;
 
-procedure release;
+procedure release; stdcall;
 begin
   if Assigned(PluginDairy) then begin
     PluginDairy.restoreOldApplication;
-    //PluginDairy.Free;
   end;
   PluginDairy := NIL;
-
+  Application := oldApp;
 end;
-
 
 function TPluginDairy.getPluginName: string;
 begin

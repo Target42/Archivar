@@ -415,7 +415,10 @@ end;
 
 procedure TCryptMod.SetpPassword(const Value: pchar);
 begin
-  FPassword := String( value );
+  if Assigned(value) then
+    FPassword := String( value )
+  else
+    FPassword := '';
 end;
 
 procedure TCryptMod.setPrivateKeyFile(value: string);

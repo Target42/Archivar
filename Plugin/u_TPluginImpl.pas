@@ -10,7 +10,7 @@ type
     private
     protected
       m_oldApp : TApplication;
-      m_data : IPluginData;
+      m_data   : IPluginData;
 
       function getPluginName : string; virtual;
       function getData : IPluginData;
@@ -26,6 +26,7 @@ type
 
       procedure Execute; virtual;
 
+      procedure PosWindow( owner, form : TForm );
   end;
 
 implementation
@@ -64,6 +65,17 @@ begin
   Result := 'Namen ändern!';
 end;
 
+
+procedure TPluginImpl.PosWindow(owner, form: TForm);
+begin
+  if not Assigned(owner) or not Assigned(form) then exit;
+
+  if form.Position = poOwnerFormCenter then begin
+    form.Position := poDesigned;
+    form.Left := Owner.Left + ( owner.Width - form.Width) div 2;
+    form.Top  := Owner.Top  + ( owner.Height - form.Height ) div 2;
+  end;
+end;
 
 procedure TPluginImpl.restoreOldApplication;
 begin

@@ -207,7 +207,7 @@ end;
 
 function TPlugin.load(data : IPluginData): boolean;
 var
-  p  : function : IPlugin; stdcall;
+  p  : function(ptr : pointer) : IPlugin; stdcall;
   r  : procedure; stdcall;
 begin
   CodeSite.EnterMethod(Self, 'load');
@@ -218,13 +218,15 @@ begin
       if m_hnd <> 0 then begin
         @p := GetProcAddress(m_hnd, PChar('getPIF'));
         if Assigned(p) then begin
-        m_pif := p;
+
+          m_pif := p(@Application);
           m_pif.config(data);
 
           FPluginName := m_pif.PluginName;
 
           FLoaded := true;
           Result  := true;
+
           CodeSite.Send(FPluginName);
         end;
         @r := GetProcAddress(m_hnd, PChar('release'));

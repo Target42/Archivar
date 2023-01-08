@@ -1160,13 +1160,13 @@ procedure TGM.SQLConnection1AfterDisconnect(Sender: TObject);
 begin
   PingTimer.Enabled := false;
 
-  (Application.MainForm as TMainForm).ApplicationSetMenu(false );
-//  PostMessage( Application.MainFormHandle, msgDisconnected, 0, 0 );
-
   m_plugins.unloadAll;
 
   if Assigned(LoginForm) then
     LoginForm.Password := '';
+
+  (Application.MainForm as TMainForm).ApplicationSetMenu(false );
+//  PostMessage( Application.MainFormHandle, msgDisconnected, 0, 0 );
 end;
 
 procedure TGM.SQLConnection1BeforeDisconnect(Sender: TObject);
@@ -1178,6 +1178,7 @@ begin
   m_misc := NIL;
 
   WindowHandler.closeAll;
+
 end;
 
 function TGM.UnLockDocument(id, typ: integer; subid : integer): TJSONObject;
