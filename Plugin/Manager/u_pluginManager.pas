@@ -11,9 +11,11 @@ type
   private
     m_data : IPluginData;
     m_list : TList<TPlugin>;
+    m_path : string;
     FMenuRoot: TMenuItem;
     procedure PluginExec(Sender: TObject);
     procedure clearPlugins;
+    procedure scan( path : string );
   public
     constructor create;
     Destructor Destroy; override;
@@ -21,7 +23,7 @@ type
     property MenuRoot: TMenuItem read FMenuRoot write FMenuRoot;
     property Items : TList<TPlugin> read m_list;
 
-    procedure scan( path : string );
+    procedure CheckPlugins;
     procedure loadAll;
     procedure unloadAll;
   end;
@@ -61,9 +63,80 @@ implementation
 
 uses
   system.SysUtils, Winapi.Windows, System.IOUtils, System.Types, Vcl.Forms,
-  System.UITypes, System.Generics.Defaults, CodeSiteLogging, u_PluginData;
+  System.UITypes, System.Generics.Defaults, CodeSiteLogging, u_PluginData,
+  u_stub, m_glob_client, u_json, System.JSON, System.Classes;
 
 { TPluginManager }
+
+procedure TPluginManager.CheckPlugins;
+var
+  client  : TTdsPluginClient;
+
+  function CheckMd5( data : TJSONObject) : boolean;
+  var
+    fname : string;
+    md5   : string;
+    org   : string;
+  begin
+    Result := false;
+    org    := JString(data, 'md5');
+    fname  := TPath.Combine(m_path, JString(data, 'filename'));
+    if not FileExists(fname) then exit;
+
+    md5 := GM.md5(fname);
+    Result := md5 = org;
+  end;
+
+  procedure Download( data : TJSONObject);
+  var
+    Req   : TJSONObject;
+    st    : TStream;
+    fname : string;
+  begin
+    fname := TPath.Combine(m_path, JString(data, 'filename'));
+
+    req := TJSONObject.Create;
+    JReplace(Req, 'id', JInt( data, 'id'));
+
+    st := client.download(req);
+
+    if Assigned(st) then
+      GM.download(fname, st);
+  end;
+
+var
+  data    : TJSONObject;
+  arr     : TJSONArray;
+  row     : TJSONObject;
+  i       : integer;
+  fname   : string;
+  plg     : TPlugin;
+begin
+  CodeSite.EnterMethod(Self, 'CheckPlugins');
+  m_path := TPath.Combine(ExtractFilePath(paramStr(0)), 'Plugins');
+
+  client := TTdsPluginClient.Create(GM.SQLConnection1.DBXConnection);
+  data   := client.getList;
+
+  arr := JArray(data, 'items');
+  if Assigned(arr) then begin
+    for i := 0 to pred(arr.Count) do begin
+      row := getRow(arr, i);
+      fname := TPath.Combine( m_path, JString(row, 'filename'));
+
+      if not checkMd5( row ) then
+        Download( row );
+      if FileExists(fname) then begin
+          plg := TPlugin.create;
+          plg.FileName := fname;
+          m_list.Add(plg);
+      end;
+    end;
+  end;
+
+  client.Free;
+  CodeSite.ExitMethod(Self, 'CheckPlugins');
+end;
 
 procedure TPluginManager.clearPlugins;
 var
@@ -99,9 +172,12 @@ var
   i   : integer;
   item: TMenuItem;
 begin
+  if m_list.Count > 0 then exit;
+
   CodeSite.EnterMethod(Self, 'loadAll');
   Screen.Cursor := crHourGlass;
-  scan( TPath.Combine(ExtractFilePath(paramStr(0)), 'Plugins') );
+
+  CheckPlugins;
 
   for plg in m_list do begin
     plg.load(m_data);
@@ -174,11 +250,11 @@ var
 begin
   for i :=0 to pred(m_list.Count) do begin
     plg := m_list[i];
-    if Assigned(plg.MenuEntry) then begin
+{    if Assigned(plg.MenuEntry) then begin
       FMenuRoot.Remove(plg.MenuEntry);
       plg.MenuEntry.Free;
-      plg.unload;
-    end;
+    end;}
+    plg.unload;
     plg.Free;
   end;
   m_list.Clear;
@@ -208,6 +284,7 @@ end;
 function TPlugin.load(data : IPluginData): boolean;
 var
   p  : function(ptr : pointer) : IPlugin; stdcall;
+  funcName : function : pchar; stdcall;
   r  : procedure; stdcall;
 begin
   CodeSite.EnterMethod(Self, 'load');
@@ -216,13 +293,17 @@ begin
     try
       m_hnd := LoadPackage(FFileName);
       if m_hnd <> 0 then begin
+        @funcName := GetProcAddress(m_hnd, PChar('getPluginName'));
+        if Assigned(funcName) then begin
+          FPluginName := funcName;
+        end else
+          FPluginName := 'Unbekanntes Plugin';
+
         @p := GetProcAddress(m_hnd, PChar('getPIF'));
         if Assigned(p) then begin
 
-          m_pif := p(@Application);
+          m_pif := p(Application);
           m_pif.config(data);
-
-          FPluginName := m_pif.PluginName;
 
           FLoaded := true;
           Result  := true;

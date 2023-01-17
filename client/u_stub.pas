@@ -1,6 +1,6 @@
 //
 // Erzeugt vom DataSnap-Proxy-Generator.
-// 26.12.2022 19:55:48
+// 14.01.2023 20:38:05
 //
 
 unit u_stub;
@@ -378,6 +378,24 @@ type
     function AutoInc(gen: string): Integer;
     function newStorage(data: TJSONObject): TJSONObject;
     function renameStorage(data: TJSONObject): TJSONObject;
+  end;
+
+  TTdsPluginClient = class(TDSAdminClient)
+  private
+    FTabPluginBeforePostCommand: TDBXCommand;
+    FgetListCommand: TDBXCommand;
+    FdownloadCommand: TDBXCommand;
+    FuploadCommand: TDBXCommand;
+    FsetStatusCommand: TDBXCommand;
+  public
+    constructor Create(ADBXConnection: TDBXConnection); overload;
+    constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
+    destructor Destroy; override;
+    procedure TabPluginBeforePost(DataSet: TDataSet);
+    function getList: TJSONObject;
+    function download(data: TJSONObject): TStream;
+    function upload(data: TJSONObject; st: TStream): TJSONObject;
+    function setStatus(data: TJSONObject): TJSONObject;
   end;
 
 implementation
@@ -2194,6 +2212,95 @@ begin
   FAutoIncCommand.DisposeOf;
   FnewStorageCommand.DisposeOf;
   FrenameStorageCommand.DisposeOf;
+  inherited;
+end;
+
+procedure TTdsPluginClient.TabPluginBeforePost(DataSet: TDataSet);
+begin
+  if FTabPluginBeforePostCommand = nil then
+  begin
+    FTabPluginBeforePostCommand := FDBXConnection.CreateCommand;
+    FTabPluginBeforePostCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FTabPluginBeforePostCommand.Text := 'TTdsPlugin.TabPluginBeforePost';
+    FTabPluginBeforePostCommand.Prepare;
+  end;
+  FTabPluginBeforePostCommand.Parameters[0].Value.SetDBXReader(TDBXDataSetReader.Create(DataSet, FInstanceOwner), True);
+  FTabPluginBeforePostCommand.ExecuteUpdate;
+end;
+
+function TTdsPluginClient.getList: TJSONObject;
+begin
+  if FgetListCommand = nil then
+  begin
+    FgetListCommand := FDBXConnection.CreateCommand;
+    FgetListCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FgetListCommand.Text := 'TTdsPlugin.getList';
+    FgetListCommand.Prepare;
+  end;
+  FgetListCommand.ExecuteUpdate;
+  Result := TJSONObject(FgetListCommand.Parameters[0].Value.GetJSONValue(FInstanceOwner));
+end;
+
+function TTdsPluginClient.download(data: TJSONObject): TStream;
+begin
+  if FdownloadCommand = nil then
+  begin
+    FdownloadCommand := FDBXConnection.CreateCommand;
+    FdownloadCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FdownloadCommand.Text := 'TTdsPlugin.download';
+    FdownloadCommand.Prepare;
+  end;
+  FdownloadCommand.Parameters[0].Value.SetJSONValue(data, FInstanceOwner);
+  FdownloadCommand.ExecuteUpdate;
+  Result := FdownloadCommand.Parameters[1].Value.GetStream(FInstanceOwner);
+end;
+
+function TTdsPluginClient.upload(data: TJSONObject; st: TStream): TJSONObject;
+begin
+  if FuploadCommand = nil then
+  begin
+    FuploadCommand := FDBXConnection.CreateCommand;
+    FuploadCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FuploadCommand.Text := 'TTdsPlugin.upload';
+    FuploadCommand.Prepare;
+  end;
+  FuploadCommand.Parameters[0].Value.SetJSONValue(data, FInstanceOwner);
+  FuploadCommand.Parameters[1].Value.SetStream(st, FInstanceOwner);
+  FuploadCommand.ExecuteUpdate;
+  Result := TJSONObject(FuploadCommand.Parameters[2].Value.GetJSONValue(FInstanceOwner));
+end;
+
+function TTdsPluginClient.setStatus(data: TJSONObject): TJSONObject;
+begin
+  if FsetStatusCommand = nil then
+  begin
+    FsetStatusCommand := FDBXConnection.CreateCommand;
+    FsetStatusCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FsetStatusCommand.Text := 'TTdsPlugin.setStatus';
+    FsetStatusCommand.Prepare;
+  end;
+  FsetStatusCommand.Parameters[0].Value.SetJSONValue(data, FInstanceOwner);
+  FsetStatusCommand.ExecuteUpdate;
+  Result := TJSONObject(FsetStatusCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
+end;
+
+constructor TTdsPluginClient.Create(ADBXConnection: TDBXConnection);
+begin
+  inherited Create(ADBXConnection);
+end;
+
+constructor TTdsPluginClient.Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean);
+begin
+  inherited Create(ADBXConnection, AInstanceOwner);
+end;
+
+destructor TTdsPluginClient.Destroy;
+begin
+  FTabPluginBeforePostCommand.DisposeOf;
+  FgetListCommand.DisposeOf;
+  FdownloadCommand.DisposeOf;
+  FuploadCommand.DisposeOf;
+  FsetStatusCommand.DisposeOf;
   inherited;
 end;
 

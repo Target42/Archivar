@@ -56,7 +56,8 @@ uses
   m_http in 'm_http.pas' {HttpMod: TDataModule},
   u_ini in 'u_ini.pas',
   m_del_files in 'm_del_files.pas' {DeleteFilesMod: TDataModule},
-  m_mail in '..\misc\m_mail.pas' {MailMod: TDataModule};
+  m_mail in '..\misc\m_mail.pas' {MailMod: TDataModule},
+  ds_plugin in 'ds_plugin.pas' {TdsPlugin: TDSServerModule};
 
 var
   MyDummyBoolean  : Boolean;

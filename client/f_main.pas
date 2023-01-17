@@ -8,7 +8,7 @@ uses
   Vcl.ActnList, Vcl.AppEvnts, fr_gremiumTree, Vcl.ExtCtrls, Vcl.StdCtrls,
   fr_taskList, Vcl.StdActns, u_bookmark, fr_bookmark, fr_epub, fr_meeting,
   JvCombobox, JvColorCombo, fr_storages, MidasLib, JvExStdCtrls, Vcl.Grids,
-  DragDrop, DropTarget, DragDropFile;
+  DragDrop, DropTarget, DragDropFile, JvComponentBase, JvPluginManager;
 
 type
   TStatusInx = (stStatus = 0, stHost, stLogin, stUser, stMsg );
@@ -180,6 +180,9 @@ type
     ac_ta_delete: TAction;
     asklschen1: TMenuItem;
     Plugins1: TMenuItem;
+    ac_ad_plugin: TAction;
+    Plugins2: TMenuItem;
+    N22: TMenuItem;
     procedure ac_prg_closeExecute(Sender: TObject);
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure ac_prg_disconExecute(Sender: TObject);
@@ -227,6 +230,8 @@ type
     procedure StatusBar1DrawPanel(StatusBar: TStatusBar; Panel: TStatusPanel;
       const Rect: TRect);
     procedure ac_ta_deleteExecute(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure ac_ad_pluginExecute(Sender: TObject);
   private
     m_noStatChange : boolean;
 
@@ -260,7 +265,7 @@ uses
   system.UITypes, f_protocol_sec, u_onlineUser, f_doMeeting, f_task_type,
   f_flieCacheForm, f_keys, f_textblock_export, f_textblock_import,
   f_storages, f_protokoll_new, f_admin, f_task_delete, i_plugin, u_pluginManager,
-  m_crypt;
+  m_crypt, f_pluginAdmin;
 
 {$R *.dfm}
 
@@ -337,6 +342,13 @@ begin
   finally
     ImagesForm.free;
   end;
+end;
+
+procedure TMainForm.ac_ad_pluginExecute(Sender: TObject);
+begin
+  Application.CreateForm(TPluginAdmin, PluginAdmin);
+  PluginAdmin.ShowModal;
+  PluginAdmin.free;
 end;
 
 procedure TMainForm.ac_ad_storagesExecute(Sender: TObject);
@@ -845,6 +857,7 @@ begin
     Admin1.Visible := false;
     Admin1.Enabled := false;
   end;
+  Plugins1.Visible        := flag;
 
 end;
 
@@ -869,6 +882,15 @@ begin
   Application.CreateForm(TBeschlusform, Beschlusform);
   Beschlusform.Show;
 //  Beschlusform.Free;
+end;
+
+procedure TMainForm.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  Action := caFree;
+  if GM.SQLConnection1.Connected then begin
+    WindowHandler.closeAll;
+    ac_prg_discon.Execute;
+  end;
 end;
 
 procedure TMainForm.FormCreate(Sender: TObject);

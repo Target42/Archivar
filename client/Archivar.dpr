@@ -237,7 +237,8 @@ uses
   f_passwd in '..\misc\f_passwd.pas' {PassWdform},
   u_ICrypt in '..\misc\u_ICrypt.pas',
   u_PluginData in '..\Plugin\Manager\u_PluginData.pas',
-  u_IWindowHandler in '..\misc\u_IWindowHandler.pas';
+  u_IWindowHandler in '..\misc\u_IWindowHandler.pas',
+  f_pluginAdmin in 'admin\f_pluginAdmin.pas' {PluginAdmin};
 
 {$R *.res}
 
@@ -268,5 +269,9 @@ begin
   Application.CreateForm(TFileCacheMod, FileCacheMod);
   Application.CreateForm(TCryptMod, CryptMod);
   Application.CreateForm(TMainForm, MainForm);
-  Application.Run;
+  try
+    Application.Run;
+  except
+
+  end;
 end.

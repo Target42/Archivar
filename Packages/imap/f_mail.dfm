@@ -52,6 +52,8 @@ object MailForm: TMailForm
       OnGetText = VSTGetText
       OnPaintText = VSTPaintText
       OnInitNode = VSTInitNode
+      ExplicitLeft = 1
+      ExplicitTop = 53
       Columns = <>
     end
     object Panel1: TPanel

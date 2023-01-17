@@ -171,10 +171,13 @@ end;
 
 procedure TMailForm.FormDestroy(Sender: TObject);
 begin
-  clearFiles;
   PluginImap.Data.WndHandler.unregisterForm(self);
+
+  clearFiles;
   FreeAndNil(MailMod);
-  m_html.free;
+  FreeAndNil(m_html);
+
+  MailForm := NIL;
 end;
 
 function TMailForm.getContent: string;

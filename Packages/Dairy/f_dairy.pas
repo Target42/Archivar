@@ -157,6 +157,7 @@ end;
 procedure TDairyForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   Action := caFree;
+  DairyForm := NIL;
 end;
 
 procedure TDairyForm.FormCreate(Sender: TObject);
@@ -184,7 +185,6 @@ procedure TDairyForm.LabeledEdit1KeyPress(Sender: TObject; var Key: Char);
 begin
   if key = #13 then
     DiQryAfterScroll( DiQry );
-
 end;
 
 procedure TDairyForm.setMonth(Month: TDate);
@@ -214,6 +214,6 @@ begin
 end;
 
 initialization
-
   DairyForm := NIL;
+
 end.

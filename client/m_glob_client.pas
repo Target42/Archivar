@@ -223,6 +223,9 @@ uses
 
 function ShowResult( res : TJSONObject; positiv : Boolean ) : boolean;
 begin
+  Result := false;
+  if not Assigned(res) then exit;
+
   Result := JBool( res, 'result', false);
   if not Result then
     ShowMessage( JString( res, 'text'))
@@ -633,6 +636,7 @@ begin
   m_hostList.Free;
   m_userList.Free;
 
+//  m_plugins.unloadAll;
   m_plugins.Free;
 end;
 
@@ -1160,7 +1164,7 @@ procedure TGM.SQLConnection1AfterDisconnect(Sender: TObject);
 begin
   PingTimer.Enabled := false;
 
-  m_plugins.unloadAll;
+//  m_plugins.unloadAll;
 
   if Assigned(LoginForm) then
     LoginForm.Password := '';

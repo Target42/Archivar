@@ -3,10 +3,12 @@ unit m_mail;
 interface
 
 uses
-  System.SysUtils, System.Classes, IdSMTPBase, IdSMTP, IdMessage, IdIOHandler,
-  IdIOHandlerSocket, IdIOHandlerStack, IdSSL, IdSSLOpenSSL, IdBaseComponent,
-  IdComponent, IdTCPConnection, IdTCPClient, IdExplicitTLSClientServerBase,
-  IdMessageClient, IdIMAP4, System.JSON, System.Generics.Collections;
+  System.SysUtils, System.Classes, IdSMTP, IdMessage, IdIOHandler,
+  IdIOHandlerStack, IdSSL, IdSSLOpenSSL, IdBaseComponent,
+  IdTCPConnection,
+  IdIMAP4, System.JSON, System.Generics.Collections, IdSMTPBase,
+  IdIOHandlerSocket, IdComponent, IdTCPClient, IdExplicitTLSClientServerBase,
+  IdMessageClient;
 
 type
   TMailMod = class(TDataModule)
@@ -85,7 +87,7 @@ var
 implementation
 
 uses
-  IniFiles, System.Win.Registry, Winapi.Windows, vcl.Dialogs,
+  System.Win.Registry, Winapi.Windows, vcl.Dialogs,
   IdText, IdEMailAddress, Vcl.Forms, Vcl.Controls, u_json;
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 

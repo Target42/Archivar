@@ -50,6 +50,7 @@ type
     DSHTTPService1: TDSHTTPService;
     DSHTTPService2: TDSHTTPService;
     DSCertFiles1: TDSCertFiles;
+    dsPlugin: TDSServerClass;
     procedure dsAdminGetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
     procedure ServiceStart(Sender: TService; var Started: Boolean);
@@ -112,6 +113,8 @@ type
     procedure DSCertFiles1GetPEMFilePasskey(ASender: TObject;
       var APasskey: AnsiString);
     function DSServer1Trace(TraceInfo: TDBXTraceInfo): CBRType;
+    procedure dsPluginGetClass(DSServerClass: TDSServerClass;
+      var PersistentClass: TPersistentClass);
   private
     const
       MaxUserNameLength = 25;
@@ -163,7 +166,8 @@ uses
   ds_taskEdit, ds_template, ds_taskView, ds_textblock, ds_fileCache, ds_epub,
   ds_meeting, System.Hash, u_json, ds_sitzung, m_hell, Grijjy.sysUtils, u_ini,
   ds_updater, ds_stamm, ds_pki, ds_dairy, ds_storage, WinApi.WinSvc,
-  u_Konst, Winapi.Messages, m_http, m_del_files, system.DateUtils, m_mail;
+  u_Konst, Winapi.Messages, m_http, m_del_files, system.DateUtils, m_mail,
+  ds_plugin;
 
 procedure TServerContainer1.dsAdminGetClass(
   DSServerClass: TDSServerClass; var PersistentClass: TPersistentClass);
@@ -785,6 +789,12 @@ procedure TServerContainer1.dsPKIGetClass(DSServerClass: TDSServerClass;
   var PersistentClass: TPersistentClass);
 begin
   PersistentClass := ds_pki.TdsPKI;
+end;
+
+procedure TServerContainer1.dsPluginGetClass(DSServerClass: TDSServerClass;
+  var PersistentClass: TPersistentClass);
+begin
+  PersistentClass := ds_plugin.TTdsPlugin;
 end;
 
 procedure TServerContainer1.dsProtocolGetClass(DSServerClass: TDSServerClass;

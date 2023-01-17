@@ -10,7 +10,6 @@ type
   TPluginImap = class(TPluginImpl)
     private
     protected
-      function getPluginName : string; override;
     public
       procedure Execute; override;
 
@@ -24,16 +23,22 @@ implementation
 
 
 uses
-  f_mail;
+  f_mail, System.SysUtils, System.Classes;
 
 var
   oldApp : TApplication;
 
 { TPluginImap }
-function getPIF(ptr : pointer) : IPlugin; stdcall;
+function getPluginName : PChar; stdcall;
+begin
+  Result := 'Mail(IMAP)';
+end;
+
+function getPIF(app : TApplication) : IPlugin; stdcall;
 begin
   oldApp := Application;
-  Application := TApplication(ptr);
+  Application := app;
+  RegisterClass(TMailForm);
   try
     PluginImap := TPluginImap.create;
     Result := PluginImap;
@@ -48,12 +53,15 @@ begin
     PluginImap.restoreOldApplication;
   end;
   PluginImap := NIL;
+  UnRegisterClass(TMailForm);
   Application := oldApp;
 end;
 
 exports
+  getPluginName,
   getPif,
   release;
+
 
 procedure TPluginImap.Execute;
 begin
@@ -66,12 +74,6 @@ begin
   end;
   MailForm.Show;
 end;
-
-function TPluginImap.getPluginName: string;
-begin
-  Result := 'Mail(IMAP)';
-end;
-
 
 
 initialization

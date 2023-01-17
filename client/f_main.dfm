@@ -16,6 +16,7 @@
   Position = poScreenCenter
   WindowState = wsMaximized
   WindowMenu = Fenster1
+  OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
   PixelsPerInch = 96
@@ -564,6 +565,12 @@
       object Aktionen1: TMenuItem
         Action = ac_ad_action
       end
+      object N22: TMenuItem
+        Caption = '-'
+      end
+      object Plugins2: TMenuItem
+        Action = ac_ad_plugin
+      end
     end
     object Fenster1: TMenuItem
       Caption = 'Fenster'
@@ -875,6 +882,11 @@
       Category = 'Task'
       Caption = 'L'#246'schen'
       OnExecute = ac_ta_deleteExecute
+    end
+    object ac_ad_plugin: TAction
+      Category = 'Admin'
+      Caption = 'Plugins'
+      OnExecute = ac_ad_pluginExecute
     end
   end
   object ApplicationEvents1: TApplicationEvents

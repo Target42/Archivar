@@ -7,7 +7,7 @@ uses
   Datasnap.DSAuth, Datasnap.DSProviderDataModuleAdapter, System.JSON;
 
 type
-  [TRoleAuth('download,admin', 'user')]
+  [TRoleAuth('download, admin', 'user')]
   TdsUpdater = class(TDSServerModule)
   private
     function ScanPath(base: string): TJSONObject;

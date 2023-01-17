@@ -9,7 +9,6 @@ type
   TPluginDairy = class(TPluginImpl)
     private
     protected
-      function getPluginName : string; override;
     public
     procedure Execute; override;
   end;
@@ -27,11 +26,15 @@ var
 
 { TPluginDairy }
 
+function getPluginName: pchar; stdcall;
+begin
+  Result := 'Tagebuch';
+end;
 
-function getPIF(ptr : pointer) : IPlugin; stdcall;
+function getPIF(App : TApplication) : IPlugin; stdcall;
 begin
   oldApp := Application;
-  Application := TApplication(ptr);
+  Application := app;
   try
     PluginDairy := TPluginDairy.create;
     Result := PluginDairy;
@@ -49,15 +52,10 @@ begin
   Application := oldApp;
 end;
 
-function TPluginDairy.getPluginName: string;
-begin
-  Result := 'Tagebuch';
-end;
-
 procedure TPluginDairy.Execute;
 begin
   if not Assigned(DairyForm)then begin
-    DairyForm := TDairyForm.create(m_data.App);
+    DairyForm := TDairyForm.create(NIL);//Application.MainForm);
   end else begin
     DairyForm.BringToFront;
   end;
@@ -65,10 +63,12 @@ begin
 end;
 
 exports
+  getPluginName,
   getPIF,
   release;
 
 initialization
   PluginDairy := NIL;
+
 end.
 

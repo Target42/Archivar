@@ -69,17 +69,14 @@ procedure TWindowHandler.closeAll;
 var
   i   : integer;
   fr  : IForceClose;
-
 begin
-  for i := 0 to pred(m_forms.Count) do begin
-    //if Supports( m_forms[i], StringToGUID('{09DB420A-2669-4E82-B537-D8866479642F}')) then
+  for i := pred(m_forms.Count) downto 0 do begin
     if Supports( m_forms[i], IForceClose) then
       m_list.Remove(m_forms[i] as IForceClose);
 
     m_forms[i].Close;
     m_forms[i].Free;
   end;
-
   m_forms.Clear;
 
   for fr in m_list do

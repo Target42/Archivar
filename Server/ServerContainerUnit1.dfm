@@ -293,4 +293,10 @@ object ServerContainer1: TServerContainer1
     Left = 144
     Top = 264
   end
+  object dsPlugin: TDSServerClass
+    OnGetClass = dsPluginGetClass
+    Server = DSServer1
+    Left = 256
+    Top = 576
+  end
 end

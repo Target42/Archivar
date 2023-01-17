@@ -12,7 +12,6 @@ type
       m_oldApp : TApplication;
       m_data   : IPluginData;
 
-      function getPluginName : string; virtual;
       function getData : IPluginData;
     public
       constructor create;
@@ -59,12 +58,6 @@ function TPluginImpl.getData: IPluginData;
 begin
   Result := m_data;
 end;
-
-function TPluginImpl.getPluginName: string;
-begin
-  Result := 'Namen ändern!';
-end;
-
 
 procedure TPluginImpl.PosWindow(owner, form: TForm);
 begin

@@ -11,13 +11,11 @@ type
 
   IPlugin = interface
     ['{606A69C2-5137-467E-87C1-15612FD507A4}']
-    function getPluginName : string;
     function getData : IPluginData;
 
     procedure config( data : IPluginData );
     property Data : IPluginData read getData;
-  
-    property PluginName : string read getPluginName;
+
 
     procedure Execute;
     procedure restoreOldApplication;
