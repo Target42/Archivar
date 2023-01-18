@@ -1,7 +1,7 @@
 object MainSetupForm: TMainSetupForm
   Left = 0
   Top = 0
-  ActiveControl = WelcomePage
+  ActiveControl = BitBtn1
   Caption = 'Setup'
   ClientHeight = 591
   ClientWidth = 558
@@ -29,7 +29,7 @@ object MainSetupForm: TMainSetupForm
     Top = 0
     Width = 558
     Height = 572
-    ActivePage = WelcomePage
+    ActivePage = InitData
     ButtonBarHeight = 42
     ButtonStart.Caption = 'To &Start Page'
     ButtonStart.NumGlyphs = 1
@@ -455,8 +455,6 @@ object MainSetupForm: TMainSetupForm
       Header.Subtitle.Font.Style = []
       Caption = 'SearchGDS'
       OnEnterPage = SearchGDSEnterPage
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel3: TPanel
         Left = 0
         Top = 489
@@ -533,8 +531,6 @@ object MainSetupForm: TMainSetupForm
       Header.Subtitle.Font.Style = []
       OnEnterPage = ServerInfoEnterPage
       OnExitPage = ServerInfoExitPage
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GroupBox1: TGroupBox
         Left = 0
         Top = 153
@@ -718,8 +714,6 @@ object MainSetupForm: TMainSetupForm
       Header.Subtitle.Font.Style = []
       OnEnterPage = SicherheitEnterPage
       OnExitPage = SicherheitExitPage
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GroupBox4: TGroupBox
         Left = 0
         Top = 70
@@ -832,8 +826,6 @@ object MainSetupForm: TMainSetupForm
       Header.Subtitle.Font.Style = []
       OnEnterPage = MailEnterPage
       OnExitPage = MailExitPage
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GroupBox6: TGroupBox
         Left = 0
         Top = 70
@@ -901,7 +893,6 @@ object MainSetupForm: TMainSetupForm
         Align = alTop
         Caption = 'SMTP (Server)'
         TabOrder = 1
-        ExplicitTop = 209
         object LabeledEdit14: TLabeledEdit
           Left = 16
           Top = 80
@@ -971,7 +962,6 @@ object MainSetupForm: TMainSetupForm
         Align = alTop
         Caption = 'Aktionen'
         TabOrder = 2
-        ExplicitTop = 281
         object Label3: TLabel
           Left = 30
           Top = 32
@@ -1011,6 +1001,55 @@ object MainSetupForm: TMainSetupForm
         end
       end
     end
+    object Plugins: TJvWizardInteriorPage
+      Header.Title.Color = clNone
+      Header.Title.Text = 'Plugins'
+      Header.Title.Anchors = [akLeft, akTop, akRight]
+      Header.Title.Font.Charset = DEFAULT_CHARSET
+      Header.Title.Font.Color = clWindowText
+      Header.Title.Font.Height = -16
+      Header.Title.Font.Name = 'Tahoma'
+      Header.Title.Font.Style = [fsBold]
+      Header.Subtitle.Color = clNone
+      Header.Subtitle.Text = 'Plugins zum Laden ausw'#228'hlen'
+      Header.Subtitle.Anchors = [akLeft, akTop, akRight, akBottom]
+      Header.Subtitle.Font.Charset = DEFAULT_CHARSET
+      Header.Subtitle.Font.Color = clWindowText
+      Header.Subtitle.Font.Height = -11
+      Header.Subtitle.Font.Name = 'Tahoma'
+      Header.Subtitle.Font.Style = []
+      Caption = 'Plugins'
+      OnEnterPage = PluginsEnterPage
+      OnExitPage = PluginsExitPage
+      object PluginView: TListView
+        Left = 0
+        Top = 70
+        Width = 558
+        Height = 460
+        Align = alClient
+        Checkboxes = True
+        Columns = <
+          item
+            Caption = 'Datei'
+            Width = 150
+          end
+          item
+            Caption = 'Name'
+            Width = 150
+          end
+          item
+            Caption = 'MD5'
+            Width = 200
+          end>
+        ReadOnly = True
+        RowSelect = True
+        SortType = stText
+        TabOrder = 0
+        ViewStyle = vsReport
+        ExplicitTop = 64
+        ExplicitHeight = 419
+      end
+    end
     object InitData: TJvWizardInteriorPage
       Header.Title.Color = clNone
       Header.Title.Text = 'Basisdaten'
@@ -1030,8 +1069,6 @@ object MainSetupForm: TMainSetupForm
       Header.Subtitle.Font.Style = []
       Caption = 'InitData'
       OnEnterPage = InitDataEnterPage
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel1: TPanel
         Left = 0
         Top = 489
@@ -1103,8 +1140,6 @@ object MainSetupForm: TMainSetupForm
       Header.Subtitle.Font.Style = []
       Caption = 'Benutzerimport'
       OnEnterPage = ImportEnterPage
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Splitter1: TSplitter
         Left = 0
         Top = 161
@@ -1271,6 +1306,7 @@ object MainSetupForm: TMainSetupForm
       'Password=masterkey'
       'Database=d:\db\archivar.fdb'
       'DriverID=FB')
+    Connected = True
     LoginPrompt = False
     Transaction = IBTransaction1
     Left = 350
@@ -1567,5 +1603,13 @@ object MainSetupForm: TMainSetupForm
     TableName = 'GR_TY'
     Left = 400
     Top = 336
+  end
+  object PluginTab: TFDTable
+    Connection = ArchivarConnection
+    Transaction = IBTransaction1
+    UpdateOptions.UpdateTableName = 'PL_PLUGIN'
+    TableName = 'PL_PLUGIN'
+    Left = 360
+    Top = 248
   end
 end

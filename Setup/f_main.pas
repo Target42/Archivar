@@ -130,6 +130,9 @@ type
     Label3: TLabel;
     Label4: TLabel;
     Button3: TButton;
+    Plugins: TJvWizardInteriorPage;
+    PluginView: TListView;
+    PluginTab: TFDTable;
     procedure SearchGDSEnterPage(Sender: TObject;
       const FromPage: TJvWizardCustomPage);
     procedure ServerInfoEnterPage(Sender: TObject;
@@ -168,6 +171,10 @@ type
     procedure BitBtn5Click(Sender: TObject);
     procedure BitBtn6Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
+    procedure PluginsEnterPage(Sender: TObject;
+      const FromPage: TJvWizardCustomPage);
+    procedure PluginsExitPage(Sender: TObject;
+      const FromPage: TJvWizardCustomPage);
   private
     m_home  : string;
     m_ini   : TiniFile;
@@ -600,7 +607,7 @@ begin
   m_ini   := TiniFile.Create(TPath.Combine(ExtractFileDir(Application.ExeName), 'ArchivServer.exe.ini'));
 
   m_berMap := TDictionary<string, integer>.create;
-//  JvWizard1.ActivePage := Mail;
+//  JvWizard1.ActivePage := Plugins;
 end;
 
 procedure TMainSetupForm.FormDestroy(Sender: TObject);
@@ -1185,6 +1192,86 @@ begin
     fs.Free;
   end;
   IdMD5.Free;
+end;
+
+procedure TMainSetupForm.PluginsEnterPage(Sender: TObject;
+  const FromPage: TJvWizardCustomPage);
+
+  function plgName( fname : string) : string;
+  var
+    hMod : HModule;
+    funcName : function : pchar; stdcall;
+  begin
+    Result := 'Unbekanntes Plugin';
+    hMod := LoadPackage(fname);
+    if hMod <> 0 then begin
+      @funcName := GetProcAddress(hMod, PChar('getPluginName'));
+      if Assigned(funcName) then begin
+        Result := funcName;
+      end;
+      UnloadPackage(hMod);
+    end;
+  end;
+var
+  path : string;
+  arr  : TStringDynArray;
+  i    : integer;
+  item : TListItem;
+begin
+  // load ...
+  Screen.Cursor := crHourGlass;
+  path := TPath.Combine(m_home, 'Plugins');
+  arr := TDirectory.GetFiles(path, '*.bpl');
+
+  for i := low(arr) to High(arr) do begin
+    item := PluginView.Items.Add;
+    item.Caption := ExtractFileName(arr[i]);
+    item.SubItems.Add( plgName(arr[i]) );
+    item.SubItems.Add(md5(arr[i]));
+    item.Checked := true;
+  end;
+  SetLength(arr, 0);
+  Screen.Cursor := crDefault;
+end;
+
+procedure TMainSetupForm.PluginsExitPage(Sender: TObject;
+  const FromPage: TJvWizardCustomPage);
+var
+  i    : integer;
+  path : string;
+  fname: string;
+  bs : TStream;
+  fs : TFileStream;
+begin
+
+  path := TPath.Combine(m_home, 'Plugins');
+  Screen.Cursor := crHourGlass;
+  PluginTab.Open;
+  for i := 0 to pred(PluginView.Items.Count) do begin
+    if PluginView.Items.Item[i].Checked then begin
+      fname := TPath.Combine(path, PluginView.Items.Item[i].Caption);
+      PluginTab.Append;
+      PluginTab.FieldByName('PL_ID').AsInteger      := AutoInc('gen_pl_id');
+      PluginTab.FieldByName('PL_NAME').AsString     := PluginView.Items.Item[i].SubItems[0];
+      PluginTab.FieldByName('PL_FILENAME').AsString := PluginView.Items.Item[i].Caption;
+      PluginTab.FieldByName('PL_STATE').AsString    := 'A';
+      PluginTab.FieldByName('PL_MD5').AsString      := PluginView.Items.Item[i].SubItems[1];
+
+      bs := PluginTab.CreateBlobStream(PluginTab.FieldByName('PL_DATA'), bmWrite );
+      fs := TFileStream.Create(fname, fmOpenRead + fmShareDenyNone);
+      bs.CopyFrom(fs, fs.Size);
+      bs.Free;
+      fs.Free;
+      PluginTab.Post;
+    end;
+  end;
+
+  PluginTab.Close;
+
+  if IBTransaction1.Active then
+    IBTransaction1.Commit;
+
+  Screen.Cursor := crDefault;
 end;
 
 function TMainSetupForm.progress(name: string): TListItem;
