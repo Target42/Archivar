@@ -50,10 +50,6 @@ object TaskEditForm: TTaskEditForm
     TabOrder = 1
     object TabSheet1: TTabSheet
       Caption = 'Daten'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GroupBox1: TGroupBox
         Left = 0
         Top = 0
@@ -62,8 +58,6 @@ object TaskEditForm: TTaskEditForm
         Align = alTop
         Caption = 'Allgemeines'
         TabOrder = 0
-        ExplicitLeft = 3
-        ExplicitTop = -6
         object Label1: TLabel
           Left = 3
           Top = 30
@@ -262,14 +256,8 @@ object TaskEditForm: TTaskEditForm
         Align = alClient
         TabOrder = 1
         OnChange = PageControl2Change
-        ExplicitTop = 113
-        ExplicitHeight = 279
         object TabSheet3: TTabSheet
           Caption = 'Details'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 251
           inline FormFrame1: TFormFrame
             Left = 0
             Top = 0
@@ -278,11 +266,10 @@ object TaskEditForm: TTaskEditForm
             Align = alClient
             TabOrder = 0
             ExplicitWidth = 709
-            ExplicitHeight = 251
+            ExplicitHeight = 219
             inherited ScrollBox1: TScrollBox
               Width = 709
               Height = 219
-              ExplicitTop = 2
               ExplicitWidth = 709
               ExplicitHeight = 219
             end
@@ -342,17 +329,6 @@ object TaskEditForm: TTaskEditForm
           inherited VST: TVirtualStringTree
             Height = 318
             ExplicitHeight = 318
-            Columns = <
-              item
-                Position = 0
-                Text = 'Verzeichnis'
-                Width = 150
-              end
-              item
-                Position = 1
-                Text = 'Datum'
-                Width = 95
-              end>
           end
         end
         inherited GroupBox3: TGroupBox
@@ -375,7 +351,7 @@ object TaskEditForm: TTaskEditForm
         end
         inherited ImageList1: TImageList
           Bitmap = {
-            494C010102000800800010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+            494C010102000800840010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
             0000000000003600000028000000400000001000000001002000000000000010
             000000000000000000000000000000000000000000FF078DBE00078DBE00078D
             BE00078DBE00078DBE00078DBE00078DBE00078DBE00078DBE00078DBE00078D
@@ -519,8 +495,6 @@ object TaskEditForm: TTaskEditForm
     object TabSheet5: TTabSheet
       Caption = 'Log-buch'
       ImageIndex = 2
-      ExplicitWidth = 296
-      ExplicitHeight = 154
       inline LogFrame1: TLogFrame
         Left = 0
         Top = 0
@@ -528,8 +502,8 @@ object TaskEditForm: TTaskEditForm
         Height = 392
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 296
-        ExplicitHeight = 154
+        ExplicitWidth = 717
+        ExplicitHeight = 392
         inherited GroupBox3: TGroupBox
           Left = 532
           Height = 392
@@ -551,18 +525,18 @@ object TaskEditForm: TTaskEditForm
         inherited Panel1: TPanel
           Width = 532
           Height = 392
-          ExplicitWidth = 111
-          ExplicitHeight = 154
+          ExplicitWidth = 532
+          ExplicitHeight = 392
           inherited GroupBox1: TGroupBox
             Width = 532
-            ExplicitWidth = 111
+            ExplicitWidth = 532
             inherited EditFrame1: TEditFrame
               Width = 528
-              ExplicitWidth = 107
+              ExplicitWidth = 528
               inherited RE: TRichEdit
                 Width = 528
                 OnKeyPress = DBEdit1KeyPress
-                ExplicitWidth = 107
+                ExplicitWidth = 528
               end
               inherited Panel1: TPanel
                 Width = 528

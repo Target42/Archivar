@@ -414,6 +414,7 @@ object DairyForm: TDairyForm
     object DiQryDI_STAMP: TSQLTimeStampField
       FieldName = 'DI_STAMP'
       Origin = 'DI_STAMP'
+      DisplayFormat = 'dd.mm.yyyy hh:nn'
     end
     object DiQryDI_CRYPTED: TStringField
       FieldName = 'DI_CRYPTED'

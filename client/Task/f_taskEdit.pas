@@ -11,8 +11,8 @@ uses
   Vcl.OleCtrls, SHDocVw, JvColorCombo, fr_form, fr_log,
 
   u_ForceClose, JvExStdCtrls, JvCombobox, JvExMask, JvToolEdit, JvMaskEdit,
-  JvCheckedMaskEdit, JvDatePickerEdit, Vcl.Mask, u_SpellChecker, System.JSON,
-  Vcl.ExtCtrls;
+  JvCheckedMaskEdit, JvDatePickerEdit, u_SpellChecker, System.JSON,
+  Vcl.ExtCtrls, Vcl.Mask;
 
 type
   TTaskEditForm = class(TForm, IForceClose)

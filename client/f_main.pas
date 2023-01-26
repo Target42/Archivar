@@ -7,8 +7,8 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls, Vcl.Menus, System.Actions,
   Vcl.ActnList, Vcl.AppEvnts, fr_gremiumTree, Vcl.ExtCtrls, Vcl.StdCtrls,
   fr_taskList, Vcl.StdActns, u_bookmark, fr_bookmark, fr_epub, fr_meeting,
-  JvCombobox, JvColorCombo, fr_storages, MidasLib, JvExStdCtrls, Vcl.Grids,
-  DragDrop, DropTarget, DragDropFile, JvComponentBase, JvPluginManager;
+  JvCombobox, JvColorCombo, fr_storages, MidasLib, JvExStdCtrls,
+  DragDrop, DragDropFile, JvComponentBase;
 
 type
   TStatusInx = (stStatus = 0, stHost, stLogin, stUser, stMsg );
@@ -264,8 +264,8 @@ uses
   f_meeting_new, f_meeting_select, f_meeting_proto, f_login,
   system.UITypes, f_protocol_sec, u_onlineUser, f_doMeeting, f_task_type,
   f_flieCacheForm, f_keys, f_textblock_export, f_textblock_import,
-  f_storages, f_protokoll_new, f_admin, f_task_delete, i_plugin, u_pluginManager,
-  m_crypt, f_pluginAdmin;
+  f_storages, f_protokoll_new, f_admin, f_task_delete,
+  f_pluginAdmin;
 
 {$R *.dfm}
 

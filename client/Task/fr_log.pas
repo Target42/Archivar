@@ -41,7 +41,7 @@ type
 implementation
 
 uses
-  m_html, m_glob_client, System.StrUtils;
+  m_html, m_glob_client;
 
 {$R *.dfm}
 

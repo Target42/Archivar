@@ -64,7 +64,7 @@ implementation
 uses
   system.SysUtils, Winapi.Windows, System.IOUtils, System.Types, Vcl.Forms,
   System.UITypes, System.Generics.Defaults, CodeSiteLogging, u_PluginData,
-  u_stub, m_glob_client, u_json, System.JSON, System.Classes;
+  u_stub, m_glob_client, u_json, System.JSON, System.Classes, Vcl.Dialogs;
 
 { TPluginManager }
 
@@ -111,6 +111,7 @@ var
   i       : integer;
   fname   : string;
   plg     : TPlugin;
+  state   : string;
 begin
   CodeSite.EnterMethod(Self, 'CheckPlugins');
   m_path := TPath.Combine(ExtractFilePath(paramStr(0)), 'Plugins');
@@ -124,9 +125,14 @@ begin
       row := getRow(arr, i);
       fname := TPath.Combine( m_path, JString(row, 'filename'));
 
-      if not checkMd5( row ) then
+      state := JString(row, 'state');
+
+      if (state = 'A') and (not checkMd5( row )) then
+        Download( row )
+      else if not FileExists(fname) and (state = 'E') then
         Download( row );
-      if FileExists(fname) then begin
+
+      if FileExists(fname) and ((state = 'A')or (state = 'E') )then begin
           plg := TPlugin.create;
           plg.FileName := fname;
           m_list.Add(plg);
@@ -286,11 +292,13 @@ var
   p  : function(ptr : pointer) : IPlugin; stdcall;
   funcName : function : pchar; stdcall;
   r  : procedure; stdcall;
+  msg : string;
 begin
   CodeSite.EnterMethod(Self, 'load');
   Result := false;
   if FileExists(FFileName) then begin
     try
+      msg := FFileName+#10#13;
       m_hnd := LoadPackage(FFileName);
       if m_hnd <> 0 then begin
         @funcName := GetProcAddress(m_hnd, PChar('getPluginName'));
@@ -309,15 +317,22 @@ begin
           Result  := true;
 
           CodeSite.Send(FPluginName);
-        end;
+        end else
+          msg := msg + 'getPif not found'#10#13;
+
         @r := GetProcAddress(m_hnd, PChar('release'));
         if Assigned(r) then begin
           m_release := r;
-        end else
+        end else begin
           Result := false;
+          msg := msg + 'release not found'#10#13;
+        end;
       end;
     except
-
+      on e : exception do begin
+        msg := msg + e.toString;
+        ShowMessage( msg );
+      end;
     end;
   end;
   CodeSite.ExitMethod(Self, 'load');

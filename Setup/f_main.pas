@@ -1197,40 +1197,34 @@ end;
 procedure TMainSetupForm.PluginsEnterPage(Sender: TObject;
   const FromPage: TJvWizardCustomPage);
 
-  function plgName( fname : string) : string;
-  var
-    hMod : HModule;
-    funcName : function : pchar; stdcall;
-  begin
-    Result := 'Unbekanntes Plugin';
-    hMod := LoadPackage(fname);
-    if hMod <> 0 then begin
-      @funcName := GetProcAddress(hMod, PChar('getPluginName'));
-      if Assigned(funcName) then begin
-        Result := funcName;
-      end;
-      UnloadPackage(hMod);
-    end;
-  end;
 var
   path : string;
-  arr  : TStringDynArray;
+  data : TJSONObject;
+  arr  : TJSONArray;
   i    : integer;
+  Row  : TJSONObject;
   item : TListItem;
+  fname: string;
 begin
   // load ...
   Screen.Cursor := crHourGlass;
-  path := TPath.Combine(m_home, 'Plugins');
-  arr := TDirectory.GetFiles(path, '*.bpl');
+  path  := TPath.Combine(m_home, 'Plugins');
+  fname := TPath.Combine(path, 'plugins.json');
+  data  := loadJSON(fname);
+  if Assigned(data) then begin
+    arr := JArray( data, 'plugins');
+    if Assigned(arr) then begin
 
-  for i := low(arr) to High(arr) do begin
-    item := PluginView.Items.Add;
-    item.Caption := ExtractFileName(arr[i]);
-    item.SubItems.Add( plgName(arr[i]) );
-    item.SubItems.Add(md5(arr[i]));
-    item.Checked := true;
+      for i := 0 to pred(arr.Count) do begin
+        row := getRow(arr, i);
+        item := PluginView.Items.Add;
+        item.Caption := JString( row, 'name');
+        item.SubItems.Add( JString(row, 'file'));
+        item.SubItems.Add(md5(TPath.Combine(path,JString(row, 'file'))));
+        item.Checked := true;
+      end;
+    end;
   end;
-  SetLength(arr, 0);
   Screen.Cursor := crDefault;
 end;
 

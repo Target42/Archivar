@@ -34,7 +34,7 @@ unit NHunXml;
 interface
 
 uses
-  Windows, Messages, Classes, SysUtils, StrUtils, Widestrings;
+  Windows, Messages, Classes, SysUtils;
 
 type
 {$IFNDEF UNICODE}

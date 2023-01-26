@@ -620,7 +620,8 @@ begin
       else if SameText(TagParams.Strings[0], 'date') then     ReplaceText := FormatDateTime('dd.mm.yyyy', now)
       else if SameText(TagParams.Strings[0], 'time') then     ReplaceText := FormatDateTime('hh:nn', now)
       else if SameText(TagParams.Strings[0], 'user') then     ReplaceText := GM.UserName
-      else if SameText(TagParams.Strings[0], 'host') then     ReplaceText := GM.JvComputerInfoEx1.Identification.LocalComputerName      else
+      else if SameText(TagParams.Strings[0], 'host') then     ReplaceText := GetEnvironmentVariable('COMPUTERNAME')
+      else
         ReplaceText := 'Unbekannter system parameter : '+TagParams.Strings[0]+'<br>';
     end;
 

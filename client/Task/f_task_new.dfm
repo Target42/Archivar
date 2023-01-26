@@ -70,8 +70,6 @@ object Taskform: TTaskform
       Header.Subtitle.Font.Style = []
       Caption = 'Gremium'
       OnNextButtonClick = GremiumNextButtonClick
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object LV: TListView
         Left = 0
         Top = 70
@@ -94,8 +92,6 @@ object Taskform: TTaskform
         TabOrder = 0
         ViewStyle = vsReport
         OnClick = LVClick
-        ExplicitTop = 78
-        ExplicitHeight = 67
       end
     end
     object AufgabenTypen: TJvWizardInteriorPage

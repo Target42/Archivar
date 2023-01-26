@@ -64,7 +64,6 @@ object PluginAdmin: TPluginAdmin
     Align = alBottom
     Caption = 'Aktionen'
     TabOrder = 2
-    ExplicitTop = 228
     object BitBtn1: TBitBtn
       Left = 16
       Top = 16
@@ -91,6 +90,15 @@ object PluginAdmin: TPluginAdmin
       Caption = 'Deaktivieren'
       TabOrder = 2
       OnClick = BitBtn3Click
+    end
+    object BitBtn4: TBitBtn
+      Left = 304
+      Top = 16
+      Width = 75
+      Height = 25
+      Caption = 'Entwicklung'
+      TabOrder = 3
+      OnClick = BitBtn4Click
     end
   end
   object FileOpenDialog1: TFileOpenDialog

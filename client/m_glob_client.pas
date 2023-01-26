@@ -9,13 +9,14 @@ uses
   FireDAC.Stan.Error, FireDAC.DatS,
   FireDAC.Comp.DataSet, FireDAC.Comp.Client,
   System.Generics.Collections, u_gremium, u_stub, System.JSON,
-  JvComputerInfoEx, Datasnap.DSCommon,
+  Datasnap.DSCommon,
   Data.DBXJSON, pngimage, Vcl.ImgList, Vcl.Controls,
   u_berTypes, Datasnap.DSConnect, i_personen, Vcl.Dialogs,
   JvSHFileOperation, System.Notification,
   DbxCompressionFilter, u_ShowMessageTimeOut, Data.DbxHTTPLayer, Vcl.ExtCtrls,
-  FireDAC.Phys.Intf, FireDAC.DApt.Intf, JvBaseDlg, System.ImageList,
-  JvComponentBase, u_SpellChecker, u_pluginManager;
+  JvBaseDlg,
+  JvComponentBase, u_pluginManager, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
+  System.ImageList;
 
 const
   WMUSER            = WM_USER + 25;
@@ -46,7 +47,6 @@ type
     DeleteTimesTabFD_ID: TIntegerField;
     DeleteTimesTabFD_NAME: TStringField;
     DeleteTimesTabFD_MONATE: TIntegerField;
-    JvComputerInfoEx1: TJvComputerInfoEx;
     DSClientCallbackChannelManager1: TDSClientCallbackChannelManager;
     ImageList1: TImageList;
     ImageList2: TImageList;
@@ -642,8 +642,11 @@ end;
 
 procedure TGM.Disconnect;
 begin
-  if SQLConnection1.Connected then
-    SQLConnection1.Close;
+  try
+    if SQLConnection1.Connected then
+      SQLConnection1.Close;
+  except
+  end;
 end;
 
 function TGM.download(fname: string; st: TStream): boolean;
@@ -1099,8 +1102,8 @@ begin
 
   req := TJSONObject.Create;
 
-  JReplace( req, 'host',      JvComputerInfoEx1.Identification.LocalComputerName);
-  JReplace( req, 'hostuser',  JvComputerInfoEx1.Identification.LocalUserName );
+  JReplace( req, 'host',      GetEnvironmentVariable('COMPUTERNAME'));
+  JReplace( req, 'hostuser',  GetEnvironmentVariable('USERNAME'));
   client := NIL;
 
 

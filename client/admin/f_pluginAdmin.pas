@@ -17,11 +17,13 @@ type
     FileOpenDialog1: TFileOpenDialog;
     BitBtn2: TBitBtn;
     BitBtn3: TBitBtn;
+    BitBtn4: TBitBtn;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
     procedure BitBtn3Click(Sender: TObject);
+    procedure BitBtn4Click(Sender: TObject);
   private
     m_client : TTdsPluginClient;
     m_data   : TJSONObject;
@@ -114,6 +116,16 @@ begin
   if not Assigned(LV.Selected) then exit;
 
   row := LV.Selected.Data;
+  changeStatus(JInt(row, 'id'), 'E');
+end;
+
+procedure TPluginAdmin.BitBtn4Click(Sender: TObject);
+var
+  row : TJSONObject;
+begin
+  if not Assigned(LV.Selected) then exit;
+
+  row := LV.Selected.Data;
   changeStatus(JInt(row, 'id'), 'D');
 end;
 
@@ -172,7 +184,6 @@ var
   state : string;
 begin
   if not Assigned(m_data) then exit;
-
 
 
   LV.Items.BeginUpdate;

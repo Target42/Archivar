@@ -72,7 +72,6 @@ object MeetingProtoForm: TMeetingProtoForm
         Width = 631
         Height = 200
         OnChange = GremiumFrame1TVChange
-        ExplicitLeft = 0
         ExplicitWidth = 631
         ExplicitHeight = 200
       end

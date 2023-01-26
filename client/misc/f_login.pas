@@ -40,7 +40,7 @@ var
 implementation
 
 uses
-  m_glob_client, u_ini, f_proxy;
+  m_glob_client, u_ini;
 
 {$R *.dfm}
 

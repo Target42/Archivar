@@ -11,7 +11,7 @@ uses
   FireDAC.Comp.UI, Vcl.ComCtrls, VirtualTrees, System.Generics.Collections,
   System.JSON, System.Actions, Vcl.ActnList, Vcl.Menus, Winapi.ActiveX,
   System.ImageList, Vcl.ImgList, DropTarget, DragDrop, DropSource, DragDropFile,
-  f_uploadForm, Winapi.Windows, Vcl.AppEvnts, DragDropContext, DragDropHandler;
+  f_uploadForm, Winapi.Windows, Vcl.AppEvnts;
 
 
 type

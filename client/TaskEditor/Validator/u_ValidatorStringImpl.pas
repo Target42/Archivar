@@ -3,7 +3,7 @@ unit u_ValidatorStringImpl;
 interface
 
 uses
-  i_taskEdit,i_datafields, System.UITypes, u_validatorBaseImpl;
+  i_taskEdit,System.UITypes, u_validatorBaseImpl;
 
 type
   TValidatorStringImpl = class( TValidatorBaseImpl )

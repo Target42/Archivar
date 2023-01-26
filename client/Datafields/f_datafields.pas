@@ -43,7 +43,7 @@ var
 implementation
 
 uses
-  System.IOUtils, m_glob_client, f_datafield_edit, Xml.XMLIntf, xsd_DataField,
+  System.IOUtils, m_glob_client, f_datafield_edit, xsd_DataField,
   system.UITypes;
 
 var

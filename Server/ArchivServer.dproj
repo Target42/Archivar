@@ -93,6 +93,7 @@
         <DCC_ExeOutput>D:\git\ber.git\Bin\Server\</DCC_ExeOutput>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <Manifest_File>(Ohne)</Manifest_File>
+        <UsePackages>true</UsePackages>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">

@@ -8,7 +8,7 @@ uses
   Vcl.DBCtrls, Data.DB, Datasnap.DBClient, Datasnap.DSConnect,
   u_gremium, Vcl.ComCtrls, JvDBDateTimePicker,
   i_chapter, Vcl.Buttons, System.JSON, VirtualTrees, fr_editForm, fr_to,
-  Vcl.DBGrids, Vcl.Grids, Vcl.Mask, JvExComCtrls, JvDateTimePicker;
+  Vcl.DBGrids, JvExComCtrls, JvDateTimePicker, Vcl.Grids, Vcl.Mask;
 
 type
   TMeetingForm = class(TForm)

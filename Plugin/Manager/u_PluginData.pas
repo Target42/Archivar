@@ -25,7 +25,7 @@ type
 implementation
 
 uses
-  m_glob_client, m_crypt, m_WindowHandler, u_json, System.SysUtils, m_html,
+  m_glob_client, m_crypt, m_WindowHandler, u_json, System.SysUtils,
   m_http, Vcl.Dialogs;
 
 { TPluginDataImpl }

@@ -8,8 +8,8 @@ uses
   FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
   FireDAC.Stan.Error, FireDAC.DatS,
   FireDAC.Stan.StorageBin, Vcl.ExtCtrls, FireDAC.Comp.DataSet,
-  FireDAC.Comp.Client, System.Generics.Collections,
-  Vcl.Grids, FireDAC.Phys.Intf, FireDAC.DApt.Intf;
+  FireDAC.Comp.Client, System.Generics.Collections, FireDAC.Phys.Intf,
+  FireDAC.DApt.Intf, Vcl.Grids;
 
 type
   TUploadForm = class(TForm)

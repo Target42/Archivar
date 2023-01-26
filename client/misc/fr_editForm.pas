@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ComCtrls,
-  u_SpellChecker, Vcl.Buttons, Vcl.Menus, Vcl.ExtCtrls, JvExStdCtrls,
+  Vcl.Buttons, Vcl.Menus, Vcl.ExtCtrls, JvExStdCtrls,
   JvCombobox, JvColorCombo;
 
 type
@@ -62,7 +62,7 @@ type
 implementation
 
 uses
-  m_glob_client, NHunspell, u_ini, system.UITypes;
+  NHunspell, u_ini, system.UITypes;
 
 {$R *.dfm}
 

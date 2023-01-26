@@ -63,7 +63,7 @@ type
 implementation
 
 uses
-  u_TaskCtrlPropImpl, System.SysUtils, Winapi.Windows, Vcl.Menus, i_datafields,
+  u_TaskCtrlPropImpl, System.SysUtils, Winapi.Windows, Vcl.Menus,
   Vcl.Dialogs, Vcl.Graphics;
 { TaskCtrlTable }
 

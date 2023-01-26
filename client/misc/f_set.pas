@@ -5,8 +5,9 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_base, Vcl.ComCtrls, Vcl.Buttons,
-  Vcl.StdCtrls, Vcl.ExtCtrls, IdBaseComponent, IdComponent, IdTCPConnection,
-  IdTCPClient, IdHTTP, Vcl.Samples.Spin;
+  Vcl.StdCtrls, Vcl.ExtCtrls,
+  IdHTTP, Vcl.Samples.Spin, IdBaseComponent, IdComponent, IdTCPConnection,
+  IdTCPClient;
 
 type
   TMySettingsForm = class(TForm)
@@ -61,7 +62,7 @@ var
 implementation
 
 uses
-  m_glob_client, u_ini, System.IOUtils, u_SpellChecker;
+  m_glob_client, u_ini, u_SpellChecker;
 
 {$R *.dfm}
 

@@ -1,0 +1,13 @@
+{
+  "plugins":
+  [
+    {
+      "name":"Tagebuch",
+      "file":"Dairy.bpl"
+    },
+    {
+      "name":"Mail(imap)",
+      "file":"mail_imap.bpl"
+    }
+  ]
+}

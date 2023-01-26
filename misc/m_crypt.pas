@@ -5,7 +5,7 @@ interface
 uses
   System.SysUtils, System.Classes, uTPLb_Hash, uTPLb_Signatory,
   uTPLb_CryptographicLibrary, uTPLb_Codec,
-  uTPLb_Asymetric, uTPLb_BaseNonVisualComponent, u_ICrypt;
+  uTPLb_Asymetric, u_ICrypt, uTPLb_BaseNonVisualComponent;
 
 type
   TCryptMod = class(TDataModule, ICrypt)

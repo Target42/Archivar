@@ -98,6 +98,7 @@
         <Debugger_RunParams>/host:localhost</Debugger_RunParams>
         <DCC_UnitSearchPath>C:\Users\Public\Documents\Embarcadero\Studio\DragnDrop\Source;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <DCC_ExeOutput>D:\git\ber.git\Bin\client\</DCC_ExeOutput>
+        <UsePackages>true</UsePackages>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
@@ -112,14 +113,15 @@
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Build>15</VerInfo_Build>
-        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.15;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Build>26</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.26;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <Icon_MainIcon>icons8_Library.ico</Icon_MainIcon>
         <DCC_SYMBOL_PLATFORM>false</DCC_SYMBOL_PLATFORM>
         <DCC_UNIT_PLATFORM>false</DCC_UNIT_PLATFORM>
         <DCC_UnitSearchPath>C:\Users\Public\Documents\Embarcadero\Studio\DragnDrop\Source;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <DCC_BplOutput>.\$(Platform)\$(Config)</DCC_BplOutput>
         <DCC_AssertionsAtRuntime>false</DCC_AssertionsAtRuntime>
+        <UsePackages>true</UsePackages>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">
@@ -677,9 +679,165 @@
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">
-                <DeployFile LocalName="dws\dws.html" Configuration="Debug" Class="ProjectFile">
+                <DeployFile LocalName="$(BDSCOMMONDIR)\Bpl\JvCore250.bpl" Configuration="Release" Class="DependencyPackage">
                     <Platform Name="Win32">
-                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\dbexpress250.bpl" Configuration="Release" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\vclsmp250.bpl" Configuration="Release" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDSCOMMONDIR)\Bpl\VirtualTreesDR250.bpl" Configuration="Release" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\inet250.bpl" Configuration="Release" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\vclimg250.de" Configuration="Release" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>vclimg250.de</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDSCOMMONDIR)\Bpl\dwsLibRuntimeXE7.bpl" Configuration="Release" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\dbrtl250.de" Configuration="Release" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>dbrtl250.de</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\DBXClientDriver250.bpl" Configuration="Release" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\vcl250.bpl" Configuration="Release" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\CustomIPTransport250.bpl" Configuration="Release" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\DataSnapProviderClient250.bpl" Configuration="Release" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDSCOMMONDIR)\Bpl\SynEditDR250.bpl" Configuration="Release" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\vclsmp250.de" Configuration="Release" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>vclsmp250.de</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\FireDAC250.de" Configuration="Release" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>FireDAC250.de</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\DataSnapCommon250.de" Configuration="Release" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>DataSnapCommon250.de</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\dbexpress250.de" Configuration="Release" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>dbexpress250.de</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\DataSnapCommon250.bpl" Configuration="Release" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\DataSnapClient250.de" Configuration="Release" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>DataSnapClient250.de</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDSCOMMONDIR)\Bpl\JvWizards250.bpl" Configuration="Release" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\IndyProtocols250.de" Configuration="Release" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>IndyProtocols250.de</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\FireDACCommon250.de" Configuration="Release" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>FireDACCommon250.de</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\xmlrtl250.de" Configuration="Release" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>xmlrtl250.de</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\IndySystem250.bpl" Configuration="Release" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\vclie250.de" Configuration="Release" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>vclie250.de</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\dsnap250.bpl" Configuration="Release" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\ibxpress250.de" Configuration="Release" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>ibxpress250.de</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\FireDACSqliteDriver250.bpl" Configuration="Release" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\IndyIPCommon250.bpl" Configuration="Release" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\xmlrtl250.bpl" Configuration="Release" Class="DependencyPackage">
+                    <Platform Name="Win32">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -689,15 +847,126 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="$(BDSCOMMONDIR)\Bpl\JclVcl250.bpl" Configuration="Release" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\ibxpress250.bpl" Configuration="Release" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\vclie250.bpl" Configuration="Release" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\FireDACCommonDriver250.bpl" Configuration="Release" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\vcldb250.bpl" Configuration="Release" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\DBXCommonDriver250.bpl" Configuration="Release" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDSCOMMONDIR)\Bpl\JvCustom250.bpl" Configuration="Release" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDSCOMMONDIR)\Bpl\JvNet250.bpl" Configuration="Release" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\vcl250.de" Configuration="Release" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>vcl250.de</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\vcldb250.de" Configuration="Release" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>vcldb250.de</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\vclFireDAC250.bpl" Configuration="Release" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\IndyCore250.de" Configuration="Release" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>IndyCore250.de</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\rtl250.de" Configuration="Release" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>rtl250.de</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="Datafields\ERA-NS.txt" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\Bin\Server\client\latest\Archivar.exe" Configuration="Release" Class="ProjectOutput">
+                <DeployFile LocalName="$(BDSCOMMONDIR)\Bpl\Jcl250.bpl" Configuration="Release" Class="DependencyPackage">
                     <Platform Name="Win32">
-                        <RemoteName>Archivar.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDSCOMMONDIR)\Bpl\JvStdCtrls250.bpl" Configuration="Release" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\IndyProtocols250.bpl" Configuration="Release" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="dws\dws.html" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\FireDACCommon250.bpl" Configuration="Release" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDSCOMMONDIR)\Bpl\JvControls250.bpl" Configuration="Release" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\inet250.de" Configuration="Release" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>inet250.de</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\dsnap250.de" Configuration="Release" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>dsnap250.de</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDSCOMMONDIR)\Bpl\JvDB250.bpl" Configuration="Release" Class="DependencyPackage">
+                    <Platform Name="Win32">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -707,9 +976,112 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="dws\dws.html" Configuration="Release" Class="ProjectFile">
+                <DeployFile LocalName="$(BDS)\Redist\Win32\rtl250.bpl" Configuration="Release" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\IndySystem250.de" Configuration="Release" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>IndySystem250.de</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\DBXCommonDriver250.de" Configuration="Release" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>DBXCommonDriver250.de</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\IndyIPClient250.bpl" Configuration="Release" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\adortl250.bpl" Configuration="Release" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\vclFireDAC250.de" Configuration="Release" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>vclFireDAC250.de</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\adortl250.de" Configuration="Release" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>adortl250.de</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDSCOMMONDIR)\Bpl\JvSystem250.bpl" Configuration="Release" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\Bin\Server\client\latest\Archivar.exe" Configuration="Release" Class="ProjectOutput">
+                    <Platform Name="Win32">
+                        <RemoteName>Archivar.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\IndyCore250.bpl" Configuration="Release" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\vclimg250.bpl" Configuration="Release" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDSCOMMONDIR)\Bpl\JvDlgs250.bpl" Configuration="Release" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\dbrtl250.bpl" Configuration="Release" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\vclx250.bpl" Configuration="Release" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\DataSnapProviderClient250.de" Configuration="Release" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>DataSnapProviderClient250.de</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\vclx250.de" Configuration="Release" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>vclx250.de</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\FireDAC250.bpl" Configuration="Release" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="dws\dws.html" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\DataSnapClient250.bpl" Configuration="Release" Class="DependencyPackage">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\DBXClientDriver250.de" Configuration="Release" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>DBXClientDriver250.de</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
