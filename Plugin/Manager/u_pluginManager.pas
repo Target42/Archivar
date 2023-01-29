@@ -256,10 +256,11 @@ var
 begin
   for i :=0 to pred(m_list.Count) do begin
     plg := m_list[i];
-{    if Assigned(plg.MenuEntry) then begin
+    if Assigned(plg.MenuEntry) then begin
       FMenuRoot.Remove(plg.MenuEntry);
       plg.MenuEntry.Free;
-    end;}
+      plg.MenuEntry := NIL;
+    end;
     plg.unload;
     plg.Free;
   end;

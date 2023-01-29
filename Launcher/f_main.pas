@@ -66,6 +66,8 @@ type
 
     procedure clearFiles;
     procedure FillFiles( obj : TJSONObject );
+
+    procedure unzipRuntime;
   public
     property Root : string read m_root write setRoot;
   end;
@@ -125,6 +127,8 @@ var
     SQLConnection1.Params.Values['HostName']  := host;
     SQLConnection1.Params.Values['Port']      := port;
   end;
+var
+  flag : boolean;
 begin
   // check the Path
   if not SameText(m_root, LabeledEdit1.Text) then begin
@@ -139,12 +143,13 @@ begin
     ShowMessage('Bitte einene gültigen Host eingeben.');
     exit;
   end;
-
+  flag := false;
   clearFiles;
   setHost( LabeledEdit2.Text );
 
   unpackSSL;
   copyInstaller;
+
 
   Screen.Cursor := crHourGlass;
   try
@@ -159,8 +164,15 @@ begin
       end;
     end;
     if CheckFiles then
-      DownloadFiles;
+      flag := DownloadFiles;
+
+    StatusBar1.SimpleText := 'Laufzeitumgebung auspacken';
+    unzipRuntime;
+    StatusBar1.SimpleText := 'Abgeschlossen';
     Screen.Cursor := crDefault;
+
+    if flag then
+      startProgram;;
   except
     on e : exception do begin
       Screen.Cursor := crDefault;
@@ -168,6 +180,7 @@ begin
       ShowMessage( e.ToString );
     end;
   end;
+
 end;
 
 procedure TMainForm.CheckBox2Click(Sender: TObject);
@@ -304,10 +317,6 @@ begin
     end;
   end;
   StatusBar1.SimpleText := 'Fertig';
-
-  if Result then
-    startProgram;
-
 end;
 
 procedure TMainForm.FillFiles(obj: TJSONObject);
@@ -494,6 +503,30 @@ begin
   zip.Free;
   rs.Free;
 
+end;
+
+procedure TMainForm.unzipRuntime;
+var
+  fname : string;
+  zip   : TZipFile;
+  i     : integer;
+begin
+  fname := TPath.Combine(m_root, 'runtime.zip');
+  if not FileExists(fname) then exit;
+  ProgressBar1.Position := 0;
+
+  zip := TZipFile.Create;
+  zip.Open(fname, zmRead);
+  ProgressBar1.Max      := zip.FileCount-1;
+  for i := 0 to pred(zip.FileCount) do begin
+    try
+      zip.Extract(i, m_root);
+      ProgressBar1.Position := i;
+    except
+
+    end;
+  end;
+  zip.Free;
 end;
 
 end.

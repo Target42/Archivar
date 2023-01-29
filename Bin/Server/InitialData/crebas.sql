@@ -1,7 +1,7 @@
 /* ============================================================ */
 /*   Database name:  MODEL_2                                    */
 /*   DBMS name:      InterBase                                  */
-/*   Created on:     02.01.2023  13:18                          */
+/*   Created on:     29.01.2023  13:10                          */
 /* ============================================================ */
 
 create generator gen_be_id;
@@ -192,6 +192,8 @@ create table PL_PLUGIN
     PL_NAME                         VARCHAR(150)                   ,
     PL_DATA                         BLOB                           ,
     PL_MD5                          VARCHAR(32)                    ,
+    PL_STATE                        CHAR(1)                        ,
+    PL_FILENAME                     VARCHAR(250)                   ,
     constraint PK_PL_PLUGIN primary key (PL_ID)
 );
 
@@ -318,7 +320,7 @@ create table TA_TASK
     TA_REM                          VARCHAR(256)                   ,
     TA_COLOR                        INTEGER                        ,
     TA_DELETED                      CHAR(1)                        ,
-    TA_BEARBEITER                   VARCHAR                        ,
+    TA_BEARBEITER                   VARCHAR(255)                   ,
     constraint PK_TA_TASK primary key (TA_ID)
 );
 

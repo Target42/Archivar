@@ -121,16 +121,34 @@ procedure THttpMod.IdHTTPServer1CommandGet(AContext: TIdContext;
   ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
 var
   s :string;
+  fname : string;
 begin
   GrijjyLog.EnterMethod(self, 'IdHTTPServer1CommandGet(');
   GrijjyLog.send( 'get:', ARequestInfo.Document );
   GrijjyLog.send( 'IP :', ARequestInfo.RemoteIP );
 
-
   if SameText(ARequestInfo.Document, '/launcher.zip') then
   begin
     GrijjyLog.send( 'buildZip');
     buildZip( AResponseInfo );
+  end else if SameText(ARequestInfo.Document, '/logo.png') then begin
+    fname := ExpandFileName(TPath.Combine( IniOptions.DNLwwwroot, 'html\logo.png'));
+    if FileExists(fname) then begin
+      AResponseInfo.ContentStream := TFileStream.Create(fname, fmOpenRead + fmShareDenyNone);
+      AResponseInfo.FreeContentStream := true;
+      AResponseInfo.ResponseNo := 200;
+    end else
+      AResponseInfo.ResponseNo := 404;
+  end else if SameText(ARequestInfo.Document, '/facicon.ico') then begin
+    AResponseInfo.ResponseNo := 404;
+  end  else if SameText(ARequestInfo.Document, '/server.zip') then begin
+    fname := ExpandFileName(TPath.Combine( IniOptions.DNLwwwroot, 'server.zip'));
+  if FileExists(fname) then begin
+      AResponseInfo.ContentStream := TFileStream.Create(fname, fmOpenRead + fmShareDenyNone);
+      AResponseInfo.FreeContentStream := true;
+      AResponseInfo.ResponseNo := 200;
+    end else
+      AResponseInfo.ResponseNo := 404;
   end else begin
     GrijjyLog.send( 'page procducer');
     s := PageProducer1.Content;

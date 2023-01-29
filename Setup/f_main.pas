@@ -1218,8 +1218,8 @@ begin
       for i := 0 to pred(arr.Count) do begin
         row := getRow(arr, i);
         item := PluginView.Items.Add;
-        item.Caption := JString( row, 'name');
-        item.SubItems.Add( JString(row, 'file'));
+        item.Caption := JString(row, 'file');
+        item.SubItems.Add( JString( row, 'name') );
         item.SubItems.Add(md5(TPath.Combine(path,JString(row, 'file'))));
         item.Checked := true;
       end;

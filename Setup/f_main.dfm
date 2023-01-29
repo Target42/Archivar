@@ -714,6 +714,8 @@ object MainSetupForm: TMainSetupForm
       Header.Subtitle.Font.Style = []
       OnEnterPage = SicherheitEnterPage
       OnExitPage = SicherheitExitPage
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GroupBox4: TGroupBox
         Left = 0
         Top = 70
@@ -826,6 +828,8 @@ object MainSetupForm: TMainSetupForm
       Header.Subtitle.Font.Style = []
       OnEnterPage = MailEnterPage
       OnExitPage = MailExitPage
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GroupBox6: TGroupBox
         Left = 0
         Top = 70
@@ -1067,6 +1071,8 @@ object MainSetupForm: TMainSetupForm
       Header.Subtitle.Font.Style = []
       Caption = 'InitData'
       OnEnterPage = InitDataEnterPage
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Panel1: TPanel
         Left = 0
         Top = 489

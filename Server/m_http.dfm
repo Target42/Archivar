@@ -22,6 +22,15 @@ object HttpMod: THttpMod
       '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">'
       '<html>'
       '<head>'
+      '<style>'
+      ''
+      '.center {'
+      '  display: block;'
+      '  margin-left: auto;'
+      '  margin-right: auto;'
+      '  width: 50%;'
+      '}'
+      '<.style>'
       '</head>'
       ''
       ''
@@ -31,6 +40,7 @@ object HttpMod: THttpMod
       '<h1>Archivar</h1>'
       ''
       ''
+      ' <img src="/logo.png" alt="logo" class="center"> '
       '<br>'
       ''
       ''
@@ -63,8 +73,8 @@ object HttpMod: THttpMod
       '</body>'
       '</html>')
     OnHTMLTag = PageProducer1HTMLTag
-    Left = 152
-    Top = 24
+    Left = 232
+    Top = 48
   end
   object IdServerIOHandlerStack1: TIdServerIOHandlerStack
     Left = 80
