@@ -643,8 +643,14 @@ end;
 procedure TGM.Disconnect;
 begin
   try
-    if SQLConnection1.Connected then
+    if SQLConnection1.Connected then begin
+      DSClientCallbackChannelManager1.CloseClientChannel;
+
+    if Assigned(m_misc) then
+      FreeAndNil(m_misc);
+
       SQLConnection1.Close;
+    end;
   except
   end;
 end;
