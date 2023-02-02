@@ -194,6 +194,7 @@ begin
   m_date := Month;
   DecodeDate(m_date, y, m, d);
 
+  DiQry.Close;
   Label1.Caption := FormatDateTime('mmmm yyyy', m_date);
   DiQry.ParamByName('start').AsDate := EncodeDate(y, m, 1);
   DiQry.ParamByName('ende').AsDate  := EncodeDate(y, m, DaysInAMonth(y, m));
