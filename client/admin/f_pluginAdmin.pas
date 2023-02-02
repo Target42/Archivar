@@ -126,7 +126,7 @@ begin
   if not Assigned(LV.Selected) then exit;
 
   row := LV.Selected.Data;
-  changeStatus(JInt(row, 'id'), 'D');
+  changeStatus(JInt(row, 'id'), 'E');
 end;
 
 procedure TPluginAdmin.changeStatus(id : integer; status: string);
@@ -199,7 +199,8 @@ begin
       item.SubItems.Add( JString( row, 'filename'));
       state := JString( row, 'state');
       if state = 'A' then item.SubItems.Add( 'Aktiv' )
-      else if state = 'D' then item.SubItems.Add( 'Deaktiv' );
+      else if state = 'D' then item.SubItems.Add( 'Deaktiv' )
+      else if state = 'E' then item.SubItems.Add( 'Entwicklung' );
     end;
   end;
   LV.Items.EndUpdate;

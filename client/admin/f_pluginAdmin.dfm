@@ -48,12 +48,15 @@ object PluginAdmin: TPluginAdmin
         end
         item
           Caption = 'Status'
+          Width = 90
         end>
       ReadOnly = True
       RowSelect = True
       SortType = stText
       TabOrder = 0
       ViewStyle = vsReport
+      ExplicitLeft = 4
+      ExplicitTop = 14
     end
   end
   object GroupBox2: TGroupBox
