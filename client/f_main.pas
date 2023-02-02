@@ -919,6 +919,14 @@ begin
   ApplicationSetMenu( false );
   ParseCmdLine;
   GM.Plugins.MenuRoot := Plugins1;
+
+{$ifdef DEBUG}
+  est1.Visible   := true;
+  test21.Visible := true;
+{$else}
+  est1.Visible   := false;
+  test21.Visible := false;
+{$endif}
 end;
 
 procedure TMainForm.FormDestroy(Sender: TObject);
