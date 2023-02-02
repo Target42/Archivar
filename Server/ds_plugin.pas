@@ -11,7 +11,7 @@ uses
   System.JSON;
 
 type
-  [TRoleAuth('download, admin', 'user')]
+  [TRoleAuth('download, admin, user')]
   TTdsPlugin = class(TDSServerModule)
     TabPlugin: TFDTable;
     FDTransaction1: TFDTransaction;

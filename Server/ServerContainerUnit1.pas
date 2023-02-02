@@ -662,7 +662,8 @@ begin
     except
       on e : exception do begin
         GrijjyLog.Send( e.ToString, Error);
-        QueryUser.Close;
+        if QueryUser.Active then
+          QueryUser.Close;
       end;
     end;
 
@@ -676,7 +677,6 @@ begin
     m_Lock.Release;
   end;
   GrijjyLog.ExitMethod(self, 'DSAuthenticationManager1UserAuthenticate');
-
 end;
 
 procedure TServerContainer1.DSAuthenticationManager1UserAuthorize(
