@@ -133,6 +133,9 @@ type
     Plugins: TJvWizardInteriorPage;
     PluginView: TListView;
     PluginTab: TFDTable;
+    GroupBox9: TGroupBox;
+    LabeledEdit19: TLabeledEdit;
+    LabeledEdit20: TLabeledEdit;
     procedure SearchGDSEnterPage(Sender: TObject;
       const FromPage: TJvWizardCustomPage);
     procedure ServerInfoEnterPage(Sender: TObject;
@@ -202,6 +205,8 @@ type
 
     function AutoInc( name : string ) : integer;
     function md5( fname : string ) : string;
+
+    procedure ImportExcel(fileName : string );
   public
     { Public-Deklarationen }
   end;
@@ -216,7 +221,8 @@ uses
   xsd_Betriebsrat, xsd_DataField, FireDAC.Phys.IBWrapper,
   System.Win.ComObj, System.Hash, u_ePub, xsd_TextBlock,
   System.Zip, Xml.XMLIntf, Xml.XMLDoc, System.JSON, u_json, ShellApi,
-  system.UITypes, m_mail;
+  system.UITypes, m_mail, System.Win.Registry, Excel4Delphi,
+  Excel4Delphi.Stream, u_texte;
 
 {$R *.dfm}
 
@@ -244,6 +250,8 @@ begin
   importDataTypes;
   importTasks;
 
+  BitBtn1.Enabled := false;
+
   InitData.VisibleButtons := [TJvWizardButtonKind.bkNext, TJvWizardButtonKind.bkFinish];
 end;
 
@@ -253,27 +261,73 @@ var
   i    : integer;
   fname: string;
   found: boolean;
+  inPath : boolean;
   procedure AddColoredString(AText: string; AColor: TColor);
   begin
-    AText := AText + #13;
     with RE do
     begin
       SelStart := Length(Text);
+      SelLength := 0;
       SelAttributes.Color := AColor;
-      SelText := AText;
+      Lines.Add(AText);
     end;
   end;
+
+  function checkRegistry : boolean;
+  var
+    reg:TRegistry;
+    fname : string;
+  begin
+    Result := false;
+    reg := TRegistry.Create(KEY_READ);
+    reg.RootKey := HKEY_LOCAL_MACHINE;
+
+    if reg.OpenKey('\SOFTWARE\Firebird Project\Firebird Server\Instances',false) then
+    begin
+      AddColoredString('ok  :'+reg.ReadString('DefaultInstance'), clGreen );
+      LabeledEdit19.Text := reg.ReadString('DefaultInstance');
+      Result := true;
+    end else if reg.OpenKey('\SOFTWARE\WOW6432node\Firebird Project\Firebird Server\Instances',false) then
+    begin
+      AddColoredString('ok  :'+reg.ReadString('DefaultInstance'), clGreen);
+      LabeledEdit19.Text := reg.ReadString('DefaultInstance');
+      Result := true;
+    end;
+    if LabeledEdit19.Text <> '' then begin
+      fname := TPath.Combine(LabeledEdit19.Text, 'bin\fbclient.dll');
+      if FileExists(fname) then
+        LabeledEdit20.Text := fname;
+    end;
+    reg.CloseKey;
+    reg.Free;
+  end;
+var
+  reg : string;
+  inList : boolean;
 begin
-  SearchGDS.Subtitle.Text := 'Suche fbclient.dll';
+  RE.PlainText := false;
+  SearchGDS.Subtitle.Text := SearchGDSText;
   SearchGDS.VisibleButtons := [TJvWizardButtonKind.bkBack, TJvWizardButtonKind.bkCancel];
-  // search gds32.dll
-  RE.Lines.Clear;
+
+  RE.Lines.Text := InfoGDSText;
+
   List := TStringList.Create;
   list.StrictDelimiter := true;
   list.Delimiter := ';';
   list.DelimitedText := GetEnvironmentVariable('PATH');
-  list.Sort;
-  found := false;
+
+  reg := '';
+  found := checkRegistry;
+  if found then begin
+    AddColoredString('Firebird wurde in der Registry gefunden!',  clGreen);
+    reg := LabeledEdit20.Text;
+  end else
+    AddColoredString('Es wurde keine Firebird-Installation gefunden!',  clRed);
+
+
+  AddColoredString('Suche im Pfad:', clBlack);
+  inPath := false;
+  inList := false;
   for i := 0 to pred(list.Count) do
   begin
     if trim(list[i]) = '' then
@@ -282,24 +336,28 @@ begin
     fname :=  TPath.Combine(list[i], 'fbclient.dll');
     if FileExists(fname) then
     begin
-      found := true;
+      found   := true;
+      inList  := true;
       AddColoredString('ok  :'+List[i], clGreen);
-    end
-    else
-      AddColoredString('fail:'+List[i], clRed);
-  end;
-  if found then
-  begin
-    SearchGDS.Subtitle.font.Color := clGreen;
-    SearchGDS.Subtitle.Text := SearchGDS.Subtitle.Text + sLineBreak+'Erfolgreich!';
-    SearchGDS.VisibleButtons := [TJvWizardButtonKind.bkBack, TJvWizardButtonKind.bkNext, TJvWizardButtonKind.bkCancel];
-  end
-  else
-  begin
-      SearchGDS.Subtitle.Font.Color := clRed;
-      SearchGDS.Subtitle.Text := SearchGDS.Subtitle.Text + sLineBreak+'Nicht gefunden!';
+      if LabeledEdit20.Text = '' then
+        LabeledEdit20.Text := List[i];
+      if not inPath then begin
+        inPath := SameTExt( reg, fname);
+      end;
+    end;
   end;
 
+  if not inList then
+    AddColoredString('Die fbClient.dll wurde nicht im Suchpfad gefunden!', clRed);
+
+  if not inPath and (reg <> '' ) then begin
+    AddColoredString('Es wurde eine FireBird-Installation gefunden, aber sie ist nicht um Suchpfad eingetragen.', clRed);
+  end;
+
+  if found then
+  begin
+    SearchGDS.VisibleButtons := [TJvWizardButtonKind.bkBack, TJvWizardButtonKind.bkNext, TJvWizardButtonKind.bkCancel];
+  end;
   list.Free;
 end;
 
@@ -519,15 +577,22 @@ begin
 end;
 
 procedure TMainSetupForm.Button1Click(Sender: TObject);
+var
+  ext : string;
 begin
   FileOpenDialog1.DefaultFolder := ExtractFilePath(TPath.Combine(m_home, 'InitialData'));
 
   if FileOpenDialog1.Execute then begin
-    FDMemTable1.EmptyDataSet;
-    FDBatchMoveTextReader1.DataDef.WithFieldNames := CheckBox1.Checked;
-    FDBatchMoveTextReader1.FileName := FileOpenDialog1.FileName;
-    FDBatchMove1.GuessFormat;
-    FDBatchMove1.Execute;
+    ext := ExtractFileExt(FileOpenDialog1.FileName);
+    if SameText(ext, '.csv')  then begin
+      FDMemTable1.EmptyDataSet;
+      FDBatchMoveTextReader1.DataDef.WithFieldNames := CheckBox1.Checked;
+      FDBatchMoveTextReader1.FileName := FileOpenDialog1.FileName;
+      FDBatchMove1.GuessFormat;
+      FDBatchMove1.Execute;
+    end else begin
+      ImportExcel( FileOpenDialog1.FileName );
+    end;
   end;
 end;
 
@@ -607,7 +672,7 @@ begin
   m_ini   := TiniFile.Create(TPath.Combine(ExtractFileDir(Application.ExeName), 'ArchivServer.exe.ini'));
 
   m_berMap := TDictionary<string, integer>.create;
-//  JvWizard1.ActivePage := Plugins;
+//  JvWizard1.ActivePage := Import;
 end;
 
 procedure TMainSetupForm.FormDestroy(Sender: TObject);
@@ -758,6 +823,44 @@ begin
   item.SubItems.Strings[0] := 'Abgeschlossen';
   EPTab.Close;
   updateLV;
+end;
+
+procedure TMainSetupForm.ImportExcel(fileName: string);
+var
+  workBook: TZWorkBook;
+  y       : integer;
+  sheet   : TZSheet;
+  start   : integer;
+begin
+  if not FileExists(fileName) then exit;
+
+  if CheckBox1.Checked then
+    start := 1
+  else
+    start := 0;
+
+  workBook := TZWorkBook.Create(nil);
+  workBook.LoadFromFile(fileName);
+  if workBook.Sheets.Count > 0 then begin
+    sheet := workBook.Sheets[0];
+    if sheet.ColCount >= 5 then begin
+      FDMemTable1.Open;
+      for y := start to pred(sheet.RowCount) do begin
+        if trim(sheet.Cell[0, y ].Data) <> '' then begin
+          FDMemTable1.Append;
+          FDMemTable1PE_NET.AsString        := sheet.Cell[0, y ].Data;
+          FDMemTable1PE_NAME.AsString       := sheet.Cell[1, y ].Data;
+          FDMemTable1PE_VORNAME.AsString    := sheet.Cell[2, y ].Data;
+          FDMemTable1PE_DEPARTMENT.AsString := sheet.Cell[3, y ].Data;
+          FDMemTable1PE_MAIL.AsString       := sheet.Cell[4, y ].Data;
+          FDMemTable1.Post;
+        end;
+      end;
+    end else begin
+      ShowMessage('Das Sheet hat weniger als 5 Spalten!');
+    end;
+  end;
+  workBook.Free;
 end;
 
 procedure TMainSetupForm.importFileCache;
