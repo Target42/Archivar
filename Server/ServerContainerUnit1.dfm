@@ -2,7 +2,7 @@ object ServerContainer1: TServerContainer1
   OldCreateOrder = False
   OnCreate = ServiceCreate
   OnDestroy = ServiceDestroy
-  DisplayName = 'ServerContainer1'
+  DisplayName = 'ArchivarServer'
   OnStart = ServiceStart
   OnStop = ServiceStop
   Height = 680

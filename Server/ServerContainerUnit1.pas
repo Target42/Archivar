@@ -810,6 +810,7 @@ begin
   GrijjyLog.Service := 'Archivar';
   GrijjyLog.SetLogLevel(TgoLogLevel.Info);
 
+  SetCurrentDirectory(PWchar(ExtractFilePath(paramStr(0))));
   LockMod     := TLockMod.create(self);
   GM          := TGM.Create(self);
   HttpMod     := THttpMod.Create(self);
