@@ -14,7 +14,8 @@ uses
   xsd_TaskType in '..\misc\xsd_TaskType.pas',
   Vcl.Themes,
   Vcl.Styles,
-  m_mail in '..\misc\m_mail.pas' {MailMod: TDataModule};
+  m_mail in '..\misc\m_mail.pas' {MailMod: TDataModule},
+  u_texte in 'u_texte.pas';
 
 {$R *.res}
 
