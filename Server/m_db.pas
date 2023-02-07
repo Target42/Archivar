@@ -7,17 +7,21 @@ uses
   FireDAC.Phys.FB, FireDAC.Phys.FBDef, FireDAC.Stan.Intf, FireDAC.Stan.Option,
   FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Stan.Def,
   FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.VCLUI.Wait, FireDAC.Comp.Client,
-  Data.DB, FireDAC.Phys.Intf;
+  Data.DB, FireDAC.Phys.Intf, FireDAC.Phys.IBWrapper, FireDAC.Phys.IBBase;
 
 type
   TDBMod = class(TDataModule)
     ArchivarConnection: TFDConnection;
     FDTransaction1: TFDTransaction;
     FDManager1: TFDManager;
+    FDFBNBackup1: TFDFBNBackup;
+    FDPhysFBDriverLink1: TFDPhysFBDriverLink;
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
   private
-    { Private declarations }
+    m_clientDLL : string;
+
+    procedure findClientDLL;
   public
     function startDB: boolean;
     procedure stopDB;
@@ -31,7 +35,7 @@ var
 implementation
 
 uses
-  Grijjy.CloudLogging, u_ini, FireDAC.Phys.IBWrapper;
+  Grijjy.CloudLogging, u_ini, system.IOUtils;
 
 {%CLASSGROUP 'System.Classes.TPersistent'}
 
@@ -47,14 +51,39 @@ begin
 //
 end;
 
+procedure TDBMod.findClientDLL;
+var
+  list  : TStringList;
+  i     : integer;
+  fname : string;
+begin
+  m_clientDLL := '';
+  List := TStringList.Create;
+  list.StrictDelimiter := true;
+  list.Delimiter := ';';
+  list.DelimitedText := GetEnvironmentVariable('PATH');
+  list.Sort;
+
+  for i := 0 to pred(list.Count) do begin
+    fname := TPath.combine( list[i], 'fbclient.dll');
+    if FileExists(fname) then begin
+      m_clientDLL := fname;
+      break;
+    end;
+  end;
+  list.Free;
+end;
+
 function TDBMod.startDB: boolean;
 var
   db : string;
 begin
   GrijjyLog.EnterMethod(self, 'startDB');
+  findClientDLL;
 
   db := IniOptions.DBhost+':'+IniOptions.DBdb;
   GrijjyLog.Send('db name', db);
+  GrijjyLog.Send('dll', m_clientDLL);
 {$ifdef DEBUG}
   Writeln( 'DB:'+db);
 {$endif}
@@ -75,6 +104,17 @@ begin
     Pooled    := true;
   end;
   FDManager.AddConnectionDef('FirebirdPooled', 'FB', ArchivarConnection.Params );
+
+  FDPhysFBDriverLink1.VendorLib := m_clientDLL;
+
+  with FDFBNBackup1 do begin
+    Protocol  := ipTCPIP;
+    host      := IniOptions.DBhost;
+    Database  := IniOptions.DBdb;
+    UserName  := IniOptions.DBuser;
+    Password  := IniOptions.DBpwd;
+    level     := 0;
+  end;
 
   try
     ArchivarConnection.ConnectionDefName := 'FirebirdPooled';

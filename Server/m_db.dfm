@@ -30,4 +30,13 @@ object DBMod: TDBMod
     Left = 128
     Top = 24
   end
+  object FDFBNBackup1: TFDFBNBackup
+    DriverLink = FDPhysFBDriverLink1
+    Left = 264
+    Top = 88
+  end
+  object FDPhysFBDriverLink1: TFDPhysFBDriverLink
+    Left = 264
+    Top = 40
+  end
 end
