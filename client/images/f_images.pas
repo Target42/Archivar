@@ -83,6 +83,7 @@ end;
 
 procedure TImagesForm.FormCreate(Sender: TObject);
 begin
+  DSProviderConnection1.SQLConnection := GM.SQLConnection1;
   PicTab.Open;
 end;
 
