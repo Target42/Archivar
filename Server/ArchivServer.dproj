@@ -5,10 +5,11 @@
         <FrameworkType>VCL</FrameworkType>
         <MainSource>ArchivServer.dpr</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">Release</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>1</TargetedPlatforms>
         <AppType>Application</AppType>
+        <Profile Condition="'$(Platform)'=='Win32'">target42</Profile>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
         <Base>true</Base>
@@ -60,7 +61,7 @@
         <SanitizedProjectName>ArchivServer</SanitizedProjectName>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
-        <DCC_UsePackage>DBXSqliteDriver;fmxase;DBXDb2Driver;DBXInterBaseDriver;clinetsuite_102;OverbyteIcsD102Run;vclactnband;vclFireDAC;tethering;svnui;JvGlobus;FireDACADSDriver;JvPluginSystem;DBXMSSQLDriver;JvMM;DatasnapConnectorsFreePascal;FireDACMSSQLDriver;vcltouch;JvBands;vcldb;bindcompfmx;svn;Intraweb;DBXOracleDriver;JvJans;JvNet;inetdb;JvAppFrm;VirtualTreesDR;Skype4Delphi;RaizeComponentsVcl;FmxTeeUI;emsedge;JvDotNetCtrls;fmx;fmxdae;RaizeComponentsVclDb;vclib;dwsLibRuntime;JvWizards;FireDACDBXDriver;dbexpress;IndyCore;UIBD21Win32R;vclx;JvPageComps;dsnap;DataSnapCommon;JvDB;DataSnapConnectors;VCLRESTComponents;JclDeveloperTools;vclie;CPortLibDXE;bindengine;DBXMySQLDriver;FireDACOracleDriver;FireDACMySQLDriver;DBXFirebirdDriver;JvCmp;JvHMI;FireDACCommonODBC;DataSnapClient;IndyIPCommon;bindcompdbx;JvCustom;vcl;IndyIPServer;DBXSybaseASEDriver;JvXPCtrls;IndySystem;FireDACDb2Driver;dsnapcon;FireDACMSAccDriver;fmxFireDAC;FireDACInfxDriver;vclimg;TeeDB;Jcl;JvCore;emshosting;JvCrypt;FireDACPgDriver;ibmonitor;FireDACASADriver;DBXOdbcDriver;FireDACTDataDriver;FMXTee;DbxCommonDriver;JvDlgs;JvRuntimeDesign;ibxpress;Tee;JvManagedThreads;DataSnapServer;xmlrtl;DataSnapNativeClient;fmxobj;vclwinx;FireDACDSDriver;rtl;ibxbindings;DbxClientDriver;JvTimeFramework;DBXSybaseASADriver;AsyncProDR;CustomIPTransport;vcldsnap;JvSystem;JvStdCtrls;SynEditDR;bindcomp;appanalytics;DBXInformixDriver;IndyIPClient;bindcompvcl;TeeUI;JvDocking;dbxcds;VclSmp;JvPascalInterpreter;adortl;FireDACODBCDriver;JclVcl;DataSnapIndy10ServerTransport;dsnapxml;DataSnapProviderClient;dbrtl;IndyProtocols;inetdbxpress;FireDACMongoDBDriver;JvControls;JvPrintPreview;PowerPDFDR;JclContainers;DataSnapServerMidas;$(DCC_UsePackage)</DCC_UsePackage>
+        <DCC_UsePackage>DBXSqliteDriver;fmxase;DBXDb2Driver;DBXInterBaseDriver;clinetsuite_102;OverbyteIcsD102Run;vclactnband;vclFireDAC;tethering;svnui;JvGlobus;FireDACADSDriver;JvPluginSystem;DBXMSSQLDriver;JvMM;DatasnapConnectorsFreePascal;FireDACMSSQLDriver;vcltouch;JvBands;vcldb;bindcompfmx;svn;Intraweb;DBXOracleDriver;JvJans;JvNet;inetdb;JvAppFrm;VirtualTreesDR;RaizeComponentsVcl;FmxTeeUI;emsedge;JvDotNetCtrls;fmx;fmxdae;RaizeComponentsVclDb;vclib;dwsLibRuntime;JvWizards;FireDACDBXDriver;dbexpress;IndyCore;UIBD21Win32R;vclx;JvPageComps;dsnap;DataSnapCommon;JvDB;DataSnapConnectors;VCLRESTComponents;JclDeveloperTools;vclie;CPortLibDXE;bindengine;DBXMySQLDriver;FireDACOracleDriver;FireDACMySQLDriver;DBXFirebirdDriver;JvCmp;JvHMI;FireDACCommonODBC;DataSnapClient;IndyIPCommon;bindcompdbx;JvCustom;vcl;IndyIPServer;DBXSybaseASEDriver;JvXPCtrls;IndySystem;FireDACDb2Driver;dsnapcon;FireDACMSAccDriver;fmxFireDAC;FireDACInfxDriver;vclimg;TeeDB;Jcl;JvCore;emshosting;JvCrypt;FireDACPgDriver;ibmonitor;FireDACASADriver;DBXOdbcDriver;FireDACTDataDriver;FMXTee;DbxCommonDriver;JvDlgs;JvRuntimeDesign;ibxpress;Tee;JvManagedThreads;DataSnapServer;xmlrtl;DataSnapNativeClient;fmxobj;vclwinx;FireDACDSDriver;rtl;ibxbindings;DbxClientDriver;JvTimeFramework;DBXSybaseASADriver;AsyncProDR;CustomIPTransport;vcldsnap;JvSystem;JvStdCtrls;SynEditDR;bindcomp;appanalytics;DBXInformixDriver;IndyIPClient;bindcompvcl;TeeUI;JvDocking;dbxcds;VclSmp;JvPascalInterpreter;adortl;FireDACODBCDriver;JclVcl;DataSnapIndy10ServerTransport;dsnapxml;DataSnapProviderClient;dbrtl;IndyProtocols;inetdbxpress;FireDACMongoDBDriver;JvControls;JvPrintPreview;PowerPDFDR;JclContainers;DataSnapServerMidas;$(DCC_UsePackage)</DCC_UsePackage>
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
         <BT_BuildType>Debug</BT_BuildType>
         <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
@@ -93,7 +94,6 @@
         <DCC_ExeOutput>D:\git\ber.git\Bin\Server\</DCC_ExeOutput>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <Manifest_File>(Ohne)</Manifest_File>
-        <UsePackages>true</UsePackages>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">
@@ -300,6 +300,12 @@
                 </Excluded_Packages>
             </Delphi.Personality>
             <Deployment Version="3">
+                <DeployFile LocalName="..\Bin\Server\ArchivServer.exe" Configuration="Release" Class="ProjectOutput">
+                    <Platform Name="Win32">
+                        <RemoteName>ArchivServer.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDS)\Redist\osx32\libcgunwind.1.0.dylib" Class="DependencyModule">
                     <Platform Name="OSX32">
                         <Overwrite>true</Overwrite>
@@ -311,8 +317,15 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="$(BDS)\Redist\iossimulator\libcgunwind.1.0.dylib" Class="DependencyModule">
-                    <Platform Name="iOSSimulator">
+                <DeployFile LocalName="system.json" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="system.json" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -321,14 +334,13 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="$(BDS)\Redist\osx32\libcgsqlite3.dylib" Class="DependencyModule">
-                    <Platform Name="OSX32">
+                <DeployFile LocalName="$(BDS)\Redist\iossimulator\libcgunwind.1.0.dylib" Class="DependencyModule">
+                    <Platform Name="iOSSimulator">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="system.json" Configuration="Debug" Class="ProjectFile">
-                    <Platform Name="Win32">
-                        <RemoteDir>.\</RemoteDir>
+                <DeployFile LocalName="$(BDS)\Redist\osx32\libcgsqlite3.dylib" Class="DependencyModule">
+                    <Platform Name="OSX32">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -691,7 +703,7 @@
                 <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
             </Deployment>
             <Platforms>
-                <Platform value="Win32">True</Platform>
+                <Platform value="Win32" Profile="target42">True</Platform>
                 <Platform value="Win64">False</Platform>
             </Platforms>
             <ModelSupport>False</ModelSupport>
