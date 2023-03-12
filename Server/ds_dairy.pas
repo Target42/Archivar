@@ -19,6 +19,7 @@ type
     DataSrc: TDataSetProvider;
     procedure DSServerModuleCreate(Sender: TObject);
     procedure DITabBeforePost(DataSet: TDataSet);
+    procedure DataQryBeforeOpen(DataSet: TDataSet);
   private
     m_id : integer;
   public
@@ -27,11 +28,25 @@ type
 
 implementation
 
-
+uses
+  Grijjy.CloudLogging;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
 {$R *.dfm}
+
+procedure TdsDairy.DataQryBeforeOpen(DataSet: TDataSet);
+begin
+  GrijjyLog.EnterMethod(self, 'DataQryBeforeOpen');
+
+  DataQry.ParamByName('PE_ID').AsInteger := m_id;
+  GrijjyLog.Send('ID', DataQry.ParamByName('PE_ID').AsInteger );
+  GrijjyLog.Send('start',   DataQry.ParamByName('start').AsString );
+  GrijjyLog.Send('ende',    DataQry.ParamByName('ende').AsString );
+
+
+  GrijjyLog.ExitMethod(self, 'DataQryBeforeOpen');
+end;
 
 procedure TdsDairy.DITabBeforePost(DataSet: TDataSet);
 begin
@@ -45,8 +60,8 @@ begin
   Session := TDSSessionManager.GetThreadSession;
 
   m_id := StrToIntDef( Session.GetData('id'), -1 );
-  DITab.Filter    := 'PE_ID = '+intToStr(m_id);
-  DITab.Filtered  := true;
+  DataQry.ParamByName('PE_ID').AsInteger := m_id;
+
 end;
 
 end.

@@ -33,7 +33,7 @@ object TaksEditorForm: TTaksEditorForm
     Top = 0
     Width = 1015
     Height = 480
-    ActivePage = TabSheet2
+    ActivePage = TabSheet1
     Align = alClient
     TabOrder = 1
     object TabSheet1: TTabSheet
@@ -348,7 +348,7 @@ object TaksEditorForm: TTaksEditorForm
           end
           inherited Panel1: TPanel
             Width = 1003
-            ExplicitWidth = 292
+            ExplicitWidth = 1003
             inherited JvColorComboBox1: TJvColorComboBox
               Height = 20
               ExplicitHeight = 20
@@ -442,12 +442,6 @@ object TaksEditorForm: TTaksEditorForm
           Height = 452
           ExplicitLeft = 784
           ExplicitHeight = 452
-          inherited GroupBox1: TGroupBox
-            inherited LV: TListView
-              ExplicitLeft = 2
-              ExplicitTop = 15
-            end
-          end
           inherited GroupBox4: TGroupBox
             Height = 200
             ExplicitHeight = 200
@@ -475,7 +469,6 @@ object TaksEditorForm: TTaksEditorForm
             ExplicitHeight = 254
             inherited TV: TTreeView
               Height = 196
-              ExplicitLeft = 2
               ExplicitHeight = 196
             end
             inherited Panel4: TPanel
@@ -486,7 +479,7 @@ object TaksEditorForm: TTaksEditorForm
         end
         inherited ImageList1: TImageList
           Bitmap = {
-            494C01010D001800100110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+            494C01010D0018001C0110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
             0000000000003600000028000000400000004000000001002000000000000040
             0000000000000000000000000000000000000000000000000000000000000000
             0000000000000000000000000000000000000000000000000000000000000000
@@ -1066,7 +1059,7 @@ object TaksEditorForm: TTaksEditorForm
           Width = 611
           Height = 452
           ExplicitWidth = 611
-          ExplicitHeight = 154
+          ExplicitHeight = 452
           inherited Splitter2: TSplitter
             Width = 611
             ExplicitTop = 298

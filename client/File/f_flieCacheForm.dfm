@@ -76,8 +76,7 @@ object FileCacheForm: TFileCacheForm
     SortType = stText
     TabOrder = 1
     ViewStyle = vsReport
-    OnClick = BitBtn5Click
-    ExplicitTop = -6
+    OnDblClick = BitBtn5Click
   end
   object GroupBox1: TGroupBox
     Left = 0

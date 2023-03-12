@@ -27,13 +27,15 @@ object dsDairy: TdsDairy
     Top = 96
   end
   object DataQry: TFDQuery
+    BeforeOpen = DataQryBeforeOpen
     Connection = DBMod.ArchivarConnection
     Transaction = FDTransaction1
     SQL.Strings = (
       'SELECT * FROM DI_DAIRY r'
       'where '
-      'cast(DI_STAMP as Date) > :start and'
-      'cast( DI_STAMP as Date ) < :ende')
+      'cast(DI_STAMP as Date) >= :start and'
+      'cast( DI_STAMP as Date ) <= :ende'
+      'and pe_id = :pe_id')
     Left = 152
     Top = 48
     ParamData = <
@@ -45,6 +47,11 @@ object dsDairy: TdsDairy
       item
         Name = 'ENDE'
         DataType = ftDate
+        ParamType = ptInput
+      end
+      item
+        Name = 'PE_ID'
+        DataType = ftInteger
         ParamType = ptInput
       end>
   end

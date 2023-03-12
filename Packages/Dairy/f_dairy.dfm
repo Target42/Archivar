@@ -380,6 +380,8 @@ object DairyForm: TDairyForm
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsDairy'
+    Connected = True
+    SQLConnection = GM.SQLConnection1
     Left = 72
     Top = 104
   end
@@ -395,6 +397,12 @@ object DairyForm: TDairyForm
         DataType = ftDate
         Name = 'ENDE'
         ParamType = ptInput
+      end
+      item
+        DataType = ftInteger
+        Name = 'PE_ID'
+        ParamType = ptInput
+        Value = 1
       end>
     ProviderName = 'DataSrc'
     RemoteServer = DSProviderConnection1

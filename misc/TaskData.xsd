@@ -7,6 +7,7 @@
 		</xs:annotation>
 		<xs:complexType>
 			<xs:sequence>
+				<xs:element ref="Attributes"/>
 				<xs:element ref="Values"/>
 				<xs:element ref="Tables"/>
 			</xs:sequence>
@@ -78,6 +79,13 @@
 		</xs:complexType>
 	</xs:element>
 	<xs:element name="Values">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="Field" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Attributes">
 		<xs:complexType>
 			<xs:sequence>
 				<xs:element ref="Field" minOccurs="0" maxOccurs="unbounded"/>

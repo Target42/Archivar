@@ -90,6 +90,7 @@ type
     m_form              : ITaskForm;
 
     m_onNewForm         : TOnNewForm;
+    FTemplateCLID: string;
 
     procedure createNodes;
     procedure setNodesVisible( value : Boolean);
@@ -129,6 +130,7 @@ type
 
     property OnNewForm : TOnNewForm read m_onNewForm write m_onNewForm;
     property Task : ITask read m_task write setTask;
+    property TemplateCLID: string read FTemplateCLID write FTemplateCLID;
 
     procedure saveCurrentForm;
 
@@ -968,6 +970,7 @@ procedure TEditorFrame.SpeedButton8Click(Sender: TObject);
     writer : TTaskForm2XML;
   begin
     writer := TTaskForm2XML.create;
+    writer.createTestAttributes(FTemplateCLID);
     tf.Text :=  writer.getXML(m_form).XML;
     writer.Free;
   end;
@@ -1020,6 +1023,7 @@ begin
     if Assigned(tf) then
     begin
       writer := TTaskForm2XML.create;
+      writer.createTestAttributes(FTemplateCLID);
       writer.fromText(tf.Text, m_form);
       writer.Free;
     end

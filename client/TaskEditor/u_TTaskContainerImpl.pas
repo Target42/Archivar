@@ -8,12 +8,13 @@ uses
 type
   TTaskContainerImpl = class(TInterfacedObject, ITaskContainer)
     private
-      m_clid    : string;
-      m_id      : integer;
-      m_task    : ITask;
-      m_files   : ITaskFiles;
-      m_info    : ITaskFiles;
-      m_styles  : ITaskStyles;
+      m_clid          : string;
+      m_id            : integer;
+      m_task          : ITask;
+      m_files         : ITaskFiles;
+      m_info          : ITaskFiles;
+      m_styles        : ITaskStyles;
+      m_templateCLID  : string;
 
       procedure setTask( value : ITask );
       function  getTask : ITask;

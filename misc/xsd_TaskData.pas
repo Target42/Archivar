@@ -3,7 +3,7 @@
 {                                                         }
 {                    XML-Datenbindung                     }
 {                                                         }
-{         Generiert am: 03.10.2020 14:59:42               }
+{         Generiert am: 03.03.2023 20:20:29               }
 {       Generiert von: D:\git\ber.git\misc\TaskData.xsd   }
 {                                                         }
 {*********************************************************}
@@ -19,8 +19,9 @@ type
 { Forward-Deklarationen }
 
   IXMLList = interface;
-  IXMLValues = interface;
+  IXMLAttributes = interface;
   IXMLField = interface;
+  IXMLValues = interface;
   IXMLTables = interface;
   IXMLTable = interface;
   IXMLHeader = interface;
@@ -31,12 +32,13 @@ type
 { IXMLList }
 
   IXMLList = interface(IXMLNode)
-    ['{A5C8BC8D-6388-4F38-88AB-9495629890CA}']
+    ['{44BB0275-2EC5-404B-A1A7-E3AA6A02C901}']
     { Eigenschaftszugriff }
     function Get_Clid: UnicodeString;
     function Get_Taskclid: UnicodeString;
     function Get_Stylename: UnicodeString;
     function Get_Styleclid: UnicodeString;
+    function Get_Attributes: IXMLAttributes;
     function Get_Values: IXMLValues;
     function Get_Tables: IXMLTables;
     procedure Set_Clid(Value: UnicodeString);
@@ -48,14 +50,15 @@ type
     property Taskclid: UnicodeString read Get_Taskclid write Set_Taskclid;
     property Stylename: UnicodeString read Get_Stylename write Set_Stylename;
     property Styleclid: UnicodeString read Get_Styleclid write Set_Styleclid;
+    property Attributes: IXMLAttributes read Get_Attributes;
     property Values: IXMLValues read Get_Values;
     property Tables: IXMLTables read Get_Tables;
   end;
 
-{ IXMLValues }
+{ IXMLAttributes }
 
-  IXMLValues = interface(IXMLNodeCollection)
-    ['{0120AC72-4F86-42A0-B0C5-1D5B3E21C6B8}']
+  IXMLAttributes = interface(IXMLNodeCollection)
+    ['{DC138ED5-EB28-409D-BCC6-5D756AC83721}']
     { Eigenschaftszugriff }
     function Get_Field(Index: Integer): IXMLField;
     { Methoden & Eigenschaften }
@@ -67,7 +70,7 @@ type
 { IXMLField }
 
   IXMLField = interface(IXMLNode)
-    ['{B784E470-61FF-44A8-BA55-6F978FD21CA3}']
+    ['{4ECC1A70-9A4F-4953-9E5C-88DD2DC555E7}']
     { Eigenschaftszugriff }
     function Get_Field: UnicodeString;
     function Get_Fieldclid: UnicodeString;
@@ -90,10 +93,22 @@ type
     property Value: UnicodeString read Get_Value write Set_Value;
   end;
 
+{ IXMLValues }
+
+  IXMLValues = interface(IXMLNodeCollection)
+    ['{0FFEBFC0-5756-4B85-8749-A1C283BBB662}']
+    { Eigenschaftszugriff }
+    function Get_Field(Index: Integer): IXMLField;
+    { Methoden & Eigenschaften }
+    function Add: IXMLField;
+    function Insert(const Index: Integer): IXMLField;
+    property Field[Index: Integer]: IXMLField read Get_Field; default;
+  end;
+
 { IXMLTables }
 
   IXMLTables = interface(IXMLNodeCollection)
-    ['{48E50852-68BB-4A39-AC48-05D916778F39}']
+    ['{ED86E848-1465-4EE3-BB64-0954AEC93A25}']
     { Eigenschaftszugriff }
     function Get_Table(Index: Integer): IXMLTable;
     { Methoden & Eigenschaften }
@@ -105,7 +120,7 @@ type
 { IXMLTable }
 
   IXMLTable = interface(IXMLNode)
-    ['{B70E1B7B-A915-48FE-A6B7-E1A0C24337D5}']
+    ['{CFDF5743-5AD7-440A-B287-60E60497B095}']
     { Eigenschaftszugriff }
     function Get_Ctrlclid: UnicodeString;
     function Get_Field: UnicodeString;
@@ -126,7 +141,7 @@ type
 { IXMLHeader }
 
   IXMLHeader = interface(IXMLNodeCollection)
-    ['{2F702ED8-8FAC-4D9A-ADDE-6868B639F08E}']
+    ['{4A60EDAC-DB1E-4A8D-92CB-C8DE78226F41}']
     { Eigenschaftszugriff }
     function Get_Field(Index: Integer): IXMLField;
     { Methoden & Eigenschaften }
@@ -138,7 +153,7 @@ type
 { IXMLRows }
 
   IXMLRows = interface(IXMLNodeCollection)
-    ['{1656C121-7955-468E-AEB8-B614FC7E0F14}']
+    ['{3147BFFD-5B53-4BDA-8C14-5677134AD760}']
     { Eigenschaftszugriff }
     function Get_Row(Index: Integer): IXMLRow;
     { Methoden & Eigenschaften }
@@ -150,7 +165,7 @@ type
 { IXMLRow }
 
   IXMLRow = interface(IXMLNodeCollection)
-    ['{A7889EDA-9587-44F5-88FD-BD3FB740A004}']
+    ['{11647EF4-58E8-450A-9D8F-8B58F2047295}']
     { Eigenschaftszugriff }
     function Get_Value(Index: Integer): UnicodeString;
     { Methoden & Eigenschaften }
@@ -162,7 +177,7 @@ type
 { IXMLData }
 
   IXMLData = interface(IXMLNode)
-    ['{2115D906-EF72-4F6A-AD3C-646C2DA1CF71}']
+    ['{D8EAF73B-470B-4BD1-850C-8E84CEB6AD4C}']
     { Eigenschaftszugriff }
     function Get_Field: UnicodeString;
     function Get_Fieldclid: UnicodeString;
@@ -179,8 +194,9 @@ type
 { Forward-Deklarationen }
 
   TXMLList = class;
-  TXMLValues = class;
+  TXMLAttributes = class;
   TXMLField = class;
+  TXMLValues = class;
   TXMLTables = class;
   TXMLTable = class;
   TXMLHeader = class;
@@ -197,6 +213,7 @@ type
     function Get_Taskclid: UnicodeString;
     function Get_Stylename: UnicodeString;
     function Get_Styleclid: UnicodeString;
+    function Get_Attributes: IXMLAttributes;
     function Get_Values: IXMLValues;
     function Get_Tables: IXMLTables;
     procedure Set_Clid(Value: UnicodeString);
@@ -207,11 +224,11 @@ type
     procedure AfterConstruction; override;
   end;
 
-{ TXMLValues }
+{ TXMLAttributes }
 
-  TXMLValues = class(TXMLNodeCollection, IXMLValues)
+  TXMLAttributes = class(TXMLNodeCollection, IXMLAttributes)
   protected
-    { IXMLValues }
+    { IXMLAttributes }
     function Get_Field(Index: Integer): IXMLField;
     function Add: IXMLField;
     function Insert(const Index: Integer): IXMLField;
@@ -236,6 +253,18 @@ type
     procedure Set_Header(Value: UnicodeString);
     procedure Set_Width(Value: Integer);
     procedure Set_Value(Value: UnicodeString);
+  end;
+
+{ TXMLValues }
+
+  TXMLValues = class(TXMLNodeCollection, IXMLValues)
+  protected
+    { IXMLValues }
+    function Get_Field(Index: Integer): IXMLField;
+    function Add: IXMLField;
+    function Insert(const Index: Integer): IXMLField;
+  public
+    procedure AfterConstruction; override;
   end;
 
 { TXMLTables }
@@ -327,7 +356,7 @@ const
 
 implementation
 
-
+uses Xml.xmlutil;
 
 { Globale Funktionen }
 
@@ -350,6 +379,7 @@ end;
 
 procedure TXMLList.AfterConstruction;
 begin
+  RegisterChildNode('Attributes', TXMLAttributes);
   RegisterChildNode('Values', TXMLValues);
   RegisterChildNode('Tables', TXMLTables);
   inherited;
@@ -395,6 +425,11 @@ begin
   SetAttribute('styleclid', Value);
 end;
 
+function TXMLList.Get_Attributes: IXMLAttributes;
+begin
+  Result := ChildNodes['Attributes'] as IXMLAttributes;
+end;
+
 function TXMLList.Get_Values: IXMLValues;
 begin
   Result := ChildNodes['Values'] as IXMLValues;
@@ -405,9 +440,9 @@ begin
   Result := ChildNodes['Tables'] as IXMLTables;
 end;
 
-{ TXMLValues }
+{ TXMLAttributes }
 
-procedure TXMLValues.AfterConstruction;
+procedure TXMLAttributes.AfterConstruction;
 begin
   RegisterChildNode('Field', TXMLField);
   ItemTag := 'Field';
@@ -415,17 +450,17 @@ begin
   inherited;
 end;
 
-function TXMLValues.Get_Field(Index: Integer): IXMLField;
+function TXMLAttributes.Get_Field(Index: Integer): IXMLField;
 begin
   Result := List[Index] as IXMLField;
 end;
 
-function TXMLValues.Add: IXMLField;
+function TXMLAttributes.Add: IXMLField;
 begin
   Result := AddItem(-1) as IXMLField;
 end;
 
-function TXMLValues.Insert(const Index: Integer): IXMLField;
+function TXMLAttributes.Insert(const Index: Integer): IXMLField;
 begin
   Result := AddItem(Index) as IXMLField;
 end;
@@ -490,6 +525,31 @@ end;
 procedure TXMLField.Set_Value(Value: UnicodeString);
 begin
   ChildNodes['Value'].NodeValue := Value;
+end;
+
+{ TXMLValues }
+
+procedure TXMLValues.AfterConstruction;
+begin
+  RegisterChildNode('Field', TXMLField);
+  ItemTag := 'Field';
+  ItemInterface := IXMLField;
+  inherited;
+end;
+
+function TXMLValues.Get_Field(Index: Integer): IXMLField;
+begin
+  Result := List[Index] as IXMLField;
+end;
+
+function TXMLValues.Add: IXMLField;
+begin
+  Result := AddItem(-1) as IXMLField;
+end;
+
+function TXMLValues.Insert(const Index: Integer): IXMLField;
+begin
+  Result := AddItem(Index) as IXMLField;
 end;
 
 { TXMLTables }

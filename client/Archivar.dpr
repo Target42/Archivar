@@ -120,7 +120,6 @@ uses
   fr_form in 'TaskEditor\fr_form.pas' {FormFrame: TFrame},
   f_chapterTask in 'Protokoll\f_chapterTask.pas' {ChapterTaskForm},
   xsd_Styles in '..\misc\xsd_Styles.pas',
-  xsd_TaskData in '..\misc\xsd_TaskData.pas',
   fr_ReportEditor in 'TaskEditor\Forms\fr_ReportEditor.pas' {ReportFrameEditor: TFrame},
   fr_ReportEditor_html in 'TaskEditor\Forms\fr_ReportEditor_html.pas' {ReportFrameEditorHtml: TFrame},
   fr_ReportEditor_pas in 'TaskEditor\Forms\fr_ReportEditor_pas.pas' {ReportFrameEditorPas: TFrame},
@@ -238,7 +237,9 @@ uses
   u_ICrypt in '..\misc\u_ICrypt.pas',
   u_PluginData in '..\Plugin\Manager\u_PluginData.pas',
   u_IWindowHandler in '..\misc\u_IWindowHandler.pas',
-  f_pluginAdmin in 'admin\f_pluginAdmin.pas' {PluginAdmin};
+  f_pluginAdmin in 'admin\f_pluginAdmin.pas' {PluginAdmin},
+  xsd_TaskData in '..\misc\xsd_TaskData.pas',
+  m_taskimporter in 'Task\m_taskimporter.pas' {TaskImporterMod: TDataModule};
 
 {$R *.res}
 

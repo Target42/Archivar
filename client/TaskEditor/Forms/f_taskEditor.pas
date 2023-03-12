@@ -63,9 +63,10 @@ type
     procedure ac_exportExecute(Sender: TObject);
     procedure ReportFrame1Button1Click(Sender: TObject);
   private
-    m_teid : integer;
-    m_tc   : ITaskContainer;
-    FSystem: boolean;
+    m_teid    : integer;
+    m_te_clid : string;
+    m_tc      : ITaskContainer;
+    FSystem : boolean;
 
     procedure setTEID( value : integer );
     procedure setTaskContainer( value : ITaskContainer);
@@ -352,6 +353,10 @@ begin
   if TETab.IsEmpty then
     exit;
   TETab.Edit;
+
+  m_te_clid := TETab.FieldByName('TE_CLID').AsString;
+  EditorFrame1.TemplateCLID := m_te_clid;
+  ReportFrame1.TemplateClID := m_te_clid;
 
   loadFromStream( TETab.CreateBlobStream(TETab.FieldByName('TE_DATA'), bmRead),
     TETab.FieldByName('TE_NAME').AsString);

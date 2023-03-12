@@ -3,12 +3,21 @@ unit u_taskForm2XML;
 interface
 
 uses
-  i_taskEdit, xsd_TaskData, System.Classes;
+  i_taskEdit, xsd_TaskData, System.Generics.Collections, System.Classes;
 
 type
   TTaskForm2XML = class
+    public
+    const
+      Attrib_Names : Array[0..7] of string =
+      ('Titel', 'Gestartet', 'Termin', 'Erfasst', 'Status',
+       'Antragsteller', 'Kommentar', 'Template' );
     private
       m_xList: IXMLList;
+      m_attribs : TStringList;
+
+      procedure saveAttribs;
+      procedure loadAttribs;
 
       procedure SaveControl( ctrl : ITaskCtrl );
       procedure SaveTable( ctrl : ITaskCtrl );
@@ -31,23 +40,38 @@ type
 
       function  getXML(form : ITaskForm ) : IXMLList; overload;
       function  getXML( st : TStream ) : IXMLList; overload;
+
+      function setAttribute( name, value : string ) : boolean;
+      procedure createTestAttributes(clid : string );
   end;
 
 implementation
 
 uses
-  System.Generics.Collections, System.SysUtils, Xml.XMLIntf, Xml.XMLDoc;
+  System.SysUtils, Xml.XMLIntf, Xml.XMLDoc;
 
 { TTaskForm2XML }
 
 constructor TTaskForm2XML.create;
 begin
+  m_attribs := TStringList.Create;
+end;
 
+procedure TTaskForm2XML.createTestAttributes(clid : string );
+begin
+  self.setAttribute('Titel',          'Titel');
+  self.setAttribute('Gestartet',      DateTimeToStr(now));
+  self.setAttribute('Termin',         DateTimeToStr(now+7));
+  self.setAttribute('Erfasst',        'Jone Doe');
+  self.setAttribute('Status',         'Gelesen');
+  self.setAttribute('Antragsteller',  'Fantomas');
+  self.setAttribute('Kommentar',      'Kommentar');
+  self.setAttribute('Template',       clid );
 end;
 
 destructor TTaskForm2XML.Destroy;
 begin
-
+  m_attribs.Free;
   inherited;
 end;
 
@@ -72,6 +96,7 @@ begin
     if Assigned(ctrl) then
       ctrl.Data := xf.Value;
   end;
+
   for i := 0 to pred(xList.Tables.Count) do
   begin
     loadTable(xList.Tables[i], form );
@@ -100,6 +125,7 @@ begin
     xml := NewXMLDocument;
     xml.LoadFromStream(st);
     Result := xml.GetDocBinding('List', TXMLList, TargetNamespace) as IXMLList;
+    loadAttribs;
   except
     Result := NewList;
   end;
@@ -111,6 +137,8 @@ begin
 
   m_xList.Clid := form.CLID;
   m_xList.Taskclid := form.Owner.CLID;
+
+  saveAttribs;
 
   if Assigned(form) then
   begin
@@ -126,13 +154,29 @@ begin
   except
     m_xList := NewList;
   end;
+  loadAttribs;
   doLoad( form);
 end;
 
 procedure TTaskForm2XML.load(st: TStream; form: ITaskForm);
 begin
   m_xList := getXML( st );
+  loadAttribs;
   doLoad( form);
+end;
+
+procedure TTaskForm2XML.loadAttribs;
+var
+  i : integer;
+  val : string;
+  xfld : IXMLField;
+begin
+  if Assigned(m_xList) and Assigned(m_xList.Attributes) then begin
+    for i := 0 to pred(m_xList.Attributes.Count) do begin
+      xfld := m_xList.Attributes.Field[i];
+      setAttribute(xfld.Field, xfld.Value);
+    end;
+  end;
 end;
 
 procedure TTaskForm2XML.loadTable(xTab: IXMLTable; form : ITaskForm);
@@ -205,6 +249,19 @@ begin
   end;
 end;
 
+procedure TTaskForm2XML.saveAttribs;
+var
+  i : integer;
+  val : string;
+  xfld : IXMLField;
+begin
+  for i := 0 to pred(m_attribs.Count) do begin
+    xfld := m_xList.Attributes.Add;
+    xfld.Field := m_attribs.Names[i];
+    xfld.Value := m_attribs.ValueFromIndex[i];
+  end;
+end;
+
 function TTaskForm2XML.save(name: string; form: ITaskForm): Boolean;
 begin
   Result := false;
@@ -212,6 +269,8 @@ begin
 
   m_xList.Clid := form.CLID;
   m_xList.Taskclid := form.Owner.CLID;
+
+  saveAttribs;
 
   if Assigned(form) then
   begin
@@ -311,6 +370,22 @@ begin
   begin
     writeRow;
   end;
+end;
+
+function TTaskForm2XML.setAttribute(name, value: string): boolean;
+var
+  i   : integer;
+begin
+  Result := true;
+  for i := low(Attrib_Names) to High(Attrib_Names) do begin
+    Result := SameText( name, Attrib_Names[i]);
+    if Result then begin
+      break;
+    end;
+  end;
+
+  if Result then
+    m_attribs.Values[name] := value;
 end;
 
 end.

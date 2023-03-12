@@ -78,6 +78,7 @@ type
 
     m_files     : TList<TReportFrameEditor>;
     m_libFiles  : TList<ITaskFile>;
+    FTemplateClID: string;
 
     function OpenCode(tf : ITaskFile;style : ITaskStyle ) : TReportFrameEditor;
 
@@ -101,6 +102,7 @@ type
     procedure release;
 
     property TaskContainer : ITaskContainer read m_tc write setTaskContainer;
+    property TemplateClID: string read FTemplateClID write FTemplateClID;
     property Form : ITaskForm read m_form write m_form;
 
     procedure save;
@@ -147,6 +149,7 @@ var
     if not Assigned(m_form) then
       exit;
     writer := TTaskForm2XML.create;
+    writer.createTestAttributes(FTemplateClID);
     xList := writer.getXML(m_form);
     writer.Free;
   end;

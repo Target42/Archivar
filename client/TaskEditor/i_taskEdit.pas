@@ -265,12 +265,12 @@ type
       function  getID : integer;
 
     //public
-      property CLID     : string      read getCLID      write setCLID;
-      property ID       : integer     read getID        write setID;
-      property Task     : ITask       read getTask      write setTask;
-      property TestData : ITaskFiles  read getTestdata;
-      property Styles   : ITaskStyles read getStyles;
-      property Info     : ITaskFiles  read getInfoFiles;
+      property CLID         : string      read getCLID          write setCLID;
+      property ID           : integer     read getID            write setID;
+      property Task         : ITask       read getTask          write setTask;
+      property TestData     : ITaskFiles  read getTestdata;
+      property Styles       : ITaskStyles read getStyles;
+      property Info         : ITaskFiles  read getInfoFiles;
 
       function loadFromPath( path : string )  : boolean;
       function loadFromZip( zip : TZipFile )  : boolean;

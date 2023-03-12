@@ -1,13 +1,13 @@
 //
 // Erzeugt vom DataSnap-Proxy-Generator.
-// 14.01.2023 20:38:05
+// 26.02.2023 20:07:24
 //
 
 unit u_stub;
 
 interface
 
-uses System.JSON, Data.DBXCommon, Data.DBXClient, Data.DBXDataSnap, Datasnap.DSProxy, System.Classes, System.SysUtils, Data.DB, Data.DBXDBReaders;
+uses System.JSON, Data.DBXCommon, Data.DBXClient, Data.DBXDataSnap, Data.DBXJSON, Datasnap.DSProxy, System.Classes, System.SysUtils, Data.DB, Data.SqlExpr, Data.DBXDBReaders, Data.DBXCDSReaders, Data.DBXJSONReflect;
 
 type
   TAdminModClient = class(TDSAdminClient)
@@ -358,12 +358,14 @@ type
   private
     FDSServerModuleCreateCommand: TDBXCommand;
     FDITabBeforePostCommand: TDBXCommand;
+    FDataQryBeforeOpenCommand: TDBXCommand;
   public
     constructor Create(ADBXConnection: TDBXConnection); overload;
     constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
     destructor Destroy; override;
     procedure DSServerModuleCreate(Sender: TObject);
     procedure DITabBeforePost(DataSet: TDataSet);
+    procedure DataQryBeforeOpen(DataSet: TDataSet);
   end;
 
   TdsStorageClient = class(TDSAdminClient)
@@ -2138,6 +2140,19 @@ begin
   FDITabBeforePostCommand.ExecuteUpdate;
 end;
 
+procedure TdsDairyClient.DataQryBeforeOpen(DataSet: TDataSet);
+begin
+  if FDataQryBeforeOpenCommand = nil then
+  begin
+    FDataQryBeforeOpenCommand := FDBXConnection.CreateCommand;
+    FDataQryBeforeOpenCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FDataQryBeforeOpenCommand.Text := 'TdsDairy.DataQryBeforeOpen';
+    FDataQryBeforeOpenCommand.Prepare;
+  end;
+  FDataQryBeforeOpenCommand.Parameters[0].Value.SetDBXReader(TDBXDataSetReader.Create(DataSet, FInstanceOwner), True);
+  FDataQryBeforeOpenCommand.ExecuteUpdate;
+end;
+
 constructor TdsDairyClient.Create(ADBXConnection: TDBXConnection);
 begin
   inherited Create(ADBXConnection);
@@ -2152,6 +2167,7 @@ destructor TdsDairyClient.Destroy;
 begin
   FDSServerModuleCreateCommand.DisposeOf;
   FDITabBeforePostCommand.DisposeOf;
+  FDataQryBeforeOpenCommand.DisposeOf;
   inherited;
 end;
 

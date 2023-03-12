@@ -43,6 +43,7 @@ type
   public
     { Public-Deklarationen }
     function load( teid : integer )   : ITaskContainer;
+    function TemplateCLID( teid : integer ) : string;
     function SysLoad( clid : string ) : ITaskContainer;
 
     procedure setDirty( clid : string );
@@ -171,6 +172,15 @@ begin
   end;
   if m_map.ContainsKey(clid) then
     Result := createTC(m_map[clid]);
+end;
+
+function TTemplateCacheMod.TemplateCLID(teid: integer): string;
+var
+  temp : Template;
+begin
+  Result := '';
+  if m_idMap.TryGetValue(teid, temp) then
+    Result := temp.CLID;
 end;
 
 { TTemplateCacheMod.Template }

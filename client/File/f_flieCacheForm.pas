@@ -126,31 +126,37 @@ end;
 
 procedure TFileCacheForm.BitBtn5Click(Sender: TObject);
 var
-  ptr   : TFileCacheMod.TPEntry;
-  fname : string;
+  ptr: TFileCacheMod.TPEntry;
+  fname: string;
 begin
   if not Assigned(LV.Selected) then
     exit;
 
-  ptr := TFileCacheMod.TPEntry( LV.Selected.Data );
+  ptr := TFileCacheMod.TPEntry(LV.Selected.Data);
 
   Application.CreateForm(TWebEditorForm, WebEditorForm);
-  if not WebEditorForm.canEdit(ptr^.name) then begin
-    ShowMessage('Das Dokument kann mit dem internen Editor nioht bearbeitet werden.');
+  if not WebEditorForm.canEdit(ptr^.name) then
+  begin
+    ShowMessage
+      ('Das Dokument kann mit dem internen Editor nioht bearbeitet werden.');
     WebEditorForm.Free;
 
     exit;
   end;
+
   fname := FileCacheMod.getFile(ptr^.cache, ptr^.name);
 
   try
-    if lockDocument(ptr^.id, GM.UserID, false) then begin
+    if lockDocument(ptr^.id, GM.UserID, false) then
+    begin
       WebEditorForm.FileName := fname;
-      if WebEditorForm.ShowModal = mrOk then begin
+      if WebEditorForm.ShowModal = mrOk then
+      begin
         FileCacheMod.upload(ptr^.cache, ptr^.name, fname);
       end;
       unlocDocument(ptr^.id, GM.UserID, false);
-    end else
+    end
+    else
       ShowMessage('Das Dokument konnte nicht gesperrt werden!');
   except
 

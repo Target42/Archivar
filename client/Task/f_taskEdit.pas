@@ -125,6 +125,7 @@ type
   private
     m_ta_id : integer;
     m_ty_id : integeR;
+    m_templateCLID : string;
 
     m_form  : ITaskForm;
     m_tc    : ITaskContainer;
@@ -573,7 +574,6 @@ begin
     m_tc.release;
   m_tc := NIL;
 
-
   AssigenmentsQry.ParamByName('TA_ID').AsInteger := m_ta_id;
   AssigenmentsQry.Open;
   if AssigenmentsQry.FieldByName('count').AsInteger > 1 then
@@ -589,7 +589,6 @@ begin
   TaskTab.Close;
   TaskTab.Open;
 
-
   if not TaskTab.Locate('TA_ID', VarArrayOf([m_ta_id]), []) then
   begin
     TaskTab.Close;
@@ -603,9 +602,9 @@ begin
 
   JvColorComboBox1.ColorValue := TColor(TaskTab.FieldByName('TA_COLOR').AsInteger);
 
-
   if not Assigned(m_tc) then
     LoadTemplate( TaskTab.FieldByName('TE_ID').AsInteger );
+  m_templateCLID := TemplateCacheMod.TemplateCLID(TaskTab.FieldByName('TE_ID').AsInteger);
 
   LoadData;
 
@@ -679,6 +678,14 @@ begin
   if Assigned(m_form) then
   begin
     writer := TTaskForm2XML.create;
+    writer.setAttribute('Titel',          TaskTabTA_NAME.AsString);
+    writer.setAttribute('Gestartet',      TaskTabTA_STARTED.AsString);
+    writer.setAttribute('Termin',         TaskTabTA_TERMIN.AsString);
+    writer.setAttribute('Erfasst',        TaskTabTA_CREATED.AsString);
+    writer.setAttribute('Status',         TaskTabTA_STATUS.AsString);
+    writer.setAttribute('Antragsteller',  TaskTabTA_BEARBEITER.AsString);
+    writer.setAttribute('Kommentar',      TaskTabTA_REM.AsString);
+    writer.setAttribute('Template',       m_templateCLID);
     writer.save(mem, m_form);
     writer.Free;
     mem.Position := 0;

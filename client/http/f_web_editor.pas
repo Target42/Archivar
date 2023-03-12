@@ -25,8 +25,8 @@ type
     SynPasSyn1: TSynPasSyn;
     procedure BaseFrame1OKBtnClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure FormDestroy(Sender: TObject);
     procedure BaseFrame1AbortBtnClick(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
   private
     m_fname : string;
     m_data  : TStringList;
@@ -60,10 +60,10 @@ end;
 
 procedure TWebEditorForm.BaseFrame1OKBtnClick(Sender: TObject);
 begin
-  SynEdit1.Lines.SaveToFile(m_fname);
+  FNeedUpload := (m_data.Text <> SynEdit1.Lines.Text);
 
-  FNeedUpload := true;
-  FreeAndNil(m_data);
+  if FNeedUpload then
+    SynEdit1.Lines.SaveToFile(m_fname);
 end;
 
 function TWebEditorForm.canEdit(fname: string): boolean;
@@ -94,11 +94,7 @@ end;
 
 procedure TWebEditorForm.FormDestroy(Sender: TObject);
 begin
-  if Assigned(m_data) and (m_fname <> '' ) then
-  begin
-    m_data.SaveToFile(m_fname);
-    FreeAndNil(m_data);
-  end;
+  FreeAndNil(m_data);
 end;
 
 function TWebEditorForm.GetFileName: string;
@@ -137,8 +133,9 @@ begin
   except
 
   end;
-
   SynEdit1.Lines.LoadFromFile(m_fname);
+  m_data.Assign(SynEdit1.Lines);
+
   FNeedUpload := false;
 end;
 

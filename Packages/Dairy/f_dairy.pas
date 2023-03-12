@@ -190,14 +190,18 @@ end;
 procedure TDairyForm.setMonth(Month: TDate);
 var
   d, m, y : word;
+  st, en  : TDate;
 begin
-  m_date := Month;
-  DecodeDate(m_date, y, m, d);
+  DecodeDate(Month, y, m, d);
+  m_date  := EncodeDate(y, m, 1);
+  st      := EncodeDate(y, m, 1);
+  en      := EncodeDate(y, m, DaysInAMonth(y, m));
 
   DiQry.Close;
   Label1.Caption := FormatDateTime('mmmm yyyy', m_date);
-  DiQry.ParamByName('start').AsDate := EncodeDate(y, m, 1);
-  DiQry.ParamByName('ende').AsDate  := EncodeDate(y, m, DaysInAMonth(y, m));
+  DiQry.ParamByName('start').AsDate := st;
+  DiQry.ParamByName('ende').AsDate  := en;
+  DiQry.ParamByName('pe_id').AsInteger := 0;
   m_inUpdate := true;
   DiQry.Open;
 
