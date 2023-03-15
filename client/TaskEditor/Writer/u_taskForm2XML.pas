@@ -3,15 +3,17 @@ unit u_taskForm2XML;
 interface
 
 uses
-  i_taskEdit, xsd_TaskData, System.Generics.Collections, System.Classes;
+  i_taskEdit, xsd_TaskData, System.Generics.Collections, System.Classes,
+  u_template;
 
 type
   TTaskForm2XML = class
     public
     const
-      Attrib_Names : Array[0..7] of string =
+      Attrib_Names : Array[0..8] of string =
       ('Titel', 'Gestartet', 'Termin', 'Erfasst', 'Status',
-       'Antragsteller', 'Kommentar', 'Template' );
+       'Antragsteller', 'Kommentar',
+       'Template', 'Typ' );
     private
       m_xList: IXMLList;
       m_attribs : TStringList;
@@ -42,13 +44,13 @@ type
       function  getXML( st : TStream ) : IXMLList; overload;
 
       function setAttribute( name, value : string ) : boolean;
-      procedure createTestAttributes(clid : string );
+      procedure createTestAttributes(te : TTemplate );
   end;
 
 implementation
 
 uses
-  System.SysUtils, Xml.XMLIntf, Xml.XMLDoc;
+  System.SysUtils, Xml.XMLIntf, Xml.XMLDoc, u_templateCache;
 
 { TTaskForm2XML }
 
@@ -57,7 +59,7 @@ begin
   m_attribs := TStringList.Create;
 end;
 
-procedure TTaskForm2XML.createTestAttributes(clid : string );
+procedure TTaskForm2XML.createTestAttributes( te : TTemplate );
 begin
   self.setAttribute('Titel',          'Titel');
   self.setAttribute('Gestartet',      DateTimeToStr(now));
@@ -66,7 +68,8 @@ begin
   self.setAttribute('Status',         'Gelesen');
   self.setAttribute('Antragsteller',  'Fantomas');
   self.setAttribute('Kommentar',      'Kommentar');
-  self.setAttribute('Template',       clid );
+  self.setAttribute('Typ',            intToStr(te.TYID));
+  self.setAttribute('Template',       te.CLID );
 end;
 
 destructor TTaskForm2XML.Destroy;
@@ -251,13 +254,21 @@ end;
 
 procedure TTaskForm2XML.saveAttribs;
 var
-  i : integer;
-  val : string;
-  xfld : IXMLField;
+  i     : integer;
+  val   : string;
+  xfld  : IXMLField;
+  text  : string;
+  rem   : IXMLNode;
 begin
   for i := 0 to pred(m_attribs.Count) do begin
+    text := m_attribs.Names[i];
+    if SameText(text, 'Template') or SameTExt(text, 'Typ') then begin
+      rem := m_xList.OwnerDocument.CreateNode('Diese WErte nicht ändern', ntComment);
+      m_xList.Attributes.ChildNodes.Add(rem);
+    end;
+
     xfld := m_xList.Attributes.Add;
-    xfld.Field := m_attribs.Names[i];
+    xfld.Field := text;
     xfld.Value := m_attribs.ValueFromIndex[i];
   end;
 end;

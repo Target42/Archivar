@@ -239,7 +239,8 @@ uses
   u_IWindowHandler in '..\misc\u_IWindowHandler.pas',
   f_pluginAdmin in 'admin\f_pluginAdmin.pas' {PluginAdmin},
   xsd_TaskData in '..\misc\xsd_TaskData.pas',
-  m_taskimporter in 'Task\m_taskimporter.pas' {TaskImporterMod: TDataModule};
+  m_taskimporter in 'Task\m_taskimporter.pas' {TaskImporterMod: TDataModule},
+  u_template in 'Task\u_template.pas';
 
 {$R *.res}
 

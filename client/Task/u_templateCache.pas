@@ -4,7 +4,8 @@ interface
 
 uses
   System.SysUtils, System.Classes, Data.DB, Datasnap.DBClient,
-  Datasnap.DSConnect, System.Generics.Collections, m_glob_client, i_taskEdit;
+  Datasnap.DSConnect, System.Generics.Collections, m_glob_client, i_taskEdit,
+  u_template;
 
 type
   TTemplateCacheMod = class(TDataModule)
@@ -14,36 +15,19 @@ type
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
   private
-    type
-      Template = class
-        private
-          FCLID : string;
-          FID   : integer;
-          FNAME : string;
-          m_st  : TMemoryStream;
+    m_list      : Tlist<TTemplate>;
+    m_idMap     : TDictionary<integer, TTemplate>;
+    m_map       : TDictionary<string,  TTemplate>;
 
-          function Getst: TStream;
-        public
-          constructor create;
-          Destructor Destroy; override;
+    procedure loadTemplate( teid : integer );
+    function loadTemplateData(dataset: TClientDataset) : boolean;
 
-          property Name : string read FNAME write FNAME;
-          property CLID: string read FCLID write FCLID;
-          property ID: integer read FID write FID;
-          property st: TStream read Getst;
-      end;
-  private
-    m_list      : Tlist<Template>;
-    m_idMap     : TDictionary<integer, Template>;
-    m_map       : TDictionary<string,  Template>;
-
-    function loadTemplate(dataset: TClientDataset) : boolean;
-
-    function createTC( te : Template ):ITaskContainer;
+    function createTC( te : TTemplate ):ITaskContainer;
   public
     { Public-Deklarationen }
+
     function load( teid : integer )   : ITaskContainer;
-    function TemplateCLID( teid : integer ) : string;
+    function Template( teid : integer ) : TTemplate;
     function SysLoad( clid : string ) : ITaskContainer;
 
     procedure setDirty( clid : string );
@@ -60,7 +44,7 @@ implementation
 
 {$R *.dfm}
 
-function TTemplateCacheMod.createTC(te: Template): ITaskContainer;
+function TTemplateCacheMod.createTC(te: TTemplate): ITaskContainer;
 var
   st : TStream;
 begin
@@ -69,7 +53,7 @@ begin
     exit;
 
   st := TMemoryStream.Create;
-  te.m_st.Position := 0;
+  te.st.Position := 0;
   st.CopyFrom( te.st, -1);
   st.Position := 0;
 
@@ -79,14 +63,14 @@ end;
 procedure TTemplateCacheMod.DataModuleCreate(Sender: TObject);
 begin
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
-  m_list      := Tlist<Template>.create;
-  m_idMap     := TDictionary<integer, Template>.create;
-  m_map       := TDictionary<string, Template>.create;
+  m_list      := Tlist<TTemplate>.create;
+  m_idMap     := TDictionary<integer, TTemplate>.create;
+  m_map       := TDictionary<string, TTemplate>.create;
 end;
 
 procedure TTemplateCacheMod.DataModuleDestroy(Sender: TObject);
 var
-  t : Template;
+  t : TTemplate;
 begin
   for t in m_list do
     t.free;
@@ -101,12 +85,7 @@ begin
   Result := NIL;
   if not m_idmap.ContainsKey(teid) then
   begin
-    GetTEQry.ParamByName('TE_ID').AsInteger := teid;
-    GetTEQry.Open;
-
-    loadTemplate(GetTEQry);
-
-    GetTEQry.Close;
+    loadTemplate(teid);
   end;
   if m_idMap.ContainsKey(teid) then
   begin
@@ -115,17 +94,28 @@ begin
 
 end;
 
-function TTemplateCacheMod.loadTemplate(dataset: TClientDataset): boolean;
+procedure TTemplateCacheMod.loadTemplate(teid: integer);
+begin
+  GetTEQry.ParamByName('TE_ID').AsInteger := teid;
+  GetTEQry.Open;
+
+  loadTemplateData(GetTEQry);
+
+  GetTEQry.Close;
+end;
+
+function TTemplateCacheMod.loadTemplateData(dataset: TClientDataset): boolean;
 var
-  te  : Template;
+  te  : TTemplate;
   st  : TStream;
 begin
   te := NIL;
 
   if not dataset.IsEmpty then
   begin
-    te      := Template.create;
+    te      := TTemplate.create;
     te.ID   := dataset.FieldByName('TE_ID').AsInteger;
+    te.TYID := dataset.FieldByName('TY_ID').AsInteger;
     te.CLID := dataset.FieldByName('TE_CLID').AsString;
     te.Name := dataset.FieldByName('TE_NAME').AsString;
 
@@ -143,7 +133,7 @@ end;
 
 procedure TTemplateCacheMod.setDirty(clid: string);
 var
-  te : Template;
+  te : TTemplate;
 begin
   for te in m_list do
   begin
@@ -166,7 +156,7 @@ begin
     GetSysTeQry.ParamByName('clid').AsString := clid;
     GetSysTeQry.Open;
 
-    loadTemplate(GetSysTeQry);
+    loadTemplateData(GetSysTeQry);
 
     GetSysTeQry.Close;
   end;
@@ -174,31 +164,14 @@ begin
     Result := createTC(m_map[clid]);
 end;
 
-function TTemplateCacheMod.TemplateCLID(teid: integer): string;
-var
-  temp : Template;
+function TTemplateCacheMod.Template(teid: integer): TTemplate;
 begin
-  Result := '';
-  if m_idMap.TryGetValue(teid, temp) then
-    Result := temp.CLID;
-end;
+  Result := NIL;
 
-{ TTemplateCacheMod.Template }
+  if not m_idMap.ContainsKey(teid) then
+    loadTemplate(teid);
 
-constructor TTemplateCacheMod.Template.create;
-begin
-  m_st  := TMemoryStream.Create;
-end;
-
-destructor TTemplateCacheMod.Template.Destroy;
-begin
-  m_st.Free;
-  inherited;
-end;
-
-function TTemplateCacheMod.Template.Getst: TStream;
-begin
-  Result := m_st;
+  m_idMap.TryGetValue(teid, Result);
 end;
 
 

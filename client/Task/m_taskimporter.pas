@@ -42,6 +42,8 @@ var
 
 implementation
 
+uses
+  System.IOUtils;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -59,7 +61,10 @@ begin
 end;
 
 function TTaskImporterMod.import(path: string): boolean;
+var
+  fileName : string;
 begin
+  fileName := TPath.Combine( path, 'data.xml');
   Result := FileExists(fileName);
 
   try

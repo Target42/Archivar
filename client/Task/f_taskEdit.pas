@@ -9,10 +9,9 @@ uses
   Datasnap.DSConnect,
   JvDBDatePickerEdit, Vcl.StdCtrls, Vcl.DBCtrls,
   Vcl.OleCtrls, SHDocVw, JvColorCombo, fr_form, fr_log,
-
   u_ForceClose, JvExStdCtrls, JvCombobox, JvExMask, JvToolEdit, JvMaskEdit,
   JvCheckedMaskEdit, JvDatePickerEdit, u_SpellChecker, System.JSON,
-  Vcl.ExtCtrls, Vcl.Mask;
+  Vcl.ExtCtrls, Vcl.Mask, u_template;
 
 type
   TTaskEditForm = class(TForm, IForceClose)
@@ -125,7 +124,7 @@ type
   private
     m_ta_id : integer;
     m_ty_id : integeR;
-    m_templateCLID : string;
+    m_template : TTemplate;
 
     m_form  : ITaskForm;
     m_tc    : ITaskContainer;
@@ -604,7 +603,7 @@ begin
 
   if not Assigned(m_tc) then
     LoadTemplate( TaskTab.FieldByName('TE_ID').AsInteger );
-  m_templateCLID := TemplateCacheMod.TemplateCLID(TaskTab.FieldByName('TE_ID').AsInteger);
+  m_template:= TemplateCacheMod.Template(TaskTab.FieldByName('TE_ID').AsInteger);
 
   LoadData;
 
@@ -685,7 +684,8 @@ begin
     writer.setAttribute('Status',         TaskTabTA_STATUS.AsString);
     writer.setAttribute('Antragsteller',  TaskTabTA_BEARBEITER.AsString);
     writer.setAttribute('Kommentar',      TaskTabTA_REM.AsString);
-    writer.setAttribute('Template',       m_templateCLID);
+    writer.setAttribute('Type',           TaskTabTY_ID.AsString);
+    writer.setAttribute('Template',       m_template.CLID);
     writer.save(mem, m_form);
     writer.Free;
     mem.Position := 0;

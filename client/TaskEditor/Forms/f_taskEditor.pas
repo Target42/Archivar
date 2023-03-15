@@ -64,7 +64,6 @@ type
     procedure ReportFrame1Button1Click(Sender: TObject);
   private
     m_teid    : integer;
-    m_te_clid : string;
     m_tc      : ITaskContainer;
     FSystem : boolean;
 
@@ -93,7 +92,7 @@ implementation
 uses
   i_datafields, f_datafield_edit, System.IOUtils,
   u_TTaskContainerImpl, m_glob_client, f_task_datafields,
-  System.UITypes, u_templateCache;
+  System.UITypes, u_templateCache, u_template;
 
 {$R *.dfm}
 
@@ -343,6 +342,8 @@ begin
 end;
 
 procedure TTaksEditorForm.setTEID(value: integer);
+var
+  te : TTemplate;
 begin
   m_teid := value;
 
@@ -354,9 +355,10 @@ begin
     exit;
   TETab.Edit;
 
-  m_te_clid := TETab.FieldByName('TE_CLID').AsString;
-  EditorFrame1.TemplateCLID := m_te_clid;
-  ReportFrame1.TemplateClID := m_te_clid;
+  te := TemplateCacheMod.Template(m_teid);
+
+  EditorFrame1.Template := te;
+  ReportFrame1.Template := te;
 
   loadFromStream( TETab.CreateBlobStream(TETab.FieldByName('TE_DATA'), bmRead),
     TETab.FieldByName('TE_NAME').AsString);
@@ -364,7 +366,6 @@ begin
   begin
     GroupBox3.Enabled := false;
   end;
-
 end;
 
 procedure TTaksEditorForm.updateVarList;

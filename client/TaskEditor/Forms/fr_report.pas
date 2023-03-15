@@ -9,7 +9,7 @@ uses
   SynHighlighterHtml, JvExControls,
   Vcl.OleCtrls, SHDocVw, i_taskEdit, Vcl.Menus, Vcl.ExtCtrls,
   System.Types, System.Generics.Collections, SynHighlighterDWS, Vcl.Buttons,
-  fr_ReportEditor, m_dws;
+  fr_ReportEditor, m_dws, u_template;
 
 type
   TReportFrame = class(TFrame)
@@ -78,7 +78,7 @@ type
 
     m_files     : TList<TReportFrameEditor>;
     m_libFiles  : TList<ITaskFile>;
-    FTemplateClID: string;
+    FTemplate: TTemplate;
 
     function OpenCode(tf : ITaskFile;style : ITaskStyle ) : TReportFrameEditor;
 
@@ -102,8 +102,10 @@ type
     procedure release;
 
     property TaskContainer : ITaskContainer read m_tc write setTaskContainer;
-    property TemplateClID: string read FTemplateClID write FTemplateClID;
     property Form : ITaskForm read m_form write m_form;
+
+    property Template: TTemplate read FTemplate write FTemplate;
+
 
     procedure save;
     procedure doNewForm( frm : ITaskForm );
@@ -149,7 +151,7 @@ var
     if not Assigned(m_form) then
       exit;
     writer := TTaskForm2XML.create;
-    writer.createTestAttributes(FTemplateClID);
+    writer.createTestAttributes(FTemplate);
     xList := writer.getXML(m_form);
     writer.Free;
   end;
@@ -299,6 +301,7 @@ end;
 
 procedure TReportFrame.init;
 begin
+  FTemplate   := NIL;
   m_libFiles  := TList<ITaskFile>.create;
 
   Application.CreateForm(TDwsMod, DwsMod);

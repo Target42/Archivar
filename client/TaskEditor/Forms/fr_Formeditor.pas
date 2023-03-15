@@ -7,7 +7,7 @@ uses
   Vcl.Graphics, Vcl.Controls, Vcl.Forms,
   System.Contnrs, Vcl.AppEvnts, Vcl.StdCtrls, Vcl.ComCtrls, Vcl.ExtCtrls,
   i_taskEdit, fr_propertyEditor, Vcl.Buttons, System.ImageList, Vcl.ImgList,
-  System.Classes;
+  System.Classes, u_template;
 
 type
   TCtrlEntry = record
@@ -90,7 +90,7 @@ type
     m_form              : ITaskForm;
 
     m_onNewForm         : TOnNewForm;
-    FTemplateCLID: string;
+    FTemplate           : TTemplate;
 
     procedure createNodes;
     procedure setNodesVisible( value : Boolean);
@@ -130,7 +130,7 @@ type
 
     property OnNewForm : TOnNewForm read m_onNewForm write m_onNewForm;
     property Task : ITask read m_task write setTask;
-    property TemplateCLID: string read FTemplateCLID write FTemplateCLID;
+    property Template: TTemplate read FTemplate write FTemplate;
 
     procedure saveCurrentForm;
 
@@ -497,6 +497,7 @@ begin
   m_task              := NIL;
   m_form              := NIL;
   m_newType           := ctNone;
+  FTemplate           := NIL;
 
   createNodes;
   updateLV;
@@ -970,7 +971,7 @@ procedure TEditorFrame.SpeedButton8Click(Sender: TObject);
     writer : TTaskForm2XML;
   begin
     writer := TTaskForm2XML.create;
-    writer.createTestAttributes(FTemplateCLID);
+    writer.createTestAttributes(FTemplate);
     tf.Text :=  writer.getXML(m_form).XML;
     writer.Free;
   end;
@@ -1023,7 +1024,7 @@ begin
     if Assigned(tf) then
     begin
       writer := TTaskForm2XML.create;
-      writer.createTestAttributes(FTemplateCLID);
+      writer.createTestAttributes(FTemplate);
       writer.fromText(tf.Text, m_form);
       writer.Free;
     end

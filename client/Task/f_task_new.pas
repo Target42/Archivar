@@ -68,7 +68,7 @@ implementation
 
 uses
   m_glob_client, u_stub, m_WindowHandler, Win.ComObj, u_gremium,
-  System.DateUtils, u_berTypes;
+  System.DateUtils, u_berTypes, System.JSON, u_json;
 
 {$R *.dfm}
 
