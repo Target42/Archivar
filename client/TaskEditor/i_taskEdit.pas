@@ -174,6 +174,7 @@ type
     function isContainer : boolean;
 
     function findCtrlByCLID( clid : string ) : ITaskCtrl;
+    function findCtrlByField( name : string ): ITaskCtrl;
     function findCtrl( name : string ) : ITaskCtrl; overload;
     function findCtrl( ctrl : TControl): ITaskCtrl; overload;
     function newControl(parent : TWinControl; x, y : Integer) :  TControl;

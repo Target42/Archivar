@@ -4,18 +4,18 @@ object dsTaskView: TdsTaskView
   Width = 623
   object GetTAQry: TDataSetProvider
     DataSet = GetTA
-    Left = 40
-    Top = 184
+    Left = 168
+    Top = 168
   end
   object GetTEQry: TDataSetProvider
     DataSet = GetTE
-    Left = 112
-    Top = 192
+    Left = 40
+    Top = 168
   end
   object TaskTab: TDataSetProvider
     DataSet = Task
     Left = 264
-    Top = 184
+    Top = 168
   end
   object BETab: TDataSetProvider
     DataSet = BE
@@ -24,8 +24,8 @@ object dsTaskView: TdsTaskView
   end
   object GetSysTeQry: TDataSetProvider
     DataSet = GetSysTe
-    Left = 136
-    Top = 136
+    Left = 96
+    Top = 168
   end
   object IBTransaction1: TFDTransaction
     Connection = DBMod.ArchivarConnection
@@ -55,8 +55,8 @@ object dsTaskView: TdsTaskView
     SQL.Strings = (
       'select * from TA_TASK'
       'where TA_ID = :TA_ID')
-    Left = 40
-    Top = 48
+    Left = 168
+    Top = 112
     ParamData = <
       item
         Name = 'TA_ID'
@@ -87,8 +87,8 @@ object dsTaskView: TdsTaskView
     SQL.Strings = (
       'select * from TE_TEMPLATE'
       'where TE_CLID = :clid')
-    Left = 144
-    Top = 80
+    Left = 88
+    Top = 120
     ParamData = <
       item
         Name = 'CLID'

@@ -13,7 +13,7 @@ type
       Attrib_Names : Array[0..8] of string =
       ('Titel', 'Gestartet', 'Termin', 'Erfasst', 'Status',
        'Antragsteller', 'Kommentar',
-       'Template', 'Typ' );
+       'Template', 'Gremium' );
     private
       m_xList: IXMLList;
       m_attribs : TStringList;
@@ -50,7 +50,7 @@ type
 implementation
 
 uses
-  System.SysUtils, Xml.XMLIntf, Xml.XMLDoc, u_templateCache;
+  System.SysUtils, Xml.XMLIntf, Xml.XMLDoc, u_templateCache, m_glob_client;
 
 { TTaskForm2XML }
 
@@ -68,8 +68,8 @@ begin
   self.setAttribute('Status',         'Gelesen');
   self.setAttribute('Antragsteller',  'Fantomas');
   self.setAttribute('Kommentar',      'Kommentar');
-  self.setAttribute('Typ',            intToStr(te.TYID));
-  self.setAttribute('Template',       te.CLID );
+  self.setAttribute('Template',       te.name );
+  self.setAttribute('Gremium',        GM.GremiumName(-1));
 end;
 
 destructor TTaskForm2XML.Destroy;
@@ -95,7 +95,13 @@ begin
   for i := 0 to pred( xList.Values.Count) do
   begin
     xf := xList.Values.Field[i];
-    ctrl := form.Base.findCtrlByCLID(xf.Ctrlclid);
+    ctrl := NIL;
+    if xf.HasAttribute('ctrlclid') then begin
+      ctrl := form.Base.findCtrlByCLID(xf.Ctrlclid);
+    end else if xf.HasAttribute('field') then begin
+      ctrl := form.Base.findCtrlByField(xf.Field);
+    end;
+
     if Assigned(ctrl) then
       ctrl.Data := xf.Value;
   end;
@@ -171,7 +177,6 @@ end;
 procedure TTaskForm2XML.loadAttribs;
 var
   i : integer;
-  val : string;
   xfld : IXMLField;
 begin
   if Assigned(m_xList) and Assigned(m_xList.Attributes) then begin
@@ -213,9 +218,6 @@ begin
   if not Assigned(ctrl) then
     exit;
 
-//  if xtab.Header.Count <> ctrl.TableCtrlIF.ColCount then
-//    exit;
-
   dataFieldMap := TDictionary<integer, integer>.create;
 
   buildMap;
@@ -255,7 +257,6 @@ end;
 procedure TTaskForm2XML.saveAttribs;
 var
   i     : integer;
-  val   : string;
   xfld  : IXMLField;
   text  : string;
   rem   : IXMLNode;
@@ -263,7 +264,7 @@ begin
   for i := 0 to pred(m_attribs.Count) do begin
     text := m_attribs.Names[i];
     if SameText(text, 'Template') or SameTExt(text, 'Typ') then begin
-      rem := m_xList.OwnerDocument.CreateNode('Diese WErte nicht ändern', ntComment);
+      rem := m_xList.OwnerDocument.CreateNode('Diesen Werte nicht ändern', ntComment);
       m_xList.Attributes.ChildNodes.Add(rem);
     end;
 

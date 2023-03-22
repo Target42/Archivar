@@ -125,6 +125,7 @@ type
     m_ta_id : integer;
     m_ty_id : integeR;
     m_template : TTemplate;
+    m_gremium_name : string;
 
     m_form  : ITaskForm;
     m_tc    : ITaskContainer;
@@ -137,6 +138,8 @@ type
 
     procedure setRO( value : boolean );
     function  getRO : boolean;
+
+    procedure setGremiumID( value : integer );
 
     function changed : boolean;
     procedure save;
@@ -154,7 +157,7 @@ type
     procedure setID( ta_id, ty_id: integer );
 
     property RO : Boolean read getRO write setRO;
-    property GremiumID: integer read FGremiumID write FGremiumID;
+    property GremiumID: integer read FGremiumID write setGremiumID;
 
     function LockCheck : boolean;
 
@@ -685,7 +688,8 @@ begin
     writer.setAttribute('Antragsteller',  TaskTabTA_BEARBEITER.AsString);
     writer.setAttribute('Kommentar',      TaskTabTA_REM.AsString);
     writer.setAttribute('Type',           TaskTabTY_ID.AsString);
-    writer.setAttribute('Template',       m_template.CLID);
+    writer.setAttribute('Template',       m_template.Name);
+    writer.setAttribute('Gremium',        m_gremium_name );
     writer.save(mem, m_form);
     writer.Free;
     mem.Position := 0;
@@ -714,6 +718,12 @@ begin
   m_changed := false;
   if Assigned(m_form) then
     m_form.Changed := false;
+end;
+
+procedure TTaskEditForm.setGremiumID(value: integer);
+begin
+  FGremiumID := value;
+  m_gremium_name := GM.GremiumName(FGremiumID)
 end;
 
 procedure TTaskEditForm.setID(ta_id, ty_id: integer);

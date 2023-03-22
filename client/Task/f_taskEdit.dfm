@@ -258,10 +258,6 @@ object TaskEditForm: TTaskEditForm
         OnChange = PageControl2Change
         object TabSheet3: TTabSheet
           Caption = 'Details'
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           inline FormFrame1: TFormFrame
             Left = 0
             Top = 0
@@ -358,7 +354,7 @@ object TaskEditForm: TTaskEditForm
         end
         inherited ImageList1: TImageList
           Bitmap = {
-            494C0101020008009C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+            494C010102000800A00010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
             0000000000003600000028000000400000001000000001002000000000000010
             000000000000000000000000000000000000000000FF078DBE00078DBE00078D
             BE00078DBE00078DBE00078DBE00078DBE00078DBE00078DBE00078DBE00078D
@@ -547,7 +543,7 @@ object TaskEditForm: TTaskEditForm
               end
               inherited Panel1: TPanel
                 Width = 528
-                ExplicitWidth = 528
+                ExplicitWidth = 107
                 inherited JvColorComboBox1: TJvColorComboBox
                   Height = 20
                   ExplicitHeight = 20
@@ -558,8 +554,8 @@ object TaskEditForm: TTaskEditForm
           inherited GroupBox2: TGroupBox
             Width = 532
             Height = 271
-            ExplicitWidth = 532
-            ExplicitHeight = 271
+            ExplicitWidth = 111
+            ExplicitHeight = 33
             inherited WebBrowser1: TWebBrowser
               Width = 522
               Height = 248

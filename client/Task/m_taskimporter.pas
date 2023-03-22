@@ -4,35 +4,18 @@ interface
 
 uses
   System.SysUtils, System.Classes, Data.DB, Datasnap.DBClient,
-  Datasnap.DSConnect, m_glob_client, xsd_TaskData;
+  Datasnap.DSConnect, m_glob_client, xsd_TaskData, u_stub;
 
 type
   TTaskImporterMod = class(TDataModule)
-    DSProviderConnection1: TDSProviderConnection;
-    TaskTab: TClientDataSet;
-    TaskTabTA_REST: TStringField;
-    TaskTabTE_ID: TIntegerField;
-    TaskTabTA_ID: TIntegerField;
-    TaskTabTY_ID: TIntegerField;
-    TaskTabTA_STARTED: TDateField;
-    TaskTabTA_CREATED: TSQLTimeStampField;
-    TaskTabTA_NAME: TStringField;
-    TaskTabTA_DATA: TBlobField;
-    TaskTabTA_CREATED_BY: TStringField;
-    TaskTabTA_TERMIN: TDateField;
-    TaskTabTA_CLID: TStringField;
-    TaskTabTA_FLAGS: TIntegerField;
-    TaskTabTA_STATUS: TStringField;
-    TaskTabTA_STYLE: TStringField;
-    TaskTabTA_STYLE_CLID: TStringField;
-    TaskTabTA_REM: TStringField;
-    TaskTabTA_COLOR: TIntegerField;
-    TaskTabTA_DELETED: TStringField;
-    TaskTabTA_BEARBEITER: TStringField;
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
   private
-    m_data : IXMLList;
+    m_client  : TDSImportClient;
+    m_data    : IXMLList;
+    m_token   : string;
+
+    function find( name : string ) : IXMLField;
   public
     function import( path : string ) : boolean;
   end;
@@ -40,38 +23,105 @@ type
 var
   TaskImporterMod: TTaskImporterMod;
 
+procedure ImportPath( path : string);
+
 implementation
 
 uses
-  System.IOUtils;
+  System.IOUtils, System.Win.ComObj, System.Variants, System.JSON, u_json,
+  Vcl.Dialogs, Vcl.Forms;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
 {$R *.dfm}
 
+procedure ImportPath( path : string);
+var
+  Importer: TTaskImporterMod;
+begin
+  Importer:= TTaskImporterMod.Create(NIL);
+  Importer.import(path);
+  Importer.free;
+
+end;
+
+
 procedure TTaskImporterMod.DataModuleCreate(Sender: TObject);
 begin
-  DSProviderConnection1.SQLConnection := GM.SQLConnection1;
+  m_client := TDSImportClient.Create(GM.SQLConnection1.DBXConnection);
   m_data := NIL;
 end;
 
 procedure TTaskImporterMod.DataModuleDestroy(Sender: TObject);
 begin
   m_data := NIL;
+  m_client.Free;
+end;
+
+function TTaskImporterMod.find(name: string): IXMLField;
+var
+  i : integer;
+begin
+  Result := NIL;
+  for i := 0 to pred(m_data.Attributes.Count) do begin
+    if SameText( name, m_data.Attributes.Field[i].Field) then begin
+      Result := m_data.Attributes.Field[i];
+      break;
+    end;
+  end;
 end;
 
 function TTaskImporterMod.import(path: string): boolean;
 var
-  fileName : string;
+  fileName  : string;
+  res, req  : TJSONObject;
+  i         : integer;
+  st        : TMemoryStream;
 begin
   fileName := TPath.Combine( path, 'data.xml');
-  Result := FileExists(fileName);
+  Result   := FileExists(fileName);
+
+  if not Result then exit;
 
   try
-    m_data := LoadList(fileName);
+    m_data := LoadList(fileName)
   except
-    Result := false;
+    on e : exception do begin
 
+    end;
+  end;
+  if not Assigned(m_data) then begin
+    ShowMessage('XML konnte nicht gelesen werden oder hat Fehler!');
+    Result := false;
+    exit;
+  end;
+
+  // start import
+  res := m_client.startImport;
+  Result := JBool( res, 'result' );
+  if not Result then begin
+    ShowMessage( JString( res, 'text' ));
+    exit;
+  end;
+  m_token := JString( res, 'token');
+
+  Req := TJSONObject.Create;
+  JReplace( req, 'token', m_token);
+
+  for i := 0 to pred(m_data.Attributes.Count) do begin
+    JReplace(req, m_data.Attributes.Field[i].Field, m_data.Attributes.Field[i].Value);
+  end;
+
+  st  := TMemoryStream.Create;
+  m_data.OwnerDocument.SaveToStream(st);
+  st.Position := 0;
+
+  res := m_client.importTask(req, st);
+
+  Result := JBool(res, 'result');
+  if not Result then begin
+    ShowMessage( JString( res, 'text' ));
+    exit;
   end;
 end;
 

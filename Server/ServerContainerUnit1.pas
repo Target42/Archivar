@@ -51,6 +51,7 @@ type
     DSHTTPService2: TDSHTTPService;
     DSCertFiles1: TDSCertFiles;
     dsPlugin: TDSServerClass;
+    dsImport: TDSServerClass;
     procedure dsAdminGetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
     procedure ServiceStart(Sender: TService; var Started: Boolean);
@@ -115,6 +116,8 @@ type
     function DSServer1Trace(TraceInfo: TDBXTraceInfo): CBRType;
     procedure dsPluginGetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
+    procedure dsImportGetClass(DSServerClass: TDSServerClass;
+      var PersistentClass: TPersistentClass);
   private
     const
       MaxUserNameLength = 25;
@@ -160,6 +163,9 @@ implementation
 
   http://docwiki.embarcadero.com/RADStudio/Seattle/en/Server_Side_Session_Management
 }
+
+//{$define STUB}
+
 uses
   Winapi.Windows, m_db, ds_gremium, ds_admin, ds_person, IOUtils,
   ds_taks, ds_file, ds_misc, ds_protocol, ds_image, ds_chapter,
@@ -167,7 +173,7 @@ uses
   ds_meeting, System.Hash, u_json, ds_sitzung, m_hell, Grijjy.sysUtils, u_ini,
   ds_updater, ds_stamm, ds_pki, ds_dairy, ds_storage, WinApi.WinSvc,
   u_Konst, Winapi.Messages, m_http, m_del_files, system.DateUtils, m_mail,
-  ds_plugin;
+  ds_plugin, ds_import;
 
 procedure TServerContainer1.dsAdminGetClass(
   DSServerClass: TDSServerClass; var PersistentClass: TPersistentClass);
@@ -572,6 +578,11 @@ var
   end;
 
 begin
+{$ifdef STUB}
+  valid := true;
+
+  exit;
+{$endif}
   try
     GrijjyLog.EnterMethod(self, 'DSAuthenticationManager1UserAuthenticate');
     m_Lock.Acquire;
@@ -685,6 +696,12 @@ procedure TServerContainer1.DSAuthenticationManager1UserAuthorize(
 var
   i : integer;
 begin
+{$ifdef STUB}
+  valid := true;
+
+  exit;
+{$endif}
+
 //  GrijjyLog.EnterMethod(self, 'UserAuthorize');
 //  GrijjyLog.Send('Authorise user rols', AuthorizeEventObject.UserRoles );
 
@@ -765,6 +782,12 @@ procedure TServerContainer1.dsImageGetClass(DSServerClass: TDSServerClass;
   var PersistentClass: TPersistentClass);
 begin
   PersistentClass := ds_image.TdsImage;
+end;
+
+procedure TServerContainer1.dsImportGetClass(DSServerClass: TDSServerClass;
+  var PersistentClass: TPersistentClass);
+begin
+  PersistentClass := ds_import.TDSImport;
 end;
 
 procedure TServerContainer1.dsMeeingGetClass(DSServerClass: TDSServerClass;

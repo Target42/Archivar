@@ -600,6 +600,8 @@ procedure TMainSetupForm.Button2Click(Sender: TObject);
 var
   s  : string;
   id : integer;
+ { TODO : Wahlergebnis und Listenwahl ermöglichen }
+ { TODO :Ersatzmitglieder kennzeichen }
 begin
   s := format('Sollen diese Personen dem Gremium:'#13'%s'#13'zugewiesen werden?', [GRTab.FieldByName('GR_NAME').AsString]);
   if not (MessageDlg(s, mtConfirmation, [mbYes, mbNo], 0) = mrYes) then

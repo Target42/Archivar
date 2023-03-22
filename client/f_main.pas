@@ -8,7 +8,7 @@ uses
   Vcl.ActnList, Vcl.AppEvnts, fr_gremiumTree, Vcl.ExtCtrls, Vcl.StdCtrls,
   fr_taskList, Vcl.StdActns, u_bookmark, fr_bookmark, fr_epub, fr_meeting,
   JvCombobox, JvColorCombo, fr_storages, MidasLib, JvExStdCtrls,
-  DragDrop, DragDropFile, JvComponentBase;
+  DragDrop, DragDropFile, JvComponentBase, JvBaseDlg, JvBrowseFolder;
 
 type
   TStatusInx = (stStatus = 0, stHost, stLogin, stUser, stMsg );
@@ -183,6 +183,10 @@ type
     ac_ad_plugin: TAction;
     Plugins2: TMenuItem;
     N22: TMenuItem;
+    ac_ta_import: TAction;
+    JvBrowseForFolderDialog1: TJvBrowseForFolderDialog;
+    N23: TMenuItem;
+    Import3: TMenuItem;
     procedure ac_prg_closeExecute(Sender: TObject);
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure ac_prg_disconExecute(Sender: TObject);
@@ -232,6 +236,8 @@ type
     procedure ac_ta_deleteExecute(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure ac_ad_pluginExecute(Sender: TObject);
+    procedure ac_ta_importExecute(Sender: TObject);
+    procedure test21Click(Sender: TObject);
   private
     m_noStatChange : boolean;
 
@@ -265,7 +271,7 @@ uses
   system.UITypes, f_protocol_sec, u_onlineUser, f_doMeeting, f_task_type,
   f_flieCacheForm, f_keys, f_textblock_export, f_textblock_import,
   f_storages, f_protokoll_new, f_admin, f_task_delete,
-  f_pluginAdmin;
+  f_pluginAdmin, f_task_import, m_taskimporter;
 
 {$R *.dfm}
 
@@ -645,6 +651,13 @@ begin
   execTaskDeleteForm;
 end;
 
+procedure TMainForm.ac_ta_importExecute(Sender: TObject);
+begin
+  if JvBrowseForFolderDialog1.Execute then begin
+    ImportPath(JvBrowseForFolderDialog1.Directory);
+  end;
+end;
+
 procedure TMainForm.ac_ta_loadExecute(Sender: TObject);
 begin
   Application.CreateForm(TTaskListForm, TaskListForm);
@@ -823,6 +836,7 @@ begin
   ac_ta_neu.Enabled       := flag;
   ac_ta_load.Enabled      := flag;
   ac_ta_delete.Enabled    := flag;
+  ac_ta_import.Enabled    := flag;
 
   ac_pr_new.Enabled       := flag;
   ac_pr_open.Enabled      := flag;
@@ -1050,6 +1064,11 @@ begin
     frm.TEID := te_id;
     frm.Show;
   end;
+end;
+
+procedure TMainForm.test21Click(Sender: TObject);
+begin
+  showImportForm;
 end;
 
 procedure TMainForm.UpdateUserView(sender: TObject);

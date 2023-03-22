@@ -240,7 +240,8 @@ uses
   f_pluginAdmin in 'admin\f_pluginAdmin.pas' {PluginAdmin},
   xsd_TaskData in '..\misc\xsd_TaskData.pas',
   m_taskimporter in 'Task\m_taskimporter.pas' {TaskImporterMod: TDataModule},
-  u_template in 'Task\u_template.pas';
+  u_template in 'Task\u_template.pas',
+  f_task_import in 'Task\f_task_import.pas' {TaskImportForm};
 
 {$R *.res}
 

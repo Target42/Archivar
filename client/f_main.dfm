@@ -50,7 +50,7 @@
     Height = 467
     Align = alClient
     Center = True
-    ExplicitLeft = 251
+    ExplicitLeft = 255
     ExplicitTop = -1
   end
   object StatusBar1: TStatusBar
@@ -110,10 +110,6 @@
     object TabSheet2: TTabSheet
       Caption = 'Lesezeichen'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       inline BookmarkFrame1: TBookmarkFrame
         Left = 0
         Top = 0
@@ -172,10 +168,6 @@
     object TabSheet6: TTabSheet
       Caption = 'Online'
       ImageIndex = 3
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object UserView: TListView
         Left = 0
         Top = 0
@@ -365,6 +357,12 @@
         object asklschen1: TMenuItem
           Action = ac_ta_delete
           Enabled = False
+        end
+        object N23: TMenuItem
+          Caption = '-'
+        end
+        object Import3: TMenuItem
+          Action = ac_ta_import
         end
       end
       object Proptokoll1: TMenuItem
@@ -606,6 +604,7 @@
       object test21: TMenuItem
         Caption = 'test2'
         Visible = False
+        OnClick = test21Click
       end
     end
   end
@@ -898,10 +897,20 @@
       Caption = 'Plugins'
       OnExecute = ac_ad_pluginExecute
     end
+    object ac_ta_import: TAction
+      Category = 'Task'
+      Caption = 'Import'
+      OnExecute = ac_ta_importExecute
+    end
   end
   object ApplicationEvents1: TApplicationEvents
     OnMessage = ApplicationEvents1Message
     Left = 64
     Top = 216
+  end
+  object JvBrowseForFolderDialog1: TJvBrowseForFolderDialog
+    Title = 'Import Task'
+    Left = 136
+    Top = 268
   end
 end

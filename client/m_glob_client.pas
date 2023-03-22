@@ -199,6 +199,7 @@ var
     'Vorsitz',
     'Stellvertretung',
     'Schriftführung',
+    'Optional',
     'Ersatz',
     'Berater',
     'Praktikant',
@@ -834,12 +835,22 @@ function TGM.GremiumName(id: integer): string;
 var
   i : integer;
 begin
+  if id < 1 then begin
   for i := 0 to pred(m_gremien.Count) do
-  begin
-    if Gremien.Items[i].ID = id then
     begin
-      Result := Gremien.Items[i].ShortName;
-      break;
+      if Gremien.Items[i].ParentShort = '' then begin
+        Result := Gremien.Items[i].ShortName;
+        break;
+      end;
+    end
+  end else begin
+    for i := 0 to pred(m_gremien.Count) do
+    begin
+      if Gremien.Items[i].ID = id then
+      begin
+        Result := Gremien.Items[i].ShortName;
+        break;
+      end;
     end;
   end;
 end;

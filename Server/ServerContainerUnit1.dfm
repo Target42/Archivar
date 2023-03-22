@@ -299,4 +299,10 @@ object ServerContainer1: TServerContainer1
     Left = 256
     Top = 576
   end
+  object dsImport: TDSServerClass
+    OnGetClass = dsImportGetClass
+    Server = DSServer1
+    Left = 256
+    Top = 632
+  end
 end

@@ -1,6 +1,6 @@
 //
 // Erzeugt vom DataSnap-Proxy-Generator.
-// 26.02.2023 20:07:24
+// 19.03.2023 20:19:09
 //
 
 unit u_stub;
@@ -398,6 +398,24 @@ type
     function download(data: TJSONObject): TStream;
     function upload(data: TJSONObject; st: TStream): TJSONObject;
     function setStatus(data: TJSONObject): TJSONObject;
+  end;
+
+  TDSImportClient = class(TDSAdminClient)
+  private
+    FDSServerModuleCreateCommand: TDBXCommand;
+    FstartImportCommand: TDBXCommand;
+    FimportTaskCommand: TDBXCommand;
+    FuploadFileCommand: TDBXCommand;
+    FendImportCommand: TDBXCommand;
+  public
+    constructor Create(ADBXConnection: TDBXConnection); overload;
+    constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
+    destructor Destroy; override;
+    procedure DSServerModuleCreate(Sender: TObject);
+    function startImport: TJSONObject;
+    function importTask(data: TJSONObject; st: TStream): TJSONObject;
+    function uploadFile(data: TJSONObject; st: TStream): TJSONObject;
+    function endImport(data: TJSONObject): TJSONObject;
   end;
 
 implementation
@@ -2317,6 +2335,108 @@ begin
   FdownloadCommand.DisposeOf;
   FuploadCommand.DisposeOf;
   FsetStatusCommand.DisposeOf;
+  inherited;
+end;
+
+procedure TDSImportClient.DSServerModuleCreate(Sender: TObject);
+begin
+  if FDSServerModuleCreateCommand = nil then
+  begin
+    FDSServerModuleCreateCommand := FDBXConnection.CreateCommand;
+    FDSServerModuleCreateCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FDSServerModuleCreateCommand.Text := 'TDSImport.DSServerModuleCreate';
+    FDSServerModuleCreateCommand.Prepare;
+  end;
+  if not Assigned(Sender) then
+    FDSServerModuleCreateCommand.Parameters[0].Value.SetNull
+  else
+  begin
+    FMarshal := TDBXClientCommand(FDSServerModuleCreateCommand.Parameters[0].ConnectionHandler).GetJSONMarshaler;
+    try
+      FDSServerModuleCreateCommand.Parameters[0].Value.SetJSONValue(FMarshal.Marshal(Sender), True);
+      if FInstanceOwner then
+        Sender.Free
+    finally
+      FreeAndNil(FMarshal)
+    end
+  end;
+  FDSServerModuleCreateCommand.ExecuteUpdate;
+end;
+
+function TDSImportClient.startImport: TJSONObject;
+begin
+  if FstartImportCommand = nil then
+  begin
+    FstartImportCommand := FDBXConnection.CreateCommand;
+    FstartImportCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FstartImportCommand.Text := 'TDSImport.startImport';
+    FstartImportCommand.Prepare;
+  end;
+  FstartImportCommand.ExecuteUpdate;
+  Result := TJSONObject(FstartImportCommand.Parameters[0].Value.GetJSONValue(FInstanceOwner));
+end;
+
+function TDSImportClient.importTask(data: TJSONObject; st: TStream): TJSONObject;
+begin
+  if FimportTaskCommand = nil then
+  begin
+    FimportTaskCommand := FDBXConnection.CreateCommand;
+    FimportTaskCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FimportTaskCommand.Text := 'TDSImport.importTask';
+    FimportTaskCommand.Prepare;
+  end;
+  FimportTaskCommand.Parameters[0].Value.SetJSONValue(data, FInstanceOwner);
+  FimportTaskCommand.Parameters[1].Value.SetStream(st, FInstanceOwner);
+  FimportTaskCommand.ExecuteUpdate;
+  Result := TJSONObject(FimportTaskCommand.Parameters[2].Value.GetJSONValue(FInstanceOwner));
+end;
+
+function TDSImportClient.uploadFile(data: TJSONObject; st: TStream): TJSONObject;
+begin
+  if FuploadFileCommand = nil then
+  begin
+    FuploadFileCommand := FDBXConnection.CreateCommand;
+    FuploadFileCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FuploadFileCommand.Text := 'TDSImport.uploadFile';
+    FuploadFileCommand.Prepare;
+  end;
+  FuploadFileCommand.Parameters[0].Value.SetJSONValue(data, FInstanceOwner);
+  FuploadFileCommand.Parameters[1].Value.SetStream(st, FInstanceOwner);
+  FuploadFileCommand.ExecuteUpdate;
+  Result := TJSONObject(FuploadFileCommand.Parameters[2].Value.GetJSONValue(FInstanceOwner));
+end;
+
+function TDSImportClient.endImport(data: TJSONObject): TJSONObject;
+begin
+  if FendImportCommand = nil then
+  begin
+    FendImportCommand := FDBXConnection.CreateCommand;
+    FendImportCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FendImportCommand.Text := 'TDSImport.endImport';
+    FendImportCommand.Prepare;
+  end;
+  FendImportCommand.Parameters[0].Value.SetJSONValue(data, FInstanceOwner);
+  FendImportCommand.ExecuteUpdate;
+  Result := TJSONObject(FendImportCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
+end;
+
+constructor TDSImportClient.Create(ADBXConnection: TDBXConnection);
+begin
+  inherited Create(ADBXConnection);
+end;
+
+constructor TDSImportClient.Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean);
+begin
+  inherited Create(ADBXConnection, AInstanceOwner);
+end;
+
+destructor TDSImportClient.Destroy;
+begin
+  FDSServerModuleCreateCommand.DisposeOf;
+  FstartImportCommand.DisposeOf;
+  FimportTaskCommand.DisposeOf;
+  FuploadFileCommand.DisposeOf;
+  FendImportCommand.DisposeOf;
   inherited;
 end;
 

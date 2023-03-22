@@ -94,6 +94,7 @@ type
     procedure release;
 
     function findCtrlByCLID( clid : string ) : ITaskCtrl;
+    function findCtrlByField( name : string ): ITaskCtrl;
     function findCtrl( name : string ) : ITaskCtrl; overload;
     function findCtrl( ctrl : TControl): ITaskCtrl; overload;
     function find( pkt : TPoint ) : ITaskCtrl;
@@ -356,6 +357,23 @@ begin
     for i := 0 to pred(m_list.Count) do
     begin
       Result := m_list[i].findCtrlByCLID(clid);
+      if Assigned(Result) then
+        break;
+    end;
+  end;
+end;
+
+function TaskCtrlImpl.findCtrlByField(name: string): ITaskCtrl;
+var
+  i : integer;
+begin
+  Result := NIL;
+  if Assigned(m_dataField) and SameText( m_dataField.Name, name) then
+    Result := NIL
+  else begin
+    for i := 0 to pred(m_list.Count) do
+    begin
+      Result := m_list[i].findCtrlByField(name);
       if Assigned(Result) then
         break;
     end;
