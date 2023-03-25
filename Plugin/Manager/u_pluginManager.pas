@@ -257,9 +257,11 @@ begin
   for i :=0 to pred(m_list.Count) do begin
     plg := m_list[i];
     if Assigned(plg.MenuEntry) then begin
-      FMenuRoot.Remove(plg.MenuEntry);
-      plg.MenuEntry.Free;
-      plg.MenuEntry := NIL;
+
+      if FMenuRoot.IndexOf(plg.MenuEntry) >-1 then begin
+        FMenuRoot.Remove(plg.MenuEntry);
+        plg.MenuEntry := NIL;
+      end;
     end;
     plg.unload;
     plg.Free;

@@ -164,7 +164,6 @@ implementation
   http://docwiki.embarcadero.com/RADStudio/Seattle/en/Server_Side_Session_Management
 }
 
-//{$define STUB}
 
 uses
   Winapi.Windows, m_db, ds_gremium, ds_admin, ds_person, IOUtils,
@@ -578,11 +577,6 @@ var
   end;
 
 begin
-{$ifdef STUB}
-  valid := true;
-
-  exit;
-{$endif}
   try
     GrijjyLog.EnterMethod(self, 'DSAuthenticationManager1UserAuthenticate');
     m_Lock.Acquire;
@@ -696,11 +690,6 @@ procedure TServerContainer1.DSAuthenticationManager1UserAuthorize(
 var
   i : integer;
 begin
-{$ifdef STUB}
-  valid := true;
-
-  exit;
-{$endif}
 
 //  GrijjyLog.EnterMethod(self, 'UserAuthorize');
 //  GrijjyLog.Send('Authorise user rols', AuthorizeEventObject.UserRoles );

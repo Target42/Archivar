@@ -76,7 +76,7 @@ begin
     DeleteFolder.Transaction := trans;
   end;
 
-
+  // alle ordner der Gruppe besteimmen
   GetFolderQry.ParamByName('grid').AsInteger := grid;
 
   GetFolderQry.Open;
@@ -95,6 +95,7 @@ begin
   GetFolderQry.Close;
 
   m_folder.Add(drid);
+  // liste alle Unterordner erstellen..
   addChilds(drid);
 
   SetLength(list, 0);
@@ -102,10 +103,10 @@ begin
   if not GetFolderQry.Transaction.Active then
     GetFolderQry.Transaction.StartTransaction;
 
-
   DeleteFolder.ValidateAll;
   try
     for drid in m_folder do begin
+      // alles löschen -> siehe script
       DeleteFolder.Params.ParamByName('drid').AsInteger := drid;
       DeleteFolder.ExecuteAll;
     end;

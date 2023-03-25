@@ -60,6 +60,9 @@ begin
     src.Free;
   end;
   PicTab.Close;
+  if PicTab.Transaction.Active then
+    PicTab.Transaction.Commit;
+
   Result := mem;
 end;
 
@@ -79,6 +82,10 @@ begin
     arr.AddElement(row);
     PicTab.Next;
   end;
+  PicTab.Close;
+
+  if PicTab.Transaction.Active then
+    PicTab.Transaction.Commit;
 
   JReplace( Result, 'items', arr);
 end;

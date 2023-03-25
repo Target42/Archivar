@@ -14,8 +14,16 @@ type
     m_client  : TDSImportClient;
     m_data    : IXMLList;
     m_token   : string;
+    m_path    : string;
 
     function find( name : string ) : IXMLField;
+
+    function prepare_import( path : string ): boolean;
+    function start_import : boolean;
+    procedure UploadFiles(id : integer);
+    procedure end_import;
+
+
   public
     function import( path : string ) : boolean;
   end;
@@ -29,7 +37,7 @@ implementation
 
 uses
   System.IOUtils, System.Win.ComObj, System.Variants, System.JSON, u_json,
-  Vcl.Dialogs, Vcl.Forms;
+  Vcl.Dialogs, Vcl.Forms, System.Types;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -42,7 +50,6 @@ begin
   Importer:= TTaskImporterMod.Create(NIL);
   Importer.import(path);
   Importer.free;
-
 end;
 
 
@@ -56,6 +63,20 @@ procedure TTaskImporterMod.DataModuleDestroy(Sender: TObject);
 begin
   m_data := NIL;
   m_client.Free;
+end;
+
+procedure TTaskImporterMod.end_import;
+var
+  req, res : TJSONObject;
+begin
+  req := TJSONObject.Create;
+  JReplace( req, 'token', m_token );
+
+  res := m_client.endImport(req);
+
+  if not JBool( res, 'result') then
+    ShowMessage( JString( res, 'text'));
+
 end;
 
 function TTaskImporterMod.find(name: string): IXMLField;
@@ -73,37 +94,13 @@ end;
 
 function TTaskImporterMod.import(path: string): boolean;
 var
-  fileName  : string;
   res, req  : TJSONObject;
-  i         : integer;
   st        : TMemoryStream;
+  i         : integer;
 begin
-  fileName := TPath.Combine( path, 'data.xml');
-  Result   := FileExists(fileName);
+  if not prepare_import(path) then exit;
 
-  if not Result then exit;
-
-  try
-    m_data := LoadList(fileName)
-  except
-    on e : exception do begin
-
-    end;
-  end;
-  if not Assigned(m_data) then begin
-    ShowMessage('XML konnte nicht gelesen werden oder hat Fehler!');
-    Result := false;
-    exit;
-  end;
-
-  // start import
-  res := m_client.startImport;
-  Result := JBool( res, 'result' );
-  if not Result then begin
-    ShowMessage( JString( res, 'text' ));
-    exit;
-  end;
-  m_token := JString( res, 'token');
+  if not start_import then exit;
 
   Req := TJSONObject.Create;
   JReplace( req, 'token', m_token);
@@ -122,6 +119,78 @@ begin
   if not Result then begin
     ShowMessage( JString( res, 'text' ));
     exit;
+  end;
+
+  UploadFiles(JInt( res, 'id'));
+
+  end_import;
+end;
+
+function TTaskImporterMod.prepare_import(path : string ): boolean;
+var
+  fileName : string;
+begin
+  m_path   := path;
+  fileName := TPath.Combine( path, 'data.xml');
+  Result   := FileExists(fileName);
+
+  if not Result then exit;
+
+  try
+    m_data := LoadList(fileName);
+    Result := true;
+  except
+    on e : exception do begin
+
+    end;
+  end;
+  if not Assigned(m_data) then begin
+    ShowMessage('XML konnte nicht gelesen werden oder hat Fehler!');
+    Result := false;
+  end;
+
+end;
+
+function TTaskImporterMod.start_import : boolean;
+var
+  res : TJSONObject;
+begin
+  // start import
+  res := m_client.startImport;
+  Result := JBool( res, 'result' );
+  if not Result then begin
+    ShowMessage( JString( res, 'text' ));
+  end else
+    m_token := JString( res, 'token');
+
+end;
+
+procedure TTaskImporterMod.UploadFiles(id : integer);
+var
+  arr : TStringDynArray;
+  i   : integer;
+  req : TJSONObject;
+  res : TJSONObject;
+  fname : string;
+  st    : TStream;
+begin
+  arr := TDirectory.GetFiles(m_path);
+  for i := low(arr) to High(arr) do begin
+    fname := ExtractFileName(arr[i]);
+    if not SameText(fname, 'data.xml') then begin
+      req := TJSONObject.Create;
+
+      JReplace( req, 'token', m_token);
+      JReplace( req, 'fname', ExtractFileName(arr[i]));
+      JReplace( req, 'id', id);
+
+      st := TFileStream.Create(arr[i], fmOpenRead + fmShareDenyNone);
+
+      Res := m_client.uploadFile( req, st );
+      if not Jbool(res, 'result') then begin
+        ShowMessage( JString( res, 'text'));
+      end;
+    end;
   end;
 end;
 

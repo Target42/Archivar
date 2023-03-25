@@ -56,4 +56,93 @@ object DSImport: TDSImport
     Left = 144
     Top = 160
   end
+  object findTaskQry: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
+    SQL.Strings = (
+      'select * from TA_TASK'
+      'where TA_ID = :ta_id')
+    Left = 256
+    Top = 56
+    ParamData = <
+      item
+        Name = 'TA_ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+  end
+  object CreateDirQry: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
+    SQL.Strings = (
+      'INSERT INTO DR_DIR (DR_ID, DR_GROUP)'
+      'VALUES ('
+      '    :DR_ID, '
+      '    :DR_GROUP'
+      ');')
+    Left = 392
+    Top = 40
+    ParamData = <
+      item
+        Name = 'DR_ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end
+      item
+        Name = 'DR_GROUP'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+  end
+  object FileData: TFDTable
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
+    UpdateOptions.UpdateTableName = 'FI_FILE'
+    TableName = 'FI_FILE'
+    Left = 392
+    Top = 104
+  end
+  object UpdateDirSum: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
+    SQL.Strings = (
+      'update DR_DIR'
+      'set dr_size = ('
+      'SELECT sum(FI_SIZE)'
+      'FROM FI_FILE r'
+      'where dr_id = :id'
+      ')'
+      'where dr_id = :id;')
+    Left = 392
+    Top = 168
+    ParamData = <
+      item
+        Name = 'ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+  end
+  object UpdateTask: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
+    SQL.Strings = (
+      'UPDATE TA_TASK a'
+      'SET '
+      '    a.DR_ID = :dr_id'
+      'WHERE'
+      '    a.TA_ID = :ta_id')
+    Left = 504
+    Top = 40
+    ParamData = <
+      item
+        Name = 'DR_ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end
+      item
+        Name = 'TA_ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+  end
 end

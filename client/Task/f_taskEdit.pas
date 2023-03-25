@@ -95,6 +95,7 @@ type
     Label6: TLabel;
     DBEdit6: TDBEdit;
     TaskTabTA_BEARBEITER: TStringField;
+    TaskTabDR_ID: TIntegerField;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -610,7 +611,7 @@ begin
 
   LoadData;
 
-  FileFrame1.RootID := m_ta_id;
+  FileFrame1.RootID := TaskTab.FieldByName('DR_ID').AsInteger;
   for i := 0 to pred(ComboBox1.Items.Count) do
   begin
     if integer(ComboBox1.Items.Objects[i]) = TaskTab.FieldByName('TA_FLAGS').AsInteger then
