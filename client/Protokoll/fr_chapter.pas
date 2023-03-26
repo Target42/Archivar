@@ -64,6 +64,7 @@ type
     ac_beschluss: TAction;
     ac_be_bearbeiten: TAction;
     ac_be_delete: TAction;
+    ImageList2: TImageList;
     procedure ComboBox1Change(Sender: TObject);
     procedure TVDragOver(Sender, Source: TObject; X, Y: Integer;
       State: TDragState; var Accept: Boolean);

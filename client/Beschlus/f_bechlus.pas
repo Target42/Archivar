@@ -36,6 +36,7 @@ type
     Erweitert1: TMenuItem;
     extbeusteine1: TMenuItem;
     TNFrame1: TTNFrame;
+    ImageList2: TImageList;
     procedure LVGremiumDragOver(Sender, Source: TObject; X, Y: Integer;
       State: TDragState; var Accept: Boolean);
     procedure FormCreate(Sender: TObject);

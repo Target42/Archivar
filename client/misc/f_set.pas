@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_base, Vcl.ComCtrls, Vcl.Buttons,
   Vcl.StdCtrls, Vcl.ExtCtrls,
   IdHTTP, Vcl.Samples.Spin, IdBaseComponent, IdComponent, IdTCPConnection,
-  IdTCPClient;
+  IdTCPClient, System.ImageList, Vcl.ImgList;
 
 type
   TMySettingsForm = class(TForm)
@@ -39,6 +39,7 @@ type
     CheckBox1: TCheckBox;
     TabSheet4: TTabSheet;
     BitBtn2: TBitBtn;
+    ImageList1: TImageList;
     procedure SpeedButton1Click(Sender: TObject);
     procedure LBClick(Sender: TObject);
     procedure SpeedButton2Click(Sender: TObject);

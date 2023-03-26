@@ -1,7 +1,7 @@
 object PersonenListForm: TPersonenListForm
   Left = 0
   Top = 0
-  Caption = 'PersonenListForm'
+  Caption = 'Personenliste'
   ClientHeight = 299
   ClientWidth = 635
   Color = clBtnFace

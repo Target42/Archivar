@@ -12,7 +12,8 @@ uses
   Vcl.Buttons,
   i_chapter,
   Vcl.OleCtrls, SHDocVw, System.Generics.Collections,
-  u_teilnehmer, fr_protocol, u_ForceClose, JvExComCtrls;
+  u_teilnehmer, fr_protocol, u_ForceClose, JvExComCtrls, System.ImageList,
+  Vcl.ImgList;
 
 type
   TProtokollForm = class(TForm, IForceClose)
@@ -56,6 +57,7 @@ type
     PopupMenu1: TPopupMenu;
     BitBtn3: TBitBtn;
     BitBtn4: TBitBtn;
+    ImageList1: TImageList;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);

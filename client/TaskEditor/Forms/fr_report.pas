@@ -53,7 +53,7 @@ type
     TabSheet3: TTabSheet;
     WebBrowser1: TWebBrowser;
     Panel1: TPanel;
-    Button1: TButton;
+    Button1: TBitBtn;
     procedure PopupMenu1Popup(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure CheckBox1Click(Sender: TObject);

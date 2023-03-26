@@ -8,7 +8,8 @@ uses
   Vcl.DBCtrls, Data.DB, Datasnap.DBClient, Datasnap.DSConnect,
   u_gremium, Vcl.ComCtrls, JvDBDateTimePicker,
   i_chapter, Vcl.Buttons, System.JSON, VirtualTrees, fr_editForm, fr_to,
-  Vcl.DBGrids, JvExComCtrls, JvDateTimePicker, Vcl.Grids, Vcl.Mask;
+  Vcl.DBGrids, JvExComCtrls, JvDateTimePicker, Vcl.Grids, Vcl.Mask,
+  System.ImageList, Vcl.ImgList;
 
 type
   TMeetingForm = class(TForm)
@@ -69,6 +70,7 @@ type
     Panel2: TPanel;
     DBNavigator1: TDBNavigator;
     OptTnQry: TClientDataSet;
+    ImageList1: TImageList;
     procedure FormCreate(Sender: TObject);
     procedure ElTabBeforePost(DataSet: TDataSet);
     procedure ComboBox1Change(Sender: TObject);

@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons, Vcl.ExtCtrls,
-  Vcl.ComCtrls;
+  Vcl.ComCtrls, System.ImageList, Vcl.ImgList;
 
 type
   TKeysform = class(TForm)
@@ -18,6 +18,7 @@ type
     Memo1: TMemo;
     TabSheet2: TTabSheet;
     Memo2: TMemo;
+    ImageList1: TImageList;
     procedure BitBtn1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
   private
