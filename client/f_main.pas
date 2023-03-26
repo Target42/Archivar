@@ -8,7 +8,9 @@ uses
   Vcl.ActnList, Vcl.AppEvnts, fr_gremiumTree, Vcl.ExtCtrls, Vcl.StdCtrls,
   fr_taskList, Vcl.StdActns, u_bookmark, fr_bookmark, fr_epub, fr_meeting,
   JvCombobox, JvColorCombo, fr_storages, MidasLib, JvExStdCtrls,
-  DragDrop, DragDropFile, JvComponentBase, JvBaseDlg, JvBrowseFolder;
+  DragDrop, DragDropFile, JvComponentBase, JvBaseDlg, JvBrowseFolder,
+  System.ImageList, Vcl.ImgList, Vcl.ToolWin, Vcl.Buttons, JvSpeedbar,
+  JvExExtCtrls, JvExtComponent;
 
 type
   TStatusInx = (stStatus = 0, stHost, stLogin, stUser, stMsg );
@@ -187,6 +189,7 @@ type
     JvBrowseForFolderDialog1: TJvBrowseForFolderDialog;
     N23: TMenuItem;
     Import3: TMenuItem;
+    ImageList1: TImageList;
     procedure ac_prg_closeExecute(Sender: TObject);
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure ac_prg_disconExecute(Sender: TObject);

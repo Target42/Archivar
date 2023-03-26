@@ -11,7 +11,7 @@ uses
   Vcl.OleCtrls, SHDocVw, JvColorCombo, fr_form, fr_log,
   u_ForceClose, JvExStdCtrls, JvCombobox, JvExMask, JvToolEdit, JvMaskEdit,
   JvCheckedMaskEdit, JvDatePickerEdit, u_SpellChecker, System.JSON,
-  Vcl.ExtCtrls, Vcl.Mask, u_template;
+  Vcl.ExtCtrls, Vcl.Mask, u_template, System.ImageList, Vcl.ImgList;
 
 type
   TTaskEditForm = class(TForm, IForceClose)
@@ -96,6 +96,7 @@ type
     DBEdit6: TDBEdit;
     TaskTabTA_BEARBEITER: TStringField;
     TaskTabDR_ID: TIntegerField;
+    ImageList1: TImageList;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);

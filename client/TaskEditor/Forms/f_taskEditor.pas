@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_editForm, Vcl.ExtCtrls,
   Vcl.StdCtrls, Vcl.ComCtrls, Vcl.Buttons, i_taskEdit, fr_Formeditor, fr_report,
   System.Actions, Vcl.ActnList, Vcl.Menus, Vcl.DBCtrls, Data.DB,
-  Datasnap.DBClient, Datasnap.DSConnect, Vcl.Mask;
+  Datasnap.DBClient, Datasnap.DSConnect, Vcl.Mask, System.ImageList, Vcl.ImgList;
 
 type
   TTaksEditorForm = class(TForm)
@@ -49,6 +49,7 @@ type
     SaveDialog1: TSaveDialog;
     Export1: TMenuItem;
     OpenDialog1: TOpenDialog;
+    ImageList1: TImageList;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
