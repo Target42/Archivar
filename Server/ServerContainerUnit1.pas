@@ -221,7 +221,7 @@ begin
 
   Session := TDSSessionManager.GetThreadSession;
 
-  session.Close;
+//  session.Close;
   GrijjyLog.Send('DSConnectEventObject.ChannelInfo.Id', DSConnectEventObject.ChannelInfo.Id);
   GrijjyLog.Send('session id',                          session.id);
   GrijjyLog.Send('session name',                        session.UserName);
@@ -967,6 +967,7 @@ end;
 procedure TServerContainer1.ServiceStop(Sender: TService; var Stopped: Boolean);
 begin
   GrijjyLog.EnterMethod(self, 'ServiceStop');
+  try
   DSServer1.Stop;
   DBMod.stopDB;
   HttpMod.ende;
@@ -974,6 +975,10 @@ begin
   m_timer.Terminate;
   m_timer := NIL;
 
+  except
+    on e : exception do
+      GrijjyLog.Send(e.ToString, TgoLogLevel.Error );
+  end;
   Stopped := true;
   GrijjyLog.ExitMethod( self, 'ServiceStop');
 end;

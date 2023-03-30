@@ -13,7 +13,7 @@ object ServerContainer1: TServerContainer1
     OnError = DSServer1Error
     AutoStart = False
     OnTrace = DSServer1Trace
-    Left = 64
+    Left = 72
     Top = 11
   end
   object DSTCPServerTransport1: TDSTCPServerTransport
