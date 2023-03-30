@@ -66,10 +66,8 @@ type
     FDBatchMoveDataSetWriter1: TFDBatchMoveDataSetWriter;
     FDBatchMove1: TFDBatchMove;
     CheckBox1: TCheckBox;
-    Button1: TButton;
     FileOpenDialog1: TFileOpenDialog;
     DBNavigator1: TDBNavigator;
-    Button2: TButton;
     PETab: TFDTable;
     Panel3: TPanel;
     BitBtn2: TBitBtn;
@@ -129,13 +127,15 @@ type
     GroupBox8: TGroupBox;
     Label3: TLabel;
     Label4: TLabel;
-    Button3: TButton;
     Plugins: TJvWizardInteriorPage;
     PluginView: TListView;
     PluginTab: TFDTable;
     GroupBox9: TGroupBox;
     LabeledEdit19: TLabeledEdit;
     LabeledEdit20: TLabeledEdit;
+    Button3: TBitBtn;
+    Button1: TBitBtn;
+    Button2: TBitBtn;
     procedure SearchGDSEnterPage(Sender: TObject;
       const FromPage: TJvWizardCustomPage);
     procedure ServerInfoEnterPage(Sender: TObject;
@@ -253,6 +253,7 @@ begin
   BitBtn1.Enabled := false;
 
   InitData.VisibleButtons := [TJvWizardButtonKind.bkNext, TJvWizardButtonKind.bkFinish];
+  JvWizard1.SelectNextPage;
 end;
 
 procedure TMainSetupForm.BitBtn2Click(Sender: TObject);
@@ -574,6 +575,8 @@ begin
     end;
   end;
   ArchivarConnection.Close;
+
+  JvWizard1.SelectNextPage;
 end;
 
 procedure TMainSetupForm.Button1Click(Sender: TObject);

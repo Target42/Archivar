@@ -533,6 +533,7 @@ end;
 
 procedure TMainForm.ac_prg_disconExecute(Sender: TObject);
 begin
+  setPanel(integer(stMsg), 'Das Beenden dauert lange bei HTTP');
   GM.Disconnect;
 end;
 

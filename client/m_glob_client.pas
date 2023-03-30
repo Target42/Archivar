@@ -643,9 +643,12 @@ end;
 
 procedure TGM.Disconnect;
 begin
+  CodeSite.EnterMethod(Self, 'diconnect');
   try
     if SQLConnection1.Connected then begin
+      CodeSite.EnterMethod(self, 'CloseClientChannel');
       DSClientCallbackChannelManager1.CloseClientChannel;
+      CodeSite.exitMethod(self, 'CloseClientChannel');
 
     if Assigned(m_misc) then
       FreeAndNil(m_misc);
@@ -654,6 +657,7 @@ begin
     end;
   except
   end;
+  CodeSite.ExitMethod(self, 'diconnect');
 end;
 
 function TGM.download(fname: string; st: TStream): boolean;
@@ -1182,6 +1186,7 @@ end;
 
 procedure TGM.SQLConnection1AfterDisconnect(Sender: TObject);
 begin
+  CodeSite.EnterMethod(self, 'AfterDisconnect(');
   PingTimer.Enabled := false;
 
   m_plugins.unloadAll;
@@ -1190,11 +1195,13 @@ begin
     LoginForm.Password := '';
 
   (Application.MainForm as TMainForm).ApplicationSetMenu(false );
+  CodeSite.ExitMethod(self, 'AfterDisconnect(');
 //  PostMessage( Application.MainFormHandle, msgDisconnected, 0, 0 );
 end;
 
 procedure TGM.SQLConnection1BeforeDisconnect(Sender: TObject);
 begin
+  CodeSite.EnterMethod(self, 'BeforeDisconnect(');
   DSClientCallbackChannelManager1.UnregisterCallback(BRD_CHANNEL);
 
   if Assigned(m_misc) then
@@ -1202,6 +1209,7 @@ begin
   m_misc := NIL;
 
   WindowHandler.closeAll;
+  CodeSite.ExitMethod(self, 'BeforeDisconnect(');
 
 end;
 

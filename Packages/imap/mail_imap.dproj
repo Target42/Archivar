@@ -5,7 +5,7 @@
         <ProjectVersion>18.4</ProjectVersion>
         <FrameworkType>VCL</FrameworkType>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Release</Config>
+        <Config Condition="'$(Config)'==''">Debug</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>1</TargetedPlatforms>
         <AppType>Package</AppType>
@@ -199,6 +199,12 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\IndyCore250.de" Configuration="Release" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>IndyCore250.de</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="$(BDSCOMMONDIR)\Bpl\VirtualTreesDR250.bpl" Configuration="Release" Class="DependencyPackage">
                     <Platform Name="Win32">
                         <Overwrite>true</Overwrite>
@@ -206,12 +212,6 @@
                 </DeployFile>
                 <DeployFile LocalName="$(BDS)\Redist\Win32\inet250.bpl" Configuration="Release" Class="DependencyPackage">
                     <Platform Name="Win32">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
-                <DeployFile LocalName="$(BDS)\Redist\Win32\IndyCore250.de" Configuration="Release" Class="DependencyPackageResource">
-                    <Platform Name="Win32">
-                        <RemoteName>IndyCore250.de</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

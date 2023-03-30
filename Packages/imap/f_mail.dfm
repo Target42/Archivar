@@ -1,7 +1,7 @@
 object MailForm: TMailForm
   Left = 0
   Top = 0
-  Caption = 'MailForm'
+  Caption = 'Mail (pop3/smtp)'
   ClientHeight = 418
   ClientWidth = 1020
   Color = clBtnFace
@@ -32,7 +32,7 @@ object MailForm: TMailForm
     Width = 417
     Height = 399
     Align = alLeft
-    Caption = 'GroupBox1'
+    Caption = 'Mails'
     TabOrder = 0
     object VST: TVirtualStringTree
       Left = 2
@@ -52,8 +52,6 @@ object MailForm: TMailForm
       OnGetText = VSTGetText
       OnPaintText = VSTPaintText
       OnInitNode = VSTInitNode
-      ExplicitLeft = 1
-      ExplicitTop = 53
       Columns = <>
     end
     object Panel1: TPanel

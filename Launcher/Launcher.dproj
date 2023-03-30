@@ -105,6 +105,7 @@
         <VerInfo_IncludeVerInfo>true</VerInfo_IncludeVerInfo>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <Debugger_RunParams>&quot;-proxypwd:Schweden 2023&quot;</Debugger_RunParams>
+        <Icon_MainIcon>..\client\pics\icons8_Book_Shelf.ico</Icon_MainIcon>
     </PropertyGroup>
     <ItemGroup>
         <DelphiCompile Include="$(MainSource)">

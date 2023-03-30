@@ -91,7 +91,7 @@
         <DCC_SYMBOL_PLATFORM>false</DCC_SYMBOL_PLATFORM>
         <DCC_UNIT_PLATFORM>false</DCC_UNIT_PLATFORM>
         <DCC_UnitSearchPath>C:\Users\Public\Documents\Embarcadero\Studio\Excel4Delphi\source\;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
-        <Icon_MainIcon>icons8_Settings.ico</Icon_MainIcon>
+        <Icon_MainIcon>..\client\pics\icons8_Book_Shelf.ico</Icon_MainIcon>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>

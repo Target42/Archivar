@@ -113,6 +113,10 @@
     object TabSheet2: TTabSheet
       Caption = 'Lesezeichen'
       ImageIndex = 34
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       inline BookmarkFrame1: TBookmarkFrame
         Left = 0
         Top = 0
@@ -171,6 +175,10 @@
     object TabSheet6: TTabSheet
       Caption = 'Online'
       ImageIndex = 21
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object UserView: TListView
         Left = 0
         Top = 0
@@ -250,8 +258,6 @@
     object TabSheet4: TTabSheet
       Caption = 'Aufgaben'
       ImageIndex = 33
-      ExplicitTop = 24
-      ExplicitHeight = 159
       object GroupBox2: TGroupBox
         Left = 0
         Top = 0
@@ -260,7 +266,6 @@
         Align = alClient
         Caption = 'Aufgaben'
         TabOrder = 0
-        ExplicitHeight = 159
         inline TaskListFrame1: TTaskListFrame
           Left = 2
           Top = 15
@@ -271,12 +276,12 @@
           ExplicitLeft = 2
           ExplicitTop = 15
           ExplicitWidth = 1114
-          ExplicitHeight = 142
+          ExplicitHeight = 141
           inherited LV: TListView
             Width = 1114
             Height = 141
             ExplicitWidth = 1114
-            ExplicitHeight = 142
+            ExplicitHeight = 141
           end
           inherited ActionList1: TActionList
             Left = 176
@@ -288,8 +293,6 @@
     object TabSheet5: TTabSheet
       Caption = 'Termine'
       ImageIndex = 46
-      ExplicitTop = 24
-      ExplicitHeight = 159
       inline MeetingFrame1: TMeetingFrame
         Left = 0
         Top = 0
@@ -298,7 +301,7 @@
         Align = alClient
         TabOrder = 0
         ExplicitWidth = 1118
-        ExplicitHeight = 159
+        ExplicitHeight = 158
         inherited Lv: TListView
           Width = 1118
           Height = 158
@@ -320,7 +323,7 @@
               TitleImage = -1
             end>
           ExplicitWidth = 1118
-          ExplicitHeight = 159
+          ExplicitHeight = 158
         end
       end
     end
@@ -988,7 +991,7 @@
     Left = 360
     Top = 48
     Bitmap = {
-      494C01012F003800E80010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01012F003800F40010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000040000000C0000000010020000000000000C0
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
