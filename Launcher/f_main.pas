@@ -413,6 +413,7 @@ var
 begin
   m_files  := TList<prFile>.create;
   m_client := NIL;
+
   IniOptions.LoadFromFile(ParamStr(0)+'.ini');
 
   fname := paramStr(0)+'.ini';
