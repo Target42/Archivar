@@ -20,7 +20,8 @@ uses
   IdSSLOpenSSL, IdHTTP,
   IdCustomHTTPServer, IdHTTPServer, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
   IdIOHandlerSocket, IdTCPConnection, IdTCPClient, IdServerIOHandler,
-  IdComponent, Vcl.Grids, System.Generics.Collections;
+  IdComponent, Vcl.Grids, System.Generics.Collections, DosCommand, CWMIBase,
+  CServiceInfo, CProcessInfo;
 
 type
   TMainSetupForm = class(TForm)
@@ -136,6 +137,18 @@ type
     Button3: TBitBtn;
     Button1: TBitBtn;
     Button2: TBitBtn;
+    ServerStart: TJvWizardInteriorPage;
+    GroupBox10: TGroupBox;
+    Edit1: TEdit;
+    BitBtn7: TBitBtn;
+    GroupBox11: TGroupBox;
+    Edit2: TEdit;
+    BitBtn8: TBitBtn;
+    BitBtn9: TBitBtn;
+    BitBtn10: TBitBtn;
+    BitBtn11: TBitBtn;
+    ServiceInfo1: TServiceInfo;
+    ProcessInfo1: TProcessInfo;
     procedure SearchGDSEnterPage(Sender: TObject;
       const FromPage: TJvWizardCustomPage);
     procedure ServerInfoEnterPage(Sender: TObject;
@@ -178,6 +191,13 @@ type
       const FromPage: TJvWizardCustomPage);
     procedure PluginsExitPage(Sender: TObject;
       const FromPage: TJvWizardCustomPage);
+    procedure ServerStartEnterPage(Sender: TObject;
+      const FromPage: TJvWizardCustomPage);
+    procedure BitBtn8Click(Sender: TObject);
+    procedure BitBtn11Click(Sender: TObject);
+    procedure BitBtn9Click(Sender: TObject);
+    procedure BitBtn10Click(Sender: TObject);
+    procedure BitBtn7Click(Sender: TObject);
   private
     m_home  : string;
     m_ini   : TiniFile;
@@ -207,6 +227,9 @@ type
     function md5( fname : string ) : string;
 
     procedure ImportExcel(fileName : string );
+
+    procedure run( filename : string );
+    function findService(auto_close : boolean = true) : boolean;
   public
     { Public-Deklarationen }
   end;
@@ -232,6 +255,42 @@ begin
   AutoIncQry.Open;
   Result := AutoIncQry.FieldByName('GEN_ID').AsInteger;
   AutoIncQry.Close;
+end;
+
+procedure TMainSetupForm.BitBtn10Click(Sender: TObject);
+begin
+  if not findService then begin
+    ShowMessage('Der Service ist nicht installiert');
+    exit;
+  end;
+
+  run('Service_Stop.Bat');
+
+  if not findService(false) then
+    ShowMessage('Der Service wurde nicht gefudnen!')
+  else begin
+    if ServiceInfo1.ServiceProperties.Started  then
+      ShowMessage('Der Service wurde gestoppt')
+    else
+      ShowMessage('Der Service wurde NICHT gestoppt');
+  end;
+  ServiceInfo1.Active := false;
+
+end;
+
+procedure TMainSetupForm.BitBtn11Click(Sender: TObject);
+begin
+  if not findService then begin
+    ShowMessage('Der Service ist nicht installiert');
+    exit;
+  end;
+
+  run('Service_Uninstall.bat');
+
+  if not findService then
+    ShowMessage('Der Service ist jetzt deinstalliert')
+  else
+    ShowMessage('Die Deinstallation ist fehlgeschlagen');
 end;
 
 procedure TMainSetupForm.BitBtn1Click(Sender: TObject);
@@ -466,6 +525,51 @@ begin
     Label4.Font.Color := clRed;
 end;
 
+procedure TMainSetupForm.BitBtn7Click(Sender: TObject);
+var
+  fname : string;
+begin
+  fname := TPath.Combine(ExtractFilePath(paramStr(0)), Edit1.Text);
+
+  ShellExecute(Handle, 'open', PWideChar(fname), '', '', SW_SHOWNORMAL);
+end;
+
+procedure TMainSetupForm.BitBtn8Click(Sender: TObject);
+begin
+  if findService then begin
+    ShowMessage('Der Service ist schon installiert');
+    exit;
+  end;
+
+  run('Service_Install.bat');
+
+  if findService then
+    ShowMessage('Der Service ist jetzt installiert')
+  else
+    ShowMessage('Die Installation ist fehlgeschlagen');
+end;
+
+procedure TMainSetupForm.BitBtn9Click(Sender: TObject);
+begin
+  if not findService then begin
+    ShowMessage('Der Service ist nicht installiert');
+    exit;
+  end;
+
+  run('Service_Start.bat');
+
+  if not findService(false) then
+    ShowMessage('Der Service wurde nicht gefunden!')
+  else begin
+
+    if ServiceInfo1.ServiceProperties.Started  then
+      ShowMessage('Der Service wurde gestarted')
+    else
+      ShowMessage('Der Service wurde NICHT gestarted');
+  end;
+  ServiceInfo1.Active := false;
+end;
+
 procedure TMainSetupForm.btnCreateClick(Sender: TObject);
 var
   db    : TFDConnection;
@@ -671,13 +775,31 @@ begin
    Result := StringReplace(Result, '\\', '\', [rfReplaceAll]);
 end;
 
+function TMainSetupForm.findService(auto_close : boolean): boolean;
+var
+  i : integer;
+begin
+  Result := false;
+  ServiceInfo1.Active := true;
+  for i := 1 to ServiceInfo1.ObjectsCount do begin
+    ServiceInfo1.ObjectIndex := i;
+
+    if SameText(ServiceInfo1.ServiceProperties.DisplayName, 'ArchivarService') then begin
+      Result := true;
+      break;
+    end;
+  end;
+  if auto_close then
+    ServiceInfo1.Active := false;
+end;
+
 procedure TMainSetupForm.FormCreate(Sender: TObject);
 begin
   m_home := TPath.Combine(ExtractFileDir(Application.ExeName), 'InitialData');
   m_ini   := TiniFile.Create(TPath.Combine(ExtractFileDir(Application.ExeName), 'ArchivServer.exe.ini'));
 
   m_berMap := TDictionary<string, integer>.create;
-//  JvWizard1.ActivePage := Import;
+  JvWizard1.ActivePage := ServerStart;
 end;
 
 procedure TMainSetupForm.FormDestroy(Sender: TObject);
@@ -1385,6 +1507,14 @@ begin
   LV.Selected   := Result;
 end;
 
+procedure TMainSetupForm.run(filename: string);
+var
+  fname : string;
+begin
+  fname := 'cmd.exe /k'+TPath.Combine(ExtractFilePath(paramStr(0)), filename );
+  ShellExecute(Handle, 'open', PWideChar(fname), '', '', SW_SHOWNORMAL);
+end;
+
 procedure TMainSetupForm.SearchGDSEnterPage(Sender: TObject;
   const FromPage: TJvWizardCustomPage);
 begin
@@ -1421,6 +1551,13 @@ begin
   m_ini.WriteString('DS', 'httpsport',    LabeledEdit4.Text);
 
   m_ini.WriteString('dnl', 'port',        LabeledEdit5.Text);
+end;
+
+procedure TMainSetupForm.ServerStartEnterPage(Sender: TObject;
+  const FromPage: TJvWizardCustomPage);
+begin
+  Edit1.Text := 'ArchivServer.console.exe';
+  Edit2.Text := 'ArchivServer.service.exe';
 end;
 
 procedure TMainSetupForm.SicherheitEnterPage(Sender: TObject;
