@@ -176,7 +176,7 @@ begin
     JReplace( msg, 'id',   drid);
     JReplace( msg, 'grid', grid);
 
-    ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg);
+    ArchivService.BroadcastMessage(BRD_CHANNEL, msg);
 
     JResult( Result, true, 'Das Verzeichnis wurde gelöscht');
   except
@@ -389,7 +389,7 @@ var
     arr := IntListToJArray(list);
 
     JReplace(msg, 'items', arr);
-    ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg);
+    ArchivService.BroadcastMessage(BRD_CHANNEL, msg);
   end;
 begin
   GrijjyLog.EnterMethod(self, 'lock');
@@ -453,7 +453,7 @@ function TdsFile.move(data: TJSONObject): TJSONObject;
     JAction(  msg, BRD_FOLDER_UPDATE);
     JReplace( msg, 'grid', id);
     JReplace( msg, 'type', typ);
-    ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg);
+    ArchivService.BroadcastMessage(BRD_CHANNEL, msg);
   end;
 
   procedure moveFiles;
@@ -598,7 +598,7 @@ begin
       JReplace( msg, 'pid',  pid );
       JReplaceDouble( msg, 'stamp', now);
 
-      ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg);
+      ArchivService.BroadcastMessage(BRD_CHANNEL, msg);
   end;
 
 end;
@@ -657,7 +657,7 @@ begin
       JReplace( msg, 'id',   id);
       JReplace( msg, 'grid', grid);
       JReplace( msg, 'name', name );
-      ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg);
+      ArchivService.BroadcastMessage(BRD_CHANNEL, msg);
   end;
 end;
 
@@ -683,7 +683,7 @@ var
     arr := IntListToJArray(list);
 
     JReplace(msg, 'items', arr);
-    ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg);
+    ArchivService.BroadcastMessage(BRD_CHANNEL, msg);
   end;
 begin
   GrijjyLog.EnterMethod(self, 'unlock');

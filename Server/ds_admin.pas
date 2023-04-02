@@ -141,22 +141,22 @@ var
     JReplace( obj, 'counter', val);
     setText(  obj, 'text', Format('Der Server wird um %s runtergefahren', [DateTimeToStr(da)]));
 
-    ServerContainer1.BroadcastMessage(BRD_CHANNEL, obj);
-    ServerContainer1.Shutdown( val );
+    ArchivService.BroadcastMessage(BRD_CHANNEL, obj);
+    ArchivService.Shutdown( val );
   end;
   procedure sendMessage;
   begin
     JReplace( obj, 'urgend', JBool(data, 'urgend'));
     setText(  obj, 'text', getText( data, 'text' ));
-    ServerContainer1.BroadcastMessage(BRD_CHANNEL, obj);
+    ArchivService.BroadcastMessage(BRD_CHANNEL, obj);
   end;
   procedure sendCloseEdits;
   begin
-    ServerContainer1.BroadcastMessage(BRD_CHANNEL, obj);
+    ArchivService.BroadcastMessage(BRD_CHANNEL, obj);
   end;
   procedure sendTerminate;
   begin
-    ServerContainer1.BroadcastMessage(BRD_CHANNEL, obj);
+    ArchivService.BroadcastMessage(BRD_CHANNEL, obj);
   end;
 
 begin

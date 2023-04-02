@@ -188,7 +188,7 @@ procedure TGM.LoadIni;
 var
   FName : string;
 begin
-  fname := ParamStr(0)+'.ini';
+  fname := TPath.Combine(ExtractFilePath(ParamStr(0)), 'ArchivServer.exe.ini');
   IniOptions.LoadFromFile(fname);
 end;
 
@@ -228,7 +228,7 @@ procedure TGM.SaveIni;
 var
   FName : string;
 begin
-  fname := ParamStr(0) +'.ini';
+  fname := TPAth.Combine(ExtractFilePath(ParamStr(0)), 'ArchivServer.exe.ini');
   IniOptions.SaveToFile(fname);
 end;
 

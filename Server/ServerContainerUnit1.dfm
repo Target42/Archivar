@@ -1,8 +1,8 @@
-object ServerContainer1: TServerContainer1
+object ArchivService: TArchivService
   OldCreateOrder = False
   OnCreate = ServiceCreate
   OnDestroy = ServiceDestroy
-  DisplayName = 'ArchivarServer'
+  DisplayName = 'ArchivarService'
   OnStart = ServiceStart
   OnStop = ServiceStop
   Height = 680

@@ -5,7 +5,7 @@
         <FrameworkType>VCL</FrameworkType>
         <MainSource>ArchivServer.dpr</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Release</Config>
+        <Config Condition="'$(Config)'==''">Debug</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>1</TargetedPlatforms>
         <AppType>Application</AppType>
@@ -103,7 +103,7 @@
             <DesignClass>TDSServerModule</DesignClass>
         </DCCReference>
         <DCCReference Include="ServerContainerUnit1.pas">
-            <Form>ServerContainer1</Form>
+            <Form>ArchivService</Form>
             <DesignClass>TService</DesignClass>
         </DCCReference>
         <DCCReference Include="m_glob_server.pas">

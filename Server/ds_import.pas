@@ -211,7 +211,7 @@ begin
   JReplace( msg, 'taid', taid);
   JReplace( msg, 'grid', grid);
   JReplace( msg, 'assign', assign );
-  ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg);
+  ArchivService.BroadcastMessage(BRD_CHANNEL, msg);
 end;
 
 function TDSImport.startImport: TJSONObject;

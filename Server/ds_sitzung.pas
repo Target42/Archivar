@@ -123,7 +123,7 @@ begin
   JAction( msg, BRD_DOC_UPDATE);
   GrijjyLog.Send('data out', msg.ToJSON);
 
-  ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg);
+  ArchivService.BroadcastMessage(BRD_CHANNEL, msg);
 
   GrijjyLog.ExitMethod(self, 'updateDocument');
 end;

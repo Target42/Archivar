@@ -506,7 +506,7 @@ begin
   msg := TJSONObject.Create;
   JAction(  msg, BRD_MEETING_NEW);
   JReplace( msg, 'id', el_id);
-  ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg);
+  ArchivService.BroadcastMessage(BRD_CHANNEL, msg);
 end;
 
 end.

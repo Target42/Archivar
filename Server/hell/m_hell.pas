@@ -86,7 +86,7 @@ begin
 
         fillUser( me.LeadID, msg );
 
-        ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg);
+        ArchivService.BroadcastMessage(BRD_CHANNEL, msg);
 
         break;
       end;
@@ -137,7 +137,7 @@ begin
   JReplace( msg, 'status',  integer(ts));
   JReplace( msg, 'list',    arr);
 
-  ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg);
+  ArchivService.BroadcastMessage(BRD_CHANNEL, msg);
 
   list.Free;
 
@@ -201,7 +201,7 @@ begin
           JReplace( msg, 'cancel',cancel);
           JReplace(msg, 'data', me.Vote.getResult);
 
-          ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg );
+          ArchivService.BroadcastMessage(BRD_CHANNEL, msg );
 
           me.removeVote;
           JResult( Result, true, '');
@@ -362,7 +362,7 @@ begin
       IBTransaction1.Commit;
 
     for obj in msgList do begin
-      ServerContainer1.BroadcastMessage(BRD_CHANNEL, obj);
+      ArchivService.BroadcastMessage(BRD_CHANNEL, obj);
     end;
 
     for id in emptyList do begin
@@ -421,7 +421,7 @@ begin
           JAction(  msg, BRD_LEAD_CHG);
           JReplace( msg, 'lead',    me.LeadID);
         end;
-        ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg);
+        ArchivService.BroadcastMessage(BRD_CHANNEL, msg);
 
         break;
       end;
@@ -464,7 +464,7 @@ begin
   JReplace( msg, 'running', running);
   JReplace( msg, 'lead',    leadID );
 
-  ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg);
+  ArchivService.BroadcastMessage(BRD_CHANNEL, msg);
 end;
 
 procedure THellMod.sendStartLead(id, peid: integer);
@@ -478,7 +478,7 @@ begin
 
   fillUser( peid, msg );
 
-  ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg);
+  ArchivService.BroadcastMessage(BRD_CHANNEL, msg);
 
 end;
 
@@ -491,7 +491,7 @@ begin
   JReplace( msg, 'id',      id);
   JReplace( msg, 'lead',   -1);
 
-  ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg);
+  ArchivService.BroadcastMessage(BRD_CHANNEL, msg);
 end;
 
 function THellMod.setStatus(el_id, pe_id: integer; var prid : integer;
@@ -528,7 +528,7 @@ begin
     IBTransaction1.Commit;
 
   if Assigned(msg) then
-    ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg);
+    ArchivService.BroadcastMessage(BRD_CHANNEL, msg);
 end;
 
 function THellMod.startVote(obj: TJSONobject): TJSONObject;
@@ -559,7 +559,7 @@ begin
           msg := TJSONObject.Create;
           JAction( msg, BRD_VOTE_END);
           JReplace(msg, 'data', me.Vote.getResult );
-          ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg );
+          ArchivService.BroadcastMessage(BRD_CHANNEL, msg );
           me.removeVote;
         end;
 
@@ -574,7 +574,7 @@ begin
           JReplace( msg, 'lead', me.LeadID );
           JReplace( msg, 'data', me.Vote.getUserList);
 
-          ServerContainer1.BroadcastMessage(BRD_CHANNEL,  msg);
+          ArchivService.BroadcastMessage(BRD_CHANNEL,  msg);
           JResult( Result, true, '');
         end
         else
@@ -611,7 +611,7 @@ begin
           JAction(msg, BRD_VOTE);
           JReplace(msg, 'vote', obj.Clone as TJSONObject);
 
-          ServerContainer1.BroadcastMessage( BRD_CHANNEL, msg);
+          ArchivService.BroadcastMessage( BRD_CHANNEL, msg);
           JReplace(Result, 'result', true);
         end;
       end;

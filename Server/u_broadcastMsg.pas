@@ -65,7 +65,7 @@ begin
   GrijjyLog.Send('broadcast', m_msg.ToJSON);
 
   try
-    ServerContainer1.BroadcastMessage(FChannel, m_msg);
+    ArchivService.BroadcastMessage(FChannel, m_msg);
   except
     Result := false;
   end;

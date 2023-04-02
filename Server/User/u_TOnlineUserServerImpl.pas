@@ -206,7 +206,7 @@ begin
   end;
   JReplace( data, 'user', arr);
 
-  ServerContainer1.BroadcastMessage(BRD_CHANNEL, data);
+  ArchivService.BroadcastMessage(BRD_CHANNEL, data);
 end;
 
 procedure TOnlineUserServerImpl.sendUserStatus(us: IServerUser);
@@ -219,7 +219,7 @@ begin
   JReplace( data, 'id',     us.ID);
   JReplace( data, 'state',  us.Status );
 
-  ServerContainer1.BroadcastMessage(BRD_CHANNEL, data);
+  ArchivService.BroadcastMessage(BRD_CHANNEL, data);
 end;
 
 procedure TOnlineUserServerImpl.SetItems(inx : integer; const Value: IServerUser);

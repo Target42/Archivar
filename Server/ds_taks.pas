@@ -348,7 +348,7 @@ begin
         JAction(  msg, BRD_TASK_DELETE);
         JReplace( msg, 'taid', ta_id);
         JReplace( msg, 'clid', clid);
-        ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg);
+        ArchivService.BroadcastMessage(BRD_CHANNEL, msg);
       except
         on e : exception do
         begin
@@ -428,7 +428,7 @@ begin
       JAction(  msg, BRD_TASK_MOVE);
       JReplace( msg, 'taid', taid);
       JReplace( msg, 'grid', grid);
-      ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg);
+      ArchivService.BroadcastMessage(BRD_CHANNEL, msg);
     except
 
     end;
@@ -456,7 +456,7 @@ begin
   JReplace( msg, 'taid', taid);
   JReplace( msg, 'grid', grid);
   JReplace( msg, 'assign', assign );
-  ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg);
+  ArchivService.BroadcastMessage(BRD_CHANNEL, msg);
 
 end;
 

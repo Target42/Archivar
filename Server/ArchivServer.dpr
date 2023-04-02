@@ -12,7 +12,7 @@ program ArchivServer;
 uses
   Vcl.SvcMgr,
   ds_admin in 'ds_admin.pas' {AdminMod: TDSServerModule},
-  ServerContainerUnit1 in 'ServerContainerUnit1.pas' {ServerContainer1: TService},
+  ServerContainerUnit1 in 'ServerContainerUnit1.pas' {ArchivService: TService},
   System.SysUtils {ServerContainer1: TService},
   m_glob_server in 'm_glob_server.pas' {GM: TDataModule},
   m_db in 'm_db.pas' {DBMod: TDataModule},
@@ -64,6 +64,12 @@ var
   MyDummyBoolean  : Boolean;
   s               : string;
 
+{$IFDEF DEBUG}
+{$e console.exe}
+{$ELSE}
+{$e service.exe}
+{$ENDIF}
+
 begin
 {$ifdef DEBUG}
 //  Application;
@@ -78,27 +84,27 @@ begin
 
 
     // Create the TService descendant manually.
-    ServerContainer1 := TServerContainer1.Create(nil);
+    ArchivService := TArchivService.Create(nil);
 
     // Simulate service start.
-    ServerContainer1.ServiceStart(ServerContainer1, MyDummyBoolean);
+    ArchivService.ServiceStart(ArchivService, MyDummyBoolean);
 
     // Keep the console box running (ServerContainer1 code runs in the background)
     repeat
       ReadLn(s);
       s := trim(s);
 
-      if s = 'o' then ServerContainer1.dumpOnlineUser;
-      if s = 's' then ServerContainer1.dumpSessions;
+      if s = 'o' then ArchivService.dumpOnlineUser;
+      if s = 's' then ArchivService.dumpSessions;
       if s = 'l' then begin
         Writeln('start logging');
-        ServerContainer1.startLogging;
+        ArchivService.startLogging;
       end;
 
     until s = 'q';
 
     // On exit, destroy the service object.
-    FreeAndNil(ServerContainer1);
+    FreeAndNil(ArchivService);
   except
     on E: Exception do
     begin
@@ -111,7 +117,7 @@ begin
   if not Application.DelayInitialize or Application.Installing then
     Application.Initialize;
 
-  Application.CreateForm(TServerContainer1, ServerContainer1);
+  Application.CreateForm(TArchivService, ArchivService);
   Application.Run;
 {$endif}
 end.

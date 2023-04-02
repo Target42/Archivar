@@ -18,7 +18,7 @@ uses
   FireDAC.DApt.Intf;
 
 type
-  TServerContainer1 = class(TService)
+  TArchivService = class(TService)
     DSServer1: TDSServer;
     DSTCPServerTransport1: TDSTCPServerTransport;
     dsAdmin: TDSServerClass;
@@ -152,7 +152,7 @@ type
   end;
 
 var
-  ServerContainer1: TServerContainer1;
+  ArchivService: TArchivService;
 
 implementation
 
@@ -174,13 +174,13 @@ uses
   u_Konst, Winapi.Messages, m_http, m_del_files, system.DateUtils, m_mail,
   ds_plugin, ds_import;
 
-procedure TServerContainer1.dsAdminGetClass(
+procedure TArchivService.dsAdminGetClass(
   DSServerClass: TDSServerClass; var PersistentClass: TPersistentClass);
 begin
   PersistentClass := ds_admin.TAdminMod;
 end;
 
-procedure TServerContainer1.DSServer1Connect(
+procedure TArchivService.DSServer1Connect(
   DSConnectEventObject: TDSConnectEventObject);
 var
   Session : TDSSession;
@@ -212,7 +212,7 @@ begin
   GrijjyLog.ExitMethod(self, 'DSServer1Connect');
 end;
 
-procedure TServerContainer1.DSServer1Disconnect(
+procedure TArchivService.DSServer1Disconnect(
   DSConnectEventObject: TDSConnectEventObject);
 var
   session : TDSSession;
@@ -229,7 +229,7 @@ begin
   GrijjyLog.ExitMethod(self, 'DSServer1Disconnect');
 end;
 
-procedure TServerContainer1.DSServer1Error(
+procedure TArchivService.DSServer1Error(
   DSErrorEventObject: TDSErrorEventObject);
 var
   session : TDSSession;
@@ -248,60 +248,60 @@ begin
 
 end;
 
-function TServerContainer1.DSServer1Trace(TraceInfo: TDBXTraceInfo): CBRType;
+function TArchivService.DSServer1Trace(TraceInfo: TDBXTraceInfo): CBRType;
 begin
   Result := cbrCONTINUE;
 end;
 
-procedure TServerContainer1.dsTextBlockGetClass(
+procedure TArchivService.dsTextBlockGetClass(
   DSServerClass: TDSServerClass; var PersistentClass: TPersistentClass);
 begin
   PersistentClass := ds_textblock.TdsTextBlock;
 end;
 
-procedure TServerContainer1.dsUpdaterGetClass(
+procedure TArchivService.dsUpdaterGetClass(
   DSServerClass: TDSServerClass; var PersistentClass: TPersistentClass);
 begin
   PersistentClass := ds_updater.TdsUpdater;
 end;
 
-procedure TServerContainer1.dsSitzungGetClass(DSServerClass: TDSServerClass;
+procedure TArchivService.dsSitzungGetClass(DSServerClass: TDSServerClass;
   var PersistentClass: TPersistentClass);
 begin
   PersistentClass := ds_sitzung.TdsSitzung;
 end;
 
-procedure TServerContainer1.dsStammDataGetClass(DSServerClass: TDSServerClass;
+procedure TArchivService.dsStammDataGetClass(DSServerClass: TDSServerClass;
   var PersistentClass: TPersistentClass);
 begin
   PersistentClass := ds_stamm.TStammMod;
 end;
 
-procedure TServerContainer1.dsStorageGetClass(DSServerClass: TDSServerClass;
+procedure TArchivService.dsStorageGetClass(DSServerClass: TDSServerClass;
   var PersistentClass: TPersistentClass);
 begin
   PersistentClass := ds_storage.TdsStorage;
 end;
 
-procedure TServerContainer1.dsTaskEditGetClass(DSServerClass: TDSServerClass;
+procedure TArchivService.dsTaskEditGetClass(DSServerClass: TDSServerClass;
   var PersistentClass: TPersistentClass);
 begin
   PersistentClass := ds_taskEdit.TdsTaskEdit;
 end;
 
-procedure TServerContainer1.dsTaskGetClass(DSServerClass: TDSServerClass;
+procedure TArchivService.dsTaskGetClass(DSServerClass: TDSServerClass;
   var PersistentClass: TPersistentClass);
 begin
   PersistentClass := ds_taks.TdsTask;
 end;
 
-procedure TServerContainer1.dsTaskViewGetClass(DSServerClass: TDSServerClass;
+procedure TArchivService.dsTaskViewGetClass(DSServerClass: TDSServerClass;
   var PersistentClass: TPersistentClass);
 begin
   PersistentClass := ds_taskView.TdsTaskView;
 end;
 
-procedure TServerContainer1.DSTCPServerTransport1Connect(
+procedure TArchivService.DSTCPServerTransport1Connect(
   Event: TDSTCPConnectEventObject);
 begin
   GrijjyLog.EnterMethod(self, 'DSTCPServerTransport1Connect');
@@ -313,7 +313,7 @@ begin
   GrijjyLog.ExitMethod(self, 'DSTCPServerTransport1Connect');
 end;
 
-procedure TServerContainer1.DSTCPServerTransport1Disconnect(
+procedure TArchivService.DSTCPServerTransport1Disconnect(
   Event: TDSTCPDisconnectEventObject);
 begin
   GrijjyLog.EnterMethod(self, 'DSTCPServerTransport1Disconnect');
@@ -321,13 +321,13 @@ begin
   GrijjyLog.ExitMethod(self, 'DSTCPServerTransport1Disconnect');
 end;
 
-procedure TServerContainer1.dsTemplateGetClass(DSServerClass: TDSServerClass;
+procedure TArchivService.dsTemplateGetClass(DSServerClass: TDSServerClass;
   var PersistentClass: TPersistentClass);
 begin
   PersistentClass := ds_template.TdsTemplate;
 end;
 
-procedure TServerContainer1.dumpOnlineUser;
+procedure TArchivService.dumpOnlineUser;
 var
   i : integer;
   us : IServerUser;
@@ -340,7 +340,7 @@ begin
   GrijjyLog.ExitMethod(self, 'dumpOnlineUser');
 end;
 
-procedure TServerContainer1.dumpSessions;
+procedure TArchivService.dumpSessions;
 var
   list    : TList<String>;
   s       : string;
@@ -371,7 +371,7 @@ end;
 
 procedure ServiceController(CtrlCode: DWord); stdcall;
 begin
-  ServerContainer1.Controller(CtrlCode);
+  ArchivService.Controller(CtrlCode);
 end;
 
 procedure SimKeyEvent(VirtualKey : Integer; Flags : LongWord);
@@ -391,7 +391,7 @@ begin
   SendInput(1, Input, SizeOf(Input));
 end;
 
-procedure TServerContainer1.execShutdown(sender: TObject);
+procedure TArchivService.execShutdown(sender: TObject);
 var
   obj  : TJSONObject;
 {$ifdef DEBUG}
@@ -419,7 +419,7 @@ begin
 {$endif}
 end;
 
-procedure TServerContainer1.execTimeToDie(sender: TObject);
+procedure TArchivService.execTimeToDie(sender: TObject);
 var
   DeleteFilesMod : TDeleteFilesMod;
 begin
@@ -434,12 +434,12 @@ begin
   GrijjyLog.ExitMethod(self, 'execTimeToDie');
 end;
 
-function TServerContainer1.GetServiceController: TServiceController;
+function TArchivService.GetServiceController: TServiceController;
 begin
   Result := ServiceController;
 end;
 
-procedure TServerContainer1.removeUser(Session: TDSSession);
+procedure TArchivService.removeUser(Session: TDSSession);
 begin
   GrijjyLog.EnterMethod(self, 'removeUser');
 
@@ -473,7 +473,7 @@ begin
   GrijjyLog.ExitMethod(self, 'removeUser');
 end;
 
-procedure TServerContainer1.BroadcastMessage(id: string; data: TJSONObject);
+procedure TArchivService.BroadcastMessage(id: string; data: TJSONObject);
 begin
   GrijjyLog.EnterMethod(self, 'BroadcastMessage');
   GrijjyLog.Send('Broadcast', id);
@@ -483,31 +483,31 @@ begin
   GrijjyLog.ExitMethod(self, 'BroadcastMessage');
 end;
 
-procedure TServerContainer1.createTimer;
+procedure TArchivService.createTimer;
 begin
   if not Assigned(m_timer) then begin
     m_timer := TServerTimer.Create;
   end;
 end;
 
-function TServerContainer1.DoContinue: Boolean;
+function TArchivService.DoContinue: Boolean;
 begin
   Result := inherited;
   DSServer1.Start;
 end;
 
-procedure TServerContainer1.DoInterrogate;
+procedure TArchivService.DoInterrogate;
 begin
   inherited;
 end;
 
-function TServerContainer1.DoPause: Boolean;
+function TArchivService.DoPause: Boolean;
 begin
   DSServer1.Stop;
   Result := inherited;
 end;
 
-function TServerContainer1.DoStop: Boolean;
+function TArchivService.DoStop: Boolean;
 begin
   try
     DSServer1.Stop;
@@ -518,7 +518,7 @@ begin
   Result := inherited;
 end;
 
-procedure TServerContainer1.DSAuthenticationManager1UserAuthenticate(
+procedure TArchivService.DSAuthenticationManager1UserAuthenticate(
   Sender: TObject; const Protocol, Context, User, Password: string;
   var valid: Boolean; UserRoles: TStrings);
 var
@@ -684,7 +684,7 @@ begin
   GrijjyLog.ExitMethod(self, 'DSAuthenticationManager1UserAuthenticate');
 end;
 
-procedure TServerContainer1.DSAuthenticationManager1UserAuthorize(
+procedure TArchivService.DSAuthenticationManager1UserAuthorize(
   Sender: TObject; AuthorizeEventObject: TDSAuthorizeEventObject;
   var valid: Boolean);
 var
@@ -725,97 +725,97 @@ begin
   GrijjyLog.ExitMethod(self, 'UserAuthorize');}
 end;
 
-procedure TServerContainer1.DSCertFiles1GetPEMFilePasskey(ASender: TObject;
+procedure TArchivService.DSCertFiles1GetPEMFilePasskey(ASender: TObject;
   var APasskey: AnsiString);
 begin
   APasskey := AnsiString(IniOptions.sslpassword);
 end;
 
-procedure TServerContainer1.dsChapterGetClass(DSServerClass: TDSServerClass;
+procedure TArchivService.dsChapterGetClass(DSServerClass: TDSServerClass;
   var PersistentClass: TPersistentClass);
 begin
   PersistentClass := ds_chapter.TdsChapter;
 end;
 
-procedure TServerContainer1.dsDairyGetClass(DSServerClass: TDSServerClass;
+procedure TArchivService.dsDairyGetClass(DSServerClass: TDSServerClass;
   var PersistentClass: TPersistentClass);
 begin
   PersistentClass := ds_dairy.TdsDairy;
 end;
 
-procedure TServerContainer1.dsEpubGetClass(DSServerClass: TDSServerClass;
+procedure TArchivService.dsEpubGetClass(DSServerClass: TDSServerClass;
   var PersistentClass: TPersistentClass);
 begin
   PersistentClass := ds_epub.TdsEpub;
 end;
 
-procedure TServerContainer1.dsFileCacheGetClass(DSServerClass: TDSServerClass;
+procedure TArchivService.dsFileCacheGetClass(DSServerClass: TDSServerClass;
   var PersistentClass: TPersistentClass);
 begin
   PersistentClass := ds_fileCache.TdsFileCache;
 end;
 
-procedure TServerContainer1.dsFileGetClass(DSServerClass: TDSServerClass;
+procedure TArchivService.dsFileGetClass(DSServerClass: TDSServerClass;
   var PersistentClass: TPersistentClass);
 begin
   PersistentClass := ds_file.TdsFile;
 end;
 
-procedure TServerContainer1.dsGremiumGetClass(DSServerClass: TDSServerClass;
+procedure TArchivService.dsGremiumGetClass(DSServerClass: TDSServerClass;
   var PersistentClass: TPersistentClass);
 begin
   PersistentClass := ds_gremium.TDSGremium;
 end;
 
-procedure TServerContainer1.dsImageGetClass(DSServerClass: TDSServerClass;
+procedure TArchivService.dsImageGetClass(DSServerClass: TDSServerClass;
   var PersistentClass: TPersistentClass);
 begin
   PersistentClass := ds_image.TdsImage;
 end;
 
-procedure TServerContainer1.dsImportGetClass(DSServerClass: TDSServerClass;
+procedure TArchivService.dsImportGetClass(DSServerClass: TDSServerClass;
   var PersistentClass: TPersistentClass);
 begin
   PersistentClass := ds_import.TDSImport;
 end;
 
-procedure TServerContainer1.dsMeeingGetClass(DSServerClass: TDSServerClass;
+procedure TArchivService.dsMeeingGetClass(DSServerClass: TDSServerClass;
   var PersistentClass: TPersistentClass);
 begin
   PersistentClass := ds_meeting.TdsMeeing;
 end;
 
-procedure TServerContainer1.dsMiscGetClass(DSServerClass: TDSServerClass;
+procedure TArchivService.dsMiscGetClass(DSServerClass: TDSServerClass;
   var PersistentClass: TPersistentClass);
 begin
   PersistentClass := ds_misc.TdsMisc;
 end;
 
-procedure TServerContainer1.dsPersonGetClass(DSServerClass: TDSServerClass;
+procedure TArchivService.dsPersonGetClass(DSServerClass: TDSServerClass;
   var PersistentClass: TPersistentClass);
 begin
   PersistentClass := ds_person.TdsPerson;
 end;
 
-procedure TServerContainer1.dsPKIGetClass(DSServerClass: TDSServerClass;
+procedure TArchivService.dsPKIGetClass(DSServerClass: TDSServerClass;
   var PersistentClass: TPersistentClass);
 begin
   PersistentClass := ds_pki.TdsPKI;
 end;
 
-procedure TServerContainer1.dsPluginGetClass(DSServerClass: TDSServerClass;
+procedure TArchivService.dsPluginGetClass(DSServerClass: TDSServerClass;
   var PersistentClass: TPersistentClass);
 begin
   PersistentClass := ds_plugin.TTdsPlugin;
 end;
 
-procedure TServerContainer1.dsProtocolGetClass(DSServerClass: TDSServerClass;
+procedure TArchivService.dsProtocolGetClass(DSServerClass: TDSServerClass;
   var PersistentClass: TPersistentClass);
 begin
   PersistentClass := ds_protocol.TdsProtocol;
 end;
 
-procedure TServerContainer1.ServiceCreate(Sender: TObject);
+procedure TArchivService.ServiceCreate(Sender: TObject);
 var
   f : TExtFile;
 begin
@@ -903,14 +903,14 @@ begin
 
 end;
 
-procedure TServerContainer1.ServiceDestroy(Sender: TObject);
+procedure TArchivService.ServiceDestroy(Sender: TObject);
 begin
   if Assigned(m_timer) then
     m_timer.Terminate;
   m_sessions.Free;
 end;
 
-procedure TServerContainer1.ServiceStart(Sender: TService; var Started: Boolean);
+procedure TArchivService.ServiceStart(Sender: TService; var Started: Boolean);
 begin
   GrijjyLog.EnterMethod(self, 'ServiceStart');
   createTimer;
@@ -964,7 +964,7 @@ begin
   GrijjyLog.ExitMethod(self, 'ServiceStart');
 end;
 
-procedure TServerContainer1.ServiceStop(Sender: TService; var Stopped: Boolean);
+procedure TArchivService.ServiceStop(Sender: TService; var Stopped: Boolean);
 begin
   GrijjyLog.EnterMethod(self, 'ServiceStop');
   try
@@ -983,12 +983,12 @@ begin
   GrijjyLog.ExitMethod( self, 'ServiceStop');
 end;
 
-procedure TServerContainer1.Shutdown(value: integer);
+procedure TArchivService.Shutdown(value: integer);
 begin
   m_timer.newTimer( value * 1000, false, execShutdown);
 end;
 
-procedure TServerContainer1.startLogging;
+procedure TArchivService.startLogging;
 begin
   GrijjyLog.Connect(GrijjyLog.DEFAULT_BROKER, GrijjyLog.Service );
 end;

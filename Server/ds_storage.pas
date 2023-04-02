@@ -184,7 +184,7 @@ begin
   JReplace( msg, 'id',    id );
   JReplace( msg, 'drid',  drid );
 
-  ServerContainer1.BroadcastMessage(BRD_CHANNEL, msg);
+  ArchivService.BroadcastMessage(BRD_CHANNEL, msg);
 end;
 
 end.
