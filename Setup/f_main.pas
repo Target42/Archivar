@@ -799,7 +799,7 @@ begin
   m_ini   := TiniFile.Create(TPath.Combine(ExtractFileDir(Application.ExeName), 'ArchivServer.exe.ini'));
 
   m_berMap := TDictionary<string, integer>.create;
-  JvWizard1.ActivePage := ServerStart;
+//  JvWizard1.ActivePage := ServerStart;
 end;
 
 procedure TMainSetupForm.FormDestroy(Sender: TObject);

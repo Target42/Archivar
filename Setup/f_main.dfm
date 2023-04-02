@@ -1,7 +1,7 @@
 object MainSetupForm: TMainSetupForm
   Left = 0
   Top = 0
-  ActiveControl = Edit1
+  ActiveControl = WelcomePage
   Caption = 'Setup'
   ClientHeight = 591
   ClientWidth = 558
@@ -29,7 +29,7 @@ object MainSetupForm: TMainSetupForm
     Top = 0
     Width = 558
     Height = 572
-    ActivePage = ServerStart
+    ActivePage = WelcomePage
     ButtonBarHeight = 42
     ButtonStart.Caption = 'To &Start Page'
     ButtonStart.NumGlyphs = 1
@@ -1453,6 +1453,8 @@ object MainSetupForm: TMainSetupForm
       Caption = 'Plugins'
       OnEnterPage = PluginsEnterPage
       OnExitPage = PluginsExitPage
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object PluginView: TListView
         Left = 0
         Top = 70
@@ -1501,6 +1503,8 @@ object MainSetupForm: TMainSetupForm
       Header.Subtitle.Font.Style = []
       Caption = 'InitData'
       OnEnterPage = InitDataEnterPage
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Panel1: TPanel
         Left = 0
         Top = 489
@@ -1869,6 +1873,8 @@ object MainSetupForm: TMainSetupForm
       Header.Subtitle.Font.Style = []
       VisibleButtons = [bkBack, bkNext, bkFinish]
       OnEnterPage = ServerStartEnterPage
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GroupBox10: TGroupBox
         Left = 0
         Top = 70

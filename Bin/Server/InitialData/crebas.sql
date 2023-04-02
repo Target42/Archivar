@@ -1,7 +1,7 @@
 /* ============================================================ */
 /*   Database name:  MODEL_2                                    */
 /*   DBMS name:      InterBase                                  */
-/*   Created on:     29.01.2023  13:10                          */
+/*   Created on:     02.04.2023  14:47                          */
 /* ============================================================ */
 
 create generator gen_be_id;
@@ -32,6 +32,11 @@ create generator gen_tn_id;
 create generator gen_ty_id;
 create generator gen_ep_id;
 create generator gen_pl_id;
+
+create generator gen_mac_id;;
+create generator gen_maf_id;
+create generator gen_mam_id;
+
 /* ============================================================ */
 /*   Table: FD_DELETE                                           */
 /* ============================================================ */
@@ -269,6 +274,18 @@ create table DR_DIR
 create ASC index DR_DIR_SEC on DR_DIR (DR_GROUP);
 
 /* ============================================================ */
+/*   Table: MAC_MAIL_ACCOUNT                                    */
+/* ============================================================ */
+create table MAC_MAIL_ACCOUNT
+(
+    MAC_ID                          INTEGER                not null,
+    MAC_TITLE                       VARCHAR(150)                   ,
+    MAC_TYPE                        VARCHAR(32)                    ,
+    MAC_DATA                        BLOB                           ,
+    constraint PK_MAC_MAIL_ACCOUNT primary key (MAC_ID)
+);
+
+/* ============================================================ */
 /*   Table: TE_TEMPLATE                                         */
 /* ============================================================ */
 create table TE_TEMPLATE
@@ -458,6 +475,22 @@ create table CP_CHAPTER
 /*   Index: CP_CHAPTER_SEC                                      */
 /* ============================================================ */
 create ASC index CP_CHAPTER_SEC on CP_CHAPTER (PR_ID, CP_ID);
+
+/* ============================================================ */
+/*   Table: MAF_FOLDER                                          */
+/* ============================================================ */
+create table MAF_FOLDER
+(
+    MAF_ID                          INTEGER                not null,
+    MAC_ID                          INTEGER                        ,
+    MAF_NAME                        VARCHAR(255)                   ,
+    constraint PK_MAF_FOLDER primary key (MAF_ID)
+);
+
+/* ============================================================ */
+/*   Index: MAF_FOLDER_NAME                                     */
+/* ============================================================ */
+create unique ASC index MAF_FOLDER_NAME on MAF_FOLDER (MAC_ID, MAF_NAME);
 
 /* ============================================================ */
 /*   Table: GR_PA                                               */
@@ -679,6 +712,22 @@ create table GR_TY
     constraint PK_GR_TY primary key (GR_ID, TY_ID)
 );
 
+/* ============================================================ */
+/*   Table: MAM_MAIL                                            */
+/* ============================================================ */
+create table MAM_MAIL
+(
+    MAM_ID                          INTEGER                not null,
+    MAF_ID                          INTEGER                        ,
+    MAM_SENDER                      VARCHAR(255)                   ,
+    MAM_DATE                        TIMESTAMP                      ,
+    MAM_TITLE                       VARCHAR(255)                   ,
+    MAM_MD5                         VARCHAR(32)                    ,
+    MAM_DATA                        BLOB                           ,
+    MAM_ATTACH                      INTEGER                        ,
+    constraint PK_MAM_MAIL primary key (MAM_ID)
+);
+
 alter table TE_TEMPLATE
     add constraint FK_REF_3353 foreign key  (TY_ID)
        references TY_TASKTYPE;
@@ -722,6 +771,10 @@ alter table PR_PROTOKOL
 alter table CP_CHAPTER
     add constraint FK_REF_1627 foreign key  (PR_ID)
        references PR_PROTOKOL;
+
+alter table MAF_FOLDER
+    add constraint FK_REF_14034 foreign key  (MAC_ID)
+       references MAC_MAIL_ACCOUNT;
 
 alter table GR_PA
     add constraint FK_REF_16 foreign key  (GR_ID)
@@ -806,6 +859,10 @@ alter table GR_TY
 alter table GR_TY
     add constraint FK_REF_12256 foreign key  (TY_ID)
        references TY_TASKTYPE;
+
+alter table MAM_MAIL
+    add constraint FK_REF_14049 foreign key  (MAF_ID)
+       references MAF_FOLDER;
 
 
 set term /;
