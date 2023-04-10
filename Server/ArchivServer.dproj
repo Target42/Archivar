@@ -271,6 +271,19 @@
             <FormType>dfm</FormType>
             <DesignClass>TDSServerModule</DesignClass>
         </DCCReference>
+        <DCCReference Include="mail\m_mail_imap.pas">
+            <Form>MailIMap</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="mail\u_MailHandler.pas"/>
+        <DCCReference Include="mail\u_Mailthread.pas"/>
+        <DCCReference Include="mail\i_mail.pas"/>
+        <DCCReference Include="ds_mail.pas">
+            <Form>DSMail</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDSServerModule</DesignClass>
+        </DCCReference>
         <RcItem Include="system.json">
             <ContainerId>ResourceItem</ContainerId>
             <ResourceType>RCDATA</ResourceType>

@@ -149,6 +149,9 @@ type
     BitBtn11: TBitBtn;
     ServiceInfo1: TServiceInfo;
     ProcessInfo1: TProcessInfo;
+    CheckBox2: TCheckBox;
+    MailKonto: TFDTable;
+    MailFolder: TFDTable;
     procedure SearchGDSEnterPage(Sender: TObject;
       const FromPage: TJvWizardCustomPage);
     procedure ServerInfoEnterPage(Sender: TObject;
@@ -1401,7 +1404,46 @@ end;
 
 procedure TMainSetupForm.MailExitPage(Sender: TObject;
   const FromPage: TJvWizardCustomPage);
+var
+  obj : TJSONObject;
+  id  : integer;
+  procedure save;
+  var
+    bs : TStream;
+  begin
+    bs := MailKonto.CreateBlobStream(MailKonto.FieldByName('MaC_DATA'), bmWrite);
+    saveJSON( obj, bs );
+    bs.Free;
+  end;
 begin
+  if CheckBox2.Checked then begin
+    obj := MailMod.currentConfig;
+    JReplace(obj, 'kontoname', 'system');
+    id := AutoInc('gen_MAC_Id');
+
+    MailKonto.Open;
+    MailKonto.Append;
+    MailKonto.FieldByName('MAC_ID').AsInteger     := id;
+    MailKonto.FieldByName('MAC_TITLE').AsString   := JString( obj, 'kontoname');
+    MailKonto.FieldByName('MAC_TYPE').AsString    := JString( obj, 'typ' );
+    MailKonto.FieldByName('MAC_ACTIVE').AsString := 'T';
+    save;
+    MailKonto.Post;
+
+    MailFolder.Open;
+    MailFolder.Append;
+    MailFolder.FieldByName('MAF_ID').AsInteger  := AutoInc('GEN_MAF_ID');
+    MailFolder.FieldByName('MAC_ID').AsInteger  := id;
+    MailFolder.FieldByName('MAF_NAME').AsString := 'System';
+    MailFolder.Post;
+
+
+    if IBTransaction1.Active then
+      IBTransaction1.Commit;
+    MailKonto.Close;
+    MailFolder.Close;
+  end;
+
   FreeAndNil(MailMod);
 end;
 

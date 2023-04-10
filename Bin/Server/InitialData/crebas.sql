@@ -1,7 +1,7 @@
 /* ============================================================ */
 /*   Database name:  MODEL_2                                    */
 /*   DBMS name:      InterBase                                  */
-/*   Created on:     02.04.2023  14:47                          */
+/*   Created on:     08.04.2023  12:53                          */
 /* ============================================================ */
 
 create generator gen_be_id;
@@ -36,7 +36,6 @@ create generator gen_pl_id;
 create generator gen_mac_id;;
 create generator gen_maf_id;
 create generator gen_mam_id;
-
 /* ============================================================ */
 /*   Table: FD_DELETE                                           */
 /* ============================================================ */
@@ -282,6 +281,7 @@ create table MAC_MAIL_ACCOUNT
     MAC_TITLE                       VARCHAR(150)                   ,
     MAC_TYPE                        VARCHAR(32)                    ,
     MAC_DATA                        BLOB                           ,
+    MAC_ACTIVE                      CHAR(1)                        ,
     constraint PK_MAC_MAIL_ACCOUNT primary key (MAC_ID)
 );
 

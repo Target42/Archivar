@@ -1,6 +1,6 @@
 //
 // Erzeugt vom DataSnap-Proxy-Generator.
-// 19.03.2023 20:19:09
+// 04.04.2023 20:05:54
 //
 
 unit u_stub;
@@ -416,6 +416,14 @@ type
     function importTask(data: TJSONObject; st: TStream): TJSONObject;
     function uploadFile(data: TJSONObject; st: TStream): TJSONObject;
     function endImport(data: TJSONObject): TJSONObject;
+  end;
+
+  TDSMailClient = class(TDSAdminClient)
+  private
+  public
+    constructor Create(ADBXConnection: TDBXConnection); overload;
+    constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
+    destructor Destroy; override;
   end;
 
 implementation
@@ -2437,6 +2445,21 @@ begin
   FimportTaskCommand.DisposeOf;
   FuploadFileCommand.DisposeOf;
   FendImportCommand.DisposeOf;
+  inherited;
+end;
+
+constructor TDSMailClient.Create(ADBXConnection: TDBXConnection);
+begin
+  inherited Create(ADBXConnection);
+end;
+
+constructor TDSMailClient.Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean);
+begin
+  inherited Create(ADBXConnection, AInstanceOwner);
+end;
+
+destructor TDSMailClient.Destroy;
+begin
   inherited;
 end;
 

@@ -10,7 +10,7 @@ uses
   JvCombobox, JvColorCombo, fr_storages, MidasLib, JvExStdCtrls,
   DragDrop, DragDropFile, JvComponentBase, JvBaseDlg, JvBrowseFolder,
   System.ImageList, Vcl.ImgList, Vcl.ToolWin, Vcl.Buttons, JvSpeedbar,
-  JvExExtCtrls, JvExtComponent;
+  JvExExtCtrls, JvExtComponent, f_mail;
 
 type
   TStatusInx = (stStatus = 0, stHost, stLogin, stUser, stMsg );
@@ -190,6 +190,8 @@ type
     N23: TMenuItem;
     Import3: TMenuItem;
     ImageList1: TImageList;
+    ac_ad_mail: TAction;
+    Mailkonten1: TMenuItem;
     procedure ac_prg_closeExecute(Sender: TObject);
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure ac_prg_disconExecute(Sender: TObject);
@@ -241,6 +243,7 @@ type
     procedure ac_ad_pluginExecute(Sender: TObject);
     procedure ac_ta_importExecute(Sender: TObject);
     procedure test21Click(Sender: TObject);
+    procedure ac_ad_mailExecute(Sender: TObject);
   private
     m_noStatChange : boolean;
 
@@ -331,6 +334,11 @@ begin
   finally
     WebServerFilesForm.free;
   end;
+end;
+
+procedure TMainForm.ac_ad_mailExecute(Sender: TObject);
+begin
+  doMailSettings;
 end;
 
 procedure TMainForm.ac_ad_personExecute(Sender: TObject);

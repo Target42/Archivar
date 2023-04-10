@@ -269,6 +269,7 @@ begin
     UpdateTree;
   end;
 end;
+
 procedure TMailForm.UpdateMail(mail: TIdMessage);
 var
   decoder : TMailDecoder;

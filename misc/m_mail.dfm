@@ -2,16 +2,16 @@ object MailMod: TMailMod
   OldCreateOrder = False
   OnCreate = DataModuleCreate
   OnDestroy = DataModuleDestroy
-  Height = 363
-  Width = 448
+  Height = 446
+  Width = 598
   object IdIMAP41: TIdIMAP4
     IOHandler = IdSSLIOHandlerSocketOpenSSL1
     Port = 993
     UseTLS = utUseImplicitTLS
     SASLMechanisms = <>
     MilliSecsToWaitToClearBuffer = 10
-    Left = 96
-    Top = 56
+    Left = 80
+    Top = 16
   end
   object IdSSLIOHandlerSocketOpenSSL1: TIdSSLIOHandlerSocketOpenSSL
     Destination = ':993'
@@ -23,8 +23,8 @@ object MailMod: TMailMod
     SSLOptions.Mode = sslmUnassigned
     SSLOptions.VerifyMode = []
     SSLOptions.VerifyDepth = 0
-    Left = 88
-    Top = 120
+    Left = 80
+    Top = 80
   end
   object TestMsg: TIdMessage
     AttachmentEncoding = 'UUE'
@@ -50,8 +50,8 @@ object MailMod: TMailMod
     Port = 465
     SASLMechanisms = <>
     UseTLS = utUseImplicitTLS
-    Left = 328
-    Top = 24
+    Left = 264
+    Top = 16
   end
   object IdSSLIOHandlerSocketOpenSSL2: TIdSSLIOHandlerSocketOpenSSL
     Destination = ':465'
@@ -61,7 +61,7 @@ object MailMod: TMailMod
     SSLOptions.Mode = sslmUnassigned
     SSLOptions.VerifyMode = []
     SSLOptions.VerifyDepth = 0
-    Left = 336
-    Top = 88
+    Left = 264
+    Top = 80
   end
 end

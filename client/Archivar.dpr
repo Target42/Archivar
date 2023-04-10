@@ -227,7 +227,6 @@ uses
   f_task_assigment in 'TaskEditor\f_task_assigment.pas' {TaskAssignmentForm},
   fr_textblock in 'TextBlock\fr_textblock.pas' {TextBlockFrame: TFrame},
   fr_editForm in 'misc\fr_editForm.pas' {EditFrame: TFrame},
-  fr_base in '..\misc\fr_base.pas' {BaseFrame: TFrame},
   Vcl.Themes,
   Vcl.Styles,
   i_plugin in '..\Plugin\i_plugin.pas',
@@ -241,7 +240,11 @@ uses
   xsd_TaskData in '..\misc\xsd_TaskData.pas',
   m_taskimporter in 'Task\m_taskimporter.pas' {TaskImporterMod: TDataModule},
   u_template in 'Task\u_template.pas',
-  f_task_import in 'Task\f_task_import.pas' {TaskImportForm};
+  f_task_import in 'Task\f_task_import.pas' {TaskImportForm},
+  fr_base in '..\misc\fr_base.pas' {BaseFrame: TFrame},
+  f_mail in 'mail\f_mail.pas' {Mailform},
+  m_mail in '..\misc\m_mail.pas' {MailMod: TDataModule},
+  f_mail_imap in 'mail\f_mail_imap.pas' {MailimapConfigForm};
 
 {$R *.res}
 
@@ -272,6 +275,8 @@ begin
   Application.CreateForm(TFileCacheMod, FileCacheMod);
   Application.CreateForm(TCryptMod, CryptMod);
   Application.CreateForm(TMainForm, MainForm);
+  Application.CreateForm(TMailMod, MailMod);
+
   try
     Application.Run;
   except

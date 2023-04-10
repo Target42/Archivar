@@ -92,8 +92,8 @@
         <DCC_UNIT_PLATFORM>false</DCC_UNIT_PLATFORM>
         <DCC_DUPLICATE_CTOR_DTOR>false</DCC_DUPLICATE_CTOR_DTOR>
         <VerInfo_AutoIncVersion>true</VerInfo_AutoIncVersion>
-        <VerInfo_Build>66</VerInfo_Build>
-        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.66;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+        <VerInfo_Build>68</VerInfo_Build>
+        <VerInfo_Keys>CompanyName=;FileDescription=$(MSBuildProjectName);FileVersion=1.0.0.68;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProgramID=com.embarcadero.$(MSBuildProjectName);ProductName=$(MSBuildProjectName);ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
         <DCC_DebugInfoInTds>true</DCC_DebugInfoInTds>
         <Debugger_RunParams>/host:localhost</Debugger_RunParams>
         <DCC_UnitSearchPath>C:\Users\Public\Documents\Embarcadero\Studio\DragnDrop\Source;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
@@ -627,10 +627,6 @@
             <Form>EditFrame</Form>
             <DesignClass>TFrame</DesignClass>
         </DCCReference>
-        <DCCReference Include="..\misc\fr_base.pas">
-            <Form>BaseFrame</Form>
-            <DesignClass>TFrame</DesignClass>
-        </DCCReference>
         <DCCReference Include="..\Plugin\i_plugin.pas"/>
         <DCCReference Include="..\Plugin\Manager\u_pluginManager.pas"/>
         <DCCReference Include="..\misc\u_ForceClose.pas"/>
@@ -653,6 +649,24 @@
         <DCCReference Include="Task\u_template.pas"/>
         <DCCReference Include="Task\f_task_import.pas">
             <Form>TaskImportForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="..\misc\fr_base.pas">
+            <Form>BaseFrame</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TFrame</DesignClass>
+        </DCCReference>
+        <DCCReference Include="mail\f_mail.pas">
+            <Form>Mailform</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="..\misc\m_mail.pas">
+            <Form>MailMod</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TDataModule</DesignClass>
+        </DCCReference>
+        <DCCReference Include="mail\f_mail_imap.pas">
+            <Form>MailimapConfigForm</Form>
             <FormType>dfm</FormType>
         </DCCReference>
         <None Include="Datafields\ERA-NS.txt"/>

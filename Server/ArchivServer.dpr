@@ -58,14 +58,19 @@ uses
   m_del_files in 'm_del_files.pas' {DeleteFilesMod: TDataModule},
   m_mail in '..\misc\m_mail.pas' {MailMod: TDataModule},
   ds_plugin in 'ds_plugin.pas' {TdsPlugin: TDSServerModule},
-  ds_import in 'ds_import.pas' {DSImport: TDSServerModule};
+  ds_import in 'ds_import.pas' {DSImport: TDSServerModule},
+  m_mail_imap in 'mail\m_mail_imap.pas' {MailIMap: TDataModule},
+  u_MailHandler in 'mail\u_MailHandler.pas',
+  u_Mailthread in 'mail\u_Mailthread.pas',
+  i_mail in 'mail\i_mail.pas',
+  ds_mail in 'ds_mail.pas' {DSMail: TDSServerModule};
 
 var
   MyDummyBoolean  : Boolean;
   s               : string;
 
 {$IFDEF DEBUG}
-{$e console.exe}
+// {$e console.exe}
 {$ELSE}
 {$e service.exe}
 {$ENDIF}

@@ -1,7 +1,7 @@
 object MainSetupForm: TMainSetupForm
   Left = 0
   Top = 0
-  ActiveControl = WelcomePage
+  ActiveControl = LabeledEdit10
   Caption = 'Setup'
   ClientHeight = 591
   ClientWidth = 558
@@ -29,7 +29,7 @@ object MainSetupForm: TMainSetupForm
     Top = 0
     Width = 558
     Height = 572
-    ActivePage = WelcomePage
+    ActivePage = Mail
     ButtonBarHeight = 42
     ButtonStart.Caption = 'To &Start Page'
     ButtonStart.NumGlyphs = 1
@@ -1429,6 +1429,16 @@ object MainSetupForm: TMainSetupForm
           TabOrder = 0
           OnClick = Button3Click
         end
+        object CheckBox2: TCheckBox
+          Left = 336
+          Top = 32
+          Width = 153
+          Height = 17
+          Caption = 'Als Systemkonto speichern'
+          Checked = True
+          State = cbChecked
+          TabOrder = 1
+        end
       end
     end
     object Plugins: TJvWizardInteriorPage
@@ -1453,8 +1463,6 @@ object MainSetupForm: TMainSetupForm
       Caption = 'Plugins'
       OnEnterPage = PluginsEnterPage
       OnExitPage = PluginsExitPage
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object PluginView: TListView
         Left = 0
         Top = 70
@@ -1503,8 +1511,6 @@ object MainSetupForm: TMainSetupForm
       Header.Subtitle.Font.Style = []
       Caption = 'InitData'
       OnEnterPage = InitDataEnterPage
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Panel1: TPanel
         Left = 0
         Top = 489
@@ -1873,8 +1879,6 @@ object MainSetupForm: TMainSetupForm
       Header.Subtitle.Font.Style = []
       VisibleButtons = [bkBack, bkNext, bkFinish]
       OnEnterPage = ServerStartEnterPage
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GroupBox10: TGroupBox
         Left = 0
         Top = 70
@@ -2139,6 +2143,7 @@ object MainSetupForm: TMainSetupForm
       'Password=masterkey'
       'Database=d:\db\archivar.fdb'
       'DriverID=FB')
+    Connected = True
     LoginPrompt = False
     Transaction = IBTransaction1
     Left = 350
@@ -14534,5 +14539,21 @@ object MainSetupForm: TMainSetupForm
         '"0";'#10#9'WriteTransferCount = "0";'#10'};'#10)
     Left = 288
     Top = 288
+  end
+  object MailKonto: TFDTable
+    Connection = ArchivarConnection
+    Transaction = IBTransaction1
+    UpdateOptions.UpdateTableName = 'MAC_MAIL_ACCOUNT'
+    TableName = 'MAC_MAIL_ACCOUNT'
+    Left = 24
+    Top = 321
+  end
+  object MailFolder: TFDTable
+    Connection = ArchivarConnection
+    Transaction = IBTransaction1
+    UpdateOptions.UpdateTableName = 'MAF_FOLDER'
+    TableName = 'MAF_FOLDER'
+    Left = 72
+    Top = 321
   end
 end

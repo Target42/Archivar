@@ -172,8 +172,8 @@ object ArchivService: TArchivService
   object dsUpdater: TDSServerClass
     OnGetClass = dsUpdaterGetClass
     Server = DSServer1
-    Left = 48
-    Top = 432
+    Left = 184
+    Top = 72
   end
   object IBTransaction1: TFDTransaction
     Connection = DBMod.ArchivarConnection
@@ -304,5 +304,19 @@ object ArchivService: TArchivService
     Server = DSServer1
     Left = 256
     Top = 632
+  end
+  object dsMail: TDSServerClass
+    OnGetClass = dsMailGetClass
+    Server = DSServer1
+    Left = 328
+    Top = 640
+  end
+  object MailKonto: TFDTable
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
+    UpdateOptions.UpdateTableName = 'MAC_MAIL_ACCOUNT'
+    TableName = 'MAC_MAIL_ACCOUNT'
+    Left = 48
+    Top = 448
   end
 end

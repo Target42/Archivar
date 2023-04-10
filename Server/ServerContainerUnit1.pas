@@ -15,7 +15,7 @@ uses
   FireDAC.Stan.Async, FireDAC.DApt,
   FireDAC.Comp.DataSet, FireDAC.Comp.Client, MidasLib, u_serverTimer,
   Datasnap.DSHTTP, Data.DBXCommon, Data.DBCommonTypes, FireDAC.Phys.Intf,
-  FireDAC.DApt.Intf;
+  FireDAC.DApt.Intf, u_MailHandler;
 
 type
   TArchivService = class(TService)
@@ -52,6 +52,8 @@ type
     DSCertFiles1: TDSCertFiles;
     dsPlugin: TDSServerClass;
     dsImport: TDSServerClass;
+    dsMail: TDSServerClass;
+    MailKonto: TFDTable;
     procedure dsAdminGetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
     procedure ServiceStart(Sender: TService; var Started: Boolean);
@@ -118,6 +120,8 @@ type
       var PersistentClass: TPersistentClass);
     procedure dsImportGetClass(DSServerClass: TDSServerClass;
       var PersistentClass: TPersistentClass);
+    procedure dsMailGetClass(DSServerClass: TDSServerClass;
+      var PersistentClass: TPersistentClass);
   private
     const
       MaxUserNameLength = 25;
@@ -128,10 +132,14 @@ type
     m_sessions : TThreadList<String>;
     m_log : string;
 
+    m_mailHandler : TMailHandler;
+
     procedure removeUser( Session: TDSSession );
     procedure createTimer;
     procedure execShutdown( sender : TObject );
     procedure execTimeToDie( sender : TObject );
+
+    procedure fillMailHandler;
   protected
     function DoStop: Boolean; override;
     function DoPause: Boolean; override;
@@ -172,7 +180,7 @@ uses
   ds_meeting, System.Hash, u_json, ds_sitzung, m_hell, Grijjy.sysUtils, u_ini,
   ds_updater, ds_stamm, ds_pki, ds_dairy, ds_storage, WinApi.WinSvc,
   u_Konst, Winapi.Messages, m_http, m_del_files, system.DateUtils, m_mail,
-  ds_plugin, ds_import;
+  ds_plugin, ds_import, ds_mail;
 
 procedure TArchivService.dsAdminGetClass(
   DSServerClass: TDSServerClass; var PersistentClass: TPersistentClass);
@@ -432,6 +440,31 @@ begin
   end;
   DeleteFilesMod.Free;
   GrijjyLog.ExitMethod(self, 'execTimeToDie');
+end;
+
+procedure TArchivService.fillMailHandler;
+var
+  data : TJSONObject;
+  bst  : TStream;
+begin
+  MailKonto.Open;
+  while not MailKonto.Eof do begin
+    if MailKonto.FieldByName('MAC_ACTIVE').AsString = 'T' then begin
+      bst := MailKonto.CreateBlobStream(MailKonto.FieldByName('MAC_DATA'), bmRead);
+      try
+        data := loadJSON(bst);
+        JReplace(data, 'kontoname', MailKonto.FieldByName('MAC_TITLE').AsString);
+        m_mailHandler.addMail( data);
+      except
+      end;
+    end;
+    MailKonto.Next;
+  end;
+  MailKonto.Close;
+
+  if MailKonto.Transaction.Active then
+    MailKonto.Transaction.Commit;
+
 end;
 
 function TArchivService.GetServiceController: TServiceController;
@@ -779,6 +812,12 @@ begin
   PersistentClass := ds_import.TDSImport;
 end;
 
+procedure TArchivService.dsMailGetClass(DSServerClass: TDSServerClass;
+  var PersistentClass: TPersistentClass);
+begin
+  PersistentClass := ds_mail.TDSMail;
+end;
+
 procedure TArchivService.dsMeeingGetClass(DSServerClass: TDSServerClass;
   var PersistentClass: TPersistentClass);
 begin
@@ -821,6 +860,8 @@ var
 begin
   GrijjyLog.Service := 'Archivar';
   GrijjyLog.SetLogLevel(TgoLogLevel.Info);
+
+  m_mailHandler := TMailHandler.create;
 
   SetCurrentDirectory(PWchar(ExtractFilePath(paramStr(0))));
   LockMod     := TLockMod.create(self);
@@ -908,6 +949,8 @@ begin
   if Assigned(m_timer) then
     m_timer.Terminate;
   m_sessions.Free;
+
+  m_mailHandler.free;
 end;
 
 procedure TArchivService.ServiceStart(Sender: TService; var Started: Boolean);
@@ -960,6 +1003,10 @@ begin
       Started := false;
     end;
   end;
+
+  fillMailHandler;
+
+  m_mailHandler.start;
   GrijjyLog.Send('started:', Started);
   GrijjyLog.ExitMethod(self, 'ServiceStart');
 end;
@@ -968,12 +1015,14 @@ procedure TArchivService.ServiceStop(Sender: TService; var Stopped: Boolean);
 begin
   GrijjyLog.EnterMethod(self, 'ServiceStop');
   try
-  DSServer1.Stop;
-  DBMod.stopDB;
-  HttpMod.ende;
+    m_mailHandler.stop;
 
-  m_timer.Terminate;
-  m_timer := NIL;
+    DSServer1.Stop;
+    DBMod.stopDB;
+    HttpMod.ende;
+
+    m_timer.Terminate;
+    m_timer := NIL;
 
   except
     on e : exception do

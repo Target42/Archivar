@@ -21,6 +21,7 @@ type
     procedure DataModuleDestroy(Sender: TObject);
   private
     m_mailFolder : TStringlist;
+    m_selectedMailFolder : TStringList;
     m_list       : TList<TIdMessage>;
 
     function GetIMapHost: string;
@@ -40,13 +41,16 @@ type
     function GetSmtpPwd: string;
     procedure SetSmtpPwd(const Value: string);
     procedure clearMails;
+    function getImapFolder : TStrings;
   public
 
     // common
     procedure load;
     function save : boolean;
     class function getMailConfig : TJSONObject;
+
     procedure config( data : TJSONObject );
+    function currentConfig : TJSONObject;
 
     // imap
     property IMapHost: string read GetIMapHost write SetIMapHost;
@@ -55,13 +59,22 @@ type
     property IMapPWD: string read GetImapPWD write SetImapPWD;
 
     property MailFolder : TStringList read m_mailFolder;
+    property SelectedMailFolder : TStringList read m_selectedMailFolder;
     property Mails      : TList<TIdMessage> read m_list;
 
     procedure loadImap;
     function saveIMap : boolean;
+
+    function testImap : boolean;
+
     function connect : boolean;
     procedure disconnect;
-    function testImap : boolean;
+
+    function connectImap : boolean;
+    procedure closeImap;
+
+    function connectSmtp:boolean;
+    procedure closeSmtp;
 
     function updateMailFolder : boolean;
     function SelectInbox( name : string ) : boolean;
@@ -102,6 +115,16 @@ begin
   m_list.Clear;
 end;
 
+procedure TMailMod.closeImap;
+begin
+  IdIMAP41.Disconnect;
+end;
+
+procedure TMailMod.closeSmtp;
+begin
+  IdSMTP1.Disconnect;
+end;
+
 procedure TMailMod.config(data: TJSONObject);
 var
   obj : TJSONObject;
@@ -115,6 +138,7 @@ begin
       IdIMAP41.Port     := JInt(    obj, 'port');
       IdIMAP41.Username := JString( obj, 'user');
       IdIMAP41.Password := JString( obj, 'pwd' );
+      getText( obj, 'folder', m_selectedMailFolder);
     end;
   except
 
@@ -145,23 +169,76 @@ begin
   end;
 end;
 
+function TMailMod.connectImap: boolean;
+begin
+  Result :=false;
+  try
+    IdIMAP41.Connect;
+    Result := IdIMAP41.Connected;
+  except
+
+  end;
+end;
+
+function TMailMod.connectSmtp: boolean;
+begin
+  Result := false;
+  try
+    IdSMTP1.Connect;
+
+    Result := IdSMTP1.Connected;
+  except
+  end;
+
+end;
+
+function TMailMod.currentConfig: TJSONObject;
+var
+  obj : TJSONObject;
+begin
+  Result := TJSONObject.Create;
+  JReplace(Result, 'typ', 'imap/smtp');
+
+  obj := TJSONObject.Create;
+  JReplace( obj, 'host', IdIMAP41.Host );
+  JReplace( obj, 'port', IdIMAP41.Port );
+  JReplace( obj, 'user', IdIMAP41.Username );
+  JReplace( obj, 'pwd',  IdIMAP41.Password );
+  setText( obj, 'folder', m_selectedMailFolder);
+  JReplace(Result, 'imap', obj);
+
+  obj := TJSONObject.Create;
+  JReplace( obj, 'host', IdSMTP1.Host );
+  JReplace( obj, 'port', IdSMTP1.Port );
+  JReplace( obj, 'user', IdSMTP1.Username );
+  JReplace( obj, 'pwd',  IdSMTP1.Password );
+  JReplace(Result, 'smtp', obj);
+end;
+
 procedure TMailMod.DataModuleCreate(Sender: TObject);
 begin
-  m_mailFolder := TStringlist.Create;
-  m_list       := TList<TIdMessage>.create;
+  m_mailFolder          := TStringlist.Create;
+  m_selectedMailFolder  := TStringList.Create;
+  m_list                := TList<TIdMessage>.create;
 end;
 
 procedure TMailMod.DataModuleDestroy(Sender: TObject);
 begin
   m_mailFolder.free;
+  m_selectedMailFolder.Free;
   clearmails;
   m_list.Free;
 end;
 
 procedure TMailMod.disconnect;
 begin
-  IdIMAP41.Disconnect;
-  IdSMTP1.Disconnect;
+  closeImap;
+  closeImap;
+end;
+
+function TMailMod.getImapFolder: TStrings;
+begin
+
 end;
 
 function TMailMod.GetIMapHost: string;
@@ -204,8 +281,15 @@ begin
   reg := TRegistry.Create(KEY_READ );
   reg.RootKey := HKEY_CURRENT_USER;
 
-  JReplace( Result, 'imap', get('Software\Archivar\imap'));
-  JReplace( Result, 'smtp', get('Software\Archivar\smtp'));
+  JReplace(Result, 'kontoname', 'system');
+  JReplace(Result, 'typ', 'imap/smtp');
+
+  if reg.KeyExists('Software\Archivar\imap') then begin
+    JReplace( Result, 'imap', get('Software\Archivar\imap'));
+    setText( Result, 'folder', 'INBOX');
+  end;
+  if reg.KeyExists('Software\Archivar\smtp') then
+    JReplace( Result, 'smtp', get('Software\Archivar\smtp'));
 
   reg.Free;
 end;
@@ -503,7 +587,8 @@ begin
   for i := IdIMAP41.MailBox.TotalMsgs downto 1 do begin
     mail := TIdMessage.Create;
     m_list.Add(mail);
-    IdIMAP41.Retrieve(i, mail);  end;
+    IdIMAP41.Retrieve(i, mail);
+  end;
 end;
 
 end.
