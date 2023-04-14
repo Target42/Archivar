@@ -10,6 +10,7 @@ object DBMod: TDBMod
       'Password=masterkey'
       'Database=D:\db\ARCHIVAR.FDB'
       'DriverID=FB')
+    Connected = True
     LoginPrompt = False
     Transaction = FDTransaction1
     Left = 38

@@ -28,10 +28,6 @@ type
     DBNavigator1: TDBNavigator;
     BitBtn1: TBitBtn;
     DataSource2: TDataSource;
-    FolderMAF_ID: TIntegerField;
-    FolderMAC_ID: TIntegerField;
-    FolderMAF_NAME: TStringField;
-    FolderMAF_ACTIVE: TStringField;
     GroupBox2: TGroupBox;
     Panel3: TPanel;
     DBNavigator2: TDBNavigator;
@@ -46,6 +42,8 @@ type
     procedure BaseFrame1OKBtnClick(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
     procedure AccountsAfterPost(DataSet: TDataSet);
+    procedure AccountsNewRecord(DataSet: TDataSet);
+    procedure AccountsAfterScroll(DataSet: TDataSet);
   private
     procedure SyncImapFolder( data : TJSONObject);
   public
@@ -94,6 +92,12 @@ begin
   data.Free;
 end;
 
+procedure TMailform.AccountsAfterScroll(DataSet: TDataSet);
+begin
+  Folder.Filter := 'MAC_ID='+DataSet.FieldByName('MAC_ID').AsString;
+  Folder.Filtered := true;
+end;
+
 procedure TMailform.AccountsBeforePost(DataSet: TDataSet);
 begin
   if DataSet.FieldByName('MAC_ID').IsNull then
@@ -120,6 +124,18 @@ begin
     Sender.AsString := 'T'
   else
     Sender.AsString := 'F';
+end;
+
+procedure TMailform.AccountsNewRecord(DataSet: TDataSet);
+begin
+  if DataSet.FieldByName('MAC_ID').IsNull then
+    DataSet.FieldByName('MAC_ID').AsInteger := GM.autoInc('gen_mac_id');
+
+  if DataSet.FieldByName('MAC_ACTIVE').IsNull then
+    DataSet.FieldByName('MAC_ACTIVE').AsString := 'T';
+
+  if DataSet.FieldByName('MAC_TYPE').IsNull then
+    DataSet.FieldByName('MAC_TYPE').AsString := 'imap/smtp';
 end;
 
 procedure TMailform.BaseFrame1OKBtnClick(Sender: TObject);

@@ -26,7 +26,7 @@ object MailIMap: TMailIMap
     Left = 80
     Top = 80
   end
-  object TestMsg: TIdMessage
+  object Msg: TIdMessage
     AttachmentEncoding = 'UUE'
     Body.Strings = (
       'Das ist eine Testmail vom Archivar-Server')
@@ -63,5 +63,73 @@ object MailIMap: TMailIMap
     SSLOptions.VerifyDepth = 0
     Left = 255
     Top = 72
+  end
+  object FolderQry: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Transaction = FDTransaction1
+    SQL.Strings = (
+      'SELECT *'
+      'FROM MAF_FOLDER '
+      'where MAC_ID = :mac_id'
+      'and MAF_ACTIVE = '#39'T'#39)
+    Left = 200
+    Top = 152
+    ParamData = <
+      item
+        Name = 'MAC_ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+  end
+  object FDTransaction1: TFDTransaction
+    Connection = DBMod.ArchivarConnection
+    Left = 280
+    Top = 152
+  end
+  object MailTab: TFDTable
+    Connection = DBMod.ArchivarConnection
+    Transaction = FDTransaction1
+    UpdateOptions.UpdateTableName = 'MAM_MAIL'
+    TableName = 'MAM_MAIL'
+    Left = 200
+    Top = 216
+  end
+  object AutoincQry: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Transaction = FDTransaction1
+    Left = 312
+    Top = 216
+  end
+  object ListQry: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Transaction = FDTransaction1
+    SQL.Strings = (
+      'SELECT MAM_ID, MAM_MSG_ID'
+      'FROM MAM_MAIL'
+      'where MAF_ID = :maf_id')
+    Left = 392
+    Top = 176
+    ParamData = <
+      item
+        Name = 'MAF_ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+  end
+  object DeleteQry: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Transaction = FDTransaction1
+    SQL.Strings = (
+      'DELETE FROM MAM_MAIL a '
+      'WHERE'
+      '    a.MAM_ID = :MAM_ID')
+    Left = 392
+    Top = 232
+    ParamData = <
+      item
+        Name = 'MAM_ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
   end
 end

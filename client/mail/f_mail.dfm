@@ -230,6 +230,7 @@ object Mailform: TMailform
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TDSMail'
+    SQLConnection = GM.SQLConnection1
     Left = 168
     Top = 248
   end
@@ -240,6 +241,8 @@ object Mailform: TMailform
     RemoteServer = DSProviderConnection1
     BeforePost = AccountsBeforePost
     AfterPost = AccountsAfterPost
+    AfterScroll = AccountsAfterScroll
+    OnNewRecord = AccountsNewRecord
     Left = 272
     Top = 240
     object AccountsMAC_ID: TIntegerField
@@ -267,29 +270,12 @@ object Mailform: TMailform
   end
   object Folder: TClientDataSet
     Aggregates = <>
+    IndexFieldNames = 'MAC_ID'
     Params = <>
     ProviderName = 'Mailfolder'
     RemoteServer = DSProviderConnection1
-    Left = 280
+    Left = 272
     Top = 296
-    object FolderMAF_ID: TIntegerField
-      FieldName = 'MAF_ID'
-      Required = True
-    end
-    object FolderMAC_ID: TIntegerField
-      FieldName = 'MAC_ID'
-    end
-    object FolderMAF_NAME: TStringField
-      FieldName = 'MAF_NAME'
-      Size = 255
-    end
-    object FolderMAF_ACTIVE: TStringField
-      FieldName = 'MAF_ACTIVE'
-      OnGetText = AccountsMAC_ACTIVEGetText
-      OnSetText = AccountsMAC_ACTIVESetText
-      FixedChar = True
-      Size = 1
-    end
   end
   object DataSource1: TDataSource
     DataSet = Accounts
@@ -298,7 +284,7 @@ object Mailform: TMailform
   end
   object DataSource2: TDataSource
     DataSet = Folder
-    Left = 352
-    Top = 312
+    Left = 336
+    Top = 296
   end
 end

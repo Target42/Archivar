@@ -44,6 +44,7 @@ begin
     for mail in list do begin
       if SameText( mail.KontoName,  name) then begin
         Result := false;
+        mail.config(data);
         break;
       end;
     end;

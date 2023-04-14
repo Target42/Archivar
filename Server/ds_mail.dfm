@@ -18,8 +18,6 @@ object DSMail: TDSMail
   end
   object Maf: TFDTable
     IndexFieldNames = 'MAF_ID'
-    MasterSource = DataSource1
-    MasterFields = 'MAC_ID'
     DetailFields = 'MAC_ID'
     Connection = DBMod.ArchivarConnection
     Transaction = FDTransaction1
@@ -37,10 +35,5 @@ object DSMail: TDSMail
     DataSet = Maf
     Left = 144
     Top = 200
-  end
-  object DataSource1: TDataSource
-    DataSet = Mac
-    Left = 112
-    Top = 88
   end
 end

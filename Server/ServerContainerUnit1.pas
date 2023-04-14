@@ -454,6 +454,7 @@ begin
       try
         data := loadJSON(bst);
         JReplace(data, 'kontoname', MailKonto.FieldByName('MAC_TITLE').AsString);
+        JReplace(data, 'kontoid', MailKonto.FieldByName('MAC_ID').AsInteger);
         m_mailHandler.addMail( data);
       except
       end;

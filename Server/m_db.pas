@@ -7,7 +7,9 @@ uses
   FireDAC.Phys.FB, FireDAC.Phys.FBDef, FireDAC.Stan.Intf, FireDAC.Stan.Option,
   FireDAC.Stan.Error, FireDAC.UI.Intf, FireDAC.Stan.Def,
   FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.VCLUI.Wait, FireDAC.Comp.Client,
-  Data.DB, FireDAC.Phys.Intf, FireDAC.Phys.IBWrapper, FireDAC.Phys.IBBase;
+  Data.DB, FireDAC.Phys.Intf, FireDAC.Phys.IBWrapper, FireDAC.Phys.IBBase,
+  FireDAC.Stan.Param, FireDAC.DatS, FireDAC.DApt.Intf, FireDAC.DApt,
+  FireDAC.Comp.DataSet;
 
 type
   TDBMod = class(TDataModule)
