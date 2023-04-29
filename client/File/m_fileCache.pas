@@ -275,6 +275,7 @@ var
   client      : TdsFileCacheClient;
   req         : TJSONObject;
   st          : TStream;
+  path        : string;
 begin
   Result  := false;
 
@@ -307,6 +308,8 @@ begin
 
       st := client.download(req);
 
+      path := ExtractFilePath(fname);
+      ForceDirectories(path);
       GM.download(fname, st);
     finally
       client.Free;

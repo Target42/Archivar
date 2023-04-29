@@ -277,7 +277,7 @@ uses
   system.UITypes, f_protocol_sec, u_onlineUser, f_doMeeting, f_task_type,
   f_flieCacheForm, f_keys, f_textblock_export, f_textblock_import,
   f_storages, f_protokoll_new, f_admin, f_task_delete,
-  f_pluginAdmin, f_task_import, m_taskimporter;
+  f_pluginAdmin, f_task_import, m_taskimporter, f_mail_client;
 
 {$R *.dfm}
 
@@ -1080,7 +1080,8 @@ end;
 
 procedure TMainForm.test21Click(Sender: TObject);
 begin
-  showImportForm;
+//  showImportForm;
+  Application.CreateForm(TMailClientForm, MailClientForm);
 end;
 
 procedure TMainForm.UpdateUserView(sender: TObject);

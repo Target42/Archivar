@@ -215,7 +215,6 @@ var
     MailTab.FieldByName('MAM_Sender').AsString := msg.From.Text;
     MailTab.FieldByName('MAM_DATE').AsDateTime := msg.Date;
     MailTab.FieldByName('MAM_TITLE').AsString  := msg.Subject;
-    MailTab.FieldByName('MAM_MD5').AsString    := md5;
     MailTab.FieldByName('MAM_ATTACH').AsInteger:= msg.MessageParts.AttachmentCount;
     MailTab.FieldByName('MAM_MSG_ID').AsString := THashMD5.GetHashString(msg.Headers.Values['Message-ID']);
 
@@ -284,10 +283,10 @@ begin
 
           if not MailTab.Locate('MAF_ID;MAM_MSG_ID', VarArrayOf([maf_id, md5]), [loCaseInsensitive]) then begin
             st.Clear;
+            msg.Clear;
             IdIMAP41.Retrieve(i, Msg);
             msg.SaveToStream(st);
             st.Position := 0;
-            md5 := THashMD5.GetHashString(st);
             addMail(st);
           end
         end;
