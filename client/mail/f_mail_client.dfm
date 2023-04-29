@@ -127,8 +127,6 @@ object MailClientForm: TMailClientForm
           Width = 413
           Height = 361
           OnChange = MailFrame1VSTChange
-          ExplicitLeft = 1
-          ExplicitTop = -4
           ExplicitWidth = 413
           ExplicitHeight = 361
         end
@@ -145,10 +143,6 @@ object MailClientForm: TMailClientForm
     Caption = 'Panel2'
     ShowCaption = False
     TabOrder = 2
-    ExplicitLeft = 488
-    ExplicitTop = 40
-    ExplicitWidth = 185
-    ExplicitHeight = 425
     object Splitter3: TSplitter
       Left = 0
       Top = 373
@@ -194,10 +188,10 @@ object MailClientForm: TMailClientForm
         Columns = <>
         LargeImages = ImageList1
         TabOrder = 0
-        ExplicitLeft = 64
-        ExplicitTop = 24
-        ExplicitWidth = 250
-        ExplicitHeight = 150
+        OnMouseDown = LvMouseDown
+        OnMouseMove = LvMouseMove
+        ExplicitLeft = 3
+        ExplicitTop = 11
       end
     end
   end
@@ -250,7 +244,7 @@ object MailClientForm: TMailClientForm
     Left = 668
     Top = 112
     Bitmap = {
-      494C01010C001800100020002000FFFFFFFFFF00FFFFFFFFFFFFFFFF424D3600
+      494C01010C001800180020002000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000800000008000000001002000000000000000
       0100000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -2366,6 +2360,24 @@ object MailClientForm: TMailClientForm
       F000003FF000000FF000003FF000003FF000007FF000000FF000007FF000007F
       F00000FFF000000FF00000FFF00000FFF00001FFF000000FF00001FFF00001FF
       F00003FFF000000FF00003FFF00003FFF80007FFF800001FF80007FFF80007FF
-      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
+      FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00000000000000000000000000000000
+      000000000000}
+  end
+  object DataFormatAdapterSource: TDataFormatAdapter
+    DragDropComponent = DropEmptySource1
+    DataFormatName = 'TVirtualFileStreamDataFormat'
+    Left = 544
+    Top = 436
+  end
+  object DropEmptySource1: TDropEmptySource
+    DragTypes = [dtCopy, dtMove]
+    Left = 664
+    Top = 436
+  end
+  object DropDummy1: TDropDummy
+    DragTypes = []
+    WinTarget = 0
+    Left = 788
+    Top = 440
   end
 end

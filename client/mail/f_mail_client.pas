@@ -8,7 +8,7 @@ uses
   Datasnap.DSConnect, Vcl.StdCtrls, Vcl.ComCtrls, System.Generics.Collections,
   System.JSON, Vcl.ExtCtrls, VirtualTrees, IdBaseComponent, IdMessage,
   Vcl.Imaging.pngimage, fr_mails, Vcl.OleCtrls, SHDocVw, System.ImageList,
-  Vcl.ImgList;
+  Vcl.ImgList, DragDrop, DropSource, DragDropFile, Winapi.ActiveX, DropTarget;
 
 type
   TMailClientForm = class(TForm)
@@ -32,6 +32,9 @@ type
     Splitter3: TSplitter;
     Lv: TListView;
     ImageList1: TImageList;
+    DataFormatAdapterSource: TDataFormatAdapter;
+    DropEmptySource1: TDropEmptySource;
+    DropDummy1: TDropDummy;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -40,6 +43,9 @@ type
       const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex;
       TextType: TVSTTextType);
     procedure MailFrame1VSTChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
+    procedure LvMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
+    procedure LvMouseDown(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
   private
     type
       Account = class
@@ -61,6 +67,9 @@ type
 
           function FullName : string;
       end;
+    procedure OnGetStream(Sender: TFileContentsStreamOnDemandClipboardFormat;
+      Index: integer; out AStream: IStream);
+
   private
     m_ext      : TDictionary<string, integer>;
     m_accounts : TList<Account>;
@@ -82,7 +91,7 @@ implementation
 
 uses
   m_glob_client, u_json, System.Generics.Defaults, System.DateUtils, u_TMail,
-  u_mail_decoder, m_fileCache, System.IOUtils;
+  u_mail_decoder, m_fileCache, System.IOUtils, DragDropFormats;
 
 {$R *.dfm}
 
@@ -181,6 +190,8 @@ begin
   m_ext := TDictionary<string, integer>.create;
   fillExtDict;
 
+  (DataFormatAdapterSource.DataFormat as TVirtualFileStreamDataFormat).OnGetStream := OnGetStream;
+
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
   m_accounts := TList<Account>.create;
   MailFrame1.prepare;
@@ -218,6 +229,39 @@ begin
   MailFrame1.release;
   TMailDecoder.clearFiles(m_tempdir);
   m_files.Free;
+
+  DropEmptySource1.FlushClipboard;
+end;
+
+procedure TMailClientForm.LvMouseDown(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+var
+  i: integer;
+begin
+  if (LV.SelCount > 0) and
+    (LV.GetHitTestInfoAt(X, Y) * [htOnItem, htOnIcon, htOnLabel, htOnStateIcon] <> []) and
+    (DragDetectPlus(LV.Handle, Point(X,Y))) then
+  begin
+    // Transfer the file names to the data format. The content will be extracted
+    // by the target on-demand.
+    TVirtualFileStreamDataFormat(DataFormatAdapterSource.DataFormat).FileNames.Clear;
+    for i := 0 to LV.Items.Count-1 do
+      if (LV.Items[i].Selected) then
+        TVirtualFileStreamDataFormat(DataFormatAdapterSource.DataFormat).
+          FileNames.Add( m_files[integer(LV.Items[i].Data)]);
+
+    // ...and let it rip!
+    DropEmptySource1.Execute;
+  end;
+end;
+
+procedure TMailClientForm.LvMouseMove(Sender: TObject; Shift: TShiftState; X,
+  Y: Integer);
+begin
+  if (LV.GetHitTestInfoAt(X, Y) * [htOnItem, htOnIcon, htOnLabel, htOnStateIcon] <> []) then
+    Screen.Cursor := crHandPoint
+  else
+    Screen.Cursor := crDefault;
 end;
 
 procedure TMailClientForm.MailFrame1VSTChange(Sender: TBaseVirtualTree;
@@ -248,6 +292,44 @@ begin
   AddAttachemnts;
   decoder.Free;
   list.Free;
+end;
+
+procedure TMailClientForm.OnGetStream(
+  Sender: TFileContentsStreamOnDemandClipboardFormat; Index: integer;
+  out AStream: IStream);
+var
+  Stream: TMemoryStream;
+  i: integer;
+  SelIndex: integer;
+  Found: boolean;
+begin
+  Stream := TMemoryStream.Create;
+  try
+    AStream := nil;
+    // Find the listview item which corresponds to the requested data item.
+    SelIndex := 0;
+    Found := False;
+    for i := 0 to LV.Items.Count-1 do
+      if (LV.Items[i].Selected) then
+      begin
+        if (SelIndex = Index) then
+        begin
+          // Get the data stored in the listview item and...
+          Stream.LoadFromFile(m_files[integer(LV.Items[i].Data)]);
+          Found := True;
+          break;
+        end;
+        inc(SelIndex);
+      end;
+    if (not Found) then
+      exit;
+
+
+    AStream := TFixedStreamAdapter.Create(Stream, soOwned);
+  except
+    Stream.Free;
+    raise;
+  end;
 end;
 
 procedure TMailClientForm.TVChange(Sender: TObject; Node: TTreeNode);

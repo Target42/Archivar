@@ -262,7 +262,8 @@ begin
   for i := 0 to pred(m_attach.count) do begin
     mem := m_attach.objects[i] as TMemoryStream;
     mem.Position := 0;
-    mem.saveToFile( TPath.Combine( dir, m_attach[i]));
+    m_attach[i] := TPath.Combine( dir, m_attach[i]);
+    mem.saveToFile( m_attach[i]);
   end;
   Result := true;
 end;
