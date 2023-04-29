@@ -112,7 +112,6 @@ begin
   LTCPServer := TIdTCPServer.Create;
   try
     try
-
       with LTCPServer do
       begin
         DefaultPort   := APort;

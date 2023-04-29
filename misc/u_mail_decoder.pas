@@ -4,7 +4,7 @@ interface
 
 uses
   IdMessage, System.Classes, System.Generics.Collections, IdAttachmentFile,
-  IdText;
+  IdText, IdEMailAddress;
 
 type
   TMailDecoder = class
@@ -29,6 +29,8 @@ type
       procedure replaceKeys( dir : string );
 
       function saveFiles( dir : string ) : boolean;
+
+      function getContent( template : string ) : string;
     public
       constructor create;
       Destructor Destroy; override;
@@ -38,12 +40,18 @@ type
       property Attachments : TStringList read m_attach;
 
       function SaveToFolder( dir : string ) : boolean;
+
+      function UseTemplate( dir, template : string ) : string;
+
+      class procedure clearFiles( dir : string ) ;
+      class function prettyName( addr : TIdEMailAddressItem ) : string;
   end;
 
 implementation
 
 uses
-  System.SysUtils, System.IOUtils;
+  System.SysUtils, System.IOUtils, system.DateUtils, System.Types,
+  System.StrUtils, Winapi.Windows;
 
 { TMailDecoder }
 
@@ -80,6 +88,16 @@ begin
 
 end;
 
+class procedure TMailDecoder.clearFiles(dir: string);
+var
+  i : integer;
+  arr : TStringDynArray;
+begin
+  arr := TDirectory.GetFiles(dir);
+  for i := low(arr) to High(arr) do
+    TFile.Delete(arr[i]);
+end;
+
 constructor TMailDecoder.create;
 begin
   m_msg     := NIL;
@@ -101,6 +119,35 @@ begin
   m_keys.free;
 
   inherited;
+end;
+
+function TMailDecoder.getContent(template: string): string;
+  function addrList( list : TIdEmailAddressList ): string;
+  var
+    i : integer;
+  begin
+    Result := '';
+    for i := 0 to pred(list.Count) do
+      Result := Result + prettyName(list.Items[i])+';';
+    if Result <> '' then
+      SetLength( Result, length(Result)-1);
+  end;
+  function repHTML( text : string ) : string;
+  begin
+    Result := System.StrUtils.ReplaceText(text, '<', '&lt;' );
+    Result := System.StrUtils.ReplaceText(Result, '<', '&gt;' );
+  end;
+begin
+  Result := template;
+  Result := ReplaceText(Result, '<#date>',    FormatDateTime('ddd, dd.mmmm.yyyy hh:nn', m_msg.Date ));
+  Result := ReplaceText(Result, '<#sender>',  repHTML(prettyName(m_msg.From)));
+  Result := ReplaceText(Result, '<#subject>', m_msg.Subject );
+  Result := ReplaceText(Result, '<#an>',      repHTML(addrList(m_msg.Recipients)));
+  if m_msg.CCList.Count > 0 then
+    Result := ReplaceText(Result, '<#cc>', 'cc:'+repHTML(addrList(m_msg.CCList)))
+  else
+    Result := ReplaceText(Result, '<#cc>', '' );
+  Result := ReplaceText(Result, '<#text>',    m_html.Text);
 end;
 
 procedure TMailDecoder.loadText(txt: TIdText);
@@ -134,6 +181,13 @@ begin
       end;
     end;
   end;
+end;
+
+class function TMailDecoder.prettyName(addr: TIdEMailAddressItem): string;
+begin
+  Result := addr.Address;
+  if addr.Name <> '' then
+    Result := addr.Name+'<'+Result+'>';
 end;
 
 procedure TMailDecoder.replaceKeys( dir : string );
@@ -232,6 +286,28 @@ begin
 
   parseAttamchemnts;
   CheckOnlyText;
+end;
+
+function TMailDecoder.UseTemplate(dir, template: string): string;
+var
+  list : TStringList;
+begin
+  Result := '';
+  if dir = '' then begin
+    dir := TPath.Combine(TPath.GetTempPath, IntToHex(GetTickCount) );
+  end else
+    clearFiles( dir );
+
+
+  if ForceDirectories(dir) then begin
+    list := TStringList.Create;
+    replaceKeys(dir);
+    saveFiles( dir );
+    Result := TPath.Combine( dir, 'index.html');
+    list.Text := getContent( template );
+    list.saveToFile( Result);
+    list.Free;
+  end;
 end;
 
 end.

@@ -16,6 +16,14 @@ object MailimapConfigForm: TMailimapConfigForm
   OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
+  object Splitter1: TSplitter
+    Left = 241
+    Top = 115
+    Height = 147
+    ExplicitLeft = 320
+    ExplicitTop = 144
+    ExplicitHeight = 100
+  end
   inline BaseFrame1: TBaseFrame
     Left = 0
     Top = 374
@@ -241,19 +249,45 @@ object MailimapConfigForm: TMailimapConfigForm
   object GroupBox2: TGroupBox
     Left = 0
     Top = 115
-    Width = 552
+    Width = 241
     Height = 147
-    Align = alClient
-    Caption = 'MailFolder'
+    Align = alLeft
+    Caption = 'Ausgw'#228'hlte Ordner'
     TabOrder = 3
-    object CheckListBox1: TCheckListBox
+    ExplicitLeft = -3
+    object LB1: TListBox
       Left = 2
       Top = 15
-      Width = 548
+      Width = 237
       Height = 130
       Align = alClient
       ItemHeight = 13
+      Sorted = True
       TabOrder = 0
+      OnDblClick = LB1DblClick
+    end
+  end
+  object GroupBox1: TGroupBox
+    Left = 244
+    Top = 115
+    Width = 308
+    Height = 147
+    Align = alClient
+    Caption = 'M'#246'gliche Ordner'
+    TabOrder = 4
+    ExplicitLeft = 245
+    object LB2: TListBox
+      Left = 2
+      Top = 15
+      Width = 304
+      Height = 130
+      Align = alClient
+      ItemHeight = 13
+      Sorted = True
+      TabOrder = 0
+      OnDblClick = LB2DblClick
+      ExplicitLeft = 3
+      ExplicitTop = 14
     end
   end
 end

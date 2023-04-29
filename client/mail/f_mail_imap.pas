@@ -24,12 +24,17 @@ type
     BitBtn6: TBitBtn;
     LabeledEdit18: TLabeledEdit;
     GroupBox2: TGroupBox;
-    CheckListBox1: TCheckListBox;
+    Splitter1: TSplitter;
+    GroupBox1: TGroupBox;
+    LB1: TListBox;
+    LB2: TListBox;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure BaseFrame1OKBtnClick(Sender: TObject);
     procedure BitBtn5Click(Sender: TObject);
     procedure BitBtn6Click(Sender: TObject);
+    procedure LB1DblClick(Sender: TObject);
+    procedure LB2DblClick(Sender: TObject);
   private
     m_mailMod : TMailMod;
     m_changed : boolean;
@@ -41,6 +46,7 @@ type
     procedure saveSmtp;
     function GetData: TJSONObject;
     procedure SetData(const Value: TJSONObject);
+    procedure move( src, dest : TListBox );
   public
     property Data: TJSONObject read GetData write SetData;
     property Folder : TStringList read m_folder;
@@ -71,14 +77,14 @@ begin
     m_mailMod.connectImap;
     m_mailMod.updateMailFolder;
 
-    CheckListBox1.Items.Assign(m_mailMod.MailFolder);
-    m_folderUpdate := true;
-
-    for i := 0 to pred(m_mailMod.SelectedMailFolder.Count) do begin
-      inx := CheckListBox1.Items.IndexOf(m_mailMod.SelectedMailFolder[i]);
-      if inx <> -1 then
-        CheckListBox1.Checked[inx] := true;
+    LB2.Items.BeginUpdate;
+    LB2.Items.Assign(m_mailMod.MailFolder);
+    for i := pred(LB2.Items.Count) downto 0 do begin
+      if LB1.Items.IndexOf(LB2.Items[i]) >-1 then
+        LB2.Items.Delete(i);
     end;
+    LB2.Items.EndUpdate;
+    m_folderUpdate := true;
   except
     on e : exception do
       ShowMessage(e.ToString);
@@ -126,13 +132,12 @@ begin
     LabeledEdit13.Text := JString( obj, 'pwd' );
     LabeledEdit10.Text := JString( obj, 'host' );
     LabeledEdit11.Text := IntToStr(JInt( obj, 'port' ));
+
     if m_folder.Count = 0 then
       getText(obj, 'folder', m_folder );
 
     m_mailMod.SelectedMailFolder.Assign(m_folder);
-    CheckListBox1.Items.Assign(m_folder);
-    for i := 0 to pred(CheckListBox1.Items.Count) do
-      CheckListBox1.Checked[i] := true;
+    LB1.Items.Assign(m_folder);
   end;
 end;
 
@@ -155,6 +160,30 @@ begin
   result := m_mailMod.currentConfig;
 end;
 
+procedure TMailimapConfigForm.LB1DblClick(Sender: TObject);
+begin
+  move(LB1, LB2);
+end;
+
+procedure TMailimapConfigForm.LB2DblClick(Sender: TObject);
+begin
+  move(LB2, LB1);
+end;
+
+procedure TMailimapConfigForm.move(src, dest: TListBox);
+var
+  s : string;
+  inx : integer;
+begin
+  if src.ItemIndex = -1 then exit;
+
+  s := src.Items[src.ItemIndex];
+  src.Items.Delete(src.ItemIndex);
+
+  if dest.Items.IndexOf(s) = -1 then
+    dest.Items.Add(s);
+end;
+
 procedure TMailimapConfigForm.saveImap;
 var
   i : integer;
@@ -165,11 +194,7 @@ begin
   m_mailMod.ImapPort  := StrToIntDef( LabeledEdit11.Text, 0);
 
   if m_folderUpdate then begin
-    m_mailMod.SelectedMailFolder.Clear;
-    for i := 0 to pred(CheckListBox1.Items.Count) do begin
-      if CheckListBox1.Checked[i] then
-        m_mailMod.SelectedMailFolder.Add(CheckListBox1.Items[i]);
-    end;
+    m_mailMod.SelectedMailFolder.Assign(LB1.Items);
   end;
 end;
 

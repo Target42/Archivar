@@ -38,8 +38,6 @@ type
       Node: PVirtualNode; Column: TColumnIndex; const Text: string;
       const CellRect: TRect; var DefaultDraw: Boolean);
     procedure VSTDblClick(Sender: TObject);
-    procedure PageProducer1HTMLTag(Sender: TObject; Tag: TTag;
-      const TagString: string; TagParams: TStrings; var ReplaceText: string);
   private
   type
     PTVSTData = ^TVSTData;
@@ -55,14 +53,11 @@ type
     m_wwwPort : integer;
 
     m_msg: TidMessage;
-    m_html: TStringList;
+    m_tempdir : string;
 
     procedure UpdateTree;
-    function prettyName( addr : TIdEMailAddressItem ) : string;
     procedure UpdateMail( mail : TIdMessage );
 
-    procedure clearFiles;
-    function getContent : string;
   public
     procedure ForceClose( force : boolean);
   end;
@@ -79,18 +74,6 @@ uses
 {$R *.dfm}
 
 { TMailForm }
-
-procedure TMailForm.clearFiles;
-var
-  arr : TStringDynArray;
-  i   : integer;
-begin
-  if not DirectoryExists(m_wwwRoot) then exit;
-
-  arr := TDirectory.GetFiles(m_wwwRoot);
-  for i := low(arr) to high(arr) do
-      DeleteFile(arr[i]);
-end;
 
 procedure TMailForm.ComboBox1Change(Sender: TObject);
 begin
@@ -158,9 +141,11 @@ procedure TMailForm.FormCreate(Sender: TObject);
 begin
   ComboBox1.Text := '';
 
+  m_tempdir := TPath.Combine(TPath.GetTempPath, IntToHex(GetTickCount) );
+  ForceDirectories(m_tempdir);
+
   PluginImap.Data.WndHandler.registerForm(self);
   MailMod := TMailMod.create(NIL);
-  m_html  := TStringList.Create;
 
   VST.NodeDataSize := sizeof(TVSTData);
 
@@ -173,89 +158,11 @@ procedure TMailForm.FormDestroy(Sender: TObject);
 begin
   PluginImap.Data.WndHandler.unregisterForm(self);
 
-  clearFiles;
   FreeAndNil(MailMod);
-  FreeAndNil(m_html);
+
+  TMailDecoder.clearFiles(m_tempdir);
 
   MailForm := NIL;
-end;
-
-function TMailForm.getContent: string;
-  function addrList( list : TIdEmailAddressList ): string;
-  var
-    i : integer;
-  begin
-    Result := '';
-    for i := 0 to pred(list.Count) do
-      Result := Result + prettyName(list.Items[i])+';';
-    if Result <> '' then
-      SetLength( Result, length(Result)-1);
-  end;
-  function repHTML( text : string ) : string;
-  begin
-    Result := System.StrUtils.ReplaceText(text, '<', '&lt;' );
-    Result := System.StrUtils.ReplaceText(Result, '<', '&gt;' );
-  end;
-var
-  rs   : TResourceStream;
-  list : TStringList;
-begin
-  list := TStringList.Create;
-  RS := TResourceStream.Create(HInstance, 'template', RT_RCDATA);
-  list.LoadFromStream(RS);
-  rs.Free;
-  Result := list.Text;
-  list.Free;
-
-  Result := ReplaceText(Result, '<#date>',    FormatDateTime('ddd, dd.mmmm.yyyy hh:nn', m_msg.Date ));
-  Result := ReplaceText(Result, '<#sender>',  repHTML(prettyName(m_msg.From)));
-  Result := ReplaceText(Result, '<#subject>', m_msg.Subject );
-  Result := ReplaceText(Result, '<#an>',      repHTML(addrList(m_msg.Recipients)));
-  if m_msg.CCList.Count > 0 then
-    Result := ReplaceText(Result, '<#cc>', 'cc:'+repHTML(addrList(m_msg.CCList)))
-  else
-    Result := ReplaceText(Result, '<#cc>', '' );
-  Result := ReplaceText(Result, '<#text>',    m_html.Text);
-end;
-
-procedure TMailForm.PageProducer1HTMLTag(Sender: TObject; Tag: TTag;
-  const TagString: string; TagParams: TStrings; var ReplaceText: string);
-
-  function addrList( list : TIdEmailAddressList ): string;
-  var
-    i : integer;
-  begin
-    Result := '';
-    for i := 0 to pred(list.Count) do
-      Result := Result + prettyName(list.Items[i])+';';
-    if Result <> '' then
-      SetLength( Result, length(Result)-1);
-  end;
-  function repHTML( text : string ) : string;
-  begin
-    Result := System.StrUtils.ReplaceText(text, '<', '&lt;' );
-    Result := System.StrUtils.ReplaceText(Result, '<', '&gt;' );
-  end;
-var
-  s : string;
-begin
-       if SameText(TagString, 'date')     then  ReplaceText := FormatDateTime('ddd, dd.mmmm.yyyy hh:nn', m_msg.Date )
-  else if SameText(TagString, 'sender')   then  ReplaceText := repHTML(prettyName(m_msg.From))
-  else if SameText(TagString, 'subject')  then  ReplaceText := m_msg.Subject
-  else if SameText(TagString, 'an')       then  ReplaceText := repHTML(addrList(m_msg.Recipients))
-  else if SameText(TagString, 'cc')       then  begin
-    s := repHTML(addrList(m_msg.CCList));
-    if s <> '' then
-      ReplaceText := 'cc:'+s;
-  end
-  else if SameText(TagString, 'text')     then  ReplaceText := m_html.Text;
-end;
-
-function TMailForm.prettyName(addr: TIdEMailAddressItem): string;
-begin
-  Result := addr.Address;
-  if addr.Name <> '' then
-    Result := addr.Name+'<'+Result+'>';
 end;
 
 procedure TMailForm.Timer1Timer(Sender: TObject);
@@ -275,24 +182,26 @@ var
   decoder : TMailDecoder;
   fname   : string;
   list    : TStringList;
+  rs   : TResourceStream;
 begin
+
+
   m_msg := mail;
 
   list  := TStringList.Create;
   WebBrowser1.Navigate('about:blank');
 
+  RS := TResourceStream.Create(HInstance, 'template', RT_RCDATA);
+  list.LoadFromStream(RS);
+  rs.Free;
+
   decoder := TMailDecoder.create;
   decoder.Msg := mail;
-  decoder.SaveToFolder(m_wwwRoot);
+  fname := decoder.UseTemplate(m_tempdir, list.Text);
 
-  m_html.Text := decoder.Html.Text;
-
-  fname := TPath.Combine(m_wwwRoot, 'index.html');
-  list.Text := getContent;
-  list.SaveToFile(fname);
   WebBrowser1.Navigate(fname);
   list.Free;
-
+  decoder.Free;
 end;
 
 
@@ -329,7 +238,7 @@ begin
 
     ptr^.Level := 1;
     ptr^.title := mail.Subject;
-    ptr^.from := prettyName(ptr^.mail.From);
+    ptr^.from := TMailDecoder.prettyName(ptr^.mail.From);
     ptr^.send := FormatDateTime('hh:nn', ptr^.mail.Date);
 
     VST.MultiLine[node] := true;

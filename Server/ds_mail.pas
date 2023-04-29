@@ -17,6 +17,8 @@ type
     Maf: TFDTable;
     MailAccount: TDataSetProvider;
     Mailfolder: TDataSetProvider;
+    MamTab: TFDTable;
+    Mails: TDataSetProvider;
   private
     { Private-Deklarationen }
   public
