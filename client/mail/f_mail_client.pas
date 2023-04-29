@@ -7,7 +7,8 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Datasnap.DBClient,
   Datasnap.DSConnect, Vcl.StdCtrls, Vcl.ComCtrls, System.Generics.Collections,
   System.JSON, Vcl.ExtCtrls, VirtualTrees, IdBaseComponent, IdMessage,
-  Vcl.Imaging.pngimage, fr_mails, Vcl.OleCtrls, SHDocVw;
+  Vcl.Imaging.pngimage, fr_mails, Vcl.OleCtrls, SHDocVw, System.ImageList,
+  Vcl.ImgList;
 
 type
   TMailClientForm = class(TForm)
@@ -26,6 +27,11 @@ type
     Splitter2: TSplitter;
     MailFrame1: TMailFrame;
     WebBrowser1: TWebBrowser;
+    Panel2: TPanel;
+    GroupBox3: TGroupBox;
+    Splitter3: TSplitter;
+    Lv: TListView;
+    ImageList1: TImageList;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -56,11 +62,15 @@ type
           function FullName : string;
       end;
   private
+    m_ext      : TDictionary<string, integer>;
     m_accounts : TList<Account>;
     m_inUpdate : boolean;
     m_tempdir  : string;
+    m_files    : TStringList;
 
     procedure updateTree;
+    procedure fillExtDict;
+    procedure AddAttachemnts;
   public
     { Public-Deklarationen }
   end;
@@ -75,6 +85,55 @@ uses
   u_mail_decoder, m_fileCache, System.IOUtils;
 
 {$R *.dfm}
+
+procedure TMailClientForm.AddAttachemnts;
+var
+  item : TListItem;
+  i    : integer;
+  ext  : string;
+  inx  : integer;
+begin
+  LV.Items.BeginUpdate;
+  LV.Items.Clear;
+
+  for i := 0 to pred(m_files.Count) do begin
+    item := LV.Items.Add;
+    item.Data := pointer(i);
+    item.Caption := ExtractFileName(m_files[i]);
+    inx := 0;
+    ext := LowerCase(ExtractFileExt(m_files[i]));
+    m_ext.TryGetValue(ext, inx);
+    item.ImageIndex := inx;
+  end;
+  LV.Items.EndUpdate;
+end;
+
+procedure TMailClientForm.fillExtDict;
+begin
+  // text
+  m_ext.Add('.txt',   9);
+  // Archive
+  m_ext.Add('.zip',   1);
+  m_ext.Add('.7z',    1);
+  m_ext.Add('.rar',   1);
+  m_ext.Add('.tar',   1);
+  //excel
+  m_ext.Add('.csv',   2);
+  m_ext.Add('.xlsx',  5);
+  m_ext.Add('.xls',   11);
+  //images
+  m_ext.Add('.png',   7);
+  m_ext.Add('.jpg',   4);
+  m_ext.Add('.jpeg',  4);
+  m_ext.Add('.gif',   3);
+  //powerpoint
+  m_ext.Add('.ppt',   8);
+  m_ext.Add('.pptx',  8);
+  //pdf
+  m_ext.Add('.pdf',   6);
+  //word
+  m_ext.Add('.docx',  10);
+end;
 
 procedure TMailClientForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
@@ -118,6 +177,10 @@ begin
   m_tempdir := TPath.Combine(TPath.GetTempPath, IntToHex(GetTickCount) );
   ForceDirectories(m_tempdir);
 
+  m_files    := TStringList.Create;
+  m_ext := TDictionary<string, integer>.create;
+  fillExtDict;
+
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
   m_accounts := TList<Account>.create;
   MailFrame1.prepare;
@@ -154,6 +217,7 @@ begin
 
   MailFrame1.release;
   TMailDecoder.clearFiles(m_tempdir);
+  m_files.Free;
 end;
 
 procedure TMailClientForm.MailFrame1VSTChange(Sender: TBaseVirtualTree;
@@ -167,6 +231,8 @@ begin
   if m_inUpdate then exit;
 
   WebBrowser1.Navigate('about:blank');
+  LV.Items.Clear;
+
   mail := MailFrame1.SelectedMail;
   if not Assigned(mail) then exit;
 
@@ -178,6 +244,8 @@ begin
   index := decoder.UseTemplate(m_tempdir, list.Text);
 
   WebBrowser1.Navigate(index);
+  m_files.Assign(decoder.Attachments);
+  AddAttachemnts;
   decoder.Free;
   list.Free;
 end;

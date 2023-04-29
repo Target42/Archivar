@@ -55,7 +55,7 @@ var
 implementation
 
 uses
-  u_json, IdMessageCollection, m_db, system.hash, System.Variants;
+  u_json, IdMessageCollection, m_db, system.hash, System.Variants, IdAttachmentFile;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -207,6 +207,20 @@ var
   procedure addMail( st : TMemoryStream );
   var
     bst : TStream;
+
+    function CountAttachments : integer;
+    var
+      i : integer;
+    begin
+      Result := 0;
+      for i := 0 to pred(msg.MessageParts.Count) do
+      begin
+        if msg.MessageParts.Items[i] is TIdAttachmentFile then
+          if (msg.MessageParts.Items[i] as TIdAttachmentFile).ContentID = '' then
+            Result := Result + 1;
+      end;
+    end;
+
   begin
     st.Position := 0;
     MailTab.Append;
@@ -215,7 +229,7 @@ var
     MailTab.FieldByName('MAM_Sender').AsString := msg.From.Text;
     MailTab.FieldByName('MAM_DATE').AsDateTime := msg.Date;
     MailTab.FieldByName('MAM_TITLE').AsString  := msg.Subject;
-    MailTab.FieldByName('MAM_ATTACH').AsInteger:= msg.MessageParts.AttachmentCount;
+    MailTab.FieldByName('MAM_ATTACH').AsInteger:= CountAttachments;
     MailTab.FieldByName('MAM_MSG_ID').AsString := THashMD5.GetHashString(msg.Headers.Values['Message-ID']);
 
     bst := MailTab.CreateBlobStream(MailTab.FieldByName('MAM_DATA'), bmWrite);

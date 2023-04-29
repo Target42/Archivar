@@ -19,9 +19,11 @@ type
       FAttachments: boolean;
       m_png : TPngImage;
       m_bmp : TBitmap;
+      FHeadline : string;
 
       procedure processMailData;
       procedure SetKategorie( value : string );
+      procedure fillHeadline;
     public
       constructor create;
       destructor Destroy;  override;
@@ -35,6 +37,7 @@ type
       property Attachments: boolean read FAttachments write FAttachments;
       property Attachment: TPngImage read m_png;
       property Message : TIdMessage read FMessage;
+      property HeadLine: string read FHeadline;
 
       property Kategorie: string read FKategorie write SetKategorie;
       property Katbmp : TBitmap read m_bmp;
@@ -48,7 +51,7 @@ function LoadMail( fname : string ) : TMail;
 implementation
 
 uses
-  System.SysUtils, System.Types;
+  System.SysUtils, System.Types, System.StrUtils, IdAttachmentFile, IdText;
 
 { TMail }
 
@@ -78,6 +81,83 @@ begin
   m_bmp.Free;
   FMessage.Free;
   inherited;
+end;
+
+procedure TMail.fillHeadline;
+var
+  i : integer;
+  text : string;
+  html : string;
+  function StripHTMLTags(const strHTML: string): string;
+  var
+    P: PChar;
+    InTag: Boolean;
+    i, intResultLength: Integer;
+  begin
+    P := PChar(strHTML);
+    Result := '';
+
+    InTag := False;
+    repeat
+      case P^ of
+        '<': InTag := True;
+        '>': InTag := False;
+        #13, #10: ; {do nothing}
+        else
+          if not InTag then
+          begin
+            //if (P^ in [#9, #32]) and ((P+1)^ in [#10, #13, #32, #9, '<']) then
+            if CharInSet(P^, [#9, #32]) and CharInSet((P+1)^, [#10, #13, #32, #9, '<']) then
+            else
+              Result := Result + P^;
+          end;
+      end;
+      Inc(P);
+    until (P^ = #0);
+
+    {convert system characters}
+    Result := StringReplace(Result, '&quot;', '"',  [rfReplaceAll]);
+    Result := StringReplace(Result, '&apos;', '''', [rfReplaceAll]);
+    Result := StringReplace(Result, '&gt;',   '>',  [rfReplaceAll]);
+    Result := StringReplace(Result, '&lt;',   '<',  [rfReplaceAll]);
+    Result := StringReplace(Result, '&amp;',  '&',  [rfReplaceAll]);
+    Result := StringReplace(Result, '&Auml;', 'Ä',  [rfReplaceAll]);
+    Result := StringReplace(Result, '&auml;', 'ä',  [rfReplaceAll]);
+    Result := StringReplace(Result, '&Ouml;', 'Ö',  [rfReplaceAll]);
+    Result := StringReplace(Result, '&ouml;', 'ö',  [rfReplaceAll]);
+    Result := StringReplace(Result, '&Uuml;', 'Ü',  [rfReplaceAll]);
+    Result := StringReplace(Result, '&uuml;', 'ü',  [rfReplaceAll]);
+    Result := StringReplace(Result, '&szlig;','ß',  [rfReplaceAll]);
+    Result := StringReplace(Result, '&nbsp;', ' ',  [rfReplaceAll]);
+  end;
+
+  procedure addText(txt: TIdText);
+  begin
+    if txt.ContentType = 'text/html' then
+    begin
+      html := html + txt.Body.Text;
+    end;
+    if txt.ContentType = 'text/plain' then
+    begin
+      text := text + txt.Body.Text;
+    end;
+  end;
+begin
+  text := '';
+  html := '';
+  for i := 0 to pred(FMessage.MessageParts.Count) do
+  begin
+    if FMessage.MessageParts.Items[i] is TIdText then
+    begin
+      addText(FMessage.MessageParts.Items[i] as TIdText);
+    end;
+  end;
+  FHeadline := trim(StripHTMLTags(html));
+  if FHeadline = '' then begin
+    FHeadline := trim(ReplaceText( text, #$d#$a, '' ));
+  end;
+  if Length(FHeadline) > 120 then
+    SetLength(FHeadline, 120);
 end;
 
 function TMail.loadFromFile(fname: string): boolean;
@@ -123,6 +203,7 @@ begin
   if Trim(FTitel) = '' then
     FTitel := '(Kein Betreff)';
 
+  FillHeadLine;
 //  m_bmp.Canvas.Brush.Color := clWindow;
 //  m_bmp.Canvas.FillRect( Rect( 0, 0, m_bmp.Width, m_bmp.Height));
 end;

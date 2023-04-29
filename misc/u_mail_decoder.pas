@@ -80,10 +80,9 @@ begin
     TMemoryStream(m_attach.Objects[i]).Free;
   m_attach.clear;
 
-
   for i := 0 to pred(m_keys.count) do
-
     TMemoryStream(m_keys.Objects[i]).Free;
+
   m_keys.clear;
 
 end;

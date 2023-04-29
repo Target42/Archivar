@@ -218,14 +218,17 @@ var
   begin
     PaintInfo.Canvas.Font.Size := 10;
     PaintInfo.Canvas.Font.Style := PaintInfo.Canvas.Font.Style + [fsBold];
-    s := ptr^.Titel;
+    PaintInfo.Canvas.Brush.Color := clBtnFace;
 
+    s := ptr^.Titel;
     re := PaintInfo.ContentRect;
+    PaintInfo.Canvas.FillRect(re);
     //PaintInfo.Canvas.TextRect(re, s, [tfCenter] );
     dx := (re.Width - PaintInfo.Canvas.TextWidth(s)) div 2;
     dy := (re.Height- PaintInfo.Canvas.TextHeight(s)) div 2;
     PaintInfo.Canvas.TextRect( re, re.Left + dx, re.Top + dy , s );
     PaintInfo.Canvas.Font.Style := PaintInfo.Canvas.Font.Style - [fsBold];
+    PaintInfo.Canvas.Brush.Color := clWindow;
   end;
 
   procedure paintSender;
@@ -264,6 +267,15 @@ var
 
     PaintInfo.Canvas.TextRect(r, s);
   end;
+  procedure drawHeadLine;
+  begin
+    re.Left  := PaintInfo.ContentRect.Left;
+    re.Right := PaintInfo.ContentRect.Right;
+    re.Top   := re.Bottom + 2;
+    re.Bottom := re.Top + PaintInfo.Canvas.TextHeight('W');
+    s := ptr^.mail.Headline;
+    PaintInfo.Canvas.TextRect(re, s);
+  end;
   procedure paintAttach;
   var
     r : TRect;
@@ -300,10 +312,8 @@ begin
       paintSubject;
       paintAttach;
       paintSendTime;
+      drawHeadLine;
     end;
-    Canvas.Brush.Color := clRed;
-    Canvas.FrameRect(ContentRect);
-
   end;
 end;
 
