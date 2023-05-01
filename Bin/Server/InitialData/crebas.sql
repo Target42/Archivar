@@ -1,7 +1,7 @@
 /* ============================================================ */
 /*   Database name:  MODEL_2                                    */
 /*   DBMS name:      InterBase                                  */
-/*   Created on:     08.04.2023  12:53                          */
+/*   Created on:     30.04.2023  15:58                          */
 /* ============================================================ */
 
 create generator gen_be_id;
@@ -484,6 +484,7 @@ create table MAF_FOLDER
     MAF_ID                          INTEGER                not null,
     MAC_ID                          INTEGER                        ,
     MAF_NAME                        VARCHAR(255)                   ,
+    MAF_ACTIVE                      CHAR(1)                        ,
     constraint PK_MAF_FOLDER primary key (MAF_ID)
 );
 
@@ -722,11 +723,18 @@ create table MAM_MAIL
     MAM_SENDER                      VARCHAR(255)                   ,
     MAM_DATE                        TIMESTAMP                      ,
     MAM_TITLE                       VARCHAR(255)                   ,
-    MAM_MD5                         VARCHAR(32)                    ,
     MAM_DATA                        BLOB                           ,
     MAM_ATTACH                      INTEGER                        ,
+    MAM_MSG_ID                      VARCHAR(32)                    ,
+    MAM_STATUS                      VARCHAR(100)                   ,
+    MAM_KATEGORIE                   VARCHAR(100)                   ,
     constraint PK_MAM_MAIL primary key (MAM_ID)
 );
+
+/* ============================================================ */
+/*   Index: MAM_MAIL_ID                                         */
+/* ============================================================ */
+create ASC index MAM_MAIL_ID on MAM_MAIL (MAF_ID, MAM_MSG_ID);
 
 alter table TE_TEMPLATE
     add constraint FK_REF_3353 foreign key  (TY_ID)
