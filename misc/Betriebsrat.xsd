@@ -17,6 +17,7 @@
 			<xs:attribute name="kurz" type="xs:string"/>
 			<xs:attribute name="pkurz" type="xs:string"/>
 			<xs:attribute name="pic" type="xs:string"/>
+			<xs:attribute name="color" type="xs:integer"/>
 		</xs:complexType>
 	</xs:element>
 </xs:schema>

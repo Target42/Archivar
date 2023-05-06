@@ -3,7 +3,7 @@
 {                                                            }
 {                      XML-Datenbindung                      }
 {                                                            }
-{         Generiert am: 29.07.2020 09:12:39                  }
+{         Generiert am: 02.05.2023 21:00:54                  }
 {       Generiert von: D:\git\ber.git\misc\Betriebsrat.xsd   }
 {                                                            }
 {************************************************************}
@@ -24,7 +24,7 @@ type
 { IXMLBER }
 
   IXMLBER = interface(IXMLNodeCollection)
-    ['{D9F1CDF9-BBBE-452C-A265-727307D29E06}']
+    ['{A1683D1B-C4E1-4829-BA57-2515F4C835BA}']
     { Eigenschaftszugriff }
     function Get_Gremium(Index: Integer): IXMLGremium;
     { Methoden & Eigenschaften }
@@ -36,21 +36,24 @@ type
 { IXMLGremium }
 
   IXMLGremium = interface(IXMLNode)
-    ['{7F0A8C12-44B5-490C-BEE6-66606DB86640}']
+    ['{4648F61F-D247-4598-8F17-F806C3723AE8}']
     { Eigenschaftszugriff }
     function Get_Name: UnicodeString;
     function Get_Kurz: UnicodeString;
     function Get_Pkurz: UnicodeString;
     function Get_Pic: UnicodeString;
+    function Get_Color: Integer;
     procedure Set_Name(Value: UnicodeString);
     procedure Set_Kurz(Value: UnicodeString);
     procedure Set_Pkurz(Value: UnicodeString);
     procedure Set_Pic(Value: UnicodeString);
+    procedure Set_Color(Value: Integer);
     { Methoden & Eigenschaften }
     property Name: UnicodeString read Get_Name write Set_Name;
     property Kurz: UnicodeString read Get_Kurz write Set_Kurz;
     property Pkurz: UnicodeString read Get_Pkurz write Set_Pkurz;
     property Pic: UnicodeString read Get_Pic write Set_Pic;
+    property Color: Integer read Get_Color write Set_Color;
   end;
 
 { Forward-Deklarationen }
@@ -79,10 +82,12 @@ type
     function Get_Kurz: UnicodeString;
     function Get_Pkurz: UnicodeString;
     function Get_Pic: UnicodeString;
+    function Get_Color: Integer;
     procedure Set_Name(Value: UnicodeString);
     procedure Set_Kurz(Value: UnicodeString);
     procedure Set_Pkurz(Value: UnicodeString);
     procedure Set_Pic(Value: UnicodeString);
+    procedure Set_Color(Value: Integer);
   end;
 
 { Globale Funktionen }
@@ -96,7 +101,7 @@ const
 
 implementation
 
-
+uses Xml.xmlutil;
 
 { Globale Funktionen }
 
@@ -180,6 +185,16 @@ end;
 procedure TXMLGremium.Set_Pic(Value: UnicodeString);
 begin
   SetAttribute('pic', Value);
+end;
+
+function TXMLGremium.Get_Color: Integer;
+begin
+  Result := AttributeNodes['color'].NodeValue;
+end;
+
+procedure TXMLGremium.Set_Color(Value: Integer);
+begin
+  SetAttribute('color', Value);
 end;
 
 end.
