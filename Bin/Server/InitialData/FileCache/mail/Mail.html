@@ -6,21 +6,25 @@
   <title></title>
 </head>
 <body>
-<small>
-<#date>
-</small><br>
-<p>
-<big>
-<#sender>
-</big><br>
+
+<p style="text-align:right;">
+<small><#date></small>
 </p>
-<span style="font-weight: bold;">
+
+<table cellspacing="0" cellpadding="0" style="background-color:"#f2f2f2>
+<p>
+<tr>
+ <td>Von:&nbsp;&nbsp;</td>
+ <td style="font-style: italic;"><big><#sender></big></td>
+</tr>
+<td>An:</td>
+<td><#an></td>
+<#cc>
+</table>
+
+<p style="font-weight: bold;">
 <#subject>
-</span><br>
-An :
-<#an>
-<br>
-<#cc><br>
+</p>
 <hr>
 <#text>
 </body>

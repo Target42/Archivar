@@ -55,7 +55,8 @@ var
 implementation
 
 uses
-  u_json, IdMessageCollection, m_db, system.hash, System.Variants, IdAttachmentFile;
+  u_json, IdMessageCollection, m_db, system.hash, System.Variants, IdAttachmentFile,
+  Grijjy.CloudLogging;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
@@ -80,8 +81,13 @@ function TMailIMap.config(data: TJSONObject): boolean;
 var
   obj : TJSONObject;
 begin
+  GrijjyLog.EnterMethod('config');
+
   m_konto_id := JInt( data, 'kontoid' );
   m_KontoName:= JString( data, 'kontoname');
+
+  GrijjyLog.Send('Konto', m_KontoName );
+  GrijjyLog.Send('config data', data.ToJSON);
 
   FolderQry.ParamByName('MAC_ID').AsInteger := m_konto_id;
 
@@ -111,6 +117,7 @@ begin
     m_folder.Add('INBOX');
 
   result := (IdSMTP1.Host <> '' ) and (IdSMTP1.Host <> '');
+  GrijjyLog.ExitMethod('config');
 end;
 
 function TMailIMap.connect: boolean;
@@ -272,6 +279,7 @@ var
   i     : integer;
   st    : TMemoryStream;
 begin
+  GrijjyLog.EnterMethod('update');
   Result    := 0;
   st        := TMemoryStream.Create;
   mails     := TStringList.Create;
@@ -284,6 +292,7 @@ begin
 
     FolderQry.Open;
     while not FolderQry.eof do begin
+      GrijjyLog.Send('Retrieve', FolderQry.FieldByName('MAF_NAME').AsString);
       if IdIMAP41.SelectMailBox(FolderQry.FieldByName('MAF_NAME').AsString) then begin
         maf_id := FolderQry.FieldByName('MAF_ID').AsInteger;
 
@@ -312,7 +321,8 @@ begin
       FolderQry.Next;
     end;
   except
-
+    on e : exception do
+      GrijjyLog.Send(e.ToString, TgoLogLevel.Error);
   end;
   IdIMAP41.Disconnect;
   st.Free;
@@ -322,6 +332,7 @@ begin
 
   FolderQry.Close;
   MailTab.Close;
+  GrijjyLog.ExitMethod('update');
 end;
 
 end.

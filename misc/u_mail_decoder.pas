@@ -139,13 +139,15 @@ function TMailDecoder.getContent(template: string): string;
 begin
   Result := template;
   Result := ReplaceText(Result, '<#date>',    FormatDateTime('ddd, dd.mmmm.yyyy hh:nn', m_msg.Date ));
-  Result := ReplaceText(Result, '<#sender>',  repHTML(prettyName(m_msg.From)));
+  Result := ReplaceText(Result, '<#sender>',  '<a href="mailto:'+m_msg.From.Address+'?subject=AW:'+m_msg.Subject+'">'+repHTML(prettyName(m_msg.From))+'</a>' );
   Result := ReplaceText(Result, '<#subject>', m_msg.Subject );
+
   Result := ReplaceText(Result, '<#an>',      repHTML(addrList(m_msg.Recipients)));
   if m_msg.CCList.Count > 0 then
-    Result := ReplaceText(Result, '<#cc>', 'cc:'+repHTML(addrList(m_msg.CCList)))
+    Result := ReplaceText(Result, '<#cc>', '<td>cc:</td><td>'+repHTML(addrList(m_msg.CCList)))+'</td>'
   else
     Result := ReplaceText(Result, '<#cc>', '' );
+
   Result := ReplaceText(Result, '<#text>',    m_html.Text);
 end;
 
@@ -259,6 +261,7 @@ begin
     mem.Position := 0;
     mem.saveToFile( TPath.Combine( dir, m_inline[m_keys[i]]));
   end;
+
   for i := 0 to pred(m_attach.count) do begin
     mem := m_attach.objects[i] as TMemoryStream;
     mem.Position := 0;

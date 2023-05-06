@@ -1,6 +1,6 @@
 //
 // Erzeugt vom DataSnap-Proxy-Generator.
-// 04.04.2023 20:05:54
+// 05.05.2023 20:36:21
 //
 
 unit u_stub;
@@ -420,10 +420,12 @@ type
 
   TDSMailClient = class(TDSAdminClient)
   private
+    FsetMailStatusCommand: TDBXCommand;
   public
     constructor Create(ADBXConnection: TDBXConnection); overload;
     constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
     destructor Destroy; override;
+    function setMailStatus(data: TJSONObject): TJSONObject;
   end;
 
 implementation
@@ -2448,6 +2450,20 @@ begin
   inherited;
 end;
 
+function TDSMailClient.setMailStatus(data: TJSONObject): TJSONObject;
+begin
+  if FsetMailStatusCommand = nil then
+  begin
+    FsetMailStatusCommand := FDBXConnection.CreateCommand;
+    FsetMailStatusCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FsetMailStatusCommand.Text := 'TDSMail.setMailStatus';
+    FsetMailStatusCommand.Prepare;
+  end;
+  FsetMailStatusCommand.Parameters[0].Value.SetJSONValue(data, FInstanceOwner);
+  FsetMailStatusCommand.ExecuteUpdate;
+  Result := TJSONObject(FsetMailStatusCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
+end;
+
 constructor TDSMailClient.Create(ADBXConnection: TDBXConnection);
 begin
   inherited Create(ADBXConnection);
@@ -2460,6 +2476,7 @@ end;
 
 destructor TDSMailClient.Destroy;
 begin
+  FsetMailStatusCommand.DisposeOf;
   inherited;
 end;
 

@@ -248,7 +248,8 @@ uses
   f_mail_client in 'mail\f_mail_client.pas' {MailClientForm},
   fr_mails in 'mail\MailFrame\fr_mails.pas' {MailFrame: TFrame},
   u_TMail in 'mail\MailFrame\u_TMail.pas',
-  u_mail_decoder in '..\misc\u_mail_decoder.pas';
+  u_mail_decoder in '..\misc\u_mail_decoder.pas',
+  f_kategorie in 'mail\f_kategorie.pas' {KategorieForm};
 
 {$R *.res}
 
@@ -279,7 +280,6 @@ begin
   Application.CreateForm(TFileCacheMod, FileCacheMod);
   Application.CreateForm(TCryptMod, CryptMod);
   Application.CreateForm(TMainForm, MainForm);
-  Application.CreateForm(TMailMod, MailMod);
   try
     Application.Run;
   except

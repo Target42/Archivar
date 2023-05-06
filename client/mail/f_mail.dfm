@@ -276,6 +276,24 @@ object Mailform: TMailform
     RemoteServer = DSProviderConnection1
     Left = 272
     Top = 296
+    object FolderMAF_ID: TIntegerField
+      FieldName = 'MAF_ID'
+      Required = True
+    end
+    object FolderMAC_ID: TIntegerField
+      FieldName = 'MAC_ID'
+    end
+    object FolderMAF_NAME: TStringField
+      FieldName = 'MAF_NAME'
+      Size = 255
+    end
+    object FolderMAF_ACTIVE: TStringField
+      FieldName = 'MAF_ACTIVE'
+      OnGetText = FolderMAF_ACTIVEGetText
+      OnSetText = FolderMAF_ACTIVESetText
+      FixedChar = True
+      Size = 1
+    end
   end
   object DataSource1: TDataSource
     DataSet = Accounts

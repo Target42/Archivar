@@ -49,4 +49,43 @@ object DSMail: TDSMail
     Left = 176
     Top = 152
   end
+  object Gremien: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Transaction = FDTransaction1
+    SQL.Strings = (
+      'SELECT GR_SHORT, r.GR_COLOR'
+      'FROM GR_GREMIUM r'
+      'where gr_color <> 0'
+      'order by GR_SHORT')
+    Left = 240
+    Top = 88
+  end
+  object GremiumQry: TDataSetProvider
+    DataSet = Gremien
+    Left = 240
+    Top = 152
+  end
+  object KategorieSet: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Transaction = FDTransaction1
+    SQL.Strings = (
+      'UPDATE MAM_MAIL a'
+      'SET '
+      '    a.MAM_KATEGORIE = :name'
+      'WHERE'
+      '    a.MAM_ID = :id')
+    Left = 352
+    Top = 24
+    ParamData = <
+      item
+        Name = 'NAME'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+  end
 end

@@ -32,6 +32,10 @@ type
     Panel3: TPanel;
     DBNavigator2: TDBNavigator;
     DBGrid2: TDBGrid;
+    FolderMAF_ID: TIntegerField;
+    FolderMAC_ID: TIntegerField;
+    FolderMAF_NAME: TStringField;
+    FolderMAF_ACTIVE: TStringField;
     procedure FormCreate(Sender: TObject);
     procedure AccountsMAC_ACTIVESetText(Sender: TField; const Text: string);
     procedure AccountsMAC_ACTIVEGetText(Sender: TField; var Text: string;
@@ -44,6 +48,9 @@ type
     procedure AccountsAfterPost(DataSet: TDataSet);
     procedure AccountsNewRecord(DataSet: TDataSet);
     procedure AccountsAfterScroll(DataSet: TDataSet);
+    procedure FolderMAF_ACTIVEGetText(Sender: TField; var Text: string;
+      DisplayText: Boolean);
+    procedure FolderMAF_ACTIVESetText(Sender: TField; const Text: string);
   private
     procedure SyncImapFolder( data : TJSONObject);
   public
@@ -191,6 +198,23 @@ procedure TMailform.DBNavigator1Click(Sender: TObject; Button: TNavigateBtn);
 begin
   BitBtn1.Enabled := (Button = nbEdit) or (Button = nbInsert);
   GroupBox2.Enabled  := not BitBtn1.Enabled;
+end;
+
+procedure TMailform.FolderMAF_ACTIVEGetText(Sender: TField; var Text: string;
+  DisplayText: Boolean);
+begin
+  if Sender.AsString = 'T' then
+    Text := 'Aktiv'
+  else
+    Text := 'Inaktiv';
+end;
+
+procedure TMailform.FolderMAF_ACTIVESetText(Sender: TField; const Text: string);
+begin
+  if SameText( text, 'Aktiv') then
+    Sender.AsString := 'T'
+  else
+    Sender.AsString := 'F';
 end;
 
 procedure TMailform.FormCreate(Sender: TObject);
