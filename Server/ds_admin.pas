@@ -89,6 +89,7 @@ begin
     JReplace( row, 'parent',  GremiumQry.FieldByName('GR_PARENT_SHORT').AsString);
     JReplace( row, 'image',   GremiumQry.FieldByName('GR_PIC_NAME').AsString);
     JReplace( row, 'sid',     GremiumQry.FieldByName('DR_ID').AsInteger );
+    JReplace( row, 'color',    GremiumQry.FieldByName('GR_COLOR').AsInteger);
 
     arr.AddElement(row);
     GremiumQry.Next

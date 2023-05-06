@@ -45,6 +45,28 @@ object GremiumEditForm: TGremiumEditForm
     Height = 13
     Caption = 'image'
   end
+  object Label4: TLabel
+    Left = 112
+    Top = 101
+    Width = 28
+    Height = 13
+    Caption = 'Farbe'
+  end
+  object PB: TPaintBox
+    Left = 112
+    Top = 120
+    Width = 41
+    Height = 16
+    OnPaint = PBPaint
+  end
+  object SpeedButton1: TSpeedButton
+    Left = 159
+    Top = 120
+    Width = 23
+    Height = 22
+    Caption = '...'
+    OnClick = SpeedButton1Click
+  end
   inline BaseFrame1: TBaseFrame
     Left = 0
     Top = 153
@@ -151,5 +173,9 @@ object GremiumEditForm: TGremiumEditForm
     DataSet = Images
     Left = 80
     Top = 72
+  end
+  object ColorDialog1: TColorDialog
+    Left = 248
+    Top = 8
   end
 end

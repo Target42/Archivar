@@ -280,6 +280,7 @@ object GremiumForm: TGremiumForm
     Height = 200
     Align = alClient
     DataSource = DataSource1
+    DefaultDrawing = False
     Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
     ReadOnly = True
     TabOrder = 2
@@ -288,6 +289,7 @@ object GremiumForm: TGremiumForm
     TitleFont.Height = -11
     TitleFont.Name = 'Tahoma'
     TitleFont.Style = []
+    OnDrawColumnCell = DBGrid1DrawColumnCell
     OnDblClick = DBGrid1DblClick
     Columns = <
       item
@@ -316,6 +318,12 @@ object GremiumForm: TGremiumForm
         FieldName = 'GR_PIC_NAME'
         Title.Caption = 'Image'
         Width = 150
+        Visible = True
+      end
+      item
+        Expanded = False
+        FieldName = 'GR_COLOR'
+        Title.Caption = 'Farbe'
         Visible = True
       end>
   end
