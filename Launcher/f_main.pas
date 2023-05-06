@@ -209,6 +209,7 @@ begin
         FillFiles(obj);
       end;
     end;
+
     if CheckFiles then
       flag := DownloadFiles;
 
@@ -255,6 +256,8 @@ begin
         st := TFileStream.Create(fname, fmOpenWrite + fmShareExclusive );
         m_files[i].locked := false;
         st.Free;
+
+        m_files[i].needUpdate := md5 <> m_files[i].md5;
       except
         begin
           m_files[i].locked := true;
