@@ -192,6 +192,8 @@ type
     ImageList1: TImageList;
     ac_ad_mail: TAction;
     Mailkonten1: TMenuItem;
+    ac_mail: TAction;
+    Mails1: TMenuItem;
     procedure ac_prg_closeExecute(Sender: TObject);
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure ac_prg_disconExecute(Sender: TObject);
@@ -244,6 +246,7 @@ type
     procedure ac_ta_importExecute(Sender: TObject);
     procedure test21Click(Sender: TObject);
     procedure ac_ad_mailExecute(Sender: TObject);
+    procedure ac_mailExecute(Sender: TObject);
   private
     m_noStatChange : boolean;
 
@@ -414,6 +417,11 @@ begin
     frm.TEID    := te_id;
     frm.Show;
   end;
+end;
+
+procedure TMainForm.ac_mailExecute(Sender: TObject);
+begin
+    Application.CreateForm(TMailClientForm, MailClientForm);
 end;
 
 procedure TMainForm.ac_me_deleteExecute(Sender: TObject);
@@ -1081,7 +1089,6 @@ end;
 procedure TMainForm.test21Click(Sender: TObject);
 begin
 //  showImportForm;
-  Application.CreateForm(TMailClientForm, MailClientForm);
 end;
 
 procedure TMainForm.UpdateUserView(sender: TObject);

@@ -99,6 +99,7 @@ object MailClientForm: TMailClientForm
         Width = 413
         Height = 143
         Align = alClient
+        HideSelection = False
         Indent = 19
         TabOrder = 0
         OnChange = TVChange
@@ -126,6 +127,7 @@ object MailClientForm: TMailClientForm
         inherited VST: TVirtualDrawTree
           Width = 413
           Height = 361
+          PopupMenu = PopupMenu2
           OnChange = MailFrame1VSTChange
           ExplicitWidth = 413
           ExplicitHeight = 361
@@ -187,11 +189,11 @@ object MailClientForm: TMailClientForm
         Align = alClient
         Columns = <>
         LargeImages = ImageList1
+        PopupMenu = PopupMenu1
         TabOrder = 0
+        OnDblClick = LvDblClick
         OnMouseDown = LvMouseDown
         OnMouseMove = LvMouseMove
-        ExplicitLeft = 3
-        ExplicitTop = 11
       end
     end
   end
@@ -244,7 +246,7 @@ object MailClientForm: TMailClientForm
     Left = 668
     Top = 112
     Bitmap = {
-      494C01010C001800180020002000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01010C001800380020002000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000800000008000000001002000000000000000
       0100000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -2366,18 +2368,67 @@ object MailClientForm: TMailClientForm
   object DataFormatAdapterSource: TDataFormatAdapter
     DragDropComponent = DropEmptySource1
     DataFormatName = 'TVirtualFileStreamDataFormat'
-    Left = 544
-    Top = 436
+    Left = 608
+    Top = 420
   end
   object DropEmptySource1: TDropEmptySource
     DragTypes = [dtCopy, dtMove]
-    Left = 664
-    Top = 436
+    Left = 712
+    Top = 412
   end
   object DropDummy1: TDropDummy
     DragTypes = []
     WinTarget = 0
-    Left = 788
-    Top = 440
+    Left = 812
+    Top = 416
+  end
+  object PopupMenu1: TPopupMenu
+    Left = 452
+    Top = 416
+    object ffnen1: TMenuItem
+      Action = ac_open
+    end
+    object N1: TMenuItem
+      Caption = '-'
+    end
+    object Speichernals1: TMenuItem
+      Action = ac_saveas
+    end
+  end
+  object ActionList1: TActionList
+    Left = 452
+    Top = 480
+    object ac_open: TAction
+      Caption = #214'ffnen'
+      OnExecute = ac_openExecute
+    end
+    object ac_saveas: TAction
+      Caption = 'Speichern als'
+      OnExecute = ac_saveasExecute
+    end
+  end
+  object FileSaveDialog1: TFileSaveDialog
+    FavoriteLinks = <>
+    FileTypes = <>
+    Options = [fdoPathMustExist]
+    Title = 'Anhang speichern als'
+    Left = 540
+    Top = 488
+  end
+  object GremiumQry: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    ProviderName = 'GremiumQry'
+    RemoteServer = DSProviderConnection1
+    Left = 224
+    Top = 24
+  end
+  object PopupMenu2: TPopupMenu
+    Left = 168
+    Top = 259
+    object Kategorien1: TMenuItem
+      Caption = 'Kategorien'
+      OnClick = Kategorien1Click
+    end
   end
 end

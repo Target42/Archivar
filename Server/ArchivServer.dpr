@@ -70,7 +70,7 @@ var
   s               : string;
 
 {$IFDEF DEBUG}
-// {$e console.exe}
+//{$e console.exe}
 {$ELSE}
 {$e service.exe}
 {$ENDIF}
@@ -107,6 +107,7 @@ begin
       end;
 
     until s = 'q';
+    ArchivService.ServiceStop(ArchivService, MyDummyBoolean);
 
     // On exit, destroy the service object.
     FreeAndNil(ArchivService);

@@ -99,7 +99,7 @@ object MailimapConfigForm: TMailimapConfigForm
     end
     object BitBtn5: TBitBtn
       Left = 207
-      Top = 84
+      Top = 80
       Width = 80
       Height = 25
       Caption = 'Test'
@@ -193,7 +193,7 @@ object MailimapConfigForm: TMailimapConfigForm
     end
     object BitBtn6: TBitBtn
       Left = 463
-      Top = 73
+      Top = 72
       Width = 75
       Height = 25
       Caption = 'Test'
@@ -254,7 +254,6 @@ object MailimapConfigForm: TMailimapConfigForm
     Align = alLeft
     Caption = 'Ausgw'#228'hlte Ordner'
     TabOrder = 3
-    ExplicitLeft = -3
     object LB1: TListBox
       Left = 2
       Top = 15
@@ -275,7 +274,6 @@ object MailimapConfigForm: TMailimapConfigForm
     Align = alClient
     Caption = 'M'#246'gliche Ordner'
     TabOrder = 4
-    ExplicitLeft = 245
     object LB2: TListBox
       Left = 2
       Top = 15
@@ -286,8 +284,6 @@ object MailimapConfigForm: TMailimapConfigForm
       Sorted = True
       TabOrder = 0
       OnDblClick = LB2DblClick
-      ExplicitLeft = 3
-      ExplicitTop = 14
     end
   end
 end

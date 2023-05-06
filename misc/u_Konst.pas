@@ -68,6 +68,9 @@ const
   BRD_ADMIN_CLOSE_EDIT: string = 'closeedits';
   BRD_ADMIN_TERMINATE : string = 'terminate';
 
+  // Mailk
+  BRD_MAIL            : string = 'email';
+
 const
   VOTE_YES      =  1;
   VOTE_NO       = -1;

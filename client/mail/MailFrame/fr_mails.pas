@@ -25,9 +25,11 @@ type
         mail  : TMail;
       end;
   private
-    m_mails : TList<TMail>;
+    m_mails     : TList<TMail>;
     m_mailOrder : TMailOrder;
-    m_up : boolean;
+    m_up        : boolean;
+    m_selected  : TList<TMail>;
+    m_kats      : TStringList;
 
     procedure setMailOrdner( value : TMailOrder );
     function getMailOrder: TMailOrder;
@@ -38,9 +40,10 @@ type
     procedure prepare;
     procedure release;
 
-    property Mails: TList<TMail> read m_mails;
+    property Mails      : TList<TMail> read m_mails;
+    property MailOrder  : TMailOrder read getMailOrder write setMailOrdner;
+    property Kategorien : TStringList read m_kats write m_kats;
 
-    property MailOrder : TMailOrder read getMailOrder write setMailOrdner;
     property Up : boolean read m_up write setUp;
 
     procedure UpdateView;
@@ -52,12 +55,15 @@ type
     function newMail : TMail;
 
     function SelectedMail : TMail;
+    function SelectedMails : TList<TMail>;
+
+    procedure UpdateTreeView;
   end;
 
 implementation
 
 uses
-  System.Generics.Defaults, System.UITypes;
+  System.Generics.Defaults, System.UITypes, System.Types;
 
 {$R *.dfm}
 
@@ -101,9 +107,12 @@ end;
 
 procedure TMailFrame.prepare;
 begin
-  m_mails := TList<TMail>.create;
-  vst.NodeDataSize := SizeOf(VSTData);
-  m_up := true;
+  m_mails     := TList<TMail>.create;
+  m_selected  := TList<TMail>.create;
+  m_kats      := NIL;
+
+  vst.NodeDataSize  := SizeOf(VSTData);
+  m_up              := true;
 end;
 
 procedure TMailFrame.release;
@@ -117,6 +126,7 @@ begin
   for mail in m_mails do
     mail.Free;
   mails.Free;
+  m_selected.Free;
 end;
 
 procedure TMailFrame.resort;
@@ -152,6 +162,26 @@ begin
   Result  := ptr^.mail;
 end;
 
+function TMailFrame.SelectedMails: TList<TMail>;
+var
+  node : PVirtualNode;
+  ptr  : PVSTData;
+begin
+  m_selected.clear;
+  node := VSt.GetFirst;
+
+  while Assigned(node) do begin
+    ptr := node.GetData;
+    if Assigned(ptr^.mail) then begin
+      if VST.Selected[node] then begin
+        m_selected.Add(ptr^.mail)
+      end;
+    end;
+    node := vst.GetNext(node);
+  end;
+  Result := m_selected;
+end;
+
 procedure TMailFrame.setMailOrdner(value: TMailOrder);
 begin
   m_mailOrder := value;
@@ -162,6 +192,11 @@ procedure TMailFrame.setUp(value: boolean);
 begin
   m_up := value;
   resort;
+end;
+
+procedure TMailFrame.UpdateTreeView;
+begin
+  VSt.Invalidate;
 end;
 
 procedure TMailFrame.UpdateView;
@@ -210,6 +245,7 @@ var
   ptr : PVSTData;
   s   : string;
   re  : TRect;
+  myContentRect : TRect;
 
   procedure PaintSection;
   var
@@ -220,23 +256,31 @@ var
     PaintInfo.Canvas.Font.Style := PaintInfo.Canvas.Font.Style + [fsBold];
     PaintInfo.Canvas.Brush.Color := clBtnFace;
 
-    s := ptr^.Titel;
     re := PaintInfo.ContentRect;
-    PaintInfo.Canvas.FillRect(re);
-    //PaintInfo.Canvas.TextRect(re, s, [tfCenter] );
+    PaintInfo.Canvas.RoundRect(re, 10, 10);
+
+    re:= myContentRect;
+
+    s := ptr^.Titel;
     dx := (re.Width - PaintInfo.Canvas.TextWidth(s)) div 2;
     dy := (re.Height- PaintInfo.Canvas.TextHeight(s)) div 2;
     PaintInfo.Canvas.TextRect( re, re.Left + dx, re.Top + dy , s );
+
     PaintInfo.Canvas.Font.Style := PaintInfo.Canvas.Font.Style - [fsBold];
     PaintInfo.Canvas.Brush.Color := clWindow;
+    PaintInfo.Canvas.Brush.Style := bsClear
   end;
 
   procedure paintSender;
   begin
     PaintInfo.Canvas.Font.Size := 10;
     PaintInfo.Canvas.Font.Color := clBlue;
-    re := PaintInfo.ContentRect;
-    re.Width := re.Width - 36;
+    re := MyContentRect;
+
+    re.Width := re.Width - 20;
+    if ptr^.mail.Kategorie <> '' then
+      re.Width := re.Width - ptr^.mail.Katbmp.Width;
+
     re.Bottom := re.Top + PaintInfo.Canvas.TextHeight('W')+2;
 
     s := ptr^.mail.Absender;
@@ -251,6 +295,7 @@ var
     re.Top := re.Bottom;
     re.Bottom := re.Bottom + PaintInfo.Canvas.TextHeight('W')+2;
     s :=  ptr^.mail.Titel;
+
     UniqueString(s);
     PaintInfo.Canvas.TextRect(re, s, [tfModifyString, tfEndEllipsis]);
     PaintInfo.Canvas.Font.Style := PaintInfo.Canvas.Font.Style - [fsItalic];
@@ -262,52 +307,60 @@ var
     s := ptr^.mail.SendTime;
 
     r := re;
-    r.Right := PaintInfo.ContentRect.Right;
+    r.Right := MyContentRect.Right;
     r.Left := r.Right - PaintInfo.Canvas.TextWidth(s) - 4;
 
     PaintInfo.Canvas.TextRect(r, s);
   end;
   procedure drawHeadLine;
   begin
-    re.Left  := PaintInfo.ContentRect.Left;
-    re.Right := PaintInfo.ContentRect.Right;
+    re.Left  := MyContentRect.Left;
+    re.Right := MyContentRect.Right;
     re.Top   := re.Bottom + 2;
     re.Bottom := re.Top + PaintInfo.Canvas.TextHeight('W');
     s := ptr^.mail.Headline;
-    PaintInfo.Canvas.TextRect(re, s);
+    PaintInfo.Canvas.TextRect(re, s, [tfModifyString, tfEndEllipsis]);
   end;
   procedure paintAttach;
   var
     r : TRect;
   begin
     if not ptr^.mail.Attachment.Empty then begin
-      r := PaintInfo.ContentRect;
+      r := MyContentRect;
       r.Left := r.Right - 18;
       r.Bottom := r.Top + 18;
       ptr^.mail.Attachment.Draw(PaintInfo.Canvas, r);
     end;
 
     if ptr^.mail.Kategorie <> '' then begin
-      r.Left := r.Left - 16;
-      r.Right := r.Right - 16;
-      PaintInfo.Canvas.CopyRect( r, ptr^.mail.Katbmp.Canvas, Rect( 0, 0, 16, 16));
+      r := myContentRect;
+      r.Bottom := r.Top + 16;
+      r.Right := r.Right - 18;
+      r.Left := r.Right - ptr^.mail.Katbmp.Width;
+
+      PaintInfo.Canvas.CopyRect( r, ptr^.mail.Katbmp.Canvas,
+        Rect( 0, 0, ptr^.mail.Katbmp.width, ptr^.mail.Katbmp.Height));
     end;
   end;
 begin
   with sender as TVirtualDrawTree, PaintInfo do begin
     ptr := node.GetData;
-    if (Selected[Node]) then
-      Canvas.Font.Color := clHighlightText
-    else
-      Canvas.Font.Color := clWindowText;
+    myContentRect := ContentRect;
 
-    SetBKMode(Canvas.Handle, TRANSPARENT);
-
-    Canvas.Brush.Style := bsClear;
-
+//    Canvas.Brush.Style := bsClear;
+    Canvas.Pen.Color := clWindowFrame;
     if VST.GetNodeLevel(node) = 0 then begin
+      myContentRect.Inflate(-2, -2);
       PaintSection;
     end else begin
+      myContentRect.Inflate(-3, -3);
+  //    Canvas.Brush.Color := clWindow;
+      Canvas.Brush.Style := bsClear;
+
+      SetBKMode(PaintInfo.Canvas.Handle, TRANSPARENT);
+      Canvas.RoundRect(ContentRect, 5, 5);
+
+      SetBKMode(PaintInfo.Canvas.Handle, TRANSPARENT);
       paintSender;
       paintSubject;
       paintAttach;
@@ -325,7 +378,7 @@ begin
     VST.NodeHeight[Node] := 24;
   end
   else begin
-    VST.NodeHeight[Node]  := 48;
+    VST.NodeHeight[Node]  := 54;
     Include(InitialStates, ivsMultiline);
   end;
 end;

@@ -8,7 +8,8 @@ uses
   Datasnap.DSConnect, Vcl.StdCtrls, Vcl.ComCtrls, System.Generics.Collections,
   System.JSON, Vcl.ExtCtrls, VirtualTrees, IdBaseComponent, IdMessage,
   Vcl.Imaging.pngimage, fr_mails, Vcl.OleCtrls, SHDocVw, System.ImageList,
-  Vcl.ImgList, DragDrop, DropSource, DragDropFile, Winapi.ActiveX, DropTarget;
+  Vcl.ImgList, DragDrop, DropSource, DragDropFile, Winapi.ActiveX, DropTarget,
+  System.Actions, Vcl.ActnList, Vcl.Menus;
 
 type
   TMailClientForm = class(TForm)
@@ -35,6 +36,17 @@ type
     DataFormatAdapterSource: TDataFormatAdapter;
     DropEmptySource1: TDropEmptySource;
     DropDummy1: TDropDummy;
+    PopupMenu1: TPopupMenu;
+    ActionList1: TActionList;
+    ac_open: TAction;
+    ac_saveas: TAction;
+    FileSaveDialog1: TFileSaveDialog;
+    ffnen1: TMenuItem;
+    N1: TMenuItem;
+    Speichernals1: TMenuItem;
+    GremiumQry: TClientDataSet;
+    PopupMenu2: TPopupMenu;
+    Kategorien1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -46,6 +58,10 @@ type
     procedure LvMouseMove(Sender: TObject; Shift: TShiftState; X, Y: Integer);
     procedure LvMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
+    procedure LvDblClick(Sender: TObject);
+    procedure ac_openExecute(Sender: TObject);
+    procedure ac_saveasExecute(Sender: TObject);
+    procedure Kategorien1Click(Sender: TObject);
   private
     type
       Account = class
@@ -76,10 +92,15 @@ type
     m_inUpdate : boolean;
     m_tempdir  : string;
     m_files    : TStringList;
+    m_katlist  : TStringList;
 
     procedure updateTree;
     procedure fillExtDict;
     procedure AddAttachemnts;
+    procedure FillKats;
+
+    function handle_mails( const Arg: TJSONObject ) : boolean;
+    procedure setKategorie( name : string; var elements: TStringList );
   public
     { Public-Deklarationen }
   end;
@@ -91,9 +112,39 @@ implementation
 
 uses
   m_glob_client, u_json, System.Generics.Defaults, System.DateUtils, u_TMail,
-  u_mail_decoder, m_fileCache, System.IOUtils, DragDropFormats;
+  u_mail_decoder, m_fileCache, System.IOUtils, DragDropFormats, ShellApi,
+  f_kategorie, u_eventHandler, u_Konst, u_stub;
 
 {$R *.dfm}
+
+procedure TMailClientForm.ac_openExecute(Sender: TObject);
+var
+  inx : integer;
+  fname : string;
+begin
+  if not Assigned(LV.Selected) then exit;
+
+  inx := integer(LV.Selected.Data );
+  fname := m_files[inx];
+
+  ShellExecute(Handle, 'open', PWideChar(fname), '', '', SW_SHOWNORMAL);
+end;
+
+procedure TMailClientForm.ac_saveasExecute(Sender: TObject);
+var
+  inx : integer;
+  fname : string;
+begin
+  if not Assigned(LV.Selected) then exit;
+
+  inx := integer(LV.Selected.Data );
+  fname := m_files[inx];
+
+  FileSaveDialog1.FileName := ExtractFileName(fname);
+  if FileSaveDialog1.Execute then begin
+    TFile.Copy(fname, FileSaveDialog1.FileName);
+  end;
+end;
 
 procedure TMailClientForm.AddAttachemnts;
 var
@@ -144,6 +195,17 @@ begin
   m_ext.Add('.docx',  10);
 end;
 
+procedure TMailClientForm.FillKats;
+begin
+  GremiumQry.Open;
+  while not GremiumQry.Eof do begin
+    m_katlist.AddPair(GremiumQry.FieldByName('GR_SHORT').AsString, GremiumQry.FieldByName('GR_COLOR').AsString);
+    GremiumQry.Next;
+  end;
+  GremiumQry.Close;
+  setColors( m_katlist );
+end;
+
 procedure TMailClientForm.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
   Action := caFree;
@@ -181,22 +243,27 @@ var
     end;
   end;
 begin
-  m_inUpdate        := false;
-
-  m_tempdir := TPath.Combine(TPath.GetTempPath, IntToHex(GetTickCount) );
+  m_inUpdate  := false;
+  m_katlist   := TStringList.create;
+  m_tempdir   := TPath.Combine(TPath.GetTempPath, IntToHex(GetTickCount) );
   ForceDirectories(m_tempdir);
 
   m_files    := TStringList.Create;
   m_ext := TDictionary<string, integer>.create;
+
   fillExtDict;
 
   (DataFormatAdapterSource.DataFormat as TVirtualFileStreamDataFormat).OnGetStream := OnGetStream;
+
+  EventHandler.Register( self, handle_mails, BRD_MAIL);
 
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
   m_accounts := TList<Account>.create;
   MailFrame1.prepare;
 
   WebBrowser1.Navigate('about:blank');
+  FillKats;
+  MailFrame1.Kategorien := m_katlist;
 
   Accounts.Open;
   folder.Open;
@@ -222,6 +289,8 @@ procedure TMailClientForm.FormDestroy(Sender: TObject);
 var
   acc : Account;
 begin
+  EventHandler.Unregister(self);
+
   for acc in m_accounts do
     acc.Free;
   m_accounts.Free;
@@ -231,6 +300,71 @@ begin
   m_files.Free;
 
   DropEmptySource1.FlushClipboard;
+end;
+
+function TMailClientForm.handle_mails(const Arg: TJSONObject): boolean;
+var
+  action : string;
+  elements : TStringList;
+begin
+  Result    := false;
+  elements  := TStringList.Create;
+
+  action    := JString( arg, 'typ');
+  getText(arg, 'elements', elements);
+
+  if SameText( action, 'kategorie') then begin
+    setKategorie( JString(Arg, 'value'), elements);
+  end;
+  elements.Free;
+end;
+
+procedure TMailClientForm.Kategorien1Click(Sender: TObject);
+var
+  list : TList<TMail>;
+
+  procedure sendRequest;
+  var
+    client    : TDSMailClient;
+    arg       : TJSONObject;
+    list      : TList<TMail>;
+    elements  : TStringList;
+    mail      : TMail;
+  begin
+    elements :=  TStringList.Create;
+    list := MailFrame1.SelectedMails;
+    for mail in list do
+      elements.Add(IntToStr(mail.ID));
+
+    if elements.Count > 0 then begin
+      client := TDSMailClient.Create(GM.SQLConnection1.DBXConnection);
+      arg := TJSONObject.Create;
+
+      JReplace(arg, 'action', 'kategorie');
+      JReplace(arg, 'kategorie', KategorieForm.Selection);
+      SetText( arg, 'elements', elements);
+      client.setMailStatus(arg);
+      client.Free;
+    end;
+    elements.Free;
+  end;
+begin
+  list := MailFrame1.SelectedMails;
+
+  Application.CreateForm(TKategorieForm, KategorieForm);
+  KategorieForm.Kategorien := m_katlist;
+  if list.Count > 0 then
+  KategorieForm.Selection  := list[0].Kategorie;
+
+  if KategorieForm.ShowModal = mrOk then
+    sendRequest;
+
+  KategorieForm.free;
+end;
+
+procedure TMailClientForm.LvDblClick(Sender: TObject);
+begin
+  ac_open.Execute;
 end;
 
 procedure TMailClientForm.LvMouseDown(Sender: TObject; Button: TMouseButton;
@@ -332,6 +466,25 @@ begin
   end;
 end;
 
+procedure TMailClientForm.setKategorie(name: string;
+  var elements: TStringList);
+var
+  i, id : integer;
+  j     : integer;
+begin
+  for i := 0 to pred(elements.Count) do begin
+    if TryStrToInt(elements[i], id) then begin
+      for j := 0 to pred(MailFrame1.Mails.Count) do begin
+        if MailFrame1.Mails[j].ID = id then begin
+          MailFrame1.Mails[j].Kategorie := name;
+          break;
+        end;
+      end;
+    end;
+  end;
+  MailFrame1.UpdateTreeView;
+end;
+
 procedure TMailClientForm.TVChange(Sender: TObject; Node: TTreeNode);
 var
   Mail : TMail;
@@ -355,6 +508,7 @@ begin
     st := Mails.CreateBlobStream(mails.FieldByName('MAM_DATA'), bmRead);
     mail.loadFromStream(st);
     st.Free;
+    mail.ID          := Mails.FieldByName('MAM_ID').AsInteger;
     mail.Kategorie   := mails.FieldByName('MAM_KATEGORIE').AsString;
     mail.Attachments := mails.FieldByName('MAM_ATTACH').AsInteger > 0 ;
 

@@ -947,11 +947,16 @@ end;
 
 procedure TArchivService.ServiceDestroy(Sender: TObject);
 begin
+  try
   if Assigned(m_timer) then
     m_timer.Terminate;
   m_sessions.Free;
 
   m_mailHandler.free;
+  except
+    on e : exception do
+      GrijjyLog.Send(e.ToString);
+  end;
 end;
 
 procedure TArchivService.ServiceStart(Sender: TService; var Started: Boolean);
@@ -1018,7 +1023,12 @@ begin
   try
     m_mailHandler.stop;
 
+    try
     DSServer1.Stop;
+    except
+
+    end;
+
     DBMod.stopDB;
     HttpMod.ende;
 

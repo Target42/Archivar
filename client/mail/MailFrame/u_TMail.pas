@@ -20,6 +20,7 @@ type
       m_png : TPngImage;
       m_bmp : TBitmap;
       FHeadline : string;
+    FID: integer;
 
       procedure processMailData;
       procedure SetKategorie( value : string );
@@ -28,6 +29,7 @@ type
       constructor create;
       destructor Destroy;  override;
 
+      property ID: integer read FID write FID;
       property Titel: string read FTitel write FTitel;
       property Absender: string read FAbsender write FAbsender;
       property Adresse: string read FAdresse write FAdresse;
@@ -48,6 +50,8 @@ type
 
 function LoadMail( fname : string ) : TMail;
 
+procedure setColors( list : TStrings);
+
 implementation
 
 uses
@@ -65,14 +69,19 @@ begin
     FreeAndNil(Result);
 end;
 
+procedure setColors( list : TStrings);
+begin
+  kats.Assign(list);
+end;
+
 constructor TMail.create;
 begin
+  FID           := 0;
   FMessage      := TIdMessage.Create;
   FAttachments  := false;
   m_png         := TPngImage.Create;
   m_bmp         := TBitmap.Create;
-  m_bmp.Width   := 16;
-  m_bmp.Height  := 16;
+  m_bmp.SetSize(16, 16);
 end;
 
 destructor TMail.Destroy;
@@ -92,9 +101,15 @@ var
   var
     P: PChar;
     InTag: Boolean;
-    i, intResultLength: Integer;
+    i : Integer;
+    s : string;
   begin
-    P := PChar(strHTML);
+    i := Pos('</head>', strHTML );
+    if i > -1 then
+      s := copy( strHTML, i + 7, Length(strHTML) )
+    else s := strHTML;
+
+    P := PChar(s);
     Result := '';
 
     InTag := False;
@@ -106,9 +121,8 @@ var
         else
           if not InTag then
           begin
-            //if (P^ in [#9, #32]) and ((P+1)^ in [#10, #13, #32, #9, '<']) then
-            if CharInSet(P^, [#9, #32]) and CharInSet((P+1)^, [#10, #13, #32, #9, '<']) then
-            else
+            if not (CharInSet(P^, [#9, #32]) and CharInSet((P+1)^, [#10, #13, #32, #9, '<'])) then
+//            else
               Result := Result + P^;
           end;
       end;
@@ -145,16 +159,20 @@ var
 begin
   text := '';
   html := '';
-  for i := 0 to pred(FMessage.MessageParts.Count) do
-  begin
-    if FMessage.MessageParts.Items[i] is TIdText then
+  if FMessage.MessageParts.Count > 0 then begin
+    for i := 0 to pred(FMessage.MessageParts.Count) do
     begin
-      addText(FMessage.MessageParts.Items[i] as TIdText);
+      if FMessage.MessageParts.Items[i] is TIdText then
+      begin
+        addText(FMessage.MessageParts.Items[i] as TIdText);
+      end;
     end;
-  end;
-  FHeadline := trim(StripHTMLTags(html));
-  if FHeadline = '' then begin
-    FHeadline := trim(ReplaceText( text, #$d#$a, '' ));
+    FHeadline := trim(StripHTMLTags(html));
+    if FHeadline = '' then begin
+      FHeadline := trim(ReplaceText( text, #$d#$a, ' ' ));
+    end;
+  end else begin
+    FHeadline := trim(ReplaceText( FMessage.Body.Text, #$d#$a, ' ' ));;
   end;
   if Length(FHeadline) > 120 then
     SetLength(FHeadline, 120);

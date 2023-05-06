@@ -680,6 +680,10 @@
         </DCCReference>
         <DCCReference Include="mail\MailFrame\u_TMail.pas"/>
         <DCCReference Include="..\misc\u_mail_decoder.pas"/>
+        <DCCReference Include="mail\f_kategorie.pas">
+            <Form>KategorieForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
         <None Include="Datafields\ERA-NS.txt"/>
         <RcItem Include="dws\dws.html">
             <ContainerId>ResourceItem</ContainerId>

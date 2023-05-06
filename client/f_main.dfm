@@ -475,6 +475,9 @@
       object Import1: TMenuItem
         Action = ac_to_import
       end
+      object Mails1: TMenuItem
+        Action = ac_mail
+      end
       object Statistik1: TMenuItem
         Action = ac_to_stat
       end
@@ -977,6 +980,12 @@
       ImageIndex = 47
       OnExecute = ac_ad_mailExecute
     end
+    object ac_mail: TAction
+      Category = 'Tools'
+      Caption = 'Mails'
+      ImageIndex = 47
+      OnExecute = ac_mailExecute
+    end
   end
   object ApplicationEvents1: TApplicationEvents
     OnMessage = ApplicationEvents1Message
@@ -992,7 +1001,7 @@
     Left = 360
     Top = 48
     Bitmap = {
-      494C010130003800040110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010130003800080110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000040000000D0000000010020000000000000D0
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

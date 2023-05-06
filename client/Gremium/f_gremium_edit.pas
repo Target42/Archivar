@@ -5,7 +5,8 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Datasnap.DBClient,
-  Datasnap.DSConnect, fr_base, Vcl.StdCtrls, Vcl.DBCtrls, Vcl.Mask;
+  Datasnap.DSConnect, fr_base, Vcl.StdCtrls, Vcl.DBCtrls, Vcl.Mask, Vcl.Buttons,
+  Vcl.ExtCtrls;
 
 type
   TGremiumEditForm = class(TForm)
@@ -24,10 +25,16 @@ type
     Images: TClientDataSet;
     ImageSrc: TDataSource;
     DBImage1: TDBImage;
+    ColorDialog1: TColorDialog;
+    Label4: TLabel;
+    PB: TPaintBox;
+    SpeedButton1: TSpeedButton;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure BaseFrame1AbortBtnClick(Sender: TObject);
     procedure BaseFrame1OKBtnClick(Sender: TObject);
+    procedure SpeedButton1Click(Sender: TObject);
+    procedure PBPaint(Sender: TObject);
   private
     m_id : integer;
     procedure setID( value : integer);
@@ -64,7 +71,7 @@ begin
       client.Free;
     end;
   end;
-
+  GRTab.FieldByName('GR_COLOR').AsInteger := PB.Tag;
   GRTab.Post;
   GRTab.ApplyUpdates(0);
 end;
@@ -86,6 +93,18 @@ begin
   GRTab.Close;
 end;
 
+procedure TGremiumEditForm.PBPaint(Sender: TObject);
+var
+  re : TRect;
+begin
+  if Pb.Tag = 0 then
+    PB.Canvas.Brush.Color := self.Color
+  else
+    PB.Canvas.Brush.Color := TColor(PB.Tag);
+  re := Rect(0, 0, PB.Width, PB.Height);
+  PB.Canvas.FillRect(re);
+end;
+
 procedure TGremiumEditForm.setID(value: integer);
 var
   opts : TLocateOptions;
@@ -102,9 +121,10 @@ begin
 
   if m_id > 0 then
   begin
-    if GRTab.Locate('GR_ID', VarArrayOf([m_id]), opts) then
-      GRTab.Edit
-    else
+    if GRTab.Locate('GR_ID', VarArrayOf([m_id]), opts) then begin
+      GRTab.Edit;
+      PB.Tag := GRTab.FieldByName('GR_COLOR').AsInteger;
+    end else
       GRTab.Append;
   end
   else
@@ -112,6 +132,15 @@ begin
 
   if GRTab.State = dsInsert then
     GRTab.FieldByName('GR_ID').AsInteger := 0;
+end;
+
+procedure TGremiumEditForm.SpeedButton1Click(Sender: TObject);
+begin
+  if ColorDialog1.Execute then begin
+    PB.Tag := ColorDialog1.Color;
+    PB.Invalidate;
+  end;
+
 end;
 
 end.

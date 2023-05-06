@@ -41,7 +41,6 @@ type
     function GetSmtpPwd: string;
     procedure SetSmtpPwd(const Value: string);
     procedure clearMails;
-    function getImapFolder : TStrings;
   public
 
     // common
@@ -92,6 +91,9 @@ type
 
     function sendText( names : TStringList; subject, text : string ) : boolean;
 
+    function checkImap : boolean;
+    function checkSmtp : boolean;
+
   end;
 
 var
@@ -105,6 +107,18 @@ uses
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 
 {$R *.dfm}
+
+function TMailMod.checkImap: boolean;
+begin
+  Result := (IdIMAP41.Host <> '') and (IdIMAP41.Username <> '' ) and
+            (IdIMAP41.Password <> '' ) and ( IdIMAP41.Port <> 0 );
+end;
+
+function TMailMod.checkSmtp: boolean;
+begin
+  Result := ( IdSMTP1.Host <> '' ) and ( IdIMAP41.Username <> '' ) and
+            ( IdSMTP1.Password <> '' ) and ( IdSMTP1.Port <> 0 );
+end;
 
 procedure TMailMod.clearMails;
 var
@@ -234,11 +248,6 @@ procedure TMailMod.disconnect;
 begin
   closeImap;
   closeImap;
-end;
-
-function TMailMod.getImapFolder: TStrings;
-begin
-
 end;
 
 function TMailMod.GetIMapHost: string;
