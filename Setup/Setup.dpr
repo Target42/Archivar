@@ -4,7 +4,6 @@ uses
   Vcl.Forms,
   f_main in 'f_main.pas' {MainSetupForm},
   xsd_StoreLimits in '..\misc\xsd_StoreLimits.pas',
-  xsd_Betriebsrat in '..\misc\xsd_Betriebsrat.pas',
   xsd_DataField in '..\misc\xsd_DataField.pas',
   u_ePub in '..\misc\ePub\u_ePub.pas',
   u_navpoint in '..\misc\ePub\u_navpoint.pas',
@@ -15,7 +14,8 @@ uses
   Vcl.Themes,
   Vcl.Styles,
   m_mail in '..\misc\m_mail.pas' {MailMod: TDataModule},
-  u_texte in 'u_texte.pas';
+  u_texte in 'u_texte.pas',
+  xsd_Betriebsrat in '..\misc\xsd_Betriebsrat.pas';
 
 {$R *.res}
 

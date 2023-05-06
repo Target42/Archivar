@@ -510,15 +510,16 @@ end;
 
 procedure TMainSetupForm.BitBtn6Click(Sender: TObject);
 begin
-  if trim(LabeledEdit18.Text) = '' then begin
-    ShowMessage('Bitte eine gültige eMail-Adresse angeben.');
-    exit;
-  end;
 
   MailMod.SmtpHost  := Trim(LabeledEdit14.Text);
   MailMod.SmtpPort  := StrToIntDef( LabeledEdit15.Text, 0);
   MailMod.SmtpUser  := Trim(LabeledEdit16.Text);
   MailMod.SmtpPWD   := Trim(LabeledEdit17.Text);
+
+  if trim(LabeledEdit18.Text) = '' then begin
+    ShowMessage('Bitte eine gültige eMail-Adresse angeben für einen Sendetest');
+    exit;
+  end;
 
   if MailMod.TestSmtp( LabeledEdit18.Text) then begin
     MailMod.saveSmtp;
@@ -761,6 +762,14 @@ end;
 
 procedure TMainSetupForm.Button3Click(Sender: TObject);
 begin
+  if not MailMod.checkImap then begin
+    ShowMessage( 'IMAP-Konfiguration ist nicht vollständig!');
+  end;
+
+  if not MailMod.checkSmtp then begin
+    ShowMessage( 'SMTP-Konfiguration ist nicht vollständig!');
+  end;
+
   MailMod.save;
 end;
 
@@ -1068,6 +1077,11 @@ begin
     GRTab.FieldByName('GR_SHORT').AsString          := xml.Gremium[i].Kurz;
     GRTab.FieldByName('GR_PARENT_SHORT').AsString   := xml.Gremium[i].Pkurz;
     GRTab.FieldByName('GR_PIC_NAME').AsString       := xml.Gremium[i].Pic;
+    if xml.Gremium[i].HasAttribute('color') then
+      GRTab.FieldByName('GR_COLOR').AsInteger       := xml.Gremium[i].Color
+    else
+      GRTab.FieldByName('GR_COLOR').AsInteger       := 0;
+
     GRTab.Post;
     m_berMap.AddOrSetValue(UpperCase(xml.Gremium[i].Kurz), id);
     ProgressBar1.Position := i;
@@ -1417,9 +1431,12 @@ var
   end;
 begin
   if CheckBox2.Checked then begin
-    obj := MailMod.currentConfig;
-    JReplace(obj, 'kontoname', 'system');
     id := AutoInc('gen_MAC_Id');
+    obj := MailMod.currentConfig;
+
+    JReplace(obj, 'kontoname', 'system');
+    Jreplace(obj, 'kontoid', id );
+    setText( obj, 'folder', 'INBOX');
 
     MailKonto.Open;
     MailKonto.Append;
@@ -1442,6 +1459,13 @@ begin
       IBTransaction1.Commit;
     MailKonto.Close;
     MailFolder.Close;
+  end;
+  if not MailMod.checkImap then begin
+    ShowMessage( 'IMAP-Konfiguration ist nicht vollständig!');
+  end;
+
+  if not MailMod.checkSmtp then begin
+    ShowMessage( 'SMTP-Konfiguration ist nicht vollständig!');
   end;
 
   FreeAndNil(MailMod);
