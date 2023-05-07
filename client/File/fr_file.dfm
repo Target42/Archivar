@@ -1,14 +1,16 @@
 object FileFrame: TFileFrame
   Left = 0
   Top = 0
-  Width = 451
-  Height = 305
+  Width = 908
+  Height = 520
   Align = alClient
   TabOrder = 0
+  ExplicitWidth = 451
+  ExplicitHeight = 305
   object Splitter1: TSplitter
     Left = 249
     Top = 0
-    Height = 305
+    Height = 520
     ExplicitLeft = 224
     ExplicitTop = 32
     ExplicitHeight = 100
@@ -17,13 +19,14 @@ object FileFrame: TFileFrame
     Left = 0
     Top = 0
     Width = 249
-    Height = 305
+    Height = 520
     Align = alLeft
     Caption = 'Ordner'
     TabOrder = 0
+    ExplicitHeight = 305
     object GroupBox4: TGroupBox
       Left = 2
-      Top = 414
+      Top = 461
       Width = 245
       Height = 57
       Align = alBottom
@@ -79,7 +82,7 @@ object FileFrame: TFileFrame
       Left = 2
       Top = 15
       Width = 245
-      Height = 399
+      Height = 446
       Align = alClient
       DragMode = dmAutomatic
       Header.AutoSizeIndex = -1
@@ -108,22 +111,24 @@ object FileFrame: TFileFrame
         item
           Position = 1
           Text = 'Datum'
-          Width = 95
+          Width = 91
         end>
     end
   end
   object GroupBox3: TGroupBox
     Left = 252
     Top = 0
-    Width = 199
-    Height = 305
+    Width = 656
+    Height = 520
     Align = alClient
     Caption = 'Dateien'
     TabOrder = 1
+    ExplicitWidth = 199
+    ExplicitHeight = 305
     object GroupBox1: TGroupBox
       Left = 2
-      Top = 414
-      Width = 409
+      Top = 461
+      Width = 652
       Height = 57
       Align = alBottom
       Caption = 'Dateiaktionen'
@@ -401,8 +406,8 @@ object FileFrame: TFileFrame
     object LV: TListView
       Left = 2
       Top = 15
-      Width = 409
-      Height = 399
+      Width = 652
+      Height = 446
       Align = alClient
       Checkboxes = True
       Columns = <
@@ -535,7 +540,7 @@ object FileFrame: TFileFrame
     Left = 88
     Top = 360
     Bitmap = {
-      494C010102000800740010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102000800780010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       000000000000000000000000000000000000000000FF078DBE00078DBE00078D
       BE00078DBE00078DBE00078DBE00078DBE00078DBE00078DBE00078DBE00078D

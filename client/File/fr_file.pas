@@ -987,7 +987,8 @@ begin
   ListFolder.Close;
 
   buildTree;
-  m_root.Name := 'Root';
+  if Assigned(m_root) then
+    m_root.Name := 'Root';
   updateView;
 
   Screen.Cursor := crDefault;
@@ -1036,7 +1037,7 @@ var
 var
   ptr : PVirtualNode;
 begin
-  if m_inupdate then exit;
+  if m_inupdate or not Assigned(m_root) then exit;
 
   m_inupdate := true;
 

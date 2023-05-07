@@ -21,6 +21,7 @@ type
       m_bmp : TBitmap;
       FHeadline : string;
     FID: integer;
+    FStatus: string;
 
       procedure processMailData;
       procedure SetKategorie( value : string );
@@ -43,6 +44,7 @@ type
 
       property Kategorie: string read FKategorie write SetKategorie;
       property Katbmp : TBitmap read m_bmp;
+      property Status: string read FStatus write FStatus;
 
       function loadFromFile( fname : string ) : boolean;
       function loadFromStream( st : TStream ) : boolean;
@@ -244,16 +246,26 @@ var
     m_bmp.Canvas.Brush.Color := getColor(name);
     m_bmp.Canvas.FillRect(re);
   end;
+var
+  i : integer;
 begin
   FKategorie := trim(value);
+  m_bmp.SetSize(0, 0);
   if FKategorie.IsEmpty then exit;
 
   list := TStringList.Create;
   list.StrictDelimiter := true;
   list.Delimiter := ';';
   list.DelimitedText := FKategorie;
+  m_bmp.SetSize( list.Count * 16, 16);
 
-  case list.Count of
+  for i := 0 to pred(list.Count) do begin
+    paintRect(Rect( i * 16, 0, i * 16 + 16, 16), list[i]);
+  end;
+
+
+
+{  case list.Count of
     1 : begin
       paintRect(Rect( 0, 0, 16, 16 ), list[0]);
     end;
@@ -272,7 +284,7 @@ begin
       paintRect(Rect( 8, 0, 11, 16 ),  list[2]);
       paintRect(Rect( 12, 0, 16, 16 ), list[3]);
     end;
-  end;
+  end;}
   list.Free;
 
 end;

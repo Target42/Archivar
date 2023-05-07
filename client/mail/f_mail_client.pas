@@ -333,6 +333,7 @@ var
   begin
     elements :=  TStringList.Create;
     list := MailFrame1.SelectedMails;
+
     for mail in list do
       elements.Add(IntToStr(mail.ID));
 
@@ -353,11 +354,13 @@ begin
 
   Application.CreateForm(TKategorieForm, KategorieForm);
   KategorieForm.Kategorien := m_katlist;
-  if list.Count > 0 then
-  KategorieForm.Selection  := list[0].Kategorie;
 
-  if KategorieForm.ShowModal = mrOk then
-    sendRequest;
+  if list.Count > 0 then begin
+    KategorieForm.Selection  := list[0].Kategorie;
+
+    if KategorieForm.ShowModal = mrOk then
+      sendRequest;
+  end;
 
   KategorieForm.free;
 end;
@@ -511,6 +514,7 @@ begin
     mail.ID          := Mails.FieldByName('MAM_ID').AsInteger;
     mail.Kategorie   := mails.FieldByName('MAM_KATEGORIE').AsString;
     mail.Attachments := mails.FieldByName('MAM_ATTACH').AsInteger > 0 ;
+    mail.Status      := mails.FieldByName('MAM_STATUS').AsString;
 
     Mails.Next;
   end;

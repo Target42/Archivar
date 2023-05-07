@@ -347,15 +347,18 @@ begin
     ptr := node.GetData;
     myContentRect := ContentRect;
 
-//    Canvas.Brush.Style := bsClear;
     Canvas.Pen.Color := clWindowFrame;
     if VST.GetNodeLevel(node) = 0 then begin
       myContentRect.Inflate(-2, -2);
       PaintSection;
     end else begin
       myContentRect.Inflate(-3, -3);
-  //    Canvas.Brush.Color := clWindow;
       Canvas.Brush.Style := bsClear;
+      if ptr^.mail.Status = '' then
+        Canvas.Font.Style := Canvas.Font.Style + [fsBold]
+      else
+        Canvas.Font.Style := Canvas.Font.Style - [fsBold];
+
 
       SetBKMode(PaintInfo.Canvas.Handle, TRANSPARENT);
       Canvas.RoundRect(ContentRect, 5, 5);

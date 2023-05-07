@@ -124,19 +124,19 @@ type
     procedure ac_spellExecute(Sender: TObject);
     procedure ac_assignmentExecute(Sender: TObject);
   private
-    m_ta_id : integer;
-    m_ty_id : integeR;
-    m_template : TTemplate;
-    m_gremium_name : string;
+    m_ta_id       : integer;
+    m_ty_id       : integer;
+    m_template    : TTemplate;
+    m_gremium_name: string;
 
-    m_form  : ITaskForm;
-    m_tc    : ITaskContainer;
-    m_style : ITaskStyle;
+    m_form        : ITaskForm;
+    m_tc          : ITaskContainer;
+    m_style       : ITaskStyle;
 
-    m_ro    : boolean;
-    m_changed : boolean;
-    m_spell : TSpellChecker;
-    FGremiumID: integer;
+    m_ro          : boolean;
+    m_changed     : boolean;
+    m_spell       : TSpellChecker;
+    FGremiumID    : integer;
 
     procedure setRO( value : boolean );
     function  getRO : boolean;
@@ -612,6 +612,7 @@ begin
 
   LoadData;
 
+  was tun, wenn kein Folder da?
   FileFrame1.RootID := TaskTab.FieldByName('DR_ID').AsInteger;
   for i := 0 to pred(ComboBox1.Items.Count) do
   begin
