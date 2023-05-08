@@ -194,6 +194,9 @@ type
     Mailkonten1: TMenuItem;
     ac_mail: TAction;
     Mails1: TMenuItem;
+    Hilfe1: TMenuItem;
+    ac_hlp_fehler: TAction;
+    Fehlermelden1: TMenuItem;
     procedure ac_prg_closeExecute(Sender: TObject);
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure ac_prg_disconExecute(Sender: TObject);
@@ -247,6 +250,7 @@ type
     procedure test21Click(Sender: TObject);
     procedure ac_ad_mailExecute(Sender: TObject);
     procedure ac_mailExecute(Sender: TObject);
+    procedure ac_hlp_fehlerExecute(Sender: TObject);
   private
     m_noStatChange : boolean;
 
@@ -280,7 +284,7 @@ uses
   system.UITypes, f_protocol_sec, u_onlineUser, f_doMeeting, f_task_type,
   f_flieCacheForm, f_keys, f_textblock_export, f_textblock_import,
   f_storages, f_protokoll_new, f_admin, f_task_delete,
-  f_pluginAdmin, f_task_import, m_taskimporter, f_mail_client;
+  f_pluginAdmin, f_task_import, m_taskimporter, f_mail_client, ShellApi;
 
 {$R *.dfm}
 
@@ -417,6 +421,11 @@ begin
     frm.TEID    := te_id;
     frm.Show;
   end;
+end;
+
+procedure TMainForm.ac_hlp_fehlerExecute(Sender: TObject);
+begin
+  ShellExecute(Handle, 'open', 'https://github.com/Target42/Archivar/issues', '', '', SW_SHOWNORMAL);
 end;
 
 procedure TMainForm.ac_mailExecute(Sender: TObject);

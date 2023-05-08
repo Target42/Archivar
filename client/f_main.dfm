@@ -633,6 +633,13 @@
         OnClick = test21Click
       end
     end
+    object Hilfe1: TMenuItem
+      Caption = 'Hilfe'
+      GroupIndex = 200
+      object Fehlermelden1: TMenuItem
+        Action = ac_hlp_fehler
+      end
+    end
   end
   object ActionList1: TActionList
     Images = ImageList1
@@ -986,6 +993,11 @@
       ImageIndex = 47
       OnExecute = ac_mailExecute
     end
+    object ac_hlp_fehler: TAction
+      Category = 'help'
+      Caption = 'Fehlermelden'
+      OnExecute = ac_hlp_fehlerExecute
+    end
   end
   object ApplicationEvents1: TApplicationEvents
     OnMessage = ApplicationEvents1Message
@@ -1001,7 +1013,7 @@
     Left = 360
     Top = 48
     Bitmap = {
-      494C010130003800080110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C0101300038000C0110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000040000000D0000000010020000000000000D0
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

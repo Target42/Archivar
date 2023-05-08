@@ -1,7 +1,7 @@
 /* ============================================================ */
 /*   Database name:  MODEL_2                                    */
 /*   DBMS name:      InterBase                                  */
-/*   Created on:     30.04.2023  15:58                          */
+/*   Created on:     07.05.2023  16:12                          */
 /* ============================================================ */
 
 create generator gen_be_id;
@@ -405,6 +405,7 @@ create table GR_GREMIUM
     GR_PARENT_SHORT                 VARCHAR(20)                    ,
     GR_CHANGES                      BLOB                           ,
     GR_PIC_NAME                     VARCHAR(100)                   ,
+    GR_COLOR                        INTEGER                        ,
     constraint PK_GR_GREMIUM primary key (GR_ID)
 );
 

@@ -1,4 +1,4 @@
-unit u_TMail;
+ï»¿unit u_TMail;
 
 interface
 
@@ -137,13 +137,13 @@ var
     Result := StringReplace(Result, '&gt;',   '>',  [rfReplaceAll]);
     Result := StringReplace(Result, '&lt;',   '<',  [rfReplaceAll]);
     Result := StringReplace(Result, '&amp;',  '&',  [rfReplaceAll]);
-    Result := StringReplace(Result, '&Auml;', 'Ä',  [rfReplaceAll]);
-    Result := StringReplace(Result, '&auml;', 'ä',  [rfReplaceAll]);
-    Result := StringReplace(Result, '&Ouml;', 'Ö',  [rfReplaceAll]);
-    Result := StringReplace(Result, '&ouml;', 'ö',  [rfReplaceAll]);
-    Result := StringReplace(Result, '&Uuml;', 'Ü',  [rfReplaceAll]);
-    Result := StringReplace(Result, '&uuml;', 'ü',  [rfReplaceAll]);
-    Result := StringReplace(Result, '&szlig;','ß',  [rfReplaceAll]);
+    Result := StringReplace(Result, '&Auml;', 'Ã„',  [rfReplaceAll]);
+    Result := StringReplace(Result, '&auml;', 'Ã¤',  [rfReplaceAll]);
+    Result := StringReplace(Result, '&Ouml;', 'Ã–',  [rfReplaceAll]);
+    Result := StringReplace(Result, '&ouml;', 'Ã¶',  [rfReplaceAll]);
+    Result := StringReplace(Result, '&Uuml;', 'Ãœ',  [rfReplaceAll]);
+    Result := StringReplace(Result, '&uuml;', 'Ã¼',  [rfReplaceAll]);
+    Result := StringReplace(Result, '&szlig;','ÃŸ',  [rfReplaceAll]);
     Result := StringReplace(Result, '&nbsp;', ' ',  [rfReplaceAll]);
   end;
 
@@ -262,31 +262,7 @@ begin
   for i := 0 to pred(list.Count) do begin
     paintRect(Rect( i * 16, 0, i * 16 + 16, 16), list[i]);
   end;
-
-
-
-{  case list.Count of
-    1 : begin
-      paintRect(Rect( 0, 0, 16, 16 ), list[0]);
-    end;
-    2 : begin
-      paintRect(Rect( 0, 0, 7, 16 ),  list[0]);
-      paintRect(Rect( 8, 0, 16, 16 ), list[1]);
-    end;
-    3 : begin
-      paintRect(Rect( 0, 0,  4, 16 ),   list[0]);
-      paintRect(Rect( 5, 0,  10, 16 ),  list[1]);
-      paintRect(Rect( 11, 0, 16, 16 ),  list[2]);
-    end;
-    4 : begin
-      paintRect(Rect( 0, 0, 3, 16 ),   list[0]);
-      paintRect(Rect( 4, 0, 7, 16 ),   list[1]);
-      paintRect(Rect( 8, 0, 11, 16 ),  list[2]);
-      paintRect(Rect( 12, 0, 16, 16 ), list[3]);
-    end;
-  end;}
   list.Free;
-
 end;
 
 initialization

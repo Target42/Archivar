@@ -43,5 +43,4 @@ contains
   u_IWindowHandler in '..\..\misc\u_IWindowHandler.pas',
   i_plugin in '..\..\Plugin\i_plugin.pas';
 
-
 end.

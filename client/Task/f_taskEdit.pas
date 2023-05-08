@@ -266,10 +266,10 @@ var
 begin
   if changed then
   begin
-    case MessageDlg('Die Daten wurden geändert.'+#13+#10+
+    case MessageDlg('Die Daten wurden geÃ¤ndert.'+#13+#10+
                     ''+#13+#10+
-                    'Änderungen speichern (Ja)'+#13+#10+
-                    'Änderungen verwerfen (Nein)'+#13+#10+
+                    'Ã„nderungen speichern (Ja)'+#13+#10+
+                    'Ã„nderungen verwerfen (Nein)'+#13+#10+
                     'Im Dialog bleiben (Abbrechen)'+#13+#10+'',
                      mtConfirmation, [mbYes, mbNo, mbCancel], 0) of
       mrYes : save;
@@ -356,10 +356,10 @@ begin
   CanClose := true;
   if changed and (TaskTab.State =  dsEdit ) then
   begin
-    case MessageDlg('Die Daten wurden geändert.'+#13+#10+
+    case MessageDlg('Die Daten wurden geÃ¤ndert.'+#13+#10+
                     ''+#13+#10+
-                    'Änderungen speichern (Ja)'+#13+#10+
-                    'Änderungen verwerfen (Nein)'+#13+#10+
+                    'Ã„nderungen speichern (Ja)'+#13+#10+
+                    'Ã„nderungen verwerfen (Nein)'+#13+#10+
                     'Im Dialog bleiben (Abbrechen)'+#13+#10+'',
                      mtConfirmation, [mbYes, mbNo, mbCancel], 0) of
       mrYes :
@@ -612,7 +612,7 @@ begin
 
   LoadData;
 
-  was tun, wenn kein Folder da?
+   { TODO : Fehlerbehandlung, wenn keine folder }
   FileFrame1.RootID := TaskTab.FieldByName('DR_ID').AsInteger;
   for i := 0 to pred(ComboBox1.Items.Count) do
   begin
@@ -763,7 +763,7 @@ begin
   FileFrame1.RO := m_ro;
 
   if m_ro then
-    StatusBar1.Panels.Items[0].Text := 'Schreibgeschützt'
+    StatusBar1.Panels.Items[0].Text := 'SchreibgeschÃ¼tzt'
   else
     StatusBar1.Panels.Items[0].Text := 'Bearbeitbar';
   StatusBar1.Invalidate;

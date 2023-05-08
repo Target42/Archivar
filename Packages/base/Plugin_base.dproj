@@ -205,15 +205,15 @@
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="$(BDS)\Redist\Win32\dbrtl250.de" Configuration="Release" Class="DependencyPackageResource">
-                    <Platform Name="Win32">
-                        <RemoteName>dbrtl250.de</RemoteName>
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
                 <DeployFile LocalName="$(BDS)\Redist\Win32\rtl250.de" Configuration="Release" Class="DependencyPackageResource">
                     <Platform Name="Win32">
                         <RemoteName>rtl250.de</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\Win32\dbrtl250.de" Configuration="Release" Class="DependencyPackageResource">
+                    <Platform Name="Win32">
+                        <RemoteName>dbrtl250.de</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
