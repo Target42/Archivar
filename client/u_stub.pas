@@ -1,6 +1,6 @@
 //
 // Erzeugt vom DataSnap-Proxy-Generator.
-// 05.05.2023 20:36:21
+// 08.05.2023 21:09:02
 //
 
 unit u_stub;
@@ -78,6 +78,7 @@ type
     FAssignmentsCommand: TDBXCommand;
     FAssignToGremiumCommand: TDBXCommand;
     FAssignmentRemoveCommand: TDBXCommand;
+    FcheckFileStorageCommand: TDBXCommand;
   public
     constructor Create(ADBXConnection: TDBXConnection); overload;
     constructor Create(ADBXConnection: TDBXConnection; AInstanceOwner: Boolean); overload;
@@ -94,6 +95,7 @@ type
     function Assignments(taid: Integer): TJSONObject;
     function AssignToGremium(data: TJSONObject): TJSONObject;
     function AssignmentRemove(data: TJSONObject): TJSONObject;
+    procedure checkFileStorage(taid: Integer);
   end;
 
   TdsFileClient = class(TDSAdminClient)
@@ -877,6 +879,19 @@ begin
   Result := TJSONObject(FAssignmentRemoveCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
 end;
 
+procedure TdsTaskClient.checkFileStorage(taid: Integer);
+begin
+  if FcheckFileStorageCommand = nil then
+  begin
+    FcheckFileStorageCommand := FDBXConnection.CreateCommand;
+    FcheckFileStorageCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FcheckFileStorageCommand.Text := 'TdsTask.checkFileStorage';
+    FcheckFileStorageCommand.Prepare;
+  end;
+  FcheckFileStorageCommand.Parameters[0].Value.SetInt32(taid);
+  FcheckFileStorageCommand.ExecuteUpdate;
+end;
+
 constructor TdsTaskClient.Create(ADBXConnection: TDBXConnection);
 begin
   inherited Create(ADBXConnection);
@@ -901,6 +916,7 @@ begin
   FAssignmentsCommand.DisposeOf;
   FAssignToGremiumCommand.DisposeOf;
   FAssignmentRemoveCommand.DisposeOf;
+  FcheckFileStorageCommand.DisposeOf;
   inherited;
 end;
 

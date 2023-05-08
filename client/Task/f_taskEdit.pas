@@ -1,4 +1,4 @@
-unit f_taskEdit;
+﻿unit f_taskEdit;
 
 interface
 
@@ -178,7 +178,7 @@ implementation
 uses
   m_WindowHandler, Vcl.Dialogs, m_glob_client, System.UITypes, u_json, u_bookmark, u_berTypes, m_BookMarkHandler, DateUtils,
   u_taskForm2XML, u_konst, m_html, xsd_TaskData, u_templateCache, u_kategorie,
-  f_task_assigment, u_eventHandler;
+  f_task_assigment, u_eventHandler, u_stub;
 
 {$R *.dfm}
 
@@ -571,12 +571,18 @@ end;
 procedure TTaskEditForm.reload;
 var
   i : integer;
+  client : TdsTaskClient;
 begin
   screen.Cursor := crSQLWait;
 
   if Assigned(m_tc) then
     m_tc.release;
   m_tc := NIL;
+
+
+  client := TdsTaskClient.Create(GM.SQLConnection1.DBXConnection);
+  client.checkFileStorage(m_ta_id);
+  client.Free;
 
   AssigenmentsQry.ParamByName('TA_ID').AsInteger := m_ta_id;
   AssigenmentsQry.Open;
@@ -735,6 +741,7 @@ begin
   m_ty_id := ty_id;
 
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
+
   reload;
 end;
 

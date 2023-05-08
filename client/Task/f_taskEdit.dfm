@@ -52,10 +52,6 @@ object TaskEditForm: TTaskEditForm
     object TabSheet1: TTabSheet
       Caption = 'Daten'
       ImageIndex = 10
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GroupBox1: TGroupBox
         Left = 0
         Top = 0
@@ -266,10 +262,6 @@ object TaskEditForm: TTaskEditForm
         object TabSheet3: TTabSheet
           Caption = 'Details'
           ImageIndex = 12
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
           inline FormFrame1: TFormFrame
             Left = 0
             Top = 0
@@ -290,10 +282,6 @@ object TaskEditForm: TTaskEditForm
         object TabSheet4: TTabSheet
           Caption = 'Vorschau'
           ImageIndex = 11
-          ExplicitLeft = 0
-          ExplicitTop = 24
-          ExplicitWidth = 0
-          ExplicitHeight = 219
           object WebBrowser1: TWebBrowser
             Left = 0
             Top = 0
@@ -333,25 +321,36 @@ object TaskEditForm: TTaskEditForm
         end
         inherited GroupBox2: TGroupBox
           Height = 391
-          ExplicitHeight = 392
+          ExplicitHeight = 391
           inherited GroupBox4: TGroupBox
             Top = 332
-            ExplicitTop = 333
+            ExplicitTop = 332
           end
           inherited VST: TVirtualStringTree
             Height = 317
-            ExplicitHeight = 318
+            ExplicitHeight = 317
+            Columns = <
+              item
+                Position = 0
+                Text = 'Verzeichnis'
+                Width = 150
+              end
+              item
+                Position = 1
+                Text = 'Datum'
+                Width = 91
+              end>
           end
         end
         inherited GroupBox3: TGroupBox
           Width = 466
           Height = 391
           ExplicitWidth = 466
-          ExplicitHeight = 392
+          ExplicitHeight = 391
           inherited GroupBox1: TGroupBox
             Top = 332
             Width = 462
-            ExplicitTop = 333
+            ExplicitTop = 332
             ExplicitWidth = 462
           end
           inherited LV: TListView
@@ -363,7 +362,7 @@ object TaskEditForm: TTaskEditForm
         end
         inherited ImageList1: TImageList
           Bitmap = {
-            494C010102000800B80010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+            494C010102000800BC0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
             0000000000003600000028000000400000001000000001002000000000000010
             000000000000000000000000000000000000000000FF078DBE00078DBE00078D
             BE00078DBE00078DBE00078DBE00078DBE00078DBE00078DBE00078DBE00078D
@@ -507,8 +506,6 @@ object TaskEditForm: TTaskEditForm
     object TabSheet5: TTabSheet
       Caption = 'Log-buch'
       ImageIndex = 9
-      ExplicitWidth = 296
-      ExplicitHeight = 153
       inline LogFrame1: TLogFrame
         Left = 0
         Top = 0
@@ -516,8 +513,8 @@ object TaskEditForm: TTaskEditForm
         Height = 391
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 296
-        ExplicitHeight = 153
+        ExplicitWidth = 718
+        ExplicitHeight = 391
         inherited GroupBox3: TGroupBox
           Left = 533
           Height = 391
@@ -528,33 +525,33 @@ object TaskEditForm: TTaskEditForm
             ExplicitHeight = 374
             inherited Panel1: TPanel
               Top = 318
-              ExplicitTop = 319
+              ExplicitTop = 318
             end
             inherited LV: TListView
               Height = 318
-              ExplicitHeight = 319
+              ExplicitHeight = 318
             end
           end
         end
         inherited Panel1: TPanel
           Width = 533
           Height = 391
-          ExplicitWidth = 111
-          ExplicitHeight = 153
+          ExplicitWidth = 533
+          ExplicitHeight = 391
           inherited GroupBox1: TGroupBox
             Width = 533
-            ExplicitWidth = 111
+            ExplicitWidth = 533
             inherited EditFrame1: TEditFrame
               Width = 529
-              ExplicitWidth = 107
+              ExplicitWidth = 529
               inherited RE: TRichEdit
                 Width = 529
                 OnKeyPress = DBEdit1KeyPress
-                ExplicitWidth = 107
+                ExplicitWidth = 529
               end
               inherited Panel1: TPanel
                 Width = 529
-                ExplicitWidth = 107
+                ExplicitWidth = 529
                 inherited JvColorComboBox1: TJvColorComboBox
                   Height = 20
                   ExplicitHeight = 20
@@ -565,8 +562,8 @@ object TaskEditForm: TTaskEditForm
           inherited GroupBox2: TGroupBox
             Width = 533
             Height = 270
-            ExplicitWidth = 111
-            ExplicitHeight = 32
+            ExplicitWidth = 533
+            ExplicitHeight = 270
             inherited WebBrowser1: TWebBrowser
               Width = 523
               Height = 247
@@ -822,7 +819,7 @@ object TaskEditForm: TTaskEditForm
     Left = 216
     Top = 289
     Bitmap = {
-      494C01010D005800580010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01010D0058005C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000004000000001002000000000000040
       000000000000000000000000000000000000B57A4E00B57A4E00B57A4E00B57A
       4E00B57A4E00B57A4E00000000FF000000FF000000FF000000FF000000FF0000

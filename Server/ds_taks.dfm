@@ -467,4 +467,71 @@ object dsTask: TdsTask
     Left = 328
     Top = 104
   end
+  object CheckFolderID: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Transaction = CheckTrans
+    SQL.Strings = (
+      'SELECT DR_ID    '
+      'FROM TA_TASK a '
+      'WHERE'
+      '    a.TA_ID = :id')
+    Left = 32
+    Top = 472
+    ParamData = <
+      item
+        Name = 'ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+  end
+  object CheckTrans: TFDTransaction
+    Connection = DBMod.ArchivarConnection
+    Left = 48
+    Top = 424
+  end
+  object FolderID: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Transaction = CheckTrans
+    Left = 104
+    Top = 480
+  end
+  object NewFolderQry: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Transaction = CheckTrans
+    SQL.Strings = (
+      'INSERT INTO DR_DIR (DR_ID, DR_GROUP)'
+      'VALUES ('
+      '    :id, '
+      '    :id'
+      ');')
+    Left = 168
+    Top = 480
+    ParamData = <
+      item
+        Name = 'ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+  end
+  object UpdateTask: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Transaction = CheckTrans
+    SQL.Strings = (
+      'UPDATE TA_TASK a'
+      'SET '
+      '    a.DR_ID = :dr_id'
+      'WHERE'
+      '    a.TA_ID = :ta_id')
+    Left = 232
+    Top = 488
+    ParamData = <
+      item
+        Name = 'DR_ID'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TA_ID'
+        ParamType = ptInput
+      end>
+  end
 end

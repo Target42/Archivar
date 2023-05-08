@@ -53,6 +53,11 @@ type
     LTTab: TFDTable;
     Assigenments: TFDQuery;
     AssigenmentsQry: TDataSetProvider;
+    CheckFolderID: TFDQuery;
+    CheckTrans: TFDTransaction;
+    FolderID: TFDQuery;
+    NewFolderQry: TFDQuery;
+    UpdateTask: TFDQuery;
     procedure TaskLogTabBeforePost(DataSet: TDataSet);
   private
     function getAssignments( taid : integer ) : TJSONArray;
@@ -74,6 +79,8 @@ type
     function Assignments( taid : integer ) : TJSONObject;
     function AssignToGremium( data : TJSONObject ) : TJSONObject;
     function AssignmentRemove( data : TJSONObject ) : TJSONObject;
+
+    procedure checkFileStorage( taid : integer );
   end;
 
 implementation
@@ -253,6 +260,41 @@ begin
   AutoIncQry.Open;
   Result := AutoIncQry.FieldByName('GEN_ID').AsInteger;
   AutoIncQry.Close;
+end;
+
+procedure TdsTask.checkFileStorage(taid: integer);
+var
+  needFolder : boolean;
+  id : integer;
+begin
+  CheckFolderID.ParamByName('ID').AsInteger := taid;
+  CheckFolderID.Open;
+
+  if CheckFolderID.IsEmpty then begin
+    CheckFolderID.Close;
+    exit;
+  end;
+
+  needFolder := CheckFolderID.FieldByName('DR_ID').AsInteger = 0;
+  CheckFolderID.Close;
+
+  if needFolder then begin
+    FolderID.SQL.Text := 'SELECT GEN_ID( gen_dr_id, 1 ) FROM RDB$DATABASE;';
+    FolderID.Open;
+    id := FolderID.FieldByName('GEN_ID').AsInteger;
+    FolderID.Close;
+
+    NewFolderQry.ParamByName('ID').AsInteger := id;
+    NewFolderQry.ExecSQL;
+
+    UpdateTask.ParamByName('TA_ID').AsInteger := taid;
+    UpdateTask.ParamByName('DR_ID').AsInteger := id;
+    UpdateTask.ExecSQL;
+  end;
+
+  if CheckTrans.Active then
+    CheckTrans.Commit;
+
 end;
 
 function TdsTask.closeTask(ta_id: integer): TJSONObject;

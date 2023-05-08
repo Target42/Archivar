@@ -70,7 +70,7 @@ var
   s               : string;
 
 {$IFDEF DEBUG}
-{$e console.exe}
+//{$e console.exe}
 {$ELSE}
 {$e service.exe}
 {$ENDIF}
