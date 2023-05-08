@@ -197,6 +197,8 @@ type
     Hilfe1: TMenuItem;
     ac_hlp_fehler: TAction;
     Fehlermelden1: TMenuItem;
+    ac_hlp_hilfe: TAction;
+    Hilfe2: TMenuItem;
     procedure ac_prg_closeExecute(Sender: TObject);
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure ac_prg_disconExecute(Sender: TObject);
