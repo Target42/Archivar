@@ -1,4 +1,4 @@
-unit u_pluginManager;
+﻿unit u_pluginManager;
 
 interface
 
@@ -204,7 +204,7 @@ begin
     )
   );
 
-  // mit dem Men� verbinden
+  // mit dem Menü verbinden
   for i := 0 to pred(m_list.Count) do begin
     plg := m_list[i];
 

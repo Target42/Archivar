@@ -1,4 +1,4 @@
-unit u_renderer;
+﻿unit u_renderer;
 
 interface
 
@@ -105,7 +105,7 @@ begin
       FLoader.clearData;
     end;
   end;
-  // Beschl�sse
+  // Beschlüsse
   if renderBe then begin
   for i := 0 to pred( cp.Votes.Count ) do
     renderBeschluss( cp.Votes.Item[i] );

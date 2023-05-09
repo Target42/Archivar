@@ -1,4 +1,4 @@
-unit f_main;
+ï»¿unit f_main;
 
 interface
 
@@ -182,11 +182,11 @@ begin
   end;
 
   if not ForceDirectories(m_root) then begin
-    ShowMessage('Das Verzeichniss'+sLineBreak+m_root+sLineBreak+'ungültig');
+    ShowMessage('Das Verzeichniss'+sLineBreak+m_root+sLineBreak+'ungÃ¼ltig');
     exit;
   end;
   if Trim(LabeledEdit2.Text) = '' then begin
-    ShowMessage('Bitte einene gültigen Host eingeben.');
+    ShowMessage('Bitte einene gÃ¼ltigen Host eingeben.');
     exit;
   end;
   flag := false;

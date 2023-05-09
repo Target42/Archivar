@@ -105,7 +105,7 @@ begin
     TabPlugin.Edit;
     TabPlugin.FieldByName('PL_STATE').AsString := JString(data, 'state');
     TabPlugin.Post;
-    JResult( Result, true, 'Status ge�ndert');
+    JResult( Result, true, 'Status geŇ°ndert');
     FDTransaction1.Commit;
   end else begin
     JResult( Result, false, 'Pluign nicht gefunden');

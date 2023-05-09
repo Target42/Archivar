@@ -1,4 +1,4 @@
-unit fr_Formeditor;
+﻿unit fr_Formeditor;
 
 interface
 
@@ -992,7 +992,7 @@ begin
     tf := m_task.Owner.TestData.getFile(fname);
     if Assigned(tf) then
     begin
-      if (MessageDlg('Die Datei existiert schon.'+#13+#10+'Soll sie �berschrieben werden?', mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
+      if (MessageDlg('Die Datei existiert schon.'+#13+#10+'Soll sie überschrieben werden?', mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
         fillFile(tf);
     end
     else

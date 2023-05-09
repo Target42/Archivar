@@ -1,4 +1,4 @@
-unit m_del_files;
+﻿unit m_del_files;
 
 interface
 
@@ -106,7 +106,7 @@ begin
   DeleteFolder.ValidateAll;
   try
     for drid in m_folder do begin
-      // alles l�schen -> siehe script
+      // alles löschen -> siehe script
       DeleteFolder.Params.ParamByName('drid').AsInteger := drid;
       DeleteFolder.ExecuteAll;
     end;

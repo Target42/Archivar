@@ -150,7 +150,7 @@ procedure TReportFrameEditor.SpeedButton1Click(Sender: TObject);
 begin
   if not m_tf.Readonly then begin
     if changed then begin
-      if (MessageDlg('Sollen die �nderungen gespeichert werden?', mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
+      if (MessageDlg('Sollen die Ă„nderungen gespeichert werden?', mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
         save;
     end;
   end;

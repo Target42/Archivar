@@ -264,7 +264,7 @@ begin
   for i := 0 to pred(m_attribs.Count) do begin
     text := m_attribs.Names[i];
     if SameText(text, 'Template') or SameTExt(text, 'Typ') then begin
-      rem := m_xList.OwnerDocument.CreateNode('Diesen Werte nicht �ndern', ntComment);
+      rem := m_xList.OwnerDocument.CreateNode('Diesen Werte nicht √§ndern', ntComment);
       m_xList.Attributes.ChildNodes.Add(rem);
     end;
 

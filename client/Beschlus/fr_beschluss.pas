@@ -1,4 +1,4 @@
-unit fr_beschluss;
+﻿unit fr_beschluss;
 
 interface
 
@@ -257,7 +257,7 @@ end;
 procedure TBeschlussFrame.setBeschluss(be: IBeschluss);
 begin
   if m_changed or EditFrame1.Modified then begin
-    if (MessageDlg('Der Beschluss wurde ge�ndert.'+#13+#10+
+    if (MessageDlg('Der Beschluss wurde geŇ°ndert.'+#13+#10+
                    'Soll er gespeichert werden?', mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
     Save;
   end;

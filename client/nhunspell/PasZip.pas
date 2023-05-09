@@ -1,4 +1,4 @@
-/// ZIP/LZ77 Deflate/Inflate Compression in pure pascal
+﻿/// ZIP/LZ77 Deflate/Inflate Compression in pure pascal
 // - this unit is a part of the freeware Synopse framekork,
 // licensed in the LGPL v3; version 1.5
 unit PasZip;
@@ -1224,7 +1224,7 @@ begin
                 // copy to end of window
                 dec(C, Extra);
                 MoveWithOverlap(R, Q, Extra);
- {?? R wird 2 Zeilen weiter �berschrieben}             //  inc(R, Extra);
+ {?? R wird 2 Zeilen weiter überschrieben}             //  inc(R, Extra);
                 inc(Q, Extra);
                 // copy rest from start of window
                 R := S.window;

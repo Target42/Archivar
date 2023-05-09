@@ -233,6 +233,7 @@ begin
   mark.TypeID     := integer(dstEinstellung);
   mark.DocType    := dtTask;
   mark.GremiumID  := FGremiumID;
+
  PostMessage( Application.MainFormHandle, msgNewBookMark, 0, 0 );
 end;
 

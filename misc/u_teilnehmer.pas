@@ -1,4 +1,4 @@
-unit u_teilnehmer;
+ï»¿unit u_teilnehmer;
 
 interface
 
@@ -36,7 +36,7 @@ function TeilnehmerStatusToString( st : TTeilnehmerStatus; ShowAll : boolean) : 
 begin
   case st of
     tsUnbekannt:      Result := 'Unbekannt';
-    tsVerfuegbar:     Result := 'Verfügbar';
+    tsVerfuegbar:     Result := 'VerfÃ¼gbar';
     tsAnwesend:       Result := 'Anwesend';
     tsEntschuldigt:   Result := 'Entschuldigt';
     tsUnentschuldigt: Result := 'Unentschuldigt';
@@ -56,7 +56,7 @@ function StringToTTeilnehmerStatus( value : string ) : TTeilnehmerStatus;
 begin
   if SameText(value, 'unbekannt') then
     Result := tsUnbekannt
-  else if sameText(value, 'Verfügbar') then
+  else if sameText(value, 'VerfÃ¼gbar') then
     Result := tsVerfuegbar
   else if sameText(value, 'Anwesend') then
     Result := tsAnwesend

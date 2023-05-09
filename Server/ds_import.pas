@@ -1,4 +1,4 @@
-unit ds_import;
+ï»¿unit ds_import;
 
 interface
 
@@ -94,7 +94,7 @@ begin
 
   end;
   if not checkSessionToken(JString( data, 'token')) then begin
-    JResponse(Result, false, 'Das ist nicht das gültige Import-Token.');
+    JResponse(Result, false, 'Das ist nicht das gÃ¼ltige Import-Token.');
     exit;
   end;
   taid := StrToIntDef( m_session.GetData('import_ta_id'), 0 );
@@ -133,7 +133,7 @@ begin
   Result := TJSONObject.Create;
 
   if not checkSessionToken(JString( data, 'token')) then begin
-    JResponse(Result, false, 'Das ist nicht das gültige Import-Token.');
+    JResponse(Result, false, 'Das ist nicht das gÃ¼ltige Import-Token.');
     exit;
   end;
 
@@ -252,7 +252,7 @@ var
 begin
   Result := TJSONObject.Create;
   if not checkSessionToken(JString( data, 'token')) then begin
-    JResponse(Result, false, 'Das ist nicht das gültige Import-Token.');
+    JResponse(Result, false, 'Das ist nicht das gÃ¼ltige Import-Token.');
     exit;
   end;
 

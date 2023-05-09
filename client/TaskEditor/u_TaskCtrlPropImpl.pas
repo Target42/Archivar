@@ -1,4 +1,4 @@
-unit u_TaskCtrlPropImpl;
+﻿unit u_TaskCtrlPropImpl;
 
 interface
 
@@ -573,7 +573,7 @@ begin
   if m_ctrl is TComboBox then
   begin
     if Assigned(m_owner.DataField) and SameText( m_owner.DataField.Typ, 'enum') then begin
-      ShowMessage('Diese Werte werden �ber das Datenfeld bestimmt, da es vom Typ "enum" ist.');
+      ShowMessage('Diese Werte werden über das Datenfeld bestimmt, da es vom Typ "enum" ist.');
       exit;
     end;
 

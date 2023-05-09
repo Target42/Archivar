@@ -1,4 +1,4 @@
-unit m_WindowHandler;
+﻿unit m_WindowHandler;
 
 interface
 
@@ -216,7 +216,7 @@ var
   frm : TStorageForm;
 begin
   if id = -1 then begin
-    ShowMessage(Format('Ung�ltige Ablage ID : %d', [id]));
+    ShowMessage(Format('Ungültige Ablage ID : %d', [id]));
     exit;
   end;
 

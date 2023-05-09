@@ -1,4 +1,4 @@
-unit i_personen;
+﻿unit i_personen;
 
 interface
 
@@ -16,7 +16,7 @@ type
     function  getCount : integer;
     procedure setItems( inx : integer; const value : IPerson );
     function  getItems( inx : integer ) :  IPerson;
-    //p�ublic
+    //pÅublic
     property  Name       : string  read getName      write setName;
     property  count      : integer read getCount;
 

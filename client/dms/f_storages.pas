@@ -1,4 +1,4 @@
-unit f_storages;
+﻿unit f_storages;
 
 interface
 
@@ -133,7 +133,7 @@ begin
     exit;
 
   if not LV.Selected.GroupID = m_grp_st then begin
-    ShowMessage('Nur allgemeine Ablagen k�nnen umbekannt werden!');
+    ShowMessage('Nur allgemeine Ablagen können umbekannt werden!');
     exit;
   end;
 
