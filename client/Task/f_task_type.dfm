@@ -28,6 +28,10 @@ object TaskTypeForm: TTaskTypeForm
     ExplicitWidth = 417
     inherited StatusBar1: TStatusBar
       Width = 417
+      SimplePanel = True
+      SimpleText = 
+        'In den Bildern wird ein gleichnamiges PNG ben'#246'tigt, f'#252'r die Lese' +
+        'zeichen'
       ExplicitWidth = 417
     end
     inherited Panel1: TPanel
