@@ -58,6 +58,8 @@ type
     FolderID: TFDQuery;
     NewFolderQry: TFDQuery;
     UpdateTask: TFDQuery;
+    TaskType: TFDTable;
+    TYTab: TDataSetProvider;
     procedure TaskLogTabBeforePost(DataSet: TDataSet);
   private
     function getAssignments( taid : integer ) : TJSONArray;

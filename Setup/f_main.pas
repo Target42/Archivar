@@ -1157,7 +1157,6 @@ begin
   initPGBar(Length(fi)-1);
   for i := 0 to Length(fi)-1 do begin
 
-
     PITab.Append;
     PITab.FieldByName('PI_ID').AsInteger := AutoInc('gen_pi_id');
     PITab.FieldByName('PI_NAME').AsString:= ExtractFileName(fi[i]);

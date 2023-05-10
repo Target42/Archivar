@@ -97,6 +97,7 @@ type
     TaskTabTA_BEARBEITER: TStringField;
     TaskTabDR_ID: TIntegerField;
     ImageList1: TImageList;
+    TyTab: TClientDataSet;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -128,6 +129,7 @@ type
     m_ty_id       : integer;
     m_template    : TTemplate;
     m_gremium_name: string;
+    m_group       : string;
 
     m_form        : ITaskForm;
     m_tc          : ITaskContainer;
@@ -228,13 +230,15 @@ begin
   mark := BookMarkHandler.Bookmarks.newBookmark(TaskTab.FieldByName('TA_CLID').AsString);
   mark.ID         := TaskTab.FieldByName('TA_ID').AsInteger;
   mark.Titel      := TaskTab.FieldByName('TA_NAME').AsString;
-  mark.Group      := 'Einstellung';
+  mark.Group      := m_group;
   mark.Internal   := false;
-  mark.TypeID     := integer(dstEinstellung);
+  mark.TypeID     := m_ty_id;
   mark.DocType    := dtTask;
   mark.GremiumID  := FGremiumID;
 
  PostMessage( Application.MainFormHandle, msgNewBookMark, 0, 0 );
+ Application.ProcessMessages;
+
 end;
 
 procedure TTaskEditForm.ac_refreshExecute(Sender: TObject);
@@ -580,6 +584,13 @@ begin
     m_tc.release;
   m_tc := NIL;
 
+  m_group := 'Unbekannt';
+  TyTab.Filter := 'TY_ID = '+IntToStr(m_ty_id);
+  TyTab.Filtered := true;
+  TyTab.Open;
+  if not TyTab.IsEmpty then
+    m_group := TyTab.FieldByName('TY_NAME').AsString;
+  TyTab.Close;
 
   client := TdsTaskClient.Create(GM.SQLConnection1.DBXConnection);
   client.checkFileStorage(m_ta_id);

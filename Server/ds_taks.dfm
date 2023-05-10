@@ -534,4 +534,17 @@ object dsTask: TdsTask
         ParamType = ptInput
       end>
   end
+  object TaskType: TFDTable
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
+    UpdateOptions.UpdateTableName = 'TY_TASKTYPE'
+    TableName = 'TY_TASKTYPE'
+    Left = 232
+    Top = 288
+  end
+  object TYTab: TDataSetProvider
+    DataSet = TaskType
+    Left = 240
+    Top = 352
+  end
 end

@@ -117,9 +117,9 @@ begin
 
   if not Assigned(Result) then
   begin
-   Result := TBookmark.create;
-   Result.CLID := clid;
-   m_list.Add(Result);
+    Result := TBookmark.create;
+    Result.CLID := clid;
+    m_list.Add(Result);
   end;
 end;
 
@@ -129,13 +129,14 @@ var
   i    : integer;
 begin
   mark := NIL;
-  for i := 0 to pred(m_list.Count) do
+  for i := pred(m_list.Count) downto 0 do
   begin
     if m_list[i].CLID = clid then
     begin
       mark := m_list[i];
       m_list.Delete(i);
       mark.Free;
+      break;
     end;
   end;
   PostMessage( Application.MainFormHandle, msgRemoveBookmark, 0, LPARAM(mark));
