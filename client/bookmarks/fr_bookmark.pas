@@ -142,6 +142,13 @@ begin
 
   LV.Items.BeginUpdate;
   LV.Items.Clear;
+  // Create groups
+  for i := 0 to pred(m_BookMarkHandler.BookMarkHandler.Bookmarks.Count) do
+  begin
+    mark := m_BookMarkHandler.BookMarkHandler.Bookmarks.items[i];
+    grpID(mark.Group);
+  end;
+  // add entries
   for i := 0 to pred(m_BookMarkHandler.BookMarkHandler.Bookmarks.Count) do
   begin
     mark := m_BookMarkHandler.BookMarkHandler.Bookmarks.items[i];
