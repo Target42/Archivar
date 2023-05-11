@@ -43,37 +43,6 @@
       end
     end
   end
-  object DBGrid1: TDBGrid
-    Left = 0
-    Top = 0
-    Width = 571
-    Height = 296
-    Align = alClient
-    DataSource = PicSrc
-    Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
-    ReadOnly = True
-    TabOrder = 1
-    TitleFont.Charset = DEFAULT_CHARSET
-    TitleFont.Color = clWindowText
-    TitleFont.Height = -11
-    TitleFont.Name = 'Tahoma'
-    TitleFont.Style = []
-    OnDblClick = DBGrid1DblClick
-    Columns = <
-      item
-        Expanded = False
-        FieldName = 'PI_NAME'
-        Title.Caption = 'Name'
-        Width = 150
-        Visible = True
-      end
-      item
-        Expanded = False
-        FieldName = 'PI_MD5'
-        Title.Caption = 'MD5'
-        Visible = True
-      end>
-  end
   object Panel2: TPanel
     Left = 0
     Top = 296
@@ -83,7 +52,7 @@
     BevelOuter = bvNone
     Caption = 'Panel2'
     ShowCaption = False
-    TabOrder = 2
+    TabOrder = 1
     DesignSize = (
       571
       56)
@@ -176,17 +145,23 @@
       TabOrder = 1
       OnClick = BitBtn1Click
     end
-    object DBImage1: TDBImage
-      Left = 248
-      Top = 6
-      Width = 32
-      Height = 32
-      DataField = 'PI_DATA'
-      DataSource = PicSrc
-      Proportional = True
-      ReadOnly = True
-      TabOrder = 2
-    end
+  end
+  object LV: TListView
+    Left = 0
+    Top = 0
+    Width = 571
+    Height = 296
+    Align = alClient
+    Columns = <>
+    LargeImages = ImageList1
+    SmallImages = ImageList1
+    SortType = stText
+    TabOrder = 2
+    OnDblClick = LVDblClick
+    ExplicitLeft = 227
+    ExplicitTop = 196
+    ExplicitWidth = 250
+    ExplicitHeight = 150
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsImage'
@@ -212,5 +187,9 @@
     Title = 'Bild laden'
     Left = 48
     Top = 232
+  end
+  object ImageList1: TImageList
+    Left = 176
+    Top = 184
   end
 end
