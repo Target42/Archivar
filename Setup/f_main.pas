@@ -152,6 +152,7 @@ type
     CheckBox2: TCheckBox;
     MailKonto: TFDTable;
     MailFolder: TFDTable;
+    SpeedButton1: TSpeedButton;
     procedure SearchGDSEnterPage(Sender: TObject;
       const FromPage: TJvWizardCustomPage);
     procedure ServerInfoEnterPage(Sender: TObject;
@@ -201,6 +202,7 @@ type
     procedure BitBtn9Click(Sender: TObject);
     procedure BitBtn10Click(Sender: TObject);
     procedure BitBtn7Click(Sender: TObject);
+    procedure SpeedButton1Click(Sender: TObject);
   private
     m_home  : string;
     m_ini   : TiniFile;
@@ -807,11 +809,11 @@ end;
 
 procedure TMainSetupForm.FormCreate(Sender: TObject);
 begin
-  m_home := TPath.Combine(ExtractFileDir(Application.ExeName), 'InitialData');
-  m_ini   := TiniFile.Create(TPath.Combine(ExtractFileDir(Application.ExeName), 'ArchivServer.exe.ini'));
+  m_home    := TPath.Combine(ExtractFileDir(Application.ExeName), 'InitialData');
+  m_ini     := TiniFile.Create(TPath.Combine(ExtractFileDir(Application.ExeName), 'ArchivServer.exe.ini'));
+  m_berMap  := TDictionary<string, integer>.create;
 
-  m_berMap := TDictionary<string, integer>.create;
-//  JvWizard1.ActivePage := ServerStart;
+//  JvWizard1.ActivePage := Sicherheit;
 end;
 
 procedure TMainSetupForm.FormDestroy(Sender: TObject);
@@ -1669,6 +1671,17 @@ begin
   if IBTransaction1.Active then
     IBTransaction1.Commit;
 
+end;
+
+procedure TMainSetupForm.SpeedButton1Click(Sender: TObject);
+var
+  s : string;
+begin
+  s := CreateClassID;
+  s := StringReplace(s, '{', '', [rfReplaceAll, rfIgnoreCase]);
+  s := StringReplace(s, '}', '', [rfReplaceAll, rfIgnoreCase]);
+  s := StringReplace(s, '-', '', [rfReplaceAll, rfIgnoreCase]);
+  LabeledEdit2.Text := s;
 end;
 
 procedure TMainSetupForm.updateLV;
