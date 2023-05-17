@@ -73,7 +73,6 @@ object AdminForm: TAdminForm
     Align = alBottom
     Caption = 'Aktionen'
     TabOrder = 2
-    ExplicitTop = 165
     object BitBtn1: TBitBtn
       Left = 24
       Top = 24

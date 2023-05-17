@@ -129,6 +129,8 @@ object MailClientForm: TMailClientForm
           Height = 361
           PopupMenu = PopupMenu2
           OnChange = MailFrame1VSTChange
+          ExplicitLeft = 1
+          ExplicitTop = -4
           ExplicitWidth = 413
           ExplicitHeight = 361
         end
@@ -223,7 +225,7 @@ object MailClientForm: TMailClientForm
     Params = <>
     ProviderName = 'Mails'
     RemoteServer = DSProviderConnection1
-    Left = 136
+    Left = 160
     Top = 80
   end
   object IdMessage1: TIdMessage
@@ -237,8 +239,8 @@ object MailClientForm: TMailClientForm
     Recipients = <>
     ReplyTo = <>
     ConvertPreamble = True
-    Left = 264
-    Top = 80
+    Left = 224
+    Top = 88
   end
   object ImageList1: TImageList
     Height = 32
@@ -246,7 +248,7 @@ object MailClientForm: TMailClientForm
     Left = 668
     Top = 112
     Bitmap = {
-      494C01010C001800380020002000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01010C001800440020002000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000800000008000000001002000000000000000
       0100000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

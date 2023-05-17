@@ -964,7 +964,7 @@
     end
     object ac_ad_action: TAction
       Category = 'Admin'
-      Caption = 'Aktionen'
+      Caption = 'Adminnachrichten senden'
       ImageIndex = 25
       OnExecute = ac_ad_actionExecute
     end
@@ -976,7 +976,7 @@
     end
     object ac_ad_plugin: TAction
       Category = 'Admin'
-      Caption = 'Plugins'
+      Caption = 'Pluginverwaltung'
       ImageIndex = 24
       OnExecute = ac_ad_pluginExecute
     end
@@ -1024,7 +1024,7 @@
     Left = 360
     Top = 48
     Bitmap = {
-      494C010133003800180110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010133003800200110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000040000000D0000000010020000000000000D0
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
