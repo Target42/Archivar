@@ -979,6 +979,9 @@ begin
     ptr^.next := NIL;
     ptr^.child:= NIL;
 
+    if (ptr^.pid = ptr^.id) and( ptr^.id <> m_grid) then
+      ptr^.pid := m_grid;
+
     if ptr^.pid =0 then
       m_root := ptr;
 

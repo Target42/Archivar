@@ -28,7 +28,7 @@ implementation
 
 procedure TFolder.add(fld: TFolder);
 begin
-  if not Assigned(fld) then exit;
+  if not Assigned(fld) or ( fld = self ) then exit;
 
   if not m_childs.Contains(fld) then
     m_childs.Add(fld);
