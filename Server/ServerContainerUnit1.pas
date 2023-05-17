@@ -629,7 +629,7 @@ begin
     if IBTransaction1.Active then
       IBTransaction1.Rollback;
     try
-      IBTransaction1.StartTransaction;
+//      IBTransaction1.StartTransaction;
 
       Session := TDSSessionManager.GetThreadSession;
 
@@ -697,7 +697,8 @@ begin
       end;
 
       QueryUser.Close;
-      IBTransaction1.Commit;
+      if IBTransaction1.Active then
+        IBTransaction1.Commit;
     except
       on e : exception do begin
         GrijjyLog.Send( e.ToString, Error);

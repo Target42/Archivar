@@ -181,7 +181,6 @@ object ArchivService: TArchivService
     Top = 328
   end
   object QueryUser: TFDQuery
-    ObjectView = False
     Connection = DBMod.ArchivarConnection
     Transaction = IBTransaction1
     SQL.Strings = (
