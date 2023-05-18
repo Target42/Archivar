@@ -242,13 +242,13 @@
     Top = 472
     Width = 1126
     Height = 187
-    ActivePage = TabSheet4
+    ActivePage = TabSheet5
     Align = alBottom
     Images = ImageList1
     TabOrder = 2
     Visible = False
     object TabSheet4: TTabSheet
-      Caption = 'Aufgaben'
+      Caption = 'Offene Aufgaben'
       ImageIndex = 33
       object GroupBox2: TGroupBox
         Left = 0
@@ -283,7 +283,7 @@
       end
     end
     object TabSheet5: TTabSheet
-      Caption = 'Termine'
+      Caption = 'Sitzungstermine'
       ImageIndex = 46
       inline MeetingFrame1: TMeetingFrame
         Left = 0
@@ -314,6 +314,26 @@
               FooterAlign = taLeftJustify
               TitleImage = -1
             end>
+          ExplicitWidth = 1118
+          ExplicitHeight = 158
+        end
+      end
+    end
+    object TabSheet8: TTabSheet
+      Caption = 'L'#246'schwarnung'
+      ImageIndex = 7
+      inline FilesToDeleteFrame1: TFilesToDeleteFrame
+        Left = 0
+        Top = 0
+        Width = 1118
+        Height = 158
+        Align = alClient
+        TabOrder = 0
+        ExplicitWidth = 1118
+        ExplicitHeight = 158
+        inherited LV: TListView
+          Width = 1118
+          Height = 158
           ExplicitWidth = 1118
           ExplicitHeight = 158
         end
@@ -1024,7 +1044,7 @@
     Left = 360
     Top = 48
     Bitmap = {
-      494C010133003800200110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010133003800280110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000040000000D0000000010020000000000000D0
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

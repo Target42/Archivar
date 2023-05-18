@@ -1,7 +1,7 @@
 object dsMisc: TdsMisc
   OldCreateOrder = False
   OnCreate = DSServerModuleCreate
-  Height = 262
+  Height = 357
   Width = 689
   object OpenTaskQry: TDataSetProvider
     DataSet = openTasks
@@ -202,5 +202,34 @@ object dsMisc: TdsMisc
     TableName = 'DR_DIR'
     Left = 616
     Top = 136
+  end
+  object FilesToDelete: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
+    SQL.Strings = (
+      'SELECT * '
+      'FROM FI_FILE r'
+      'where PE_ID = :pe_id'
+      'and datediff( day from current_date to FI_TODELETE) < :tage'
+      'order by FI_TODELETE')
+    Left = 224
+    Top = 232
+    ParamData = <
+      item
+        Name = 'PE_ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end
+      item
+        Name = 'TAGE'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = 34
+      end>
+  end
+  object FilesToDeleteQry: TDataSetProvider
+    DataSet = FilesToDelete
+    Left = 216
+    Top = 288
   end
 end

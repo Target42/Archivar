@@ -136,7 +136,7 @@ begin
       item.Caption := JString( row, 'name');
       item.SubItems.Add(IntToStr(JInt(row, 'version')));
       item.SubItems.Add(GM.calcSize(JInt64( row, 'size')));
-      item.SubItems.Add(FormatDateTime('dd.mm.yyyy hh:nn:ss', JDouble(row, 'created')));
+      item.SubItems.Add(FormatDateTime('dd.mm.yyyy', JDouble(row, 'created')));
       item.SubItems.Add(FormatDateTime('dd.mm.yyyy', JDouble(row, 'todelete')));
       item.SubItems.Add(JString( row, 'user'));
     end;

@@ -10,7 +10,7 @@ uses
   JvCombobox, JvColorCombo, fr_storages, MidasLib, JvExStdCtrls,
   DragDrop, DragDropFile, JvComponentBase, JvBaseDlg, JvBrowseFolder,
   System.ImageList, Vcl.ImgList, Vcl.ToolWin, Vcl.Buttons, JvSpeedbar,
-  JvExExtCtrls, JvExtComponent, f_mail;
+  JvExExtCtrls, JvExtComponent, f_mail, fr_files_to_delete;
 
 type
   TStatusInx = (stStatus = 0, stHost, stLogin, stUser, stMsg );
@@ -199,6 +199,8 @@ type
     Fehlermelden1: TMenuItem;
     ac_hlp_hilfe: TAction;
     Hilfe2: TMenuItem;
+    TabSheet8: TTabSheet;
+    FilesToDeleteFrame1: TFilesToDeleteFrame;
     procedure ac_prg_closeExecute(Sender: TObject);
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure ac_prg_disconExecute(Sender: TObject);
@@ -820,6 +822,7 @@ begin
         BookmarkFrame1.updatebookMarks;
         StoragesFrame1.updateStorages;
         ePupFrame1.init;
+        FilesToDeleteFrame1.prepare;
       end;
     msgDisconnected:
       begin
@@ -831,6 +834,7 @@ begin
         setPanel(integer(stUser), '  ');
 
         ePupFrame1.release;
+        FilesToDeleteFrame1.release;
       end;
     msgStatus:
       begin

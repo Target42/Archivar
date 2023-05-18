@@ -37,6 +37,8 @@ type
     GRTab: TFDTable;
     PETab: TFDTable;
     DRTab: TFDTable;
+    FilesToDelete: TFDQuery;
+    FilesToDeleteQry: TDataSetProvider;
     procedure DSServerModuleCreate(Sender: TObject);
   private
   private
