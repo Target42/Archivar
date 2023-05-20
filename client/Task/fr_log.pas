@@ -82,7 +82,7 @@ end;
 procedure TLogFrame.Memo1DragOver(Sender, Source: TObject; X, Y: Integer;
   State: TDragState; var Accept: Boolean);
 begin
-  Accept := Sender = TextBlockFrame1.LV;
+  Accept := Source = TextBlockFrame1.LV;
 end;
 
 procedure TLogFrame.PageProducer1HTMLTag(Sender: TObject; Tag: TTag;
