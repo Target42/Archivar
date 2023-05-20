@@ -141,17 +141,15 @@ object MeetingForm: TMeetingForm
     Top = 81
     Width = 677
     Height = 431
-    ActivePage = TabSheet3
+    ActivePage = TabSheet1
     Align = alClient
     Images = ImageList1
     TabOrder = 2
-    ExplicitLeft = 8
-    ExplicitTop = 87
     object TabSheet1: TTabSheet
       Caption = 'Inhalt'
       object Splitter1: TSplitter
         Left = 0
-        Top = 279
+        Top = 278
         Width = 669
         Height = 3
         Cursor = crVSplit
@@ -163,7 +161,7 @@ object MeetingForm: TMeetingForm
         Left = 0
         Top = 0
         Width = 669
-        Height = 279
+        Height = 278
         Align = alClient
         Caption = 'Tagesordnung'
         TabOrder = 0
@@ -171,18 +169,19 @@ object MeetingForm: TMeetingForm
           Left = 2
           Top = 15
           Width = 665
-          Height = 262
+          Height = 261
           Align = alClient
           TabOrder = 0
           ExplicitLeft = 2
           ExplicitTop = 15
           ExplicitWidth = 665
-          ExplicitHeight = 262
+          ExplicitHeight = 261
           inherited VST: TVirtualStringTree
             Width = 665
-            Height = 262
+            Height = 261
+            ExplicitTop = -1
             ExplicitWidth = 665
-            ExplicitHeight = 262
+            ExplicitHeight = 261
             Columns = <
               item
                 Position = 0
@@ -199,7 +198,7 @@ object MeetingForm: TMeetingForm
       end
       object GroupBox3: TGroupBox
         Left = 0
-        Top = 282
+        Top = 281
         Width = 669
         Height = 121
         Align = alBottom
@@ -240,7 +239,7 @@ object MeetingForm: TMeetingForm
         Left = 0
         Top = 0
         Width = 669
-        Height = 362
+        Height = 361
         Align = alClient
         Columns = <
           item
@@ -309,7 +308,7 @@ object MeetingForm: TMeetingForm
       end
       object Panel1: TPanel
         Left = 0
-        Top = 362
+        Top = 361
         Width = 669
         Height = 41
         Align = alBottom
@@ -386,7 +385,7 @@ object MeetingForm: TMeetingForm
         Left = 0
         Top = 0
         Width = 669
-        Height = 362
+        Height = 361
         Align = alClient
         DataSource = TGSrc
         Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
@@ -440,7 +439,7 @@ object MeetingForm: TMeetingForm
       end
       object Panel2: TPanel
         Left = 0
-        Top = 362
+        Top = 361
         Width = 669
         Height = 41
         Align = alBottom
@@ -591,6 +590,8 @@ object MeetingForm: TMeetingForm
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsMeeing'
+    Connected = True
+    SQLConnection = GM.SQLConnection1
     Left = 48
     Top = 176
   end
@@ -614,10 +615,10 @@ object MeetingForm: TMeetingForm
     Params = <
       item
         DataType = ftInteger
-        Name = 'id'
+        Name = 'PR_ID'
         ParamType = ptInput
       end>
-    ProviderName = 'ListProtocolQry'
+    ProviderName = 'ProtokollQry'
     RemoteServer = DSProviderConnection1
     Left = 80
     Top = 232
@@ -662,19 +663,19 @@ object MeetingForm: TMeetingForm
       FieldName = 'TN_ID'
       Required = True
     end
-    object TNQryTN_NAME: TWideStringField
+    object TNQryTN_NAME: TStringField
       FieldName = 'TN_NAME'
       Size = 100
     end
-    object TNQryTN_VORNAME: TWideStringField
+    object TNQryTN_VORNAME: TStringField
       FieldName = 'TN_VORNAME'
       Size = 100
     end
-    object TNQryTN_DEPARTMENT: TWideStringField
+    object TNQryTN_DEPARTMENT: TStringField
       FieldName = 'TN_DEPARTMENT'
       Size = 25
     end
-    object TNQryTN_ROLLE: TWideStringField
+    object TNQryTN_ROLLE: TStringField
       FieldName = 'TN_ROLLE'
       Size = 50
     end
@@ -684,11 +685,11 @@ object MeetingForm: TMeetingForm
     object TNQryPE_ID: TIntegerField
       FieldName = 'PE_ID'
     end
-    object TNQryTN_GRUND: TWideStringField
+    object TNQryTN_GRUND: TStringField
       FieldName = 'TN_GRUND'
       Size = 100
     end
-    object TNQryTN_READ: TDateTimeField
+    object TNQryTN_READ: TSQLTimeStampField
       FieldName = 'TN_READ'
     end
   end
@@ -728,7 +729,7 @@ object MeetingForm: TMeetingForm
     Left = 448
     Top = 64
     Bitmap = {
-      494C010103000800100010001000FFFFFFFFFF00FFFFFFFFFFFFFFFF424D3600
+      494C010103000800200010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000447A9600447A
@@ -864,6 +865,7 @@ object MeetingForm: TMeetingForm
       E000C3C300010000EFC0818100010000EFC7C3C300010000EFFFE00700010000
       EFC0C00300010000EFC0E66700010000E000800180010000EFC0C00381010000
       EFC7E667C3C1000003FFC3C3FFFF000003FFC3C3C3E1000003FFE7E7C3E10000
-      03FFFFFFC3E100001FFFFFFFC3E10000}
+      03FFFFFFC3E100001FFFFFFFC3E1000000000000000000000000000000000000
+      000000000000}
   end
 end

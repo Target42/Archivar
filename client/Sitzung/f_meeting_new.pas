@@ -57,20 +57,20 @@ type
     LabeledEdit4: TLabeledEdit;
     LabeledEdit5: TLabeledEdit;
     BitBtn2: TBitBtn;
-    TNQryPR_ID: TIntegerField;
-    TNQryTN_ID: TIntegerField;
-    TNQryTN_NAME: TWideStringField;
-    TNQryTN_VORNAME: TWideStringField;
-    TNQryTN_DEPARTMENT: TWideStringField;
-    TNQryTN_ROLLE: TWideStringField;
-    TNQryTN_STATUS: TIntegerField;
-    TNQryPE_ID: TIntegerField;
-    TNQryTN_GRUND: TWideStringField;
-    TNQryTN_READ: TDateTimeField;
     Panel2: TPanel;
     DBNavigator1: TDBNavigator;
     OptTnQry: TClientDataSet;
     ImageList1: TImageList;
+    TNQryPR_ID: TIntegerField;
+    TNQryTN_ID: TIntegerField;
+    TNQryTN_NAME: TStringField;
+    TNQryTN_VORNAME: TStringField;
+    TNQryTN_DEPARTMENT: TStringField;
+    TNQryTN_ROLLE: TStringField;
+    TNQryTN_STATUS: TIntegerField;
+    TNQryPE_ID: TIntegerField;
+    TNQryTN_GRUND: TStringField;
+    TNQryTN_READ: TSQLTimeStampField;
     procedure FormCreate(Sender: TObject);
     procedure ElTabBeforePost(DataSet: TDataSet);
     procedure ComboBox1Change(Sender: TObject);
@@ -510,7 +510,7 @@ begin
   LabeledEdit1.Text := m_gr.Name;
 
   ProtoQry.Close;
-  ProtoQry.ParamByName('ID').AsInteger := m_pr_id;
+  ProtoQry.ParamByName('PR_ID').AsInteger := m_pr_id;
   ProtoQry.Open;
   if ProtoQry.IsEmpty then
     ShowMessage('Das Protokoll wurde nicht gefunden!');
@@ -601,11 +601,11 @@ begin
       else
         setGrp(3);
     end;
-    item.Caption := TNQryTN_NAME.Value;
-    item.SubItems.Add(TNQryTN_VORNAME.Value);
-    item.SubItems.Add(TNQryTN_ROLLE.Value );
-    item.SubItems.Add(TNQryTN_DEPARTMENT.Value);
-    item.SubItems.Add(TNQryTN_GRUND.Value );
+    item.Caption := TNQryTN_NAME.AsString;
+    item.SubItems.Add(TNQryTN_VORNAME.AsString);
+    item.SubItems.Add(TNQryTN_ROLLE.AsString );
+    item.SubItems.Add(TNQryTN_DEPARTMENT.AsString);
+    item.SubItems.Add(TNQryTN_GRUND.AsString );
     item.SubItems.Add(TNQryTN_READ.AsString );
     TNQry.Next;
   end;
