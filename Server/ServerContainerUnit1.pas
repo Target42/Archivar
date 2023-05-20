@@ -963,6 +963,7 @@ end;
 procedure TArchivService.ServiceStart(Sender: TService; var Started: Boolean);
 begin
   GrijjyLog.EnterMethod(self, 'ServiceStart');
+
   createTimer;
 
   m_timer.newTimer(3, 1, true, execTimeToDie);
