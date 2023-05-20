@@ -44,7 +44,6 @@ type
     BitBtn1: TBitBtn;
     BitBtn2: TBitBtn;
     BitBtn3: TBitBtn;
-    SpeedButton1: TSpeedButton;
     N1: TMenuItem;
     DropEmptyTarget1: TDropEmptyTarget;
     DataFormatAdapterTarget: TDataFormatAdapter;
@@ -53,6 +52,7 @@ type
     DataFormatAdapterSource: TDataFormatAdapter;
     ac_copy: TAction;
     ac_paste: TAction;
+    SpeedButton1: TBitBtn;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
@@ -831,7 +831,7 @@ begin
   EventHandler.Register( self, handle_folder_upd,   BRD_FOLDER_UPDATE );
   EventHandler.Register( self, handle_file_lock,    BRD_FILE_LOCK);
 
-  SpeedButton1.Caption := '';
+//  SpeedButton1.Caption := '';
 end;
 
 procedure TFileFrame.release;
@@ -1137,22 +1137,29 @@ var
   procedure handleTree;
   var
     node : PVirtualNode;
+    destID : integer;
+    srcID  : integer;
   begin
     obj  := TJSONObject.Create;
     JReplace( obj, 'type', 'folder');
 
     node := getNode;
     if Assigned(node) then begin
-      JReplace( obj, 'dest', PTFolderRec(node.GetData).id);
+      destID := PTFolderRec(node.GetData).id;
+      JReplace( obj, 'dest', destID);
       JReplace( obj, 'destgrp', m_grid );
 
       node := (Source as TVirtualStringTree).FocusedNode;
       frm  := getFrame( source as TControl);
       if Assigned(node) and Assigned(frm) then begin
-        JReplace( obj, 'src', PTFolderRec(node.GetData).id);
+        srcID := PTFolderRec(node.GetData).id;
+        JReplace( obj, 'src', srcID);
         JReplace( obj, 'srcgrp', frm.RootID );
 
-        move(obj);
+        if srcID <> destID then
+          move(obj)
+        else
+          obj.Free;
       end;
     end;
   end;

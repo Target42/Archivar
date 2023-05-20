@@ -1,8 +1,8 @@
 object FileFrame: TFileFrame
   Left = 0
   Top = 0
-  Width = 1001
-  Height = 492
+  Width = 878
+  Height = 449
   Align = alClient
   TabOrder = 0
   ExplicitWidth = 451
@@ -10,7 +10,7 @@ object FileFrame: TFileFrame
   object Splitter1: TSplitter
     Left = 249
     Top = 0
-    Height = 492
+    Height = 449
     ExplicitLeft = 224
     ExplicitTop = 32
     ExplicitHeight = 100
@@ -19,26 +19,27 @@ object FileFrame: TFileFrame
     Left = 0
     Top = 0
     Width = 249
-    Height = 492
+    Height = 449
     Align = alLeft
     Caption = 'Ordner'
     TabOrder = 0
     ExplicitHeight = 305
     object GroupBox4: TGroupBox
       Left = 2
-      Top = 433
+      Top = 390
       Width = 245
       Height = 57
       Align = alBottom
       Caption = 'Ordneraktionen'
       TabOrder = 0
       ExplicitTop = 246
-      object SpeedButton1: TSpeedButton
+      object SpeedButton1: TBitBtn
         Left = 11
         Top = 24
-        Width = 23
-        Height = 22
+        Width = 75
+        Height = 25
         Action = ac_delete
+        Caption = 'L'#246'schen'
         Glyph.Data = {
           36040000424D3604000000000000360000002800000010000000100000000100
           20000000000000040000C40E0000C40E00000000000000000000FFFFFF00FFFF
@@ -76,13 +77,14 @@ object FileFrame: TFileFrame
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
         ParentShowHint = False
         ShowHint = True
+        TabOrder = 0
       end
     end
     object VST: TVirtualStringTree
       Left = 2
       Top = 15
       Width = 245
-      Height = 418
+      Height = 375
       Align = alClient
       DragMode = dmAutomatic
       Header.AutoSizeIndex = -1
@@ -118,8 +120,8 @@ object FileFrame: TFileFrame
   object GroupBox3: TGroupBox
     Left = 252
     Top = 0
-    Width = 749
-    Height = 492
+    Width = 626
+    Height = 449
     Align = alClient
     Caption = 'Dateien'
     TabOrder = 1
@@ -127,8 +129,8 @@ object FileFrame: TFileFrame
     ExplicitHeight = 305
     object GroupBox1: TGroupBox
       Left = 2
-      Top = 433
-      Width = 745
+      Top = 390
+      Width = 622
       Height = 57
       Align = alBottom
       Caption = 'Dateiaktionen'
@@ -406,8 +408,8 @@ object FileFrame: TFileFrame
     object LV: TListView
       Left = 2
       Top = 15
-      Width = 745
-      Height = 418
+      Width = 622
+      Height = 375
       Align = alClient
       Checkboxes = True
       Columns = <
@@ -540,7 +542,7 @@ object FileFrame: TFileFrame
     Left = 88
     Top = 360
     Bitmap = {
-      494C010102000800800010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102000800880010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       000000000000000000000000000000000000000000FF078DBE00078DBE00078D
       BE00078DBE00078DBE00078DBE00078DBE00078DBE00078DBE00078DBE00078D
