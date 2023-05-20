@@ -73,9 +73,12 @@ begin
   for i := pred(m_forms.Count) downto 0 do begin
     if Supports( m_forms[i], IForceClose) then
       m_list.Remove(m_forms[i] as IForceClose);
+    try
+      m_forms[i].Close;
+      m_forms[i].Free;
+    except
 
-    m_forms[i].Close;
-    m_forms[i].Free;
+    end;
   end;
   m_forms.Clear;
 
