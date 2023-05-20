@@ -355,4 +355,30 @@ object dsMeeing: TdsMeeing
         ParamType = ptInput
       end>
   end
+  object Protokoll: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
+    SQL.Strings = (
+      'SELECT * FROM PR_PROTOKOL'
+      'where pr_id= :pr_id')
+    Left = 536
+    Top = 24
+    ParamData = <
+      item
+        Name = 'PR_ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
+  end
+  object ProtokollQry: TDataSetProvider
+    DataSet = Protokoll
+    Left = 544
+    Top = 72
+  end
+  object InsertTNQry: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
+    Left = 640
+    Top = 40
+  end
 end

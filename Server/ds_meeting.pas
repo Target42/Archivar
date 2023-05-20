@@ -40,6 +40,9 @@ type
     Gaeste: TFDQuery;
     OptTn: TFDQuery;
     DelELQry: TFDQuery;
+    Protokoll: TFDQuery;
+    ProtokollQry: TDataSetProvider;
+    InsertTNQry: TFDQuery;
   private
     procedure updateMeeting( el_id : integer );
   public
@@ -457,6 +460,18 @@ begin
     ElTable.FieldByName('PR_ID').AsInteger      := prid;
     ElTable.FieldByName('PE_ID').AsInteger      := peid;
     ElTable.Post;
+
+    // und die Mitglieder des Gremium's
+    InsertTNQry.SQL.Text := Format(
+    'insert into TN_TEILNEHMER '+
+    '(PR_ID, TN_ID, TN_NAME, TN_VORNAME, TN_DEPARTMENT, TN_ROLLE, TN_STATUS, PE_ID) '+
+    'select ''%d'' as PR_ID, gen_id( GEN_TN_ID, 1) as TN_ID, b.PE_NAME, b.PE_VORNAME, b.PE_DEPARTMENT, a.GP_ROLLE, ''%d'' as TN_STATUS, b.PE_ID '+
+    'from GR_PA a, PE_PERSON b '+
+    'where a.GR_ID = 2 '+
+    'and a.PE_ID = b.PE_ID', [prid, 0]);
+
+    InsertTNQry.ExecSQL;
+
 
     JReplace( Result, 'id', id);
     JResult( Result, true, 'Eine neue Sitzung wurde angelegt.');
