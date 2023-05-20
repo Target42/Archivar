@@ -9,7 +9,11 @@ object DBMod: TDBMod
       'User_Name=sysdba'
       'Password=masterkey'
       'Database=D:\db\ARCHIVAR.FDB'
+      'MonitorBy=Remote'
       'DriverID=FB')
+    ResourceOptions.AssignedValues = [rvCmdExecMode, rvAutoReconnect]
+    ResourceOptions.CmdExecMode = amNonBlocking
+    ResourceOptions.AutoReconnect = True
     LoginPrompt = False
     Transaction = FDTransaction1
     Left = 38
@@ -38,5 +42,9 @@ object DBMod: TDBMod
   object FDPhysFBDriverLink1: TFDPhysFBDriverLink
     Left = 264
     Top = 40
+  end
+  object FDMoniRemoteClientLink1: TFDMoniRemoteClientLink
+    Left = 48
+    Top = 144
   end
 end

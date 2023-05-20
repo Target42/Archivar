@@ -9,7 +9,8 @@ uses
   FireDAC.Stan.Pool, FireDAC.Stan.Async, FireDAC.VCLUI.Wait, FireDAC.Comp.Client,
   Data.DB, FireDAC.Phys.Intf, FireDAC.Phys.IBWrapper, FireDAC.Phys.IBBase,
   FireDAC.Stan.Param, FireDAC.DatS, FireDAC.DApt.Intf, FireDAC.DApt,
-  FireDAC.Comp.DataSet;
+  FireDAC.Comp.DataSet, FireDAC.Moni.Base, FireDAC.Moni.RemoteClient,
+  FireDAC.Moni.FlatFile;
 
 type
   TDBMod = class(TDataModule)
@@ -18,6 +19,7 @@ type
     FDManager1: TFDManager;
     FDFBNBackup1: TFDFBNBackup;
     FDPhysFBDriverLink1: TFDPhysFBDriverLink;
+    FDMoniRemoteClientLink1: TFDMoniRemoteClientLink;
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
   private
@@ -90,6 +92,7 @@ begin
   Writeln( 'DB:'+db);
 {$endif}
 
+
 //  ArchivarConnection.ConnectionDefName := 'Archivar_pooled';
   ArchivarConnection.Params.Clear;
   ArchivarConnection.DriverName := 'FB';
@@ -104,6 +107,7 @@ begin
     SQLDialect:= 3;
     PageSize  := ps4096;
     Pooled    := true;
+    MonitorBy := mbRemote;
   end;
   FDManager.AddConnectionDef('FirebirdPooled', 'FB', ArchivarConnection.Params );
 
@@ -120,6 +124,8 @@ begin
 
   try
     ArchivarConnection.ConnectionDefName := 'FirebirdPooled';
+
+//    FDMoniRemoteClientLink1.Tracing := true;
     ArchivarConnection.Open;
     Result := ArchivarConnection.Connected;
     GrijjyLog.Send('database connected');
