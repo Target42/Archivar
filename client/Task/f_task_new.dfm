@@ -53,7 +53,7 @@ object Taskform: TTaskform
       285)
     object Gremium: TJvWizardInteriorPage
       Header.Title.Color = clNone
-      Header.Title.Text = 'Aufgabentypen'
+      Header.Title.Text = 'Gremium'
       Header.Title.Anchors = [akLeft, akTop, akRight]
       Header.Title.Font.Charset = DEFAULT_CHARSET
       Header.Title.Font.Color = clWindowText
@@ -96,7 +96,7 @@ object Taskform: TTaskform
     end
     object AufgabenTypen: TJvWizardInteriorPage
       Header.Title.Color = clNone
-      Header.Title.Text = 'Gremium'
+      Header.Title.Text = 'Aufgabe'
       Header.Title.Anchors = [akLeft, akTop, akRight]
       Header.Title.Font.Charset = DEFAULT_CHARSET
       Header.Title.Font.Color = clWindowText
@@ -104,7 +104,7 @@ object Taskform: TTaskform
       Header.Title.Font.Name = 'Tahoma'
       Header.Title.Font.Style = [fsBold]
       Header.Subtitle.Color = clNone
-      Header.Subtitle.Text = 'Welches Gremium soll die Aufgabe bearbeiten?'
+      Header.Subtitle.Text = 'Welche Aufgabe soll bearbeitet werden?'
       Header.Subtitle.Anchors = [akLeft, akTop, akRight, akBottom]
       Header.Subtitle.Font.Charset = DEFAULT_CHARSET
       Header.Subtitle.Font.Color = clWindowText
@@ -114,8 +114,6 @@ object Taskform: TTaskform
       Caption = 'AufgabenTypen'
       OnEnterPage = AufgabenTypenEnterPage
       OnNextButtonClick = AufgabenTypenNextButtonClick
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object LVType: TListView
         Left = 0
         Top = 70
@@ -136,8 +134,6 @@ object Taskform: TTaskform
         TabOrder = 0
         ViewStyle = vsReport
         OnClick = LVTypeClick
-        ExplicitTop = 118
-        ExplicitHeight = 75
       end
     end
     object Template: TJvWizardInteriorPage
@@ -159,8 +155,6 @@ object Taskform: TTaskform
       Header.Subtitle.Font.Style = []
       Caption = 'Template'
       OnEnterPage = TemplateEnterPage
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object TEView: TListView
         Left = 0
         Top = 70
@@ -200,8 +194,6 @@ object Taskform: TTaskform
       Caption = 'Details1'
       OnEnterPage = Details1EnterPage
       OnFinishButtonClick = Details1FinishButtonClick
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object Label2: TLabel
         Left = 19
         Top = 85
@@ -293,8 +285,8 @@ object Taskform: TTaskform
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsTask'
-    Left = 48
-    Top = 8
+    Left = 32
+    Top = 104
   end
   object TaskTypes: TClientDataSet
     Aggregates = <>
@@ -314,13 +306,13 @@ object Taskform: TTaskform
     Params = <>
     ProviderName = 'Task'
     RemoteServer = DSProviderConnection1
-    Left = 216
-    Top = 8
+    Left = 200
+    Top = 104
   end
   object TaskSrc: TDataSource
     DataSet = Task
-    Left = 216
-    Top = 64
+    Left = 224
+    Top = 136
   end
   object TEQry: TClientDataSet
     Aggregates = <>

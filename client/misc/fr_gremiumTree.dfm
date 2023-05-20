@@ -12,6 +12,7 @@ object GremiumTreeFrame: TGremiumTreeFrame
     Height = 305
     Align = alClient
     DragMode = dmAutomatic
+    HideSelection = False
     Indent = 19
     PopupMenu = PopupMenu1
     ReadOnly = True
