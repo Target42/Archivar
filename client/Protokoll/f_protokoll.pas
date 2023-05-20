@@ -574,6 +574,10 @@ begin
   if m_ro then
     exit;
 
+  m_proto.Title := Trim(DBEdit1.Text);
+  m_proto.Nr    :=  StrToIntDef(DBEdit2.Text, m_proto.Nr );
+  m_proto.Date  := JvDBDateTimePicker1.DateTime;
+
   m_proto.save;
   m_proto.edit;
 end;

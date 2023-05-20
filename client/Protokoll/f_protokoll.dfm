@@ -45,13 +45,12 @@ object ProtokollForm: TProtokollForm
     Align = alClient
     Images = ImageList1
     TabOrder = 1
-    ExplicitTop = 55
     object TabSheet1: TTabSheet
       Caption = 'Allgemines'
       object Splitter1: TSplitter
         Left = 217
         Top = 0
-        Height = 372
+        Height = 371
         ExplicitLeft = 272
         ExplicitTop = 16
         ExplicitHeight = 100
@@ -60,7 +59,7 @@ object ProtokollForm: TProtokollForm
         Left = 220
         Top = 0
         Width = 660
-        Height = 372
+        Height = 371
         Align = alClient
         Caption = 'Inhalt'
         TabOrder = 0
@@ -68,14 +67,12 @@ object ProtokollForm: TProtokollForm
           Left = 2
           Top = 15
           Width = 656
-          Height = 355
+          Height = 354
           Align = alClient
           TabOrder = 0
-          ExplicitLeft = 0
-          ExplicitTop = 14
-          ExplicitWidth = 500
+          ExplicitHeight = 355
           ControlData = {
-            4C000000CD430000B12400000000000000000000000000000000000000000000
+            4C000000CD430000962400000000000000000000000000000000000000000000
             000000004C000000000000000000000001000000E0D057007335CF11AE690800
             2B2E126208000000000000004C0000000114020000000000C000000000000046
             8000000000000000000000000000000000000000000000000000000000000000
@@ -86,7 +83,7 @@ object ProtokollForm: TProtokollForm
         Left = 0
         Top = 0
         Width = 217
-        Height = 372
+        Height = 371
         Align = alLeft
         BevelOuter = bvNone
         Caption = 'Panel2'
@@ -96,40 +93,43 @@ object ProtokollForm: TProtokollForm
           Left = 0
           Top = 0
           Width = 217
-          Height = 372
+          Height = 371
           Align = alClient
           TabOrder = 0
           ExplicitWidth = 217
-          ExplicitHeight = 372
+          ExplicitHeight = 371
           inherited GroupBox1: TGroupBox
             Width = 217
-            Height = 306
+            Height = 305
             ExplicitWidth = 217
-            ExplicitHeight = 306
+            ExplicitHeight = 305
             inherited TV: TTreeView
               Width = 213
-              Height = 289
+              Height = 288
               ExplicitWidth = 213
-              ExplicitHeight = 289
+              ExplicitHeight = 288
             end
           end
           inherited PageControl2: TPageControl
-            Top = 306
+            Top = 305
             Width = 217
-            ExplicitLeft = 3
-            ExplicitTop = 304
+            ActivePage = ProtocolFrame1.TabSheet4
+            ExplicitTop = 305
             ExplicitWidth = 217
             inherited TabSheet4: TTabSheet
               ExplicitLeft = 4
               ExplicitWidth = 443
             end
             inherited TabSheet5: TTabSheet
+              ExplicitLeft = 4
+              ExplicitTop = 25
               ExplicitWidth = 209
+              ExplicitHeight = 37
             end
           end
           inherited ImageList1: TImageList
             Bitmap = {
-              494C010106001001A00110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+              494C010106001001A40110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
               0000000000003600000028000000400000002000000001002000000000000020
               0000000000000000000000000000000000000000000000000000000000000000
               0000000000000000000000000000000000000000000000000000000000000000
@@ -408,7 +408,7 @@ object ProtokollForm: TProtokollForm
       ImageIndex = 1
       object Panel1: TPanel
         Left = 0
-        Top = 331
+        Top = 330
         Width = 880
         Height = 41
         Align = alBottom
@@ -518,7 +518,7 @@ object ProtokollForm: TProtokollForm
         Left = 0
         Top = 0
         Width = 880
-        Height = 331
+        Height = 330
         Align = alClient
         Columns = <
           item
@@ -556,7 +556,7 @@ object ProtokollForm: TProtokollForm
       ImageIndex = 2
       object Panel3: TPanel
         Left = 0
-        Top = 331
+        Top = 330
         Width = 880
         Height = 41
         Align = alBottom
@@ -789,7 +789,7 @@ object ProtokollForm: TProtokollForm
         Left = 0
         Top = 0
         Width = 880
-        Height = 331
+        Height = 330
         Align = alClient
         Columns = <
           item
@@ -934,7 +934,7 @@ object ProtokollForm: TProtokollForm
     Left = 592
     Top = 24
     Bitmap = {
-      494C010103000800180010001000FFFFFFFFFF00FFFFFFFFFFFFFFFF424D3600
+      494C0101030008001C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -1070,6 +1070,7 @@ object ProtokollForm: TProtokollForm
       E00FC3C300010000C0078181000100008003C3C3000100000001E00700010000
       0001C003000100000001E6670001000000018001800100000001C00381010000
       0001E667C3C100000001C3C3FFFF00008003C3C3C3E10000C007E7E7C3E10000
-      E00FFFFFC3E10000F01FFFFFC3E10000}
+      E00FFFFFC3E10000F01FFFFFC3E1000000000000000000000000000000000000
+      000000000000}
   end
 end
