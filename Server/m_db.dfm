@@ -44,6 +44,7 @@ object DBMod: TDBMod
     Top = 40
   end
   object FDMoniRemoteClientLink1: TFDMoniRemoteClientLink
+    EventKinds = [ekLiveCycle, ekError, ekConnConnect, ekConnTransact, ekAdaptUpdate]
     Left = 48
     Top = 144
   end

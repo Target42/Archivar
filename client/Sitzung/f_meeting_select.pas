@@ -109,7 +109,6 @@ begin
 
   grid                      := GremiumFrame1.GremiumID;
   ELTab.Filter              := Format('GR_ID=%d and EL_STATUS in (%s)', [grid, m_filter]);
-  //ELTab.Filter              := Format('GR_ID=%d and EL_STATUS in (''R'')', [grid]);
   ELTab.Filtered            := true;
 
   DBGrid1.Enabled           := not ELTab.IsEmpty;

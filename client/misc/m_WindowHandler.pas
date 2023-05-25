@@ -81,9 +81,11 @@ begin
     end;
   end;
   m_forms.Clear;
+  Application.ProcessMessages;
 
   for fr in m_list do
     fr.ForceClose(true);
+  Application.ProcessMessages;
 end;
 
 procedure TWindowHandler.closeProtoclView(id: integer);

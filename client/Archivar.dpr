@@ -249,7 +249,9 @@ uses
   fr_mails in 'mail\MailFrame\fr_mails.pas' {MailFrame: TFrame},
   u_TMail in 'mail\MailFrame\u_TMail.pas',
   u_mail_decoder in '..\misc\u_mail_decoder.pas',
-  f_kategorie in 'mail\f_kategorie.pas' {KategorieForm};
+  f_kategorie in 'mail\f_kategorie.pas' {KategorieForm},
+  fr_files_to_delete in 'File\fr_files_to_delete.pas' {FilesToDeleteFrame: TFrame},
+  u_meeting_status in '..\misc\u_meeting_status.pas';
 
 {$R *.res}
 

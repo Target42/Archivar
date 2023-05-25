@@ -56,8 +56,8 @@ type
     ProtocolFrame1: TProtocolFrame;
     PopupMenu1: TPopupMenu;
     BitBtn3: TBitBtn;
-    BitBtn4: TBitBtn;
     ImageList1: TImageList;
+    ImageList2: TImageList;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);

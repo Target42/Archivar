@@ -68,7 +68,7 @@ type
 implementation
 
 uses
-  m_glob_client, System.Notification, u_teilnehmer;
+  m_glob_client, System.Notification, u_teilnehmer, u_meeting_status;
 
 {$R *.dfm}
 
@@ -207,12 +207,12 @@ begin
 
   MeetingQry.ParamByName('PE_ID').AsInteger := GM.UserID;
 
-  MeetingQry.ParamByName('STATUS').AsString := 'O';
+  MeetingQry.ParamByName('STATUS').AsString := Meeting_Invited;
   MeetingQry.Open;
   readValues( MeetingQry, false );
   MeetingQry.Close;
 
-  MeetingQry.ParamByName('STATUS').AsString := 'R';
+  MeetingQry.ParamByName('STATUS').AsString := Meeting_Running;
   MeetingQry.Open;
   readValues( MeetingQry, true );
   MeetingQry.Close;

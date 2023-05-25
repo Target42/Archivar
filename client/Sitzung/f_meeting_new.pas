@@ -56,7 +56,6 @@ type
     LabeledEdit3: TLabeledEdit;
     LabeledEdit4: TLabeledEdit;
     LabeledEdit5: TLabeledEdit;
-    BitBtn2: TBitBtn;
     Panel2: TPanel;
     DBNavigator1: TDBNavigator;
     OptTnQry: TClientDataSet;
@@ -71,6 +70,7 @@ type
     TNQryPE_ID: TIntegerField;
     TNQryTN_GRUND: TStringField;
     TNQryTN_READ: TSQLTimeStampField;
+    BitBtn2: TBitBtn;
     procedure FormCreate(Sender: TObject);
     procedure ElTabBeforePost(DataSet: TDataSet);
     procedure ComboBox1Change(Sender: TObject);
@@ -111,6 +111,7 @@ type
     property EL_ID    : integer   read m_el_id        write setELID;
     property ReadOnly : boolean   read GetReadOnly    write SetReadOnly;
 
+    procedure addCaption( text : string );
   end;
 
 var
@@ -199,6 +200,11 @@ begin
   except
 
   end;
+end;
+
+procedure TMeetingForm.addCaption(text: string);
+begin
+  Caption := Caption + '- ' + text;
 end;
 
 procedure TMeetingForm.BaseFrame1AbortBtnClick(Sender: TObject);
@@ -407,6 +413,10 @@ end;
 
 procedure TMeetingForm.FormDestroy(Sender: TObject);
 begin
+  if TGQry.Active and TGQry.UpdatesPending then begin
+    TGQry.ApplyUpdates(0);
+  end;
+
   EditFrame1.release;
   if m_needUpdate then
     SendUpdate;
@@ -542,8 +552,13 @@ begin
       elTab.Edit;
   end;
 
-  Panel2.Visible      := not flag;
+  DBGrid2.ReadOnly    := flag;
   EditFrame1.ReadOnly := flag;
+
+  Panel2.Visible      := not flag;
+  BitBtn2.Visible     := not flag;
+  Panel2.Visible      := not flag;
+  GroupBox4.Visible   := not flag;
   BitBtn2.Visible     := not flag;
 end;
 
@@ -618,9 +633,11 @@ begin
   LabeledEdit4.Text := IntToStr( counter[2]);
   LabeledEdit5.Text := IntToStr( counter[3]);
 
-  TGQry.Close;
-  TGQry.ParamByName('PR_ID').AsInteger := m_pr_id;
-  TGQry.Open;
+  if not TGQry.Active then begin
+    TGQry.Filter  := 'PR_ID = '+ intToStr(m_pr_id);
+    TGQry.Filtered := true;
+    TGQry.Open;
+  end;
 end;
 
 end.

@@ -63,7 +63,8 @@ uses
   u_MailHandler in 'mail\u_MailHandler.pas',
   u_Mailthread in 'mail\u_Mailthread.pas',
   i_mail in 'mail\i_mail.pas',
-  ds_mail in 'ds_mail.pas' {DSMail: TDSServerModule};
+  ds_mail in 'ds_mail.pas' {DSMail: TDSServerModule},
+  u_meeting_status in '..\misc\u_meeting_status.pas';
 
 var
   MyDummyBoolean  : Boolean;

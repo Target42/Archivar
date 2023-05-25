@@ -255,6 +255,7 @@ type
     procedure ac_ad_mailExecute(Sender: TObject);
     procedure ac_mailExecute(Sender: TObject);
     procedure ac_hlp_fehlerExecute(Sender: TObject);
+    procedure ac_me_endExecute(Sender: TObject);
   private
     m_noStatChange : boolean;
 
@@ -263,7 +264,7 @@ type
 
     procedure templateEdit( sys : boolean );
     procedure setGremiumName( id : integer );
-    procedure showMeeting( id : integer );
+    procedure showMeeting( id : integer; add : string );
     procedure doMeeting( id : integer );
 
     procedure UpdateUserView( sender : TObject );
@@ -288,7 +289,8 @@ uses
   system.UITypes, f_protocol_sec, u_onlineUser, f_doMeeting, f_task_type,
   f_flieCacheForm, f_keys, f_textblock_export, f_textblock_import,
   f_storages, f_protokoll_new, f_admin, f_task_delete,
-  f_pluginAdmin, f_task_import, m_taskimporter, f_mail_client, ShellApi;
+  f_pluginAdmin, f_task_import, m_taskimporter, f_mail_client, ShellApi,
+  u_meeting_status;
 
 {$R *.dfm}
 
@@ -457,12 +459,38 @@ end;
 procedure TMainForm.ac_me_editExecute(Sender: TObject);
 begin
   Application.CreateForm(TSelectMeetingForm, SelectMeetingForm);
-  SelectMeetingForm.Filter := '''E''';
+  SelectMeetingForm.Filter := buildMeetingFilter([Meeting_Created, Meeting_Invited]);
   if SelectMeetingForm.ShowModal = mrok then
   begin
     if SelectMeetingForm.EL_ID > 0 then
     begin
-      showMeeting( SelectMeetingForm.EL_ID );
+      showMeeting( SelectMeetingForm.EL_ID, 'Bearbeiten' );
+    end;
+  end;
+  SelectMeetingForm.free;
+end;
+
+procedure TMainForm.ac_me_endExecute(Sender: TObject);
+var
+  client : TdsMeeingClient;
+  req    : TJSONObject;
+  res    : TJSONObject;
+begin
+  Application.CreateForm(TSelectMeetingForm, SelectMeetingForm);
+  SelectMeetingForm.Filter := buildMeetingFilter([Meeting_Running]);
+  if SelectMeetingForm.ShowModal = mrok then
+  begin
+    if SelectMeetingForm.EL_ID > 0 then
+    begin
+      req := TJSONObject.Create;
+      JReplace( req, 'id', SelectMeetingForm.EL_ID );
+      try
+        client := TdsMeeingClient.Create(GM.SQLConnection1.DBXConnection);
+        res := client.closeMeeting(req)
+
+      finally
+
+      end;
     end;
   end;
   SelectMeetingForm.free;
@@ -471,12 +499,13 @@ end;
 procedure TMainForm.ac_me_executeExecute(Sender: TObject);
 begin
   if Assigned( DoMeetingform ) then begin
-    ShowMessage('Es ist noch eine Sitzung aktiv.'+sLineBreak+'Bitte diese Beenden, bevor eine neue begonnen wird!');
+    ShowMessage('Es ist noch eine Sitzung aktiv.'+sLineBreak+
+                'Bitte diese Beenden, bevor eine neue begonnen wird!');
     exit;
   end;
 
   Application.CreateForm(TSelectMeetingForm, SelectMeetingForm);
-  SelectMeetingForm.Filter := '''O'', ''R''';
+  SelectMeetingForm.Filter := buildMeetingFilter([Meeting_Invited, Meeting_Running,Meeting_Created]);
   if SelectMeetingForm.ShowModal = mrok then
   begin
     if SelectMeetingForm.EL_ID > 0 then
@@ -490,13 +519,15 @@ end;
 procedure TMainForm.ac_me_inviteExecute(Sender: TObject);
 begin
   Application.CreateForm(TSelectMeetingForm, SelectMeetingForm);
-  SelectMeetingForm.Filter := '''E''';
+  SelectMeetingForm.Filter := buildMeetingFilter([Meeting_Created, Meeting_Invited]);
   if SelectMeetingForm.ShowModal = mrok then
   begin
     if SelectMeetingForm.EL_ID > 0 then
     begin
       Application.CreateForm(TMeetingForm, MeetingForm);
       MeetingForm.EL_ID   := SelectMeetingForm.EL_ID;
+      MeetingForm.addCaption('Einladen');
+      MeetingForm.ReadOnly := true;
       if MeetingForm.ShowModal = mrOk then
         invite( MeetingForm.EL_ID );
       MeetingForm.Free;
@@ -507,7 +538,7 @@ end;
 
 procedure TMainForm.ac_me_newExecute(Sender: TObject);
 var
-  id              : integer;
+  id  : integer;
 begin
   id := -1;
   Application.CreateForm(TMeetingProtoForm, MeetingProtoForm);
@@ -519,12 +550,20 @@ begin
 
   if id > 0 then
   begin
-    Application.CreateForm(TMeetingForm, MeetingForm);
+    try
+      Application.CreateForm(TMeetingForm, MeetingForm);
+      MeetingForm.EL_ID    := id;
+      MeetingForm.ReadOnly := false;
+      MeetingForm.addCaption('Neu anlagen');
 
-    MeetingForm.EL_ID   := id;
+      if MeetingForm.ShowModal = mrOk then begin
+        if (MessageDlg('Soll auch gleich die Einladung versendet werden?', mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
+          invite( MeetingForm.EL_ID );
+      end;
+    finally
+      MeetingForm.Free;
+    end;
 
-    MeetingForm.ShowModal;
-    MeetingForm.Free;
   end;
 end;
 
@@ -538,7 +577,9 @@ begin
     begin
       Application.CreateForm(TMeetingForm, MeetingForm);
       MeetingForm.EL_ID   := SelectMeetingForm.EL_ID;
-      MeetingForm.ReadOnly:= false;
+      MeetingForm.addCaption('Update senden');
+
+//      MeetingForm.ReadOnly:= false;
       MeetingForm.GroupBox4.Visible := false;
 
       if MeetingForm.ShowModal = mrOk then
@@ -563,6 +604,7 @@ end;
 procedure TMainForm.ac_prg_disconExecute(Sender: TObject);
 begin
   setPanel(integer(stMsg), 'Das Beenden dauert lange bei HTTP');
+  WindowHandler.closeAll;
   GM.Disconnect;
 end;
 
@@ -809,6 +851,9 @@ begin
   case Msg.message of
     msgConnected :
       begin
+        Application.ProcessMessages;
+        Gm.doAfterConnect;
+
         ApplicationSetMenu( true );
 
         setPanel(integer(stStatus), 'Verbunden');
@@ -846,7 +891,7 @@ begin
     msgRemoveBookmark : BookmarkFrame1.removeBookmark( TBookmark(Msg.LParam));
     msgLoadLogo       : loadLogo;
     msgUpdateGremium  : setGremiumName( msg.lParam );
-    msgEditMeeting    : showMeeting(msg.lParam);
+    msgEditMeeting    : showMeeting(msg.lParam, 'Anzeigen');
     msgLogin          : ac_prg_connect.Execute;
     msgDoMeeting      : doMeeting(msg.lParam);
     msgMeetingEnd     : showAdmin;
@@ -1057,10 +1102,11 @@ begin
   StatusBar1.Panels.Items[ id ].Text := text;
 end;
 
-procedure TMainForm.showMeeting(id: integer);
+procedure TMainForm.showMeeting(id: integer; add : string);
 begin
   Application.CreateForm(TMeetingForm, MeetingForm);
   MeetingForm.EL_ID   := id;
+  MeetingForm.addCaption( add );
   MeetingForm.ShowModal;
   MeetingForm.Free;
 end;
