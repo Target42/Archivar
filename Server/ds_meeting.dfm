@@ -24,7 +24,7 @@ object dsMeeing: TdsMeeing
     Top = 64
   end
   object TGQry: TDataSetProvider
-    DataSet = Gaeste
+    DataSet = TGTab
     Left = 464
     Top = 64
   end
@@ -202,13 +202,18 @@ object dsMeeing: TdsMeeing
     Transaction = IBTransaction1
     SQL.Strings = (
       'update TN_TEILNEHMER'
-      'set  TN_READ= NULL'
-      'where PR_ID = :pr_id')
+      'set TN_READ = null'
+      'where tn_id in'
+      '('
+      'select b.tn_id from EL_EINLADUNG a, TN_TEILNEHMER b'
+      'where a.EL_ID = :el_id'
+      'and a.pr_id = b.PR_ID'
+      ')')
     Left = 288
     Top = 248
     ParamData = <
       item
-        Name = 'PR_ID'
+        Name = 'EL_ID'
         DataType = ftInteger
         ParamType = ptInput
       end>
@@ -298,23 +303,6 @@ object dsMeeing: TdsMeeing
         ParamType = ptInput
       end>
   end
-  object Gaeste: TFDQuery
-    ObjectView = False
-    Connection = DBMod.ArchivarConnection
-    Transaction = IBTransaction1
-    SQL.Strings = (
-      'select * from TG_GAESTE'
-      'where pr_id = :pr_id'
-      'order by tg_grund, tg_name, tg_vorname')
-    Left = 464
-    Top = 16
-    ParamData = <
-      item
-        Name = 'PR_ID'
-        DataType = ftInteger
-        ParamType = ptInput
-      end>
-  end
   object OptTn: TFDQuery
     ObjectView = False
     Connection = DBMod.ArchivarConnection
@@ -380,5 +368,36 @@ object dsMeeing: TdsMeeing
     Transaction = IBTransaction1
     Left = 640
     Top = 40
+  end
+  object TGTab: TFDTable
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
+    UpdateOptions.UpdateTableName = 'TG_GAESTE'
+    TableName = 'TG_GAESTE'
+    Left = 464
+    Top = 17
+  end
+  object changeELStatusQry: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
+    SQL.Strings = (
+      'UPDATE EL_EINLADUNG a'
+      'SET '
+      '    a.EL_STATUS = :status'
+      'WHERE'
+      '    a.EL_ID = :el_id')
+    Left = 480
+    Top = 288
+    ParamData = <
+      item
+        Name = 'STATUS'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'EL_ID'
+        DataType = ftInteger
+        ParamType = ptInput
+      end>
   end
 end

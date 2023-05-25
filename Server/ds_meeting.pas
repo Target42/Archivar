@@ -37,12 +37,13 @@ type
     AutoIncQry: TFDQuery;
     ListProtocol: TFDQuery;
     Teilnehmer: TFDQuery;
-    Gaeste: TFDQuery;
     OptTn: TFDQuery;
     DelELQry: TFDQuery;
     Protokoll: TFDQuery;
     ProtokollQry: TDataSetProvider;
     InsertTNQry: TFDQuery;
+    TGTab: TFDTable;
+    changeELStatusQry: TFDQuery;
   private
     procedure updateMeeting( el_id : integer );
   public
@@ -51,6 +52,7 @@ type
     function deleteMeeting( req : TJSONObject ) : TJSONObject;
     function Sendmail(      req : TJSONObject ) : TJSONObject;
     function invite(        req : TJSONObject ) : TJSONObject;
+    function closeMeeting(  req : TJSONObject ) : TJSONObject;
 
     function GetTree(       req : TJSONObject ) : TJSONObject;
 
@@ -63,7 +65,7 @@ implementation
 
 uses
   u_json, System.Generics.Collections, u_tree, ServerContainerUnit1,
-  Datasnap.DSSession, u_Konst;
+  Datasnap.DSSession, u_Konst, System.Win.ComObj, m_db, u_meeting_status;
 
 {%CLASSGROUP 'System.Classes.TPersistent'}
 
@@ -218,6 +220,26 @@ begin
     IBTransaction1.Commit;
 
   JResult( Result, true, 'ok');
+end;
+
+function TdsMeeing.closeMeeting(req: TJSONObject): TJSONObject;
+var
+  el_id : integer;
+begin
+  Result := TJSONObject.Create;
+
+  el_id  := JInt( req, 'id');
+
+  changeELStatusQry.ParamByName('STATUS').AsString := Meeting_Closed;
+  changeELStatusQry.ParamByName('el_id').AsInteger := el_id;
+  changeELStatusQry.ExecSQL;
+
+  if changeELStatusQry.RowsAffected > 0 then begin
+    updateMeeting(el_id);
+    JResult(Result, true, 'Meeting erfolgreich beendet');
+  end else begin
+    JResult(Result, false, 'Meeting nicht gefunden!');
+  end;
 end;
 
 function TdsMeeing.deleteMeeting(req: TJSONObject): TJSONObject;
@@ -406,8 +428,12 @@ begin
   el_id  := JInt( req, 'id');
 
   try
-    ResetReadQry.ParamByName('el_id').AsInteger       := el_id;
+    ResetReadQry.ParamByName('el_id').AsInteger      := el_id;
     ResetReadQry.ExecSQL;
+
+    changeELStatusQry.ParamByName('el_id').AsInteger := el_id;
+    changeELStatusQry.ParamByName('status').AsString := Meeting_Invited;
+    changeELStatusQry.ExecSQL;
 
     if IBTransaction1.Active then
       IBTransaction1.Commit;
@@ -456,9 +482,10 @@ begin
     ElTable.FieldByName('EL_DATUM').AsDateTime  := Date + 3;
     ElTable.FieldByName('EL_ZEIT').AsDateTime   := EncodeTime(  9, 0, 0, 0);
     ElTable.FieldByName('EL_ENDE').AsDateTime   := EncodeTime( 12, 0, 0, 0);
-    ElTable.FieldByName('EL_STATUS').AsString   := 'O';
+    ElTable.FieldByName('EL_STATUS').AsString   := Meeting_Created;
     ElTable.FieldByName('PR_ID').AsInteger      := prid;
     ElTable.FieldByName('PE_ID').AsInteger      := peid;
+    ElTable.FieldByName('EL_CLID').AsString     := CreateClassID;
     ElTable.Post;
 
     // und die Mitglieder des Gremium's
@@ -467,8 +494,8 @@ begin
     '(PR_ID, TN_ID, TN_NAME, TN_VORNAME, TN_DEPARTMENT, TN_ROLLE, TN_STATUS, PE_ID) '+
     'select ''%d'' as PR_ID, gen_id( GEN_TN_ID, 1) as TN_ID, b.PE_NAME, b.PE_VORNAME, b.PE_DEPARTMENT, a.GP_ROLLE, ''%d'' as TN_STATUS, b.PE_ID '+
     'from GR_PA a, PE_PERSON b '+
-    'where a.GR_ID = 2 '+
-    'and a.PE_ID = b.PE_ID', [prid, 0]);
+    'where a.GR_ID = %d '+
+    'and a.PE_ID = b.PE_ID', [prid, 0, grid]);
 
     InsertTNQry.ExecSQL;
 
