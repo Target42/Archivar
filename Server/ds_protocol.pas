@@ -41,12 +41,12 @@ type
     ListPr: TFDQuery;
     incQry: TFDQuery;
     AutoIncQry: TFDQuery;
-    PEQry: TFDQuery;
     UpdateCP: TFDQuery;
     DeleteCPQry: TFDQuery;
     ListTasksQry: TFDQuery;
     TNTab: TFDTable;
     NextNrQry: TFDQuery;
+    InsertTNQry: TFDQuery;
   private
     { Private-Deklarationen }
   public
@@ -249,28 +249,17 @@ begin
     PRTab.FieldByName('PR_NR').AsInteger     := nr;
     PRTab.post;
 
-
-    PEQry.ParamByName('GR_ID').AsInteger := JInt( data, 'grid' );
-    PEQry.Open;
-    TNTab.Open;
-    while not PEQry.eof do
-    begin
-      TNTab.Append;
-      TNTab.FieldByName('PR_ID').AsInteger        := id;
-      TNTab.FieldByName('TN_ID').AsInteger        := AutoInc('gen_TN_ID');
-      TNTab.FieldByName('PE_ID').AsInteger        := PEQry.FieldByName('PE_ID').AsInteger;
-      TNTab.FieldByName('TN_NAME').AsString       := PEQry.FieldByName('PE_NAME').AsString;
-      TNTab.FieldByName('TN_VORNAME').AsString    := PEQry.FieldByName('PE_VORNAME').AsString;
-      TNTab.FieldByName('TN_DEPARTMENT').AsString := PEQry.FieldByName('PE_DEPARTMENT').AsString;
-      TNTab.FieldByName('TN_ROLLE').AsString      := PEQry.FieldByName('GP_ROLLE').AsString;
-      TNTab.FieldByName('TN_STATUS').AsString     := '0';
-      TNTab.Post;
-      PEQry.next;
-    end;
+    // und die Mitglieder des Gremium's
+    InsertTNQry.SQL.Text := Format(
+    'insert into TN_TEILNEHMER '+
+    '(PR_ID, TN_ID, TN_NAME, TN_VORNAME, TN_DEPARTMENT, TN_ROLLE, TN_STATUS, PE_ID) '+
+    'select ''%d'' as PR_ID, gen_id( GEN_TN_ID, 1) as TN_ID, b.PE_NAME, b.PE_VORNAME, b.PE_DEPARTMENT, a.GP_ROLLE, ''%d'' as TN_STATUS, b.PE_ID '+
+    'from GR_PA a, PE_PERSON b '+
+    'where a.GR_ID = %d '+
+    'and a.PE_ID = b.PE_ID', [id, 0, JInt( data, 'grid' )]);
+    InsertTNQry.ExecSQL;
 
     PRTab.close;
-    PEQry.close;
-    TNTab.Close;
 
     obj := JObject( data, 'template');
     if Assigned( obj ) then begin

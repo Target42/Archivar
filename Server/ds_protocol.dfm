@@ -265,23 +265,6 @@ object dsProtocol: TdsProtocol
     Left = 80
     Top = 16
   end
-  object PEQry: TFDQuery
-    ObjectView = False
-    Connection = DBMod.ArchivarConnection
-    Transaction = IBTransaction1
-    SQL.Strings = (
-      'select  * from GR_PA a,  PE_PERSON b'
-      'where GR_ID = :GR_ID'
-      'and a.PE_ID = b.PE_ID')
-    Left = 88
-    Top = 88
-    ParamData = <
-      item
-        Name = 'GR_ID'
-        DataType = ftInteger
-        ParamType = ptInput
-      end>
-  end
   object UpdateCP: TFDQuery
     ObjectView = False
     Connection = DBMod.ArchivarConnection
@@ -373,5 +356,11 @@ object dsProtocol: TdsProtocol
         DataType = ftInteger
         ParamType = ptInput
       end>
+  end
+  object InsertTNQry: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    Transaction = IBTransaction1
+    Left = 112
+    Top = 328
   end
 end
