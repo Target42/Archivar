@@ -285,6 +285,7 @@ begin
   mails     := TStringList.Create;
   toDelete  := TList<integer>.create;
 
+  FDTransaction1.StartTransaction;
   MailTab.Open;
   try
     IdIMAP41.Connect();

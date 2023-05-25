@@ -82,6 +82,7 @@ object MailIMap: TMailIMap
       end>
   end
   object FDTransaction1: TFDTransaction
+    Options.AutoStop = False
     Connection = DBMod.ArchivarConnection
     Left = 280
     Top = 152
