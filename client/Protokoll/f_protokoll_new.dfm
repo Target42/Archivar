@@ -3,7 +3,7 @@ object ProtokollNewForm: TProtokollNewForm
   Top = 0
   Caption = 'Neues Protokoll'
   ClientHeight = 491
-  ClientWidth = 928
+  ClientWidth = 827
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -26,7 +26,7 @@ object ProtokollNewForm: TProtokollNewForm
     ExplicitHeight = 332
   end
   object Splitter2: TSplitter
-    Left = 619
+    Left = 518
     Top = 0
     Width = 5
     Height = 431
@@ -39,7 +39,7 @@ object ProtokollNewForm: TProtokollNewForm
   inline BaseFrame1: TBaseFrame
     Left = 0
     Top = 431
-    Width = 928
+    Width = 827
     Height = 60
     Align = alBottom
     AutoSize = True
@@ -47,14 +47,14 @@ object ProtokollNewForm: TProtokollNewForm
     ExplicitTop = 431
     ExplicitWidth = 928
     inherited StatusBar1: TStatusBar
-      Width = 928
-      ExplicitWidth = 928
+      Width = 827
+      ExplicitWidth = 828
     end
     inherited Panel1: TPanel
-      Width = 928
+      Width = 827
       ExplicitWidth = 928
       inherited OKBtn: TBitBtn
-        Left = 829
+        Left = 728
         Enabled = False
         ExplicitLeft = 829
       end
@@ -83,7 +83,6 @@ object ProtokollNewForm: TProtokollNewForm
         Width = 221
         Height = 414
         OnClick = GremiumFrame1TVClick
-        ExplicitLeft = 0
         ExplicitWidth = 221
         ExplicitHeight = 414
       end
@@ -92,30 +91,36 @@ object ProtokollNewForm: TProtokollNewForm
   object GroupBox2: TGroupBox
     Left = 230
     Top = 0
-    Width = 389
+    Width = 288
     Height = 431
     Align = alClient
     Caption = 'Vorschau'
     TabOrder = 2
+    ExplicitWidth = 389
     object TV: TTreeView
       Left = 2
       Top = 15
-      Width = 385
+      Width = 284
       Height = 373
       Align = alClient
       Indent = 19
       TabOrder = 0
+      ExplicitWidth = 385
     end
     object Panel1: TPanel
       Left = 2
       Top = 388
-      Width = 385
+      Width = 284
       Height = 41
       Align = alBottom
       BevelOuter = bvNone
       Caption = 'Panel1'
       ShowCaption = False
       TabOrder = 1
+      ExplicitWidth = 385
+      DesignSize = (
+        284
+        41)
       object BitBtn1: TBitBtn
         Left = 4
         Top = 6
@@ -161,10 +166,11 @@ object ProtokollNewForm: TProtokollNewForm
         OnClick = BitBtn1Click
       end
       object BitBtn2: TBitBtn
-        Left = 287
+        Left = 205
         Top = 6
         Width = 75
         Height = 25
+        Anchors = [akTop, akRight]
         Caption = 'L'#246'schen'
         Glyph.Data = {
           36040000424D3604000000000000360000002800000010000000100000000100
@@ -203,17 +209,19 @@ object ProtokollNewForm: TProtokollNewForm
           FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
         TabOrder = 1
         OnClick = BitBtn2Click
+        ExplicitLeft = 306
       end
     end
   end
   object GroupBox3: TGroupBox
-    Left = 624
+    Left = 523
     Top = 0
     Width = 304
     Height = 431
     Align = alRight
     Caption = 'Vorlagen'
     TabOrder = 3
+    ExplicitLeft = 624
     object LB: TListBox
       Left = 2
       Top = 15
