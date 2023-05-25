@@ -73,19 +73,26 @@ var
 begin
   Result := TJSONObject.Create;
   arr := TJSONArray.Create;
-  PicTab.Open;
-  while not PicTab.Eof do
-  begin
-    row := TJSONObject.Create;
-    JReplace( row, 'name', PicTab.FieldByName('PI_NAME').AsString);
-    JReplace( row, 'md5',  PicTab.FieldByName('PI_MD5').AsString);
-    arr.AddElement(row);
-    PicTab.Next;
-  end;
-  PicTab.Close;
+  PicTab.Transaction.StartTransaction;
+  try
+    PicTab.Open;
+    while not PicTab.Eof do
+    begin
+      row := TJSONObject.Create;
+      JReplace( row, 'name', PicTab.FieldByName('PI_NAME').AsString);
+      JReplace( row, 'md5',  PicTab.FieldByName('PI_MD5').AsString);
+      arr.AddElement(row);
+      PicTab.Next;
+    end;
+    PicTab.Close;
 
-  if PicTab.Transaction.Active then
-    PicTab.Transaction.Commit;
+    if PicTab.Transaction.Active then
+      PicTab.Transaction.Commit;
+  except
+    if PicTab.Transaction.Active then
+      PicTab.Transaction.Rollback;
+
+  end;
 
   JReplace( Result, 'items', arr);
 end;

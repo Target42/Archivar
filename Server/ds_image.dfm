@@ -24,6 +24,7 @@ object dsImage: TdsImage
     Top = 24
   end
   object IBTransaction1: TFDTransaction
+    Options.AutoStop = False
     Connection = DBMod.ArchivarConnection
     Left = 112
     Top = 16
