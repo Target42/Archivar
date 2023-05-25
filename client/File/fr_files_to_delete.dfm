@@ -31,7 +31,6 @@ object FilesToDeleteFrame: TFilesToDeleteFrame
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsMisc'
-    SQLConnection = GM.SQLConnection1
     Left = 72
     Top = 16
   end

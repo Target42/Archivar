@@ -55,7 +55,7 @@ begin
   LV.Items.BeginUpdate;
   LV.Items.Clear;
 
-  FilesToDeleteQry.ParamByName('tage').AsInteger := 35;
+  FilesToDeleteQry.ParamByName('tage').AsInteger := 30;
   FilesToDeleteQry.ParamByName('PE_ID').AsInteger := GM.UserID;
   FilesToDeleteQry.Open;
   while not FilesToDeleteQry.Eof do begin
