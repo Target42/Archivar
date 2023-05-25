@@ -5,6 +5,7 @@ object DeleteFilesMod: TDeleteFilesMod
   Height = 333
   Width = 502
   object FDTransaction1: TFDTransaction
+    Options.AutoStop = False
     Connection = DBMod.ArchivarConnection
     Left = 72
     Top = 32
