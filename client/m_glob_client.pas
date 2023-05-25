@@ -183,6 +183,8 @@ type
     function getStorageList : TJSONObject;
 
     function CheckStorage( typ : string; id : integer ) : integer;
+
+    procedure doAfterConnect;
   end;
 
   TMyCallback = class(TDBXCallback)
@@ -660,6 +662,76 @@ begin
   CodeSite.ExitMethod(self, 'diconnect');
 end;
 
+procedure TGM.doAfterConnect;
+var
+  Client : TAdminModClient;
+  data   : TJSONObject;
+  req    : TJSONObject;
+
+  fname : string;
+begin
+  req := TJSONObject.Create;
+
+  JReplace( req, 'host',      GetEnvironmentVariable('COMPUTERNAME'));
+  JReplace( req, 'hostuser',  GetEnvironmentVariable('USERNAME'));
+  client := NIL;
+
+
+  DSClientCallbackChannelManager1.DSHostname  := SQLConnection1.ConnectionData.Properties.Values['HostName'];
+  DSClientCallbackChannelManager1.DSPort      := SQLConnection1.ConnectionData.Properties.Values['Port'];
+  DSClientCallbackChannelManager1.RegisterCallback(BRD_CHANNEL, TMyCallback.Create);
+
+  try
+    Client := TAdminModClient.Create(SQLConnection1.DBXConnection);
+    data := Client.getUserInfo(req);
+    if Assigned(data) then
+    begin
+      self.UserName   := JString( data, 'user' );
+      self.IsAdmin    := JBool(   data, 'admin');
+      Self.Name       := JString( data, 'name');
+      Self.Vorname    := JString( data, 'vorname');
+      Self.UserID     := JInt(    data, 'id' );
+      Self.UserFolder := JInt(    data, 'drid');
+    end;
+
+    CreateDirs;
+
+    data := client.getDeleteTimes;
+    FillTimes( JArray( data, 'items'));
+  finally
+    Client.Free;
+  end;
+
+  try
+    m_misc := TdsMiscClient.Create(SQLConnection1.DBXConnection);
+  finally
+
+  end;
+  HttpMod.Home := self.wwwHome;
+
+  BookMarkHandler.load;
+
+  checkimages;
+  checkWWWRoot;
+
+  FileCacheMod.SyncCache;
+
+  requestUser;
+
+  fname :=  FileCacheMod.getFile('data', 'Kategorie.json');
+  Kategorien.load(fname);
+
+  PostMessage( Application.MainFormHandle, msgLoadLogo,       0, 0 );
+  PostMessage( Application.MainFormHandle, msgUpdateMeetings, 0, 0 );
+
+  checkOrDownloadKeys;
+
+  if SQLConnection1.Params.Values['CommunicationProtocol'] <> 'tcp/ip' then
+    PingTimer.Enabled := true;
+
+  m_plugins.loadAll;
+end;
+
 function TGM.download(fname: string; st: TStream): boolean;
 const
   BSize = 1024 * 1024;
@@ -1112,76 +1184,8 @@ begin
 end;
 
 procedure TGM.SQLConnection1AfterConnect(Sender: TObject);
-var
-  Client : TAdminModClient;
-  data   : TJSONObject;
-  req    : TJSONObject;
-
-  fname : string;
 begin
   PostMessage( Application.MainFormHandle, msgConnected, 0, 0 );
-
-  req := TJSONObject.Create;
-
-  JReplace( req, 'host',      GetEnvironmentVariable('COMPUTERNAME'));
-  JReplace( req, 'hostuser',  GetEnvironmentVariable('USERNAME'));
-  client := NIL;
-
-
-  DSClientCallbackChannelManager1.DSHostname  := SQLConnection1.ConnectionData.Properties.Values['HostName'];
-  DSClientCallbackChannelManager1.DSPort      := SQLConnection1.ConnectionData.Properties.Values['Port'];
-  DSClientCallbackChannelManager1.RegisterCallback(BRD_CHANNEL, TMyCallback.Create);
-
-  try
-    Client := TAdminModClient.Create(SQLConnection1.DBXConnection);
-    data := Client.getUserInfo(req);
-    if Assigned(data) then
-    begin
-      self.UserName   := JString( data, 'user' );
-      self.IsAdmin    := JBool(   data, 'admin');
-      Self.Name       := JString( data, 'name');
-      Self.Vorname    := JString( data, 'vorname');
-      Self.UserID     := JInt(    data, 'id' );
-      Self.UserFolder := JInt(    data, 'drid');
-    end;
-
-    CreateDirs;
-
-    data := client.getDeleteTimes;
-    FillTimes( JArray( data, 'items'));
-  finally
-    Client.Free;
-  end;
-
-  try
-    m_misc := TdsMiscClient.Create(SQLConnection1.DBXConnection);
-  finally
-
-  end;
-  HttpMod.Home := self.wwwHome;
-
-  BookMarkHandler.load;
-
-  checkimages;
-  checkWWWRoot;
-
-  FileCacheMod.SyncCache;
-
-  requestUser;
-
-  fname :=  FileCacheMod.getFile('data', 'Kategorie.json');
-  Kategorien.load(fname);
-
-  PostMessage( Application.MainFormHandle, msgLoadLogo,       0, 0 );
-  PostMessage( Application.MainFormHandle, msgUpdateMeetings, 0, 0 );
-
-  checkOrDownloadKeys;
-
-  if SQLConnection1.Params.Values['CommunicationProtocol'] <> 'tcp/ip' then
-    PingTimer.Enabled := true;
-
-  m_plugins.loadAll;
-
 end;
 
 procedure TGM.SQLConnection1AfterDisconnect(Sender: TObject);
@@ -1217,12 +1221,18 @@ function TGM.UnLockDocument(id, typ: integer; subid : integer): TJSONObject;
 var
   req : TJSONObject;
 begin
+  Result := NIL;
+
   req := TJSONObject.Create;
   JReplace( req, 'id', id);
   JReplace( req, 'typ',typ);
   JReplace( req, 'sub', subid );
 
-  Result := m_misc.UnLockDocument(req);
+  try
+    if Assigned(m_misc) then
+      Result := m_misc.UnLockDocument(req);
+  except
+  end;
 end;
 
 { TMyCallback }
