@@ -1,6 +1,6 @@
 //
 // Erzeugt vom DataSnap-Proxy-Generator.
-// 08.05.2023 21:09:02
+// 23.05.2023 20:58:15
 //
 
 unit u_stub;
@@ -277,6 +277,7 @@ type
     FdeleteMeetingCommand: TDBXCommand;
     FSendmailCommand: TDBXCommand;
     FinviteCommand: TDBXCommand;
+    FcloseMeetingCommand: TDBXCommand;
     FGetTreeCommand: TDBXCommand;
     FchangeStatusCommand: TDBXCommand;
     FchangeUserCommand: TDBXCommand;
@@ -289,6 +290,7 @@ type
     function deleteMeeting(req: TJSONObject): TJSONObject;
     function Sendmail(req: TJSONObject): TJSONObject;
     function invite(req: TJSONObject): TJSONObject;
+    function closeMeeting(req: TJSONObject): TJSONObject;
     function GetTree(req: TJSONObject): TJSONObject;
     function changeStatus(req: TJSONObject): TJSONObject;
     function changeUser(req: TJSONObject): TJSONObject;
@@ -1795,6 +1797,20 @@ begin
   Result := TJSONObject(FinviteCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
 end;
 
+function TdsMeeingClient.closeMeeting(req: TJSONObject): TJSONObject;
+begin
+  if FcloseMeetingCommand = nil then
+  begin
+    FcloseMeetingCommand := FDBXConnection.CreateCommand;
+    FcloseMeetingCommand.CommandType := TDBXCommandTypes.DSServerMethod;
+    FcloseMeetingCommand.Text := 'TdsMeeing.closeMeeting';
+    FcloseMeetingCommand.Prepare;
+  end;
+  FcloseMeetingCommand.Parameters[0].Value.SetJSONValue(req, FInstanceOwner);
+  FcloseMeetingCommand.ExecuteUpdate;
+  Result := TJSONObject(FcloseMeetingCommand.Parameters[1].Value.GetJSONValue(FInstanceOwner));
+end;
+
 function TdsMeeingClient.GetTree(req: TJSONObject): TJSONObject;
 begin
   if FGetTreeCommand = nil then
@@ -1854,6 +1870,7 @@ begin
   FdeleteMeetingCommand.DisposeOf;
   FSendmailCommand.DisposeOf;
   FinviteCommand.DisposeOf;
+  FcloseMeetingCommand.DisposeOf;
   FGetTreeCommand.DisposeOf;
   FchangeStatusCommand.DisposeOf;
   FchangeUserCommand.DisposeOf;
