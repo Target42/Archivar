@@ -177,6 +177,7 @@ object ArchivService: TArchivService
   end
   object IBTransaction1: TFDTransaction
     Options.AutoStop = False
+    Options.EnableNested = False
     Connection = DBMod.ArchivarConnection
     Left = 136
     Top = 328

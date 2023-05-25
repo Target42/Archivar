@@ -128,7 +128,7 @@ type
   private
     m_timer : TServerTimer;
     m_secret : string;
-    m_Lock : TCriticalSection;
+    m_Lock : TMutex;
     m_sessions : TThreadList<String>;
     m_log : string;
 
@@ -492,7 +492,7 @@ begin
     exit;
   end;
 
-  m_Lock.Enter;
+  m_Lock.Acquire;
   try
     GrijjyLog.send('session name', Session.UserName );
     GrijjyLog.send('session id', Session.Id );
@@ -502,7 +502,7 @@ begin
     HellMod.remove(Session.id);
 
   finally
-    m_Lock.Leave;
+    m_Lock.Release;
   end;
   GrijjyLog.ExitMethod(self, 'removeUser');
 end;
@@ -620,6 +620,7 @@ begin
     if Length(userName) > MaxUserNameLength then begin
       GrijjyLog.Send('Exceed MaxUserNameLength', Length(userName));
       GrijjyLog.ExitMethod(self, 'DSAuthenticationManager1UserAuthenticate');
+
       m_Lock.Release;
       exit;
     end;
@@ -871,7 +872,7 @@ begin
   HttpMod     := THttpMod.Create(self);
   DBMod       := TDBMod.Create(self);
   HellMod     := THellMod.create(self );
-  m_lock      := TCriticalSection.Create;
+  m_lock      := TMutex.Create;
   m_sessions  := TThreadList<String>.create;
   MailMod     := TMailMod.Create(self);
 
@@ -966,7 +967,6 @@ begin
 
   createTimer;
 
-  m_timer.newTimer(3, 1, true, execTimeToDie);
 
   try
     DBMod.startDB;
@@ -1012,9 +1012,11 @@ begin
     end;
   end;
 
+  m_timer.newTimer(3, 1, true, execTimeToDie);
   fillMailHandler;
 
   m_mailHandler.start;
+
   GrijjyLog.Send('started:', Started);
   GrijjyLog.ExitMethod(self, 'ServiceStart');
 end;
@@ -1026,15 +1028,14 @@ begin
     m_mailHandler.stop;
 
     try
-    DSServer1.Stop;
+      DSServer1.Stop;
     except
 
     end;
-
-    DBMod.stopDB;
-    HttpMod.ende;
-
     m_timer.Terminate;
+    HttpMod.ende;
+    DBMod.stopDB;
+
     m_timer := NIL;
 
   except
