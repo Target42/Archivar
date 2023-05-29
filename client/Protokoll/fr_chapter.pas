@@ -601,6 +601,8 @@ var
   i     : integer;
   en    : TEntry;
 begin
+  if m_ro then exit;
+
   node := TV.GetNodeAt(X, Y);
 
   if (Sender = TV) and ( Source = TaskList2Frame1.LV) then
@@ -655,6 +657,8 @@ var
   node : TTreeNode;
 begin
   Accept := false;
+  if m_ro then exit;
+
   if Assigned(Tv.Selected) then
   begin
     en := TEntry(TV.Selected.Data);

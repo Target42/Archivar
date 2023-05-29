@@ -151,10 +151,10 @@ begin
 
   clear;
 
-  if m_id = 0 then
-    ListTasksQry.Filtered := false
-  else
-  begin
+  if m_id = 0 then begin
+    ListTasksQry.Filtered := false;
+    ListTasksQry.Filter := '';
+  end else begin
     ListTasksQry.Filter := 'GR_ID='+intToStr(m_id);
     ListTasksQry.Filtered := true;
   end;
@@ -176,10 +176,6 @@ end;
 procedure TTaskList2Frame.SetReadOnly(const Value: boolean);
 begin
   m_ro := value;
-
-  SpeedButton1.Enabled  := not m_ro;
-  SpeedButton2.Enabled  := not m_ro;
-
 end;
 
 procedure TTaskList2Frame.ShowFilterDlg;
@@ -203,7 +199,7 @@ var
   list : TEntryList;
   i    : integer;
 begin
-  if not Assigned(FOnTaskEntry) or not Assigned(LV.Selected) then
+  if not Assigned(FOnTaskEntry) or not Assigned(LV.Selected) or m_ro then
     exit;
 
   list := TEntryList.Create;
@@ -221,6 +217,8 @@ var
   i : integer;
   list : TEntryList;
 begin
+  if m_ro then exit;
+  
   list := TEntryList.Create;
 
   for i := 0 to pred(LV.Items.Count) do

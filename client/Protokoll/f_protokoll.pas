@@ -218,6 +218,7 @@ begin
       b.Von := now;
     end;
   end;
+  UpdateTG;
 end;
 
 procedure TProtokollForm.BitBtn2Click(Sender: TObject);
@@ -236,6 +237,7 @@ begin
       b.bis := now;
     end;
   end;
+  UpdateTG;
 end;
 
 procedure TProtokollForm.BitBtn3Click(Sender: TObject);

@@ -64,8 +64,11 @@ uses
 
 procedure TProtocolSectionForm.ac_aveExecute(Sender: TObject);
 begin
-  if m_locked then
+  if not m_locked or not Assigned(m_proto) then
     exit;
+
+  ChapterFrame1.save;
+  m_proto.save;
 end;
 
 procedure TProtocolSectionForm.ac_lockExecute(Sender: TObject);
@@ -74,7 +77,7 @@ var
   ct : IChapterTitle;
   obj : TJSONObject;
 begin
-  if ComboBox1.ItemIndex = -1 then
+  if (ComboBox1.ItemIndex = -1) or m_locked then
     exit;
 
   nr := integer(ComboBox1.Items.Objects[ ComboBox1.ItemIndex ]);
@@ -90,7 +93,7 @@ begin
   begin
     setLocked(true);
     reloadDoc;
-    ShowMessage('Das Protokoll kann jetzt bearbeitet werden.');
+    ShowMessage('Der Protokollabschnitt kann jetzt bearbeitet werden.');
   end;
 end;
 
@@ -100,7 +103,6 @@ begin
     reloadDoc
   else
     ShowMessage('In der Bearbeitung kann das Dokument nicht aktualisiert werden.');
-
 end;
 
 procedure TProtocolSectionForm.ac_unlockExecute(Sender: TObject);
@@ -136,6 +138,7 @@ end;
 
 procedure TProtocolSectionForm.FormCreate(Sender: TObject);
 begin
+  m_locked := true;
   m_proto := NIL;
   m_prid  := 0;
   m_ctid  := 0;
@@ -199,7 +202,7 @@ begin
   ac_lock.Enabled         := not m_locked;
   ac_unlock.Enabled       := m_locked;
   ac_refresh.Enabled      := not m_locked;
-  ac_ave.Enabled          := not m_locked;
+  ac_ave.Enabled          := m_locked;
 
   if m_locked then
     Caption := m_proto.Title + ' - '+ m_title

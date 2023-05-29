@@ -1,8 +1,8 @@
 object ChapterFrame: TChapterFrame
   Left = 0
   Top = 0
-  Width = 753
-  Height = 475
+  Width = 891
+  Height = 565
   Align = alClient
   TabOrder = 0
   ExplicitWidth = 451
@@ -10,7 +10,7 @@ object ChapterFrame: TChapterFrame
   object Splitter1: TSplitter
     Left = 251
     Top = 0
-    Height = 475
+    Height = 565
     ExplicitLeft = 368
     ExplicitTop = 72
     ExplicitHeight = 100
@@ -19,7 +19,7 @@ object ChapterFrame: TChapterFrame
     Left = 0
     Top = 0
     Width = 251
-    Height = 475
+    Height = 565
     Align = alLeft
     Caption = 'Struktur'
     TabOrder = 0
@@ -43,9 +43,10 @@ object ChapterFrame: TChapterFrame
       Left = 2
       Top = 31
       Width = 247
-      Height = 372
+      Height = 462
       Align = alClient
       DragMode = dmAutomatic
+      HideSelection = False
       Indent = 19
       PopupMenu = PopupMenu1
       TabOrder = 0
@@ -56,7 +57,7 @@ object ChapterFrame: TChapterFrame
     end
     object PageControl1: TPageControl
       Left = 2
-      Top = 403
+      Top = 493
       Width = 247
       Height = 70
       ActivePage = TabSheet1
@@ -66,8 +67,6 @@ object ChapterFrame: TChapterFrame
       ExplicitTop = 233
       object TabSheet1: TTabSheet
         Caption = 'Bearbeiten'
-        ExplicitTop = 24
-        ExplicitHeight = 42
         object SpeedButton1: TSpeedButton
           Tag = 1
           Left = 3
@@ -112,8 +111,6 @@ object ChapterFrame: TChapterFrame
       object TabSheet2: TTabSheet
         Caption = 'Verschieben'
         ImageIndex = 1
-        ExplicitTop = 24
-        ExplicitHeight = 42
         object SpeedButton4: TSpeedButton
           Tag = 1
           Left = 3
@@ -158,8 +155,6 @@ object ChapterFrame: TChapterFrame
       object TabSheet3: TTabSheet
         Caption = 'Beschluss'
         ImageIndex = 2
-        ExplicitTop = 24
-        ExplicitHeight = 42
         object SpeedButton9: TSpeedButton
           Tag = 1
           Left = 3
@@ -190,8 +185,8 @@ object ChapterFrame: TChapterFrame
   object GroupBox2: TGroupBox
     Left = 254
     Top = 0
-    Width = 499
-    Height = 475
+    Width = 637
+    Height = 565
     Align = alClient
     Caption = 'Aufgaben'
     TabOrder = 1
@@ -200,7 +195,7 @@ object ChapterFrame: TChapterFrame
     object Panel2: TPanel
       Left = 2
       Top = 15
-      Width = 495
+      Width = 633
       Height = 41
       Align = alTop
       BevelOuter = bvNone
@@ -272,8 +267,8 @@ object ChapterFrame: TChapterFrame
     inline TaskList2Frame1: TTaskList2Frame
       Left = 2
       Top = 56
-      Width = 495
-      Height = 417
+      Width = 633
+      Height = 507
       Align = alClient
       TabOrder = 1
       ExplicitLeft = 2
@@ -281,13 +276,13 @@ object ChapterFrame: TChapterFrame
       ExplicitWidth = 193
       ExplicitHeight = 247
       inherited LV: TListView
-        Width = 454
-        Height = 417
-        ExplicitWidth = 152
-        ExplicitHeight = 247
+        Width = 592
+        Height = 507
+        ExplicitWidth = 592
+        ExplicitHeight = 507
       end
       inherited Panel2: TPanel
-        Height = 417
+        Height = 507
         ExplicitHeight = 247
       end
     end
@@ -381,7 +376,7 @@ object ChapterFrame: TChapterFrame
     Left = 208
     Top = 144
     Bitmap = {
-      494C010108002800900010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010108002800940010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000003000000001002000000000000030
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -832,7 +827,7 @@ object ChapterFrame: TChapterFrame
     Left = 56
     Top = 296
     Bitmap = {
-      494C010103000800100010001000FFFFFFFFFF00FFFFFFFFFFFFFFFF424D3600
+      494C010103000800140010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -968,6 +963,7 @@ object ChapterFrame: TChapterFrame
       83FF1FF8FC7F000081FFBFFDFEFF0000C0FFBE0D86C30000C07FBE0D02810000
       E03FBE0D02810000F01FB00D32990000F80FB00D32990000FC07B07D32990000
       FE03B07D86C30000FF01B07D84430000FF81BFFD84430000FFC11FF8CC670000
-      FFE10000C0070000FFFF1FF8FEFF0000}
+      FFE10000C0070000FFFF1FF8FEFF000000000000000000000000000000000000
+      000000000000}
   end
 end

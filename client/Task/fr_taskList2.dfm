@@ -59,6 +59,7 @@ object TaskList2Frame: TTaskList2Frame
       Top = 48
       Width = 23
       Height = 22
+      Hint = 'Ausgew'#228'hlte Aufgaben '#252'bernehmen'
       Glyph.Data = {
         36040000424D3604000000000000360000002800000010000000100000000100
         20000000000000040000C40E0000C40E00000000000000000000FFFFFF00FFFF
@@ -94,6 +95,8 @@ object TaskList2Frame: TTaskList2Frame
         FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
         FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
         FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
+      ParentShowHint = False
+      ShowHint = True
       OnClick = SpeedButton1Click
     end
     object SpeedButton2: TSpeedButton
@@ -101,6 +104,7 @@ object TaskList2Frame: TTaskList2Frame
       Top = 76
       Width = 23
       Height = 22
+      Hint = 'Alle Aufgaben '#252'bernehmen'
       Glyph.Data = {
         36040000424D3604000000000000360000002800000010000000100000000100
         20000000000000040000C40E0000C40E00000000000000000000FFFFFF00FFFF
@@ -136,13 +140,13 @@ object TaskList2Frame: TTaskList2Frame
         FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
         FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
         FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
+      ParentShowHint = False
+      ShowHint = True
       OnClick = SpeedButton2Click
     end
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsChapter'
-    Connected = True
-    SQLConnection = GM.SQLConnection1
     Left = 128
     Top = 24
   end

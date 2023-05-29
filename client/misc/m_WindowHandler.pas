@@ -83,8 +83,12 @@ begin
   m_forms.Clear;
   Application.ProcessMessages;
 
-  for fr in m_list do
-    fr.ForceClose(true);
+  for fr in m_list do begin
+    try
+      fr.ForceClose(true);
+    except
+    end;
+  end;
   Application.ProcessMessages;
 end;
 
