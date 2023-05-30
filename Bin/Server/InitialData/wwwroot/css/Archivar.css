@@ -15,6 +15,18 @@ h2 {
 	font-weight bold;
 }
 
+h3 { 
+	font-family: Arial;
+	font-size: 11px;
+	font-weight bold;
+}
+
+h4 { 
+	font-family: Arial;
+	font-size: 11px;
+	font-weight bold;
+}
+
 p {
 	font-family: Arial;
 	font-size: 12px;
@@ -23,20 +35,19 @@ table{
 	width:100%;
 	font-family: Arial;
 	font-size: 12px;
-	border: 1px solid black;
+	border: 1px solid red;
 	border-collapse: collapse;
 }
-th, td {
+th, td, tr {
 	font-family: Arial;
 	font-size: 12px;
 	border: 1px solid black;
 	border-collapse: collapse;
 }
 
-#t01 table, #t01 tr, #t01 th, #t01 td {    
+#t01 table, #t01 tr, #t01 td, #t01 th {    
   background-color: #f1f1c1;
   border: none;
-  border-collapse: collapse;
 }
 
 #data
