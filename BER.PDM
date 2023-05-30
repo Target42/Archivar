@@ -76,6 +76,27 @@ create generator gen_pl_id;\
 create generator gen_mac_id;;\
 create generator gen_maf_id;\
 create generator gen_mam_id;
+set term /;\
+CREATE TRIGGER SET_CP_CHAPTER FOR CP_CHAPTER\
+ACTIVE BEFORE INSERT POSITION 0\
+AS\
+BEGIN\
+  IF (NEW.CP_CREATED IS NULL) THEN\
+    NEW.CP_CREATED = CURRENT_TIMESTAMP;\
+END\
+;/\
+set term ;/\
+\
+set term /;\
+CREATE TRIGGER SET_CT_CHAPTER_TEXT FOR CT_CHAPTER_TEXT\
+ACTIVE BEFORE INSERT POSITION 0\
+AS\
+BEGIN\
+  IF (NEW.CT_CREATED IS NULL) THEN\
+    NEW.CT_CREATED = CURRENT_TIMESTAMP;\
+END\
+;/\
+set term ;/\
 \
 set term /;\
 CREATE TRIGGER SET_TA_TASK_NEW FOR TA_TASK\
@@ -133,7 +154,7 @@ set generator gen_ty_id to 100;
 
 
 1582717246
-1684585916
+1685470553
 0
 0
 2
@@ -13030,7 +13051,7 @@ OID     N8
 3
 3483
 289
-0
+2
 20
 0
 0
@@ -13126,7 +13147,7 @@ OID     N8
 3
 4018
 289
-2
+0
 23
 0
 0
