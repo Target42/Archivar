@@ -46,11 +46,12 @@ type
       cmd: string; TagParams: TStrings; var ReplaceText: string;
       style : ITaskStyle; data : IXMLList);
     procedure LoadHtlmFrame;
+    procedure setTaskData( value : IXMLList );
   public
 
 
     property TaskContainer  : ITaskContainer  read m_tc     write m_tc;
-    property TaskData       : IXMLList        read m_task   write m_task;
+    property TaskData       : IXMLList        read m_task   write setTaskData;
     property TaskStyle      : ITaskStyle      read m_style  write m_style;
     property Title          : string          read m_title  write m_title;
 
@@ -507,6 +508,13 @@ begin
       st.Free;
     end;
   end;
+end;
+
+procedure THtmlMod.setTaskData(value: IXMLList);
+begin
+  m_task := value;
+  if not Assigned(m_task) then
+    m_task := NewList;
 end;
 
 procedure THtmlMod.show( web : TWebBrowser);
