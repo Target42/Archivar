@@ -370,8 +370,9 @@ begin
       FID := GM.autoInc('GEN_CT_ID');
 
       data.Append;
-      data.FieldByName('CP_ID').AsInteger     := m_owner.ID;  //m_ct.ID;
-      data.FieldByName('CT_ID').AsInteger     := FID;
+      data.FieldByName('CP_ID').AsInteger       := m_owner.ID;  //m_ct.ID;
+      data.FieldByName('CT_ID').AsInteger       := FID;
+      data.FieldByName('CT_CREATED').AsDateTime := now;
     end
     else
     begin

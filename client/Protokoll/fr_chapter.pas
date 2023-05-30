@@ -625,6 +625,7 @@ begin
       end;
       entry := src.Items.Item[i].Data;
       cp.Name := entry.TaskName;
+      cp.TAID := entry.TaskID;
       cp.Data := entry;
     end;
     updateTree;
