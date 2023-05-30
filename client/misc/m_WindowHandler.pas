@@ -68,11 +68,13 @@ end;
 procedure TWindowHandler.closeAll;
 var
   i   : integer;
-  fr  : IForceClose;
+  arr : TArray<IForceClose>;
 begin
   for i := pred(m_forms.Count) downto 0 do begin
+
     if Supports( m_forms[i], IForceClose) then
       m_list.Remove(m_forms[i] as IForceClose);
+
     try
       m_forms[i].Close;
       m_forms[i].Free;
@@ -83,12 +85,13 @@ begin
   m_forms.Clear;
   Application.ProcessMessages;
 
-  for fr in m_list do begin
-    try
-      fr.ForceClose(true);
-    except
-    end;
-  end;
+  arr := m_list.ToArray;
+  m_list.Clear;
+
+  for i := low(arr) to high(arr) do
+    arr[i].ForceClose(true);
+  SetLength(arr, 0);
+
   Application.ProcessMessages;
 end;
 
@@ -213,7 +216,6 @@ begin
   begin
     Application.CreateForm(TProtokollViewForm, frm);
     frm.ID := id;
-    frm.Show;
     m_protoView.AddOrSetValue( id, frm);
     m_list.Add(frm);
   end;
