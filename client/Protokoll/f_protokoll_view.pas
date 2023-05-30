@@ -74,6 +74,7 @@ procedure TProtokollViewForm.FormClose(Sender: TObject;
   var Action: TCloseAction);
 begin
   Action := caFree;
+  WindowHandler.closeProtoclView(m_proto.ID);
 end;
 
 procedure TProtokollViewForm.FormCreate(Sender: TObject);
@@ -86,8 +87,6 @@ end;
 
 procedure TProtokollViewForm.FormDestroy(Sender: TObject);
 begin
-  WindowHandler.closeProtoclWindow(m_proto.ID);
-
   if Assigned(m_proto) then
     m_proto.release;
 
