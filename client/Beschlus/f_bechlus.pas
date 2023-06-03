@@ -37,6 +37,8 @@ type
     extbeusteine1: TMenuItem;
     TNFrame1: TTNFrame;
     ImageList2: TImageList;
+    PopupMenu1: TPopupMenu;
+    extbausteine1: TMenuItem;
     procedure LVGremiumDragOver(Sender, Source: TObject; X, Y: Integer;
       State: TDragState; var Accept: Boolean);
     procedure FormCreate(Sender: TObject);
@@ -64,17 +66,21 @@ type
     m_zustimmung  : integer;
     m_ablehnung   : integer;
     m_enthaltung  : integer;
+    FSimplePanel: boolean;
 
     procedure updateInfo;
     function GetBeschluss: IBeschluss;
     procedure SetBeschluss(const Value: IBeschluss);
 
     procedure changeTB( sender : TObject );
+    procedure setSimplePanel( value : boolean );
 
   public
     property Beschluss: IBeschluss read GetBeschluss write SetBeschluss;
-
+    property SimplePanel: boolean read FSimplePanel write setSimplePanel;
     procedure setPage( nr : integer );
+
+
   end;
 
 var
@@ -189,6 +195,7 @@ begin
   TNFrame1.init;
 
   TextBlockFrame1.init(true);
+  TextBlockFrame1.TagFilter := 'beschluss';
   EditFrame2.prepare;
 end;
 
@@ -277,6 +284,19 @@ begin
     2 : PageControl1.ActivePage := TabSheet1;
   else
     PageControl1.ActivePage := TabSheet2;
+  end;
+end;
+
+procedure TBeschlusform.setSimplePanel(value: boolean);
+begin
+  FSimplePanel := value;
+
+  if FSimplePanel then begin
+    GroupBox3.Visible := false;
+    TabSheet1.PageControl := NIL;
+  end else begin
+    GroupBox3.Visible := true;
+    TabSheet1.PageControl := PageControl1;
   end;
 end;
 

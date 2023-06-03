@@ -63,8 +63,6 @@ object Beschlusform: TBeschlusform
     TabOrder = 1
     object TabSheet2: TTabSheet
       Caption = 'Beschlustext'
-      ExplicitTop = 24
-      ExplicitHeight = 336
       object Splitter1: TSplitter
         Left = 448
         Top = 0
@@ -82,7 +80,7 @@ object Beschlusform: TBeschlusform
         Align = alBottom
         Caption = 'Abstimmung'
         TabOrder = 0
-        ExplicitTop = 253
+        ExplicitLeft = 2
         object Button1: TBitBtn
           Left = 9
           Top = 24
@@ -256,7 +254,6 @@ object Beschlusform: TBeschlusform
         Caption = 'Textbausteine'
         TabOrder = 1
         Visible = False
-        ExplicitHeight = 253
         inline TextBlockFrame1: TTextBlockFrame
           Left = 2
           Top = 15
@@ -267,14 +264,21 @@ object Beschlusform: TBeschlusform
           ExplicitLeft = 2
           ExplicitTop = 15
           ExplicitWidth = 263
-          ExplicitHeight = 236
+          ExplicitHeight = 235
           inherited Panel1: TPanel
             Top = 179
             Width = 263
-            ExplicitTop = 180
+            ExplicitTop = 179
             ExplicitWidth = 263
             inherited LabeledEdit1: TLabeledEdit
+              Left = 4
+              Top = 31
               Width = 248
+              EditLabel.ExplicitLeft = 4
+              EditLabel.ExplicitTop = 15
+              EditLabel.ExplicitWidth = 46
+              ExplicitLeft = 4
+              ExplicitTop = 31
               ExplicitWidth = 248
             end
           end
@@ -282,7 +286,7 @@ object Beschlusform: TBeschlusform
             Width = 263
             Height = 179
             ExplicitWidth = 263
-            ExplicitHeight = 180
+            ExplicitHeight = 179
           end
         end
       end
@@ -294,7 +298,6 @@ object Beschlusform: TBeschlusform
         Align = alClient
         Caption = 'Erweiterter Text'
         TabOrder = 2
-        ExplicitHeight = 253
         inline EditFrame2: TEditFrame
           Left = 2
           Top = 15
@@ -305,14 +308,15 @@ object Beschlusform: TBeschlusform
           ExplicitLeft = 2
           ExplicitTop = 15
           ExplicitWidth = 444
-          ExplicitHeight = 236
+          ExplicitHeight = 235
           inherited RE: TRichEdit
             Width = 444
             Height = 201
+            PopupMenu = PopupMenu1
             OnDragDrop = EditFrame2REDragDrop
             OnDragOver = EditFrame2REDragOver
             ExplicitWidth = 444
-            ExplicitHeight = 202
+            ExplicitHeight = 201
           end
           inherited Panel1: TPanel
             Width = 444
@@ -328,8 +332,6 @@ object Beschlusform: TBeschlusform
     object TabSheet1: TTabSheet
       Caption = 'Teilnehmer'
       ImageIndex = 1
-      ExplicitTop = 24
-      ExplicitHeight = 336
       inline TNFrame1: TTNFrame
         Left = 0
         Top = 0
@@ -338,24 +340,24 @@ object Beschlusform: TBeschlusform
         Align = alClient
         TabOrder = 0
         ExplicitWidth = 718
-        ExplicitHeight = 336
+        ExplicitHeight = 335
         inherited Splitter4: TSplitter
           Height = 335
           ExplicitHeight = 336
         end
         inherited GroupBox4: TGroupBox
           Height = 335
-          ExplicitHeight = 336
+          ExplicitHeight = 335
           inherited LVGremium: TListView
             Height = 312
-            ExplicitHeight = 313
+            ExplicitHeight = 312
           end
         end
         inherited Panel4: TPanel
           Width = 378
           Height = 335
           ExplicitWidth = 378
-          ExplicitHeight = 336
+          ExplicitHeight = 335
           inherited Splitter5: TSplitter
             Top = 143
             Width = 378
@@ -366,22 +368,22 @@ object Beschlusform: TBeschlusform
             Width = 378
             Height = 143
             ExplicitWidth = 378
-            ExplicitHeight = 144
+            ExplicitHeight = 143
             inherited LVAbwesend: TListView
               Width = 329
               Height = 120
               ExplicitWidth = 329
-              ExplicitHeight = 121
+              ExplicitHeight = 120
             end
             inherited Panel1: TPanel
               Height = 126
-              ExplicitHeight = 127
+              ExplicitHeight = 126
             end
           end
           inherited GroupBox6: TGroupBox
             Top = 146
             Width = 378
-            ExplicitTop = 147
+            ExplicitTop = 146
             ExplicitWidth = 378
             inherited LVNichtabgestimmt: TListView
               Width = 329
@@ -396,7 +398,7 @@ object Beschlusform: TBeschlusform
     Left = 559
     Top = 208
     Bitmap = {
-      494C0101010008009C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010101000800A40010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       000000000000000000000000000000000000000000FF000000FF000000FF0000
       00FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF0000
@@ -563,7 +565,7 @@ object Beschlusform: TBeschlusform
     Left = 124
     Top = 136
     Bitmap = {
-      494C010104000800280010001000FFFFFFFFFF00FFFFFFFFFFFFFFFF424D3600
+      494C010104000800300010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -831,6 +833,15 @@ object Beschlusform: TBeschlusform
       C0038001C0008003C003C003C0008003C003F00FC0008003C003FC3FC0008003
       C003F81FC0008003C003F81FC0018003C003F00FC0038003C003F00FC0038003
       C003F00FC0038003C003F00FC0038003C003F00FC0038003C007F00FC0038003
-      C00FF00FC0038003C01FF83FC003FFFF}
+      C00FF00FC0038003C01FF83FC003FFFF00000000000000000000000000000000
+      000000000000}
+  end
+  object PopupMenu1: TPopupMenu
+    Left = 348
+    Top = 161
+    object extbausteine1: TMenuItem
+      Caption = 'Textbausteine'
+      OnClick = extbeusteine1Click
+    end
   end
 end
