@@ -65,6 +65,10 @@ type
     ac_be_bearbeiten: TAction;
     ac_be_delete: TAction;
     ImageList2: TImageList;
+    N3: TMenuItem;
+    Beschlusshinzufgen1: TMenuItem;
+    Beschlussbearbeiten1: TMenuItem;
+    Beschlusslschen1: TMenuItem;
     procedure ComboBox1Change(Sender: TObject);
     procedure TVDragOver(Sender, Source: TObject; X, Y: Integer;
       State: TDragState; var Accept: Boolean);
@@ -158,6 +162,7 @@ begin
 
   Application.CreateForm(TBeschlusform, Beschlusform);
   Beschlusform.Beschluss := be;
+  Beschlusform.SimplePanel := true;
   if Beschlusform.ShowModal = mrOk then
   begin
     cp.Votes.saveModified;
@@ -195,6 +200,7 @@ begin
 
   Application.CreateForm(TBeschlusform, Beschlusform);
   Beschlusform.Beschluss := be;
+  Beschlusform.SimplePanel := true;
   if Beschlusform.ShowModal = mrOk then
   begin
     cp.Votes.saveModified;

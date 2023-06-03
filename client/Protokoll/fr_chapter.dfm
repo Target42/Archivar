@@ -1,16 +1,14 @@
 object ChapterFrame: TChapterFrame
   Left = 0
   Top = 0
-  Width = 1051
-  Height = 664
+  Width = 451
+  Height = 305
   Align = alClient
   TabOrder = 0
-  ExplicitWidth = 451
-  ExplicitHeight = 305
   object Splitter1: TSplitter
     Left = 251
     Top = 0
-    Height = 664
+    Height = 305
     ExplicitLeft = 368
     ExplicitTop = 72
     ExplicitHeight = 100
@@ -19,11 +17,10 @@ object ChapterFrame: TChapterFrame
     Left = 0
     Top = 0
     Width = 251
-    Height = 664
+    Height = 305
     Align = alLeft
     Caption = 'Struktur'
     TabOrder = 0
-    ExplicitHeight = 305
     object Label2: TLabel
       Left = 2
       Top = 15
@@ -43,7 +40,7 @@ object ChapterFrame: TChapterFrame
       Left = 2
       Top = 31
       Width = 247
-      Height = 561
+      Height = 202
       Align = alClient
       DragMode = dmAutomatic
       HideSelection = False
@@ -53,18 +50,16 @@ object ChapterFrame: TChapterFrame
       OnDblClick = TVDblClick
       OnDragDrop = TVDragDrop
       OnDragOver = TVDragOver
-      ExplicitHeight = 202
     end
     object PageControl1: TPageControl
       Left = 2
-      Top = 592
+      Top = 233
       Width = 247
       Height = 70
       ActivePage = TabSheet1
       Align = alBottom
       Images = ImageList2
       TabOrder = 1
-      ExplicitTop = 233
       object TabSheet1: TTabSheet
         Caption = 'Bearbeiten'
         object SpeedButton1: TSpeedButton
@@ -185,24 +180,21 @@ object ChapterFrame: TChapterFrame
   object GroupBox2: TGroupBox
     Left = 254
     Top = 0
-    Width = 797
-    Height = 664
+    Width = 197
+    Height = 305
     Align = alClient
     Caption = 'Aufgaben'
     TabOrder = 1
-    ExplicitWidth = 197
-    ExplicitHeight = 305
     object Panel2: TPanel
       Left = 2
       Top = 15
-      Width = 793
+      Width = 193
       Height = 41
       Align = alTop
       BevelOuter = bvNone
       Caption = 'Panel2'
       ShowCaption = False
       TabOrder = 0
-      ExplicitWidth = 193
       object Label1: TLabel
         Left = 16
         Top = 11
@@ -267,8 +259,8 @@ object ChapterFrame: TChapterFrame
     inline TaskList2Frame1: TTaskList2Frame
       Left = 2
       Top = 56
-      Width = 793
-      Height = 606
+      Width = 193
+      Height = 247
       Align = alClient
       TabOrder = 1
       ExplicitLeft = 2
@@ -276,13 +268,13 @@ object ChapterFrame: TChapterFrame
       ExplicitWidth = 193
       ExplicitHeight = 247
       inherited LV: TListView
-        Width = 752
-        Height = 606
+        Width = 152
+        Height = 247
         ExplicitWidth = 152
         ExplicitHeight = 247
       end
       inherited Panel2: TPanel
-        Height = 606
+        Height = 247
         ExplicitHeight = 247
       end
     end
@@ -366,8 +358,8 @@ object ChapterFrame: TChapterFrame
       OnExecute = ac_be_bearbeitenExecute
     end
     object ac_be_delete: TAction
-      Caption = 'Beschluss hinzuf'#252'gen'
-      Hint = 'Beschluss hinzuf'#252'gen'
+      Caption = 'Beschluss l'#246'schen'
+      Hint = 'Beschluss l'#246'schen'#13#10
       ImageIndex = 3
       OnExecute = ac_be_deleteExecute
     end
@@ -376,7 +368,7 @@ object ChapterFrame: TChapterFrame
     Left = 208
     Top = 144
     Bitmap = {
-      494C010108002800980010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010108002800A00010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000003000000001002000000000000030
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -814,6 +806,19 @@ object ChapterFrame: TChapterFrame
       Action = ac_chapter_right
       AutoCheck = True
     end
+    object N3: TMenuItem
+      Caption = '-'
+    end
+    object Beschlusshinzufgen1: TMenuItem
+      Action = ac_beschluss
+    end
+    object Beschlussbearbeiten1: TMenuItem
+      Action = ac_be_bearbeiten
+      ImageIndex = 2
+    end
+    object Beschlusslschen1: TMenuItem
+      Action = ac_be_delete
+    end
   end
   object ChapterTextTab: TClientDataSet
     Aggregates = <>
@@ -827,7 +832,7 @@ object ChapterFrame: TChapterFrame
     Left = 56
     Top = 296
     Bitmap = {
-      494C010103000800180010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010103000800200010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
