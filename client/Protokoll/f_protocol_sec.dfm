@@ -63,19 +63,33 @@ object ProtocolSectionForm: TProtocolSectionForm
       Height = 459
       ExplicitHeight = 459
       inherited Label2: TLabel
-        Height = 41
         WordWrap = True
-        ExplicitWidth = 247
-        ExplicitHeight = 41
       end
       inherited TV: TTreeView
-        Top = 56
-        Height = 331
+        Height = 356
         ExplicitHeight = 356
       end
       inherited PageControl1: TPageControl
         Top = 387
         ExplicitTop = 387
+        inherited TabSheet1: TTabSheet
+          ExplicitLeft = 4
+          ExplicitTop = 25
+          ExplicitWidth = 239
+          ExplicitHeight = 41
+        end
+        inherited TabSheet2: TTabSheet
+          ExplicitLeft = 4
+          ExplicitTop = 24
+          ExplicitWidth = 239
+          ExplicitHeight = 42
+        end
+        inherited TabSheet3: TTabSheet
+          ExplicitLeft = 4
+          ExplicitTop = 24
+          ExplicitWidth = 239
+          ExplicitHeight = 42
+        end
       end
     end
     inherited GroupBox2: TGroupBox
@@ -95,6 +109,7 @@ object ProtocolSectionForm: TProtocolSectionForm
         inherited LV: TListView
           Width = 658
           Height = 401
+          ExplicitTop = -2
           ExplicitWidth = 658
           ExplicitHeight = 401
         end
@@ -106,7 +121,7 @@ object ProtocolSectionForm: TProtocolSectionForm
     end
     inherited ImageList1: TImageList
       Bitmap = {
-        494C010108002800880010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+        494C010108002800900010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
         0000000000003600000028000000400000003000000001002000000000000030
         0000000000000000000000000000000000000000000000000000000000000000
         0000000000000000000000000000000000000000000000000000000000000000
@@ -511,7 +526,7 @@ object ProtocolSectionForm: TProtocolSectionForm
     end
     inherited ImageList2: TImageList
       Bitmap = {
-        494C010103000800180010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+        494C010103000800240010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
         0000000000003600000028000000400000001000000001002000000000000010
         0000000000000000000000000000000000000000000000000000000000000000
         0000000000000000000000000000000000000000000000000000000000000000

@@ -67,7 +67,7 @@ begin
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
   GremiumFrame1.init;
 
-  m_filter        := 'O';
+  m_filter        := '''O''';
   ELTab.Filter    := 'EL_STATUS=''X''';
   ELTab.Filtered  := true;
   ELTab.Open;
