@@ -277,7 +277,8 @@ object dsMeeing: TdsMeeing
     Transaction = IBTransaction1
     SQL.Strings = (
       'SELECT * FROM PR_PROTOKOL'
-      'where gr_id= :gr_id')
+      'where gr_id= :gr_id'
+      'order by PR_DATUM desc')
     Left = 112
     Top = 16
     ParamData = <
