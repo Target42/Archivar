@@ -78,6 +78,7 @@ type
     procedure StatusBar1DrawPanel(StatusBar: TStatusBar; Panel: TStatusPanel;
       const Rect: TRect);
     procedure BitBtn3Click(Sender: TObject);
+    procedure JvDBDateTimePicker1Change(Sender: TObject);
   private
     m_prid          : integer;
     m_proto         : IProtocol;
@@ -121,7 +122,7 @@ uses
   m_WindowHandler, System.UITypes,
   u_ProtocolImpl, u_speedbutton, f_abwesenheit,
   f_besucher, f_personen_list,
-  CodeSiteLogging;
+  CodeSiteLogging, u_gremium;
 
 {$R *.dfm}
 { TProtokollForm }
@@ -448,6 +449,20 @@ begin
   Result := -1;
   if Assigned(m_proto) then
     Result := m_proto.ID;
+end;
+
+procedure TProtokollForm.JvDBDateTimePicker1Change(Sender: TObject);
+var
+  gremium : TGremium;
+begin
+  if m_proto.ReadOnly then
+    exit;
+  m_proto.Modified := true;
+
+  gremium := GM.getGremium(m_proto.GRID);
+  if Assigned(gremium) then begin
+    DBEdit1.Text := gremium.ShortName+'_'+FormatDateTime('yyyymmdd', JvDBDateTimePicker1.Date)
+  end;
 end;
 
 procedure TProtokollForm.reload;
