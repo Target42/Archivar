@@ -264,7 +264,7 @@ type
 
     procedure templateEdit( sys : boolean );
     procedure setGremiumName( id : integer );
-    procedure showMeeting( id : integer; add : string );
+    procedure showMeeting( id : integer; editMode : boolean);
     procedure doMeeting( id : integer );
 
     procedure UpdateUserView( sender : TObject );
@@ -464,7 +464,7 @@ begin
   begin
     if SelectMeetingForm.EL_ID > 0 then
     begin
-      showMeeting( SelectMeetingForm.EL_ID, 'Bearbeiten' );
+      showMeeting( SelectMeetingForm.EL_ID, true );
     end;
   end;
   SelectMeetingForm.free;
@@ -891,7 +891,7 @@ begin
     msgRemoveBookmark : BookmarkFrame1.removeBookmark( TBookmark(Msg.LParam));
     msgLoadLogo       : loadLogo;
     msgUpdateGremium  : setGremiumName( msg.lParam );
-    msgEditMeeting    : showMeeting(msg.lParam, 'Anzeigen');
+    msgEditMeeting    : showMeeting(msg.lParam, false);
     msgLogin          : ac_prg_connect.Execute;
     msgDoMeeting      : doMeeting(msg.lParam);
     msgMeetingEnd     : showAdmin;
@@ -1102,11 +1102,17 @@ begin
   StatusBar1.Panels.Items[ id ].Text := text;
 end;
 
-procedure TMainForm.showMeeting(id: integer; add : string);
+procedure TMainForm.showMeeting(id: integer; editMode : boolean);
 begin
   Application.CreateForm(TMeetingForm, MeetingForm);
   MeetingForm.EL_ID   := id;
-  MeetingForm.addCaption( add );
+  if editMode then
+    MeetingForm.addCaption( 'Bearbeiten' )
+  else begin
+    MeetingForm.addCaption( 'Anzeigen' );
+    MeetingForm.ReadOnly := true;
+  end;
+
   MeetingForm.ShowModal;
   MeetingForm.Free;
 end;
