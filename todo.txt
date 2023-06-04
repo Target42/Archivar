@@ -1,0 +1,40 @@
+Setup
+#####
+
+ArchivServer
+############
+
+Archivar
+########
+
+Launcher
+########
+
+
+Guard
+#####
+
+Plugins
+#######
+* Einfügen von Ablagen auf dem Server
+* Umstellung der Plugins auf:
+	* User spezifisch
+	* Plugin-spezifisch
+
+Dairy
+#####
+
+Mail_imap
+#########
+* Ablage der imap-Daten auf dem Server als "User-Spezifisch"
+
+Curriculum
+###########
+* geplant
+* Datem sind "Plugin-spezifisch"
+
+
+Neu Features
+############
+
+* Anwesenheitplanung/Abwesenheitsgründe -> Einfluss in die Sitzungsplanung und die Sitzungen
