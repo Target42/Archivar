@@ -53,42 +53,50 @@ object MeetingForm: TMeetingForm
     Left = 0
     Top = 0
     Width = 677
-    Height = 81
+    Height = 115
     Align = alTop
     Caption = 'Sitzungsdaten'
     TabOrder = 1
+    ExplicitTop = 4
     object Label1: TLabel
-      Left = 199
-      Top = 24
+      Left = 15
+      Top = 56
       Width = 41
       Height = 13
       Caption = 'Protokoll'
     end
     object Label2: TLabel
-      Left = 350
-      Top = 24
+      Left = 168
+      Top = 56
       Width = 31
       Height = 13
       Caption = 'Datum'
     end
     object Label3: TLabel
-      Left = 516
-      Top = 24
+      Left = 332
+      Top = 56
       Width = 34
       Height = 13
       Caption = 'Uhrzeit'
     end
     object Label4: TLabel
-      Left = 578
-      Top = 24
+      Left = 394
+      Top = 56
       Width = 24
       Height = 13
       Caption = 'Ende'
     end
+    object Label6: TLabel
+      Left = 15
+      Top = 16
+      Width = 58
+      Height = 13
+      Caption = 'Sitzungstitel'
+    end
     object LabeledEdit1: TLabeledEdit
-      Left = 16
-      Top = 43
-      Width = 177
+      Left = 271
+      Top = 32
+      Width = 299
       Height = 21
       EditLabel.Width = 41
       EditLabel.Height = 13
@@ -97,8 +105,8 @@ object MeetingForm: TMeetingForm
       TabOrder = 0
     end
     object JvDBDateTimePicker1: TJvDBDateTimePicker
-      Left = 350
-      Top = 43
+      Left = 166
+      Top = 75
       Width = 160
       Height = 21
       Date = 44234.839669270830000000
@@ -109,8 +117,8 @@ object MeetingForm: TMeetingForm
       DataSource = ElSrc
     end
     object ComboBox1: TComboBox
-      Left = 516
-      Top = 43
+      Left = 332
+      Top = 75
       Width = 56
       Height = 21
       TabOrder = 2
@@ -118,16 +126,16 @@ object MeetingForm: TMeetingForm
       OnChange = ComboBox1Change
     end
     object ComboBox2: TComboBox
-      Left = 578
-      Top = 43
+      Left = 394
+      Top = 75
       Width = 56
       Height = 21
       TabOrder = 3
       Text = 'ComboBox2'
     end
     object DBEdit1: TDBEdit
-      Left = 199
-      Top = 43
+      Left = 15
+      Top = 75
       Width = 145
       Height = 21
       DataField = 'PR_NAME'
@@ -135,21 +143,33 @@ object MeetingForm: TMeetingForm
       ReadOnly = True
       TabOrder = 4
     end
+    object DBEdit2: TDBEdit
+      Left = 14
+      Top = 32
+      Width = 241
+      Height = 21
+      DataField = 'EL_TITEL'
+      DataSource = ElSrc
+      TabOrder = 5
+    end
   end
   object PageControl1: TPageControl
     Left = 0
-    Top = 81
+    Top = 115
     Width = 677
-    Height = 431
-    ActivePage = TabSheet2
+    Height = 397
+    ActivePage = TabSheet1
     Align = alClient
     Images = ImageList1
     TabOrder = 2
+    ExplicitTop = 81
+    ExplicitHeight = 431
     object TabSheet1: TTabSheet
       Caption = 'Inhalt'
+      ExplicitHeight = 402
       object Splitter1: TSplitter
         Left = 0
-        Top = 278
+        Top = 244
         Width = 669
         Height = 3
         Cursor = crVSplit
@@ -161,15 +181,16 @@ object MeetingForm: TMeetingForm
         Left = 0
         Top = 0
         Width = 669
-        Height = 278
+        Height = 244
         Align = alClient
         Caption = 'Tagesordnung'
         TabOrder = 0
+        ExplicitHeight = 278
         inline TOFrame1: TTOFrame
           Left = 2
           Top = 15
           Width = 665
-          Height = 261
+          Height = 227
           Align = alClient
           TabOrder = 0
           ExplicitLeft = 2
@@ -178,7 +199,7 @@ object MeetingForm: TMeetingForm
           ExplicitHeight = 261
           inherited VST: TVirtualStringTree
             Width = 665
-            Height = 261
+            Height = 227
             ExplicitWidth = 665
             ExplicitHeight = 261
             Columns = <
@@ -197,12 +218,13 @@ object MeetingForm: TMeetingForm
       end
       object GroupBox3: TGroupBox
         Left = 0
-        Top = 281
+        Top = 247
         Width = 669
         Height = 121
         Align = alBottom
         Caption = 'Anmerkungen'
         TabOrder = 1
+        ExplicitTop = 281
         inline EditFrame1: TEditFrame
           Left = 2
           Top = 15
@@ -234,11 +256,12 @@ object MeetingForm: TMeetingForm
     object TabSheet2: TTabSheet
       Caption = 'Teilnehmer'
       ImageIndex = 1
+      ExplicitHeight = 402
       object LV: TListView
         Left = 0
         Top = 0
         Width = 669
-        Height = 361
+        Height = 327
         Align = alClient
         Columns = <
           item
@@ -304,10 +327,11 @@ object MeetingForm: TMeetingForm
         RowSelect = True
         TabOrder = 0
         ViewStyle = vsReport
+        ExplicitHeight = 361
       end
       object Panel1: TPanel
         Left = 0
-        Top = 361
+        Top = 327
         Width = 669
         Height = 41
         Align = alBottom
@@ -315,7 +339,7 @@ object MeetingForm: TMeetingForm
         Caption = 'Panel1'
         ShowCaption = False
         TabOrder = 1
-        ExplicitTop = 359
+        ExplicitTop = 361
         object LabeledEdit2: TLabeledEdit
           Left = 68
           Top = 18
@@ -425,11 +449,12 @@ object MeetingForm: TMeetingForm
     object TabSheet3: TTabSheet
       Caption = 'G'#228'ste'
       ImageIndex = 2
+      ExplicitHeight = 402
       object DBGrid2: TDBGrid
         Left = 0
         Top = 0
         Width = 669
-        Height = 361
+        Height = 327
         Align = alClient
         DataSource = TGSrc
         TabOrder = 0
@@ -481,7 +506,7 @@ object MeetingForm: TMeetingForm
       end
       object Panel2: TPanel
         Left = 0
-        Top = 361
+        Top = 327
         Width = 669
         Height = 41
         Align = alBottom
@@ -489,6 +514,7 @@ object MeetingForm: TMeetingForm
         Caption = 'Panel2'
         ShowCaption = False
         TabOrder = 1
+        ExplicitTop = 361
         object DBNavigator1: TDBNavigator
           Left = 12
           Top = 6
@@ -508,7 +534,6 @@ object MeetingForm: TMeetingForm
     Align = alBottom
     Caption = 'Eigene Teilnahme'
     TabOrder = 3
-    ExplicitLeft = 8
     object Label5: TLabel
       Left = 148
       Top = 26
@@ -589,6 +614,7 @@ object MeetingForm: TMeetingForm
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsMeeing'
+    SQLConnection = GM.SQLConnection1
     Left = 48
     Top = 176
   end
@@ -599,7 +625,7 @@ object MeetingForm: TMeetingForm
     RemoteServer = DSProviderConnection1
     BeforePost = ElTabBeforePost
     OnReconcileError = ElTabReconcileError
-    Left = 24
+    Left = 32
     Top = 232
   end
   object ElSrc: TDataSource
@@ -726,7 +752,7 @@ object MeetingForm: TMeetingForm
     Left = 448
     Top = 64
     Bitmap = {
-      494C010103000800340010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010103000800380010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000447A9600447A

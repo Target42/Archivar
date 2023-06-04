@@ -1,14 +1,15 @@
 object MeetingFrame: TMeetingFrame
   Left = 0
   Top = 0
-  Width = 451
+  Width = 776
   Height = 305
   Align = alClient
   TabOrder = 0
+  ExplicitWidth = 451
   object Lv: TListView
     Left = 0
     Top = 0
-    Width = 451
+    Width = 776
     Height = 305
     Align = alClient
     Columns = <
@@ -65,6 +66,7 @@ object MeetingFrame: TMeetingFrame
     OnCustomDrawItem = LvCustomDrawItem
     OnCustomDrawSubItem = LvCustomDrawSubItem
     OnDblClick = LvDblClick
+    ExplicitWidth = 451
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsMisc'
@@ -86,7 +88,7 @@ object MeetingFrame: TMeetingFrame
       end>
     ProviderName = 'MeetingQry'
     RemoteServer = DSProviderConnection1
-    Left = 72
+    Left = 80
     Top = 72
   end
   object ApplicationEvents1: TApplicationEvents

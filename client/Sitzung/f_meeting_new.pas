@@ -71,6 +71,8 @@ type
     TNQryTN_GRUND: TStringField;
     TNQryTN_READ: TSQLTimeStampField;
     BitBtn2: TBitBtn;
+    DBEdit2: TDBEdit;
+    Label6: TLabel;
     procedure FormCreate(Sender: TObject);
     procedure ElTabBeforePost(DataSet: TDataSet);
     procedure ComboBox1Change(Sender: TObject);
@@ -503,6 +505,8 @@ begin
       if Assigned(gr) then
         self.SetGremiumID( gr );
 
+      if ELTab.FieldByName('EL_TITEL').AsString = '' then
+        ELTab.FieldByName('EL_TITEL').AsString := m_gr.ShortName + ' - Sitzung';
 
       updateTo;
       changeStatus;
@@ -554,12 +558,15 @@ begin
 
   DBGrid2.ReadOnly    := flag;
   EditFrame1.ReadOnly := flag;
+  DBEdit1.ReadOnly    := flag;
 
   Panel2.Visible      := not flag;
   BitBtn2.Visible     := not flag;
   Panel2.Visible      := not flag;
   GroupBox4.Visible   := not flag;
   BitBtn2.Visible     := not flag;
+  ComboBox1.Enabled   := not flag;
+  ComboBox2.Enabled   := not flag;
 end;
 
 procedure TMeetingForm.TGQryBeforePost(DataSet: TDataSet);
