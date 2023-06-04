@@ -458,11 +458,13 @@ var
   prid    : integer;
   Session : TDSSession;
   peid    : integeR;
+  title   : string;
 begin
 
   Result  := TJSONObject.Create;
-  grid    := JInt( req, 'grid');
-  prid    := JInt( req, 'prid');
+  grid    := JInt(    req, 'grid');
+  prid    := JInt(    req, 'prid');
+  title   := JString( req, 'title', 'Sitzungeinladung' );
 
   Session := TDSSessionManager.GetThreadSession;
   peid := StrToIntDef( Session.GetData('ID'), -1);
@@ -478,7 +480,7 @@ begin
     ElTable.Append;
     ElTable.FieldByName('EL_ID').AsInteger      := id;
     ElTable.FieldByName('GR_ID').AsInteger      := grid;
-    ElTable.FieldByName('EL_TITEL').AsString    :='Sitzungeinladung';
+    ElTable.FieldByName('EL_TITEL').AsString    := title;
     ElTable.FieldByName('EL_DATUM').AsDateTime  := Date + 3;
     ElTable.FieldByName('EL_ZEIT').AsDateTime   := EncodeTime(  9, 0, 0, 0);
     ElTable.FieldByName('EL_ENDE').AsDateTime   := EncodeTime( 12, 0, 0, 0);
@@ -510,7 +512,7 @@ function TdsMeeing.Sendmail(req: TJSONObject): TJSONObject;
 begin
   Result := TJSONObject.Create;
   try
-    ResetReadQry.ParamByName('PR_ID').AsInteger := JInt( req, 'prid');
+    ResetReadQry.ParamByName('EL_ID').AsInteger := JInt( req, 'elid');
     ResetReadQry.ExecSQL;
 
     JResult( Result, true, IntToStr( ResetReadQry.RowsAffected));
