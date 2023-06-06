@@ -266,6 +266,7 @@ type
     procedure setGremiumName( id : integer );
     procedure showMeeting( id : integer; editMode : boolean);
     procedure doMeeting( id : integer );
+    procedure DeleteMeeting(id: integer);
 
     procedure UpdateUserView( sender : TObject );
     procedure ParseCmdLine;
@@ -442,6 +443,7 @@ end;
 procedure TMainForm.ac_me_deleteExecute(Sender: TObject);
 begin
   Application.CreateForm(TSelectMeetingForm, SelectMeetingForm);
+  SelectMeetingForm.Filter := buildMeetingFilter(['O', 'E']);
   if SelectMeetingForm.ShowModal = mrok then
   begin
     if SelectMeetingForm.EL_ID > 0 then
@@ -898,6 +900,7 @@ begin
     msgRetryLogin     : ac_prg_connect.Execute;
     msgShowFileCache  : ac_ad_filecache.Execute;
     msgNeedKeys       : ac_to_keys.Execute;
+    msgDeleteMeeting  : deleteMeeting(msg.lParam)
     else
       Handled := false;
   end;
@@ -953,6 +956,11 @@ begin
   end;
   Plugins1.Visible        := flag;
 
+end;
+
+procedure TMainForm.DeleteMeeting(id: integer);
+begin
+  MeetingFrame1.remove(id);
 end;
 
 procedure TMainForm.doMeeting(id: integer);

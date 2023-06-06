@@ -45,7 +45,7 @@ type
     TGTab: TFDTable;
     changeELStatusQry: TFDQuery;
   private
-    procedure updateMeeting( el_id : integer );
+    procedure updateMeeting( el_id : integer; deleteMeeting : boolean = false);
   public
     function AutoInc( gen : string ) : integer;
     function newMeeting(    req : TJSONObject ) : TJSONObject;
@@ -270,7 +270,7 @@ begin
     exit;
   end;
 
-  FrindELQry.ParamByName('el_id').AsInteger;
+  FrindELQry.ParamByName('el_id').AsInteger := id;
   FrindELQry.Open;
   if not FrindELQry.IsEmpty then
   begin
@@ -279,15 +279,17 @@ begin
   end;
   FrindELQry.Close;
 
-  if not canDelete then
-  begin
-    Cancel('Es fehlen die Berechtigungen diese Sitzung zu löschen.');
-    exit;
+  if not SameText(Session.GetData('admin'), 'true') then begin
+    if not canDelete then
+    begin
+      Cancel('Es fehlen die Berechtigungen diese Sitzung zu löschen.');
+      exit;
+    end;
   end;
 
   if prid = -1 then
   begin
-    Cancel('Die Sitzung wurde nicht gefunden!');
+    Cancel('Das zugehörige Protokoll wurde nicht gefunden!');
     exit;
   end;
 
@@ -300,6 +302,8 @@ begin
       DelELQry.Transaction.Commit;
 
     JResult( Result, true, 'Die Einladung wurde gelöscht');
+
+    updateMeeting( id, true );
   except
     on e : exception do
     begin
@@ -532,12 +536,16 @@ begin
   end;
 end;
 
-procedure TdsMeeing.updateMeeting(el_id: integer);
+procedure TdsMeeing.updateMeeting(el_id: integer; deleteMeeting : boolean);
 var
   msg : TJSONObject;
 begin
   msg := TJSONObject.Create;
-  JAction(  msg, BRD_MEETING_NEW);
+  if not deleteMeeting then
+    JAction(  msg, BRD_MEETING_NEW)
+  else
+    JAction(  msg, BRD_MEETING_DEL);
+
   JReplace( msg, 'id', el_id);
   ArchivService.BroadcastMessage(BRD_CHANNEL, msg);
 end;

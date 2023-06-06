@@ -37,9 +37,11 @@ const
   BRD_TASK_MOVE       : string = 'task_move';       // taskmove
   BRD_TASK_DELETE     : string = 'task_delete';     // taskdelete
   BRD_TASK_ASSIGN     : string = 'task_assign';
+
   BRD_MEETING_NEW     : string = 'meeting_new';     // newmeeting
   BRD_MEETING_UPDATE  : string = 'meeting_update';  // updatemeeting
   BRD_MEETING         : string = 'meeting';         // meeting
+  BRD_MEETING_DEL     : string = 'meeting_delete';
 
   BRD_ONLINE_USER     : string = 'online_user';     // onlineuser
   BRD_ONLINE_STATE    : string = 'online_state';    // userchangestate

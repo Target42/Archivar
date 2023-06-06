@@ -39,6 +39,7 @@ type
           FRead: TDateTime;
           FStatus: string;
         FRunning: boolean;
+        FEiladender: string;
         public
           constructor create;
           Destructor Destroy; override;
@@ -52,6 +53,7 @@ type
           property Read   : TDateTime   read FRead      write FRead;
           property Status : string      read FStatus    write FStatus;
           property Running: boolean     read FRunning   write FRunning;
+          property Einadender: string read FEiladender write FEiladender;
       end;
   private
     m_list : TList<DataRec>;
@@ -63,6 +65,8 @@ type
   public
     procedure init;
     procedure release;
+
+    procedure remove( id : integer );
   end;
 
 implementation
@@ -183,6 +187,15 @@ procedure TMeetingFrame.readData;
 var
   da : DataRec;
 
+  function buildName( data : TDataSet ) : string;
+  begin
+    Result :=
+      data.FieldByName('TN_VORNAME').AsString + ' ' +
+      data.FieldByName('TN_NAME').AsString;
+      if data.FieldByName('TN_ROLLE').AsString <> '' then
+        Result := Result + ' ('+data.FieldByName('TN_ROLLE').AsString+')';
+  end;
+
   procedure readValues( data : TDataSet; flag : Boolean );
   begin
     while not data.Eof do
@@ -199,6 +212,7 @@ var
       da.Read     := data.FieldByName('TN_READ').AsDateTime;
       da.Status   := TeilnehmerStatusToString(TTeilnehmerStatus(data.FieldByName('TN_STATUS').AsInteger), false);
       da.Running  := flag;
+      da.Einadender := buildName(data);
       data.Next;
     end;
   end;
@@ -224,6 +238,20 @@ procedure TMeetingFrame.release;
 begin
   clear;
   m_list.Free;
+end;
+
+procedure TMeetingFrame.remove(id: integer);
+var
+  da : DataRec;
+begin
+  for da in m_list do begin
+    if da.Id = Id  then begin
+      m_list.Remove(da);
+      da.Free;
+      break;
+    end;
+  end;
+  updateView;
 end;
 
 procedure TMeetingFrame.UpdateMeetings(id: integer);
@@ -281,6 +309,7 @@ begin
       item.SubItems.Add(DateTimeToStr(da.Read))
     else
       item.SubItems.Add('');
+    item.SubItems.Add(da.Einadender);
   end;
   LV.Items.EndUpdate;
 end;

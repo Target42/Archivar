@@ -40,6 +40,7 @@ const
   msgShowFileCache  = WMUSER + 17;
   msgNeedKeys       = WMUSER + 18;
   msgUpdateTaskList = WMUSER + 19;
+  msgDeleteMeeting  = WMUSER + 20;
 type
   TGM = class(TDataModule)
     SQLConnection1: TSQLConnection;
@@ -106,6 +107,7 @@ type
     function handle_taskmove      ( const Arg: TJSONObject ) : boolean;
     function handle_taskdelete    ( const Arg: TJSONObject ) : boolean;
     function handle_newmeeting    ( const Arg: TJSONObject ) : boolean;
+    function handle_deletemeeting ( const Arg: TJSONObject ) : boolean;
     function handle_updatemeeting ( const Arg: TJSONObject ) : boolean;
     function handle_task_assign   ( const arg: TJSONObject ) : boolean;
 
@@ -609,6 +611,7 @@ begin
   EventHandler.Register( self, handle_taskmove,     BRD_TASK_MOVE);
   EventHandler.Register( self, handle_taskdelete,   BRD_TASK_DELETE);
   EventHandler.Register( self, handle_newmeeting,   BRD_MEETING_NEW );
+  EventHandler.Register( self, handle_deletemeeting,BRD_MEETING_DEL );
   EventHandler.Register( self, handle_updatemeeting,BRD_MEETING_UPDATE );
   EventHandler.Register( self, handle_task_assign,  BRD_TASK_ASSIGN);
 
@@ -973,6 +976,12 @@ var
   else if SameText(cmd, BRD_ADMIN_REBOOT)     then ShowShutdown;
 
 
+  Result := true;
+end;
+
+function TGM.handle_deletemeeting(const Arg: TJSONObject): boolean;
+begin
+  PostMessage(Application.MainFormHandle, msgDeleteMeeting, 0, JInt(Arg, 'id'));
   Result := true;
 end;
 
