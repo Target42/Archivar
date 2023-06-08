@@ -7,14 +7,13 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.ComCtrls,
   Vcl.ExtCtrls, i_chapter, Data.DB, Datasnap.DBClient, Datasnap.DSConnect,
   fr_protocol, Vcl.StdCtrls, Vcl.OleCtrls, SHDocVw, fr_MeetingTN, u_stub,
-  System.JSON, Vcl.Buttons, fr_beschluss, i_beschluss;
+  System.JSON, Vcl.Buttons, fr_beschluss, i_beschluss, Vcl.Menus, fr_gaeste;
 
 type
   TDoMeetingform = class(TForm)
     StatusBar1: TStatusBar;
     PageControl1: TPageControl;
     TabSheet1: TTabSheet;
-    TabSheet2: TTabSheet;
     TabSheet3: TTabSheet;
     PageControl2: TPageControl;
     TabSheet5: TTabSheet;
@@ -35,25 +34,21 @@ type
     Panel4: TPanel;
     GroupBox3: TGroupBox;
     Splitter2: TSplitter;
-    GroupBox2: TGroupBox;
-    BitBtn2: TBitBtn;
-    BitBtn3: TBitBtn;
-    BitBtn4: TBitBtn;
-    BitBtn5: TBitBtn;
-    BitBtn6: TBitBtn;
-    BitBtn7: TBitBtn;
     BeschlussFrame1: TBeschlussFrame;
+    N1: TMenuItem;
+    Beschlusshinzufgen1: TMenuItem;
+    Beschlussbearbeiten1: TMenuItem;
+    Beschlusslschen1: TMenuItem;
+    N2: TMenuItem;
+    GaesteFrame1: TGaesteFrame;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure Button1Click(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
-    procedure BitBtn2Click(Sender: TObject);
-    procedure BitBtn3Click(Sender: TObject);
-    procedure BitBtn4Click(Sender: TObject);
-    procedure BitBtn5Click(Sender: TObject);
     procedure ProtocolFrame1ac_beschlussExecute(Sender: TObject);
     procedure BeschlussFrame1BitBtn4Click(Sender: TObject);
+    procedure MeetingTNFrame1Anwesend1Click(Sender: TObject);
   private
     m_meid  : integer;
     m_prid  : integer;
@@ -138,26 +133,6 @@ begin
 
 end;
 
-procedure TDoMeetingform.BitBtn2Click(Sender: TObject);
-begin
-  doVote(+1);
-end;
-
-procedure TDoMeetingform.BitBtn3Click(Sender: TObject);
-begin
-  doVote(0);
-end;
-
-procedure TDoMeetingform.BitBtn4Click(Sender: TObject);
-begin
-  doVote(-1);
-end;
-
-procedure TDoMeetingform.BitBtn5Click(Sender: TObject);
-begin
-  doVote(-2);
-end;
-
 procedure TDoMeetingform.Button1Click(Sender: TObject);
 var
   req : TJSONObject;
@@ -187,7 +162,7 @@ begin
   JReplace( req, 'meid', m_meid);
   JReplace( req, 'beid', AbstimmungsForm.BEID );
   JReplace( req, 'usid', GM.UserID);
-  JReplace( req, 'vote',  value);
+  JReplace( req, 'vote', value);
 
   res := m_hell.Vote(req);
   ShowResult( res );
@@ -226,6 +201,7 @@ begin
   ProtocolFrame1.MeetingMode := true;
 
   MeetingTNFrame1.init;
+  GaesteFrame1.prepare;
 
   m_hell := TdsSitzungClient.Create(DSProviderConnection1.SQLConnection.DBXConnection);
   MeetingTNFrame1.Client  := m_hell;
@@ -249,6 +225,7 @@ begin
   ProtocolFrame1.onBeschlusChange := NIL;
   m_hell.Free;
 
+  GaesteFrame1.release;
   BeschlussFrame1.release;
   ProtocolFrame1.release;
   MeetingTNFrame1.release;
@@ -300,8 +277,6 @@ begin
 
   MeetingTNFrame1.Enabled := m_lead = GM.UserID;
   TabSheet6.Enabled := m_lead = GM.UserID;
-  BitBtn6.Visible   := m_lead = GM.UserID;
-  BitBtn7.Visible   := m_lead = GM.UserID;
   m_proto.ReadOnly  := m_lead <>GM.UserID;
 
   BeschlussFrame1.hasLead := m_lead = GM.UserID;
@@ -405,6 +380,12 @@ begin
 
 end;
 
+procedure TDoMeetingform.MeetingTNFrame1Anwesend1Click(Sender: TObject);
+begin
+  MeetingTNFrame1.Anwesend1Click(Sender);
+
+end;
+
 procedure TDoMeetingform.ProtocolFrame1ac_beschlussExecute(Sender: TObject);
 begin
   ProtocolFrame1.ac_beschlussExecute(Sender);
@@ -437,6 +418,7 @@ begin
       Caption                     := m_proto.Title;
       ProtocolFrame1.Protocol     := m_proto;
       MeetingTNFrame1.Teilnehmer  := m_proto.Teilnehmer;
+      GaesteFrame1.Besucher       := m_proto.Besucher;
 
     end;
     m_proto.Modified := false;

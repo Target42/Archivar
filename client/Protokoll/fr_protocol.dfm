@@ -44,12 +44,10 @@ object ProtocolFrame: TProtocolFrame
     object TabSheet4: TTabSheet
       Caption = 'Struktur'
       ImageIndex = 6
-      ExplicitTop = 24
-      ExplicitHeight = 38
       object SpeedButton1: TSpeedButton
         Tag = 1
-        Left = 4
-        Top = 3
+        Left = 3
+        Top = 6
         Width = 22
         Height = 22
         Action = ac_add
@@ -58,7 +56,7 @@ object ProtocolFrame: TProtocolFrame
       end
       object SpeedButton2: TSpeedButton
         Tag = 1
-        Left = 32
+        Left = 27
         Top = 6
         Width = 22
         Height = 22
@@ -68,7 +66,7 @@ object ProtocolFrame: TProtocolFrame
       end
       object SpeedButton6: TSpeedButton
         Tag = 1
-        Left = 60
+        Left = 59
         Top = 6
         Width = 22
         Height = 22
@@ -78,7 +76,7 @@ object ProtocolFrame: TProtocolFrame
       end
       object SpeedButton3: TSpeedButton
         Tag = 1
-        Left = 98
+        Left = 91
         Top = 6
         Width = 22
         Height = 22
@@ -88,7 +86,7 @@ object ProtocolFrame: TProtocolFrame
       end
       object SpeedButton4: TSpeedButton
         Tag = 1
-        Left = 158
+        Left = 155
         Top = 6
         Width = 22
         Height = 22
@@ -110,8 +108,6 @@ object ProtocolFrame: TProtocolFrame
     object TabSheet5: TTabSheet
       Caption = 'Beschluss'
       ImageIndex = 7
-      ExplicitTop = 24
-      ExplicitHeight = 38
       object SpeedButton7: TSpeedButton
         Tag = 1
         Left = 4
@@ -237,7 +233,7 @@ object ProtocolFrame: TProtocolFrame
     Left = 100
     Top = 25
     Bitmap = {
-      494C010108001001D00110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010108001001D40110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000003000000001002000000000000030
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

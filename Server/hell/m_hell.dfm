@@ -4,19 +4,15 @@ object HellMod: THellMod
   OnDestroy = DataModuleDestroy
   Height = 435
   Width = 670
-  object IBTransaction1: TIBTransaction
-    Params.Strings = (
-      'read_committed'
-      'rec_version'
-      'nowait')
-    Left = 40
+  object IBTransaction1: TFDTransaction
+    Connection = DBMod.ArchivarConnection
+    Left = 48
     Top = 32
   end
-  object MeetingQry: TIBQuery
+  object MeetingQry: TFDQuery
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
     Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
     SQL.Strings = (
       'select * from EL_EINLADUNG'
       'where EL_ID = :el_id')
@@ -24,16 +20,15 @@ object HellMod: THellMod
     Top = 40
     ParamData = <
       item
-        DataType = ftUnknown
-        Name = 'el_id'
-        ParamType = ptUnknown
+        Name = 'EL_ID'
+        DataType = ftInteger
+        ParamType = ptInput
       end>
   end
-  object UpdateStateQry: TIBQuery
+  object UpdateStateQry: TFDQuery
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
     Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
     SQL.Strings = (
       'update TN_TEILNEHMER'
       'set  TN_STATUS = :status'
@@ -43,26 +38,25 @@ object HellMod: THellMod
     Top = 40
     ParamData = <
       item
+        Name = 'STATUS'
         DataType = ftInteger
-        Name = 'status'
         ParamType = ptInput
       end
       item
+        Name = 'PR_ID'
         DataType = ftInteger
-        Name = 'pr_id'
         ParamType = ptInput
       end
       item
+        Name = 'PE_ID'
         DataType = ftInteger
-        Name = 'pe_id'
         ParamType = ptInput
       end>
   end
-  object UpdateMeetingStatQry: TIBQuery
+  object UpdateMeetingStatQry: TFDQuery
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
     Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
     SQL.Strings = (
       'update EL_EINLADUNG'
       'set EL_STATUS = :status'
@@ -71,21 +65,20 @@ object HellMod: THellMod
     Top = 112
     ParamData = <
       item
+        Name = 'STATUS'
         DataType = ftString
-        Name = 'status'
         ParamType = ptInput
       end
       item
-        DataType = ftInteger
         Name = 'EL_ID'
+        DataType = ftInteger
         ParamType = ptInput
       end>
   end
-  object PEqry: TIBQuery
+  object PEqry: TFDQuery
+    ObjectView = False
+    Connection = DBMod.ArchivarConnection
     Transaction = IBTransaction1
-    BufferChunks = 1000
-    CachedUpdates = False
-    ParamCheck = True
     SQL.Strings = (
       'select * from PE_PERSON'
       'where pe_id = :pe_id')
@@ -93,8 +86,8 @@ object HellMod: THellMod
     Top = 144
     ParamData = <
       item
+        Name = 'PE_ID'
         DataType = ftInteger
-        Name = 'pe_id'
         ParamType = ptInput
       end>
   end

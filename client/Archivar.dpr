@@ -251,7 +251,8 @@ uses
   u_mail_decoder in '..\misc\u_mail_decoder.pas',
   f_kategorie in 'mail\f_kategorie.pas' {KategorieForm},
   fr_files_to_delete in 'File\fr_files_to_delete.pas' {FilesToDeleteFrame: TFrame},
-  u_meeting_status in '..\misc\u_meeting_status.pas';
+  u_meeting_status in '..\misc\u_meeting_status.pas',
+  fr_gaeste in 'Sitzung2\fr_gaeste.pas' {GaesteFrame: TFrame};
 
 {$R *.res}
 

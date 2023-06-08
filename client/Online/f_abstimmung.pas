@@ -76,7 +76,7 @@ var
 implementation
 
 uses
-  u_json, m_glob_client, u_Konst;
+  u_json, m_glob_client, u_Konst, u_eventHandler;
 
 {$R *.dfm}
 
@@ -151,6 +151,8 @@ end;
 
 procedure TAbstimmungsForm.FormDestroy(Sender: TObject);
 begin
+  EventHandler.Unregister(self);
+
   m_votes.Free;
   m_user.Free;
   m_users.Free;

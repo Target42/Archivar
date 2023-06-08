@@ -3,17 +3,19 @@ unit m_hell;
 interface
 
 uses
-  System.SysUtils, System.Classes, Data.DB, IBX.IBCustomDataSet, IBX.IBQuery,
-  IBX.IBDatabase, u_teilnehmer, System.Generics.Collections, u_meeting,
-  System.JSON;
+  System.SysUtils, System.Classes, Data.DB, u_teilnehmer,
+  System.Generics.Collections, u_meeting, System.JSON, m_db, FireDAC.Stan.Intf,
+  FireDAC.Stan.Option, FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
+  FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet, FireDAC.Comp.Client,
+  FireDAC.Phys.Intf, FireDAC.DApt.Intf;
 
 type
   THellMod = class(TDataModule)
-    IBTransaction1: TIBTransaction;
-    MeetingQry: TIBQuery;
-    UpdateStateQry: TIBQuery;
-    UpdateMeetingStatQry: TIBQuery;
-    PEqry: TIBQuery;
+    IBTransaction1: TFDTransaction;
+    MeetingQry: TFDQuery;
+    UpdateStateQry: TFDQuery;
+    UpdateMeetingStatQry: TFDQuery;
+    PEqry: TFDQuery;
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
   private
@@ -128,7 +130,7 @@ begin
     end;
   end;
 
-  if IBTransaction1.InTransaction then
+  if IBTransaction1.Active then
     IBTransaction1.Commit;
 
   msg := TJSONObject.Create;
@@ -265,7 +267,7 @@ begin
   end;
   PEqry.Close;
 
-  if IBTransaction1.InTransaction then
+  if IBTransaction1.Active then
     IBTransaction1.Commit;
 end;
 
@@ -358,7 +360,7 @@ begin
     end;
     removeEmpty(list);
 
-    if IBTransaction1.InTransaction then
+    if IBTransaction1.Active then
       IBTransaction1.Commit;
 
     for obj in msgList do begin
@@ -455,7 +457,7 @@ begin
     UpdateMeetingStatQry.ParamByName('status').AsString := 'O';
   UpdateMeetingStatQry.ExecSQL;
 
-  if IBTransaction1.InTransaction then
+  if IBTransaction1.Active then
     IBTransaction1.Commit;
 
   msg := TJSONObject.Create;
@@ -524,7 +526,7 @@ begin
   end;
   MeetingQry.Close;
 
-  if IBTransaction1.InTransaction then
+  if IBTransaction1.Active then
     IBTransaction1.Commit;
 
   if Assigned(msg) then

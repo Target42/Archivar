@@ -31,7 +31,7 @@
     Top = 0
     Width = 1326
     Height = 789
-    ActivePage = TabSheet1
+    ActivePage = TabSheet3
     Align = alClient
     TabOrder = 1
     object TabSheet1: TTabSheet
@@ -74,6 +74,8 @@
             inherited TV: TTreeView
               Width = 241
               Height = 661
+              ExplicitLeft = 0
+              ExplicitTop = 11
               ExplicitWidth = 241
               ExplicitHeight = 661
             end
@@ -81,18 +83,14 @@
           inherited PageControl2: TPageControl
             Top = 678
             Width = 245
+            ActivePage = ProtocolFrame1.TabSheet4
             ExplicitTop = 678
             ExplicitWidth = 245
             inherited TabSheet4: TTabSheet
-              ExplicitLeft = 4
-              ExplicitTop = 24
-              ExplicitWidth = 443
-              ExplicitHeight = 38
+              ExplicitWidth = 237
             end
             inherited TabSheet5: TTabSheet
-              ExplicitLeft = 4
               ExplicitTop = 24
-              ExplicitWidth = 237
               ExplicitHeight = 38
             end
           end
@@ -101,9 +99,20 @@
               OnExecute = ProtocolFrame1ac_beschlussExecute
             end
           end
+          inherited PopupMenu1: TPopupMenu
+            object Beschlusshinzufgen1: TMenuItem
+              Action = ProtocolFrame1.ac_beschluss
+            end
+            object Beschlussbearbeiten1: TMenuItem
+              Action = ProtocolFrame1.ac_be_bearbeiten
+            end
+            object Beschlusslschen1: TMenuItem
+              Action = ProtocolFrame1.ac_be_delete
+            end
+          end
           inherited ImageList1: TImageList
             Bitmap = {
-              494C010106001001000210001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+              494C0101060010010C0210001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
               0000000000003600000028000000400000002000000001002000000000000020
               0000000000000000000000000000000000000000000000000000000000000000
               0000000000000000000000000000000000000000000000000000000000000000
@@ -404,8 +413,7 @@
           Height = 420
           Align = alClient
           TabOrder = 0
-          ExplicitWidth = 300
-          ExplicitHeight = 150
+          ExplicitTop = 0
           ControlData = {
             4C000000C36D0000692B00000000000000000000000000000000000000000000
             000000004C000000000000000000000001000000E0D057007335CF11AE690800
@@ -466,10 +474,18 @@
                   ExplicitHeight = 118
                   inherited RE: TRichEdit
                     Width = 797
-                    Height = 118
+                    Height = 84
                     PopupMenu = BeschlussFrame1.PopupMenu1
                     ExplicitWidth = 797
-                    ExplicitHeight = 118
+                    ExplicitHeight = 84
+                  end
+                  inherited Panel1: TPanel
+                    Width = 797
+                    ExplicitWidth = 797
+                    inherited JvColorComboBox1: TJvColorComboBox
+                      Height = 20
+                      ExplicitHeight = 20
+                    end
                   end
                 end
                 inherited Groupbox4: TGroupBox
@@ -515,7 +531,7 @@
                   ExplicitLeft = 945
                 end
                 inherited GroupBox7: TGroupBox
-                  ExplicitWidth = 176
+                  Width = 176
                   inherited BitBtn4: TBitBtn
                     OnClick = BeschlussFrame1BitBtn4Click
                   end
@@ -523,77 +539,6 @@
               end
             end
           end
-        end
-      end
-    end
-    object TabSheet2: TTabSheet
-      Caption = 'Onlineabstimung'
-      ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
-      object GroupBox2: TGroupBox
-        Left = 0
-        Top = 670
-        Width = 1318
-        Height = 91
-        Align = alBottom
-        Caption = 'Abstimmung'
-        TabOrder = 0
-        object BitBtn2: TBitBtn
-          Left = 24
-          Top = 40
-          Width = 75
-          Height = 25
-          Caption = 'Zustimmen'
-          TabOrder = 0
-          OnClick = BitBtn2Click
-        end
-        object BitBtn3: TBitBtn
-          Left = 120
-          Top = 40
-          Width = 75
-          Height = 25
-          Caption = 'Enthalten'
-          TabOrder = 1
-          OnClick = BitBtn3Click
-        end
-        object BitBtn4: TBitBtn
-          Left = 216
-          Top = 40
-          Width = 75
-          Height = 25
-          Caption = 'Ablehnen'
-          TabOrder = 2
-          OnClick = BitBtn4Click
-        end
-        object BitBtn5: TBitBtn
-          Left = 312
-          Top = 40
-          Width = 89
-          Height = 25
-          Caption = 'Nicht abstimmen'
-          TabOrder = 3
-          OnClick = BitBtn5Click
-        end
-        object BitBtn6: TBitBtn
-          Left = 424
-          Top = 40
-          Width = 75
-          Height = 25
-          Caption = 'Starten'
-          TabOrder = 4
-          Visible = False
-        end
-        object BitBtn7: TBitBtn
-          Left = 520
-          Top = 40
-          Width = 75
-          Height = 25
-          Caption = 'Stoppen'
-          TabOrder = 5
-          Visible = False
         end
       end
     end
@@ -605,7 +550,7 @@
         Top = 0
         Width = 1318
         Height = 761
-        ActivePage = TabSheet5
+        ActivePage = TabSheet6
         Align = alClient
         TabOrder = 0
         object TabSheet5: TTabSheet
@@ -678,9 +623,16 @@
                 inherited Gremium: TListView
                   Width = 969
                   Height = 439
+                  ExplicitLeft = 6
+                  ExplicitTop = 14
                   ExplicitWidth = 969
                   ExplicitHeight = 439
                 end
+              end
+            end
+            inherited PopupMenu1: TPopupMenu
+              inherited Anwesend1: TMenuItem
+                OnClick = MeetingTNFrame1Anwesend1Click
               end
             end
           end
@@ -732,10 +684,26 @@
         object TabSheet6: TTabSheet
           Caption = 'G'#228'ste'
           ImageIndex = 2
-          ExplicitLeft = 0
-          ExplicitTop = 0
-          ExplicitWidth = 0
-          ExplicitHeight = 0
+          inline GaesteFrame1: TGaesteFrame
+            Left = 0
+            Top = 0
+            Width = 1310
+            Height = 733
+            Align = alClient
+            TabOrder = 0
+            inherited Panel3: TPanel
+              Top = 692
+              Width = 1310
+              ExplicitWidth = 983
+            end
+            inherited TG: TListView
+              Width = 1310
+              Height = 692
+              ExplicitTop = 0
+              ExplicitWidth = 983
+              ExplicitHeight = 281
+            end
+          end
         end
       end
     end

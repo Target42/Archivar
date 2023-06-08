@@ -13,7 +13,7 @@ uses
   i_chapter,
   Vcl.OleCtrls, SHDocVw, System.Generics.Collections,
   u_teilnehmer, fr_protocol, u_ForceClose, JvExComCtrls, System.ImageList,
-  Vcl.ImgList;
+  Vcl.ImgList, fr_gaeste;
 
 type
   TProtokollForm = class(TForm, IForceClose)
@@ -41,13 +41,6 @@ type
     JvDBDateTimePicker1: TJvDateTimePicker;
     N3: TMenuItem;
     Speichern: TMenuItem;
-    Panel3: TPanel;
-    TG: TListView;
-    btnNeu: TBitBtn;
-    btnEdit: TBitBtn;
-    btnDelete: TBitBtn;
-    BitBtn1: TBitBtn;
-    BitBtn2: TBitBtn;
     GroupBox2: TGroupBox;
     WebBrowser1: TWebBrowser;
     Aktualisieren1: TMenuItem;
@@ -58,6 +51,7 @@ type
     BitBtn3: TBitBtn;
     ImageList1: TImageList;
     ImageList2: TImageList;
+    GaesteFrame1: TGaesteFrame;
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -68,12 +62,6 @@ type
     procedure SpeichernClick(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
     procedure DBEdit1Change(Sender: TObject);
-    procedure btnEditClick(Sender: TObject);
-    procedure btnNeuClick(Sender: TObject);
-    procedure btnDeleteClick(Sender: TObject);
-    procedure BitBtn1Click(Sender: TObject);
-    procedure BitBtn2Click(Sender: TObject);
-    procedure TGDblClick(Sender: TObject);
     procedure Aktualisieren1Click(Sender: TObject);
     procedure StatusBar1DrawPanel(StatusBar: TStatusBar; Panel: TStatusPanel;
       const Rect: TRect);
@@ -96,7 +84,7 @@ type
 
     procedure setStatus(ts: TTeilnehmerStatus; grund: string = '');
     procedure UpdateTN;
-    procedure UpdateTG;
+
 
     procedure save;
 
@@ -203,44 +191,6 @@ begin
     reload;
 end;
 
-procedure TProtokollForm.BitBtn1Click(Sender: TObject);
-var
-  i: integer;
-  b: IBesucher;
-begin
-  if m_proto.ReadOnly then
-    exit;
-
-  for i := 0 to pred(TG.Items.Count) do
-  begin
-    if TG.Items.Item[i].Selected then
-    begin
-      b := IBesucher(TG.Items.Item[i].Data);
-      b.Von := now;
-    end;
-  end;
-  UpdateTG;
-end;
-
-procedure TProtokollForm.BitBtn2Click(Sender: TObject);
-var
-  i: integer;
-  b: IBesucher;
-begin
-  if m_proto.ReadOnly then
-    exit;
-
-  for i := 0 to pred(TG.Items.Count) do
-  begin
-    if TG.Items.Item[i].Selected then
-    begin
-      b := IBesucher(TG.Items.Item[i].Data);
-      b.bis := now;
-    end;
-  end;
-  UpdateTG;
-end;
-
 procedure TProtokollForm.BitBtn3Click(Sender: TObject);
 begin
   try
@@ -254,65 +204,6 @@ begin
     PersonenListForm.Free;
   end;
 end;
-
-procedure TProtokollForm.btnDeleteClick(Sender: TObject);
-var
-  i: integer;
-  b: IBesucher;
-begin
-  if m_proto.ReadOnly then exit;
-  if not(MessageDlg('Sollen die ausgwewählten Gäste gelöscht werden?',
-    mtConfirmation, [mbYes, mbNo], 0) = mrYes) then
-    exit;
-
-  for i := pred(TG.Items.Count) downto 0 do
-  begin
-    if TG.Items.Item[i].Selected then
-    begin
-      b := IBesucher(TG.Items.Item[i].Data);
-      m_proto.Besucher.remove(b);
-    end;
-  end;
-  UpdateTG;
-end;
-
-procedure TProtokollForm.btnEditClick(Sender: TObject);
-var
-  b: IBesucher;
-begin
-  if not Assigned(TG.Selected) then
-    exit;
-
-  b := IBesucher(TG.Selected.Data);
-  Application.CreateForm(TBesucherForm, BesucherForm);
-  BesucherForm.Besucher := b;
-  if BesucherForm.ShowModal = mrOk then
-  begin
-    m_proto.Besucher.saveChanged;
-  end;
-  BesucherForm.Free;
-
-  UpdateTG;
-end;
-
-procedure TProtokollForm.btnNeuClick(Sender: TObject);
-var
-  b: IBesucher;
-begin
-  b := m_proto.Besucher.newBesucher;
-  Application.CreateForm(TBesucherForm, BesucherForm);
-  BesucherForm.Besucher := b;
-  if BesucherForm.ShowModal = mrOk then
-  begin
-    m_proto.Besucher.saveChanged;
-  end
-  else
-    m_proto.Besucher.remove(b);
-  BesucherForm.Free;
-
-  UpdateTG;
-end;
-
 
 procedure TProtokollForm.Button2Click(Sender: TObject);
 begin
@@ -417,6 +308,8 @@ begin
   ProtocolFrame1.init;
   ProtocolFrame1.Browser := WebBrowser1;
 
+  GaesteFrame1.prepare;
+
   for i := low(arrRolls) to high(arrRolls) do
   begin
     item := TMenuItem.Create(PopupMenu1);
@@ -436,6 +329,7 @@ begin
 
   WindowHandler.closeProtoclWindow(m_proto.ID);
 
+  GaesteFrame1.release;
   ProtocolFrame1.Protocol := NIL;
   m_proto.release;
   m_proto := NIL;
@@ -491,7 +385,7 @@ begin
     ProtocolFrame1.Protocol      := m_proto;
 
     UpdateTN;
-    UpdateTG;
+    GaesteFrame1.Besucher := m_proto.Besucher;
 
     WebBrowser1.Navigate('about:blank');
   end;
@@ -545,7 +439,8 @@ begin
 
   Panel1.Enabled        := not m_ro;
   Panel4.Enabled        := not m_ro;
-  Panel3.Enabled        := not m_ro;
+  GaesteFrame1.ReadOnly := m_ro;
+
 
   Speichern.Enabled     := not m_ro;
 
@@ -620,35 +515,6 @@ begin
   RectForText := Rect;
   StatusBar1.Canvas.FillRect(RectForText);
   DrawText(StatusBar1.Canvas.Handle, PChar(Panel.Text), -1, RectForText, DT_SINGLELINE or DT_VCENTER or DT_LEFT);
-end;
-
-procedure TProtokollForm.TGDblClick(Sender: TObject);
-begin
-  btnEdit.Click;
-end;
-
-procedure TProtokollForm.UpdateTG;
-var
-  i: integer;
-  b: IBesucher;
-  Item: TListItem;
-begin
-  TG.Items.BeginUpdate;
-  TG.Items.Clear;
-  for i := 0 to pred(m_proto.Besucher.Count) do
-  begin
-    b := m_proto.Besucher.Item[i];
-    Item := TG.Items.add;
-
-    Item.Data := b;
-    Item.Caption := b.name;
-    Item.SubItems.add(b.Vorname);
-    Item.SubItems.add(b.Abteilung);
-    Item.SubItems.add(FormatDateTime('hh:mm', b.Von));
-    Item.SubItems.add(FormatDateTime('hh:mm', b.bis));
-    Item.SubItems.add(b.grund);
-  end;
-  TG.Items.EndUpdate;
 end;
 
 procedure TProtokollForm.UpdateTN;
