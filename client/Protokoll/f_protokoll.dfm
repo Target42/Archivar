@@ -41,7 +41,7 @@ object ProtokollForm: TProtokollForm
     Top = 49
     Width = 888
     Height = 400
-    ActivePage = TabSheet3
+    ActivePage = TabSheet1
     Align = alClient
     Images = ImageList1
     TabOrder = 1
@@ -117,7 +117,10 @@ object ProtokollForm: TProtokollForm
             ExplicitTop = 305
             ExplicitWidth = 217
             inherited TabSheet4: TTabSheet
+              ExplicitLeft = 4
+              ExplicitTop = 25
               ExplicitWidth = 209
+              ExplicitHeight = 37
             end
             inherited TabSheet5: TTabSheet
               ExplicitTop = 24
@@ -126,7 +129,7 @@ object ProtokollForm: TProtokollForm
           end
           inherited ImageList1: TImageList
             Bitmap = {
-              494C010106001001C00110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+              494C010106001001C40110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
               0000000000003600000028000000400000002000000001002000000000000020
               0000000000000000000000000000000000000000000000000000000000000000
               0000000000000000000000000000000000000000000000000000000000000000
@@ -403,6 +406,10 @@ object ProtokollForm: TProtokollForm
     object TabSheet2: TTabSheet
       Caption = 'Teilnehmer'
       ImageIndex = 1
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Panel1: TPanel
         Left = 0
         Top = 330
@@ -543,8 +550,6 @@ object ProtokollForm: TProtokollForm
     object TabSheet3: TTabSheet
       Caption = 'G'#228'ste'
       ImageIndex = 2
-      ExplicitLeft = 8
-      ExplicitTop = 23
       inline GaesteFrame1: TGaesteFrame
         Left = 0
         Top = 0
@@ -552,17 +557,17 @@ object ProtokollForm: TProtokollForm
         Height = 371
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 880
+        ExplicitHeight = 371
         inherited Panel3: TPanel
           Top = 330
           Width = 880
-          ExplicitWidth = 983
+          ExplicitTop = 330
         end
         inherited TG: TListView
           Width = 880
           Height = 330
           ExplicitTop = 0
-          ExplicitWidth = 983
-          ExplicitHeight = 281
         end
       end
     end
@@ -685,7 +690,7 @@ object ProtokollForm: TProtokollForm
     Left = 592
     Top = 24
     Bitmap = {
-      494C010103000800380010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C0101030008003C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -828,7 +833,7 @@ object ProtokollForm: TProtokollForm
     Left = 76
     Top = 226
     Bitmap = {
-      494C010106000800400010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010106000800440010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000F0E6DE00D3B39900BF8E6700B57B5100B57B5100BF8D6700D4B39900F1E7

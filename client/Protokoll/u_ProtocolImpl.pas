@@ -4,7 +4,7 @@ interface
 
 uses
   i_chapter, xsd_protocol, System.Classes, m_protocol, Data.DB,
-  Datasnap.DBClient, i_beschluss;
+  Datasnap.DBClient, i_beschluss, System.Variants;
 
 type
   TProtocolImpl = class( TInterfacedObject, IProtocol )
@@ -73,6 +73,7 @@ type
     function saveTree : boolean;
 
     procedure SyncUser( be : IBeschluss; plan : boolean );
+    procedure UpdateBeschluss( ctid, beid : integer );
 
     procedure release;
   end;
@@ -300,15 +301,7 @@ begin
           PRTab.Post;
         end;
       end;
-
-      if PRTab.UpdatesPending     then PRTab.ApplyUpdates(-1);
-      if TNTab.UpdatesPending     then TNTab.ApplyUpdates(-1);
-      if TGTab.UpdatesPending     then TGTab.ApplyUpdates(-1);
-      if CPTab.UpdatesPending     then CPTab.ApplyUpdates(-1);
-      if CPTextTab.UpdatesPending then CPTextTab.ApplyUpdates(-1);
-      if BETab.UpdatesPending     then
-        BETab.ApplyUpdates(-1);
-
+      ApplyUpdates;
       m_modified := false;
     except
       Result := false;
@@ -452,6 +445,21 @@ begin
       p.release;
     end;
   end;
+end;
+
+procedure TProtocolImpl.UpdateBeschluss(ctid, beid: integer);
+var
+  cpt : IChapter;
+begin
+  if not Assigned(m_loader) then
+    exit;
+  cpt := m_list.findChapter(ctid);
+  if Not Assigned(cpt) then
+    exit;
+
+  m_loader.ApplyUpdateBeschluss;
+
+  cpt.Votes.updateOrNew(beid, m_loader.BETab);
 end;
 
 end.

@@ -40,6 +40,7 @@ type
     BitBtn2: TBitBtn;
     GroupBox7: TGroupBox;
     BitBtn4: TBitBtn;
+    SpeedButton2: TSpeedButton;
     procedure EditFrame1REDragDrop(Sender, Source: TObject; X, Y: Integer);
     procedure EditFrame1REDragOver(Sender, Source: TObject; X, Y: Integer;
       State: TDragState; var Accept: Boolean);
@@ -170,8 +171,14 @@ procedure TBeschlussFrame.extbausteine1Click(Sender: TObject);
 begin
   extbausteine1.Checked := not extbausteine1.Checked;
 
+
   GroupBox2.Visible := extbausteine1.Checked;
   Splitter1.Visible := extbausteine1.Checked;
+
+  if GroupBox2.Visible then begin
+    if TextBlockFrame1.TagFilter = '' then
+      TextBlockFrame1.TagFilter := 'beschluss';
+  end;
 end;
 
 procedure TBeschlussFrame.init;
@@ -282,6 +289,7 @@ end;
 procedure TBeschlussFrame.setHasLead(value: boolean);
 begin
   FhasLead := value;
+
   GroupBox5.Enabled     := FhasLead;
   LabeledEdit4.Enabled  := FhasLead;
   LabeledEdit5.Enabled  := FhasLead;

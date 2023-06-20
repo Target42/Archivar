@@ -31,7 +31,7 @@
     Top = 0
     Width = 1326
     Height = 789
-    ActivePage = TabSheet3
+    ActivePage = TabSheet1
     Align = alClient
     TabOrder = 1
     object TabSheet1: TTabSheet
@@ -74,7 +74,7 @@
             inherited TV: TTreeView
               Width = 241
               Height = 661
-              ExplicitLeft = 0
+              ExplicitLeft = 5
               ExplicitTop = 11
               ExplicitWidth = 241
               ExplicitHeight = 661
@@ -87,7 +87,10 @@
             ExplicitTop = 678
             ExplicitWidth = 245
             inherited TabSheet4: TTabSheet
+              ExplicitLeft = 4
+              ExplicitTop = 25
               ExplicitWidth = 237
+              ExplicitHeight = 37
             end
             inherited TabSheet5: TTabSheet
               ExplicitTop = 24
@@ -112,7 +115,7 @@
           end
           inherited ImageList1: TImageList
             Bitmap = {
-              494C0101060010010C0210001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+              494C010106001001200210001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
               0000000000003600000028000000400000002000000001002000000000000020
               0000000000000000000000000000000000000000000000000000000000000000
               0000000000000000000000000000000000000000000000000000000000000000
@@ -529,9 +532,13 @@
                 inherited GroupBox3: TGroupBox
                   Left = 945
                   ExplicitLeft = 945
+                  inherited BitBtn3: TBitBtn
+                    OnClick = BeschlussFrame1BitBtn3Click
+                  end
                 end
                 inherited GroupBox7: TGroupBox
                   Width = 176
+                  ExplicitWidth = 176
                   inherited BitBtn4: TBitBtn
                     OnClick = BeschlussFrame1BitBtn4Click
                   end
@@ -550,7 +557,7 @@
         Top = 0
         Width = 1318
         Height = 761
-        ActivePage = TabSheet6
+        ActivePage = TabSheet5
         Align = alClient
         TabOrder = 0
         object TabSheet5: TTabSheet
@@ -623,8 +630,6 @@
                 inherited Gremium: TListView
                   Width = 969
                   Height = 439
-                  ExplicitLeft = 6
-                  ExplicitTop = 14
                   ExplicitWidth = 969
                   ExplicitHeight = 439
                 end
@@ -691,17 +696,20 @@
             Height = 733
             Align = alClient
             TabOrder = 0
+            ExplicitWidth = 1310
+            ExplicitHeight = 733
             inherited Panel3: TPanel
               Top = 692
               Width = 1310
-              ExplicitWidth = 983
+              ExplicitTop = 692
+              ExplicitWidth = 1310
             end
             inherited TG: TListView
               Width = 1310
               Height = 692
               ExplicitTop = 0
-              ExplicitWidth = 983
-              ExplicitHeight = 281
+              ExplicitWidth = 1310
+              ExplicitHeight = 692
             end
           end
         end

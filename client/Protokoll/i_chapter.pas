@@ -75,6 +75,7 @@ type
     function cancel : boolean;
 
     procedure SyncUser( be : IBeschluss; plan : boolean = true );
+    procedure UpdateBeschluss( ctid, beid : integer );
 
     procedure release;
   end;
@@ -142,6 +143,7 @@ type
       procedure remove( cp : IChapter );
 
       function newChapter : IChapter;
+      function findChapter( id : integer ) : IChapter;
 
       function fullTitle: string;
       procedure reindex;
@@ -201,6 +203,8 @@ type
       procedure updateChapter( cp : IChapterTitle );
       procedure AddNewChaper( cp : IChapterTitle );
 
+      function findChapter( id : integer ) : IChapter;
+
       procedure release;
   end;
 
@@ -224,7 +228,6 @@ type
       function GetTimeStamp: TDateTime;
       procedure SetTimeStamp(const Value: TDateTime);
 
-
       // public
       property Protocol : IProtocol     read getProto;
       property ID       : integer       read getID        write setID;
@@ -246,6 +249,8 @@ type
       procedure loadFromDataSet( data, beData : TDataSet );
 
       procedure buildTree;
+
+      function findChapter( id : integer ) : IChapter;
 
       procedure release;
 

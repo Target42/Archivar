@@ -72,6 +72,7 @@ type
       procedure remove( cp : IChapter );
 
       function newChapter : IChapter;
+      function findChapter( id : integer ) : IChapter;
 
       function fullTitle: string;
       procedure reindex;
@@ -141,6 +142,22 @@ procedure TChapterImpl.down;
 begin
   m_parent.Childs.down(self);
   m_modified    := true;
+end;
+
+function TChapterImpl.findChapter(id: integer): IChapter;
+var
+  i : integer;
+begin
+  Result := NIL;
+  if FID = id then
+    Result := self;
+  if not Assigned(Result) then begin
+    for i := 0 to pred(m_childs.Count) do begin
+      Result := m_childs.Items[i].findChapter(id);
+      if Assigned(Result) then
+        break;
+    end;
+  end;
 end;
 
 function TChapterImpl.fullTitle: string;

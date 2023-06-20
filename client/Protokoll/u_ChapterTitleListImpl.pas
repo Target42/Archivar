@@ -30,6 +30,8 @@ type
       procedure AddNewChaper( cp : IChapterTitle);
       procedure updateChapter( cp : IChapterTitle );
 
+      function findChapter( id : integer ) : IChapter;
+
       procedure release;
   end;
 
@@ -81,6 +83,24 @@ begin
 
   m_list.Exchange(inx, inx+1);
   renumber;
+end;
+
+function TChapterTitleListImpl.findChapter(id: integer): IChapter;
+var
+  cpt : IChapterTitle;
+  i   : integer;
+begin
+  Result := NIL;
+
+  for cpt in m_list do begin
+    for i := 0 to pred(cpt.Count) do begin
+      Result := cpt.Item[i].findChapter(id);
+      if Assigned(Result) then
+        break;
+    end;
+    if Assigned(Result) then
+      break;
+  end;
 end;
 
 function TChapterTitleListImpl.getCount: integer;

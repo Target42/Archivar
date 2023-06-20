@@ -41,11 +41,18 @@ type
     function GetReadOnly: boolean;
     procedure SetReadOnly(const Value: boolean);
 
+    procedure closeAll;
+
+
   public
     property ReadOnly: boolean read GetReadOnly write SetReadOnly;
     property PR_ID: integer read GetPR_ID write SetPR_ID;
 
     function getProtocolStream : TStream;
+
+    procedure ApplyUpdates;
+    procedure ApplyUpdateBeschluss;
+
 
   end;
 
@@ -61,10 +68,46 @@ uses
 
 {$R *.dfm}
 
+procedure TProtocolMod.ApplyUpdateBeschluss;
+begin
+  if BETab.UpdatesPending     then
+    BETab.ApplyUpdates(-1);
+  BETab.Close;
+  BETab.Open;
+end;
+
+procedure TProtocolMod.ApplyUpdates;
+begin
+    if PRTab.UpdatesPending     then
+      PRTab.ApplyUpdates(-1);
+    if TNTab.UpdatesPending     then
+      TNTab.ApplyUpdates(-1);
+    if TGTab.UpdatesPending     then
+      TGTab.ApplyUpdates(-1);
+    if CPTab.UpdatesPending     then
+      CPTab.ApplyUpdates(-1);
+    if CPTextTab.UpdatesPending then
+      CPTextTab.ApplyUpdates(-1);
+    if BETab.UpdatesPending     then
+      BETab.ApplyUpdates(-1);
+end;
+
 procedure TProtocolMod.BETabBeforePost(DataSet: TDataSet);
 begin
   if dataSet.FieldByName('BE_ID').AsInteger = 0 then
     dataSet.FieldByName('BE_ID').AsInteger := GM.autoInc('gen_BE_id');
+end;
+
+procedure TProtocolMod.closeAll;
+begin
+  ApplyUpdates;
+
+  PRTab.Close;
+  CPTab.Close;
+  TGTab.Close;
+  TNTab.Close;
+  BETab.Close;
+  CPTextTab.Close;
 end;
 
 procedure TProtocolMod.DataModuleCreate(Sender: TObject);
@@ -74,12 +117,7 @@ end;
 
 procedure TProtocolMod.DataModuleDestroy(Sender: TObject);
 begin
-  PRTab.Close;
-  CPTab.Close;
-  TGTab.Close;
-  TNTab.Close;
-  BETab.Close;
-  CPTextTab.Close;
+  closeAll;
 end;
 
 function TProtocolMod.getProtocolStream: TStream;
@@ -100,6 +138,9 @@ end;
 procedure TProtocolMod.SetPR_ID(const Value: integer);
 begin
   m_id := value;
+
+  closeAll;
+
   PRTab.Open;
   if PRTab.Locate('PR_ID', VarArrayOf([m_id]), []) then
   begin

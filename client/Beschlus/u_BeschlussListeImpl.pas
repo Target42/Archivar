@@ -3,7 +3,8 @@ unit u_BeschlussListeImpl;
 interface
 
 uses
-  i_beschluss, System.Generics.Collections, m_protocol, i_chapter;
+  i_beschluss, System.Generics.Collections, m_protocol, i_chapter,
+  Data.db;
 
 type
   TBeschlussListeImpl = class( TInterfacedObject, IBeschlussListe )
@@ -28,6 +29,7 @@ type
     function  newBeschluss : IBeschluss;
     procedure delete( inx : integer ) ; overload;
     procedure delete( be : IBeschluss); overload;
+    function updateOrNew( id : integer; DataSet : TDataSet ) : boolean;
 
     function replace( old, new : IBeschluss ) : boolean;
 
@@ -141,6 +143,26 @@ end;
 procedure TBeschlussListeImpl.setOwner(value: pointer);
 begin
   m_owner := Ichapter(value);
+end;
+
+function TBeschlussListeImpl.updateOrNew(id: integer;
+  DataSet: TDataSet): boolean;
+var
+  be : IBeschluss;
+begin
+  Result := false;
+
+  for be in m_list do begin
+    if be.ID = id then begin
+      be.loadFromDataSet(dataSet);
+      Result := true;
+    end;
+  end;
+
+  if not Result then begin
+    be := self.newBeschluss;
+    be.loadFromDataSet(DataSet);
+  end;
 end;
 
 end.

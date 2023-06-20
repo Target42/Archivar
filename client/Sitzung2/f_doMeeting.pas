@@ -35,11 +35,9 @@ type
     GroupBox3: TGroupBox;
     Splitter2: TSplitter;
     BeschlussFrame1: TBeschlussFrame;
-    N1: TMenuItem;
     Beschlusshinzufgen1: TMenuItem;
     Beschlussbearbeiten1: TMenuItem;
     Beschlusslschen1: TMenuItem;
-    N2: TMenuItem;
     GaesteFrame1: TGaesteFrame;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
@@ -49,6 +47,7 @@ type
     procedure ProtocolFrame1ac_beschlussExecute(Sender: TObject);
     procedure BeschlussFrame1BitBtn4Click(Sender: TObject);
     procedure MeetingTNFrame1Anwesend1Click(Sender: TObject);
+    procedure BeschlussFrame1BitBtn3Click(Sender: TObject);
   private
     m_meid  : integer;
     m_prid  : integer;
@@ -93,6 +92,12 @@ uses
   f_abstimmung;
 
 {$R *.dfm}
+
+procedure TDoMeetingform.BeschlussFrame1BitBtn3Click(Sender: TObject);
+begin
+  BeschlussFrame1.BitBtn3Click(Sender);
+
+end;
 
 procedure TDoMeetingform.BeschlussFrame1BitBtn4Click(Sender: TObject);
 var
@@ -287,8 +292,16 @@ begin
 end;
 
 function TDoMeetingform.handle_docUpdate(const arg: TJSONObject): boolean;
+var
+  id : integer;
 begin
-  reload;
+  id := JInt( arg, 'beid');
+
+  if id <> 0 then begin
+    m_proto.UpdateBeschluss(JInt(arg, 'cpid'), id);
+    ProtocolFrame1.SelectBeschlus(id);
+  end else
+    reload;
 
   Result := true;
 end;
@@ -375,6 +388,7 @@ begin
   Result := false;
   if Assigned(AbstimmungsForm) then begin
     AbstimmungsForm.handle_voteStop(arg);
+
     Result := true;
   end;
 
@@ -442,6 +456,7 @@ begin
 
   JReplace( req, 'type',    'beschluss' );
   JReplace( req, 'prid',    m_proto.ID);
+  JReplace( req, 'cpid',    be.CTID );
   JReplace( req, 'beid',    be.ID );
   JReplace( req, 'sender',  GM.UserID );
 

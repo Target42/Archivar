@@ -5,7 +5,7 @@ object ArchivService: TArchivService
   DisplayName = 'ArchivarService'
   OnStart = ServiceStart
   OnStop = ServiceStop
-  Height = 680
+  Height = 744
   Width = 415
   object DSServer1: TDSServer
     OnConnect = DSServer1Connect
@@ -13,8 +13,8 @@ object ArchivService: TArchivService
     OnError = DSServer1Error
     AutoStart = False
     OnTrace = DSServer1Trace
-    Left = 72
-    Top = 11
+    Left = 32
+    Top = 19
   end
   object DSTCPServerTransport1: TDSTCPServerTransport
     Server = DSServer1
@@ -41,8 +41,8 @@ object ArchivService: TArchivService
     OnDisconnect = DSTCPServerTransport1Disconnect
     KeepAliveEnablement = kaEnabled
     KeepAliveTime = 10000
-    Left = 56
-    Top = 65
+    Left = 32
+    Top = 73
   end
   object dsAdmin: TDSServerClass
     OnGetClass = dsAdminGetClass
@@ -62,7 +62,7 @@ object ArchivService: TArchivService
     OnUserAuthenticate = DSAuthenticationManager1UserAuthenticate
     OnUserAuthorize = DSAuthenticationManager1UserAuthorize
     Roles = <>
-    Left = 56
+    Left = 32
     Top = 128
   end
   object dsPerson: TDSServerClass
@@ -165,22 +165,21 @@ object ArchivService: TArchivService
   object dsSitzung: TDSServerClass
     OnGetClass = dsSitzungGetClass
     Server = DSServer1
-    LifeCycle = 'Invocation'
     Left = 328
     Top = 464
   end
   object dsUpdater: TDSServerClass
     OnGetClass = dsUpdaterGetClass
     Server = DSServer1
-    Left = 184
-    Top = 72
+    Left = 192
+    Top = 16
   end
   object IBTransaction1: TFDTransaction
     Options.AutoStop = False
     Options.EnableNested = False
     Connection = DBMod.ArchivarConnection
-    Left = 136
-    Top = 328
+    Left = 24
+    Top = 360
   end
   object QueryUser: TFDQuery
     Connection = DBMod.ArchivarConnection
@@ -188,8 +187,8 @@ object ArchivService: TArchivService
     SQL.Strings = (
       'select * from PE_PERSON'
       'where PE_NET = :net')
-    Left = 40
-    Top = 328
+    Left = 24
+    Top = 424
     ParamData = <
       item
         Name = 'NET'
@@ -203,8 +202,8 @@ object ArchivService: TArchivService
     SQL.Strings = (
       'select count(*) from gr_pa'
       'where pe_id = :pe_id')
-    Left = 40
-    Top = 376
+    Left = 24
+    Top = 472
     ParamData = <
       item
         Name = 'PE_ID'
@@ -261,8 +260,8 @@ object ArchivService: TArchivService
           'Key=ai7ggYdY!fJ6eFB4')
       end>
     AuthenticationManager = DSAuthenticationManager1
-    Left = 56
-    Top = 200
+    Left = 32
+    Top = 192
   end
   object DSHTTPService2: TDSHTTPService
     HttpPort = 8089
@@ -286,13 +285,13 @@ object ArchivService: TArchivService
           'Key=XUgQukpi8QcJXasj')
       end>
     AuthenticationManager = DSAuthenticationManager1
-    Left = 144
-    Top = 200
+    Left = 32
+    Top = 240
   end
   object DSCertFiles1: TDSCertFiles
     OnGetPEMFilePasskey = DSCertFiles1GetPEMFilePasskey
-    Left = 144
-    Top = 264
+    Left = 32
+    Top = 296
   end
   object dsPlugin: TDSServerClass
     OnGetClass = dsPluginGetClass
@@ -317,7 +316,7 @@ object ArchivService: TArchivService
     Transaction = IBTransaction1
     UpdateOptions.UpdateTableName = 'MAC_MAIL_ACCOUNT'
     TableName = 'MAC_MAIL_ACCOUNT'
-    Left = 48
-    Top = 448
+    Left = 24
+    Top = 528
   end
 end

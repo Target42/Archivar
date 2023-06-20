@@ -117,7 +117,10 @@ type
     procedure saveSelected;
     procedure restoreSelected;
 
+    procedure setMeetingMode( value : boolean );
+
   public
+
     procedure init;
     procedure release;
 
@@ -126,7 +129,7 @@ type
     property ReadOnly: boolean read GetReadOnly write SetReadOnly;
 
     property onBeschlusChange: TBeschlusChange read FonBeschlusChange write FonBeschlusChange;
-    property MeetingMode: boolean read FMeetingMode write FMeetingMode;
+    property MeetingMode: boolean read FMeetingMode write setMeetingMode;
 
     function SelectBeschlus( id : integer ) : boolean;
 
@@ -200,6 +203,7 @@ var
   en  : TEntry;
   cp  : IChapter;
 begin
+  if FMeetingMode then exit;  
   if m_proto.ReadOnly or not Assigned(TV.Selected)  then exit;
   if not m_map.TryGetValue(tv.Selected, en)         then exit;
   if not(en.Typ = etBeschluss)                      then exit;
@@ -511,6 +515,7 @@ begin
   FonBeschlusChange := NIL;
   FMeetingMode:= false;
 
+
   m_renderer.Loader := m_loader;
 
   Application.CreateForm(TTitelEditform, m_TitelEditform);
@@ -592,6 +597,12 @@ begin
       end;
     end;
   end;
+end;
+
+procedure TProtocolFrame.setMeetingMode(value: boolean);
+begin
+  FMeetingMode := value;
+  ac_be_bearbeiten.Enabled := not FMeetingMode;
 end;
 
 procedure TProtocolFrame.SetProtocol(const Value: IProtocol);

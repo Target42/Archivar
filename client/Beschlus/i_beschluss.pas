@@ -34,6 +34,7 @@ type
     function  newBeschluss : IBeschluss;
     procedure delete( inx : integer ) ; overload;
     procedure delete( be : IBeschluss); overload;
+    function updateOrNew( id : integer; DataSet : TDataSet ) : boolean;
 
     function replace( olf, new : IBeschluss ) : boolean;
 

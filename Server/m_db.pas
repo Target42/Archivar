@@ -148,6 +148,8 @@ procedure TDBMod.stopDB;
 begin
   if ArchivarConnection.Connected then
     ArchivarConnection.Close;
+
+  FDManager1.DropConnections;
 end;
 
 end.

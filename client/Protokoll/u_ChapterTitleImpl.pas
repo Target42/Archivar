@@ -58,6 +58,8 @@ type
 
       procedure loadFromDataSet( data, beData : TDataSet );
 
+      function findChapter( id : integer ) : IChapter;
+
       procedure release;
   end;
 
@@ -100,6 +102,18 @@ begin
   m_owner.down(self);
   refreshList;
   FModified := true;
+end;
+
+function TChapterTitleImpl.findChapter(id: integer): IChapter;
+var
+  cp : IChapter;
+begin
+  Result := NIL;
+  for cp in m_list do begin
+    Result := cp.findChapter(id);
+    if Assigned(Result) then
+      break;
+  end;
 end;
 
 function TChapterTitleImpl.FullTitle: string;
