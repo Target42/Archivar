@@ -20,7 +20,7 @@ type
     IdSMTP1: TIdSMTP;
     IdSSLIOHandlerSocketOpenSSL2: TIdSSLIOHandlerSocketOpenSSL;
     FolderQry: TFDQuery;
-    FDTransaction1: TFDTransaction;
+    MailTransaction: TFDTransaction;
     MailTab: TFDTable;
     AutoincQry: TFDQuery;
     ListQry: TFDQuery;
@@ -285,7 +285,7 @@ begin
   mails     := TStringList.Create;
   toDelete  := TList<integer>.create;
 
-  FDTransaction1.StartTransaction;
+  MailTransaction.StartTransaction;
   MailTab.Open;
   try
     IdIMAP41.Connect();
@@ -328,11 +328,12 @@ begin
   IdIMAP41.Disconnect;
   st.Free;
 
-  if FDTransaction1.Active then
-    FDTransaction1.Commit;
-
   FolderQry.Close;
   MailTab.Close;
+
+  if MailTransaction.Active then
+    MailTransaction.Commit;
+
   GrijjyLog.ExitMethod('update');
 end;
 

@@ -75,6 +75,8 @@ type
     procedure SyncUser( be : IBeschluss; plan : boolean );
     procedure UpdateBeschluss( ctid, beid : integer );
 
+    procedure clearModified;
+
     procedure release;
   end;
 
@@ -104,6 +106,12 @@ begin
 
   end;
   Result := true;
+end;
+
+procedure TProtocolImpl.clearModified;
+begin
+  m_modified    := false;
+  m_list.clearModified;
 end;
 
 constructor TProtocolImpl.create;
@@ -301,8 +309,10 @@ begin
           PRTab.Post;
         end;
       end;
+      m_list.saveChangedChapter;
       ApplyUpdates;
-      m_modified := false;
+
+      clearModified;
     except
       Result := false;
     end;

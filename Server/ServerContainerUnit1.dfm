@@ -171,10 +171,10 @@ object ArchivService: TArchivService
   object dsUpdater: TDSServerClass
     OnGetClass = dsUpdaterGetClass
     Server = DSServer1
-    Left = 192
-    Top = 16
+    Left = 176
+    Top = 8
   end
-  object IBTransaction1: TFDTransaction
+  object ServerContainerTransaction: TFDTransaction
     Options.AutoStop = False
     Options.EnableNested = False
     Connection = DBMod.ArchivarConnection
@@ -183,7 +183,7 @@ object ArchivService: TArchivService
   end
   object QueryUser: TFDQuery
     Connection = DBMod.ArchivarConnection
-    Transaction = IBTransaction1
+    Transaction = ServerContainerTransaction
     SQL.Strings = (
       'select * from PE_PERSON'
       'where PE_NET = :net')
@@ -198,7 +198,7 @@ object ArchivService: TArchivService
   end
   object GRPEQry: TFDQuery
     Connection = DBMod.ArchivarConnection
-    Transaction = IBTransaction1
+    Transaction = ServerContainerTransaction
     SQL.Strings = (
       'select count(*) from gr_pa'
       'where pe_id = :pe_id')
@@ -313,7 +313,7 @@ object ArchivService: TArchivService
   end
   object MailKonto: TFDTable
     Connection = DBMod.ArchivarConnection
-    Transaction = IBTransaction1
+    Transaction = ServerContainerTransaction
     UpdateOptions.UpdateTableName = 'MAC_MAIL_ACCOUNT'
     TableName = 'MAC_MAIL_ACCOUNT'
     Left = 24

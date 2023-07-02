@@ -20,7 +20,7 @@ type
     GetTaskinfo: TFDQuery;
     GetProtoInfo: TFDQuery;
     LockTrans: TFDTransaction;
-    IBTransaction1: TFDTransaction;
+    dsMiscTransaction: TFDTransaction;
     openTasks: TFDQuery;
     AutoIncQry: TFDQuery;
     Meetings: TFDQuery;

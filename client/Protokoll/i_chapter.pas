@@ -77,6 +77,8 @@ type
     procedure SyncUser( be : IBeschluss; plan : boolean = true );
     procedure UpdateBeschluss( ctid, beid : integer );
 
+    procedure clearModified;
+
     procedure release;
   end;
 
@@ -180,6 +182,8 @@ type
       procedure renumber;
       procedure sortPos;
 
+      procedure clearModified;
+
       procedure release;
   end;
 
@@ -204,6 +208,8 @@ type
       procedure AddNewChaper( cp : IChapterTitle );
 
       function findChapter( id : integer ) : IChapter;
+
+      procedure clearModified;
 
       procedure release;
   end;
@@ -247,10 +253,13 @@ type
       function FullTitle : string;
 
       procedure loadFromDataSet( data, beData : TDataSet );
+      procedure save;
 
       procedure buildTree;
 
       function findChapter( id : integer ) : IChapter;
+
+      procedure clearModified;
 
       procedure release;
 

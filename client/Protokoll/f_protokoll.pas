@@ -145,6 +145,7 @@ begin
 
     Caption := '*' + m_proto.Title;
     self.RO := false;
+
     ShowMessage('Das Protokoll kann jetzt bearbeitet werden.');
   end;
 end;
@@ -391,7 +392,8 @@ begin
   end;
   CodeSite.SendAssigned('m_proto', pointer(m_proto));
 
-  m_proto.Modified := false;
+  m_proto.clearModified;
+
   CodeSite.ExitMethod(self, 'reload');
 end;
 

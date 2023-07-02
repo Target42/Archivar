@@ -57,8 +57,10 @@ type
       procedure buildTree;
 
       procedure loadFromDataSet( data, beData : TDataSet );
+      procedure save;
 
       function findChapter( id : integer ) : IChapter;
+      procedure clearModified;
 
       procedure release;
   end;
@@ -67,12 +69,18 @@ implementation
 
 uses
   System.SysUtils,
-  u_ChapterImpl, i_beschluss;
+  u_ChapterImpl, i_beschluss, System.Variants;
 
 
 procedure TChapterTitleImpl.buildTree;
 begin
 
+end;
+
+procedure TChapterTitleImpl.clearModified;
+begin
+  FModified := false;
+  m_root.clearModified;
 end;
 
 constructor TChapterTitleImpl.create(owner : IChapterTitleList; loader: TProtocolMod; proto : IProtocol);
@@ -101,7 +109,7 @@ procedure TChapterTitleImpl.down;
 begin
   m_owner.down(self);
   refreshList;
-  FModified := true;
+  setModified(true);
 end;
 
 function TChapterTitleImpl.findChapter(id: integer): IChapter;
@@ -269,6 +277,13 @@ begin
   FModified := true;
 end;
 
+procedure TChapterTitleImpl.save;
+var
+  cp : IChapter;
+begin
+  for cp in m_list do
+    cp.save(m_loader.CPTextTab);
+end;
 
 procedure TChapterTitleImpl.setID(value: integer);
 begin
@@ -285,7 +300,7 @@ procedure TChapterTitleImpl.setNr(value: integer);
 begin
   FNr       := value;
   m_root.Nr := value;
-  FModified := true;
+  setModified(true);
 end;
 
 procedure TChapterTitleImpl.setOwner;
@@ -301,13 +316,15 @@ procedure TChapterTitleImpl.setOwner;
   end;
 begin
   setValue( m_root );
-  FModified := true;
+  setModified(true);
 end;
 
 procedure TChapterTitleImpl.setText(value: string);
 begin
-  FText     := value;
-  FModified := true;
+  if FText <> value then begin
+    FText     := value;
+    setModified(true);
+  end;
 end;
 
 procedure TChapterTitleImpl.SetTimeStamp(const Value: TDateTime);
@@ -318,7 +335,7 @@ end;
 procedure TChapterTitleImpl.up;
 begin
   m_owner.up(self);
-  FModified := true;
+  setModified(true);
   refreshList;
 end;
 

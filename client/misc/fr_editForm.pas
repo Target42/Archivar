@@ -45,7 +45,7 @@ type
     procedure prepare;
     procedure Release;
 
-    property Text     : string  read getText  write setText;
+    property Text    : string  read getText  write setText;
     property ReadOnly : boolean read getRO    write setRO;
     property IsEmpty  : boolean read getIsEmpty;
     property PlainText: boolean read FPlainText write setPlainText;

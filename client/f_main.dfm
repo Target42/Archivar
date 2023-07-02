@@ -246,7 +246,6 @@
     Images = ImageList1
     TabOrder = 2
     Visible = False
-    ExplicitTop = 473
     object TabSheet4: TTabSheet
       Caption = 'Offene Aufgaben'
       ImageIndex = 33
@@ -891,7 +890,7 @@
     end
     object ac_me_execute: TAction
       Category = 'Meeting'
-      Caption = 'Ausf'#252'hren'
+      Caption = 'Teilnehmen'
       Enabled = False
       ImageIndex = 13
       OnExecute = ac_me_executeExecute
@@ -1045,7 +1044,7 @@
     Left = 360
     Top = 48
     Bitmap = {
-      494C0101330038005C0110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010133003800600110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000040000000D0000000010020000000000000D0
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

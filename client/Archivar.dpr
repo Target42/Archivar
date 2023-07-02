@@ -252,7 +252,8 @@ uses
   f_kategorie in 'mail\f_kategorie.pas' {KategorieForm},
   fr_files_to_delete in 'File\fr_files_to_delete.pas' {FilesToDeleteFrame: TFrame},
   u_meeting_status in '..\misc\u_meeting_status.pas',
-  fr_gaeste in 'Sitzung2\fr_gaeste.pas' {GaesteFrame: TFrame};
+  fr_gaeste in 'Sitzung2\fr_gaeste.pas' {GaesteFrame: TFrame},
+  f_rtf2html in 'misc\f_rtf2html.pas' {RtfToHtmlform};
 
 {$R *.res}
 

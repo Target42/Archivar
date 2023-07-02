@@ -50,7 +50,7 @@ object dsMisc: TdsMisc
     Left = 496
     Top = 24
   end
-  object IBTransaction1: TFDTransaction
+  object dsMiscTransaction: TFDTransaction
     Connection = DBMod.ArchivarConnection
     Left = 32
     Top = 16
@@ -58,7 +58,7 @@ object dsMisc: TdsMisc
   object openTasks: TFDQuery
     ObjectView = False
     Connection = DBMod.ArchivarConnection
-    Transaction = IBTransaction1
+    Transaction = dsMiscTransaction
     SQL.Strings = (
       'select * from TO_OPEN a,  TA_TASK b, TY_TASKTYPE c'
       'where a.gr_id = :gr_id'
@@ -76,14 +76,14 @@ object dsMisc: TdsMisc
   object AutoIncQry: TFDQuery
     ObjectView = False
     Connection = DBMod.ArchivarConnection
-    Transaction = IBTransaction1
+    Transaction = dsMiscTransaction
     Left = 112
     Top = 16
   end
   object Meetings: TFDQuery
     ObjectView = False
     Connection = DBMod.ArchivarConnection
-    Transaction = IBTransaction1
+    Transaction = dsMiscTransaction
     SQL.Strings = (
       'SELECT * FROM EL_EINLADUNG a, TN_TEILNEHMER b'
       'where a.pr_id = b.pr_id'
@@ -110,11 +110,11 @@ object dsMisc: TdsMisc
   end
   object PEQry: TFDQuery
     Connection = DBMod.ArchivarConnection
-    Transaction = IBTransaction1
+    Transaction = dsMiscTransaction
     SQL.Strings = (
       'select * from PE_PERSON')
-    Left = 352
-    Top = 192
+    Left = 312
+    Top = 208
     object PEQryPE_ID: TIntegerField
       FieldName = 'PE_ID'
       Origin = 'PE_ID'
@@ -152,8 +152,8 @@ object dsMisc: TdsMisc
       'r.PE_ID = b.PE_ID and'
       ':da >= pk_start and '
       ':da <= pk_end')
-    Left = 424
-    Top = 176
+    Left = 528
+    Top = 152
     ParamData = <
       item
         Name = 'NAME'
@@ -168,8 +168,8 @@ object dsMisc: TdsMisc
   end
   object FDTransaction1: TFDTransaction
     Connection = DBMod.ArchivarConnection
-    Left = 488
-    Top = 176
+    Left = 560
+    Top = 280
   end
   object ListStoragesQry: TFDQuery
     Connection = DBMod.ArchivarConnection
@@ -205,7 +205,7 @@ object dsMisc: TdsMisc
   end
   object FilesToDelete: TFDQuery
     Connection = DBMod.ArchivarConnection
-    Transaction = IBTransaction1
+    Transaction = dsMiscTransaction
     SQL.Strings = (
       'SELECT * '
       'FROM FI_FILE r'

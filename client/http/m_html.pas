@@ -4,14 +4,13 @@ interface
 
 uses
   System.SysUtils, System.Classes, Web.HTTPApp, Web.HTTPProd, xsd_TaskData,
-  JvRichEditToHtml, i_taskEdit, SHDocVw, Data.DB,
-  System.Generics.Collections, JvComponentBase;
+  i_taskEdit, SHDocVw, Data.DB,
+  System.Generics.Collections, JvComponentBase, f_rtf2html;
 
 type
   THtmlMod = class(TDataModule)
     PageProducer1: TPageProducer;
     Frame: TPageProducer;
-    JvRichEditToHtml1: TJvRichEditToHtml;
     procedure DataModuleCreate(Sender: TObject);
     procedure DataModuleDestroy(Sender: TObject);
     procedure PageProducer1HTMLTag(Sender: TObject; Tag: TTag;
@@ -35,6 +34,8 @@ type
     m_stack         : TStringList;
     m_path          : string;
     m_clid          : string;
+
+    m_rtf2html      : TRtfToHtmlform;
 
     function  getField( name : string; data : IXMLList )    : string;
     function  createTable( params : TStrings; data : IXMLList ) : String;
@@ -154,16 +155,9 @@ begin
 end;
 
 procedure THtmlMod.AddTextToStack(text: string);
-var
-  list : TStringList;
-  i    : integer;
 begin
-  list := TStringList.Create;
-  list.Text := text;
-  for i := 0 to pred(list.Count) do
-    list.Strings[i] := list.Strings[i]+'<br>';
-  m_stack.AddStrings(list);
-  list.Free;
+  m_rtf2html.RtfText := text;
+  m_stack.Add(m_rtf2html.HtmlText);
 end;
 
 procedure THtmlMod.AddTitleToStack(text: string; level: integer);
@@ -297,6 +291,7 @@ begin
   m_FrameTemplate := TPath.combine( GM.wwwHome, 'templates\frame.html');
 
   clearFrameData;
+  Application.CreateForm(TRtfToHtmlform, m_rtf2html);
 end;
 
 procedure THtmlMod.DataModuleDestroy(Sender: TObject);
@@ -305,6 +300,7 @@ begin
   m_style := NIL;
 
   m_stack.Free;
+  m_rtf2html.Free;
 
   m_Framestyle:= NIL;
   m_FrameTC   := NIL;
@@ -368,7 +364,10 @@ begin
   begin
     if SameText( name, data.Values.Field[i].Field) then
     begin
-      Result := ReplaceText( data.Values.Field[i].Value, #$A, '<br>' );
+      m_rtf2html.RtfText := data.Values.Field[i].Value;
+      Result := m_rtf2html.HtmlText;
+
+      //Result := ReplaceText( data.Values.Field[i].Value, #$A, '<br>' );
     end;
   end;
   if Trim(Result) = '' then

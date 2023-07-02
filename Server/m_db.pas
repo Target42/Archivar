@@ -125,7 +125,7 @@ begin
   try
     ArchivarConnection.ConnectionDefName := 'FirebirdPooled';
 
-    FDMoniRemoteClientLink1.Tracing := true;
+//    FDMoniRemoteClientLink1.Tracing := true;
     ArchivarConnection.Open;
     Result := ArchivarConnection.Connected;
     GrijjyLog.Send('database connected');

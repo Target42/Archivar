@@ -40,7 +40,7 @@ type
     dsMeeing: TDSServerClass;
     dsSitzung: TDSServerClass;
     dsUpdater: TDSServerClass;
-    IBTransaction1: TFDTransaction;
+    ServerContainerTransaction: TFDTransaction;
     QueryUser: TFDQuery;
     GRPEQry: TFDQuery;
     dsStammData: TDSServerClass;
@@ -249,8 +249,8 @@ begin
   GrijjyLog.Send('session name',                        session.UserName);
   GrijjyLog.Send('Error',                               DSErrorEventObject.Error.ToString, TgoLogLevel.Error);
 
-  if IBTransaction1.Active then
-     IBTransaction1.Rollback;
+  if ServerContainerTransaction.Active then
+     ServerContainerTransaction.Rollback;
 
   GrijjyLog.ExitMethod(self, 'DSServer1Error');
 
@@ -627,8 +627,8 @@ begin
 
     ph      := THashSHA2.GetHashString(Password);
 
-    if IBTransaction1.Active then
-      IBTransaction1.Rollback;
+    if ServerContainerTransaction.Active then
+      ServerContainerTransaction.Rollback;
     try
 //      IBTransaction1.StartTransaction;
 
@@ -698,8 +698,8 @@ begin
       end;
 
       QueryUser.Close;
-      if IBTransaction1.Active then
-        IBTransaction1.Commit;
+      if ServerContainerTransaction.Active then
+        ServerContainerTransaction.Commit;
     except
       on e : exception do begin
         GrijjyLog.Send( e.ToString, Error);
@@ -708,8 +708,8 @@ begin
       end;
     end;
 
-    if IBTransaction1.Active then begin
-      IBTransaction1.Rollback;
+    if ServerContainerTransaction.Active then begin
+      ServerContainerTransaction.Rollback;
       GrijjyLog.Send('Emergency rollback', Error);
     end;
     GrijjyLog.Send('user authenticate', valid);
@@ -1013,8 +1013,9 @@ begin
   end;
 
   m_timer.newTimer(3, 1, true, execTimeToDie);
-  fillMailHandler;
 
+
+  fillMailHandler;
   m_mailHandler.start;
 
   GrijjyLog.Send('started:', Started);

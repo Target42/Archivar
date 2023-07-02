@@ -35,6 +35,7 @@ type
       procedure renumber;
 
       procedure sortPos;
+      procedure clearModified;
 
       procedure release;
   end;
@@ -58,6 +59,14 @@ begin
   for i := 0 to pred(m_list.Count) do
     m_list[i].release;
   m_list.Clear;
+end;
+
+procedure TChapterListImpl.clearModified;
+var
+  cp : IChapter;
+begin
+  for cp in m_list do
+    cp.clearModified;
 end;
 
 constructor TChapterListImpl.create;

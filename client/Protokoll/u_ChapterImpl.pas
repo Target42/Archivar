@@ -380,35 +380,44 @@ begin
 end;
 
 function TChapterImpl.save(data: TDataSet): boolean;
+var
+  i : integer;
+  cp : IChapter;
 begin
   try
-    if FID = 0 then
-    begin
-      FID := GM.autoInc('GEN_CT_ID');
+    if m_modified then begin
+      if FID = 0 then
+      begin
+        FID := GM.autoInc('GEN_CT_ID');
 
-      data.Append;
-      data.FieldByName('CP_ID').AsInteger       := m_owner.ID;  //m_ct.ID;
-      data.FieldByName('CT_ID').AsInteger       := FID;
-      data.FieldByName('CT_CREATED').AsDateTime := now;
-    end
-    else
-    begin
-      data.Locate('CT_ID', VarArrayOf([FID]), []);
-      data.Edit;
+        data.Append;
+        data.FieldByName('CP_ID').AsInteger       := m_owner.ID;  //m_ct.ID;
+        data.FieldByName('CT_ID').AsInteger       := FID;
+        data.FieldByName('CT_CREATED').AsDateTime := now;
+      end
+      else
+      begin
+        if data.Locate('CT_ID', VarArrayOf([FID]), []) then
+          data.Edit
+        else
+          raise Exception.Create('Chapter not Found');
+      end;
+
+      data.FieldByName('ct_parent').AsInteger := FPID;
+      data.FieldByName('CT_NUMBER').AsInteger := FNr;
+      data.FieldByName('CT_TITLE').AsString   := FName;
+      data.FieldByName('CT_POS').AsInteger    := m_pos;
+      data.FieldByName('CT_DATA').AsString    := FRem;
+
+      if FTAID <> 0 then
+        data.FieldByName('TA_ID').AsInteger     := FTAID
+      else
+        data.FieldByName('TA_ID').Clear;
+      data.Post;
     end;
-
-    data.FieldByName('ct_parent').AsInteger := FPID;
-    data.FieldByName('CT_NUMBER').AsInteger := FNr;
-    data.FieldByName('CT_TITLE').AsString   := FName;
-    data.FieldByName('CT_POS').AsInteger    := m_pos;
-    data.FieldByName('CT_DATA').AsString    := FRem;
-
-    if FTAID <> 0 then
-      data.FieldByName('TA_ID').AsInteger     := FTAID
-    else
-      data.FieldByName('TA_ID').Clear;
-    data.Post;
     Result := true;
+    for i := 0 to pred(m_childs.Count) do
+      Result := m_childs.Items[i].save(data) and Result;
   except
     Result := false;
   end;
@@ -416,14 +425,18 @@ end;
 
 procedure TChapterImpl.setData(value: pointer);
 begin
-  m_modified  := m_modified or (value <> FData);
-  FData := value;
+  if value <> FData then begin
+    FData := value;
+    setModified(true);
+  end;
 end;
 
 procedure TChapterImpl.SetID(value: integer);
 begin
-  m_modified  := m_modified or (value <> FID);
-  FID := value;
+  if value <> FID then begin
+    FID := value;
+    setModified(true);
+  end;
 end;
 
 procedure TChapterImpl.setModified(value: boolean);
@@ -433,64 +446,80 @@ end;
 
 procedure TChapterImpl.setName(value: string);
 begin
-  m_modified  := m_modified or (value <> FName);
-  FName := value;
+  if (value <> FName) then begin
+    FName := value;
+    setModified(true);
+  end;
 end;
 
 procedure TChapterImpl.SetNr(value: integer);
 begin
-  m_modified  := m_modified or (value <> FNr);
-  FNr := value;
+  if (value <> FNr) then begin
+    FNr := value;
+    setModified(true);
+  end;
 end;
 
 procedure TChapterImpl.SetNumbering(value: boolean);
 var
   i : integer;
 begin
-  m_modified  := m_modified or (value <> FNumbering);
-  FNumbering := value;
+  if (value <> FNumbering) then begin
+    FNumbering := value;
 
-  if Assigned(m_parent) then
-  begin
-    if FNumbering then
-      m_parent.Numbering := true
-    else
+    if Assigned(m_parent) then
     begin
-      for i := 0 to pred(m_childs.Count) do
-        m_childs.Items[i].Numbering := false;
+      if FNumbering then
+        m_parent.Numbering := true
+      else
+      begin
+        for i := 0 to pred(m_childs.Count) do
+          m_childs.Items[i].Numbering := false;
+      end;
     end;
+    m_childs.renumber;
+    setModified(true);
   end;
-  m_childs.renumber;
 end;
 
 procedure TChapterImpl.setParent(value: IChapter);
 begin
-  m_modified  := m_modified or (value <> m_parent);
-  m_parent := value;
+  if (value <> m_parent) then begin
+    m_parent := value;
+    setModified(true);
+  end;
 end;
 
 procedure TChapterImpl.setPID(value: integer);
 begin
-  m_modified  := m_modified or (value <> FPID);
-  FPID := value;
+  if (value <> FPID) then begin
+    FPID := value;
+    setModified(true);
+  end;
 end;
 
 procedure TChapterImpl.setPos(value: integer);
 begin
-  m_modified  := m_modified or (value <> m_pos);
-  m_pos       := value;
+  if (value <> m_pos) then begin
+    m_pos       := value;
+    setModified(true);
+  end;
 end;
 
 procedure TChapterImpl.setRem(value: string);
 begin
-  FRem := value;
-  m_modified := true;
+  if FRem <> value then begin
+    FRem := value;
+    setModified(true);
+  end;
 end;
 
 procedure TChapterImpl.setTAID(value: integer);
 begin
-  FTAID := value;
-  m_modified := true;
+  if FTAID <> value then begin
+    FTAID := value;
+    setModified(true);
+  end;
 end;
 
 procedure TChapterImpl.SetTimeStamp(const Value: TDateTime);
@@ -506,7 +535,7 @@ end;
 procedure TChapterImpl.up;
 begin
   m_parent.Childs.up(self);
-  m_modified := true;
+  setModified(true);
 end;
 
 end.

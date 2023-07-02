@@ -5,7 +5,7 @@ interface
 uses
   System.SysUtils, System.Classes, dwsComp, xsd_TaskData, dwsErrors,
   i_taskEdit, dwsExprs, Xml.XMLIntf, Web.HTTPApp, Web.HTTPProd, dwsDebugger,
-  dwsInfo;
+  dwsInfo, f_rtf2html;
 
 type
   TXmlContainer = class( TObject )
@@ -90,6 +90,7 @@ type
     m_xTable : IXMLTable;
     m_style  : ITaskStyle;
     m_msgText: string;
+    m_rtf2html: TRtfToHtmlform;
 
     function addDataRows : string;
     function headerText : string;
@@ -139,9 +140,10 @@ begin
   Result := '';
   for i := 0 to pred(m_xList.Values.Count) do
   begin
+    m_rtf2html.RtfText := m_xList.Values.Field[i].Value;
 
     Result := Result + Format(fmt, [m_xList.Values.Field[i].Field,
-      ReplaceStr( m_xList.Values.Field[i].Value, #$A, '<br>')]);
+      m_rtf2html.HtmlText]);
   end;
 end;
 
@@ -158,8 +160,9 @@ end;
 
 procedure TDwsMod.DataModuleCreate(Sender: TObject);
 begin
-  m_script := TStringList.Create;
-  m_params := TStringList.Create;
+  m_script   := TStringList.Create;
+  m_params   := TStringList.Create;
+  m_rtf2html := TRtfToHtmlform.create(self);
 
   m_xList  := NewList;
   m_style  := NIL;
@@ -174,6 +177,7 @@ begin
   m_xList := NIL;
   m_style := NIL;
 
+  m_rtf2html.Free;
   m_script.Free;
   m_params.Free;
 end;

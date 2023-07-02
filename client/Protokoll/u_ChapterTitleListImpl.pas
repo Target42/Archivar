@@ -31,6 +31,7 @@ type
       procedure updateChapter( cp : IChapterTitle );
 
       function findChapter( id : integer ) : IChapter;
+      procedure clearModified;
 
       procedure release;
   end;
@@ -54,6 +55,14 @@ begin
     CPTab.FieldByName('CP_CREATED').AsDateTime  := cp.TimeStamp;
     CPTab.Post;
   end;
+end;
+
+procedure TChapterTitleListImpl.clearModified;
+var
+  cpt : IChapterTitle;
+begin
+  for cpt in  m_list do
+    cpt.clearModified;
 end;
 
 constructor TChapterTitleListImpl.Create(loader : TProtocolMod; proto : IProtocol);
@@ -179,6 +188,10 @@ begin
         m_loader.UpdateCPQry.ParamByName('CP_TITLE').AsString:= m_list.Items[i].Text;
         m_loader.UpdateCPQry.Execute;
 
+        m_loader.CPTextTab.Filter := 'CP_ID='+intToStr(m_list.Items[i].ID);
+        m_loader.CPTextTab.Filtered := true;
+
+        m_list.Items[i].Save;
         m_list.Items[i].Modified := false;
       end;
     end;

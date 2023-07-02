@@ -66,7 +66,7 @@ object MailIMap: TMailIMap
   end
   object FolderQry: TFDQuery
     Connection = DBMod.ArchivarConnection
-    Transaction = FDTransaction1
+    Transaction = MailTransaction
     SQL.Strings = (
       'SELECT *'
       'FROM MAF_FOLDER '
@@ -81,7 +81,7 @@ object MailIMap: TMailIMap
         ParamType = ptInput
       end>
   end
-  object FDTransaction1: TFDTransaction
+  object MailTransaction: TFDTransaction
     Options.AutoStop = False
     Connection = DBMod.ArchivarConnection
     Left = 280
@@ -89,7 +89,7 @@ object MailIMap: TMailIMap
   end
   object MailTab: TFDTable
     Connection = DBMod.ArchivarConnection
-    Transaction = FDTransaction1
+    Transaction = MailTransaction
     UpdateOptions.UpdateTableName = 'MAM_MAIL'
     TableName = 'MAM_MAIL'
     Left = 200
@@ -97,13 +97,13 @@ object MailIMap: TMailIMap
   end
   object AutoincQry: TFDQuery
     Connection = DBMod.ArchivarConnection
-    Transaction = FDTransaction1
+    Transaction = MailTransaction
     Left = 312
     Top = 216
   end
   object ListQry: TFDQuery
     Connection = DBMod.ArchivarConnection
-    Transaction = FDTransaction1
+    Transaction = MailTransaction
     SQL.Strings = (
       'SELECT MAM_ID, MAM_MSG_ID'
       'FROM MAM_MAIL'
@@ -119,7 +119,7 @@ object MailIMap: TMailIMap
   end
   object DeleteQry: TFDQuery
     Connection = DBMod.ArchivarConnection
-    Transaction = FDTransaction1
+    Transaction = MailTransaction
     SQL.Strings = (
       'DELETE FROM MAM_MAIL a '
       'WHERE'

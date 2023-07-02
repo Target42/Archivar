@@ -45,7 +45,10 @@ begin
   start := GetTickCount64 - (FIntervall * 1000);
   repeat
     WaitForSingleObject( event, 250 );
-    if self.Terminated then break;
+
+    if self.Terminated then
+      break;
+
     if (GetTickCount64 - start) >= (FIntervall * 1000 ) then begin
       GrijjyLog.Send('Update Mails start');
       list := m_konten.LockList;
@@ -55,9 +58,11 @@ begin
       finally
         m_konten.UnlockList;
       end;
+
       GrijjyLog.Send('Update Mails end');
       start := GetTickCount64;
-    end;  until self.Terminated;
+    end;
+  until self.Terminated;
 
   CloseHandle(event);
 end;

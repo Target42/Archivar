@@ -94,13 +94,14 @@ begin
   Application.CreateForm(TBeschlusform, Beschlusform);
   Beschlusform.Beschluss := m_be;
   Beschlusform.setPage( 2 );
-  Beschlusform.ShowModal;
+  if Beschlusform.ShowModal = mrOk then begin
+    m_be.Abstimmung.clear;
+    m_changed := true;
+    updateBeView;
+
+    save;
+  end;
   Beschlusform.Free;
-
-  m_be.Abstimmung.clear;
-  m_changed := true;
-
-  updateBeView;
 end;
 
 procedure TBeschlussFrame.BitBtn2Click(Sender: TObject);
@@ -290,12 +291,14 @@ procedure TBeschlussFrame.setHasLead(value: boolean);
 begin
   FhasLead := value;
 
+  Panel1.Visible        := FhasLead;
+  GroupBox3.Enabled     := FhasLead;
   GroupBox5.Enabled     := FhasLead;
+  GroupBox6.Enabled     := FhasLead;
+  GroupBox7.Enabled     := FhasLead;
   LabeledEdit4.Enabled  := FhasLead;
   LabeledEdit5.Enabled  := FhasLead;
   LabeledEdit6.Enabled  := FhasLead;
-  GroupBox3.Enabled     := FhasLead;
-  GroupBox7.Enabled     := FhasLead;
 end;
 
 procedure TBeschlussFrame.SpeedButton1Click(Sender: TObject);
