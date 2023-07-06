@@ -291,7 +291,8 @@ begin
   m_FrameTemplate := TPath.combine( GM.wwwHome, 'templates\frame.html');
 
   clearFrameData;
-  Application.CreateForm(TRtfToHtmlform, m_rtf2html);
+  // destroy the form, if the parent is destroyed
+  m_rtf2html := TRtfToHtmlform.Create(self);
 end;
 
 procedure THtmlMod.DataModuleDestroy(Sender: TObject);
@@ -300,7 +301,6 @@ begin
   m_style := NIL;
 
   m_stack.Free;
-  m_rtf2html.Free;
 
   m_Framestyle:= NIL;
   m_FrameTC   := NIL;

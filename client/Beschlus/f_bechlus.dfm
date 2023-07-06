@@ -42,12 +42,12 @@ object Beschlusform: TBeschlusform
         ExplicitTop = 6
       end
       inherited OKBtn: TBitBtn
-        Left = 631
+        Left = 634
         Top = 6
         Default = False
         Kind = bkCustom
         OnClick = BaseFrame1OKBtnClick
-        ExplicitLeft = 631
+        ExplicitLeft = 634
         ExplicitTop = 6
       end
     end
@@ -80,7 +80,6 @@ object Beschlusform: TBeschlusform
         Align = alBottom
         Caption = 'Abstimmung'
         TabOrder = 0
-        ExplicitLeft = 2
         object Button1: TBitBtn
           Left = 9
           Top = 24
@@ -135,6 +134,8 @@ object Beschlusform: TBeschlusform
           EditLabel.Width = 57
           EditLabel.Height = 13
           EditLabel.Caption = 'Zustimmung'
+          EditLabel.Color = clGreen
+          EditLabel.ParentColor = False
           NumbersOnly = True
           TabOrder = 1
           OnExit = LabeledEdit1Exit
@@ -398,7 +399,7 @@ object Beschlusform: TBeschlusform
     Left = 559
     Top = 208
     Bitmap = {
-      494C010101000800A40010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010101000800A80010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       000000000000000000000000000000000000000000FF000000FF000000FF0000
       00FF000000FF000000FF000000FF000000FF000000FF000000FF000000FF0000
@@ -565,7 +566,7 @@ object Beschlusform: TBeschlusform
     Left = 124
     Top = 136
     Bitmap = {
-      494C010104000800300010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010104000800340010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

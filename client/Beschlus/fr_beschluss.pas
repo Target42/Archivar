@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_textblock,
   Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Buttons, fr_editForm, Vcl.Menus, i_beschluss,
-  Vcl.OleCtrls, Vcl.ComCtrls, u_stub;
+  Vcl.OleCtrls, Vcl.ComCtrls, u_stub, System.JSON;
 
 type
   TBeschlussFrame = class(TFrame)
@@ -41,6 +41,7 @@ type
     GroupBox7: TGroupBox;
     BitBtn4: TBitBtn;
     SpeedButton2: TSpeedButton;
+    BitBtn5: TBitBtn;
     procedure EditFrame1REDragDrop(Sender, Source: TObject; X, Y: Integer);
     procedure EditFrame1REDragOver(Sender, Source: TObject; X, Y: Integer;
       State: TDragState; var Accept: Boolean);
@@ -53,6 +54,7 @@ type
     procedure BitBtn3Click(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
     procedure SpeedButton1Click(Sender: TObject);
+    procedure BitBtn5Click(Sender: TObject);
   private
     m_org         : IBeschluss;
     m_be          : IBeschluss;
@@ -79,13 +81,13 @@ type
     procedure setBeschluss( be : IBeschluss );
     property Beschluss : IBeschluss read m_be write setBeschluss;
 
-
+    function handle_voteStop(const arg : TJSONObject ) : boolean;
   end;
 
 implementation
 
 uses
-  f_bechlus, i_personen, system.UITypes, System.JSON, u_json;
+  f_bechlus, i_personen, system.UITypes, u_json, System.Generics.Collections;
 
 {$R *.dfm}
 
@@ -121,6 +123,23 @@ begin
   save;
 end;
 
+procedure TBeschlussFrame.BitBtn5Click(Sender: TObject);
+begin
+  if not Assigned(m_be) then
+    exit;
+
+   m_be.Abstimmung.Zustimmung := StrToIntDef(LabeledEdit1.Text, -1);
+   m_be.Abstimmung.Enthalten  := StrToIntDef(LabeledEdit3.Text, -1);
+   m_be.Abstimmung.Abgelehnt  := StrToIntDef(LabeledEdit2.Text, -1);
+   m_be.Abstimmung.Zeitpunkt  := now;
+   m_be.Status                := bsWarten;
+
+  updateBeView;
+
+  m_changed := true;
+
+end;
+
 procedure TBeschlussFrame.Button1Click(Sender: TObject);
 begin
   if not Assigned(m_be) then
@@ -128,6 +147,7 @@ begin
 
    m_be.Abstimmung.Einstimmig(true);
    m_be.Abstimmung.Zeitpunkt := now;
+   m_be.Status  := bsZugestimmt;
 
   updateBeView;
 
@@ -141,6 +161,7 @@ begin
 
   m_be.Abstimmung.Einstimmig(false);
   m_be.Abstimmung.Zeitpunkt := now;
+  m_be.Status  := bsAbgelehnt;
 
   updateBeView;
 
@@ -180,6 +201,34 @@ begin
     if TextBlockFrame1.TagFilter = '' then
       TextBlockFrame1.TagFilter := 'beschluss';
   end;
+end;
+
+function TBeschlussFrame.handle_voteStop(const arg: TJSONObject): boolean;
+var
+  ids : TList<integer>;
+  obj : TJSONObject;
+begin
+  Result := false;
+  if not Assigned(m_be) then
+    exit;
+
+  obj := JObject( arg, 'data');
+  ids := getIntNumbers( obj, 'ja');
+  m_be.Abstimmung.Zustimmung := ids.Count;
+  ids.Free;
+
+  ids   := getIntNumbers( obj, 'nein');
+  m_be.Abstimmung.Abgelehnt := ids.Count;
+  ids.Free;
+
+  ids := getIntNumbers( obj, 'en');
+  m_be.Abstimmung.Enthalten := ids.Count;
+  ids.Free;
+
+//  ids := getIntNumbers( obj, 'na');
+//  LabNA.Caption := Format('Nicht abgestimmt : %d', [ids.Count]);
+
+  updateBeView;
 end;
 
 procedure TBeschlussFrame.init;
@@ -283,7 +332,9 @@ begin
     m_be := NIL;
 
   self.Enabled  := Assigned(m_be);
+
   updateBeView;
+
   m_changed     := false;
 end;
 

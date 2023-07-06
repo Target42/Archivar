@@ -31,7 +31,8 @@ type
     procedure clear;
 
     function hasSamePerson( p : IPerson ) : boolean;
-     procedure removeSamePerson( p : IPerson );
+    procedure removeSamePerson( p : IPerson );
+    function removeSamePersonByID( id : integer ) : IPerson;
 
     procedure release;
 
@@ -153,6 +154,21 @@ begin
     if pers.compare(p) then begin
       m_list.Remove(pers);
       pers.release;
+      break;
+    end;
+  end;
+end;
+
+function TPersonenListeImpl.removeSamePersonByID(id: integer): IPerson;
+var
+  p : IPerson;
+begin
+  Result := NIL;
+
+  for p in m_list do begin
+    if p.ID = id then begin
+      Result := p;
+      m_list.Remove(Result);
       break;
     end;
   end;

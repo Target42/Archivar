@@ -203,7 +203,7 @@ var
   en  : TEntry;
   cp  : IChapter;
 begin
-  if FMeetingMode then exit;  
+//  if FMeetingMode then exit;
   if m_proto.ReadOnly or not Assigned(TV.Selected)  then exit;
   if not m_map.TryGetValue(tv.Selected, en)         then exit;
   if not(en.Typ = etBeschluss)                      then exit;

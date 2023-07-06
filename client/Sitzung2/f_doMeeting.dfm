@@ -74,7 +74,7 @@
             inherited TV: TTreeView
               Width = 241
               Height = 661
-              ExplicitLeft = 5
+              ExplicitLeft = 0
               ExplicitTop = 11
               ExplicitWidth = 241
               ExplicitHeight = 661
@@ -87,10 +87,7 @@
             ExplicitTop = 678
             ExplicitWidth = 245
             inherited TabSheet4: TTabSheet
-              ExplicitLeft = 4
-              ExplicitTop = 25
               ExplicitWidth = 237
-              ExplicitHeight = 37
             end
             inherited TabSheet5: TTabSheet
               ExplicitTop = 24
@@ -115,7 +112,7 @@
           end
           inherited ImageList1: TImageList
             Bitmap = {
-              494C010106001001200210001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+              494C010106001001280210001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
               0000000000003600000028000000400000002000000001002000000000000020
               0000000000000000000000000000000000000000000000000000000000000000
               0000000000000000000000000000000000000000000000000000000000000000

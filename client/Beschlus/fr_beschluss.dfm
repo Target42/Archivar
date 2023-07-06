@@ -1,16 +1,16 @@
 object BeschlussFrame: TBeschlussFrame
   Left = 0
   Top = 0
-  Width = 744
-  Height = 552
+  Width = 1115
+  Height = 618
   Align = alClient
   TabOrder = 0
   ExplicitWidth = 451
   ExplicitHeight = 305
   object Splitter1: TSplitter
-    Left = 487
+    Left = 858
     Top = 0
-    Height = 452
+    Height = 518
     Align = alRight
     Color = clYellow
     ParentColor = False
@@ -22,8 +22,8 @@ object BeschlussFrame: TBeschlussFrame
   object GroupBox1: TGroupBox
     Left = 0
     Top = 0
-    Width = 487
-    Height = 452
+    Width = 858
+    Height = 518
     Align = alClient
     Caption = 'Text'
     TabOrder = 0
@@ -31,8 +31,8 @@ object BeschlussFrame: TBeschlussFrame
     ExplicitHeight = 205
     object Splitter2: TSplitter
       Left = 2
-      Top = 368
-      Width = 483
+      Top = 434
+      Width = 854
       Height = 3
       Cursor = crVSplit
       Align = alBottom
@@ -50,8 +50,8 @@ object BeschlussFrame: TBeschlussFrame
     inline EditFrame1: TEditFrame
       Left = 2
       Top = 15
-      Width = 483
-      Height = 353
+      Width = 854
+      Height = 419
       Align = alClient
       TabOrder = 0
       ExplicitLeft = 2
@@ -59,8 +59,8 @@ object BeschlussFrame: TBeschlussFrame
       ExplicitWidth = 190
       ExplicitHeight = 106
       inherited RE: TRichEdit
-        Width = 483
-        Height = 319
+        Width = 854
+        Height = 385
         PopupMenu = PopupMenu1
         OnDragDrop = EditFrame1REDragDrop
         OnDragOver = EditFrame1REDragOver
@@ -68,14 +68,14 @@ object BeschlussFrame: TBeschlussFrame
         ExplicitHeight = 72
       end
       inherited Panel1: TPanel
-        Width = 483
+        Width = 854
         ExplicitWidth = 190
       end
     end
     object Groupbox4: TGroupBox
       Left = 2
-      Top = 371
-      Width = 483
+      Top = 437
+      Width = 854
       Height = 79
       Align = alBottom
       Caption = 'Nicht mit Abgestimmt'
@@ -87,7 +87,7 @@ object BeschlussFrame: TBeschlussFrame
       object Memo1: TMemo
         Left = 2
         Top = 15
-        Width = 479
+        Width = 850
         Height = 62
         Align = alClient
         Lines.Strings = (
@@ -100,10 +100,10 @@ object BeschlussFrame: TBeschlussFrame
     end
   end
   object GroupBox2: TGroupBox
-    Left = 490
+    Left = 861
     Top = 0
     Width = 254
-    Height = 452
+    Height = 518
     Align = alRight
     Caption = 'Textbausteine'
     TabOrder = 1
@@ -114,7 +114,7 @@ object BeschlussFrame: TBeschlussFrame
       Left = 2
       Top = 15
       Width = 250
-      Height = 435
+      Height = 501
       Align = alClient
       TabOrder = 0
       ExplicitLeft = 2
@@ -122,7 +122,7 @@ object BeschlussFrame: TBeschlussFrame
       ExplicitWidth = 250
       ExplicitHeight = 188
       inherited Panel1: TPanel
-        Top = 379
+        Top = 445
         Width = 250
         ExplicitTop = 132
         ExplicitWidth = 250
@@ -136,7 +136,7 @@ object BeschlussFrame: TBeschlussFrame
       end
       inherited LV: TListView
         Width = 250
-        Height = 379
+        Height = 445
         ExplicitWidth = 250
         ExplicitHeight = 132
       end
@@ -144,8 +144,8 @@ object BeschlussFrame: TBeschlussFrame
   end
   object Panel1: TPanel
     Left = 0
-    Top = 452
-    Width = 744
+    Top = 518
+    Width = 1115
     Height = 100
     Align = alBottom
     BevelOuter = bvNone
@@ -375,6 +375,50 @@ object BeschlussFrame: TBeschlussFrame
         Time = 44397.853002650460000000
         Kind = dtkTime
         TabOrder = 5
+      end
+      object BitBtn5: TBitBtn
+        Left = 177
+        Top = 51
+        Width = 109
+        Height = 30
+        Caption = 'Kl'#228'rungsbedarf'
+        Glyph.Data = {
+          36040000424D3604000000000000360000002800000010000000100000000100
+          20000000000000040000C40E0000C40E00000000000000000000FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00B2299B38B0279DABB1269D72FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00B1279C55B0279CFFB0279DABFFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00AD249B1CB1279C55B2299B38FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00B2299B38B0279CAAB1269D72FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00B1279D41B0279CFFB0279CBEFFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00AE28A113B0279BF6B0279CFBAE26
+          9D3CFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00B0279C84B0279CFFB027
+          9CF1AF269C36FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00AA00AA03B0279CA8B027
+          9CFFB0279CEEB0289F2DFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00AA00AA03AF27
+          9CA3B0279CFFB0289BBBFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00AF269C43B0269E4480008002FFFFFF00FFFFFF00AA22
+          990FB0279CFFB0279CF3FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00B0279DE9B0279CFFAF289B33FFFFFF00FFFFFF00B028
+          9F2DB0279CFFB0279CE6FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00B1269D99B0279CFFB0279CDCB1269D65AF289B66B127
+          9CDDB0279CFFB1279C96FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00AA2B9C12B0279CC9B0279CFFB0279CFFB0279CFFB027
+          9CFFB0289CC8AF209F10FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF0080008002AF289B59AF279C9DB1279B9CB126
+          9C5880008002FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+          FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
+        TabOrder = 6
+        OnClick = BitBtn5Click
       end
     end
     object GroupBox6: TGroupBox

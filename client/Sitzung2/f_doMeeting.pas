@@ -386,8 +386,11 @@ end;
 function TDoMeetingform.handle_voteStop(const arg: TJSONObject): boolean;
 begin
   Result := false;
+  BeschlussFrame1.handle_voteStop(arg);
+
   if Assigned(AbstimmungsForm) then begin
     AbstimmungsForm.handle_voteStop(arg);
+
 
     Result := true;
   end;

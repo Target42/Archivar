@@ -96,6 +96,10 @@ procedure TBeschlusform.BaseFrame1OKBtnClick(Sender: TObject);
 begin
   m_be.Text := EditFrame2.Text;
 
+  m_zustimmung := StrTointDef( LabeledEdit1.Text, m_zustimmung );
+  m_ablehnung  := StrTointDef( LabeledEdit2.Text, m_ablehnung );
+  m_enthaltung := StrTointDef( LabeledEdit3.Text, m_enthaltung );
+
   m_be.Abstimmung.Zustimmung  := m_zustimmung;
   m_be.Abstimmung.Abgelehnt   := m_ablehnung;
   m_be.Abstimmung.Enthalten   := m_enthaltung;
@@ -272,8 +276,14 @@ begin
 
   EditFrame2.Text := m_be.Text;
 
+  m_zustimmung := m_be.Abstimmung.Zustimmung;
+  m_ablehnung  := m_be.Abstimmung.Abgelehnt;
+  m_enthaltung := m_be.Abstimmung.Enthalten;
+
   TNFrame1.Beschluss := m_be;
   TNFrame1.OnUserChange := self.changeTB;
+
+  updateInfo
 
 end;
 

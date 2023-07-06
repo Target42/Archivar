@@ -4,7 +4,7 @@ interface
 
 
 uses
-  i_beschluss, i_personen;
+  i_beschluss, i_personen, System.Generics.Collections;
 
 type
   TAbstimmungImpl = class(TInterfacedObject, IAbstimmung )
@@ -36,6 +36,7 @@ type
     function  GetModified: boolean;
     procedure SetModified(const Value: boolean);
 
+    procedure CountVotes( var anz : integer; list : TList<integer>);
 
   public
     constructor create;
@@ -46,6 +47,13 @@ type
 
     procedure Release;
     function clone : IAbstimmung;
+
+    procedure resetVote;
+    procedure listZustimmung( list : TList<integer>);
+    procedure listablehnung( list : TList<integer>);
+    procedure listEnthaltung( list : TList<integer>);
+    procedure listNichtAbgestimmt( list : TList<integer>);
+
   end;
 implementation
 
@@ -76,6 +84,19 @@ begin
   Result.Zustimmung       := m_ja;
   Result.Abgelehnt        := m_nein;
   Result.Enthalten        := m_enthalten;
+end;
+
+procedure TAbstimmungImpl.CountVotes(var anz: integer; list: TList<integer>);
+var
+  i : integer;
+  p : IPerson;
+begin
+  anz := list.Count;
+  for i := 0 to pred(list.Count) do begin
+    p := m_abwesend.removeSamePersonByID(list[i]);
+    if Assigned(p) then
+      p.release;
+  end;
 end;
 
 constructor TAbstimmungImpl.create;
@@ -141,6 +162,33 @@ begin
   Result:= m_ja;
 end;
 
+procedure TAbstimmungImpl.listablehnung(list: TList<integer>);
+begin
+  CountVotes(m_nein, list );
+end;
+
+procedure TAbstimmungImpl.listEnthaltung(list: TList<integer>);
+begin
+  CountVotes( m_enthalten, list);
+end;
+
+procedure TAbstimmungImpl.listNichtAbgestimmt(list: TList<integer>);
+var
+  i : integer;
+  p : IPerson;
+begin
+  for i := 0 to pred(list.Count) do begin
+    p := m_abwesend.removeSamePersonByID(List[i]);
+    if Assigned(p) then
+      m_na.add(p);
+  end;
+end;
+
+procedure TAbstimmungImpl.listZustimmung(list: TList<integer>);
+begin
+  CountVotes(m_ja, list);
+end;
+
 procedure TAbstimmungImpl.Release;
 begin
   if Assigned(m_gremium) then
@@ -154,6 +202,17 @@ begin
   if Assigned(m_na) then
     m_na.release;
   m_na := NIL;
+end;
+
+procedure TAbstimmungImpl.resetVote;
+begin
+  m_ja        := 0;
+  m_nein      := 0;
+  m_enthalten := 0;
+  m_na.clear;
+  m_abwesend.clear;
+
+  m_abwesend.Assign(m_gremium);
 end;
 
 procedure TAbstimmungImpl.setAbgelehnt(value: integer);

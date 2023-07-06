@@ -33,6 +33,7 @@ type
 
     function hasSamePerson( p : IPerson ) : boolean;
     procedure removeSamePerson( p : IPerson );
+    function removeSamePersonByID( id : integer ) : IPerson;
 
     procedure release;
   end;

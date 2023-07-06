@@ -52,7 +52,6 @@ begin
   m_cp.Numbering  := CheckBox1.Checked;
   m_cp.Name       := LabeledEdit1.Text;
   m_cp.Rem        := EditFrame1.Text;
-  m_cp.Modified   := true;
 end;
 
 procedure TChapterEditForm.CheckBox1Click(Sender: TObject);

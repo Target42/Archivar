@@ -114,7 +114,6 @@ procedure TAbstimmungsForm.BitBtn6Click(Sender: TObject);
 begin
   if Assigned(FVoteStop) then
     FVoteStop( true );
-
 end;
 
 procedure TAbstimmungsForm.enableButtons(flag: boolean);
@@ -296,6 +295,8 @@ begin
   enableButtons( false );
 
   Result := true;
+
+  close;
  end;
 
 procedure TAbstimmungsForm.setGroup(id, code: integer);

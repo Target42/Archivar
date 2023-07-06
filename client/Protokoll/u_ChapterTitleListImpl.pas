@@ -187,13 +187,13 @@ begin
         m_loader.UpdateCPQry.ParamByName('CP_NR').AsInteger  := m_list.Items[i].Nr;
         m_loader.UpdateCPQry.ParamByName('CP_TITLE').AsString:= m_list.Items[i].Text;
         m_loader.UpdateCPQry.Execute;
-
-        m_loader.CPTextTab.Filter := 'CP_ID='+intToStr(m_list.Items[i].ID);
-        m_loader.CPTextTab.Filtered := true;
-
-        m_list.Items[i].Save;
         m_list.Items[i].Modified := false;
       end;
+
+      m_loader.CPTextTab.Filter := 'CP_ID='+intToStr(m_list.Items[i].ID);
+      m_loader.CPTextTab.Filtered := true;
+
+      m_list.Items[i].Save;
     end;
 end;
 

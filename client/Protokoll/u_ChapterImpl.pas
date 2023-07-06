@@ -382,7 +382,6 @@ end;
 function TChapterImpl.save(data: TDataSet): boolean;
 var
   i : integer;
-  cp : IChapter;
 begin
   try
     if m_modified then begin

@@ -3,7 +3,8 @@ unit i_beschluss;
 interface
 
 uses
-  i_personen, Data.DB, System.Classes, xsd_TaskData;
+  i_personen, Data.DB, System.Classes, xsd_TaskData,
+  System.Generics.Collections;
 
 type
 
@@ -131,6 +132,12 @@ type
     procedure Einstimmig( zustimmung : boolean );
 
     procedure Release;
+
+    procedure resetVote;
+    procedure listZustimmung( list : TList<integer>);
+    procedure listablehnung( list : TList<integer>);
+    procedure listEnthaltung( list : TList<integer>);
+    procedure listNichtAbgestimmt( list : TList<integer>);
 
     function clone : IAbstimmung;
 

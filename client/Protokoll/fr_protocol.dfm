@@ -1,27 +1,23 @@
 object ProtocolFrame: TProtocolFrame
   Left = 0
   Top = 0
-  Width = 1216
-  Height = 579
+  Width = 451
+  Height = 305
   Align = alClient
   TabOrder = 0
-  ExplicitWidth = 451
-  ExplicitHeight = 305
   object GroupBox1: TGroupBox
     Left = 0
     Top = 0
-    Width = 1216
-    Height = 513
+    Width = 451
+    Height = 239
     Align = alClient
     Caption = 'Abschnitte'
     TabOrder = 0
-    ExplicitWidth = 451
-    ExplicitHeight = 239
     object TV: TTreeView
       Left = 2
       Top = 15
-      Width = 1212
-      Height = 496
+      Width = 447
+      Height = 222
       Align = alClient
       DoubleBuffered = True
       HideSelection = False
@@ -34,21 +30,17 @@ object ProtocolFrame: TProtocolFrame
       OnChange = TVChange
       OnCollapsing = TVCollapsing
       OnDblClick = TVDblClick
-      ExplicitWidth = 447
-      ExplicitHeight = 222
     end
   end
   object PageControl2: TPageControl
     Left = 0
-    Top = 513
-    Width = 1216
+    Top = 239
+    Width = 451
     Height = 66
     ActivePage = TabSheet5
     Align = alBottom
     Images = ImageList1
     TabOrder = 1
-    ExplicitTop = 239
-    ExplicitWidth = 451
     object TabSheet4: TTabSheet
       Caption = 'Struktur'
       ImageIndex = 6
@@ -116,7 +108,6 @@ object ProtocolFrame: TProtocolFrame
     object TabSheet5: TTabSheet
       Caption = 'Beschluss'
       ImageIndex = 7
-      ExplicitWidth = 443
       object SpeedButton7: TSpeedButton
         Tag = 1
         Left = 4
@@ -242,7 +233,7 @@ object ProtocolFrame: TProtocolFrame
     Left = 100
     Top = 25
     Bitmap = {
-      494C010108001001D80110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010108001001DC0110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000003000000001002000000000000030
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
