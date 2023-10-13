@@ -1,5 +1,4 @@
 object DwsMod: TDwsMod
-  OldCreateOrder = False
   OnCreate = DataModuleCreate
   OnDestroy = DataModuleDestroy
   Height = 253
@@ -22,21 +21,21 @@ object DwsMod: TDwsMod
           item
             Name = 'getTableHeader'
             ResultType = 'TTableHeader'
-            OnEval = dwsUnit1ClassesTTableMethodsgetTableHeaderEval
             Visibility = cvPrivate
             Kind = mkFunction
+            OnEval = dwsUnit1ClassesTTableMethodsgetTableHeaderEval
           end
           item
             Name = 'Rows'
             ResultType = 'integer'
-            OnEval = dwsUnit1ClassesTTableMethodsRowsEval
             Kind = mkFunction
+            OnEval = dwsUnit1ClassesTTableMethodsRowsEval
           end
           item
             Name = 'Cols'
             ResultType = 'integer'
-            OnEval = dwsUnit1ClassesTTableMethodsColsEval
             Kind = mkFunction
+            OnEval = dwsUnit1ClassesTTableMethodsColsEval
           end
           item
             Name = 'Cell'
@@ -51,8 +50,8 @@ object DwsMod: TDwsMod
               end>
             ResultType = 'String'
             Overloaded = True
-            OnEval = dwsUnit1ClassesTTableMethodsCellEval
             Kind = mkFunction
+            OnEval = dwsUnit1ClassesTTableMethodsCellEval
           end
           item
             Name = 'Cell'
@@ -67,14 +66,14 @@ object DwsMod: TDwsMod
               end>
             ResultType = 'string'
             Overloaded = True
-            OnEval = dwsUnit1ClassesTTableMethodsCell_IntegerString_Eval
             Kind = mkFunction
+            OnEval = dwsUnit1ClassesTTableMethodsCell_IntegerString_Eval
           end
           item
             Name = 'getName'
             ResultType = 'string'
-            OnEval = dwsUnit1ClassesTTableMethodsgetNameEval
             Kind = mkFunction
+            OnEval = dwsUnit1ClassesTTableMethodsgetNameEval
           end>
         Properties = <
           item
@@ -95,14 +94,14 @@ object DwsMod: TDwsMod
           item
             Name = 'Count'
             ResultType = 'integer'
-            OnEval = dwsUnit1ClassesTTableHeaderMethodsCountEval
             Kind = mkFunction
+            OnEval = dwsUnit1ClassesTTableHeaderMethodsCountEval
           end
           item
             Name = 'Names'
             ResultType = 'array of string'
-            OnEval = dwsUnit1ClassesTTableHeaderMethodsNamesEval
             Kind = mkFunction
+            OnEval = dwsUnit1ClassesTTableHeaderMethodsNamesEval
           end
           item
             Name = 'Name'
@@ -112,8 +111,8 @@ object DwsMod: TDwsMod
                 DataType = 'Integer'
               end>
             ResultType = 'string'
-            OnEval = dwsUnit1ClassesTTableHeaderMethodsNameEval
             Kind = mkFunction
+            OnEval = dwsUnit1ClassesTTableHeaderMethodsNameEval
           end
           item
             Name = 'Caption'
@@ -124,8 +123,8 @@ object DwsMod: TDwsMod
               end>
             ResultType = 'String'
             Overloaded = True
-            OnEval = dwsUnit1ClassesTTableHeaderMethodsCaptionEval
             Kind = mkFunction
+            OnEval = dwsUnit1ClassesTTableHeaderMethodsCaptionEval
           end
           item
             Name = 'Caption'
@@ -136,8 +135,8 @@ object DwsMod: TDwsMod
               end>
             ResultType = 'string'
             Overloaded = True
-            OnEval = dwsUnit1ClassesTTableHeaderMethodsCaption_Integer_Eval
             Kind = mkFunction
+            OnEval = dwsUnit1ClassesTTableHeaderMethodsCaption_Integer_Eval
           end
           item
             Name = 'Width'
@@ -148,8 +147,8 @@ object DwsMod: TDwsMod
               end>
             ResultType = 'integer'
             Overloaded = True
-            OnEval = dwsUnit1ClassesTTableHeaderMethodsWidthEval
             Kind = mkFunction
+            OnEval = dwsUnit1ClassesTTableHeaderMethodsWidthEval
           end
           item
             Name = 'Width'
@@ -160,8 +159,8 @@ object DwsMod: TDwsMod
               end>
             ResultType = 'integer'
             Overloaded = True
-            OnEval = dwsUnit1ClassesTTableHeaderMethodsWidth_Integer_Eval
             Kind = mkFunction
+            OnEval = dwsUnit1ClassesTTableHeaderMethodsWidth_Integer_Eval
           end>
         OnCleanUp = dwsUnit1ClassesTTableHeaderCleanUp
       end>

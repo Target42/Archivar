@@ -44,6 +44,23 @@ object MailFrame: TMailFrame
     Width = 451
     Height = 305
     Align = alClient
+    Colors.BorderColor = 15854306
+    Colors.DisabledColor = 9671571
+    Colors.DropMarkColor = 4486895
+    Colors.DropTargetColor = 4486895
+    Colors.DropTargetBorderColor = 4486895
+    Colors.FocusedSelectionColor = 4486895
+    Colors.FocusedSelectionBorderColor = 4486895
+    Colors.GridLineColor = 15854306
+    Colors.HeaderHotColor = clBlack
+    Colors.HotColor = clBlack
+    Colors.SelectionRectangleBlendColor = 4486895
+    Colors.SelectionRectangleBorderColor = 4486895
+    Colors.SelectionTextColor = clWhite
+    Colors.TreeLineColor = 9471874
+    Colors.UnfocusedColor = 12159575
+    Colors.UnfocusedSelectionColor = 7619357
+    Colors.UnfocusedSelectionBorderColor = 7619357
     Header.AutoSizeIndex = -1
     Header.MainColumn = -1
     TabOrder = 0
@@ -51,6 +68,8 @@ object MailFrame: TMailFrame
     TreeOptions.SelectionOptions = [toFullRowSelect, toMultiSelect]
     OnDrawNode = VSTDrawNode
     OnInitNode = VSTInitNode
+    Touch.InteractiveGestures = [igPan, igPressAndTap]
+    Touch.InteractiveGestureOptions = [igoPanSingleFingerHorizontal, igoPanSingleFingerVertical, igoPanInertia, igoPanGutter, igoParentPassthrough]
     Columns = <>
   end
 end

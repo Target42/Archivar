@@ -21,7 +21,7 @@ uses
   IdCustomHTTPServer, IdHTTPServer, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
   IdIOHandlerSocket, IdTCPConnection, IdTCPClient, IdServerIOHandler,
   IdComponent, Vcl.Grids, System.Generics.Collections, DosCommand, CWMIBase,
-  CServiceInfo, CProcessInfo;
+  CServiceInfo, CProcessInfo, Vcl.Mask;
 
 type
   TMainSetupForm = class(TForm)
@@ -360,8 +360,10 @@ var
     end;
     if LabeledEdit19.Text <> '' then begin
       fname := TPath.Combine(LabeledEdit19.Text, 'bin\fbclient.dll');
-      if FileExists(fname) then
+      if FileExists(fname) then begin
         LabeledEdit20.Text := fname;
+        Result := true;
+      end;
     end;
     reg.CloseKey;
     reg.Free;
@@ -391,8 +393,11 @@ begin
 
 
   AddColoredString('Suche im Pfad:', clBlack);
+  LabeledEdit20.Text := '';
   inPath := false;
   inList := false;
+
+  list.Add(GetEnvironmentVariable('SystemRoot')+'\SysWOW64\');
   for i := 0 to pred(list.Count) do
   begin
     if trim(list[i]) = '' then
@@ -405,7 +410,10 @@ begin
       inList  := true;
       AddColoredString('ok  :'+List[i], clGreen);
       if LabeledEdit20.Text = '' then
-        LabeledEdit20.Text := List[i];
+        LabeledEdit20.Text := List[i]
+      else
+        LabeledEdit20.Text := LabeledEdit20.Text + ';'+List[i];
+
       if not inPath then begin
         inPath := SameTExt( reg, fname);
       end;
@@ -1579,7 +1587,7 @@ var
   fname : string;
 begin
   fname := 'cmd.exe /k'+TPath.Combine(ExtractFilePath(paramStr(0)), filename );
-  ShellExecute(Handle, 'open', PWideChar(fname), '', '', SW_SHOWNORMAL);
+  ShellExecute(Handle, 'runas', PWideChar(fname), '', '', SW_SHOWNORMAL);
 end;
 
 procedure TMainSetupForm.SearchGDSEnterPage(Sender: TObject;

@@ -11,12 +11,10 @@ object MailForm: TMailForm
   Font.Name = 'Tahoma'
   Font.Style = []
   FormStyle = fsMDIChild
-  OldCreateOrder = False
   Visible = True
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter
     Left = 417
@@ -34,12 +32,30 @@ object MailForm: TMailForm
     Align = alLeft
     Caption = 'Mails'
     TabOrder = 0
+    ExplicitHeight = 398
     object VST: TVirtualStringTree
       Left = 2
       Top = 56
       Width = 413
       Height = 341
       Align = alClient
+      Colors.BorderColor = 15987699
+      Colors.DisabledColor = clGray
+      Colors.DropMarkColor = 15385233
+      Colors.DropTargetColor = 15385233
+      Colors.DropTargetBorderColor = 15385233
+      Colors.FocusedSelectionColor = 15385233
+      Colors.FocusedSelectionBorderColor = 15385233
+      Colors.GridLineColor = 15987699
+      Colors.HeaderHotColor = clBlack
+      Colors.HotColor = clBlack
+      Colors.SelectionRectangleBlendColor = 15385233
+      Colors.SelectionRectangleBorderColor = 15385233
+      Colors.SelectionTextColor = clBlack
+      Colors.TreeLineColor = 9471874
+      Colors.UnfocusedColor = clGray
+      Colors.UnfocusedSelectionColor = clWhite
+      Colors.UnfocusedSelectionBorderColor = clWhite
       Header.AutoSizeIndex = -1
       Header.MainColumn = -1
       Header.Options = [hoColumnResize, hoDrag, hoShowSortGlyphs, hoVisible]
@@ -52,6 +68,8 @@ object MailForm: TMailForm
       OnGetText = VSTGetText
       OnPaintText = VSTPaintText
       OnInitNode = VSTInitNode
+      Touch.InteractiveGestures = [igPan, igPressAndTap]
+      Touch.InteractiveGestureOptions = [igoPanSingleFingerHorizontal, igoPanSingleFingerVertical, igoPanInertia, igoPanGutter, igoParentPassthrough]
       Columns = <>
     end
     object Panel1: TPanel
@@ -84,6 +102,8 @@ object MailForm: TMailForm
     Width = 1020
     Height = 19
     Panels = <>
+    ExplicitTop = 398
+    ExplicitWidth = 1016
   end
   object GroupBox2: TGroupBox
     Left = 420
@@ -93,6 +113,8 @@ object MailForm: TMailForm
     Align = alClient
     Caption = 'Mail'
     TabOrder = 2
+    ExplicitWidth = 596
+    ExplicitHeight = 398
     object Splitter2: TSplitter
       Left = 2
       Top = 297
@@ -110,8 +132,8 @@ object MailForm: TMailForm
       Height = 282
       Align = alClient
       TabOrder = 0
-      ExplicitLeft = 3
-      ExplicitTop = 12
+      ExplicitWidth = 592
+      ExplicitHeight = 281
       ControlData = {
         4C000000993D0000251D00000000000000000000000000000000000000000000
         000000004C000000000000000000000001000000E0D057007335CF11AE690800
@@ -129,6 +151,8 @@ object MailForm: TMailForm
       ItemHeight = 13
       TabOrder = 1
       Visible = False
+      ExplicitTop = 299
+      ExplicitWidth = 592
     end
   end
   object Timer1: TTimer

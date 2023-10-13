@@ -68,7 +68,8 @@ uses
 
 var
   MyDummyBoolean  : Boolean;
-  s               : string;
+
+  s               : string;
 
 {$IFDEF DEBUG}
 //{$e console.exe}
@@ -88,28 +89,22 @@ begin
     writeln('s = sessions');
     writeln('l = start logging');
 
-
     // Create the TService descendant manually.
     ArchivService := TArchivService.Create(nil);
-
     // Simulate service start.
     ArchivService.ServiceStart(ArchivService, MyDummyBoolean);
-
     // Keep the console box running (ServerContainer1 code runs in the background)
     repeat
       ReadLn(s);
       s := trim(s);
-
       if s = 'o' then ArchivService.dumpOnlineUser;
       if s = 's' then ArchivService.dumpSessions;
       if s = 'l' then begin
         Writeln('start logging');
         ArchivService.startLogging;
       end;
-
     until s = 'q';
     ArchivService.ServiceStop(ArchivService, MyDummyBoolean);
-
     // On exit, destroy the service object.
     FreeAndNil(ArchivService);
   except

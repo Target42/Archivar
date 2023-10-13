@@ -124,7 +124,7 @@ implementation
 
 uses
   Vcl.Dialogs, System.StrUtils, dwsUtils, m_glob_client,
-  System.ioutils, System.Variants;
+  System.ioutils, System.Variants, System.Types;
 
 {%CLASSGROUP 'Vcl.Controls.TControl'}
 

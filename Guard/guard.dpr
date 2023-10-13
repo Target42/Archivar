@@ -3,7 +3,8 @@ program guard;
 {$ifdef DEBUG}
   {$APPTYPE CONSOLE}
 {$endif}
-
+
+
 uses
   Vcl.SvcMgr,
   u_ArchivarGuard in 'u_ArchivarGuard.pas' {ArchivarGuard: TService},
@@ -13,7 +14,8 @@ uses
 
 var
   MyDummyBoolean  : Boolean;
-  s               : string;
+
+  s               : string;
 begin
 {$ifdef DEBUG}
 //  Application;
@@ -21,16 +23,13 @@ begin
     ReportMemoryLeaksOnShutdown := true;
     // Create the TService descendant manually.
     ArchivarGuard := TArchivarGuard.Create(nil);
-
     // Simulate service start.
     ArchivarGuard.ServiceStart(ArchivarGuard, MyDummyBoolean);
-
     // Keep the console box running (ServerContainer1 code runs in the background)
     repeat
       ReadLn(s);
       s := trim(s);
     until s = 'q';
-
     // On exit, destroy the service object.
     FreeAndNil(ArchivarGuard);
   except

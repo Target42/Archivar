@@ -2,8 +2,8 @@ object DairyForm: TDairyForm
   Left = 0
   Top = 0
   Caption = 'Tagebuch'
-  ClientHeight = 653
-  ClientWidth = 935
+  ClientHeight = 652
+  ClientWidth = 931
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -11,42 +11,44 @@ object DairyForm: TDairyForm
   Font.Name = 'Tahoma'
   Font.Style = []
   FormStyle = fsMDIChild
-  OldCreateOrder = False
   Visible = True
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter
     Left = 0
     Top = 339
-    Width = 935
+    Width = 931
     Height = 3
     Cursor = crVSplit
     Align = alTop
     ExplicitLeft = -8
     ExplicitTop = 268
+    ExplicitWidth = 935
   end
   object StatusBar1: TStatusBar
     Left = 0
-    Top = 634
-    Width = 935
+    Top = 633
+    Width = 931
     Height = 19
     Panels = <>
+    ExplicitTop = 632
+    ExplicitWidth = 927
   end
   object GroupBox1: TGroupBox
     Left = 0
     Top = 61
-    Width = 935
+    Width = 931
     Height = 209
     Align = alTop
     Caption = 'Liste'
     TabOrder = 1
+    ExplicitWidth = 927
     object DBGrid1: TDBGrid
       Left = 2
       Top = 15
-      Width = 931
+      Width = 927
       Height = 192
       Align = alClient
       DataSource = DISrc
@@ -84,11 +86,12 @@ object DairyForm: TDairyForm
   object GroupBox2: TGroupBox
     Left = 0
     Top = 270
-    Width = 935
+    Width = 931
     Height = 69
     Align = alTop
     Caption = 'Suche'
     TabOrder = 2
+    ExplicitWidth = 927
     object LabeledEdit1: TLabeledEdit
       Left = 16
       Top = 32
@@ -99,22 +102,25 @@ object DairyForm: TDairyForm
       EditLabel.Caption = 'Passwort'
       PasswordChar = '*'
       TabOrder = 0
+      Text = ''
       OnKeyPress = LabeledEdit1KeyPress
     end
   end
   object GroupBox3: TGroupBox
     Left = 0
     Top = 342
-    Width = 935
-    Height = 292
+    Width = 931
+    Height = 291
     Align = alClient
     Caption = 'Daten'
     TabOrder = 3
+    ExplicitWidth = 927
+    ExplicitHeight = 290
     object RE: TRichEdit
       Left = 2
       Top = 15
-      Width = 931
-      Height = 234
+      Width = 927
+      Height = 233
       Align = alClient
       Font.Charset = ANSI_CHARSET
       Font.Color = clWindowText
@@ -126,18 +132,21 @@ object DairyForm: TDairyForm
       ParentFont = False
       ScrollBars = ssVertical
       TabOrder = 0
-      Zoom = 100
+      ExplicitWidth = 923
+      ExplicitHeight = 232
     end
     object Panel1: TPanel
       Left = 2
-      Top = 249
-      Width = 931
+      Top = 248
+      Width = 927
       Height = 41
       Align = alBottom
       BevelOuter = bvNone
       Caption = 'Panel1'
       ShowCaption = False
       TabOrder = 1
+      ExplicitTop = 247
+      ExplicitWidth = 923
       object BitBtn1: TBitBtn
         Left = 14
         Top = 6
@@ -275,11 +284,12 @@ object DairyForm: TDairyForm
   object GroupBox4: TGroupBox
     Left = 0
     Top = 0
-    Width = 935
+    Width = 931
     Height = 61
     Align = alTop
     Caption = 'Zeitraum'
     TabOrder = 4
+    ExplicitWidth = 927
     object Label1: TLabel
       Left = 74
       Top = 22
@@ -380,8 +390,6 @@ object DairyForm: TDairyForm
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsDairy'
-    Connected = True
-    SQLConnection = GM.SQLConnection1
     Left = 72
     Top = 104
   end

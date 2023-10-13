@@ -30,14 +30,14 @@ package Dairy;
 requires
   rtl,
   vcl,
-  DbxCommonDriver,
+  vclwinx,
   dbrtl,
+  DbxCommonDriver,
   DbxClientDriver,
+  vcldb,
   dsnap,
   dbexpress,
   DataSnapProviderClient,
-  vcldb,
-  LockBox3DR,
   Plugin_base;
 
 contains

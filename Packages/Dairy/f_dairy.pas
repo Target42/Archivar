@@ -6,10 +6,15 @@ uses
   Winapi.Windows, Winapi.Messages, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB, Datasnap.DBClient,
   Datasnap.DSConnect, Vcl.ComCtrls, Vcl.StdCtrls, Vcl.DBGrids,
-  Vcl.ExtCtrls, u_ForceClose, Vcl.Grids, Vcl.Buttons, System.Actions,
-  Vcl.ActnList, u_ICrypt;
+  Vcl.Grids, Vcl.Buttons, System.Actions,
+  Vcl.ActnList, u_ICrypt, Vcl.Mask, Vcl.ExtCtrls;
 
 type
+  IForceClose = interface
+    ['{09DB420A-2669-4E82-B537-D8866479642F}']
+    procedure ForceClose( force : boolean);
+  end;
+
   TDairyForm = class(TForm, IForceClose)
     StatusBar1: TStatusBar;
     DSProviderConnection1: TDSProviderConnection;

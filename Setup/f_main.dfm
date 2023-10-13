@@ -11,11 +11,9 @@ object MainSetupForm: TMainSetupForm
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
   Position = poScreenCenter
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  PixelsPerInch = 96
   TextHeight = 13
   object StatusBar1: TStatusBar
     Left = 0
@@ -23,6 +21,8 @@ object MainSetupForm: TMainSetupForm
     Width = 558
     Height = 19
     Panels = <>
+    ExplicitTop = 568
+    ExplicitWidth = 556
   end
   object JvWizard1: TJvWizard
     Left = 0
@@ -196,10 +196,13 @@ object MainSetupForm: TMainSetupForm
     ShowRouteMap = False
     OnFinishButtonClick = JvWizard1FinishButtonClick
     OnCancelButtonClick = JvWizard1CancelButtonClick
+    ExplicitWidth = 556
+    ExplicitHeight = 568
     DesignSize = (
       558
       572)
     object WelcomePage: TJvWizardWelcomePage
+      Header.ParentFont = False
       Header.Title.Color = clNone
       Header.Title.Text = 'Archivar Setup'
       Header.Title.Anchors = [akLeft, akTop, akRight]
@@ -220,6 +223,8 @@ object MainSetupForm: TMainSetupForm
       Header.Subtitle.Font.Style = []
       Caption = 'WelcomePage'
       WaterMark.Visible = False
+      ExplicitWidth = 556
+      ExplicitHeight = 526
       object Image1: TImage
         Left = 0
         Top = 70
@@ -577,6 +582,7 @@ object MainSetupForm: TMainSetupForm
       end
     end
     object SearchGDS: TJvWizardInteriorPage
+      Header.ParentFont = False
       Header.Title.Color = clNone
       Header.Title.Text = 'Pr'#252'fe FireBIRD'
       Header.Title.Anchors = [akLeft, akTop, akRight]
@@ -690,7 +696,6 @@ object MainSetupForm: TMainSetupForm
         ScrollBars = ssVertical
         TabOrder = 1
         StyleElements = []
-        Zoom = 100
       end
       object GroupBox9: TGroupBox
         Left = 0
@@ -706,28 +711,31 @@ object MainSetupForm: TMainSetupForm
         object LabeledEdit19: TLabeledEdit
           Left = 11
           Top = 32
-          Width = 486
+          Width = 474
           Height = 21
           Anchors = [akLeft, akTop, akRight]
           EditLabel.Width = 53
           EditLabel.Height = 13
           EditLabel.Caption = 'Installation'
           TabOrder = 0
+          Text = ''
         end
         object LabeledEdit20: TLabeledEdit
           Left = 11
           Top = 78
-          Width = 486
+          Width = 474
           Height = 21
           Anchors = [akLeft, akTop, akRight]
           EditLabel.Width = 48
           EditLabel.Height = 13
           EditLabel.Caption = 'Client-DLL'
           TabOrder = 1
+          Text = ''
         end
       end
     end
     object ServerInfo: TJvWizardInteriorPage
+      Header.ParentFont = False
       Header.Title.Color = clNone
       Header.Title.Text = 'Serverinformationen'
       Header.Title.Anchors = [akLeft, akTop, akRight]
@@ -983,6 +991,7 @@ object MainSetupForm: TMainSetupForm
       end
     end
     object Sicherheit: TJvWizardInteriorPage
+      Header.ParentFont = False
       Header.Title.Color = clNone
       Header.Title.Text = 'Sicherheit'
       Header.Title.Anchors = [akLeft, akTop, akRight]
@@ -1003,6 +1012,8 @@ object MainSetupForm: TMainSetupForm
       Header.Subtitle.Font.Style = []
       OnEnterPage = SicherheitEnterPage
       OnExitPage = SicherheitExitPage
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GroupBox4: TGroupBox
         Left = 0
         Top = 70
@@ -1028,6 +1039,7 @@ object MainSetupForm: TMainSetupForm
           EditLabel.Height = 13
           EditLabel.Caption = 'Administratorpasswort'
           TabOrder = 0
+          Text = ''
         end
         object LabeledEdit2: TLabeledEdit
           Left = 168
@@ -1039,6 +1051,7 @@ object MainSetupForm: TMainSetupForm
           EditLabel.Caption = 'Server-Secret'
           Enabled = False
           TabOrder = 1
+          Text = ''
         end
       end
       object GroupBox5: TGroupBox
@@ -1140,6 +1153,7 @@ object MainSetupForm: TMainSetupForm
       end
     end
     object Mail: TJvWizardInteriorPage
+      Header.ParentFont = False
       Header.Title.Color = clNone
       Header.Title.Text = 'Mail-Server'
       Header.Title.Anchors = [akLeft, akTop, akRight]
@@ -1158,6 +1172,8 @@ object MainSetupForm: TMainSetupForm
       Header.Subtitle.Font.Style = []
       OnEnterPage = MailEnterPage
       OnExitPage = MailExitPage
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GroupBox6: TGroupBox
         Left = 0
         Top = 70
@@ -1175,6 +1191,7 @@ object MainSetupForm: TMainSetupForm
           EditLabel.Height = 13
           EditLabel.Caption = 'Host'
           TabOrder = 0
+          Text = ''
         end
         object LabeledEdit11: TLabeledEdit
           Left = 143
@@ -1185,6 +1202,7 @@ object MainSetupForm: TMainSetupForm
           EditLabel.Height = 13
           EditLabel.Caption = 'Port'
           TabOrder = 1
+          Text = ''
         end
         object LabeledEdit12: TLabeledEdit
           Left = 16
@@ -1195,6 +1213,7 @@ object MainSetupForm: TMainSetupForm
           EditLabel.Height = 13
           EditLabel.Caption = 'Username'
           TabOrder = 2
+          Text = ''
         end
         object LabeledEdit13: TLabeledEdit
           Left = 247
@@ -1206,6 +1225,7 @@ object MainSetupForm: TMainSetupForm
           EditLabel.Caption = 'Passwort'
           PasswordChar = '*'
           TabOrder = 3
+          Text = ''
         end
         object BitBtn5: TBitBtn
           Left = 257
@@ -1269,6 +1289,7 @@ object MainSetupForm: TMainSetupForm
           EditLabel.Height = 13
           EditLabel.Caption = 'Host'
           TabOrder = 0
+          Text = ''
         end
         object LabeledEdit15: TLabeledEdit
           Left = 143
@@ -1279,6 +1300,7 @@ object MainSetupForm: TMainSetupForm
           EditLabel.Height = 13
           EditLabel.Caption = 'Port'
           TabOrder = 1
+          Text = ''
         end
         object LabeledEdit16: TLabeledEdit
           Left = 16
@@ -1289,6 +1311,7 @@ object MainSetupForm: TMainSetupForm
           EditLabel.Height = 13
           EditLabel.Caption = 'Username'
           TabOrder = 2
+          Text = ''
         end
         object LabeledEdit17: TLabeledEdit
           Left = 257
@@ -1300,6 +1323,7 @@ object MainSetupForm: TMainSetupForm
           EditLabel.Caption = 'Passwort'
           PasswordChar = '*'
           TabOrder = 3
+          Text = ''
         end
         object BitBtn6: TBitBtn
           Left = 462
@@ -1354,6 +1378,7 @@ object MainSetupForm: TMainSetupForm
           EditLabel.Height = 13
           EditLabel.Caption = 'Test-Empf'#228'nger'
           TabOrder = 5
+          Text = ''
         end
       end
       object GroupBox8: TGroupBox
@@ -1450,6 +1475,7 @@ object MainSetupForm: TMainSetupForm
       end
     end
     object Plugins: TJvWizardInteriorPage
+      Header.ParentFont = False
       Header.Title.Color = clNone
       Header.Title.Text = 'Plugins'
       Header.Title.Anchors = [akLeft, akTop, akRight]
@@ -1471,6 +1497,8 @@ object MainSetupForm: TMainSetupForm
       Caption = 'Plugins'
       OnEnterPage = PluginsEnterPage
       OnExitPage = PluginsExitPage
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object PluginView: TListView
         Left = 0
         Top = 70
@@ -1499,6 +1527,7 @@ object MainSetupForm: TMainSetupForm
       end
     end
     object InitData: TJvWizardInteriorPage
+      Header.ParentFont = False
       Header.Title.Color = clNone
       Header.Title.Text = 'Basisdaten'
       Header.Title.Anchors = [akLeft, akTop, akRight]
@@ -1519,6 +1548,8 @@ object MainSetupForm: TMainSetupForm
       Header.Subtitle.Font.Style = []
       Caption = 'InitData'
       OnEnterPage = InitDataEnterPage
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object Panel1: TPanel
         Left = 0
         Top = 489
@@ -1605,6 +1636,7 @@ object MainSetupForm: TMainSetupForm
       end
     end
     object Import: TJvWizardInteriorPage
+      Header.ParentFont = False
       Header.Title.Color = clNone
       Header.Title.Text = 'Benutzerimport'
       Header.Title.Anchors = [akLeft, akTop, akRight]
@@ -1869,6 +1901,7 @@ object MainSetupForm: TMainSetupForm
       end
     end
     object ServerStart: TJvWizardInteriorPage
+      Header.ParentFont = False
       Header.Title.Color = clNone
       Header.Title.Text = 'Server starten'
       Header.Title.Anchors = [akLeft, akTop, akRight]
@@ -1887,6 +1920,8 @@ object MainSetupForm: TMainSetupForm
       Header.Subtitle.Font.Style = []
       VisibleButtons = [bkBack, bkNext, bkFinish]
       OnEnterPage = ServerStartEnterPage
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object GroupBox10: TGroupBox
         Left = 0
         Top = 70
@@ -2409,16 +2444,17 @@ object MainSetupForm: TMainSetupForm
     Top = 360
   end
   object IdServerIOHandlerSSLOpenSSL1: TIdServerIOHandlerSSLOpenSSL
+    SSLOptions.Method = sslvSSLv23
+    SSLOptions.SSLVersions = [sslvSSLv2, sslvSSLv3, sslvTLSv1, sslvTLSv1_1, sslvTLSv1_2]
     SSLOptions.Mode = sslmUnassigned
     SSLOptions.VerifyMode = []
     SSLOptions.VerifyDepth = 0
     OnGetPassword = IdServerIOHandlerSSLOpenSSL1GetPassword
-    Left = 296
-    Top = 376
+    Left = 464
+    Top = 304
   end
   object IdHTTP1: TIdHTTP
     IOHandler = IdSSLIOHandlerSocketOpenSSL1
-    AllowCookies = True
     ProxyParams.BasicAuthentication = False
     ProxyParams.ProxyPort = 0
     Request.ContentLength = -1
@@ -2438,27 +2474,29 @@ object MainSetupForm: TMainSetupForm
     MaxLineAction = maException
     Port = 0
     DefaultPort = 0
+    SSLOptions.Method = sslvSSLv23
+    SSLOptions.SSLVersions = [sslvSSLv2, sslvSSLv3, sslvTLSv1, sslvTLSv1_1, sslvTLSv1_2]
     SSLOptions.Mode = sslmUnassigned
     SSLOptions.VerifyMode = []
     SSLOptions.VerifyDepth = 0
-    Left = 424
-    Top = 368
+    Left = 456
+    Top = 240
   end
   object GRTyTab: TFDTable
     Connection = ArchivarConnection
     Transaction = IBTransaction1
     UpdateOptions.UpdateTableName = 'GR_TY'
     TableName = 'GR_TY'
-    Left = 400
-    Top = 336
+    Left = 176
+    Top = 320
   end
   object PluginTab: TFDTable
     Connection = ArchivarConnection
     Transaction = IBTransaction1
     UpdateOptions.UpdateTableName = 'PL_PLUGIN'
     TableName = 'PL_PLUGIN'
-    Left = 360
-    Top = 248
+    Left = 288
+    Top = 232
   end
   object ServiceInfo1: TServiceInfo
     Host = '.'

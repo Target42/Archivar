@@ -4,13 +4,13 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, u_ForceClose, Vcl.StdCtrls,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls,
   Vcl.ExtCtrls, Vcl.ComCtrls, VirtualTrees, IdMessage, IdEMailAddress,
   Vcl.OleCtrls, SHDocVw, Web.HTTPApp, Web.HTTPProd,
-  System.Generics.Collections;
+  System.Generics.Collections, u_ForceClose;
 
 type
-  TMailForm = class(TForm, IForceClose)
+  TMailForm = class(TForm) //, IForceClose)
     GroupBox1: TGroupBox;
     StatusBar1: TStatusBar;
     Timer1: TTimer;
