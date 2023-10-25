@@ -7,8 +7,6 @@ uses
 
 type
   TPluginDairy = class(TPluginImpl)
-    private
-    protected
     public
     procedure Execute; override;
   end;
@@ -19,10 +17,7 @@ var
 implementation
 
 uses
-  Vcl.Forms, f_dairy;
-
-var
-  oldApp : TApplication;
+  Vcl.Forms, f_dairy, System.Classes;
 
 { TPluginDairy }
 
@@ -31,10 +26,8 @@ begin
   Result := 'Tagebuch';
 end;
 
-function getPIF(App : TApplication) : IPlugin; stdcall;
+function getPIF : IPlugin; stdcall;
 begin
-  oldApp := Application;
-  Application := app;
   try
     PluginDairy := TPluginDairy.create;
     Result := PluginDairy;
@@ -45,11 +38,7 @@ end;
 
 procedure release; stdcall;
 begin
-  if Assigned(PluginDairy) then begin
-    PluginDairy.restoreOldApplication;
-  end;
   PluginDairy := NIL;
-  Application := oldApp;
 end;
 
 procedure TPluginDairy.Execute;
@@ -69,6 +58,10 @@ exports
 
 initialization
   PluginDairy := NIL;
+  RegisterClass(TDairyForm);
+
+finalization
+  UnregisterClass(TDairyForm);
 
 end.
 

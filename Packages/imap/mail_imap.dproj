@@ -180,6 +180,11 @@
         </DCCReference>
         <DCCReference Include="..\..\misc\u_json.pas"/>
         <DCCReference Include="..\..\misc\u_mail_decoder.pas"/>
+        <RcItem Include="template.html">
+            <ContainerId>ResourceItem</ContainerId>
+            <ResourceType>RCDATA</ResourceType>
+            <ResourceId>template</ResourceId>
+        </RcItem>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

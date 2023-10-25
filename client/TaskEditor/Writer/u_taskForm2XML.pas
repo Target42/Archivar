@@ -1,4 +1,4 @@
-unit u_taskForm2XML;
+﻿unit u_taskForm2XML;
 
 interface
 
@@ -388,7 +388,7 @@ function TTaskForm2XML.setAttribute(name, value: string): boolean;
 var
   i   : integer;
 begin
-  Result := true;
+  Result := false;
   for i := low(Attrib_Names) to High(Attrib_Names) do begin
     Result := SameText( name, Attrib_Names[i]);
     if Result then begin

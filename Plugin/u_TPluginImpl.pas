@@ -36,7 +36,7 @@ implementation
 procedure TPluginImpl.config(data: IPluginData);
 begin
   m_data := data;
-  Application := m_data.App;
+//  Application := m_data.App;
 end;
 
 constructor TPluginImpl.create;

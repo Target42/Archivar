@@ -32,7 +32,6 @@ object MailForm: TMailForm
     Align = alLeft
     Caption = 'Mails'
     TabOrder = 0
-    ExplicitHeight = 398
     object VST: TVirtualStringTree
       Left = 2
       Top = 56
@@ -113,8 +112,6 @@ object MailForm: TMailForm
     Align = alClient
     Caption = 'Mail'
     TabOrder = 2
-    ExplicitWidth = 596
-    ExplicitHeight = 398
     object Splitter2: TSplitter
       Left = 2
       Top = 297
@@ -151,8 +148,6 @@ object MailForm: TMailForm
       ItemHeight = 13
       TabOrder = 1
       Visible = False
-      ExplicitTop = 299
-      ExplicitWidth = 592
     end
   end
   object Timer1: TTimer

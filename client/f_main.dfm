@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = 'Archivar'
-  ClientHeight = 678
-  ClientWidth = 1126
+  ClientHeight = 677
+  ClientWidth = 1122
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -12,20 +12,18 @@
   Font.Style = []
   FormStyle = fsMDIForm
   Menu = MainMenu1
-  OldCreateOrder = False
   Position = poScreenCenter
   WindowState = wsMaximized
   WindowMenu = Fenster1
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter
     Left = 249
     Top = 0
     Width = 5
-    Height = 467
+    Height = 466
     Color = clYellow
     ParentColor = False
     Visible = False
@@ -33,8 +31,8 @@
   end
   object Splitter2: TSplitter
     Left = 0
-    Top = 467
-    Width = 1126
+    Top = 466
+    Width = 1122
     Height = 5
     Cursor = crVSplit
     Align = alBottom
@@ -42,21 +40,24 @@
     ParentColor = False
     Visible = False
     ExplicitTop = 469
+    ExplicitWidth = 1126
   end
   object Image1: TImage
     Left = 254
     Top = 0
-    Width = 872
-    Height = 467
+    Width = 868
+    Height = 466
     Align = alClient
     Center = True
     ExplicitLeft = 255
     ExplicitTop = -1
+    ExplicitWidth = 872
+    ExplicitHeight = 467
   end
   object StatusBar1: TStatusBar
     Left = 0
-    Top = 659
-    Width = 1126
+    Top = 658
+    Width = 1122
     Height = 19
     Panels = <
       item
@@ -76,12 +77,14 @@
         Width = 250
       end>
     OnDrawPanel = StatusBar1DrawPanel
+    ExplicitTop = 655
+    ExplicitWidth = 1124
   end
   object PageControl1: TPageControl
     Left = 0
     Top = 0
     Width = 249
-    Height = 467
+    Height = 466
     ActivePage = TabSheet2
     Align = alLeft
     Images = ImageList1
@@ -89,6 +92,7 @@
     TabOrder = 1
     TabPosition = tpLeft
     Visible = False
+    ExplicitHeight = 467
     object TabSheet1: TTabSheet
       Caption = 'Gremien'
       ImageIndex = 16
@@ -96,16 +100,16 @@
         Left = 0
         Top = 0
         Width = 221
-        Height = 459
+        Height = 458
         Align = alClient
         TabOrder = 0
         ExplicitWidth = 221
         ExplicitHeight = 459
         inherited TV: TTreeView
           Width = 221
-          Height = 459
+          Height = 458
           ExplicitWidth = 221
-          ExplicitHeight = 459
+          ExplicitHeight = 458
         end
       end
     end
@@ -116,16 +120,16 @@
         Left = 0
         Top = 0
         Width = 221
-        Height = 459
+        Height = 458
         Align = alClient
         TabOrder = 0
         ExplicitWidth = 221
         ExplicitHeight = 459
         inherited LV: TListView
           Width = 221
-          Height = 459
+          Height = 458
           ExplicitWidth = 221
-          ExplicitHeight = 459
+          ExplicitHeight = 455
         end
       end
     end
@@ -136,23 +140,25 @@
         Left = 0
         Top = 0
         Width = 221
-        Height = 459
+        Height = 458
         Align = alClient
         TabOrder = 0
         ExplicitWidth = 221
         ExplicitHeight = 459
         inherited GroupBox1: TGroupBox
           Width = 221
-          Height = 394
+          Height = 393
           ExplicitWidth = 221
           ExplicitHeight = 394
           inherited DBGrid1: TDBGrid
             Width = 217
             Height = 377
+            TitleFont.Height = -11
+            TitleFont.Name = 'Tahoma'
           end
         end
         inherited GroupBox2: TGroupBox
-          Top = 394
+          Top = 393
           Width = 221
           ExplicitTop = 394
           ExplicitWidth = 221
@@ -222,14 +228,14 @@
         Left = 0
         Top = 0
         Width = 221
-        Height = 459
+        Height = 458
         Align = alClient
         TabOrder = 0
         ExplicitWidth = 221
         ExplicitHeight = 459
         inherited LV: TListView
           Width = 221
-          Height = 459
+          Height = 458
           ExplicitWidth = 221
           ExplicitHeight = 459
         end
@@ -238,29 +244,32 @@
   end
   object PageControl2: TPageControl
     Left = 0
-    Top = 472
-    Width = 1126
+    Top = 471
+    Width = 1122
     Height = 187
     ActivePage = TabSheet5
     Align = alBottom
     Images = ImageList1
     TabOrder = 2
     Visible = False
+    ExplicitTop = 472
+    ExplicitWidth = 1126
     object TabSheet4: TTabSheet
       Caption = 'Offene Aufgaben'
       ImageIndex = 33
       object GroupBox2: TGroupBox
         Left = 0
         Top = 0
-        Width = 1118
+        Width = 1114
         Height = 158
         Align = alClient
         Caption = 'Aufgaben'
         TabOrder = 0
+        ExplicitWidth = 1118
         inline TaskListFrame1: TTaskListFrame
           Left = 2
           Top = 15
-          Width = 1114
+          Width = 1110
           Height = 141
           Align = alClient
           TabOrder = 0
@@ -269,7 +278,7 @@
           ExplicitWidth = 1114
           ExplicitHeight = 141
           inherited LV: TListView
-            Width = 1114
+            Width = 1110
             Height = 141
             ExplicitWidth = 1114
             ExplicitHeight = 141
@@ -287,14 +296,14 @@
       inline MeetingFrame1: TMeetingFrame
         Left = 0
         Top = 0
-        Width = 1118
+        Width = 1114
         Height = 158
         Align = alClient
         TabOrder = 0
         ExplicitWidth = 1118
         ExplicitHeight = 158
         inherited Lv: TListView
-          Width = 1118
+          Width = 1114
           Height = 158
           Groups = <
             item
@@ -313,7 +322,7 @@
               FooterAlign = taLeftJustify
               TitleImage = -1
             end>
-          ExplicitWidth = 1118
+          ExplicitWidth = 1114
           ExplicitHeight = 158
         end
       end
@@ -324,14 +333,14 @@
       inline FilesToDeleteFrame1: TFilesToDeleteFrame
         Left = 0
         Top = 0
-        Width = 1118
+        Width = 1114
         Height = 158
         Align = alClient
         TabOrder = 0
         ExplicitWidth = 1118
         ExplicitHeight = 158
         inherited LV: TListView
-          Width = 1118
+          Width = 1114
           Height = 158
           ExplicitWidth = 1118
           ExplicitHeight = 158
@@ -1044,7 +1053,7 @@
     Left = 360
     Top = 48
     Bitmap = {
-      494C010133003800600110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010133003800040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       000000000000360000002800000040000000D0000000010020000000000000D0
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

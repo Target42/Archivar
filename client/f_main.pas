@@ -488,8 +488,8 @@ begin
       JReplace( req, 'id', SelectMeetingForm.EL_ID );
       try
         client := TdsMeeingClient.Create(GM.SQLConnection1.DBXConnection);
-        res := client.closeMeeting(req)
-
+        res := client.closeMeeting(req);
+        ShowResult(res, true);
       finally
 
       end;

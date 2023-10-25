@@ -16,9 +16,7 @@ type
     procedure config( data : IPluginData );
     property Data : IPluginData read getData;
 
-
     procedure Execute;
-    procedure restoreOldApplication;
     procedure PosWindow( owner, form : TForm );
   end;
 

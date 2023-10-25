@@ -3,7 +3,7 @@
 interface
 
 uses
-  i_plugin, System.Generics.Collections, Vcl.Menus;
+  i_plugin, System.Generics.Collections, Vcl.Menus, System.Classes;
 
 type
   TPlugin = class;
@@ -41,7 +41,6 @@ type
       FPluginName : string;
       FLoaded     : boolean;
       FMenuEntry: TMenuItem;
-
     public
 
     constructor create;
@@ -64,7 +63,7 @@ implementation
 uses
   system.SysUtils, Winapi.Windows, System.IOUtils, System.Types, Vcl.Forms,
   System.UITypes, System.Generics.Defaults, CodeSiteLogging, u_PluginData,
-  u_stub, m_glob_client, u_json, System.JSON, System.Classes, Vcl.Dialogs;
+  u_stub, m_glob_client, u_json, System.JSON, Vcl.Dialogs;
 
 { TPluginManager }
 
@@ -227,7 +226,6 @@ begin
   if not ( Sender is TMenuItem) then exit;
 
   m_list.Items[( Sender as TMenuItem).Tag].execute;
-
 end;
 
 procedure TPluginManager.scan(path: string);
@@ -273,10 +271,10 @@ end;
 
 constructor TPlugin.create;
 begin
-  m_pif   := NIL;
-  m_hnd   := 0;
-  FLoaded := false;
-  FMenuEntry := NIL;
+  m_pif       := NIL;
+  m_hnd       := 0;
+  FLoaded     := false;
+  FMenuEntry  := NIL;
 end;
 
 destructor TPlugin.Destroy;
@@ -286,23 +284,26 @@ end;
 
 procedure TPlugin.execute;
 begin
-  if Assigned(m_pif) then
+  if Assigned(m_pif) then begin
     m_pif.Execute;
+  end;
 end;
 
 function TPlugin.load(data : IPluginData): boolean;
 var
-  p  : function(ptr : pointer) : IPlugin; stdcall;
+  p  : function : IPlugin; stdcall;
   funcName : function : pchar; stdcall;
   r  : procedure; stdcall;
   msg : string;
 begin
   CodeSite.EnterMethod(Self, 'load');
   Result := false;
+
   if FileExists(FFileName) then begin
     try
       msg := FFileName+#10#13;
       m_hnd := LoadPackage(FFileName);
+
       if m_hnd <> 0 then begin
         @funcName := GetProcAddress(m_hnd, PChar('getPluginName'));
         if Assigned(funcName) then begin
@@ -313,7 +314,7 @@ begin
         @p := GetProcAddress(m_hnd, PChar('getPIF'));
         if Assigned(p) then begin
 
-          m_pif := p(Application);
+          m_pif := p;
           m_pif.config(data);
 
           FLoaded := true;

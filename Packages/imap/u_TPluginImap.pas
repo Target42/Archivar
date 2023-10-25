@@ -8,25 +8,18 @@ uses
 
 type
   TPluginImap = class(TPluginImpl)
-    private
-    protected
     public
       procedure Execute; override;
-
   end;
-  pApp = ^TApplication;
-
 
 var
   PluginImap : IPlugin;
+
 implementation
 
 
 uses
   f_mail, System.SysUtils, System.Classes;
-
-var
-  oldApp : TApplication;
 
 { TPluginImap }
 function getPluginName : PChar; stdcall;
@@ -34,11 +27,8 @@ begin
   Result := 'Mail(IMAP)';
 end;
 
-function getPIF(app : TApplication) : IPlugin; stdcall;
+function getPIF : IPlugin; stdcall;
 begin
-  oldApp := Application;
-  Application := app;
-  RegisterClass(TMailForm);
   try
     PluginImap := TPluginImap.create;
     Result := PluginImap;
@@ -49,18 +39,8 @@ end;
 
 procedure release; stdcall;
 begin
-  if Assigned(PluginImap) then begin
-    PluginImap.restoreOldApplication;
-  end;
   PluginImap := NIL;
-  UnRegisterClass(TMailForm);
-  Application := oldApp;
 end;
-
-exports
-  getPluginName,
-  getPif,
-  release;
 
 
 procedure TPluginImap.Execute;
@@ -75,9 +55,17 @@ begin
   MailForm.Show;
 end;
 
+exports
+  getPluginName,
+  getPif,
+  release;
 
 initialization
+  RegisterClass(TMailForm);
   PluginImap := NIL;
+
+finalization
+  UnRegisterClass(TMailForm);
 
 end.
 

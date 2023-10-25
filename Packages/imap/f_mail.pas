@@ -156,6 +156,7 @@ end;
 
 procedure TMailForm.FormDestroy(Sender: TObject);
 begin
+
   PluginImap.Data.WndHandler.unregisterForm(self);
 
   FreeAndNil(MailMod);

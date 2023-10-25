@@ -97,6 +97,7 @@
         <DCC_UnitSearchPath>$(GITHOME)\The-Drag-and-Drop-Component-Suite-for-Delphi\Source;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
         <DCC_ExeOutput>$(GITHOME)\Archivar\Bin\client\</DCC_ExeOutput>
         <AppDPIAwarenessMode>PerMonitor</AppDPIAwarenessMode>
+        <UsePackages>true</UsePackages>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2)'!=''">
         <DCC_LocalDebugSymbols>false</DCC_LocalDebugSymbols>
