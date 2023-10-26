@@ -9,7 +9,6 @@ type
   TPluginImpl = class(TInterfacedObject, IPlugin )
     private
     protected
-      m_oldApp : TApplication;
       m_data   : IPluginData;
 
       function getData : IPluginData;
@@ -41,7 +40,6 @@ end;
 
 constructor TPluginImpl.create;
 begin
-  m_oldApp := Application;
 end;
 
 destructor TPluginImpl.Destroy;
@@ -72,10 +70,6 @@ end;
 
 procedure TPluginImpl.restoreOldApplication;
 begin
-  if Assigned(m_oldApp) then
-    Application := m_oldApp;
-
-  m_oldApp := NIL;
   m_data := NIL;
 end;
 
