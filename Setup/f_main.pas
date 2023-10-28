@@ -344,10 +344,11 @@ var
     fname : string;
   begin
     Result := false;
-    reg := TRegistry.Create(KEY_READ);
+    reg := TRegistry.Create(KEY_READ or KEY_WOW64_64KEY );
     reg.RootKey := HKEY_LOCAL_MACHINE;
 
-    if reg.OpenKey('\SOFTWARE\Firebird Project\Firebird Server\Instances',false) then
+
+    if reg.OpenKey('\SOFTWARE\Firebird Project\Firebird Server\Instances\',false) then
     begin
       AddColoredString('ok  :'+reg.ReadString('DefaultInstance'), clGreen );
       LabeledEdit19.Text := reg.ReadString('DefaultInstance');
@@ -631,17 +632,19 @@ begin
 
     Screen.Cursor := crDefault;
 
-    dbok := true;
+    dbok := CreateDB.TotalErrors = 0;
   except
     on e : exception do
     begin
      Screen.Cursor := crDefault;
      ShowMessage(e.ToString);
+     dbok := false;
     end;
   end;
   db.Free;
-  if not dbok then
+  if not dbok then begin
     exit;
+  end;
 
   ArchivarConnection.Params.Clear;
   ArchivarConnection.DriverName := 'FB';
@@ -694,6 +697,7 @@ begin
   end;
   ArchivarConnection.Close;
 
+  ServerInfo.VisibleButtons := [TJvWizardButtonKind.bkBack, TJvWizardButtonKind.bkNext,  TJvWizardButtonKind.bkCancel];
   JvWizard1.SelectNextPage;
 end;
 
@@ -767,7 +771,8 @@ begin
   if IBTransaction1.Active then
     IBTransaction1.Commit;
 
-  Import.VisibleButtons := [TJvWizardButtonKind.bkFinish];
+  Import.VisibleButtons := [TJvWizardButtonKind.bkFinish, TJvWizardButtonKind.bkNext];
+  JvWizard1.SelectNextPage;
 end;
 
 procedure TMainSetupForm.Button3Click(Sender: TObject);
@@ -821,7 +826,7 @@ begin
   m_ini     := TiniFile.Create(TPath.Combine(ExtractFileDir(Application.ExeName), 'ArchivServer.exe.ini'));
   m_berMap  := TDictionary<string, integer>.create;
 
-//  JvWizard1.ActivePage := Sicherheit;
+//  JvWizard1.ActivePage := ServerStart;
 end;
 
 procedure TMainSetupForm.FormDestroy(Sender: TObject);
@@ -936,6 +941,7 @@ begin
   GRTab.Open;
 
   Panel2.Enabled := not GRTab.IsEmpty;
+  InitData.VisibleButtons := [TJvWizardButtonKind.bkNext, TJvWizardButtonKind.bkFinish];
 end;
 
 procedure TMainSetupForm.importEPub;
@@ -1585,9 +1591,11 @@ end;
 procedure TMainSetupForm.run(filename: string);
 var
   fname : string;
+  params : string;
 begin
-  fname := 'cmd.exe /k'+TPath.Combine(ExtractFilePath(paramStr(0)), filename );
-  ShellExecute(Handle, 'runas', PWideChar(fname), '', '', SW_SHOWNORMAL);
+  fname := 'cmd.exe';
+  params := '/k'+TPath.Combine(ExtractFilePath(paramStr(0)), filename );
+  ShellExecute(Handle, 'runas', PWideChar(fname), PWideChar(params), '', SW_SHOWNORMAL);
 end;
 
 procedure TMainSetupForm.SearchGDSEnterPage(Sender: TObject;
