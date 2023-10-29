@@ -287,8 +287,8 @@ var
 begin
   Result := TJSONObject.Create;
 
-  reg := TRegistry.Create(KEY_READ );
-  reg.RootKey := HKEY_CURRENT_USER;
+  reg := TRegistry.Create(KEY_READ or KEY_WOW64_64KEY);
+  reg.RootKey := HKEY_LOCAL_MACHINE;
 
   JReplace(Result, 'kontoname', 'system');
   JReplace(Result, 'typ', 'imap/smtp');
@@ -333,8 +333,8 @@ procedure TMailMod.loadImap;
 var
   reg : TRegistry;
 begin
-  reg := TRegistry.Create(KEY_READ );
-  reg.RootKey := HKEY_CURRENT_USER;
+  reg := TRegistry.Create( KEY_READ or KEY_WOW64_64KEY );
+  reg.RootKey := HKEY_LOCAL_MACHINE;
 
   if reg.OpenKey('Software\Archivar\imap', false) then begin
 
@@ -350,8 +350,8 @@ procedure TMailMod.loadSmtp;
 var
   reg : TRegistry;
 begin
-  reg := TRegistry.Create(KEY_READ );
-  reg.RootKey := HKEY_CURRENT_USER;
+  reg := TRegistry.Create( KEY_READ or KEY_WOW64_64KEY );
+  reg.RootKey := HKEY_LOCAL_MACHINE;
 
   if reg.OpenKey('Software\Archivar\smtp', false) then begin
 

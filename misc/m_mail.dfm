@@ -1,5 +1,4 @@
 object MailMod: TMailMod
-  OldCreateOrder = False
   OnCreate = DataModuleCreate
   OnDestroy = DataModuleDestroy
   Height = 446
