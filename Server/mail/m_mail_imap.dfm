@@ -1,5 +1,4 @@
 object MailIMap: TMailIMap
-  OldCreateOrder = False
   OnCreate = DataModuleCreate
   OnDestroy = DataModuleDestroy
   Height = 317

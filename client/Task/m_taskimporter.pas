@@ -98,6 +98,7 @@ var
   st        : TMemoryStream;
   i         : integer;
 begin
+  Result := false;
   if not prepare_import(path) then exit;
 
   if not start_import then exit;

@@ -8,7 +8,8 @@ uses
   Data.DBXCommon, IPPeerClient, Vcl.StdCtrls, Vcl.Buttons, Data.DB, Data.SqlExpr,
   u_stub, System.JSON, u_ini, JvCreateProcess,
   JvBrowseFolder, Vcl.ExtCtrls, pngimage, MidasLib,
-  Data.DbxHTTPLayer, JvBaseDlg, JvComponentBase, System.Generics.Collections;
+  Data.DbxHTTPLayer, JvBaseDlg, JvComponentBase, System.Generics.Collections,
+  Vcl.Mask;
 
 type
   TMainForm = class(TForm)
@@ -268,7 +269,8 @@ begin
             Result := false;
         end
       end;
-    end;
+    end else
+      m_files[i].needUpdate := true;
   end;
   if not Result then begin
     s := 'Die folgenden Datein sind noch in Benutzung:'+sLineBreak;

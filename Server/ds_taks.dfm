@@ -1,5 +1,4 @@
 object dsTask: TdsTask
-  OldCreateOrder = False
   Height = 543
   Width = 1026
   object TaskTypes: TDataSetProvider
@@ -546,5 +545,16 @@ object dsTask: TdsTask
     DataSet = TaskType
     Left = 240
     Top = 352
+  end
+  object TS_TASK_STATUS: TFDTable
+    Connection = DBMod.ArchivarConnection
+    TableName = 'TS_TASK_STATUS'
+    Left = 336
+    Top = 408
+  end
+  object TSTab: TDataSetProvider
+    DataSet = TS_TASK_STATUS
+    Left = 336
+    Top = 480
   end
 end

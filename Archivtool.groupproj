@@ -6,16 +6,16 @@
         <Projects Include="Setup\Setup.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="Server\ArchivServer.dproj">
-            <Dependencies/>
-        </Projects>
-        <Projects Include="client\Archivar.dproj">
-            <Dependencies/>
-        </Projects>
         <Projects Include="Launcher\Launcher.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="Server\ArchivServer.dproj">
+            <Dependencies/>
+        </Projects>
         <Projects Include="Guard\guard.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="client\Archivar.dproj">
             <Dependencies/>
         </Projects>
         <Projects Include="Packages\base\Plugin_base.dproj">
@@ -44,24 +44,6 @@
     <Target Name="Setup:Make">
         <MSBuild Projects="Setup\Setup.dproj" Targets="Make"/>
     </Target>
-    <Target Name="ArchivServer">
-        <MSBuild Projects="Server\ArchivServer.dproj"/>
-    </Target>
-    <Target Name="ArchivServer:Clean">
-        <MSBuild Projects="Server\ArchivServer.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="ArchivServer:Make">
-        <MSBuild Projects="Server\ArchivServer.dproj" Targets="Make"/>
-    </Target>
-    <Target Name="Archivar">
-        <MSBuild Projects="client\Archivar.dproj"/>
-    </Target>
-    <Target Name="Archivar:Clean">
-        <MSBuild Projects="client\Archivar.dproj" Targets="Clean"/>
-    </Target>
-    <Target Name="Archivar:Make">
-        <MSBuild Projects="client\Archivar.dproj" Targets="Make"/>
-    </Target>
     <Target Name="Launcher">
         <MSBuild Projects="Launcher\Launcher.dproj"/>
     </Target>
@@ -71,6 +53,15 @@
     <Target Name="Launcher:Make">
         <MSBuild Projects="Launcher\Launcher.dproj" Targets="Make"/>
     </Target>
+    <Target Name="ArchivServer">
+        <MSBuild Projects="Server\ArchivServer.dproj"/>
+    </Target>
+    <Target Name="ArchivServer:Clean">
+        <MSBuild Projects="Server\ArchivServer.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ArchivServer:Make">
+        <MSBuild Projects="Server\ArchivServer.dproj" Targets="Make"/>
+    </Target>
     <Target Name="guard">
         <MSBuild Projects="Guard\guard.dproj"/>
     </Target>
@@ -79,6 +70,15 @@
     </Target>
     <Target Name="guard:Make">
         <MSBuild Projects="Guard\guard.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Archivar">
+        <MSBuild Projects="client\Archivar.dproj"/>
+    </Target>
+    <Target Name="Archivar:Clean">
+        <MSBuild Projects="client\Archivar.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Archivar:Make">
+        <MSBuild Projects="client\Archivar.dproj" Targets="Make"/>
     </Target>
     <Target Name="Plugin_base">
         <MSBuild Projects="Packages\base\Plugin_base.dproj"/>
@@ -108,13 +108,13 @@
         <MSBuild Projects="Packages\imap\mail_imap.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="Setup;ArchivServer;Archivar;Launcher;guard;Plugin_base;Dairy;mail_imap"/>
+        <CallTarget Targets="Setup;Launcher;ArchivServer;guard;Archivar;Plugin_base;Dairy;mail_imap"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="Setup:Clean;ArchivServer:Clean;Archivar:Clean;Launcher:Clean;guard:Clean;Plugin_base:Clean;Dairy:Clean;mail_imap:Clean"/>
+        <CallTarget Targets="Setup:Clean;Launcher:Clean;ArchivServer:Clean;guard:Clean;Archivar:Clean;Plugin_base:Clean;Dairy:Clean;mail_imap:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="Setup:Make;ArchivServer:Make;Archivar:Make;Launcher:Make;guard:Make;Plugin_base:Make;Dairy:Make;mail_imap:Make"/>
+        <CallTarget Targets="Setup:Make;Launcher:Make;ArchivServer:Make;guard:Make;Archivar:Make;Plugin_base:Make;Dairy:Make;mail_imap:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

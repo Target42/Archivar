@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB,
   Datasnap.DBClient, Datasnap.DSConnect, Vcl.StdCtrls, Vcl.ExtCtrls,
-  Vcl.ComCtrls, xsd_TextBlock;
+  Vcl.ComCtrls, xsd_TextBlock, Vcl.Mask;
 
 type
   TTextBlockFrame = class(TFrame)

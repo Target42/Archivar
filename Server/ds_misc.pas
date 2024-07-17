@@ -195,7 +195,10 @@ end;
 
 function TdsMisc.getConfigData(req: TJSONObject): TJSONObject;
 begin
+  GrijjyLog.EnterMethod(self, 'getConfigData');
   Result := TMailMod.getMailConfig;
+  GrijjyLog.Send(formatJSON(Result));
+  GrijjyLog.ExitMethod(self, 'getConfigData');
 end;
 
 function TdsMisc.getPublicKey(net : string; stamp: TDateTime): TStream;

@@ -16,7 +16,7 @@ uses
   DbxCompressionFilter, u_ShowMessageTimeOut, Data.DbxHTTPLayer, Vcl.ExtCtrls,
   JvBaseDlg,
   JvComponentBase, u_pluginManager, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
-  System.ImageList;
+  System.ImageList, REST.OpenSSL;
 
 const
   WMUSER            = WM_USER + 25;

@@ -1,5 +1,4 @@
 object GM: TGM
-  OldCreateOrder = False
   OnCreate = DataModuleCreate
   OnDestroy = DataModuleDestroy
   Height = 237
@@ -9,21 +8,22 @@ object GM: TGM
     LoginPrompt = False
     Params.Strings = (
       'DriverUnit=Data.DBXDataSnap'
-      'HostName=localhost'
-      'Port=211'
-      'CommunicationProtocol=tcp/ip'
       'DatasnapContext=datasnap/'
       
         'DriverAssemblyLoader=Borland.Data.TDBXClientDriverLoader,Borland' +
         '.Data.DbxClientDriver,Version=24.0.0.0,Culture=neutral,PublicKey' +
         'Token=91d62ebb5b0d1b1b'
+      'DriverName=DataSnap'
+      'HostName=localhost'
+      'Port=211'
       'Filters={}'
-      'DSAuthenticationPassword='
-      'DSAuthenticationUser=admin')
+      'CommunicationProtocol=tcp/ip'
+      'DSAuthenticationUser=Admin')
     AfterConnect = SQLConnection1AfterConnect
     AfterDisconnect = SQLConnection1AfterDisconnect
     BeforeDisconnect = SQLConnection1BeforeDisconnect
-    Left = 72
+    Connected = True
+    Left = 64
     Top = 32
     UniqueId = '{56E10D53-2180-4F5F-9025-8396D8CF4797}'
   end
@@ -69,7 +69,7 @@ object GM: TGM
     Left = 296
     Top = 32
     Bitmap = {
-      494C0101080078017C0310001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010108007801040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000003000000001002000000000000030
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -474,6 +474,7 @@ object GM: TGM
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsGremium'
+    Connected = True
     SQLConnection = SQLConnection1
     Left = 160
     Top = 104

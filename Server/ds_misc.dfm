@@ -1,5 +1,4 @@
 object dsMisc: TdsMisc
-  OldCreateOrder = False
   OnCreate = DSServerModuleCreate
   Height = 357
   Width = 689

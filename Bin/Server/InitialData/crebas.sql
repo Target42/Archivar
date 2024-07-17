@@ -1,7 +1,7 @@
 /* ============================================================ */
 /*   Database name:  MODEL_2                                    */
 /*   DBMS name:      InterBase                                  */
-/*   Created on:     20.05.2023  14:32                          */
+/*   Created on:     17.07.2024  11:39                          */
 /* ============================================================ */
 
 create generator gen_be_id;
@@ -737,6 +737,20 @@ create table MAM_MAIL
 /* ============================================================ */
 create ASC index MAM_MAIL_ID on MAM_MAIL (MAF_ID, MAM_MSG_ID);
 
+/* ============================================================ */
+/*   Table: TS_TASK_STATUS                                      */
+/* ============================================================ */
+create table TS_TASK_STATUS
+(
+    TA_ID                           INTEGER                not null,
+    TA_CLID                         VARCHAR(38)                    ,
+    TS_STAMP                        TIMESTAMP                      ,
+    TS_STATUS                       VARCHAR(255)                   ,
+    TS_TEXT                         BLOB                           ,
+    TS_AKTIV                        CHAR(1)                        ,
+    constraint PK_TS_TASK_STATUS primary key (TA_ID)
+);
+
 alter table TE_TEMPLATE
     add constraint FK_REF_3353 foreign key  (TY_ID)
        references TY_TASKTYPE;
@@ -873,6 +887,31 @@ alter table MAM_MAIL
     add constraint FK_REF_14049 foreign key  (MAF_ID)
        references MAF_FOLDER;
 
+alter table TS_TASK_STATUS
+    add constraint FK_REF_15582 foreign key  (TA_ID)
+       references TA_TASK;
+
+set term /;
+CREATE TRIGGER SET_CP_CHAPTER FOR CP_CHAPTER
+ACTIVE BEFORE INSERT POSITION 0
+AS
+BEGIN
+  IF (NEW.CP_CREATED IS NULL) THEN
+    NEW.CP_CREATED = CURRENT_TIMESTAMP;
+END
+;/
+set term ;/
+
+set term /;
+CREATE TRIGGER SET_CT_CHAPTER_TEXT FOR CT_CHAPTER_TEXT
+ACTIVE BEFORE INSERT POSITION 0
+AS
+BEGIN
+  IF (NEW.CT_CREATED IS NULL) THEN
+    NEW.CT_CREATED = CURRENT_TIMESTAMP;
+END
+;/
+set term ;/
 
 set term /;
 CREATE TRIGGER SET_TA_TASK_NEW FOR TA_TASK
@@ -904,7 +943,18 @@ BEGIN
     NEW.DR_STAMP = CURRENT_TIMESTAMP;
 END
 ;/
+
 set term ;/
+/*  Insert trigger "tu_ts_task_status" for table "TS_TASK_STATUS"  */
+set term /;
+create trigger tu_ts_task_status for TS_TASK_STATUS
+before update as
+begin
+    new.ts_stamp = current_timestamp;
+
+end;/
+set term ;/
+
 
 commit;
 

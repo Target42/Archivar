@@ -4,9 +4,9 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
-  Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Data.DB,
+  Vcl.Graphics, Vcl.Controls, Vcl.Dialogs, Data.DB,
   Datasnap.DBClient, Datasnap.DSConnect, System.JSON, Vcl.ComCtrls,
-  System.Generics.Collections, u_gremium, Vcl.Menus;
+  System.Generics.Collections, u_gremium, Vcl.Menus, Vcl.Forms;
 
 type
   TGremiumTreeFrame = class(TFrame)

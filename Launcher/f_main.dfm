@@ -10,11 +10,9 @@ object MainForm: TMainForm
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
   Position = poScreenCenter
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  PixelsPerInch = 96
   TextHeight = 13
   object Image1: TImage
     Left = 0
@@ -376,6 +374,8 @@ object MainForm: TMainForm
     Height = 19
     Panels = <>
     SimplePanel = True
+    ExplicitTop = 287
+    ExplicitWidth = 608
   end
   object Panel1: TPanel
     Left = 0
@@ -387,11 +387,13 @@ object MainForm: TMainForm
     Caption = 'Panel1'
     ShowCaption = False
     TabOrder = 1
+    ExplicitTop = 180
+    ExplicitWidth = 608
     DesignSize = (
       610
       107)
     object SpeedButton1: TSpeedButton
-      Left = 500
+      Left = 496
       Top = 18
       Width = 23
       Height = 22
@@ -408,9 +410,10 @@ object MainForm: TMainForm
       Height = 17
       Align = alBottom
       TabOrder = 0
+      ExplicitWidth = 602
     end
     object BitBtn1: TBitBtn
-      Left = 529
+      Left = 525
       Top = 14
       Width = 75
       Height = 25
@@ -453,17 +456,20 @@ object MainForm: TMainForm
         FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
       TabOrder = 1
       OnClick = BitBtn1Click
+      ExplicitLeft = 523
     end
     object LabeledEdit1: TLabeledEdit
       Left = 3
       Top = 19
-      Width = 491
+      Width = 487
       Height = 21
       Anchors = [akLeft, akTop, akRight]
       EditLabel.Width = 80
       EditLabel.Height = 13
       EditLabel.Caption = 'Installationspfad'
       TabOrder = 2
+      Text = ''
+      ExplicitWidth = 485
     end
     object LabeledEdit2: TLabeledEdit
       Left = 3

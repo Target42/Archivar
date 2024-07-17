@@ -10,7 +10,7 @@ uses
   System.Generics.Collections, u_ForceClose;
 
 type
-  TMailForm = class(TForm) //, IForceClose)
+  TMailForm = class(TForm, IForceClose)
     GroupBox1: TGroupBox;
     StatusBar1: TStatusBar;
     Timer1: TTimer;
@@ -86,7 +86,6 @@ begin
   if force then begin
   end;
   Self.Close;
-
 end;
 
 procedure TMailForm.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -95,13 +94,6 @@ begin
 end;
 
 procedure TMailForm.FormCreate(Sender: TObject);
-  function convJson( obj : TJSONObject ) : TJSONObject;
-  begin
-    Result := JFromText(formatJSON(obj));
-    if Assigned(obj) then
-      obj.Free;
-
-  end;
   procedure getMailCfg;
   var
     data : TJSONObject;
@@ -110,7 +102,7 @@ procedure TMailForm.FormCreate(Sender: TObject);
     req := TJSONObject.Create;
     JReplace( req, 'cmd', 'mailconfig');
 
-    data := convJson(PluginImap.Data.getConfigData(req));
+    data := PluginImap.Data.getConfigData(req);
     if Assigned(data) then begin
       MailMod.config(data);
       data.Free;
@@ -126,7 +118,7 @@ procedure TMailForm.FormCreate(Sender: TObject);
     JReplace( req, 'cmd', 'htmlconfig');
 
     obj := PluginImap.Data.getConfigData(req);
-    data := convJson(obj);
+    data := obj;
     if Assigned(data) then begin
       m_wwwRoot := JString( data, 'wwwroot');
       m_wwwPort := JInt(    data, 'port');
@@ -160,7 +152,6 @@ begin
   PluginImap.Data.WndHandler.unregisterForm(self);
 
   FreeAndNil(MailMod);
-
   TMailDecoder.clearFiles(m_tempdir);
 
   MailForm := NIL;
@@ -199,12 +190,12 @@ begin
   decoder := TMailDecoder.create;
   decoder.Msg := mail;
   fname := decoder.UseTemplate(m_tempdir, list.Text);
+  LB.Items.Assign(decoder.Attachments);
 
   WebBrowser1.Navigate(fname);
   list.Free;
   decoder.Free;
 end;
-
 
 procedure TMailForm.UpdateTree;
 var
@@ -337,7 +328,6 @@ begin
     TargetCanvas.Font.Style := TargetCanvas.Font.Style + [fsBold]
   else
     TargetCanvas.Font.Style := TargetCanvas.Font.Style - [fsBold];
-
 end;
 
 end.

@@ -60,6 +60,8 @@ type
     UpdateTask: TFDQuery;
     TaskType: TFDTable;
     TYTab: TDataSetProvider;
+    TS_TASK_STATUS: TFDTable;
+    TSTab: TDataSetProvider;
     procedure TaskLogTabBeforePost(DataSet: TDataSet);
   private
     function getAssignments( taid : integer ) : TJSONArray;

@@ -10,6 +10,7 @@ type
   TPluginImap = class(TPluginImpl)
     public
       procedure Execute; override;
+      procedure closeAllForms;  override;
   end;
 
 var
@@ -19,7 +20,7 @@ implementation
 
 
 uses
-  f_mail, System.SysUtils, System.Classes;
+  f_mail, System.SysUtils, System.Classes, Winapi.Messages, Winapi.Windows;
 
 { TPluginImap }
 function getPluginName : PChar; stdcall;
@@ -43,6 +44,14 @@ begin
 end;
 
 
+procedure TPluginImap.closeAllForms;
+begin
+  inherited;
+  if assigned(Mailform) then begin
+    MailForm.ForceClose(true);
+  end;
+end;
+
 procedure TPluginImap.Execute;
 begin
   inherited;
@@ -61,11 +70,11 @@ exports
   release;
 
 initialization
-  RegisterClass(TMailForm);
+  System.Classes.RegisterClass(TMailForm);
   PluginImap := NIL;
 
 finalization
-  UnRegisterClass(TMailForm);
+  System.Classes.UnRegisterClass(TMailForm);
 
 end.
 

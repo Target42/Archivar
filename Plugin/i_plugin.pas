@@ -18,6 +18,7 @@ type
 
     procedure Execute;
     procedure PosWindow( owner, form : TForm );
+    procedure closeAllForms;
   end;
 
   IPluginData = interface

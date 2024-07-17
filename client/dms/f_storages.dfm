@@ -2,24 +2,22 @@ object StoragesForm: TStoragesForm
   Left = 0
   Top = 0
   Caption = 'Datenablagen'
-  ClientHeight = 478
-  ClientWidth = 635
+  ClientHeight = 471
+  ClientWidth = 621
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
   Position = poOwnerFormCenter
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  PixelsPerInch = 96
   TextHeight = 13
   inline BaseFrame1: TBaseFrame
     Left = 0
-    Top = 418
-    Width = 635
+    Top = 411
+    Width = 621
     Height = 60
     Align = alBottom
     AutoSize = True
@@ -41,12 +39,14 @@ object StoragesForm: TStoragesForm
   end
   object GroupBox1: TGroupBox
     Left = 0
-    Top = 344
-    Width = 635
+    Top = 337
+    Width = 621
     Height = 74
     Align = alBottom
     Caption = 'Aktionen'
     TabOrder = 1
+    ExplicitTop = 344
+    ExplicitWidth = 635
     object BitBtn1: TBitBtn
       Left = 24
       Top = 32
@@ -183,8 +183,8 @@ object StoragesForm: TStoragesForm
   object LV: TListView
     Left = 0
     Top = 0
-    Width = 635
-    Height = 344
+    Width = 621
+    Height = 337
     Align = alClient
     Columns = <
       item
@@ -207,6 +207,8 @@ object StoragesForm: TStoragesForm
     RowSelect = True
     TabOrder = 2
     ViewStyle = vsReport
+    ExplicitWidth = 635
+    ExplicitHeight = 344
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsStorage'

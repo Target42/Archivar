@@ -233,7 +233,7 @@ type
 
     procedure ImportExcel(fileName : string );
 
-    procedure run( filename : string );
+    procedure run( filename : string; params : string );
     function findService(auto_close : boolean = true) : boolean;
   public
     { Public-Deklarationen }
@@ -269,7 +269,7 @@ begin
     exit;
   end;
 
-  run('Service_Stop.Bat');
+  run('Service_Stop.Bat', '');
 
   if not findService(false) then
     ShowMessage('Der Service wurde nicht gefudnen!')
@@ -290,7 +290,7 @@ begin
     exit;
   end;
 
-  run('Service_Uninstall.bat');
+  run(Trim(Edit2.Text), '/Uninstall');
 
   if not findService then
     ShowMessage('Der Service ist jetzt deinstalliert')
@@ -346,7 +346,6 @@ var
     Result := false;
     reg := TRegistry.Create(KEY_READ or KEY_WOW64_64KEY );
     reg.RootKey := HKEY_LOCAL_MACHINE;
-
 
     if reg.OpenKey('\SOFTWARE\Firebird Project\Firebird Server\Instances\',false) then
     begin
@@ -556,7 +555,8 @@ begin
     exit;
   end;
 
-  run('Service_Install.bat');
+//  run('Service_Install.bat');
+  run ( Trim(Edit2.Text), '/install');
 
   if findService then
     ShowMessage('Der Service ist jetzt installiert')
@@ -571,7 +571,8 @@ begin
     exit;
   end;
 
-  run('Service_Start.bat');
+//  run('Service_Start.bat', '');
+  run('net', 'start ArchivService');
 
   if not findService(false) then
     ShowMessage('Der Service wurde nicht gefunden!')
@@ -826,7 +827,7 @@ begin
   m_ini     := TiniFile.Create(TPath.Combine(ExtractFileDir(Application.ExeName), 'ArchivServer.exe.ini'));
   m_berMap  := TDictionary<string, integer>.create;
 
-//  JvWizard1.ActivePage := ServerStart;
+  JvWizard1.ActivePage := Sicherheit;
 end;
 
 procedure TMainSetupForm.FormDestroy(Sender: TObject);
@@ -1588,14 +1589,44 @@ begin
   LV.Selected   := Result;
 end;
 
-procedure TMainSetupForm.run(filename: string);
+procedure ExecuteAndWait(const aCommando: string);
+var
+  tmpStartupInfo: TStartupInfo;
+  tmpProcessInformation: TProcessInformation;
+  tmpProgram: String;
+begin
+  tmpProgram := trim(aCommando);
+  FillChar(tmpStartupInfo, SizeOf(tmpStartupInfo), 0);
+  with tmpStartupInfo do
+  begin
+    cb := SizeOf(TStartupInfo);
+    wShowWindow := SW_HIDE;
+  end;
+
+  if CreateProcess(nil, pchar(tmpProgram), nil, nil, true, CREATE_NO_WINDOW,
+    nil, nil, tmpStartupInfo, tmpProcessInformation) then
+  begin
+    // loop every 10 ms
+    while WaitForSingleObject(tmpProcessInformation.hProcess, 10) > 0 do
+    begin
+      Application.ProcessMessages;
+    end;
+    CloseHandle(tmpProcessInformation.hProcess);
+    CloseHandle(tmpProcessInformation.hThread);
+  end
+  else
+  begin
+    RaiseLastOSError;
+  end;
+end;
+
+procedure TMainSetupForm.run(filename: string; params : string);
 var
   fname : string;
-  params : string;
 begin
-  fname := 'cmd.exe';
-  params := '/k'+TPath.Combine(ExtractFilePath(paramStr(0)), filename );
-  ShellExecute(Handle, 'runas', PWideChar(fname), PWideChar(params), '', SW_SHOWNORMAL);
+  fname := fileName;
+  ExecuteAndWait( FileName+' '+params);
+//  ShellExecute(Handle, 'runas', PWideChar(fname), PWideChar(params), '', SW_SHOWNORMAL);
 end;
 
 procedure TMainSetupForm.SearchGDSEnterPage(Sender: TObject;

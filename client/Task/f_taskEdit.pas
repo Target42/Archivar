@@ -98,6 +98,15 @@ type
     TaskTabDR_ID: TIntegerField;
     ImageList1: TImageList;
     TyTab: TClientDataSet;
+    TSTab: TClientDataSet;
+    TabSheet6: TTabSheet;
+    TSSrc: TDataSource;
+    Panel1: TPanel;
+    DBCheckBox1: TDBCheckBox;
+    DBComboBox1: TDBComboBox;
+    Label11: TLabel;
+    DBLabeledEdit1: TDBLabeledEdit;
+    DBMemo1: TDBMemo;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -248,8 +257,8 @@ end;
 
 procedure TTaskEditForm.ac_saveExecute(Sender: TObject);
 begin
-  if changed then begin
-
+  if changed then
+  begin
     save;
 
     reload;
@@ -295,13 +304,14 @@ end;
 
 procedure TTaskEditForm.cancel;
 begin
+  TSTab.Cancel;
   TaskTab.Cancel;
   LogTab.Cancel;
 end;
 
 function TTaskEditForm.changed: boolean;
 begin
-  Result := m_changed or TaskTab.Modified or LogTab.Modified;
+  Result := m_changed or TaskTab.Modified or LogTab.Modified or TSTab.Modified;
   if not Result then
   begin
     if Assigned(m_form) then
@@ -640,6 +650,21 @@ begin
       break;
     end;
   end;
+
+  TSTab.Close;
+  TSTab.Open;
+  if not TSTab.Locate('TA_ID', VarArrayOf([m_ta_id]), []) then
+  begin
+    TSTab.Append;
+    TSTab.FieldByName('TA_ID').AsInteger := m_ta_id;
+    TSTab.FieldByName('TS_AKTIV').AsString := 'F';
+    TSTAb.FieldByName('TA_CLID').AsString := TaskTab.FieldByName('TA_CLID').AsString;
+    DBComboBox1.ItemIndex := 0;
+  end else
+  begin
+    TSTab.Edit;
+  end;
+
   m_changed := false;
   Screen.Cursor := crDefault;
 end;
@@ -733,6 +758,14 @@ begin
   if TaskTab.UpdatesPending then
     TaskTab.ApplyUpdates(-1);
 
+
+  if (TSTab.State = dsEdit) or (TSTab.State = dsInsert) then
+    TSTab.Post;
+
+  if TSTab.UpdatesPending then
+    TSTab.ApplyUpdates(-1);
+
+
   if LogTab.UpdatesPending then
     LogTab.ApplyUpdates(-1);
 
@@ -774,8 +807,10 @@ begin
 
   GroupBox1.Enabled           := not m_ro;
   LogFrame1.Enabled           := not m_ro;
+  TabSheet6.Enabled           := not m_ro;
 
-  TaskTab.ReadOnly  := m_ro;
+  TaskTab.ReadOnly            := m_ro;
+
 
   if Assigned(m_form) then
     m_form.ReadOnly := m_ro;

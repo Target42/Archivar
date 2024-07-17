@@ -3,44 +3,46 @@ object PluginAdmin: TPluginAdmin
   Top = 0
   Caption = 'Pluginverwaltung'
   ClientHeight = 299
-  ClientWidth = 635
+  ClientWidth = 517
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
   Position = poOwnerFormCenter
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  PixelsPerInch = 96
   TextHeight = 13
   object StatusBar1: TStatusBar
     Left = 0
     Top = 280
-    Width = 635
+    Width = 517
     Height = 19
     Panels = <>
+    ExplicitTop = 276
+    ExplicitWidth = 515
   end
   object GroupBox1: TGroupBox
     Left = 0
     Top = 0
-    Width = 635
-    Height = 224
+    Width = 517
+    Height = 216
     Align = alClient
     Caption = #220'bersicht'
     TabOrder = 1
+    ExplicitWidth = 515
+    ExplicitHeight = 212
     object LV: TListView
       Left = 2
       Top = 15
-      Width = 631
-      Height = 207
+      Width = 513
+      Height = 199
       Align = alClient
       Columns = <
         item
           Caption = 'Name'
-          Width = 250
+          Width = 150
         end
         item
           Caption = 'Dateiname'
@@ -49,22 +51,30 @@ object PluginAdmin: TPluginAdmin
         item
           Caption = 'Status'
           Width = 90
+        end
+        item
+          Caption = 'Men'#252'eintrag'
+          Width = 100
         end>
       ReadOnly = True
       RowSelect = True
       SortType = stText
       TabOrder = 0
       ViewStyle = vsReport
+      ExplicitWidth = 511
+      ExplicitHeight = 195
     end
   end
   object GroupBox2: TGroupBox
     Left = 0
-    Top = 224
-    Width = 635
-    Height = 56
+    Top = 216
+    Width = 517
+    Height = 64
     Align = alBottom
     Caption = 'Aktionen'
     TabOrder = 2
+    ExplicitTop = 212
+    ExplicitWidth = 515
     object BitBtn1: TBitBtn
       Left = 16
       Top = 16
@@ -110,7 +120,7 @@ object PluginAdmin: TPluginAdmin
       OnClick = BitBtn1Click
     end
     object BitBtn2: TBitBtn
-      Left = 112
+      Left = 199
       Top = 16
       Width = 75
       Height = 25
@@ -154,7 +164,7 @@ object PluginAdmin: TPluginAdmin
       OnClick = BitBtn2Click
     end
     object BitBtn3: TBitBtn
-      Left = 208
+      Left = 296
       Top = 16
       Width = 81
       Height = 25
@@ -198,7 +208,7 @@ object PluginAdmin: TPluginAdmin
       OnClick = BitBtn3Click
     end
     object BitBtn4: TBitBtn
-      Left = 304
+      Left = 400
       Top = 16
       Width = 89
       Height = 25
@@ -240,6 +250,50 @@ object PluginAdmin: TPluginAdmin
         FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
       TabOrder = 3
       OnClick = BitBtn4Click
+    end
+    object BitBtn5: TBitBtn
+      Left = 97
+      Top = 17
+      Width = 75
+      Height = 25
+      Caption = 'Unload'
+      Glyph.Data = {
+        36040000424D3604000000000000360000002800000010000000100000000100
+        20000000000000040000C40E0000C40E00000000000000000000FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF000000D52B0000D5730000D59F0000D59F0000
+        D5730000D52BFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF000000D50C0000D59F0000D5FE0000D5E50000D5BB0000D5BB0000
+        D5E60000D5FE0000D59D0000D10BFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF000000D80D0000D5D70000D4EF0000D6510000FF02FFFFFF00FFFFFF000000
+        FF020000D4530000D5E60000D5CD0000D50CFFFFFF00FFFFFF00FFFFFF00FFFF
+        FF000000D6A00000D5F10000D5FE0000D56CFFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF000000D7200000D5E80000D59DFFFFFF00FFFFFF00FFFFFF000000
+        D2280000D5FD0000D5540000D57F0000D5FD0000D562FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF000000D6570000D5FD0000D726FFFFFF00FFFFFF000000
+        D57A0000D5E80000FF02FFFFFF000000D57E0000D5FD0000D562FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF000000FF030000D5EA0000D578FFFFFF00FFFFFF000000
+        D59F0000D5B6FFFFFF00FFFFFF00FFFFFF000000D57E0000D5FD0000D562FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF000000D5B80000D59EFFFFFF00FFFFFF000000
+        D59E0000D5B6FFFFFF00FFFFFF00FFFFFF00FFFFFF000000D57E0000D5FD0000
+        D562FFFFFF00FFFFFF00FFFFFF000000D5B70000D59EFFFFFF00FFFFFF000000
+        D57A0000D5E40000FF01FFFFFF00FFFFFF00FFFFFF00FFFFFF000000D57E0000
+        D5FD0000D562FFFFFF000000FF020000D5E60000D578FFFFFF00FFFFFF000000
+        D2280000D5FD0000D54FFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF000000
+        D57E0000D5FD0000D5620000D4530000D5FD0000D726FFFFFF00FFFFFF00FFFF
+        FF000000D6A00000D5E60000D51EFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF000000D5740000D5FE0000D5F20000D59DFFFFFF00FFFFFF00FFFFFF00FFFF
+        FF000000D80D0000D5CE0000D5E40000D6510000FF02FFFFFF00FFFFFF000000
+        FF020000D4530000D5F10000D5DA0000D50CFFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF000000D50C0000D59F0000D5FE0000D5E50000D5BB0000D5BB0000
+        D5E60000D5FE0000D59D0000D10BFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF000000D32E0000D6820000D5A40000D5A40000
+        D5810000D72DFFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFF
+        FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
+      TabOrder = 4
+      OnClick = BitBtn5Click
     end
   end
   object FileOpenDialog1: TFileOpenDialog

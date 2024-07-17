@@ -7,15 +7,19 @@ uses
 
 type
   TPlugin = class;
+
   TPluginManager = class
   private
     m_data : IPluginData;
     m_list : TList<TPlugin>;
     m_path : string;
     FMenuRoot: TMenuItem;
+    m_plgCounter : integer;
     procedure PluginExec(Sender: TObject);
     procedure clearPlugins;
     procedure scan( path : string );
+    function addPlugin : TPlugin;
+    procedure addMenuentry( plg : TPlugin );
   public
     constructor create;
     Destructor Destroy; override;
@@ -26,6 +30,10 @@ type
     procedure CheckPlugins;
     procedure loadAll;
     procedure unloadAll;
+
+    function getByFileName( fileName : string ) : TPlugin;
+    function unloadByFileName( fileName : string ) : boolean;
+    function load(fileName : string ) : boolean;
   end;
 
   TPlugin = class
@@ -41,11 +49,13 @@ type
       FPluginName : string;
       FLoaded     : boolean;
       FMenuEntry: TMenuItem;
+      FID: integer;
     public
 
     constructor create;
     Destructor Destroy; override;
 
+    property ID: integer read FID write FID;
     property MenuEntry: TMenuItem read FMenuEntry write FMenuEntry;
     property FileName: string read FFileName write FFileName;
     property PluginName: string read FPluginName write FPluginName;
@@ -66,6 +76,48 @@ uses
   u_stub, m_glob_client, u_json, System.JSON, Vcl.Dialogs;
 
 { TPluginManager }
+
+
+
+procedure TPluginManager.addMenuentry(plg: TPlugin);
+var
+  item  : TMenuItem;
+  i     : integer;
+  list  : TStringList;
+begin
+  if not Assigned(FMenuRoot) then
+    exit;
+
+  item  := TMenuItem.Create(FMenuRoot);
+  FMenuRoot.Add(item);
+  plg.MenuEntry := item;
+
+  item.Caption  := plg.PluginName;
+  item.Tag      := plg.ID;
+  item.OnClick  := PluginExec;
+
+  // sortienren
+  list := TStringList.Create;
+  try
+    for i := 0 to FMenuRoot.Count - 1 do
+    begin
+      list.AddObject(FMenuRoot.Items[i].Caption, FMenuRoot.Items[i]);
+    end;
+    list.Sort;
+    for i := 0 to list.Count - 1 do
+      TMenuItem(list.Objects[i]).MenuIndex := i;
+  finally
+    list.Free;
+  end;
+end;
+
+function TPluginManager.addPlugin: TPlugin;
+begin
+  Result := TPlugin.create;
+  inc(m_plgCounter);
+  Result.ID := m_plgCounter;
+  m_list.Add(Result);
+end;
 
 procedure TPluginManager.CheckPlugins;
 var
@@ -132,9 +184,8 @@ begin
         Download( row );
 
       if FileExists(fname) and ((state = 'A')or (state = 'E') )then begin
-          plg := TPlugin.create;
+          plg := addPlugin;
           plg.FileName := fname;
-          m_list.Add(plg);
       end;
     end;
   end;
@@ -157,6 +208,7 @@ constructor TPluginManager.create;
 begin
   m_list :=TList<TPlugin>.create;
   m_data := TPluginDataImpl.create;
+  m_plgCounter := 0;
 end;
 
 destructor TPluginManager.Destroy;
@@ -171,12 +223,52 @@ begin
   inherited;
 end;
 
+function TPluginManager.getByFileName(fileName: string): TPlugin;
+var
+  plg : TPlugin;
+begin
+  Result := NIL;
+  for plg in m_list do begin
+    if SameText( FileName, ExtractFileName(plg.FileName)) then begin
+      Result := plg;
+      break;
+    end;
+  end;
+
+end;
+
+function TPluginManager.load(fileName: string): boolean;
+var
+  plg : TPlugin;
+begin
+  Result := false;
+
+  plg := getByFileName(ExtractFileName(FileName));
+  if not Assigned(plg) then begin
+
+    try
+      plg := addPlugin;
+      plg.FileName := FileName;
+      plg.load(m_data);
+
+      addMenuentry(plg);
+
+    except
+      on e : exception do begin
+        m_list.Remove(plg);
+        plg.Free;
+      end;
+    end;
+
+  end;
+end;
+
 procedure TPluginManager.loadAll;
 var
   plg : TPlugin;
   i   : integer;
-  item: TMenuItem;
 begin
+
   if m_list.Count > 0 then exit;
 
   CodeSite.EnterMethod(Self, 'loadAll');
@@ -187,6 +279,7 @@ begin
   for plg in m_list do begin
     plg.load(m_data);
   end;
+
   for i := pred(m_list.Count) downto 0 do begin
     if not m_list[i].Loaded then begin
       m_list[i].Free;
@@ -204,28 +297,26 @@ begin
   );
 
   // mit dem Menü verbinden
-  for i := 0 to pred(m_list.Count) do begin
-    plg := m_list[i];
-
-    item  := TMenuItem.Create(FMenuRoot);
-    FMenuRoot.Add(item);
-    plg.MenuEntry := item;
-
-    item.Caption  := plg.PluginName;
-    item.Tag      := i;
-    item.OnClick := PluginExec;
+  for plg in m_list do begin
+    addMenuentry(plg);
   end;
-
 
   Screen.Cursor := crDefault;
   CodeSite.ExitMethod(Self, 'loadAll');
 end;
 
 procedure TPluginManager.PluginExec(Sender: TObject);
+var
+  plg : TPlugin;
 begin
   if not ( Sender is TMenuItem) then exit;
 
-  m_list.Items[( Sender as TMenuItem).Tag].execute;
+  for plg in m_list do begin
+    if plg.id =  ( Sender as TMenuItem).Tag then begin
+      plg.execute;
+      break;
+    end;
+  end;
 end;
 
 procedure TPluginManager.scan(path: string);
@@ -240,6 +331,8 @@ begin
 
   for i := low(arr) to High(arr) do begin
     plg := TPlugin.create;
+    inc(m_plgCounter);
+    plg.ID := m_plgCounter;
     plg.FileName := arr[i];
     m_list.Add(plg);
   end;
@@ -250,21 +343,28 @@ end;
 procedure TPluginManager.unloadAll;
 var
   plg : TPlugin;
-  i   : integer;
 begin
-  for i :=0 to pred(m_list.Count) do begin
-    plg := m_list[i];
-    if Assigned(plg.MenuEntry) then begin
-
-      if FMenuRoot.IndexOf(plg.MenuEntry) >-1 then begin
-        FMenuRoot.Remove(plg.MenuEntry);
-        plg.MenuEntry := NIL;
-      end;
-    end;
-    plg.unload;
+  for plg in m_list do begin
+//    plg.unload;
     plg.Free;
   end;
   m_list.Clear;
+end;
+
+function TPluginManager.unloadByFileName(fileName: string): boolean;
+var
+  plg : TPlugin;
+begin
+  Result := false;
+  for plg in m_list do begin
+    if SameText( FileName, ExtractFileName(plg.FileName)) then begin
+      m_list.Remove(plg);
+//      plg.unload;
+      plg.Free;
+      Result := true;
+      break;
+    end;
+  end;
 end;
 
 { TPlugin }
@@ -275,11 +375,14 @@ begin
   m_hnd       := 0;
   FLoaded     := false;
   FMenuEntry  := NIL;
+  FID         := 0;
 end;
 
 destructor TPlugin.Destroy;
 begin
   inherited;
+  if m_hnd <> 0 then
+    Unload;
 end;
 
 procedure TPlugin.execute;
@@ -344,7 +447,13 @@ end;
 
 procedure TPlugin.unload;
 begin
-  FMenuEntry := NIL;
+
+//  m_pif.closeAllForms;
+
+  if Assigned(FMenuEntry) and Assigned(FMenuEntry.Parent) then begin
+    FMenuEntry.Parent.Remove(FMenuEntry)
+  end;
+  FMenuEntry  := NIL;
   FPluginName := '';
 
   m_pif := NIL;
@@ -354,6 +463,10 @@ begin
   if m_hnd <> 0 then
     UnloadPackage(m_hnd);
   m_hnd := 0;
+
 end;
+
+initialization
+
 
 end.

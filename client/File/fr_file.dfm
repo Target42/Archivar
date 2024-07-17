@@ -5,8 +5,6 @@ object FileFrame: TFileFrame
   Height = 449
   Align = alClient
   TabOrder = 0
-  ExplicitWidth = 451
-  ExplicitHeight = 305
   object Splitter1: TSplitter
     Left = 249
     Top = 0
@@ -23,7 +21,6 @@ object FileFrame: TFileFrame
     Align = alLeft
     Caption = 'Ordner'
     TabOrder = 0
-    ExplicitHeight = 305
     object GroupBox4: TGroupBox
       Left = 2
       Top = 390
@@ -32,7 +29,6 @@ object FileFrame: TFileFrame
       Align = alBottom
       Caption = 'Ordneraktionen'
       TabOrder = 0
-      ExplicitTop = 246
       object SpeedButton1: TBitBtn
         Left = 11
         Top = 24
@@ -82,10 +78,27 @@ object FileFrame: TFileFrame
     end
     object VST: TVirtualStringTree
       Left = 2
-      Top = 15
+      Top = 17
       Width = 245
-      Height = 375
+      Height = 373
       Align = alClient
+      Colors.BorderColor = 15854306
+      Colors.DisabledColor = 9671571
+      Colors.DropMarkColor = 4486895
+      Colors.DropTargetColor = 4486895
+      Colors.DropTargetBorderColor = 4486895
+      Colors.FocusedSelectionColor = 4486895
+      Colors.FocusedSelectionBorderColor = 4486895
+      Colors.GridLineColor = 15854306
+      Colors.HeaderHotColor = clBlack
+      Colors.HotColor = clBlack
+      Colors.SelectionRectangleBlendColor = 4486895
+      Colors.SelectionRectangleBorderColor = 4486895
+      Colors.SelectionTextColor = clWhite
+      Colors.TreeLineColor = 9471874
+      Colors.UnfocusedColor = 12159575
+      Colors.UnfocusedSelectionColor = 7619357
+      Colors.UnfocusedSelectionBorderColor = 7619357
       DragMode = dmAutomatic
       Header.AutoSizeIndex = -1
       Header.Options = [hoAutoResize, hoColumnResize, hoDblClickResize, hoDrag, hoShowSortGlyphs, hoVisible]
@@ -103,7 +116,8 @@ object FileFrame: TFileFrame
       OnGetCellText = VSTGetCellText
       OnGetImageIndex = VSTGetImageIndex
       OnNewText = VSTNewText
-      ExplicitHeight = 231
+      Touch.InteractiveGestures = [igPan, igPressAndTap]
+      Touch.InteractiveGestureOptions = [igoPanSingleFingerHorizontal, igoPanSingleFingerVertical, igoPanInertia, igoPanGutter, igoParentPassthrough]
       Columns = <
         item
           Position = 0
@@ -125,8 +139,6 @@ object FileFrame: TFileFrame
     Align = alClient
     Caption = 'Dateien'
     TabOrder = 1
-    ExplicitWidth = 199
-    ExplicitHeight = 305
     object GroupBox1: TGroupBox
       Left = 2
       Top = 390
@@ -135,8 +147,6 @@ object FileFrame: TFileFrame
       Align = alBottom
       Caption = 'Dateiaktionen'
       TabOrder = 0
-      ExplicitTop = 246
-      ExplicitWidth = 195
       object Button1: TBitBtn
         Left = 16
         Top = 24
@@ -185,7 +195,7 @@ object FileFrame: TFileFrame
       object Button2: TBitBtn
         Left = 112
         Top = 24
-        Width = 75
+        Width = 89
         Height = 25
         Caption = 'Download'
         Glyph.Data = {
@@ -407,9 +417,9 @@ object FileFrame: TFileFrame
     end
     object LV: TListView
       Left = 2
-      Top = 15
+      Top = 17
       Width = 622
-      Height = 375
+      Height = 373
       Align = alClient
       Checkboxes = True
       Columns = <
@@ -445,8 +455,6 @@ object FileFrame: TFileFrame
       OnDragOver = DBGrid1DragOver
       OnMouseDown = LVMouseDown
       OnMouseMove = LVMouseMove
-      ExplicitWidth = 195
-      ExplicitHeight = 231
     end
   end
   object DSProviderConnection1: TDSProviderConnection
@@ -542,7 +550,7 @@ object FileFrame: TFileFrame
     Left = 88
     Top = 360
     Bitmap = {
-      494C010102000800880010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102000800040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       000000000000000000000000000000000000000000FF078DBE00078DBE00078D
       BE00078DBE00078DBE00078DBE00078DBE00078DBE00078DBE00078DBE00078D

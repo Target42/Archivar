@@ -201,6 +201,8 @@ type
     Hilfe2: TMenuItem;
     TabSheet8: TTabSheet;
     FilesToDeleteFrame1: TFilesToDeleteFrame;
+    ac_view_epub: TAction;
+    ePubanzeigen1: TMenuItem;
     procedure ac_prg_closeExecute(Sender: TObject);
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure ac_prg_disconExecute(Sender: TObject);

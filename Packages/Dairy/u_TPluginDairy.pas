@@ -9,6 +9,7 @@ type
   TPluginDairy = class(TPluginImpl)
     public
     procedure Execute; override;
+    procedure closeAllForms;  override;
   end;
 
 var
@@ -39,6 +40,15 @@ end;
 procedure release; stdcall;
 begin
   PluginDairy := NIL;
+end;
+
+procedure TPluginDairy.closeAllForms;
+begin
+  inherited;
+  if Assigned(DairyForm) then
+  begin
+
+  end;
 end;
 
 procedure TPluginDairy.Execute;

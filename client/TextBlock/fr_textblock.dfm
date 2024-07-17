@@ -24,10 +24,11 @@ object TextBlockFrame: TTextBlockFrame
       Width = 436
       Height = 21
       Anchors = [akLeft, akTop, akRight]
-      EditLabel.Width = 46
-      EditLabel.Height = 13
+      EditLabel.Width = 49
+      EditLabel.Height = 15
       EditLabel.Caption = 'Tag-Filter'
       TabOrder = 0
+      Text = ''
       OnKeyPress = LabeledEdit1KeyPress
     end
   end

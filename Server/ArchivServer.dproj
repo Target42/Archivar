@@ -5,7 +5,7 @@
         <FrameworkType>VCL</FrameworkType>
         <MainSource>ArchivServer.dpr</MainSource>
         <Base>True</Base>
-        <Config Condition="'$(Config)'==''">Debug</Config>
+        <Config Condition="'$(Config)'==''">Release</Config>
         <Platform Condition="'$(Platform)'==''">Win32</Platform>
         <TargetedPlatforms>1</TargetedPlatforms>
         <AppType>Application</AppType>
@@ -326,18 +326,19 @@
                 <DeployFile LocalName="$(BDS)\Redist\iossimulator\libcgunwind.1.0.dylib" Class="DependencyModule"/>
                 <DeployFile LocalName="$(BDS)\Redist\osx32\libcgsqlite3.dylib" Class="DependencyModule"/>
                 <DeployFile LocalName="$(BDS)\Redist\osx32\libcgunwind.1.0.dylib" Class="DependencyModule"/>
-                <DeployFile LocalName="..\..\Bin\Server\ArchivServer.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="..\Bin\Server\ArchivServer.exe" Configuration="Debug" Class="ProjectOutput"/>
+                <DeployFile LocalName="..\Bin\Server\ArchivServer.exe" Configuration="Debug" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>ArchivServer.exe</RemoteName>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="..\Bin\Server\ArchivServer.exe" Configuration="Debug" Class="ProjectOutput"/>
                 <DeployFile LocalName="..\Bin\Server\ArchivServer.exe" Configuration="Release" Class="ProjectOutput"/>
                 <DeployFile LocalName="system.json" Configuration="Debug" Class="ProjectFile"/>
                 <DeployFile LocalName="system.json" Configuration="Debug" Class="ProjectFile">
                     <Platform Name="Win32">
                         <RemoteDir>.\</RemoteDir>
+                        <Enabled>false</Enabled>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>

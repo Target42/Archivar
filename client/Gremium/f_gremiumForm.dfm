@@ -2,24 +2,22 @@ object GremiumForm: TGremiumForm
   Left = 0
   Top = 0
   Caption = 'Gremien'
-  ClientHeight = 325
-  ClientWidth = 571
+  ClientHeight = 319
+  ClientWidth = 561
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
   Position = poMainFormCenter
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  PixelsPerInch = 96
   TextHeight = 13
   inline Frame11: TBaseFrame
     Left = 0
-    Top = 265
-    Width = 571
+    Top = 259
+    Width = 561
     Height = 60
     Align = alBottom
     AutoSize = True
@@ -41,17 +39,17 @@ object GremiumForm: TGremiumForm
   end
   object GroupBox1: TGroupBox
     Left = 0
-    Top = 200
-    Width = 571
+    Top = 194
+    Width = 561
     Height = 65
     Align = alBottom
     Caption = 'Aktionen'
     TabOrder = 1
     DesignSize = (
-      571
+      561
       65)
     object BitBtn1: TBitBtn
-      Left = 483
+      Left = 473
       Top = 24
       Width = 75
       Height = 25
@@ -94,6 +92,7 @@ object GremiumForm: TGremiumForm
         FF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00FFFFFF00}
       TabOrder = 0
       OnClick = BitBtn1Click
+      ExplicitLeft = 483
     end
     object BitBtn2: TBitBtn
       Left = 16
@@ -276,8 +275,8 @@ object GremiumForm: TGremiumForm
   object DBGrid1: TDBGrid
     Left = 0
     Top = 0
-    Width = 571
-    Height = 200
+    Width = 561
+    Height = 194
     Align = alClient
     DataSource = DataSource1
     DefaultDrawing = False

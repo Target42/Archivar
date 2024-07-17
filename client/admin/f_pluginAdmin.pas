@@ -18,12 +18,14 @@ type
     BitBtn2: TBitBtn;
     BitBtn3: TBitBtn;
     BitBtn4: TBitBtn;
+    BitBtn5: TBitBtn;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure BitBtn1Click(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
     procedure BitBtn3Click(Sender: TObject);
     procedure BitBtn4Click(Sender: TObject);
+    procedure BitBtn5Click(Sender: TObject);
   private
     m_client : TTdsPluginClient;
     m_data   : TJSONObject;
@@ -42,7 +44,7 @@ var
 implementation
 
 uses
-  m_glob_client, u_json;
+  m_glob_client, u_json, u_pluginManager;
 
 
 
@@ -82,6 +84,7 @@ begin
       req := TJSONObject.Create;
       JReplace(req, 'name', pName);
       JReplace(req, 'filename', ExtractFileName(FileOpenDialog1.FileName));
+      JReplace( req, 'state', 'E');
 
       st := TFileStream.Create(FileOpenDialog1.FileName, fmOpenRead + fmShareDenyNone);
 
@@ -92,6 +95,8 @@ begin
         res := NIL;
       end;
       Screen.Cursor := crDefault;
+
+      GM.Plugins.load(FileOpenDialog1.FileName);
 
       UpdateAll;
       ShowResult(res);
@@ -116,7 +121,7 @@ begin
   if not Assigned(LV.Selected) then exit;
 
   row := LV.Selected.Data;
-  changeStatus(JInt(row, 'id'), 'E');
+  changeStatus(JInt(row, 'id'), 'D');
 end;
 
 procedure TPluginAdmin.BitBtn4Click(Sender: TObject);
@@ -127,6 +132,15 @@ begin
 
   row := LV.Selected.Data;
   changeStatus(JInt(row, 'id'), 'E');
+end;
+
+procedure TPluginAdmin.BitBtn5Click(Sender: TObject);
+begin
+  if not Assigned(LV.Selected) then
+    exit;
+  GM.Plugins.unloadByFileName(Lv.Selected.SubItems[0]);
+
+  UpdateAll;
 end;
 
 procedure TPluginAdmin.changeStatus(id : integer; status: string);
@@ -182,9 +196,9 @@ var
   i   : integer;
   item: TListItem;
   state : string;
+  plg   : TPlugin;
 begin
   if not Assigned(m_data) then exit;
-
 
   LV.Items.BeginUpdate;
   LV.Items.Clear;
@@ -201,6 +215,12 @@ begin
       if state = 'A' then item.SubItems.Add( 'Aktiv' )
       else if state = 'D' then item.SubItems.Add( 'Deaktiv' )
       else if state = 'E' then item.SubItems.Add( 'Entwicklung' );
+
+      plg := GM.Plugins.getByFileName(item.SubItems[0]);
+      if Assigned(plg) and Assigned(plg.MenuEntry) then
+        Item.SubItems.Add(plg.MenuEntry.Caption)
+      else
+        Item.SubItems.Add('');
     end;
   end;
   LV.Items.EndUpdate;

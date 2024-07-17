@@ -244,6 +244,7 @@ var
     bst.Free;
     MailTab.Post;
   end;
+
   procedure readAll;
   var
     inx : integer;
@@ -261,6 +262,7 @@ var
     end;
     ListQry.Close;
   end;
+
   procedure deleteOld;
   var
     id : integer;

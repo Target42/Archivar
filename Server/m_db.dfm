@@ -1,5 +1,4 @@
 object DBMod: TDBMod
-  OldCreateOrder = False
   OnCreate = DataModuleCreate
   OnDestroy = DataModuleDestroy
   Height = 256
@@ -8,7 +7,7 @@ object DBMod: TDBMod
     Params.Strings = (
       'User_Name=sysdba'
       'Password=masterkey'
-      'Database=D:\db\ARCHIVAR.FDB'
+      'Database=c:\db\ARCHIVAR.FDB'
       'MonitorBy=Remote'
       'DriverID=FB')
     ResourceOptions.AssignedValues = [rvCmdExecMode, rvAutoReconnect]
@@ -16,7 +15,7 @@ object DBMod: TDBMod
     ResourceOptions.AutoReconnect = True
     LoginPrompt = False
     Transaction = FDTransaction1
-    Left = 38
+    Left = 62
     Top = 28
   end
   object FDTransaction1: TFDTransaction
@@ -31,7 +30,7 @@ object DBMod: TDBMod
     FormatOptions.OwnMapRules = True
     FormatOptions.MapRules = <>
     Active = True
-    Left = 128
+    Left = 160
     Top = 24
   end
   object FDFBNBackup1: TFDFBNBackup

@@ -139,6 +139,14 @@ begin
       AResponseInfo.ResponseNo := 200;
     end else
       AResponseInfo.ResponseNo := 404;
+  end else if SameText(ARequestInfo.Document, '/zulassen.png') then begin
+    fname := ExpandFileName(TPath.Combine( IniOptions.DNLwwwroot, 'html\zulassen.png'));
+    if FileExists(fname) then begin
+      AResponseInfo.ContentStream := TFileStream.Create(fname, fmOpenRead + fmShareDenyNone);
+      AResponseInfo.FreeContentStream := true;
+      AResponseInfo.ResponseNo := 200;
+    end else
+      AResponseInfo.ResponseNo := 404;
   end else if SameText(ARequestInfo.Document, '/facicon.ico') then begin
     AResponseInfo.ResponseNo := 404;
   end  else if SameText(ARequestInfo.Document, '/server.zip') then begin

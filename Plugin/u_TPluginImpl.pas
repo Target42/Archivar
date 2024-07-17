@@ -25,6 +25,8 @@ type
       procedure Execute; virtual;
 
       procedure PosWindow( owner, form : TForm );
+
+      procedure closeAllForms; virtual;
   end;
 
 implementation
@@ -32,10 +34,14 @@ implementation
 
 { TPluginImpl }
 
+procedure TPluginImpl.closeAllForms;
+begin
+
+end;
+
 procedure TPluginImpl.config(data: IPluginData);
 begin
   m_data := data;
-//  Application := m_data.App;
 end;
 
 constructor TPluginImpl.create;
