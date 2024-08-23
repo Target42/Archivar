@@ -205,8 +205,10 @@ var
   ptr  : PTVSTData;
   da   : TDate;
 begin
-  if ComboBox1.ItemIndex = -1  then exit;
+  if ComboBox1.ItemIndex = -1  then
+    exit;
 
+  VST.Clear;
   da := 0;
   root := nil;
   MailMod.SelectInbox(ComboBox1.Items[ComboBox1.ItemIndex]);

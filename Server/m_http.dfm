@@ -79,4 +79,28 @@ object HttpMod: THttpMod
     Left = 80
     Top = 176
   end
+  object PageProducer2: TPageProducer
+    HTMLDoc.Strings = (
+      '<h1>Statuskonfig fehlt</h1>')
+    OnHTMLTag = PageProducer2HTMLTag
+    Left = 352
+    Top = 184
+  end
+  object StatusQry: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    SQL.Strings = (
+      'SELECT *'
+      'FROM TS_TASK_STATUS a '
+      'WHERE'
+      '    a.TA_CLID = :ta_clid')
+    Left = 344
+    Top = 280
+    ParamData = <
+      item
+        Name = 'TA_CLID'
+        DataType = ftString
+        ParamType = ptInput
+        Value = Null
+      end>
+  end
 end

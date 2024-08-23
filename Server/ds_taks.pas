@@ -9,7 +9,8 @@ uses
   FireDAC.Stan.Intf, FireDAC.Stan.Option,
   FireDAC.Stan.Param, FireDAC.Stan.Error, FireDAC.DatS,
   FireDAC.Stan.Async, FireDAC.DApt, FireDAC.Comp.DataSet,
-  FireDAC.Comp.Client, FireDAC.Phys.Intf, FireDAC.DApt.Intf;
+  FireDAC.Comp.Client, FireDAC.Phys.Intf, FireDAC.DApt.Intf, Web.HTTPApp,
+  Web.HTTPProd;
 
 type
   [TRoleAuth('user,admin', 'download')]
@@ -85,13 +86,14 @@ type
     function AssignmentRemove( data : TJSONObject ) : TJSONObject;
 
     procedure checkFileStorage( taid : integer );
+
   end;
 
 implementation
 
 uses
   Grijjy.CloudLogging, u_json, Variants, u_Konst, m_lockMod, ServerContainerUnit1,
-  u_berTypes, Datasnap.DSSession, m_del_files;
+  u_berTypes, Datasnap.DSSession, m_del_files, u_ini, system.IOUtils;
 
 {%CLASSGROUP 'System.Classes.TPersistent'}
 
@@ -537,6 +539,7 @@ begin
   if DataSet.FieldByName('LT_NAME').IsNull then
     DataSet.FieldByName('LT_NAME').AsString := session.GetData('user');
 end;
+
 
 end.
 

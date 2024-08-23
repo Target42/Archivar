@@ -143,7 +143,8 @@ procedure TMailMod.config(data: TJSONObject);
 var
   obj : TJSONObject;
 begin
-  if not Assigned(data) then exit;
+  if not Assigned(data) then
+    exit;
 
   try
     obj := JObject( data, 'imap');

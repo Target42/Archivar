@@ -22,7 +22,6 @@ object GM: TGM
     AfterConnect = SQLConnection1AfterConnect
     AfterDisconnect = SQLConnection1AfterDisconnect
     BeforeDisconnect = SQLConnection1BeforeDisconnect
-    Connected = True
     Left = 64
     Top = 32
     UniqueId = '{56E10D53-2180-4F5F-9025-8396D8CF4797}'
@@ -474,7 +473,6 @@ object GM: TGM
   end
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsGremium'
-    Connected = True
     SQLConnection = SQLConnection1
     Left = 160
     Top = 104
