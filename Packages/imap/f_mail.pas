@@ -37,7 +37,7 @@ type
     procedure VSTDrawText(Sender: TBaseVirtualTree; TargetCanvas: TCanvas;
       Node: PVirtualNode; Column: TColumnIndex; const Text: string;
       const CellRect: TRect; var DefaultDraw: Boolean);
-    procedure VSTDblClick(Sender: TObject);
+    procedure VSTClick(Sender: TObject);
   private
   type
     PTVSTData = ^TVSTData;
@@ -241,7 +241,7 @@ begin
     vst.Expanded[root] := true;
 end;
 
-procedure TMailForm.VSTDblClick(Sender: TObject);
+procedure TMailForm.VSTClick(Sender: TObject);
 var
   ptr : PTVSTData;
 begin

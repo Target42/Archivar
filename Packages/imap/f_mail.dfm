@@ -63,7 +63,7 @@ object MailForm: TMailForm
       TabOrder = 0
       TreeOptions.MiscOptions = [toAcceptOLEDrop, toFullRepaintOnResize, toInitOnSave, toToggleOnDblClick, toWheelPanning, toVariableNodeHeight, toEditOnClick]
       TreeOptions.SelectionOptions = [toFullRowSelect]
-      OnDblClick = VSTDblClick
+      OnClick = VSTClick
       OnDrawText = VSTDrawText
       OnGetText = VSTGetText
       OnPaintText = VSTPaintText
