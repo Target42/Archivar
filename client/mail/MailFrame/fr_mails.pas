@@ -288,6 +288,7 @@ var
     PaintInfo.Canvas.TextRect(re, s, [tfModifyString, tfEndEllipsis]);
     PaintInfo.Canvas.Font.Color := clBlack;
   end;
+
   procedure paintSubject;
   begin
     PaintInfo.Canvas.Font.Size := 8;
@@ -300,6 +301,7 @@ var
     PaintInfo.Canvas.TextRect(re, s, [tfModifyString, tfEndEllipsis]);
     PaintInfo.Canvas.Font.Style := PaintInfo.Canvas.Font.Style - [fsItalic];
   end;
+
   procedure paintSendTime;
   var
    r : TRect;
@@ -312,6 +314,7 @@ var
 
     PaintInfo.Canvas.TextRect(r, s);
   end;
+
   procedure drawHeadLine;
   begin
     re.Left  := MyContentRect.Left;
@@ -321,18 +324,21 @@ var
     s := ptr^.mail.Headline;
     PaintInfo.Canvas.TextRect(re, s, [tfModifyString, tfEndEllipsis]);
   end;
+
   procedure paintAttach;
   var
     r : TRect;
   begin
-    if not ptr^.mail.Attachment.Empty then begin
+    if not ptr^.mail.Attachment.Empty then
+    begin
       r := MyContentRect;
       r.Left := r.Right - 18;
       r.Bottom := r.Top + 18;
       ptr^.mail.Attachment.Draw(PaintInfo.Canvas, r);
     end;
 
-    if ptr^.mail.Kategorie <> '' then begin
+    if ptr^.mail.Kategorie <> '' then
+    begin
       r := myContentRect;
       r.Bottom := r.Top + 16;
       r.Right := r.Right - 18;
@@ -343,27 +349,36 @@ var
     end;
   end;
 begin
-  with sender as TVirtualDrawTree, PaintInfo do begin
+  with sender as TVirtualDrawTree, PaintInfo do
+  begin
     ptr := node.GetData;
     myContentRect := ContentRect;
 
     Canvas.Pen.Color := clWindowFrame;
-    if VST.GetNodeLevel(node) = 0 then begin
+    if VST.GetNodeLevel(node) = 0 then
+    begin
       myContentRect.Inflate(-2, -2);
       PaintSection;
-    end else begin
+    end
+    else
+    begin
+//      PaintInfo.Canvas.Brush.Color := clWindow;
+      PaintInfo.Canvas.FillRect(ContentRect);
+
       myContentRect.Inflate(-3, -3);
+
       Canvas.Brush.Style := bsClear;
+
       if ptr^.mail.Status = '' then
         Canvas.Font.Style := Canvas.Font.Style + [fsBold]
       else
         Canvas.Font.Style := Canvas.Font.Style - [fsBold];
 
-
       SetBKMode(PaintInfo.Canvas.Handle, TRANSPARENT);
       Canvas.RoundRect(ContentRect, 5, 5);
 
       SetBKMode(PaintInfo.Canvas.Handle, TRANSPARENT);
+
       paintSender;
       paintSubject;
       paintAttach;

@@ -64,7 +64,7 @@ object MailFrame: TMailFrame
     Header.AutoSizeIndex = -1
     Header.MainColumn = -1
     TabOrder = 0
-    TreeOptions.PaintOptions = [toShowBackground, toShowButtons, toShowDropmark, toShowRoot, toShowTreeLines, toThemeAware, toUseBlendedImages]
+    TreeOptions.PaintOptions = [toShowBackground, toShowButtons, toShowDropmark, toShowRoot, toThemeAware, toUseBlendedImages]
     TreeOptions.SelectionOptions = [toFullRowSelect, toMultiSelect]
     OnDrawNode = VSTDrawNode
     OnInitNode = VSTInitNode

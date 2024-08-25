@@ -11,12 +11,10 @@ object MailClientForm: TMailClientForm
   Font.Name = 'Tahoma'
   Font.Style = []
   FormStyle = fsMDIChild
-  OldCreateOrder = False
   Visible = True
   OnClose = FormClose
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  PixelsPerInch = 96
   TextHeight = 13
   object Image1: TImage
     Left = 248
@@ -65,6 +63,8 @@ object MailClientForm: TMailClientForm
     Width = 953
     Height = 19
     Panels = <>
+    ExplicitTop = 537
+    ExplicitWidth = 951
   end
   object Panel1: TPanel
     Left = 0
@@ -128,9 +128,8 @@ object MailClientForm: TMailClientForm
           Width = 413
           Height = 361
           PopupMenu = PopupMenu2
+          TreeOptions.PaintOptions = [toShowBackground, toShowButtons, toShowDropmark, toShowRoot, toThemeAware, toUseBlendedImages]
           OnChange = MailFrame1VSTChange
-          ExplicitLeft = 1
-          ExplicitTop = -4
           ExplicitWidth = 413
           ExplicitHeight = 361
         end
@@ -147,6 +146,8 @@ object MailClientForm: TMailClientForm
     Caption = 'Panel2'
     ShowCaption = False
     TabOrder = 2
+    ExplicitWidth = 531
+    ExplicitHeight = 537
     object Splitter3: TSplitter
       Left = 0
       Top = 373
@@ -164,10 +165,8 @@ object MailClientForm: TMailClientForm
       Height = 373
       Align = alClient
       TabOrder = 0
-      ExplicitLeft = -121
-      ExplicitTop = -62
-      ExplicitWidth = 306
-      ExplicitHeight = 167
+      ExplicitWidth = 531
+      ExplicitHeight = 369
       ControlData = {
         4C000000163700008D2600000000000000000000000000000000000000000000
         000000004C000000000000000000000001000000E0D057007335CF11AE690800
@@ -183,6 +182,8 @@ object MailClientForm: TMailClientForm
       Align = alBottom
       Caption = 'Anh'#228'nge'
       TabOrder = 1
+      ExplicitTop = 372
+      ExplicitWidth = 531
       object Lv: TListView
         Left = 2
         Top = 15
@@ -196,6 +197,7 @@ object MailClientForm: TMailClientForm
         OnDblClick = LvDblClick
         OnMouseDown = LvMouseDown
         OnMouseMove = LvMouseMove
+        ExplicitWidth = 527
       end
     end
   end
@@ -248,7 +250,7 @@ object MailClientForm: TMailClientForm
     Left = 668
     Top = 112
     Bitmap = {
-      494C01010C001800440020002000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01010C001800040020002000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000800000008000000001002000000000000000
       0100000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
