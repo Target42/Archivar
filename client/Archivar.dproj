@@ -440,10 +440,6 @@
         <DCCReference Include="ePub\f_epub_mngr.pas">
             <Form>epubMngrForm</Form>
         </DCCReference>
-        <DCCReference Include="ePub\fr_epub.pas">
-            <Form>ePupFrame</Form>
-            <DesignClass>TFrame</DesignClass>
-        </DCCReference>
         <DCCReference Include="ePub\f_downloadEpub.pas">
             <Form>DownloadEpubform</Form>
         </DCCReference>
@@ -696,6 +692,15 @@
         <DCCReference Include="misc\f_rtf2html.pas">
             <Form>RtfToHtmlform</Form>
             <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="ePub\f_epub_show.pas">
+            <Form>ePubShowForm</Form>
+            <FormType>dfm</FormType>
+        </DCCReference>
+        <DCCReference Include="ePub\fr_epub.pas">
+            <Form>ePupFrame</Form>
+            <FormType>dfm</FormType>
+            <DesignClass>TFrame</DesignClass>
         </DCCReference>
         <None Include="Datafields\ERA-NS.txt"/>
         <RcItem Include="dws\dws.html">

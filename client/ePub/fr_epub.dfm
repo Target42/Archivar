@@ -15,9 +15,9 @@ object ePupFrame: TePupFrame
     TabOrder = 0
     object DBGrid1: TDBGrid
       Left = 2
-      Top = 15
+      Top = 17
       Width = 447
-      Height = 223
+      Height = 221
       Align = alClient
       DataSource = DataSource1
       Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgConfirmDelete, dgCancelOnExit, dgTitleClick, dgTitleHotTrack]
@@ -26,8 +26,8 @@ object ePupFrame: TePupFrame
       TabOrder = 0
       TitleFont.Charset = DEFAULT_CHARSET
       TitleFont.Color = clWindowText
-      TitleFont.Height = -11
-      TitleFont.Name = 'Tahoma'
+      TitleFont.Height = -12
+      TitleFont.Name = 'Segoe UI'
       TitleFont.Style = []
       OnDblClick = DBGrid1DblClick
       Columns = <
@@ -65,7 +65,7 @@ object ePupFrame: TePupFrame
     object BitBtn1: TBitBtn
       Left = 16
       Top = 24
-      Width = 75
+      Width = 90
       Height = 25
       Caption = 'Download'
       Glyph.Data = {
@@ -126,7 +126,7 @@ object ePupFrame: TePupFrame
     object BitBtn2: TBitBtn
       Left = 112
       Top = 24
-      Width = 75
+      Width = 89
       Height = 25
       Caption = 'Anzeigen'
       Glyph.Data = {

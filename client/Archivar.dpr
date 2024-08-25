@@ -152,7 +152,6 @@ uses
   f_web_editor in 'http\f_web_editor.pas' {WebEditorForm},
   f_epub in 'ePub\f_epub.pas' {epubform},
   f_epub_mngr in 'ePub\f_epub_mngr.pas' {epubMngrForm},
-  fr_epub in 'ePub\fr_epub.pas' {ePupFrame: TFrame},
   f_downloadEpub in 'ePub\f_downloadEpub.pas' {DownloadEpubform},
   f_meeting_new in 'Sitzung\f_meeting_new.pas' {MeetingForm},
   f_task_filter in 'Task\f_task_filter.pas' {TaskFilterForm},
@@ -253,7 +252,9 @@ uses
   fr_files_to_delete in 'File\fr_files_to_delete.pas' {FilesToDeleteFrame: TFrame},
   u_meeting_status in '..\misc\u_meeting_status.pas',
   fr_gaeste in 'Sitzung2\fr_gaeste.pas' {GaesteFrame: TFrame},
-  f_rtf2html in 'misc\f_rtf2html.pas' {RtfToHtmlform};
+  f_rtf2html in 'misc\f_rtf2html.pas' {RtfToHtmlform},
+  f_epub_show in 'ePub\f_epub_show.pas' {ePubShowForm},
+  fr_epub in 'ePub\fr_epub.pas' {ePupFrame: TFrame};
 
 {$R *.res}
 

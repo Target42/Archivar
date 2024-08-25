@@ -3,38 +3,40 @@ object epubMngrForm: TepubMngrForm
   Top = 0
   Caption = 'ePub-Manager'
   ClientHeight = 299
-  ClientWidth = 635
+  ClientWidth = 1124
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
   Position = poOwnerFormCenter
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  PixelsPerInch = 96
   TextHeight = 13
   object StatusBar1: TStatusBar
     Left = 0
     Top = 280
-    Width = 635
+    Width = 1124
     Height = 19
     Panels = <>
+    ExplicitTop = 276
+    ExplicitWidth = 633
   end
   object GroupBox1: TGroupBox
     Left = 0
     Top = 0
-    Width = 635
+    Width = 1124
     Height = 232
     Align = alClient
     Caption = #220'bersicht'
     TabOrder = 1
+    ExplicitWidth = 633
+    ExplicitHeight = 228
     object DBGrid1: TDBGrid
       Left = 2
       Top = 15
-      Width = 631
+      Width = 1120
       Height = 215
       Align = alClient
       DataSource = EPSrc
@@ -51,7 +53,7 @@ object epubMngrForm: TepubMngrForm
           Expanded = False
           FieldName = 'EP_TITLE'
           Title.Caption = 'Titel'
-          Width = 200
+          Width = 750
           Visible = True
         end
         item
@@ -80,11 +82,13 @@ object epubMngrForm: TepubMngrForm
   object GroupBox2: TGroupBox
     Left = 0
     Top = 232
-    Width = 635
+    Width = 1124
     Height = 48
     Align = alBottom
     Caption = 'Aktionen'
     TabOrder = 2
+    ExplicitTop = 228
+    ExplicitWidth = 633
     object btnUload: TBitBtn
       Left = 16
       Top = 17

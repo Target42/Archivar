@@ -258,6 +258,7 @@ type
     procedure ac_mailExecute(Sender: TObject);
     procedure ac_hlp_fehlerExecute(Sender: TObject);
     procedure ac_me_endExecute(Sender: TObject);
+    procedure ac_view_epubExecute(Sender: TObject);
   private
     m_noStatChange : boolean;
 
@@ -293,7 +294,7 @@ uses
   f_flieCacheForm, f_keys, f_textblock_export, f_textblock_import,
   f_storages, f_protokoll_new, f_admin, f_task_delete,
   f_pluginAdmin, f_task_import, m_taskimporter, f_mail_client, ShellApi,
-  u_meeting_status;
+  u_meeting_status, f_epub_show;
 
 {$R *.dfm}
 
@@ -826,6 +827,11 @@ begin
 
   Splitter1.Visible     := ac_view_admin.Checked;
   PageControl1.Visible  := ac_view_admin.Checked;
+end;
+
+procedure TMainForm.ac_view_epubExecute(Sender: TObject);
+begin
+  ShowEpubList;
 end;
 
 procedure TMainForm.ac_view_taskExecute(Sender: TObject);

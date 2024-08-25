@@ -85,7 +85,7 @@
     Top = 0
     Width = 249
     Height = 463
-    ActivePage = TabSheet2
+    ActivePage = TabSheet7
     Align = alLeft
     Images = ImageList1
     MultiLine = True
@@ -150,6 +150,7 @@
           ExplicitWidth = 221
           ExplicitHeight = 390
           inherited DBGrid1: TDBGrid
+            Top = 15
             Width = 217
             Height = 373
             TitleFont.Height = -11
@@ -236,7 +237,7 @@
           Width = 221
           Height = 455
           ExplicitWidth = 221
-          ExplicitHeight = 455
+          ExplicitHeight = 451
         end
       end
     end
@@ -318,7 +319,7 @@
               FooterAlign = taLeftJustify
               TitleImage = -1
             end>
-          ExplicitWidth = 1100
+          ExplicitWidth = 1102
           ExplicitHeight = 158
         end
       end
@@ -1040,6 +1041,8 @@
     object ac_view_epub: TAction
       Category = 'Ansicht'
       Caption = 'ePub anzeigen'
+      ImageIndex = 23
+      OnExecute = ac_view_epubExecute
     end
   end
   object ApplicationEvents1: TApplicationEvents
