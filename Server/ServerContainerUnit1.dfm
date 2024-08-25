@@ -1,5 +1,4 @@
 object ArchivService: TArchivService
-  OldCreateOrder = False
   OnCreate = ServiceCreate
   OnDestroy = ServiceDestroy
   DisplayName = 'ArchivarService'

@@ -9,7 +9,8 @@ object DBMod: TDBMod
       'Password=masterkey'
       'Database=c:\db\ARCHIVAR.FDB'
       'MonitorBy=Remote'
-      'DriverID=FB')
+      'DriverID=FB'
+      'Pooled=True')
     ResourceOptions.AssignedValues = [rvCmdExecMode, rvAutoReconnect]
     ResourceOptions.CmdExecMode = amNonBlocking
     ResourceOptions.AutoReconnect = True
@@ -44,7 +45,7 @@ object DBMod: TDBMod
   end
   object FDMoniRemoteClientLink1: TFDMoniRemoteClientLink
     EventKinds = [ekLiveCycle, ekError, ekConnConnect, ekConnTransact, ekAdaptUpdate]
-    Left = 48
+    Left = 56
     Top = 144
   end
 end
