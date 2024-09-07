@@ -10,10 +10,8 @@ object MySettingsForm: TMySettingsForm
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
   Position = poOwnerFormCenter
   OnCreate = FormCreate
-  PixelsPerInch = 96
   TextHeight = 13
   inline BaseFrame1: TBaseFrame
     Left = 0
@@ -23,10 +21,16 @@ object MySettingsForm: TMySettingsForm
     Align = alBottom
     AutoSize = True
     TabOrder = 0
-    ExplicitTop = 209
+    ExplicitTop = 205
+    ExplicitWidth = 449
+    inherited StatusBar1: TStatusBar
+      ExplicitWidth = 449
+    end
     inherited Panel1: TPanel
+      ExplicitWidth = 449
       inherited OKBtn: TBitBtn
         OnClick = BaseFrame1OKBtnClick
+        ExplicitLeft = 350
       end
     end
   end
@@ -35,32 +39,38 @@ object MySettingsForm: TMySettingsForm
     Top = 0
     Width = 451
     Height = 209
-    ActivePage = TabSheet1
+    ActivePage = TabSheet2
     Align = alClient
     Images = ImageList1
     TabOrder = 1
+    ExplicitWidth = 449
+    ExplicitHeight = 205
     object TabSheet1: TTabSheet
       Caption = 'Server'
       object LB: TListBox
         Left = 0
         Top = 0
         Width = 443
-        Height = 140
+        Height = 139
         Align = alClient
         Columns = 2
         ItemHeight = 13
         TabOrder = 0
         OnClick = LBClick
+        ExplicitWidth = 441
+        ExplicitHeight = 135
       end
       object Panel1: TPanel
         Left = 0
-        Top = 140
+        Top = 139
         Width = 443
         Height = 41
         Align = alBottom
         Caption = 'Panel1'
         ShowCaption = False
         TabOrder = 1
+        ExplicitTop = 135
+        ExplicitWidth = 441
         object SpeedButton1: TSpeedButton
           Left = 203
           Top = 6
@@ -212,7 +222,7 @@ object MySettingsForm: TMySettingsForm
         Left = 0
         Top = 0
         Width = 443
-        Height = 140
+        Height = 139
         Align = alClient
         Columns = 4
         ItemHeight = 13
@@ -220,7 +230,7 @@ object MySettingsForm: TMySettingsForm
       end
       object Panel2: TPanel
         Left = 0
-        Top = 140
+        Top = 139
         Width = 443
         Height = 41
         Align = alBottom
@@ -390,6 +400,7 @@ object MySettingsForm: TMySettingsForm
         EditLabel.Height = 13
         EditLabel.Caption = 'Proxy'
         TabOrder = 0
+        Text = ''
       end
       object SpinEdit1: TSpinEdit
         Left = 199
@@ -410,6 +421,7 @@ object MySettingsForm: TMySettingsForm
         EditLabel.Height = 13
         EditLabel.Caption = 'User'
         TabOrder = 2
+        Text = ''
       end
       object LabeledEdit3: TLabeledEdit
         Left = 151
@@ -421,6 +433,7 @@ object MySettingsForm: TMySettingsForm
         EditLabel.Caption = 'Passwort'
         PasswordChar = '*'
         TabOrder = 3
+        Text = ''
       end
       object LabeledEdit4: TLabeledEdit
         Left = 24
@@ -501,7 +514,6 @@ object MySettingsForm: TMySettingsForm
     end
   end
   object IdHTTP1: TIdHTTP
-    AllowCookies = True
     ProxyParams.BasicAuthentication = True
     ProxyParams.ProxyPort = 0
     Request.ContentLength = -1
@@ -521,7 +533,7 @@ object MySettingsForm: TMySettingsForm
     Left = 92
     Top = 56
     Bitmap = {
-      494C010104000800200010001000FFFFFFFFFF00FFFFFFFFFFFFFFFF424D3600
+      494C010104000800040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -789,6 +801,7 @@ object MySettingsForm: TMySettingsForm
       C0038001C001F800C003C00380038000C003F00F80030000C003FC3F00018000
       C003F81F0001C100C003F81F0001C3C3C003F00F0001C3C3C003F00F0001C003
       C003F00F00018001C003F00F00010000C003F00F80038001C003F00F8003F81F
-      E007F00FC007FC3FFFFFF83FF01FFC3F}
+      E007F00FC007FC3FFFFFF83FF01FFC3F00000000000000000000000000000000
+      000000000000}
   end
 end

@@ -7,7 +7,7 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_base, Vcl.ComCtrls, Vcl.Buttons,
   Vcl.StdCtrls, Vcl.ExtCtrls,
   IdHTTP, Vcl.Samples.Spin, IdBaseComponent, IdComponent, IdTCPConnection,
-  IdTCPClient, System.ImageList, Vcl.ImgList;
+  IdTCPClient, System.ImageList, Vcl.ImgList, Vcl.Mask;
 
 type
   TMySettingsForm = class(TForm)
@@ -159,13 +159,15 @@ end;
 procedure TMySettingsForm.SpeedButton2Click(Sender: TObject);
 var
   s : string;
+  inx : integer;
 begin
   s := Trim(Edit1.Text);
 
-  if LB.ItemIndex = -1 then
+  inx := LB.Items.IndexOf(s);
+  if inx = -1 then
     LB.Items.Add(s)
   else
-    LB.Items.Strings[LB.ItemIndex] := s
+    LB.Items.Strings[inx] := s
 end;
 
 procedure TMySettingsForm.SpeedButton3Click(Sender: TObject);
@@ -183,13 +185,15 @@ end;
 procedure TMySettingsForm.SpeedButton5Click(Sender: TObject);
 var
   s : string;
+  inx : integer;
 begin
   s := Trim(Edit2.Text);
 
-  if UserLB.ItemIndex = -1 then
-    UserLB.Items.Add(s)
+  inx := UserLB.items.IndexOf(s);
+  if inx = -1 then
+      UserLB.Items.Add(s)
   else
-    UserLB.Items.Strings[LB.ItemIndex] := s
+    UserLB.Items.Strings[inx] := s
 end;
 
 procedure TMySettingsForm.SpeedButton6Click(Sender: TObject);
