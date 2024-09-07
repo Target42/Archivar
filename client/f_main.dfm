@@ -77,8 +77,8 @@
         Width = 250
       end>
     OnDrawPanel = StatusBar1DrawPanel
-    ExplicitTop = 651
-    ExplicitWidth = 1108
+    ExplicitTop = 643
+    ExplicitWidth = 1106
   end
   object PageControl1: TPageControl
     Left = 0
@@ -237,7 +237,7 @@
           Width = 221
           Height = 455
           ExplicitWidth = 221
-          ExplicitHeight = 451
+          ExplicitHeight = 443
         end
       end
     end
@@ -943,7 +943,7 @@
     end
     object ac_to_wiki: TAction
       Category = 'Tools'
-      Caption = 'Wiki'
+      Caption = 'Wissensgebiete'
     end
     object ac_to_faq: TAction
       Category = 'Tools'

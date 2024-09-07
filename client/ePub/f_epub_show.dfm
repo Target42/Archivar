@@ -2,8 +2,8 @@ object ePubShowForm: TePubShowForm
   Left = 0
   Top = 0
   Caption = 'Lokale ePubs'
-  ClientHeight = 468
-  ClientWidth = 1041
+  ClientHeight = 464
+  ClientWidth = 1039
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,18 +17,20 @@ object ePubShowForm: TePubShowForm
   inline ePupFrame1: TePupFrame
     Left = 0
     Top = 0
-    Width = 1041
-    Height = 449
+    Width = 1039
+    Height = 445
     Align = alClient
     TabOrder = 0
-    ExplicitLeft = 175
-    ExplicitTop = 120
+    ExplicitWidth = 1039
+    ExplicitHeight = 445
     inherited GroupBox1: TGroupBox
-      Width = 1041
-      Height = 384
+      Width = 1039
+      Height = 380
+      ExplicitWidth = 1037
+      ExplicitHeight = 376
       inherited DBGrid1: TDBGrid
-        Width = 1037
-        Height = 365
+        Width = 1035
+        Height = 361
         Columns = <
           item
             Expanded = False
@@ -54,18 +56,19 @@ object ePubShowForm: TePubShowForm
       end
     end
     inherited GroupBox2: TGroupBox
-      Top = 384
-      Width = 1041
+      Top = 380
+      Width = 1039
+      ExplicitTop = 376
+      ExplicitWidth = 1037
     end
   end
   object StatusBar1: TStatusBar
     Left = 0
-    Top = 449
-    Width = 1041
+    Top = 445
+    Width = 1039
     Height = 19
     Panels = <>
-    ExplicitLeft = 880
-    ExplicitTop = 360
-    ExplicitWidth = 0
+    ExplicitTop = 441
+    ExplicitWidth = 1037
   end
 end
