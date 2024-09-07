@@ -1,27 +1,32 @@
 /* ============================================================ */
 /*   Database name:  MODEL_2                                    */
 /*   DBMS name:      InterBase                                  */
-/*   Created on:     17.07.2024  11:39                          */
+/*   Created on:     28.08.2024  20:55                          */
 /* ============================================================ */
 
 create generator gen_be_id;
-create generator gen_ct_id;
 create generator gen_cp_id;
+create generator gen_ct_id;
 create generator gen_da_id;
-create generator gen_dr_id;
 create generator gen_di_id;
+create generator gen_dr_id;
 create generator gen_el_id;
+create generator gen_ep_id;
 create generator gen_fc_id;
-create generator gen_fi_id;
 create generator gen_fd_id;
+create generator gen_fi_id;
 create generator gen_gr_id;
 create generator gen_hc_id;
 create generator gen_ln_id;
 create generator gen_lt_id;
 create generator gen_ma_id;
-create generator gen_pi_id;
+create generator gen_mac_id;
+create generator gen_maf_id;
+create generator gen_mam_id;
 create generator gen_pe_id;
+create generator gen_pi_id;
 create generator gen_pk_id;
+create generator gen_pl_id;
 create generator gen_pr_id;
 create generator gen_st_id;
 create generator gen_ta_id;
@@ -30,12 +35,10 @@ create generator gen_te_id;
 create generator gen_tg_id;
 create generator gen_tn_id;
 create generator gen_ty_id;
-create generator gen_ep_id;
-create generator gen_pl_id;
-
-create generator gen_mac_id;;
-create generator gen_maf_id;
-create generator gen_mam_id;
+create generator gen_wi_id;
+create generator gen_wa_id;
+create generator gen_wl_id;
+create generator gen_wd_id;
 /* ============================================================ */
 /*   Table: FD_DELETE                                           */
 /* ============================================================ */
@@ -286,6 +289,18 @@ create table MAC_MAIL_ACCOUNT
 );
 
 /* ============================================================ */
+/*   Table: WI_WIKI                                             */
+/* ============================================================ */
+create table WI_WIKI
+(
+    WI_ID                           INTEGER                not null,
+    WI_NAME                         VARCHAR(250)                   ,
+    WI_USER                         VARCHAR(100)                   ,
+    WI_STAMP                        TIMESTAMP                      ,
+    constraint PK_WI_WIKI primary key (WI_ID)
+);
+
+/* ============================================================ */
 /*   Table: TE_TEMPLATE                                         */
 /* ============================================================ */
 create table TE_TEMPLATE
@@ -493,6 +508,22 @@ create table MAF_FOLDER
 /*   Index: MAF_FOLDER_NAME                                     */
 /* ============================================================ */
 create unique ASC index MAF_FOLDER_NAME on MAF_FOLDER (MAC_ID, MAF_NAME);
+
+/* ============================================================ */
+/*   Table: WA_ARTIKEL                                          */
+/* ============================================================ */
+create table WA_ARTIKEL
+(
+    WA_ID                           INTEGER                not null,
+    WI_ID                           INTEGER                        ,
+    WA_NAME                         VARCHAR(255)                   ,
+    WA_TEXT                         BLOB                           ,
+    WA_TAGS                         VARCHAR(255)                   ,
+    WA_CREATED                      VARCHAR(100)                   ,
+    WA_EDITED                       VARCHAR(100)                   ,
+    WA_STAMP                        TIMESTAMP                      ,
+    constraint PK_WA_ARTIKEL primary key (WA_ID)
+);
 
 /* ============================================================ */
 /*   Table: GR_PA                                               */
@@ -751,6 +782,32 @@ create table TS_TASK_STATUS
     constraint PK_TS_TASK_STATUS primary key (TA_ID)
 );
 
+/* ============================================================ */
+/*   Table: WL_LINKS                                            */
+/* ============================================================ */
+create table WL_LINKS
+(
+    WL_ID                           INTEGER                not null,
+    WA_ID                           INTEGER                        ,
+    WL_NAME                         VARCHAR(255)                   ,
+    WL_LINK                         VARCHAR(255)                   ,
+    constraint PK_WL_LINKS primary key (WL_ID)
+);
+
+/* ============================================================ */
+/*   Table: WD_DATA                                             */
+/* ============================================================ */
+create table WD_DATA
+(
+    WD_ID                           INTEGER                not null,
+    WA_ID                           INTEGER                        ,
+    WD_NAME                         VARCHAR(255)                   ,
+    WD_DATA                         BLOB                           ,
+    WD_USER                         VARCHAR(100)                   ,
+    WD_STAMP                        TIMESTAMP                      ,
+    constraint PK_WD_DATA primary key (WD_ID)
+);
+
 alter table TE_TEMPLATE
     add constraint FK_REF_3353 foreign key  (TY_ID)
        references TY_TASKTYPE;
@@ -798,6 +855,10 @@ alter table CP_CHAPTER
 alter table MAF_FOLDER
     add constraint FK_REF_14034 foreign key  (MAC_ID)
        references MAC_MAIL_ACCOUNT;
+
+alter table WA_ARTIKEL
+    add constraint FK_REF_16194 foreign key  (WI_ID)
+       references WI_WIKI;
 
 alter table GR_PA
     add constraint FK_REF_16 foreign key  (GR_ID)
@@ -890,6 +951,14 @@ alter table MAM_MAIL
 alter table TS_TASK_STATUS
     add constraint FK_REF_15582 foreign key  (TA_ID)
        references TA_TASK;
+
+alter table WL_LINKS
+    add constraint FK_REF_16202 foreign key  (WA_ID)
+       references WA_ARTIKEL;
+
+alter table WD_DATA
+    add constraint FK_REF_16659 foreign key  (WA_ID)
+       references WA_ARTIKEL;
 
 set term /;
 CREATE TRIGGER SET_CP_CHAPTER FOR CP_CHAPTER
