@@ -810,6 +810,7 @@ begin
   TabSheet6.Enabled           := not m_ro;
 
   TaskTab.ReadOnly            := m_ro;
+  FileFrame1.ReadOnly         := m_ro;
 
 
   if Assigned(m_form) then

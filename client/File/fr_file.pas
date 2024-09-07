@@ -116,6 +116,8 @@ type
 
     m_dropFiles  : TStringList;
 
+    m_readonly : boolean;
+
     procedure addChild( root, child : PTFolderRec );
     function getParent( pid : integer ) : PTFolderRec;
 
@@ -141,11 +143,15 @@ type
 
     procedure OnGetStream(Sender: TFileContentsStreamOnDemandClipboardFormat;
       Index: integer; out AStream: IStream);
+    function GetReadOnly: boolean;
+    procedure SetReadOnly(const Value: boolean);
   public
     procedure prepare;
     property RootID   : integer read m_grid write setID;
     property RO       : boolean read GetRO  write SetRO;
     procedure release;
+
+    property ReadOnly: boolean read GetReadOnly write SetReadOnly;
 
     function handle_folder_new( const arg : TJSONObject ) : boolean;
     function handle_folder_del( const arg : TJSONObject ) : boolean;
@@ -497,7 +503,7 @@ end;
 procedure TFileFrame.DBGrid1DragOver(Sender, Source: TObject; X, Y: Integer;
   State: TDragState; var Accept: Boolean);
 begin
-  Accept := Assigned(VST.FocusedNode) and (Sender <> Source );
+  Accept := Assigned(VST.FocusedNode) and (Sender <> Source ) and not m_readonly;
 end;
 
 procedure TFileFrame.DropEmptySource1AfterDrop(Sender: TObject;
@@ -518,6 +524,8 @@ var
 const
   MaxBufferSize = 32*1024; // 32Kb
 begin
+  if m_readonly then
+    exit;
   // Transfer the file names and contents from the data format.
   if (TVirtualFileStreamDataFormat(DataFormatAdapterTarget.DataFormat).FileNames.Count > 0) then
   begin
@@ -600,6 +608,11 @@ begin
       break;
     end;
   end;
+end;
+
+function TFileFrame.GetReadOnly: boolean;
+begin
+  Result := m_readonly;
 end;
 
 function TFileFrame.GetRO: boolean;
@@ -831,6 +844,7 @@ begin
   EventHandler.Register( self, handle_folder_upd,   BRD_FOLDER_UPDATE );
   EventHandler.Register( self, handle_file_lock,    BRD_FILE_LOCK);
 
+  m_readonly := false;
 //  SpeedButton1.Caption := '';
 end;
 
@@ -891,6 +905,21 @@ begin
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
 
   updateTree;
+end;
+
+procedure TFileFrame.SetReadOnly(const Value: boolean);
+var
+  i : integer;
+begin
+  m_readonly := value;
+  for i := 0 to pred(ActionList1.ActionCount) do
+    ActionList1.Actions[i].Enabled := not m_readonly;
+
+  Button1.Enabled := not m_readonly;
+  Button2.Enabled := not m_readonly;
+  BitBtn1.Enabled := not m_readonly;
+  BitBtn2.Enabled := not m_readonly;
+  BitBtn3.Enabled := not m_readonly;
 end;
 
 procedure TFileFrame.SetRO(const Value: boolean);
