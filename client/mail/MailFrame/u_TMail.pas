@@ -20,8 +20,9 @@ type
       m_png : TPngImage;
       m_bmp : TBitmap;
       FHeadline : string;
-    FID: integer;
-    FStatus: string;
+      FID: integer;
+      FStatus: string;
+      FMEsgID: string;
 
       procedure processMailData;
       procedure SetKategorie( value : string );
@@ -31,6 +32,7 @@ type
       destructor Destroy;  override;
 
       property ID: integer read FID write FID;
+      property MesgID: string read FMEsgID write FMEsgID;
       property Titel: string read FTitel write FTitel;
       property Absender: string read FAbsender write FAbsender;
       property Adresse: string read FAdresse write FAdresse;
@@ -212,13 +214,14 @@ end;
 
 procedure TMail.processMailData;
 begin
-  FTitel    := FMessage.Subject;
-  FAbsender := FMessage.From.Name;
-  FSendDate := FormatDateTime( 'dddd dd.mm.yyyy', FMessage.Date );
-  FSendTime := FormatDateTime('hh:nn', FMessage.Date);
-  FAdresse  := FMessage.From.Address;
-  FTimeStamp:= FMessage.Date;
-  FAttachments := FMessage.MessageParts.AttachmentCount <> 0;
+  FTitel        := FMessage.Subject;
+  FAbsender     := FMessage.From.Name;
+  FSendDate     := FormatDateTime( 'dddd dd.mm.yyyy', FMessage.Date );
+  FSendTime     := FormatDateTime('hh:nn', FMessage.Date);
+  FAdresse      := FMessage.From.Address;
+  FTimeStamp    := FMessage.Date;
+  FAttachments  := FMessage.MessageParts.AttachmentCount <> 0;
+  FMEsgID       := FMessage.Headers.Values['Message-ID'];
 
   if Trim(FTitel) = '' then
     FTitel := '(Kein Betreff)';

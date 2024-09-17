@@ -296,13 +296,16 @@ var
   list : TStringList;
 begin
   Result := '';
-  if dir = '' then begin
+  if dir = '' then
+  begin
     dir := TPath.Combine(TPath.GetTempPath, IntToHex(GetTickCount) );
-  end else
+  end
+  else
     clearFiles( dir );
 
 
-  if ForceDirectories(dir) then begin
+  if ForceDirectories(dir) then
+  begin
     list := TStringList.Create;
     replaceKeys(dir);
     saveFiles( dir );

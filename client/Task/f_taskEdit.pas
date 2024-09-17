@@ -107,6 +107,7 @@ type
     Label11: TLabel;
     DBLabeledEdit1: TDBLabeledEdit;
     DBMemo1: TDBMemo;
+    TaskTabTA_MSGID: TStringField;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -133,6 +134,9 @@ type
     procedure JvColorComboBox1Change(Sender: TObject);
     procedure ac_spellExecute(Sender: TObject);
     procedure ac_assignmentExecute(Sender: TObject);
+    procedure DBEdit1DragOver(Sender, Source: TObject; X, Y: Integer;
+      State: TDragState; var Accept: Boolean);
+    procedure DBEdit6DragDrop(Sender, Source: TObject; X, Y: Integer);
   private
     m_ta_id       : integer;
     m_ty_id       : integer;
@@ -189,7 +193,8 @@ implementation
 uses
   m_WindowHandler, Vcl.Dialogs, m_glob_client, System.UITypes, u_json, u_bookmark, u_berTypes, m_BookMarkHandler, DateUtils,
   u_taskForm2XML, u_konst, m_html, xsd_TaskData, u_templateCache, u_kategorie,
-  f_task_assigment, u_eventHandler, u_stub;
+  f_task_assigment, u_eventHandler, u_stub, VirtualTrees.DrawTree, fr_mails,
+  u_TMail;
 
 {$R *.dfm}
 
@@ -338,9 +343,41 @@ begin
   renderPreview;
 end;
 
+procedure TTaskEditForm.DBEdit1DragOver(Sender, Source: TObject; X, Y: Integer;
+  State: TDragState; var Accept: Boolean);
+begin
+  Accept := (not  m_ro) and ( Source is TVirtualDrawTree);
+end;
+
 procedure TTaskEditForm.DBEdit1KeyPress(Sender: TObject; var Key: Char);
 begin
   m_changed := true;
+end;
+
+procedure TTaskEditForm.DBEdit6DragDrop(Sender, Source: TObject; X, Y: Integer);
+var
+  vst  : TVirtualDrawTree;
+  frm  : TMailFrame;
+  mail : TMail;
+begin
+  if m_ro or not ( Source is TVirtualDrawTree)  then
+    exit;
+
+  vst :=  ( Source as TVirtualDrawTree);
+  if not (vst.Parent is TMailFrame) then
+    exit;
+
+  frm := (vst.Parent as TMailFrame);
+
+  mail := frm.SelectedMail;
+
+  if Assigned(mail) then
+  begin
+    TaskTabTA_NAME.AsString       := mail.Titel;
+    TaskTabTA_BEARBEITER.AsString := mail.Absender;
+    TaskTabTA_MSGID.AsString      := mail.MesgID;
+  end;
+
 end;
 
 procedure TTaskEditForm.edit;
@@ -815,7 +852,7 @@ begin
 
   if Assigned(m_form) then
     m_form.ReadOnly := m_ro;
-  FileFrame1.RO := m_ro;
+  FileFrame1.ReadOnly := m_ro;
 
   if m_ro then
     StatusBar1.Panels.Items[0].Text := 'Schreibgeschützt'

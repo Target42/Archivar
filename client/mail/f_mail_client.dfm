@@ -63,8 +63,8 @@ object MailClientForm: TMailClientForm
     Width = 953
     Height = 19
     Panels = <>
-    ExplicitTop = 537
-    ExplicitWidth = 951
+    ExplicitTop = 529
+    ExplicitWidth = 949
   end
   object Panel1: TPanel
     Left = 0
@@ -76,6 +76,7 @@ object MailClientForm: TMailClientForm
     Caption = 'Panel1'
     ShowCaption = False
     TabOrder = 1
+    ExplicitHeight = 529
     object Splitter1: TSplitter
       Left = 0
       Top = 160
@@ -113,6 +114,7 @@ object MailClientForm: TMailClientForm
       Align = alClient
       Caption = 'Mails'
       TabOrder = 1
+      ExplicitHeight = 366
       inline MailFrame1: TMailFrame
         Left = 2
         Top = 15
@@ -123,12 +125,11 @@ object MailClientForm: TMailClientForm
         ExplicitLeft = 2
         ExplicitTop = 15
         ExplicitWidth = 413
-        ExplicitHeight = 361
+        ExplicitHeight = 349
         inherited VST: TVirtualDrawTree
           Width = 413
           Height = 361
           PopupMenu = PopupMenu2
-          TreeOptions.PaintOptions = [toShowBackground, toShowButtons, toShowDropmark, toShowRoot, toThemeAware, toUseBlendedImages]
           OnChange = MailFrame1VSTChange
           ExplicitWidth = 413
           ExplicitHeight = 361
@@ -146,8 +147,8 @@ object MailClientForm: TMailClientForm
     Caption = 'Panel2'
     ShowCaption = False
     TabOrder = 2
-    ExplicitWidth = 531
-    ExplicitHeight = 537
+    ExplicitWidth = 529
+    ExplicitHeight = 529
     object Splitter3: TSplitter
       Left = 0
       Top = 373
@@ -165,10 +166,10 @@ object MailClientForm: TMailClientForm
       Height = 373
       Align = alClient
       TabOrder = 0
-      ExplicitWidth = 531
-      ExplicitHeight = 369
+      ExplicitWidth = 529
+      ExplicitHeight = 361
       ControlData = {
-        4C000000163700008D2600000000000000000000000000000000000000000000
+        4C000000122C0000D71E00000000000000000000000000000000000000000000
         000000004C000000000000000000000001000000E0D057007335CF11AE690800
         2B2E12620A000000000000004C0000000114020000000000C000000000000046
         8000000000000000000000000000000000000000000000000000000000000000
@@ -182,8 +183,8 @@ object MailClientForm: TMailClientForm
       Align = alBottom
       Caption = 'Anh'#228'nge'
       TabOrder = 1
-      ExplicitTop = 372
-      ExplicitWidth = 531
+      ExplicitTop = 364
+      ExplicitWidth = 529
       object Lv: TListView
         Left = 2
         Top = 15
@@ -197,7 +198,7 @@ object MailClientForm: TMailClientForm
         OnDblClick = LvDblClick
         OnMouseDown = LvMouseDown
         OnMouseMove = LvMouseMove
-        ExplicitWidth = 527
+        ExplicitWidth = 525
       end
     end
   end

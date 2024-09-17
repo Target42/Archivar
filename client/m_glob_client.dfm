@@ -1,8 +1,9 @@
 object GM: TGM
   OnCreate = DataModuleCreate
   OnDestroy = DataModuleDestroy
-  Height = 237
-  Width = 469
+  Height = 296
+  Width = 586
+  PixelsPerInch = 120
   object SQLConnection1: TSQLConnection
     DriverName = 'DataSnap'
     LoginPrompt = False
@@ -22,8 +23,8 @@ object GM: TGM
     AfterConnect = SQLConnection1AfterConnect
     AfterDisconnect = SQLConnection1AfterDisconnect
     BeforeDisconnect = SQLConnection1BeforeDisconnect
-    Left = 64
-    Top = 32
+    Left = 80
+    Top = 40
     UniqueId = '{56E10D53-2180-4F5F-9025-8396D8CF4797}'
   end
   object DeleteTimesTab: TFDMemTable
@@ -34,8 +35,8 @@ object GM: TGM
     UpdateOptions.AssignedValues = [uvCheckRequired, uvAutoCommitUpdates]
     UpdateOptions.CheckRequired = False
     UpdateOptions.AutoCommitUpdates = True
-    Left = 152
-    Top = 32
+    Left = 190
+    Top = 40
     object DeleteTimesTabFD_ID: TIntegerField
       FieldName = 'FD_ID'
     end
@@ -55,18 +56,18 @@ object GM: TGM
     ManagerId = '246585.16461.649512'
     UserName = '{E4DBFC6B-C573-47FF-AC01-9CE6C5F63DB9}'
     Password = 'dev'
-    Left = 160
-    Top = 166
+    Left = 200
+    Top = 208
   end
   object ImageList1: TImageList
     ColorDepth = cd32Bit
     DrawingStyle = dsTransparent
-    Left = 232
-    Top = 32
+    Left = 290
+    Top = 40
   end
   object ImageList2: TImageList
-    Left = 296
-    Top = 32
+    Left = 370
+    Top = 40
     Bitmap = {
       494C010108007801040010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000003000000001002000000000000030
@@ -474,8 +475,8 @@ object GM: TGM
   object DSProviderConnection1: TDSProviderConnection
     ServerClassName = 'TdsGremium'
     SQLConnection = SQLConnection1
-    Left = 160
-    Top = 104
+    Left = 200
+    Top = 130
   end
   object GremiumMA: TClientDataSet
     Aggregates = <>
@@ -487,24 +488,24 @@ object GM: TGM
       end>
     ProviderName = 'GrUserQry'
     RemoteServer = DSProviderConnection1
-    Left = 256
-    Top = 104
+    Left = 320
+    Top = 130
   end
   object JvSHFileOperation1: TJvSHFileOperation
     Operation = foDelete
     Options = [fofNoConfirmation, fofSilent, fofNoErrorUI]
-    Left = 352
-    Top = 104
+    Left = 464
+    Top = 130
   end
   object NotificationCenter1: TNotificationCenter
-    Left = 336
-    Top = 168
+    Left = 420
+    Top = 210
   end
   object PingTimer: TTimer
     Enabled = False
     Interval = 60000
     OnTimer = PingTimerTimer
-    Left = 408
-    Top = 24
+    Left = 510
+    Top = 30
   end
 end

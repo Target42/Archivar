@@ -22,7 +22,7 @@ object TextBlockFrame: TTextBlockFrame
       Left = 8
       Top = 24
       Width = 436
-      Height = 21
+      Height = 23
       Anchors = [akLeft, akTop, akRight]
       EditLabel.Width = 49
       EditLabel.Height = 15

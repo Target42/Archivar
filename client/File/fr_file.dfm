@@ -1,14 +1,14 @@
 object FileFrame: TFileFrame
   Left = 0
   Top = 0
-  Width = 878
-  Height = 449
+  Width = 679
+  Height = 415
   Align = alClient
   TabOrder = 0
   object Splitter1: TSplitter
     Left = 249
     Top = 0
-    Height = 449
+    Height = 415
     ExplicitLeft = 224
     ExplicitTop = 32
     ExplicitHeight = 100
@@ -17,18 +17,20 @@ object FileFrame: TFileFrame
     Left = 0
     Top = 0
     Width = 249
-    Height = 449
+    Height = 415
     Align = alLeft
     Caption = 'Ordner'
     TabOrder = 0
+    ExplicitHeight = 449
     object GroupBox4: TGroupBox
       Left = 2
-      Top = 390
+      Top = 356
       Width = 245
       Height = 57
       Align = alBottom
       Caption = 'Ordneraktionen'
       TabOrder = 0
+      ExplicitTop = 390
       object SpeedButton1: TBitBtn
         Left = 11
         Top = 24
@@ -80,7 +82,7 @@ object FileFrame: TFileFrame
       Left = 2
       Top = 17
       Width = 245
-      Height = 373
+      Height = 339
       Align = alClient
       Colors.BorderColor = 15854306
       Colors.DisabledColor = 9671571
@@ -118,6 +120,7 @@ object FileFrame: TFileFrame
       OnNewText = VSTNewText
       Touch.InteractiveGestures = [igPan, igPressAndTap]
       Touch.InteractiveGestureOptions = [igoPanSingleFingerHorizontal, igoPanSingleFingerVertical, igoPanInertia, igoPanGutter, igoParentPassthrough]
+      ExplicitHeight = 373
       Columns = <
         item
           Position = 0
@@ -134,19 +137,23 @@ object FileFrame: TFileFrame
   object GroupBox3: TGroupBox
     Left = 252
     Top = 0
-    Width = 626
-    Height = 449
+    Width = 427
+    Height = 415
     Align = alClient
     Caption = 'Dateien'
     TabOrder = 1
+    ExplicitWidth = 626
+    ExplicitHeight = 449
     object GroupBox1: TGroupBox
       Left = 2
-      Top = 390
-      Width = 622
+      Top = 356
+      Width = 423
       Height = 57
       Align = alBottom
       Caption = 'Dateiaktionen'
       TabOrder = 0
+      ExplicitTop = 390
+      ExplicitWidth = 622
       object Button1: TBitBtn
         Left = 16
         Top = 24
@@ -418,8 +425,8 @@ object FileFrame: TFileFrame
     object LV: TListView
       Left = 2
       Top = 17
-      Width = 622
-      Height = 373
+      Width = 423
+      Height = 339
       Align = alClient
       Checkboxes = True
       Columns = <
@@ -446,6 +453,7 @@ object FileFrame: TFileFrame
         end>
       DragMode = dmAutomatic
       GridLines = True
+      Items.ItemData = {}
       ReadOnly = True
       RowSelect = True
       SortType = stText
@@ -455,6 +463,8 @@ object FileFrame: TFileFrame
       OnDragOver = DBGrid1DragOver
       OnMouseDown = LVMouseDown
       OnMouseMove = LVMouseMove
+      ExplicitWidth = 622
+      ExplicitHeight = 373
     end
   end
   object DSProviderConnection1: TDSProviderConnection

@@ -1,8 +1,8 @@
 object MailFrame: TMailFrame
   Left = 0
   Top = 0
-  Width = 451
-  Height = 305
+  Width = 679
+  Height = 415
   Align = alClient
   TabOrder = 0
   object Image1: TImage
@@ -41,8 +41,8 @@ object MailFrame: TMailFrame
   object VST: TVirtualDrawTree
     Left = 0
     Top = 0
-    Width = 451
-    Height = 305
+    Width = 679
+    Height = 415
     Align = alClient
     Colors.BorderColor = 15854306
     Colors.DisabledColor = 9671571
@@ -61,15 +61,21 @@ object MailFrame: TMailFrame
     Colors.UnfocusedColor = 12159575
     Colors.UnfocusedSelectionColor = 7619357
     Colors.UnfocusedSelectionBorderColor = 7619357
+    DragMode = dmAutomatic
+    DragType = dtVCL
     Header.AutoSizeIndex = -1
     Header.MainColumn = -1
     TabOrder = 0
+    TreeOptions.MiscOptions = [toFullRepaintOnResize, toInitOnSave, toToggleOnDblClick, toWheelPanning, toFullRowDrag, toEditOnClick]
     TreeOptions.PaintOptions = [toShowBackground, toShowButtons, toShowDropmark, toShowRoot, toThemeAware, toUseBlendedImages]
-    TreeOptions.SelectionOptions = [toFullRowSelect, toMultiSelect]
+    TreeOptions.SelectionOptions = [toFullRowSelect]
+    OnDragOver = VSTDragOver
     OnDrawNode = VSTDrawNode
     OnInitNode = VSTInitNode
     Touch.InteractiveGestures = [igPan, igPressAndTap]
     Touch.InteractiveGestureOptions = [igoPanSingleFingerHorizontal, igoPanSingleFingerVertical, igoPanInertia, igoPanGutter, igoParentPassthrough]
+    ExplicitWidth = 451
+    ExplicitHeight = 305
     Columns = <>
   end
 end

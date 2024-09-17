@@ -123,8 +123,6 @@ type
 
     procedure setID( value : integer );
     procedure showUploadForm( list : TStrings );
-    function GetRO: boolean;
-    procedure SetRO(const Value: boolean);
 
     function saveFile( id : integer; fname : string ) : boolean;
 
@@ -148,7 +146,6 @@ type
   public
     procedure prepare;
     property RootID   : integer read m_grid write setID;
-    property RO       : boolean read GetRO  write SetRO;
     procedure release;
 
     property ReadOnly: boolean read GetReadOnly write SetReadOnly;
@@ -615,11 +612,6 @@ begin
   Result := m_readonly;
 end;
 
-function TFileFrame.GetRO: boolean;
-begin
-  Result := ListFilesQry.ReadOnly;
-end;
-
 function TFileFrame.handle_file_lock(const arg: TJSONObject): boolean;
 var
   list   : TList<Integer>;
@@ -917,19 +909,15 @@ begin
 
   Button1.Enabled := not m_readonly;
   Button2.Enabled := not m_readonly;
+  Button3.Enabled := not m_readonly;
   BitBtn1.Enabled := not m_readonly;
   BitBtn2.Enabled := not m_readonly;
   BitBtn3.Enabled := not m_readonly;
-end;
-
-procedure TFileFrame.SetRO(const Value: boolean);
-begin
-  ListFilesQry.ReadOnly   := value;
-  GroupBox1.Enabled       := not Value;
+  SpeedButton1.Enabled := not m_readonly;
+  ListFilesQry.ReadOnly   := m_readonly;
 end;
 
 procedure TFileFrame.showUploadForm(list: TStrings);
-
 begin
   if not Assigned(VST.FocusedNode) then begin
     clearDropList;

@@ -17,6 +17,9 @@ type
       Node: PVirtualNode; var InitialStates: TVirtualNodeInitStates);
     procedure VSTDrawNode(Sender: TBaseVirtualTree;
       const PaintInfo: TVTPaintInfo);
+    procedure VSTDragOver(Sender: TBaseVirtualTree; Source: TObject;
+      Shift: TShiftState; State: TDragState; Pt: TPoint; Mode: TDropMode;
+      var Effect: Integer; var Accept: Boolean);
   private
     type
       PVSTData = ^VSTData;
@@ -156,7 +159,8 @@ var
   ptr : PVSTData;
 begin
   Result := NIL;
-  if not Assigned(VSt.FocusedNode) then  exit;
+  if not Assigned(VSt.FocusedNode) then
+    exit;
 
   ptr     := VST.FocusedNode.GetData;
   Result  := ptr^.mail;
@@ -237,6 +241,13 @@ begin
     end;
   end;
   VST.EndUpdate;
+end;
+
+procedure TMailFrame.VSTDragOver(Sender: TBaseVirtualTree; Source: TObject;
+  Shift: TShiftState; State: TDragState; Pt: TPoint; Mode: TDropMode;
+  var Effect: Integer; var Accept: Boolean);
+begin
+  Accept := false;
 end;
 
 procedure TMailFrame.VSTDrawNode(Sender: TBaseVirtualTree;

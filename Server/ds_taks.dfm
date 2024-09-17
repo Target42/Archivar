@@ -1,41 +1,42 @@
 object dsTask: TdsTask
-  Height = 543
-  Width = 1026
+  Height = 679
+  Width = 1283
+  PixelsPerInch = 120
   object TaskTypes: TDataSetProvider
     DataSet = TaskTypesQry
-    Left = 96
-    Top = 136
+    Left = 120
+    Top = 170
   end
   object Task: TDataSetProvider
     DataSet = TaskTab
-    Left = 128
-    Top = 352
+    Left = 160
+    Top = 440
   end
   object GremiumList: TDataSetProvider
     DataSet = GremiumQry
-    Left = 40
-    Top = 144
+    Left = 50
+    Top = 180
   end
   object TemplatesQry: TDataSetProvider
     DataSet = Templates
-    Left = 160
-    Top = 128
+    Left = 200
+    Top = 160
   end
   object TemplateTab: TDataSetProvider
     DataSet = Template
-    Left = 184
-    Top = 352
+    Left = 230
+    Top = 440
   end
   object TaskTableSrc: TDataSetProvider
     DataSet = TaskTable
     UpdateMode = upWhereKeyOnly
-    Left = 840
-    Top = 152
+    Left = 1050
+    Top = 190
   end
   object IBTransaction2: TFDTransaction
     Connection = DBMod.ArchivarConnection
-    Left = 904
-    Top = 24
+    Left = 1130
+    Top = 30
   end
   object TaskTable: TFDTable
     ObjectView = False
@@ -43,13 +44,13 @@ object dsTask: TdsTask
     Transaction = IBTransaction2
     UpdateOptions.UpdateTableName = 'TA_TASK'
     TableName = 'TA_TASK'
-    Left = 840
-    Top = 96
+    Left = 1050
+    Top = 120
   end
   object DeleteTrans: TFDTransaction
     Connection = DBMod.ArchivarConnection
-    Left = 512
-    Top = 24
+    Left = 640
+    Top = 30
   end
   object ArchivQry: TFDQuery
     ObjectView = False
@@ -58,8 +59,8 @@ object dsTask: TdsTask
     SQL.Strings = (
       'insert into GR_ARCHIV( GR_ID, TA_ID)'
       'values( :gr_id, :ta_id);')
-    Left = 584
-    Top = 136
+    Left = 730
+    Top = 170
     ParamData = <
       item
         Name = 'GR_ID'
@@ -79,8 +80,8 @@ object dsTask: TdsTask
     SQL.Strings = (
       'delete from TO_OPEN'
       'where TA_ID = :ta_id')
-    Left = 584
-    Top = 192
+    Left = 730
+    Top = 240
     ParamData = <
       item
         Name = 'TA_ID'
@@ -95,8 +96,8 @@ object dsTask: TdsTask
     SQL.Strings = (
       'delete from TO_OPEN'
       'where TA_ID = :ta_id')
-    Left = 516
-    Top = 128
+    Left = 645
+    Top = 160
     ParamData = <
       item
         Name = 'TA_ID'
@@ -111,8 +112,8 @@ object dsTask: TdsTask
     SQL.Strings = (
       'insert into TO_OPEN( GR_ID, TA_ID)'
       'values( :GR_ID, :TA_ID)')
-    Left = 504
-    Top = 184
+    Left = 630
+    Top = 230
     ParamData = <
       item
         Name = 'GR_ID'
@@ -133,8 +134,8 @@ object dsTask: TdsTask
       'update TA_TASK'
       'set TA_FLAGS = :TA_FLAGS'
       'where TA_ID = :TA_ID')
-    Left = 512
-    Top = 72
+    Left = 640
+    Top = 90
     ParamData = <
       item
         Name = 'TA_FLAGS'
@@ -154,8 +155,8 @@ object dsTask: TdsTask
     SQL.Strings = (
       'delete from TO_OPEN'
       'where TA_ID = :TA_ID')
-    Left = 512
-    Top = 264
+    Left = 640
+    Top = 330
     ParamData = <
       item
         Name = 'TA_ID'
@@ -170,8 +171,8 @@ object dsTask: TdsTask
     SQL.Strings = (
       'delete from LT_TASK_LOG'
       'where TA_ID = :TA_ID')
-    Left = 512
-    Top = 368
+    Left = 640
+    Top = 460
     ParamData = <
       item
         Name = 'TA_ID'
@@ -188,8 +189,8 @@ object dsTask: TdsTask
       'where FI_ID in'
       '(select FI_ID from FI_TA'
       'where TA_ID = :TA_ID)')
-    Left = 512
-    Top = 312
+    Left = 640
+    Top = 390
     ParamData = <
       item
         Name = 'TA_ID'
@@ -204,8 +205,8 @@ object dsTask: TdsTask
     SQL.Strings = (
       'delete from TA_TASK'
       'where TA_ID = :TA_ID')
-    Left = 512
-    Top = 424
+    Left = 640
+    Top = 530
     ParamData = <
       item
         Name = 'TA_ID'
@@ -220,8 +221,8 @@ object dsTask: TdsTask
     SQL.Strings = (
       'select * from TA_TASK'
       'where TA_ID = :TA_ID')
-    Left = 584
-    Top = 72
+    Left = 730
+    Top = 90
     ParamData = <
       item
         Name = 'TA_ID'
@@ -236,8 +237,8 @@ object dsTask: TdsTask
     SQL.Strings = (
       'select * from TA_TASK'
       'where TA_ID = :TA_ID')
-    Left = 584
-    Top = 272
+    Left = 730
+    Top = 340
     ParamData = <
       item
         Name = 'TA_ID'
@@ -247,8 +248,8 @@ object dsTask: TdsTask
   end
   object IBTransaction1: TFDTransaction
     Connection = DBMod.ArchivarConnection
-    Left = 168
-    Top = 32
+    Left = 210
+    Top = 40
   end
   object TaskTab: TFDTable
     ObjectView = False
@@ -257,8 +258,8 @@ object dsTask: TdsTask
     Transaction = IBTransaction1
     UpdateOptions.UpdateTableName = 'TA_TASK'
     TableName = 'TA_TASK'
-    Left = 128
-    Top = 296
+    Left = 176
+    Top = 322
   end
   object OpenTasks: TFDTable
     ObjectView = False
@@ -266,8 +267,8 @@ object dsTask: TdsTask
     Transaction = IBTransaction1
     UpdateOptions.UpdateTableName = 'TO_OPEN'
     TableName = 'TO_OPEN'
-    Left = 80
-    Top = 296
+    Left = 100
+    Top = 370
   end
   object TATab: TFDTable
     ObjectView = False
@@ -275,8 +276,8 @@ object dsTask: TdsTask
     Transaction = IBTransaction1
     UpdateOptions.UpdateTableName = 'TO_OPEN'
     TableName = 'TO_OPEN'
-    Left = 32
-    Top = 296
+    Left = 40
+    Top = 370
   end
   object Template: TFDTable
     ObjectView = False
@@ -284,8 +285,8 @@ object dsTask: TdsTask
     Transaction = IBTransaction1
     UpdateOptions.UpdateTableName = 'TE_TEMPLATE'
     TableName = 'TE_TEMPLATE'
-    Left = 176
-    Top = 296
+    Left = 220
+    Top = 370
   end
   object TaskTypesQry: TFDQuery
     ObjectView = False
@@ -296,8 +297,8 @@ object dsTask: TdsTask
       'FROM GR_TY a, ty_tasktype b'
       'where GR_ID = :gr_id'
       'and a.TY_ID = b.ty_id')
-    Left = 104
-    Top = 88
+    Left = 130
+    Top = 110
     ParamData = <
       item
         Name = 'GR_ID'
@@ -309,8 +310,8 @@ object dsTask: TdsTask
     ObjectView = False
     Connection = DBMod.ArchivarConnection
     Transaction = IBTransaction1
-    Left = 248
-    Top = 32
+    Left = 310
+    Top = 40
   end
   object GremiumQry: TFDQuery
     ObjectView = False
@@ -319,8 +320,8 @@ object dsTask: TdsTask
     SQL.Strings = (
       'select * from GR_GREMIUM'
       'order by GR_NAME')
-    Left = 40
-    Top = 96
+    Left = 50
+    Top = 120
   end
   object SetStatusQry: TFDQuery
     ObjectView = False
@@ -330,8 +331,8 @@ object dsTask: TdsTask
       'update TA_TASK'
       'set TA_FLAGS = :TA_FLAGS, TA_STATUS = :TA_STATUS'
       'where TA_ID = :TA_ID')
-    Left = 240
-    Top = 96
+    Left = 300
+    Top = 120
     ParamData = <
       item
         Name = 'TA_FLAGS'
@@ -356,8 +357,8 @@ object dsTask: TdsTask
     SQL.Strings = (
       'select * from TE_TEMPLATE'
       'where TY_ID = :id')
-    Left = 160
-    Top = 80
+    Left = 200
+    Top = 100
     ParamData = <
       item
         Name = 'ID'
@@ -372,13 +373,13 @@ object dsTask: TdsTask
     Transaction = IBTransaction2
     UpdateOptions.UpdateTableName = 'LT_TASK_LOG'
     TableName = 'LT_TASK_LOG'
-    Left = 920
-    Top = 88
+    Left = 1150
+    Top = 110
   end
   object TaskLogSrc: TDataSetProvider
     DataSet = TaskLogTab
-    Left = 920
-    Top = 152
+    Left = 1150
+    Top = 190
   end
   object Unused: TFDQuery
     Connection = DBMod.ArchivarConnection
@@ -398,8 +399,8 @@ object dsTask: TdsTask
       '  where not ta_id is NULL'
       ')'
       'order by ty_name')
-    Left = 768
-    Top = 320
+    Left = 960
+    Top = 400
     ParamData = <
       item
         Name = 'GR_ID'
@@ -409,8 +410,8 @@ object dsTask: TdsTask
   end
   object UnusedQry: TDataSetProvider
     DataSet = Unused
-    Left = 768
-    Top = 368
+    Left = 960
+    Top = 460
   end
   object ListGrTaQry: TFDQuery
     Connection = DBMod.ArchivarConnection
@@ -419,8 +420,8 @@ object dsTask: TdsTask
       'select b.GR_ID, b.GR_NAME from TO_OPEN a, GR_GREMIUM b'
       'where a.TA_ID = :ta_id'
       'and a.GR_ID = b.gr_id')
-    Left = 312
-    Top = 216
+    Left = 390
+    Top = 270
     ParamData = <
       item
         Name = 'TA_ID'
@@ -433,8 +434,8 @@ object dsTask: TdsTask
     Transaction = IBTransaction1
     UpdateOptions.UpdateTableName = 'TO_OPEN'
     TableName = 'TO_OPEN'
-    Left = 312
-    Top = 280
+    Left = 390
+    Top = 350
   end
   object LTTab: TFDTable
     BeforePost = TaskLogTabBeforePost
@@ -442,8 +443,8 @@ object dsTask: TdsTask
     Transaction = IBTransaction1
     UpdateOptions.UpdateTableName = 'LT_TASK_LOG'
     TableName = 'LT_TASK_LOG'
-    Left = 312
-    Top = 344
+    Left = 390
+    Top = 430
   end
   object Assigenments: TFDQuery
     Connection = DBMod.ArchivarConnection
@@ -452,8 +453,8 @@ object dsTask: TdsTask
       'SELECT count(TA_ID)'
       'FROM TO_OPEN '
       'where ta_id = :ta_id')
-    Left = 320
-    Top = 40
+    Left = 400
+    Top = 50
     ParamData = <
       item
         Name = 'TA_ID'
@@ -463,8 +464,8 @@ object dsTask: TdsTask
   end
   object AssigenmentsQry: TDataSetProvider
     DataSet = Assigenments
-    Left = 328
-    Top = 104
+    Left = 410
+    Top = 130
   end
   object CheckFolderID: TFDQuery
     Connection = DBMod.ArchivarConnection
@@ -474,8 +475,8 @@ object dsTask: TdsTask
       'FROM TA_TASK a '
       'WHERE'
       '    a.TA_ID = :id')
-    Left = 32
-    Top = 472
+    Left = 40
+    Top = 590
     ParamData = <
       item
         Name = 'ID'
@@ -485,14 +486,14 @@ object dsTask: TdsTask
   end
   object CheckTrans: TFDTransaction
     Connection = DBMod.ArchivarConnection
-    Left = 48
-    Top = 424
+    Left = 60
+    Top = 530
   end
   object FolderID: TFDQuery
     Connection = DBMod.ArchivarConnection
     Transaction = CheckTrans
-    Left = 104
-    Top = 480
+    Left = 130
+    Top = 600
   end
   object NewFolderQry: TFDQuery
     Connection = DBMod.ArchivarConnection
@@ -503,8 +504,8 @@ object dsTask: TdsTask
       '    :id, '
       '    :id'
       ');')
-    Left = 168
-    Top = 480
+    Left = 210
+    Top = 600
     ParamData = <
       item
         Name = 'ID'
@@ -521,8 +522,8 @@ object dsTask: TdsTask
       '    a.DR_ID = :dr_id'
       'WHERE'
       '    a.TA_ID = :ta_id')
-    Left = 232
-    Top = 488
+    Left = 290
+    Top = 610
     ParamData = <
       item
         Name = 'DR_ID'
@@ -538,23 +539,23 @@ object dsTask: TdsTask
     Transaction = IBTransaction1
     UpdateOptions.UpdateTableName = 'TY_TASKTYPE'
     TableName = 'TY_TASKTYPE'
-    Left = 232
-    Top = 288
+    Left = 290
+    Top = 360
   end
   object TYTab: TDataSetProvider
     DataSet = TaskType
-    Left = 240
-    Top = 352
+    Left = 300
+    Top = 440
   end
   object TS_TASK_STATUS: TFDTable
     Connection = DBMod.ArchivarConnection
     TableName = 'TS_TASK_STATUS'
-    Left = 336
-    Top = 408
+    Left = 420
+    Top = 510
   end
   object TSTab: TDataSetProvider
     DataSet = TS_TASK_STATUS
-    Left = 336
-    Top = 480
+    Left = 420
+    Top = 600
   end
 end

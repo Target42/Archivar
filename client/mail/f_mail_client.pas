@@ -409,7 +409,8 @@ var
   index   : string;
   list    : TStringList;
 begin
-  if m_inUpdate then exit;
+  if m_inUpdate then
+    exit;
 
   WebBrowser1.Navigate('about:blank');
   LV.Items.Clear;

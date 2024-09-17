@@ -20,7 +20,6 @@ object EditFrame: TEditFrame
     ParentFont = False
     ScrollBars = ssVertical
     TabOrder = 0
-    Zoom = 100
   end
   object Panel1: TPanel
     Left = 0
