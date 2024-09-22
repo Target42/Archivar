@@ -426,6 +426,7 @@ begin
   index := decoder.UseTemplate(m_tempdir, list.Text);
 
   WebBrowser1.Navigate(index);
+
   m_files.Assign(decoder.Attachments);
   AddAttachemnts;
   decoder.Free;

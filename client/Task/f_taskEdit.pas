@@ -11,7 +11,8 @@ uses
   Vcl.OleCtrls, SHDocVw, JvColorCombo, fr_form, fr_log,
   u_ForceClose, JvExStdCtrls, JvCombobox, JvExMask, JvToolEdit, JvMaskEdit,
   JvCheckedMaskEdit, JvDatePickerEdit, u_SpellChecker, System.JSON,
-  Vcl.ExtCtrls, Vcl.Mask, u_template, System.ImageList, Vcl.ImgList;
+  Vcl.ExtCtrls, Vcl.Mask, u_template, System.ImageList, Vcl.ImgList,
+  Vcl.Imaging.pngimage;
 
 type
   TTaskEditForm = class(TForm, IForceClose)
@@ -108,6 +109,7 @@ type
     DBLabeledEdit1: TDBLabeledEdit;
     DBMemo1: TDBMemo;
     TaskTabTA_MSGID: TStringField;
+    Image1: TImage;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -194,7 +196,7 @@ uses
   m_WindowHandler, Vcl.Dialogs, m_glob_client, System.UITypes, u_json, u_bookmark, u_berTypes, m_BookMarkHandler, DateUtils,
   u_taskForm2XML, u_konst, m_html, xsd_TaskData, u_templateCache, u_kategorie,
   f_task_assigment, u_eventHandler, u_stub, VirtualTrees.DrawTree, fr_mails,
-  u_TMail;
+  u_TMail, u_mail_decoder;
 
 {$R *.dfm}
 
@@ -359,6 +361,7 @@ var
   vst  : TVirtualDrawTree;
   frm  : TMailFrame;
   mail : TMail;
+  decoder : TMailDecoder;
 begin
   if m_ro or not ( Source is TVirtualDrawTree)  then
     exit;
@@ -376,6 +379,11 @@ begin
     TaskTabTA_NAME.AsString       := mail.Titel;
     TaskTabTA_BEARBEITER.AsString := mail.Absender;
     TaskTabTA_MSGID.AsString      := mail.MesgID;
+
+    decoder := TMailDecoder.create;
+    decoder.Msg := mail.Message;
+    FileFrame1.showUploadForm(decoder.Attachments);
+    decoder.Free;
   end;
 
 end;

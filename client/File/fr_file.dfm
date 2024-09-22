@@ -1,7 +1,7 @@
 object FileFrame: TFileFrame
   Left = 0
   Top = 0
-  Width = 679
+  Width = 936
   Height = 415
   Align = alClient
   TabOrder = 0
@@ -21,7 +21,6 @@ object FileFrame: TFileFrame
     Align = alLeft
     Caption = 'Ordner'
     TabOrder = 0
-    ExplicitHeight = 449
     object GroupBox4: TGroupBox
       Left = 2
       Top = 356
@@ -30,7 +29,6 @@ object FileFrame: TFileFrame
       Align = alBottom
       Caption = 'Ordneraktionen'
       TabOrder = 0
-      ExplicitTop = 390
       object SpeedButton1: TBitBtn
         Left = 11
         Top = 24
@@ -120,7 +118,6 @@ object FileFrame: TFileFrame
       OnNewText = VSTNewText
       Touch.InteractiveGestures = [igPan, igPressAndTap]
       Touch.InteractiveGestureOptions = [igoPanSingleFingerHorizontal, igoPanSingleFingerVertical, igoPanInertia, igoPanGutter, igoParentPassthrough]
-      ExplicitHeight = 373
       Columns = <
         item
           Position = 0
@@ -130,30 +127,26 @@ object FileFrame: TFileFrame
         item
           Position = 1
           Text = 'Datum'
-          Width = 91
+          Width = 95
         end>
     end
   end
   object GroupBox3: TGroupBox
     Left = 252
     Top = 0
-    Width = 427
+    Width = 684
     Height = 415
     Align = alClient
     Caption = 'Dateien'
     TabOrder = 1
-    ExplicitWidth = 626
-    ExplicitHeight = 449
     object GroupBox1: TGroupBox
       Left = 2
       Top = 356
-      Width = 423
+      Width = 680
       Height = 57
       Align = alBottom
       Caption = 'Dateiaktionen'
       TabOrder = 0
-      ExplicitTop = 390
-      ExplicitWidth = 622
       object Button1: TBitBtn
         Left = 16
         Top = 24
@@ -425,7 +418,7 @@ object FileFrame: TFileFrame
     object LV: TListView
       Left = 2
       Top = 17
-      Width = 423
+      Width = 680
       Height = 339
       Align = alClient
       Checkboxes = True
@@ -453,7 +446,6 @@ object FileFrame: TFileFrame
         end>
       DragMode = dmAutomatic
       GridLines = True
-      Items.ItemData = {}
       ReadOnly = True
       RowSelect = True
       SortType = stText
@@ -463,8 +455,6 @@ object FileFrame: TFileFrame
       OnDragOver = DBGrid1DragOver
       OnMouseDown = LVMouseDown
       OnMouseMove = LVMouseMove
-      ExplicitWidth = 622
-      ExplicitHeight = 373
     end
   end
   object DSProviderConnection1: TDSProviderConnection

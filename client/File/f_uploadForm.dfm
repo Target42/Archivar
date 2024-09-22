@@ -10,11 +10,9 @@ object UploadForm: TUploadForm
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
   Position = poMainFormCenter
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  PixelsPerInch = 96
   TextHeight = 13
   inline BaseFrame1: TBaseFrame
     Left = 0
@@ -24,19 +22,19 @@ object UploadForm: TUploadForm
     Align = alBottom
     AutoSize = True
     TabOrder = 0
-    ExplicitTop = 239
-    ExplicitWidth = 635
+    ExplicitTop = 235
+    ExplicitWidth = 633
     inherited StatusBar1: TStatusBar
       Width = 635
       ExplicitWidth = 635
     end
     inherited Panel1: TPanel
       Width = 635
-      ExplicitWidth = 635
+      ExplicitWidth = 633
       inherited OKBtn: TBitBtn
         Left = 547
         OnClick = Button1Click
-        ExplicitLeft = 547
+        ExplicitLeft = 545
       end
     end
   end

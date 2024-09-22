@@ -33,7 +33,7 @@ type
     m_list : TStringList;
     m_drid : integer;
     m_map   : TDictionary<integer, integer>;
-    m_default : integer;
+    m_default : integer; // default löschfrist
   public
     property DR_ID : integer read m_drid write m_drid;
 
@@ -86,9 +86,13 @@ begin
       try
         id := DataTab.FieldByName('ID').AsInteger;
         try
-          //fs := TFileStream.Create( m_list[id], fmOpenRead + fmShareDenyWrite);
-          fs := m_list.Objects[id] as TStream;
-          fs.Position := 0;
+          if m_list.Objects[id] = NIL then
+            fs := TFileStream.Create( m_list[id], fmOpenRead + fmShareDenyWrite)
+          else
+          begin
+            fs := m_list.Objects[id] as TStream;
+            fs.Position := 0;
+          end;
         except
           fs := NIL;
         end;

@@ -105,11 +105,12 @@ begin
   m_inline  := TDictionary<string, string>.create;
   m_attach  := TStringList.create;
   m_keys    := TStringList.create;
-
 end;
 
 destructor TMailDecoder.Destroy;
 begin
+  clear;
+
   m_msg := NIL;
   m_html.free;
   m_text.free;

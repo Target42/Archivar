@@ -122,7 +122,6 @@ type
     function getParent( pid : integer ) : PTFolderRec;
 
     procedure setID( value : integer );
-    procedure showUploadForm( list : TStrings );
 
     function saveFile( id : integer; fname : string ) : boolean;
 
@@ -143,9 +142,10 @@ type
       Index: integer; out AStream: IStream);
     function GetReadOnly: boolean;
     procedure SetReadOnly(const Value: boolean);
+
   public
     procedure prepare;
-    property RootID   : integer read m_grid write setID;
+    property  RootID   : integer read m_grid write setID;
     procedure release;
 
     property ReadOnly: boolean read GetReadOnly write SetReadOnly;
@@ -157,6 +157,8 @@ type
     function handle_file_lock ( const arg : TJSONObject ) : boolean;
 
     function getFileList    : TJSONObject;
+
+    procedure showUploadForm( list : TStringList );
   end;
 
 implementation
@@ -383,7 +385,7 @@ begin
       m_dropFiles.AddObject(OpenDialog1.Files[i], mem)
     end;
 
-    showUploadForm( OpenDialog1.Files );
+    showUploadForm( m_dropFiles );
   end;
 end;
 
@@ -917,7 +919,7 @@ begin
   ListFilesQry.ReadOnly   := m_readonly;
 end;
 
-procedure TFileFrame.showUploadForm(list: TStrings);
+procedure TFileFrame.showUploadForm(list: TStringList);
 begin
   if not Assigned(VST.FocusedNode) then begin
     clearDropList;
@@ -927,7 +929,7 @@ begin
   Application.CreateForm(TUploadForm, UploadForm);
 
   UploadForm.Dr_ID := PTFolderRec(VST.FocusedNode.GetData)^.id;
-  UploadForm.AssignFiles( m_dropFiles );
+  UploadForm.AssignFiles( list );
 
   if UploadForm.ShowModal = mrOk then begin
     updateFiles;
@@ -1114,7 +1116,8 @@ var
   ptr : PTFolderRec;
 begin
   m_curDir := -1;
-  if not Assigned(Node) then  exit;
+  if not Assigned(Node) then
+    exit;
 
   ptr := PTFolderRec(node.GetData);
 

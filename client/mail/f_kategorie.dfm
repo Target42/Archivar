@@ -2,24 +2,22 @@ object KategorieForm: TKategorieForm
   Left = 0
   Top = 0
   Caption = 'Kategorien'
-  ClientHeight = 276
-  ClientWidth = 240
+  ClientHeight = 272
+  ClientWidth = 238
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
   Position = poMainFormCenter
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  PixelsPerInch = 96
   TextHeight = 13
   inline BaseFrame1: TBaseFrame
     Left = 0
-    Top = 216
-    Width = 240
+    Top = 212
+    Width = 238
     Height = 60
     Align = alBottom
     AutoSize = True
@@ -42,8 +40,8 @@ object KategorieForm: TKategorieForm
   object LV: TListView
     Left = 0
     Top = 0
-    Width = 240
-    Height = 216
+    Width = 238
+    Height = 212
     Align = alClient
     Checkboxes = True
     Columns = <
@@ -56,6 +54,8 @@ object KategorieForm: TKategorieForm
     TabOrder = 1
     ViewStyle = vsReport
     ExplicitTop = 2
+    ExplicitWidth = 240
+    ExplicitHeight = 216
   end
   object ImageList1: TImageList
     Left = 72
