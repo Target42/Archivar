@@ -47,6 +47,7 @@ type
     GremiumQry: TClientDataSet;
     PopupMenu2: TPopupMenu;
     Kategorien1: TMenuItem;
+    Status1: TMenuItem;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -62,6 +63,7 @@ type
     procedure ac_openExecute(Sender: TObject);
     procedure ac_saveasExecute(Sender: TObject);
     procedure Kategorien1Click(Sender: TObject);
+    procedure Status1Click(Sender: TObject);
   private
     type
       Account = class
@@ -93,6 +95,7 @@ type
     m_tempdir  : string;
     m_files    : TStringList;
     m_katlist  : TStringList;
+    m_statuslist : TStringList;
 
     procedure updateTree;
     procedure fillExtDict;
@@ -101,6 +104,7 @@ type
 
     function handle_mails( const Arg: TJSONObject ) : boolean;
     procedure setKategorie( name : string; var elements: TStringList );
+    procedure setStatus( name : string; var elements: TStringList );
   public
     { Public-Deklarationen }
   end;
@@ -242,9 +246,36 @@ var
       Folder.Next;
     end;
   end;
+
+  procedure AddStati;
+  var
+    fname : string;
+    i     : Integer;
+    item  : TMenuItem;
+  begin
+    fname := FileCacheMod.getFile('mail', 'MailStati.txt');
+    if FileExists(fname) then
+      m_statuslist.LoadFromFile(fname)
+    else
+      m_statuslist.DelimitedText := 'Offen;In Bearbeitung;Nachfrage;Abgeschlossen';
+
+    //Status1
+    for i := 0 to pred(m_statuslist.Count) do
+    begin
+      item := TMenuItem.Create(Status1);
+      Status1.Add(item);
+      item.OnClick := Status1Click;
+      item.Tag := i;
+      item.Caption := m_statuslist[i];
+    end;
+  end;
 begin
   m_inUpdate  := false;
   m_katlist   := TStringList.create;
+  m_statuslist:= TStringList.Create;
+  m_statuslist.StrictDelimiter := true;
+  m_statuslist.Delimiter := ';';
+
   m_tempdir   := TPath.Combine(TPath.GetTempPath, IntToHex(GetTickCount) );
   ForceDirectories(m_tempdir);
 
@@ -252,6 +283,7 @@ begin
   m_ext := TDictionary<string, integer>.create;
 
   fillExtDict;
+  AddStati;
 
   (DataFormatAdapterSource.DataFormat as TVirtualFileStreamDataFormat).OnGetStream := OnGetStream;
 
@@ -297,6 +329,8 @@ begin
 
   MailFrame1.release;
   TMailDecoder.clearFiles(m_tempdir);
+
+  m_statuslist.Free;
   m_files.Free;
 
   DropEmptySource1.FlushClipboard;
@@ -313,9 +347,14 @@ begin
   action    := JString( arg, 'typ');
   getText(arg, 'elements', elements);
 
-  if SameText( action, 'kategorie') then begin
+  if SameText( action, 'kategorie') then
+  begin
     setKategorie( JString(Arg, 'value'), elements);
-  end;
+  end
+  else
+  if SameText(action, 'status') then
+    setStatus( JString(Arg, 'value'), elements);
+
   elements.Free;
 end;
 
@@ -416,7 +455,8 @@ begin
   LV.Items.Clear;
 
   mail := MailFrame1.SelectedMail;
-  if not Assigned(mail) then exit;
+  if not Assigned(mail) then
+    exit;
 
   list := TStringList.Create;
   list.LoadFromFile(FileCacheMod.getFile('mail', 'mail.html'));
@@ -488,6 +528,55 @@ begin
     end;
   end;
   MailFrame1.UpdateTreeView;
+end;
+
+procedure TMailClientForm.setStatus(name: string; var elements: TStringList);
+var
+  i, id : integer;
+  j     : integer;
+begin
+  for i := 0 to pred(elements.Count) do
+  begin
+    if TryStrToInt(elements[i], id) then
+    begin
+      for j := 0 to pred(MailFrame1.Mails.Count) do
+      begin
+        if MailFrame1.Mails[j].ID = id then
+        begin
+          MailFrame1.Mails[j].Status := name;
+          break;
+        end;
+      end;
+    end;
+  end;
+  MailFrame1.UpdateTreeView;
+end;
+
+procedure TMailClientForm.Status1Click(Sender: TObject);
+var
+  list : TList<TMail>;
+  client    : TDSMailClient;
+  arg       : TJSONObject;
+  elements  : TStringList;
+  mail      : TMail;
+begin
+  list := MailFrame1.SelectedMails;
+  elements :=  TStringList.Create;
+
+  for mail in list do
+    elements.Add(IntToStr(mail.ID));
+
+  if elements.Count > 0 then begin
+    client := TDSMailClient.Create(GM.SQLConnection1.DBXConnection);
+    arg := TJSONObject.Create;
+
+    JReplace(arg, 'action', 'status');
+    JReplace(arg, 'status', m_statuslist[(sender as TMenuItem).Tag]);
+    SetText( arg, 'elements', elements);
+    client.setMailStatus(arg);
+    client.Free;
+  end;
+  elements.Free;
 end;
 
 procedure TMailClientForm.TVChange(Sender: TObject; Node: TTreeNode);

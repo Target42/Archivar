@@ -110,6 +110,7 @@ type
     DBMemo1: TDBMemo;
     TaskTabTA_MSGID: TStringField;
     Image1: TImage;
+    GroupBox2: TGroupBox;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
@@ -155,6 +156,8 @@ type
     m_spell       : TSpellChecker;
     FGremiumID    : integer;
 
+    m_orgwidth    : integer;
+
     procedure setRO( value : boolean );
     function  getRO : boolean;
 
@@ -196,7 +199,7 @@ uses
   m_WindowHandler, Vcl.Dialogs, m_glob_client, System.UITypes, u_json, u_bookmark, u_berTypes, m_BookMarkHandler, DateUtils,
   u_taskForm2XML, u_konst, m_html, xsd_TaskData, u_templateCache, u_kategorie,
   f_task_assigment, u_eventHandler, u_stub, VirtualTrees.DrawTree, fr_mails,
-  u_TMail, u_mail_decoder;
+  u_TMail, u_mail_decoder, System.Hash;
 
 {$R *.dfm}
 
@@ -378,7 +381,7 @@ begin
   begin
     TaskTabTA_NAME.AsString       := mail.Titel;
     TaskTabTA_BEARBEITER.AsString := mail.Absender;
-    TaskTabTA_MSGID.AsString      := mail.MesgID;
+    TaskTabTA_MSGID.AsString      := THashMD5.GetHashString(mail.MesgID);
 
     decoder := TMailDecoder.create;
     decoder.Msg := mail.Message;
@@ -442,6 +445,8 @@ procedure TTaskEditForm.FormCreate(Sender: TObject);
 var
   i : integer;
 begin
+
+  m_orgwidth := 750;
 
   FormFrame1.prepare;
   LogFrame1.prepare;
@@ -744,13 +749,16 @@ var
 begin
   FormFrame1.getSize(x, y);
 
-  if x > ClientWidth then
-    ClientWidth :=x;
+  if x < m_orgwidth then
+    x := m_orgwidth;
 
-  if TabSheet1.Height < y then begin
-    ClientHeight := ClientHeight + ( y - TabSheet1.Height );
+  ClientWidth :=x;
+
+  //if TabSheet1.Height < y then
+  begin
+    ClientHeight := ( y + Groupbox1.Height ) + 96; // double header size of the page control
   end;
-  Self.Position := poOwnerFormCenter;
+//  Self.Position := poOwnerFormCenter;
 end;
 
 procedure TTaskEditForm.save;

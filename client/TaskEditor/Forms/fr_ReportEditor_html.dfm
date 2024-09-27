@@ -16,33 +16,43 @@ inherited ReportFrameEditorHtml: TReportFrameEditorHtml
     Font.Height = -13
     Font.Name = 'Courier New'
     Font.Style = []
+    Font.Quality = fqClearTypeNatural
     TabOrder = 0
     OnKeyPress = SynEdit1KeyPress
-    CodeFolding.CollapsedLineColor = clGrayText
-    CodeFolding.FolderBarLinesColor = clGrayText
     CodeFolding.ShowCollapsedLine = True
-    CodeFolding.IndentGuidesColor = clGray
-    CodeFolding.IndentGuides = True
     UseCodeFolding = False
     Gutter.Font.Charset = DEFAULT_CHARSET
     Gutter.Font.Color = clWindowText
     Gutter.Font.Height = -11
     Gutter.Font.Name = 'Courier New'
     Gutter.Font.Style = []
+    Gutter.Font.Quality = fqClearTypeNatural
+    Gutter.Bands = <
+      item
+        Kind = gbkMarks
+        Width = 13
+      end
+      item
+        Kind = gbkLineNumbers
+      end
+      item
+        Kind = gbkFold
+      end
+      item
+        Kind = gbkTrackChanges
+      end
+      item
+        Kind = gbkMargin
+        Width = 3
+      end>
     Highlighter = SynHTMLSyn1
-    FontSmoothing = fsmNone
+    SelectedColor.Alpha = 0.400000005960464500
   end
   object SynHTMLSyn1: TSynHTMLSyn
-    Options.AutoDetectEnabled = False
-    Options.AutoDetectLineLimit = 0
-    Options.Visible = False
     Left = 96
     Top = 88
   end
   object SynCssSyn1: TSynCssSyn
-    Options.AutoDetectEnabled = False
-    Options.AutoDetectLineLimit = 0
-    Options.Visible = False
     Left = 224
     Top = 112
   end

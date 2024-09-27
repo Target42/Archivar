@@ -2,8 +2,8 @@ object MailClientForm: TMailClientForm
   Left = 0
   Top = 0
   Caption = 'Mails'
-  ClientHeight = 560
-  ClientWidth = 953
+  ClientHeight = 556
+  ClientWidth = 951
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -52,31 +52,31 @@ object MailClientForm: TMailClientForm
   object Splitter2: TSplitter
     Left = 417
     Top = 0
-    Height = 541
+    Height = 537
     ExplicitLeft = 832
     ExplicitTop = 80
     ExplicitHeight = 100
   end
   object StatusBar1: TStatusBar
     Left = 0
-    Top = 541
-    Width = 953
+    Top = 537
+    Width = 951
     Height = 19
     Panels = <>
-    ExplicitTop = 537
-    ExplicitWidth = 951
+    ExplicitTop = 533
+    ExplicitWidth = 949
   end
   object Panel1: TPanel
     Left = 0
     Top = 0
     Width = 417
-    Height = 541
+    Height = 537
     Align = alLeft
     BevelOuter = bvNone
     Caption = 'Panel1'
     ShowCaption = False
     TabOrder = 1
-    ExplicitHeight = 537
+    ExplicitHeight = 533
     object Splitter1: TSplitter
       Left = 0
       Top = 160
@@ -110,29 +110,29 @@ object MailClientForm: TMailClientForm
       Left = 0
       Top = 163
       Width = 417
-      Height = 378
+      Height = 374
       Align = alClient
       Caption = 'Mails'
       TabOrder = 1
-      ExplicitHeight = 374
+      ExplicitHeight = 370
       inline MailFrame1: TMailFrame
         Left = 2
         Top = 15
         Width = 413
-        Height = 361
+        Height = 357
         Align = alClient
         TabOrder = 0
         ExplicitLeft = 2
         ExplicitTop = 15
         ExplicitWidth = 413
-        ExplicitHeight = 357
+        ExplicitHeight = 353
         inherited VST: TVirtualDrawTree
           Width = 413
-          Height = 361
+          Height = 357
           PopupMenu = PopupMenu2
           OnChange = MailFrame1VSTChange
           ExplicitWidth = 413
-          ExplicitHeight = 361
+          ExplicitHeight = 357
         end
       end
     end
@@ -140,19 +140,19 @@ object MailClientForm: TMailClientForm
   object Panel2: TPanel
     Left = 420
     Top = 0
-    Width = 533
-    Height = 541
+    Width = 531
+    Height = 537
     Align = alClient
     BevelOuter = bvNone
     Caption = 'Panel2'
     ShowCaption = False
     TabOrder = 2
-    ExplicitWidth = 531
-    ExplicitHeight = 537
+    ExplicitWidth = 529
+    ExplicitHeight = 533
     object Splitter3: TSplitter
       Left = 0
-      Top = 373
-      Width = 533
+      Top = 369
+      Width = 531
       Height = 3
       Cursor = crVSplit
       Align = alBottom
@@ -162,14 +162,14 @@ object MailClientForm: TMailClientForm
     object WebBrowser1: TWebBrowser
       Left = 0
       Top = 0
-      Width = 533
-      Height = 373
+      Width = 531
+      Height = 369
       Align = alClient
       TabOrder = 0
-      ExplicitWidth = 531
-      ExplicitHeight = 369
+      ExplicitWidth = 529
+      ExplicitHeight = 365
       ControlData = {
-        4C000000163700008D2600000000000000000000000000000000000000000000
+        4C000000E1360000232600000000000000000000000000000000000000000000
         000000004C000000000000000000000001000000E0D057007335CF11AE690800
         2B2E12620A000000000000004C0000000114020000000000C000000000000046
         8000000000000000000000000000000000000000000000000000000000000000
@@ -177,18 +177,18 @@ object MailClientForm: TMailClientForm
     end
     object GroupBox3: TGroupBox
       Left = 0
-      Top = 376
-      Width = 533
+      Top = 372
+      Width = 531
       Height = 165
       Align = alBottom
       Caption = 'Anh'#228'nge'
       TabOrder = 1
-      ExplicitTop = 372
-      ExplicitWidth = 531
+      ExplicitTop = 368
+      ExplicitWidth = 529
       object Lv: TListView
         Left = 2
         Top = 15
-        Width = 529
+        Width = 527
         Height = 148
         Align = alClient
         Columns = <>
@@ -198,8 +198,7 @@ object MailClientForm: TMailClientForm
         OnDblClick = LvDblClick
         OnMouseDown = LvMouseDown
         OnMouseMove = LvMouseMove
-        ExplicitLeft = 3
-        ExplicitTop = 14
+        ExplicitWidth = 525
       end
     end
   end
@@ -229,7 +228,7 @@ object MailClientForm: TMailClientForm
     Params = <>
     ProviderName = 'Mails'
     RemoteServer = DSProviderConnection1
-    Left = 160
+    Left = 168
     Top = 80
   end
   object IdMessage1: TIdMessage
@@ -244,7 +243,7 @@ object MailClientForm: TMailClientForm
     ReplyTo = <>
     ConvertPreamble = True
     Left = 224
-    Top = 88
+    Top = 80
   end
   object ImageList1: TImageList
     Height = 32
@@ -2435,6 +2434,9 @@ object MailClientForm: TMailClientForm
     object Kategorien1: TMenuItem
       Caption = 'Kategorien'
       OnClick = Kategorien1Click
+    end
+    object Status1: TMenuItem
+      Caption = 'Status'
     end
   end
 end

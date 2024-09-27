@@ -77,6 +77,8 @@
         Width = 250
       end>
     OnDrawPanel = StatusBar1DrawPanel
+    ExplicitTop = 615
+    ExplicitWidth = 1096
   end
   object PageControl1: TPageControl
     Left = 0
@@ -90,7 +92,6 @@
     TabOrder = 1
     TabPosition = tpLeft
     Visible = False
-    ExplicitHeight = 439
     object TabSheet1: TTabSheet
       Caption = 'Gremien'
       ImageIndex = 16
@@ -102,7 +103,7 @@
         Align = alClient
         TabOrder = 0
         ExplicitWidth = 221
-        ExplicitHeight = 431
+        ExplicitHeight = 419
         inherited TV: TTreeView
           Width = 221
           Height = 419
@@ -122,12 +123,12 @@
         Align = alClient
         TabOrder = 0
         ExplicitWidth = 221
-        ExplicitHeight = 431
+        ExplicitHeight = 419
         inherited LV: TListView
           Width = 221
           Height = 419
           ExplicitWidth = 221
-          ExplicitHeight = 455
+          ExplicitHeight = 419
         end
       end
     end
@@ -142,16 +143,16 @@
         Align = alClient
         TabOrder = 0
         ExplicitWidth = 221
-        ExplicitHeight = 431
+        ExplicitHeight = 419
         inherited GroupBox1: TGroupBox
           Width = 221
           Height = 354
           ExplicitWidth = 221
-          ExplicitHeight = 390
+          ExplicitHeight = 354
           inherited DBGrid1: TDBGrid
             Top = 15
             Width = 217
-            Height = 373
+            Height = 337
             TitleFont.Height = -11
             TitleFont.Name = 'Tahoma'
           end
@@ -159,7 +160,7 @@
         inherited GroupBox2: TGroupBox
           Top = 354
           Width = 221
-          ExplicitTop = 390
+          ExplicitTop = 354
           ExplicitWidth = 221
         end
         inherited EpubTab: TFDMemTable
@@ -179,7 +180,7 @@
         Left = 0
         Top = 0
         Width = 221
-        Height = 390
+        Height = 378
         Align = alClient
         Columns = <
           item
@@ -196,11 +197,10 @@
         RowSelect = True
         TabOrder = 0
         ViewStyle = vsReport
-        ExplicitHeight = 414
       end
       object Panel1: TPanel
         Left = 0
-        Top = 390
+        Top = 378
         Width = 221
         Height = 41
         Align = alBottom
@@ -232,12 +232,12 @@
         Align = alClient
         TabOrder = 0
         ExplicitWidth = 221
-        ExplicitHeight = 431
+        ExplicitHeight = 419
         inherited LV: TListView
           Width = 221
           Height = 419
           ExplicitWidth = 221
-          ExplicitHeight = 419
+          ExplicitHeight = 415
         end
       end
     end
@@ -252,8 +252,6 @@
     Images = ImageList1
     TabOrder = 2
     Visible = False
-    ExplicitTop = 444
-    ExplicitWidth = 1102
     object TabSheet4: TTabSheet
       Caption = 'Offene Aufgaben'
       ImageIndex = 33
@@ -265,7 +263,6 @@
         Align = alClient
         Caption = 'Aufgaben'
         TabOrder = 0
-        ExplicitWidth = 1094
         inline TaskListFrame1: TTaskListFrame
           Left = 2
           Top = 15
@@ -275,7 +272,7 @@
           TabOrder = 0
           ExplicitLeft = 2
           ExplicitTop = 15
-          ExplicitWidth = 1090
+          ExplicitWidth = 1086
           ExplicitHeight = 141
           inherited LV: TListView
             Width = 1086
@@ -300,7 +297,7 @@
         Height = 158
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1094
+        ExplicitWidth = 1090
         ExplicitHeight = 158
         inherited Lv: TListView
           Width = 1090
@@ -322,7 +319,7 @@
               FooterAlign = taLeftJustify
               TitleImage = -1
             end>
-          ExplicitWidth = 1102
+          ExplicitWidth = 1090
           ExplicitHeight = 158
         end
       end
@@ -337,12 +334,12 @@
         Height = 158
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1094
+        ExplicitWidth = 1090
         ExplicitHeight = 158
         inherited LV: TListView
           Width = 1090
           Height = 158
-          ExplicitWidth = 1102
+          ExplicitWidth = 1090
           ExplicitHeight = 158
         end
       end
@@ -470,6 +467,14 @@
           Action = ac_me_delete
         end
       end
+      object N24: TMenuItem
+        Caption = '-'
+        GroupIndex = 200
+      end
+      object Mails1: TMenuItem
+        Action = ac_mail
+        GroupIndex = 200
+      end
     end
     object Reports1: TMenuItem
       Caption = 'Reports'
@@ -505,9 +510,6 @@
       end
       object Import1: TMenuItem
         Action = ac_to_import
-      end
-      object Mails1: TMenuItem
-        Action = ac_mail
       end
       object Statistik1: TMenuItem
         Action = ac_to_stat

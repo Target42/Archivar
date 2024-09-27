@@ -6,7 +6,7 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes,
   Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_textblock,
   Vcl.ExtCtrls, Vcl.StdCtrls, Vcl.Buttons, fr_editForm, Vcl.Menus, i_beschluss,
-  Vcl.OleCtrls, Vcl.ComCtrls, u_stub, System.JSON;
+  Vcl.OleCtrls, Vcl.ComCtrls, u_stub, System.JSON, Vcl.Mask;
 
 type
   TBeschlussFrame = class(TFrame)

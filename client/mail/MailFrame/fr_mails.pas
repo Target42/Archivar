@@ -335,6 +335,22 @@ var
     s := ptr^.mail.Headline;
     PaintInfo.Canvas.TextRect(re, s, [tfModifyString, tfEndEllipsis]);
   end;
+  procedure drawStatus;
+  begin
+    re.Left  := MyContentRect.Left;
+    re.Right := MyContentRect.Right;
+    re.Top   := re.Bottom + 2;
+
+    PaintInfo.Canvas.Font.Color := clRed;
+    re.Bottom := re.Top + PaintInfo.Canvas.TextHeight('W');
+    s := 'Status : ';
+    PaintInfo.Canvas.TextRect(re, s, [tfModifyString, tfEndEllipsis]);
+    re.Left := Re.Left + PaintInfo.Canvas.TextWidth(s);
+    PaintInfo.Canvas.Font.Color := clBlack;
+    s := ptr^.mail.Status;
+    PaintInfo.Canvas.TextRect(re, s, [tfModifyString, tfEndEllipsis]);
+  end;
+
 
   procedure paintAttach;
   var
@@ -395,6 +411,7 @@ begin
       paintAttach;
       paintSendTime;
       drawHeadLine;
+      drawStatus;
     end;
   end;
 end;
@@ -407,7 +424,7 @@ begin
     VST.NodeHeight[Node] := 24;
   end
   else begin
-    VST.NodeHeight[Node]  := 54;
+    VST.NodeHeight[Node]  := 74;
     Include(InitialStates, ivsMultiline);
   end;
 end;

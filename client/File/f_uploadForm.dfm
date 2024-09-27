@@ -2,8 +2,8 @@ object UploadForm: TUploadForm
   Left = 0
   Top = 0
   Caption = 'Dateiupload'
-  ClientHeight = 299
-  ClientWidth = 635
+  ClientHeight = 295
+  ClientWidth = 633
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -16,8 +16,8 @@ object UploadForm: TUploadForm
   TextHeight = 13
   inline BaseFrame1: TBaseFrame
     Left = 0
-    Top = 239
-    Width = 635
+    Top = 235
+    Width = 633
     Height = 60
     Align = alBottom
     AutoSize = True
@@ -41,8 +41,8 @@ object UploadForm: TUploadForm
   object DBGrid1: TDBGrid
     Left = 0
     Top = 0
-    Width = 635
-    Height = 239
+    Width = 633
+    Height = 235
     Align = alClient
     DataSource = DataSource1
     TabOrder = 1

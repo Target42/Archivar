@@ -1,5 +1,4 @@
 object WindowHandler: TWindowHandler
-  OldCreateOrder = False
   OnCreate = DataModuleCreate
   OnDestroy = DataModuleDestroy
   Height = 150

@@ -1,7 +1,7 @@
 object FileFrame: TFileFrame
   Left = 0
   Top = 0
-  Width = 936
+  Width = 865
   Height = 415
   Align = alClient
   TabOrder = 0
@@ -127,26 +127,28 @@ object FileFrame: TFileFrame
         item
           Position = 1
           Text = 'Datum'
-          Width = 95
+          Width = 91
         end>
     end
   end
   object GroupBox3: TGroupBox
     Left = 252
     Top = 0
-    Width = 684
+    Width = 613
     Height = 415
     Align = alClient
     Caption = 'Dateien'
     TabOrder = 1
+    ExplicitWidth = 684
     object GroupBox1: TGroupBox
       Left = 2
       Top = 356
-      Width = 680
+      Width = 609
       Height = 57
       Align = alBottom
       Caption = 'Dateiaktionen'
       TabOrder = 0
+      ExplicitWidth = 680
       object Button1: TBitBtn
         Left = 16
         Top = 24
@@ -418,7 +420,7 @@ object FileFrame: TFileFrame
     object LV: TListView
       Left = 2
       Top = 17
-      Width = 680
+      Width = 609
       Height = 339
       Align = alClient
       Checkboxes = True
@@ -455,6 +457,7 @@ object FileFrame: TFileFrame
       OnDragOver = DBGrid1DragOver
       OnMouseDown = LVMouseDown
       OnMouseMove = LVMouseMove
+      ExplicitWidth = 680
     end
   end
   object DSProviderConnection1: TDSProviderConnection

@@ -22,12 +22,14 @@ type
     Gremien: TFDQuery;
     GremiumQry: TDataSetProvider;
     KategorieSet: TFDQuery;
+    StatusSet: TFDQuery;
   private
     procedure clearEmptyLines( var list : TStringList );
     function setKategorie(kategorie : string; elements : TStringList ) : boolean;
-
+    function setStatus(status : string; elements : TStringList ) : boolean;
   public
     function setMailStatus( data : TJSONObject ) : TJSONObject;
+
   end;
 
 implementation
@@ -95,7 +97,6 @@ function TDSMail.setMailStatus(data: TJSONObject): TJSONObject;
 var
   elements : TStringList;
   action   : string;
-  s        : string;
   flag     : boolean;
 begin
   Result    := TJSONObject.Create;
@@ -106,10 +107,16 @@ begin
   getText( data, 'elements', elements);
   clearEmptyLines(elements);
 
-  if SameText( action, 'kategorie') then begin
-    s := JString(data, 'kategorie');
-    flag := setKategorie( s, elements);
+  if SameText( action, 'kategorie') then
+  begin
+    flag := setKategorie( JString(data, 'kategorie'), elements);
+  end
+  else
+  if SameText( action, 'status') then
+  begin
+    flag := setStatus( JString(data, 'status'), elements);
   end;
+
 
   if flag then
     JResult(Result, true, '')
@@ -117,6 +124,41 @@ begin
     JResult( Result, false, 'Der Vorgang hat nicht für alle Elemente functioniert');
 
   elements.Free;
+end;
+
+function TDSMail.setStatus(status: string; elements: TStringList): boolean;
+var
+  i : integer;
+  id: integer;
+  count : integer;
+  msg   : TJSONObject;
+begin
+  count := 0;
+
+  StatusSet.Prepare;
+  StatusSet.ParamByName('name').AsString := status;
+  for i := 0 to pred(elements.Count) do begin
+    if TryStrToInt(elements[i], id) then begin
+      StatusSet.ParamByName('id').AsInteger := id;
+      StatusSet.ExecSQL;
+      count := count + StatusSet.RowsAffected;
+    end;
+  end;
+  StatusSet.Unprepare;
+
+  if FDTransaction1.Active then
+    FDTransaction1.Commit;
+
+
+  Result := count = elements.Count;
+
+  msg := TJSONObject.Create;
+  JReplace(msg, 'action', BRD_MAIL);
+  JReplace(msg, 'typ', 'status');
+  JReplace(msg, 'value', status);
+  setText( msg, 'elements', elements);
+
+  ArchivService.BroadcastMessage(BRD_CHANNEL, msg);
 end;
 
 end.

@@ -277,6 +277,8 @@ begin
       TaskEditForm.setID( id, typeID );
       TaskEditForm.GremiumID := grid;
 
+      if TaskEditForm.WindowState <> TWindowState.wsMaximized then
+        TaskEditForm.resizeForm;
 
       m_taskMap.Add(id, TaskEditForm);
       m_list.Add(TaskEditForm);

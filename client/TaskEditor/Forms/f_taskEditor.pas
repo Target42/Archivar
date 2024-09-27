@@ -247,6 +247,8 @@ procedure TTaksEditorForm.FormCreate(Sender: TObject);
 begin
   DSProviderConnection1.SQLConnection := GM.SQLConnection1;
   m_tc := NIL;
+  PageControl1.ActivePage := TabSheet1;
+
   EditorFrame1.init;
 
   ReportFrame1.init;

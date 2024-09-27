@@ -49,27 +49,27 @@ object BeschlussFrame: TBeschlussFrame
     end
     inline EditFrame1: TEditFrame
       Left = 2
-      Top = 15
+      Top = 17
       Width = 854
-      Height = 419
+      Height = 417
       Align = alClient
       TabOrder = 0
       ExplicitLeft = 2
-      ExplicitTop = 15
-      ExplicitWidth = 190
-      ExplicitHeight = 106
+      ExplicitTop = 17
+      ExplicitWidth = 854
+      ExplicitHeight = 417
       inherited RE: TRichEdit
         Width = 854
-        Height = 385
+        Height = 383
         PopupMenu = PopupMenu1
         OnDragDrop = EditFrame1REDragDrop
         OnDragOver = EditFrame1REDragOver
-        ExplicitWidth = 190
-        ExplicitHeight = 72
+        ExplicitWidth = 854
+        ExplicitHeight = 383
       end
       inherited Panel1: TPanel
         Width = 854
-        ExplicitWidth = 190
+        ExplicitWidth = 854
       end
     end
     object Groupbox4: TGroupBox
@@ -86,16 +86,15 @@ object BeschlussFrame: TBeschlussFrame
       ExplicitWidth = 190
       object Memo1: TMemo
         Left = 2
-        Top = 15
+        Top = 17
         Width = 850
-        Height = 62
+        Height = 60
         Align = alClient
         Lines.Strings = (
           'Memo1')
         ReadOnly = True
         ScrollBars = ssVertical
         TabOrder = 0
-        ExplicitWidth = 186
       end
     end
   end
@@ -108,21 +107,19 @@ object BeschlussFrame: TBeschlussFrame
     Caption = 'Textbausteine'
     TabOrder = 1
     Visible = False
-    ExplicitLeft = 197
-    ExplicitHeight = 205
     inline TextBlockFrame1: TTextBlockFrame
       Left = 2
-      Top = 15
+      Top = 17
       Width = 250
-      Height = 501
+      Height = 499
       Align = alClient
       TabOrder = 0
       ExplicitLeft = 2
-      ExplicitTop = 15
+      ExplicitTop = 17
       ExplicitWidth = 250
-      ExplicitHeight = 188
+      ExplicitHeight = 499
       inherited Panel1: TPanel
-        Top = 445
+        Top = 443
         Width = 250
         ExplicitTop = 132
         ExplicitWidth = 250
@@ -136,7 +133,7 @@ object BeschlussFrame: TBeschlussFrame
       end
       inherited LV: TListView
         Width = 250
-        Height = 445
+        Height = 443
         ExplicitWidth = 250
         ExplicitHeight = 132
       end
@@ -165,8 +162,8 @@ object BeschlussFrame: TBeschlussFrame
       object Label1: TLabel
         Left = 306
         Top = 28
-        Width = 34
-        Height = 13
+        Width = 37
+        Height = 15
         Caption = 'Uhrzeit'
       end
       object SpeedButton1: TSpeedButton
@@ -217,8 +214,8 @@ object BeschlussFrame: TBeschlussFrame
         Width = 23
         Height = 21
         Alignment = taCenter
-        EditLabel.Width = 57
-        EditLabel.Height = 13
+        EditLabel.Width = 69
+        EditLabel.Height = 21
         EditLabel.Caption = 'Zustimmung'
         EditLabel.Color = clBtnFace
         EditLabel.ParentColor = False
@@ -241,8 +238,8 @@ object BeschlussFrame: TBeschlussFrame
         Width = 29
         Height = 21
         Alignment = taCenter
-        EditLabel.Width = 60
-        EditLabel.Height = 13
+        EditLabel.Width = 67
+        EditLabel.Height = 21
         EditLabel.Caption = 'Enhaltungen'
         LabelPosition = lpLeft
         NumbersOnly = True
@@ -257,8 +254,8 @@ object BeschlussFrame: TBeschlussFrame
         Width = 23
         Height = 21
         Alignment = taCenter
-        EditLabel.Width = 51
-        EditLabel.Height = 13
+        EditLabel.Width = 59
+        EditLabel.Height = 21
         EditLabel.Caption = 'Ablehnung'
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clRed
@@ -370,9 +367,9 @@ object BeschlussFrame: TBeschlussFrame
         Top = 24
         Width = 55
         Height = 21
-        Date = 44397.853002650460000000
+        Date = 44397.000000000000000000
         Format = 'HH:mm'
-        Time = 44397.853002650460000000
+        Time = 0.853002650459529800
         Kind = dtkTime
         TabOrder = 5
       end
@@ -434,8 +431,8 @@ object BeschlussFrame: TBeschlussFrame
         Top = 24
         Width = 25
         Height = 21
-        EditLabel.Width = 50
-        EditLabel.Height = 13
+        EditLabel.Width = 55
+        EditLabel.Height = 21
         EditLabel.Caption = 'Anwesend'
         LabelPosition = lpLeft
         NumbersOnly = True
@@ -450,8 +447,8 @@ object BeschlussFrame: TBeschlussFrame
         Top = 24
         Width = 25
         Height = 21
-        EditLabel.Width = 50
-        EditLabel.Height = 13
+        EditLabel.Width = 55
+        EditLabel.Height = 21
         EditLabel.Caption = 'Abwesend'
         LabelPosition = lpLeft
         NumbersOnly = True
@@ -466,8 +463,8 @@ object BeschlussFrame: TBeschlussFrame
         Top = 24
         Width = 25
         Height = 21
-        EditLabel.Width = 75
-        EditLabel.Height = 13
+        EditLabel.Width = 87
+        EditLabel.Height = 21
         EditLabel.Caption = 'Nicht Abgestimt'
         LabelPosition = lpLeft
         NumbersOnly = True

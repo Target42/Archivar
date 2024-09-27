@@ -1,18 +1,19 @@
 object LogFrame: TLogFrame
   Left = 0
   Top = 0
-  Width = 1054
+  Width = 581
   Height = 377
   Align = alClient
   TabOrder = 0
   object GroupBox3: TGroupBox
-    Left = 869
+    Left = 396
     Top = 0
     Width = 185
     Height = 377
     Align = alRight
     Caption = 'Textbausteine'
     TabOrder = 0
+    ExplicitLeft = 869
     inline TextBlockFrame1: TTextBlockFrame
       Left = 2
       Top = 17
@@ -27,7 +28,7 @@ object LogFrame: TLogFrame
       inherited Panel1: TPanel
         Top = 302
         Width = 181
-        ExplicitTop = 232
+        ExplicitTop = 302
         ExplicitWidth = 181
         inherited LabeledEdit1: TLabeledEdit
           Width = 161
@@ -39,32 +40,34 @@ object LogFrame: TLogFrame
         Width = 181
         Height = 302
         ExplicitWidth = 181
-        ExplicitHeight = 232
+        ExplicitHeight = 302
       end
     end
   end
   object Panel1: TPanel
     Left = 0
     Top = 0
-    Width = 869
+    Width = 396
     Height = 377
     Align = alClient
     BevelOuter = bvNone
     Caption = 'Panel1'
     ShowCaption = False
     TabOrder = 1
+    ExplicitWidth = 869
     object GroupBox1: TGroupBox
       Left = 0
       Top = 0
-      Width = 869
+      Width = 396
       Height = 121
       Align = alTop
       Caption = 'Aktuelle Informationen'
       TabOrder = 0
+      ExplicitWidth = 869
       inline EditFrame1: TEditFrame
         Left = 2
         Top = 17
-        Width = 865
+        Width = 392
         Height = 102
         Align = alClient
         TabOrder = 0
@@ -73,7 +76,7 @@ object LogFrame: TLogFrame
         ExplicitWidth = 865
         ExplicitHeight = 102
         inherited RE: TRichEdit
-          Width = 865
+          Width = 392
           Height = 68
           OnDragDrop = Memo1DragDrop
           OnDragOver = Memo1DragOver
@@ -81,7 +84,7 @@ object LogFrame: TLogFrame
           ExplicitHeight = 68
         end
         inherited Panel1: TPanel
-          Width = 865
+          Width = 392
           ExplicitWidth = 865
         end
       end
@@ -89,24 +92,24 @@ object LogFrame: TLogFrame
     object GroupBox2: TGroupBox
       Left = 0
       Top = 121
-      Width = 869
+      Width = 396
       Height = 256
       Align = alClient
       Caption = 'Historie'
       TabOrder = 1
+      ExplicitWidth = 869
       object WebBrowser1: TWebBrowser
         AlignWithMargins = True
         Left = 5
         Top = 20
-        Width = 859
+        Width = 386
         Height = 231
         Align = alClient
         TabOrder = 0
-        ExplicitTop = 18
-        ExplicitWidth = 917
-        ExplicitHeight = 404
+        ExplicitWidth = 859
+        ExplicitHeight = 233
         ControlData = {
-          4C000000C8580000151800000000000000000000000000000000000000000000
+          4C000000E5270000E01700000000000000000000000000000000000000000000
           000000004C000000000000000000000001000000E0D057007335CF11AE690800
           2B2E126208000000000000004C0000000114020000000000C000000000000046
           8000000000000000000000000000000000000000000000000000000000000000

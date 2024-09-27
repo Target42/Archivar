@@ -6,7 +6,8 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_ReportEditor, Vcl.Buttons,
    m_dws, Vcl.ExtCtrls, Vcl.StdCtrls, SynEditHighlighter, SynHighlighterDWS,
-  SynEdit, i_taskEdit, SynHighlighterCSS, SynEditOptionsDialog, Vcl.Menus;
+  SynEdit, i_taskEdit, SynHighlighterCSS, SynEditOptionsDialog, Vcl.Menus,
+  SynEditCodeFolding;
 
 type
   TReportFrameEditorPas = class(TReportFrameEditor)

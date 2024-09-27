@@ -25,26 +25,42 @@ inherited ReportFrameEditorPas: TReportFrameEditorPas
     Font.Height = -13
     Font.Name = 'Courier New'
     Font.Style = []
+    Font.Quality = fqClearTypeNatural
     TabOrder = 1
     OnKeyPress = SynEdit1KeyPress
-    CodeFolding.CollapsedLineColor = clGrayText
-    CodeFolding.FolderBarLinesColor = clGrayText
     CodeFolding.ShowCollapsedLine = True
-    CodeFolding.IndentGuidesColor = clGray
-    CodeFolding.IndentGuides = True
     UseCodeFolding = False
     Gutter.Font.Charset = DEFAULT_CHARSET
     Gutter.Font.Color = clWindowText
     Gutter.Font.Height = -11
     Gutter.Font.Name = 'Courier New'
     Gutter.Font.Style = []
+    Gutter.Font.Quality = fqClearTypeNatural
     Gutter.ShowLineNumbers = True
+    Gutter.Bands = <
+      item
+        Kind = gbkMarks
+        Width = 13
+      end
+      item
+        Kind = gbkLineNumbers
+      end
+      item
+        Kind = gbkFold
+      end
+      item
+        Kind = gbkTrackChanges
+      end
+      item
+        Kind = gbkMargin
+        Width = 3
+      end>
     Highlighter = SynDWSSyn1
     Lines.Strings = (
       'SynEdit1')
     Options = [eoAutoIndent, eoDragDropEditing, eoEnhanceEndKey, eoGroupUndo, eoScrollPastEol, eoShowScrollHint, eoSmartTabDelete, eoSmartTabs, eoTabIndent, eoTabsToSpaces]
+    SelectedColor.Alpha = 0.400000005960464500
     WantTabs = True
-    FontSmoothing = fsmNone
   end
   object Panel2: TPanel
     Left = 0
@@ -95,9 +111,6 @@ inherited ReportFrameEditorPas: TReportFrameEditorPas
   end
   object SynDWSSyn1: TSynDWSSyn
     DefaultFilter = 'DWScript Files (*.dws;*.pas;*.inc)|*.dws;*.pas;*.inc'
-    Options.AutoDetectEnabled = False
-    Options.AutoDetectLineLimit = 0
-    Options.Visible = False
     Left = 224
     Top = 112
   end

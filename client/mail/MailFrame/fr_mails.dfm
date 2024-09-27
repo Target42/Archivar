@@ -74,8 +74,6 @@ object MailFrame: TMailFrame
     OnInitNode = VSTInitNode
     Touch.InteractiveGestures = [igPan, igPressAndTap]
     Touch.InteractiveGestureOptions = [igoPanSingleFingerHorizontal, igoPanSingleFingerVertical, igoPanInertia, igoPanGutter, igoParentPassthrough]
-    ExplicitWidth = 451
-    ExplicitHeight = 305
     Columns = <>
   end
 end

@@ -2,30 +2,28 @@ object TaskImportForm: TTaskImportForm
   Left = 0
   Top = 0
   Caption = 'Aufgabe importieren'
-  ClientHeight = 403
-  ClientWidth = 676
+  ClientHeight = 399
+  ClientWidth = 674
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
   Position = poOwnerFormCenter
-  PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter
     Left = 201
     Top = 0
-    Height = 384
+    Height = 380
     ExplicitLeft = 256
     ExplicitTop = 64
     ExplicitHeight = 100
   end
   object StatusBar1: TStatusBar
     Left = 0
-    Top = 384
-    Width = 676
+    Top = 380
+    Width = 674
     Height = 19
     Panels = <>
     ExplicitTop = 280
@@ -35,12 +33,13 @@ object TaskImportForm: TTaskImportForm
     Left = 0
     Top = 0
     Width = 201
-    Height = 384
+    Height = 380
     Align = alLeft
     Caption = 'GroupBox1'
     TabOrder = 1
     ExplicitLeft = -3
     ExplicitTop = -6
+    ExplicitHeight = 384
     object JvDriveCombo1: TJvDriveCombo
       Left = 2
       Top = 15
@@ -82,8 +81,8 @@ object TaskImportForm: TTaskImportForm
   object Panel1: TPanel
     Left = 204
     Top = 0
-    Width = 472
-    Height = 384
+    Width = 470
+    Height = 380
     Align = alClient
     BevelOuter = bvNone
     Caption = 'Panel1'
@@ -114,22 +113,38 @@ object TaskImportForm: TTaskImportForm
       Font.Height = -13
       Font.Name = 'Courier New'
       Font.Style = []
+      Font.Quality = fqClearTypeNatural
       TabOrder = 0
-      CodeFolding.CollapsedLineColor = clGrayText
-      CodeFolding.FolderBarLinesColor = clGrayText
       CodeFolding.ShowCollapsedLine = True
-      CodeFolding.IndentGuidesColor = clGray
-      CodeFolding.IndentGuides = True
       UseCodeFolding = False
       Gutter.Font.Charset = DEFAULT_CHARSET
       Gutter.Font.Color = clWindowText
       Gutter.Font.Height = -11
       Gutter.Font.Name = 'Courier New'
       Gutter.Font.Style = []
+      Gutter.Font.Quality = fqClearTypeNatural
+      Gutter.Bands = <
+        item
+          Kind = gbkMarks
+          Width = 13
+        end
+        item
+          Kind = gbkLineNumbers
+        end
+        item
+          Kind = gbkFold
+        end
+        item
+          Kind = gbkTrackChanges
+        end
+        item
+          Kind = gbkMargin
+          Width = 3
+        end>
       Highlighter = SynXMLSyn1
       Lines.Strings = (
         'SynEdit1')
-      FontSmoothing = fsmNone
+      SelectedColor.Alpha = 0.400000005960464500
       ExplicitLeft = 1
       ExplicitTop = 15
       ExplicitWidth = 200
@@ -149,9 +164,6 @@ object TaskImportForm: TTaskImportForm
     end
   end
   object SynXMLSyn1: TSynXMLSyn
-    Options.AutoDetectEnabled = False
-    Options.AutoDetectLineLimit = 0
-    Options.Visible = False
     WantBracesParsed = False
     Left = 392
     Top = 88

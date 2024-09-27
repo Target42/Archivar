@@ -1,5 +1,4 @@
 object DSMail: TDSMail
-  OldCreateOrder = False
   Height = 277
   Width = 556
   object FDTransaction1: TFDTransaction
@@ -86,6 +85,30 @@ object DSMail: TDSMail
         Name = 'ID'
         DataType = ftInteger
         ParamType = ptInput
+      end>
+  end
+  object StatusSet: TFDQuery
+    Connection = DBMod.ArchivarConnection
+    SQL.Strings = (
+      'UPDATE MAM_MAIL a'
+      'SET '
+      '    a.MAM_STATUs = :name'
+      'WHERE'
+      '    a.MAM_ID = :id')
+    Left = 424
+    Top = 112
+    ParamData = <
+      item
+        Name = 'NAME'
+        DataType = ftString
+        ParamType = ptInput
+        Value = Null
+      end
+      item
+        Name = 'ID'
+        DataType = ftInteger
+        ParamType = ptInput
+        Value = Null
       end>
   end
 end

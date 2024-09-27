@@ -84,7 +84,8 @@ begin
             Contains( ext, SynIniSyn1.DefaultFilter)      or
             Contains( ext, SynJScriptSyn1.DefaultFilter)  or
             Contains( ext, SynPythonSyn1.DefaultFilter)   or
-            Contains( ext, SynSTSyn1.DefaultFilter);
+            Contains( ext, SynSTSyn1.DefaultFilter)       or
+            SameText( ext, '.txt');
 end;
 
 procedure TWebEditorForm.FormCreate(Sender: TObject);
@@ -128,7 +129,9 @@ begin
     else if contains( ext, SynIniSyn1.DefaultFilter)      then SynEdit1.Highlighter := SynIniSyn1
     else if contains( ext, SynJScriptSyn1.DefaultFilter)  then SynEdit1.Highlighter := SynJScriptSyn1
     else if contains( ext, SynPythonSyn1.DefaultFilter)   then SynEdit1.Highlighter := SynPythonSyn1
-    else if contains( ext, SynSTSyn1.DefaultFilter)       then SynEdit1.Highlighter := SynSTSyn1;
+    else if contains( ext, SynSTSyn1.DefaultFilter)       then SynEdit1.Highlighter := SynSTSyn1
+    else if SameText( ext, '.txt')                        then SynEdit1.Highlighter := NIL;
+
 
   except
 
