@@ -132,7 +132,7 @@ object MailClientForm: TMailClientForm
           PopupMenu = PopupMenu2
           OnChange = MailFrame1VSTChange
           ExplicitWidth = 413
-          ExplicitHeight = 357
+          ExplicitHeight = 353
         end
       end
     end
@@ -166,8 +166,6 @@ object MailClientForm: TMailClientForm
       Height = 369
       Align = alClient
       TabOrder = 0
-      ExplicitWidth = 529
-      ExplicitHeight = 365
       ControlData = {
         4C000000E1360000232600000000000000000000000000000000000000000000
         000000004C000000000000000000000001000000E0D057007335CF11AE690800
@@ -2438,5 +2436,17 @@ object MailClientForm: TMailClientForm
     object Status1: TMenuItem
       Caption = 'Status'
     end
+    object N2: TMenuItem
+      Caption = '-'
+    end
+    object N3: TMenuItem
+      Caption = 'Export'
+      OnClick = N3Click
+    end
+  end
+  object JvBrowseForFolderDialog1: TJvBrowseForFolderDialog
+    Title = 'Export mail'
+    Left = 280
+    Top = 283
   end
 end

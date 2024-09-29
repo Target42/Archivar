@@ -9,7 +9,7 @@ uses
   System.JSON, Vcl.ExtCtrls, VirtualTrees, IdBaseComponent, IdMessage,
   Vcl.Imaging.pngimage, fr_mails, Vcl.OleCtrls, SHDocVw, System.ImageList,
   Vcl.ImgList, DragDrop, DropSource, DragDropFile, Winapi.ActiveX, DropTarget,
-  System.Actions, Vcl.ActnList, Vcl.Menus;
+  System.Actions, Vcl.ActnList, Vcl.Menus, JvBaseDlg, JvBrowseFolder;
 
 type
   TMailClientForm = class(TForm)
@@ -48,6 +48,9 @@ type
     PopupMenu2: TPopupMenu;
     Kategorien1: TMenuItem;
     Status1: TMenuItem;
+    N2: TMenuItem;
+    N3: TMenuItem;
+    JvBrowseForFolderDialog1: TJvBrowseForFolderDialog;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -64,6 +67,7 @@ type
     procedure ac_saveasExecute(Sender: TObject);
     procedure Kategorien1Click(Sender: TObject);
     procedure Status1Click(Sender: TObject);
+    procedure N3Click(Sender: TObject);
   private
     type
       Account = class
@@ -471,6 +475,22 @@ begin
   AddAttachemnts;
   decoder.Free;
   list.Free;
+end;
+
+procedure TMailClientForm.N3Click(Sender: TObject);
+var
+  decoder : TMailDecoder;
+  mail    : TMail;
+begin
+  mail := MailFrame1.SelectedMail;
+
+  if not JvBrowseForFolderDialog1.Execute or not Assigned(mail) then
+    exit;
+
+  Decoder := TMailDecoder.create;
+  decoder.Msg := mail.Message;
+  decoder.ExportMail(JvBrowseForFolderDialog1.Directory);
+  decoder.Free;
 end;
 
 procedure TMailClientForm.OnGetStream(

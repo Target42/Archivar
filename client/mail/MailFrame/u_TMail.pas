@@ -50,6 +50,7 @@ type
 
       function loadFromFile( fname : string ) : boolean;
       function loadFromStream( st : TStream ) : boolean;
+      function exportMail( path : string; Attachements : boolean = false ) : boolean;
   end;
 
 function LoadMail( fname : string ) : TMail;
@@ -59,7 +60,8 @@ procedure setColors( list : TStrings);
 implementation
 
 uses
-  System.SysUtils, System.Types, System.StrUtils, IdAttachmentFile, IdText;
+  System.SysUtils, System.Types, System.StrUtils, IdAttachmentFile, IdText,
+  System.IOUtils;
 
 { TMail }
 
@@ -94,6 +96,28 @@ begin
   m_bmp.Free;
   FMessage.Free;
   inherited;
+end;
+
+function TMail.exportMail(path: string; Attachements: boolean): boolean;
+var
+  fname : string;
+  i     : integer;
+begin
+  fname := self.Titel;
+  for i := 1 to length(fname) do
+  begin
+    if not TPath.IsValidFileNameChar(fname[i]) then
+      fname[i] := '_';
+  end;
+  path := TPath.Combine(path, fname +'.mail');
+  ForceDirectories(fname);
+  FMessage.SaveToFile(TPAth.Combine(path, 'mail.eml'));
+
+  if not Attachements or not FAttachments then
+    exit;
+
+  FMessage.MessageParts.Items[0].PartType
+
 end;
 
 procedure TMail.fillHeadline;

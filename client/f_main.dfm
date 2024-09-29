@@ -237,7 +237,7 @@
           Width = 221
           Height = 419
           ExplicitWidth = 221
-          ExplicitHeight = 415
+          ExplicitHeight = 418
         end
       end
     end

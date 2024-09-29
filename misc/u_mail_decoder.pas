@@ -40,6 +40,7 @@ type
       property Attachments : TStringList read m_attach;
 
       function SaveToFolder( dir : string ) : boolean;
+      function ExportMail( dir : string ) : boolean;
 
       function UseTemplate( dir, template : string ) : string;
 
@@ -119,6 +120,25 @@ begin
   m_keys.free;
 
   inherited;
+end;
+
+function TMailDecoder.ExportMail(dir: string): boolean;
+var
+  fname : string;
+  i     : integer;
+begin
+  fname := m_msg.Subject;
+  for i := 1 to length(fname) do
+  begin
+    if not TPath.IsValidFileNameChar(fname[i]) then
+      fname[i] := '_';
+  end;
+  dir := TPath.Combine(dir, fname +'.mail');
+  Result := ForceDirectories(dir);
+  if not Result then
+    exit;
+  m_msg.SaveToFile(TPAth.Combine(dir, 'mail.eml'));
+  Result := Self.SaveToFolder(dir);
 end;
 
 function TMailDecoder.getContent(template: string): string;
