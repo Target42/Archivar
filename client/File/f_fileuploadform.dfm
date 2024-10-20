@@ -10,22 +10,21 @@ object FileUploadForm: TFileUploadForm
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
   Position = poOwnerFormCenter
   OnActivate = FormActivate
   DesignSize = (
     514
     180)
-  PixelsPerInch = 96
   TextHeight = 13
   object SpeedButton1: TSpeedButton
-    Left = 463
+    Left = 461
     Top = 32
     Width = 23
     Height = 22
     Anchors = [akTop, akRight]
     Caption = '...'
     OnClick = SpeedButton1Click
+    ExplicitLeft = 463
   end
   object Label1: TLabel
     Left = 16
@@ -42,34 +41,36 @@ object FileUploadForm: TFileUploadForm
     Align = alBottom
     AutoSize = True
     TabOrder = 0
-    ExplicitTop = 120
-    ExplicitWidth = 514
+    ExplicitTop = 116
+    ExplicitWidth = 512
     inherited StatusBar1: TStatusBar
       Width = 514
-      ExplicitWidth = 514
+      ExplicitWidth = 512
     end
     inherited Panel1: TPanel
       Width = 514
-      ExplicitWidth = 514
+      ExplicitWidth = 512
       inherited OKBtn: TBitBtn
         Left = 415
         Kind = bkCustom
         ModalResult = 0
         OnClick = BaseFrame1OKBtnClick
-        ExplicitLeft = 415
+        ExplicitLeft = 413
       end
     end
   end
   object LabeledEdit1: TLabeledEdit
     Left = 16
     Top = 32
-    Width = 441
+    Width = 439
     Height = 21
     Anchors = [akLeft, akTop, akRight]
     EditLabel.Width = 25
     EditLabel.Height = 13
     EditLabel.Caption = 'Datei'
     TabOrder = 1
+    Text = ''
+    ExplicitWidth = 437
   end
   object ComboBox1: TComboBox
     Left = 16

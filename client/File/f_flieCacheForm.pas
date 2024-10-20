@@ -5,18 +5,20 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, fr_base, Vcl.StdCtrls, Vcl.ComCtrls,
-  Vcl.Buttons, m_glob_client;
+  Vcl.Buttons, m_glob_client, Vcl.ExtCtrls, VirtualTrees, m_fileCache,
+  System.ImageList, Vcl.ImgList, PngImageList, System.Generics.Collections;
 
 type
   TFileCacheForm = class(TForm)
     BaseFrame1: TBaseFrame;
-    LV: TListView;
     GroupBox1: TGroupBox;
     BitBtn1: TBitBtn;
     BitBtn2: TBitBtn;
     BitBtn3: TBitBtn;
     BitBtn4: TBitBtn;
     BitBtn5: TBitBtn;
+    VST: TVirtualStringTree;
+    PngImageList1: TPngImageList;
     procedure FormCreate(Sender: TObject);
     procedure FormDestroy(Sender: TObject);
     procedure BitBtn2Click(Sender: TObject);
@@ -24,11 +26,32 @@ type
     procedure BitBtn3Click(Sender: TObject);
     procedure BitBtn4Click(Sender: TObject);
     procedure BitBtn5Click(Sender: TObject);
+    procedure VSTFreeNode(Sender: TBaseVirtualTree; Node: PVirtualNode);
+    procedure VSTGetText(Sender: TBaseVirtualTree; Node: PVirtualNode;
+      Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
+    procedure VSTGetImageIndex(Sender: TBaseVirtualTree; Node: PVirtualNode;
+      Kind: TVTImageKind; Column: TColumnIndex; var Ghosted: Boolean;
+      var ImageIndex: TImageIndex);
+    procedure VSTChange(Sender: TBaseVirtualTree; Node: PVirtualNode);
   private
+    type
+      PTVSTData = ^TVSTData;
+      TVSTData = record
+        name    : string;
+        changed : boolean;
+        ptr     : TFileCacheMod.TPEntry;
+        imageInx: integer;
+      end;
+  private
+    m_ext : TStringList;
+    m_selectedID : integer;
+    m_inUpdate : boolean;
+
     function lockDocument( fc_id, us_id : integer; showResult : boolean = true ) : boolean;
     function unlocDocument( fc_id, us_id : integer; showResult : boolean = true ) : boolean;
 
     procedure updateList(Sender : TObject );
+    procedure updateTreeView;
   public
     { Public-Deklarationen }
   end;
@@ -39,7 +62,7 @@ var
 implementation
 
 uses
-  m_fileCache, f_fileuploadform, u_stub, System.JSON, u_json, system.IOUtils,
+  f_fileuploadform, u_stub, System.JSON, u_json, system.IOUtils,
   f_web_editor;
 
 {$R *.dfm}
@@ -48,43 +71,43 @@ uses
 
 procedure TFileCacheForm.BitBtn1Click(Sender: TObject);
 var
-  name, cache : string;
-  i           : integer;
+  ptr : PTVSTData;
 begin
-  if not Assigned(lv.Selected) then
+  if not Assigned(VST.FocusedNode) then
     exit;
 
-  name  := LV.Selected.Caption;
-  for i := 0 to pred(LV.Groups.Count) do begin
-    if LV.Groups.Items[i].GroupID = LV.Selected.GroupID then begin
-      cache := LV.Groups.Items[i].Header;
-      break;
-    end;
-  end;
-  if (name <> '') and (cache <> '') then begin
-    FileCacheMod.deleteFile(cache, name);
-  end;
+  ptr := VST.FocusedNode.GetData;
+  if not Assigned(ptr) then
+    exit;
+
+  FileCacheMod.deleteFile( ptr^.ptr^.cache, ptr^.ptr^.name);
 end;
 
 procedure TFileCacheForm.BitBtn2Click(Sender: TObject);
 var
   i     : integer;
   fname : string;
-  ptr   : TFileCacheMod.TPEntry;
+  ptr   : PTVSTData;
   localChanged : boolean;
-begin
-  localChanged  := false;
-  ptr           := NIL;
-  if Assigned(LV.Selected) then begin
-    ptr   := TFileCacheMod.TPEntry(LV.Selected.Data);
-    fname := TPath.Combine(GM.Cache, format('%s\%s', [ptr^.cache, ptr^.name]));
-    localChanged  := ptr^.md5 <> GM.md5(fname);
-  end;
 
-  if not localChanged then begin
+begin
+  if not Assigned(VST.FocusedNode) then
+    exit;
+
+  ptr := VST.FocusedNode.GetData;
+  if not Assigned(ptr) then
+    exit;
+
+  fname := TPath.Combine(GM.Cache, format('%s\%s', [ptr^.ptr^.cache, ptr^.ptr^.name]));
+  localChanged  := ptr^.ptr^.md5 <> GM.md5(fname);
+
+
+  if not localChanged then
+  begin
     Application.CreateForm(TFileUploadForm, FileUploadForm);
 
-    for i := 0 to pred(FileCacheMod.Files.Count) do begin
+    for i := 0 to pred(FileCacheMod.Files.Count) do
+    begin
       if FileUploadForm.Dirs.IndexOf(FileCacheMod.Files.Items[i].cache) = -1  then
         FileUploadForm.Dirs.Add(FileCacheMod.Files.Items[i].cache);
     end;
@@ -94,67 +117,78 @@ begin
     finally
       FileUploadForm.Free;
     end;
-  end else begin
+  end
+  else
+  begin
     // upload local ..
     if Assigned(ptr) then
-      FileCacheMod.upload(ptr^.cache, ptr^.name,fname);
+      FileCacheMod.upload(ptr^.ptr^.cache, ptr^.ptr^.name,fname);
   end;
 
 end;
 
 procedure TFileCacheForm.BitBtn3Click(Sender: TObject);
 var
-  ptr     : TFileCacheMod.TPEntry;
+  ptr     : PTVSTData;
 begin
-  if not Assigned(LV.Selected) then
+  if not Assigned(VST.FocusedNode) then
     exit;
 
-  ptr := TFileCacheMod.TPEntry( LV.Selected.Data );
-  lockDocument(ptr^.id, GM.UserID );
+  ptr := VST.FocusedNode.GetData;
+  if not Assigned(ptr) then
+    exit;
+
+  lockDocument(ptr^.ptr^.id, GM.UserID );
+
 end;
 
 procedure TFileCacheForm.BitBtn4Click(Sender: TObject);
 var
-  ptr     : TFileCacheMod.TPEntry;
+  ptr     : PTVSTData;
 begin
-  if not Assigned(LV.Selected) then
+  if not Assigned(VST.FocusedNode) then
     exit;
 
-  ptr := TFileCacheMod.TPEntry( LV.Selected.Data );
-  unlocDocument( ptr^.id, GM.UserID);
+  ptr := VST.FocusedNode.GetData;
+  if not Assigned(ptr) then
+    exit;
+
+  unlocDocument( ptr^.ptr^.id, GM.UserID);
 end;
 
 procedure TFileCacheForm.BitBtn5Click(Sender: TObject);
 var
-  ptr: TFileCacheMod.TPEntry;
-  fname: string;
+  ptr     : PTVSTData;
+  fname   : string;
 begin
-  if not Assigned(LV.Selected) then
+  if not Assigned(VST.FocusedNode) then
     exit;
 
-  ptr := TFileCacheMod.TPEntry(LV.Selected.Data);
+  ptr := VST.FocusedNode.GetData;
+  if not Assigned(ptr) then
+    exit;
 
   Application.CreateForm(TWebEditorForm, WebEditorForm);
-  if not WebEditorForm.canEdit(ptr^.name) then
+  if not WebEditorForm.canEdit(ptr^.ptr^.name) then
   begin
     ShowMessage
-      ('Das Dokument kann mit dem internen Editor nioht bearbeitet werden.');
+      ('Das Dokument kann mit dem internen Editor nicht bearbeitet werden.');
     WebEditorForm.Free;
 
     exit;
   end;
 
-  fname := FileCacheMod.getFile(ptr^.cache, ptr^.name);
+  fname := FileCacheMod.getFile(ptr^.ptr^.cache, ptr^.ptr^.name);
 
   try
-    if lockDocument(ptr^.id, GM.UserID, false) then
+    if lockDocument(ptr^.ptr^.id, GM.UserID, false) then
     begin
       WebEditorForm.FileName := fname;
       if WebEditorForm.ShowModal = mrOk then
       begin
-        FileCacheMod.upload(ptr^.cache, ptr^.name, fname);
+        FileCacheMod.upload(ptr^.ptr^.cache, ptr^.ptr^.name, fname);
       end;
-      unlocDocument(ptr^.id, GM.UserID, false);
+      unlocDocument(ptr^.ptr^.id, GM.UserID, false);
     end
     else
       ShowMessage('Das Dokument konnte nicht gesperrt werden!');
@@ -162,17 +196,25 @@ begin
 
   end;
   WebEditorForm.Free;
-
 end;
 
 procedure TFileCacheForm.FormCreate(Sender: TObject);
 begin
+  VST.NodeDataSize := sizeof(TVSTData);
+  m_ext := TStringList.Create;
+  m_ext.StrictDelimiter := true;
+  m_ext.Delimiter := ';';
+  m_ext.DelimitedText := ';.html;.pas;.py;.txt;.xml;.json;.ini';
+  m_selectedID := -1;
+  m_inUpdate := false;
   FileCacheMod.Listner := updateList;
+
 end;
 
 procedure TFileCacheForm.FormDestroy(Sender: TObject);
 begin
   FileCacheMod.Listner := NIL;
+  m_ext.Free;
 end;
 
 function TFileCacheForm.lockDocument(fc_id, us_id: integer;
@@ -224,72 +266,189 @@ begin
 end;
 
 procedure TFileCacheForm.updateList(Sender : TObject );
-  function getGroup( name : string ) : integer;
+begin
+  updateTreeView;
+end;
+
+
+procedure TFileCacheForm.updateTreeView;
+var
+  list : TStringList;
+
+  function changed( ptr : TFileCacheMod.TPEntry ) : boolean;
+  var
+    fname : string;
+  begin
+    fname := TPath.Combine(GM.Cache, Format('%s\%s',
+      [ptr.cache, ptr.name ]));
+    Result := ptr.md5 <> GM.md5(fname);
+  end;
+
+  procedure cleanList;
   var
     i : integer;
-    grp : TListGroup;
   begin
-    grp     := NIL;
-    for i := 0 to pred(LV.Groups.Count) do begin
-      if SameText(LV.Groups.Items[i].Header, name) then begin
-        grp := LV.Groups.Items[i];
-        break;
+    for i := pred(list.Count) downto 0 do
+    begin
+      if trim(list[i]) = '' then
+        list.Delete(i);
+    end;
+  end;
+
+  function getNode( path : string ) : PVirtualNode;
+  var
+    node : PVirtualNode;
+    sub : PVirtualNode;
+    ptr  : PTVSTData;
+  begin
+    node := VST.GetFirst;
+    list.DelimitedText := path;
+
+    cleanList;
+
+    while list.Count > 0 do
+    begin
+      sub := VST.GetFirstChild(node);
+      while Assigned(sub) do
+      begin
+        if not Assigned(sub) then
+          break;
+
+        ptr := sub.GetData;
+        if SameText(ptr^.name, list[0]) then
+        begin
+          list.Delete(0);
+          node := sub;
+          break;
+        end
+        else
+          sub := VST.GetNextSibling(sub);
+      end;
+
+      if not Assigned(sub) then
+      begin
+        node := VST.AddChild(node);
+        ptr := node.GetData;
+        ptr^.name := list[0];
+        ptr^.ptr  := NIL;
+        ptr^.imageInx := 0;
+        list.Delete(0);
       end;
     end;
-
-    if not Assigned(grp) then begin
-      grp := LV.Groups.Add;
-      grp.Header := name;
-      grp.GroupID := Lv.Groups.Count;
-    end;
-
-    Result := grp.GroupID;
+    Result := node;
   end;
+
 var
-  i, j  : integer;
-  item  : TlistItem;
-  fname : string;
-  max   : integer;
-  len   : integer;
+  ptr  : PTVSTData;
+  node : PVirtualNode;
+  sub  : PVirtualNode;
+  en   : TFileCacheMod.TPEntry;
+  s    : string;
 begin
-  LV.Items.BeginUpdate;
-  LV.Groups.Clear;
-  LV.Items.Clear;
-  for i := 0 to pred(FileCacheMod.Files.Count) do begin
+  list := TStringList.Create;
+  list.StrictDelimiter := true;
+  list.Delimiter := '\';
 
-    fname := TPath.Combine(GM.Cache, Format('%s\%s',
-      [FileCacheMod.Files.Items[i].cache, FileCacheMod.Files.Items[i].name ]));
+  VST.BeginUpdate;
+  m_inUpdate := true;
+  VST.Clear;
 
-    item          := LV.Items.Add;
-    item.Caption  := FileCacheMod.Files.Items[i].name;
-    item.SubItems.add( FileCacheMod.Files.Items[i].ts);
+  node := VST.AddChild(NIL);
+  ptr := node.GetData;
+  ptr^.name := 'Root';
+  ptr^.ptr  := NIL;
 
-    if FileCacheMod.Files.Items[i].md5 <> GM.md5(fname) then
-      item.SubItems.add( 'Ja')
-    else
-      item.SubItems.add( '' );
+  for en in FileCacheMod.Files do
+  begin
+    node := getNode(en.cache);
+    sub  := VST.AddChild(node);
+    ptr  := sub.GetData;
 
-    item.SubItems.add( FileCacheMod.Files.Items[i].user );
-    item.SubItems.add( FileCacheMod.Files.Items[i].tl );
-    item.GroupID  := getGroup(FileCacheMod.Files.Items[i].cache);
-
-    item.Data     := FileCacheMod.Files.Items[i];
+    ptr^.changed := changed(en);
+    ptr^.ptr     := en;
+    s := LowerCase(ExtractFileExt(en.name));
+    ptr^.imageInx := m_ext.IndexOf(s);
   end;
 
-  for i := 0 to pred(LV.Columns.Count) do begin
-    max := LV.Canvas.TextWidth(LV.Columns.Items[i].Caption);
-    for j := 0 to pred(LV.Items.Count) do begin
-      if i = 0 then
-        len := LV.Canvas.TextWidth(LV.Items.Item[j].Caption)
-      else
-        len := LV.Canvas.TextWidth(LV.Items.Item[j].SubItems.Strings[i-1]);
-      if len > max then
-        max := len;
+  VST.FullExpand();
+  VST.EndUpdate;
+
+  node := VST.GetFirst();
+  while Assigned(node) do
+  begin
+    ptr := node.GetData;
+
+    if Assigned(ptr) and Assigned(ptr^.ptr) and ( ptr^.ptr^.id = m_selectedID) then
+    begin
+      VSt.FocusedNode := node;
+      break;
     end;
-    LV.Columns.Items[i].Width := max + 16;
+    node := VST.GetNext(node);
   end;
 
-  LV.Items.EndUpdate;
+
+  m_inUpdate := false;
+
+  list.Free;
+end;
+
+procedure TFileCacheForm.VSTChange(Sender: TBaseVirtualTree;
+  Node: PVirtualNode);
+var
+  ptr : PTVSTData;
+begin
+  if not Assigned(node) or m_inUpdate then
+    exit;
+
+  ptr := node.GetData;
+  if Assigned(ptr) and Assigned(ptr^.ptr) then
+    m_selectedID := ptr^.ptr^.id;
+end;
+
+procedure TFileCacheForm.VSTFreeNode(Sender: TBaseVirtualTree;
+  Node: PVirtualNode);
+var
+  ptr : PTVSTData;
+begin
+  ptr := node.GetData;
+  SetLength(ptr^.name, 0);
+end;
+
+procedure TFileCacheForm.VSTGetImageIndex(Sender: TBaseVirtualTree;
+  Node: PVirtualNode; Kind: TVTImageKind; Column: TColumnIndex;
+  var Ghosted: Boolean; var ImageIndex: TImageIndex);
+var
+  ptr : PTVSTData;
+begin
+  ptr := node.GetData;
+  if (Column = 0) and ( kind in [ ikNormal, ikSelected ]) then
+  begin
+    ImageIndex := ptr^.imageInx;
+  end;
+end;
+
+procedure TFileCacheForm.VSTGetText(Sender: TBaseVirtualTree;
+  Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType;
+  var CellText: string);
+var
+  ptr : PTVSTData;
+begin
+  ptr := node.GetData;
+  CellText := '';
+
+  case Column of
+    0 :
+    begin
+      if not Assigned(ptr^.ptr) then
+        CellText := ptr^.name
+      else
+        CellText := ptr^.ptr^.name;
+    end;
+    1 : if Assigned(ptr^.ptr) then CellText := ptr^.ptr^.ts;
+    2 : if ptr^.changed then CellText := 'Ja';
+    3 : if Assigned(ptr^.ptr) then CellText := ptr^.ptr^.tl;
+    4 : if Assigned(ptr^.ptr) then CellText := ptr^.ptr^.user;
+  end;
 end;
 
 end.
