@@ -1,8 +1,8 @@
 object DwsMod: TDwsMod
   OnCreate = DataModuleCreate
   OnDestroy = DataModuleDestroy
-  Height = 253
-  Width = 315
+  Height = 334
+  Width = 357
   object DelphiWebScript1: TDelphiWebScript
     Left = 24
     Top = 16
@@ -286,8 +286,8 @@ object DwsMod: TDwsMod
       '</table>'
       '')
     OnHTMLTag = DumpTableHTMLTag
-    Left = 88
-    Top = 192
+    Left = 128
+    Top = 200
   end
   object dwsDebugger1: TdwsDebugger
     OnNotifyException = dwsDebugger1NotifyException

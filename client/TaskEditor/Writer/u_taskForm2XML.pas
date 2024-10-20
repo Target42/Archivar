@@ -96,9 +96,12 @@ begin
   begin
     xf := xList.Values.Field[i];
     ctrl := NIL;
-    if xf.HasAttribute('ctrlclid') then begin
+    if xf.HasAttribute('ctrlclid') then
+    begin
       ctrl := form.Base.findCtrlByCLID(xf.Ctrlclid);
-    end else if xf.HasAttribute('field') then begin
+    end
+    else if xf.HasAttribute('field') then
+    begin
       ctrl := form.Base.findCtrlByField(xf.Field);
     end;
 

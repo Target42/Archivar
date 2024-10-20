@@ -368,17 +368,20 @@ var
   i : integer;
 begin
   Result := NIL;
-  if Assigned(m_dataField) and SameText( m_dataField.Name, name) then
-    Result := NIL
-  else begin
-    for i := 0 to pred(m_list.Count) do
+  for i := 0 to pred(m_list.Count) do
+  begin
+    if Assigned(m_list[i].DataField) and SameTExt(m_list[i].DataField.Name, name) then
     begin
+      Result := m_list[i];
+    end
+    else
       Result := m_list[i].findCtrlByField(name);
-      if Assigned(Result) then
-        break;
-    end;
+
+    if Assigned(Result) then
+      break;
   end;
 end;
+
 
 function TaskCtrlImpl.findCtrl(name: string): ITaskCtrl;
 var
