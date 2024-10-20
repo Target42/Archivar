@@ -133,11 +133,11 @@ begin
     if not TPath.IsValidFileNameChar(fname[i]) then
       fname[i] := '_';
   end;
-  dir := TPath.Combine(dir, fname +'.mail');
+  dir := TPath.Combine(dir, fname );
   Result := ForceDirectories(dir);
   if not Result then
     exit;
-  m_msg.SaveToFile(TPAth.Combine(dir, 'mail.eml'));
+  m_msg.SaveToFile(TPath.Combine(dir, 'mail.eml'));
   Result := Self.SaveToFolder(dir);
 end;
 
@@ -299,7 +299,7 @@ begin
   if Result then begin
     replaceKeys(dir);
     saveFiles( dir );
-    m_html.saveToFile( TPath.Combine( dir, 'index.html'));
+    m_html.saveToFile( TPath.Combine( dir, 'index.html'), TEncoding.UTF8);
   end;
 end;
 

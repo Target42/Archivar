@@ -1,5 +1,4 @@
 object DSImport: TDSImport
-  OldCreateOrder = False
   OnCreate = DSServerModuleCreate
   Height = 309
   Width = 648

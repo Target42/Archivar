@@ -34,6 +34,7 @@ type
     function checkSessionToken( token : string ) : boolean;
     function autoInc( name : string ) : integer;
     function TemplateByName( name : string ; var teid, tyid : integer ) : boolean;
+    function TemplateByClid( clid : string ; var teid, tyid : integer ) : boolean;
     function GremiumByShortName( name : string; var grid : integer ) : boolean;
     procedure sendNotify( grid, taid : integer; assign : boolean );
   public
@@ -143,10 +144,21 @@ begin
     exit;
   end;
 
-  s := JString(data, 'Template');
-  if not TemplateByName(s, teid, tyid) then begin
-    JResponse(Result, false, 'Die Vorlage wurde nicht gefunden!');
-    exit;
+  if JExistsKey(data, 'taskclid') then
+  begin
+    s := JString(data, 'taskclid');
+    if not TemplateByCLID(s, teid, tyid) then begin
+      JResponse(Result, false, 'Die Vorlage-CLID wurde nicht gefunden!');
+      exit;
+    end;
+  end
+  else
+  begin
+    s := JString(data, 'Template');
+    if not TemplateByName(s, teid, tyid) then begin
+      JResponse(Result, false, 'Die Vorlage wurde nicht gefunden!');
+      exit;
+    end;
   end;
 
   Task.Open;
@@ -165,6 +177,7 @@ begin
     Task.FieldByName('TA_STATUS').AsString    := JString( data, 'Status', 'Importiert');
     Task.FieldByName('TA_REM').AsString       := JString( data, 'Kommentar');
     Task.FieldByName('TA_BEARBEITER').AsString:= JString( data, 'Antragsteller');
+
     if JString(data, 'Erfasst') = '' then
       Task.FieldByName('TA_CREATED_BY').AsString:= GM.getNameFromSession
     else
@@ -229,6 +242,19 @@ begin
   JReplace( Result, 'token', token);
 
   JResponse(Result, true, 'Import gestartet.');
+end;
+
+function TDSImport.TemplateByClid(clid: string; var teid,
+  tyid: integer): boolean;
+begin
+  Template.Open;
+  Result := Template.Locate('TE_ClID', VarArrayOf([clid]), [loCaseInsensitive]);
+  if Result then begin
+    teid := Template.FieldByName('TE_ID').AsInteger;
+    tyid := Template.FieldByName('TY_ID').AsInteger;
+  end;
+  Template.Close;
+
 end;
 
 function TDSImport.TemplateByName(name: string; var teid,
