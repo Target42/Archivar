@@ -203,6 +203,7 @@ type
     procedure BitBtn10Click(Sender: TObject);
     procedure BitBtn7Click(Sender: TObject);
     procedure SpeedButton1Click(Sender: TObject);
+    procedure IdHTTPServer1QuerySSLPort(APort: Word; var VUseSSL: Boolean);
   private
     m_home  : string;
     m_ini   : TiniFile;
@@ -250,7 +251,7 @@ uses
   System.Win.ComObj, System.Hash, u_ePub, xsd_TextBlock,
   System.Zip, Xml.XMLIntf, Xml.XMLDoc, System.JSON, u_json, ShellApi,
   system.UITypes, m_mail, System.Win.Registry, Excel4Delphi,
-  Excel4Delphi.Stream, u_texte;
+  Excel4Delphi.Stream, u_texte, IdSSLOpenSSLHeaders;
 
 {$R *.dfm}
 
@@ -628,7 +629,8 @@ begin
         add( 'DEFAULT CHARACTER SET NONE;');
       end;
       ValidateAll;
-      ExecuteAll;
+      if not ExecuteAll then
+        ShowMessage('Es ist ein Fehler aufgetreten. Ist das Kennwort korrekt?');
     end;
 
     Screen.Cursor := crDefault;
@@ -643,7 +645,9 @@ begin
     end;
   end;
   db.Free;
-  if not dbok then begin
+
+  if not dbok then
+  begin
     exit;
   end;
 
@@ -828,6 +832,7 @@ begin
   m_berMap  := TDictionary<string, integer>.create;
 
   JvWizard1.ActivePage := Sicherheit;
+  IdSSLOpenSSLHeaders.IdOpenSSLSetLibPath(ExtractFileDir(Application.ExeName));
 end;
 
 procedure TMainSetupForm.FormDestroy(Sender: TObject);
@@ -853,6 +858,12 @@ procedure TMainSetupForm.IdHTTPServer1CommandGet(AContext: TIdContext;
   ARequestInfo: TIdHTTPRequestInfo; AResponseInfo: TIdHTTPResponseInfo);
 begin
   AResponseInfo.ContentText := 'ok';
+end;
+
+procedure TMainSetupForm.IdHTTPServer1QuerySSLPort(APort: Word;
+  var VUseSSL: Boolean);
+begin
+  VUseSSL := true;
 end;
 
 procedure TMainSetupForm.IdServerIOHandlerSSLOpenSSL1GetPassword(

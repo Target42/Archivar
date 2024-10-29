@@ -288,6 +288,7 @@ object ArchivService: TArchivService
     Top = 240
   end
   object DSCertFiles1: TDSCertFiles
+    SSLVersion = sslvSSLv23
     OnGetPEMFilePasskey = DSCertFiles1GetPEMFilePasskey
     Left = 32
     Top = 296
