@@ -88,8 +88,8 @@ object WebEditorForm: TWebEditorForm
     ExplicitHeight = 507
   end
   object SynCssSyn1: TSynCssSyn
-    Left = 96
-    Top = 40
+    Left = 160
+    Top = 120
   end
   object SynHTMLSyn1: TSynHTMLSyn
     Left = 48
@@ -106,11 +106,11 @@ object WebEditorForm: TWebEditorForm
   end
   object SynIniSyn1: TSynIniSyn
     Left = 144
-    Top = 40
+    Top = 248
   end
   object SynJScriptSyn1: TSynJScriptSyn
-    Left = 176
-    Top = 40
+    Left = 192
+    Top = 368
   end
   object SynPythonSyn1: TSynPythonSyn
     Left = 296

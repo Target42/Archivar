@@ -10,7 +10,7 @@ uses
   JvCombobox, JvColorCombo, fr_storages, MidasLib, JvExStdCtrls,
   DragDrop, DragDropFile, JvComponentBase, JvBaseDlg, JvBrowseFolder,
   System.ImageList, Vcl.ImgList, Vcl.ToolWin, Vcl.Buttons, JvSpeedbar,
-  JvExExtCtrls, JvExtComponent, f_mail, fr_files_to_delete;
+  JvExExtCtrls, JvExtComponent, f_mail, fr_files_to_delete, PngImageList;
 
 type
   TStatusInx = (stStatus = 0, stHost, stLogin, stUser, stMsg );
@@ -204,6 +204,14 @@ type
     ac_view_epub: TAction;
     ePubanzeigen1: TMenuItem;
     N24: TMenuItem;
+    ToolBar1: TToolBar;
+    ToolButton1: TToolButton;
+    ToolButton2: TToolButton;
+    ToolButton3: TToolButton;
+    ToolButton4: TToolButton;
+    ToolButton5: TToolButton;
+    ToolButton6: TToolButton;
+    PngImageList1: TPngImageList;
     procedure ac_prg_closeExecute(Sender: TObject);
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure ac_prg_disconExecute(Sender: TObject);
