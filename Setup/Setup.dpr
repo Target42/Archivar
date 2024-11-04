@@ -15,7 +15,8 @@ uses
   Vcl.Styles,
   m_mail in '..\misc\m_mail.pas' {MailMod: TDataModule},
   u_texte in 'u_texte.pas',
-  xsd_Betriebsrat in '..\misc\xsd_Betriebsrat.pas';
+  xsd_Betriebsrat in '..\misc\xsd_Betriebsrat.pas',
+  u_service in 'u_service.pas';
 
 {$R *.res}
 

@@ -21,8 +21,10 @@ uses
   IdCustomHTTPServer, IdHTTPServer, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
   IdIOHandlerSocket, IdTCPConnection, IdTCPClient, IdServerIOHandler,
   IdComponent, Vcl.Grids, System.Generics.Collections, DosCommand, CWMIBase,
-  CServiceInfo, CProcessInfo, Vcl.Mask;
+  CServiceInfo, CProcessInfo, Vcl.Mask, u_service;
 
+
+  // Power-Shell Get-Service "Archiv*"
 type
   TMainSetupForm = class(TForm)
     StatusBar1: TStatusBar;
@@ -147,8 +149,6 @@ type
     BitBtn9: TBitBtn;
     BitBtn10: TBitBtn;
     BitBtn11: TBitBtn;
-    ServiceInfo1: TServiceInfo;
-    ProcessInfo1: TProcessInfo;
     CheckBox2: TCheckBox;
     MailKonto: TFDTable;
     MailFolder: TFDTable;
@@ -208,6 +208,7 @@ type
     m_home  : string;
     m_ini   : TiniFile;
     m_berMap : TDictionary<string, integer>;
+    m_service : TServiceDetect;
 
     procedure importImages;
     procedure importTaskTypes;
@@ -235,7 +236,7 @@ type
     procedure ImportExcel(fileName : string );
 
     procedure run( filename : string; params : string );
-    function findService(auto_close : boolean = true) : boolean;
+    function findService : boolean;
   public
     { Public-Deklarationen }
   end;
@@ -272,16 +273,14 @@ begin
 
   run('Service_Stop.Bat', '');
 
-  if not findService(false) then
+  if not findService then
     ShowMessage('Der Service wurde nicht gefudnen!')
   else begin
-    if ServiceInfo1.ServiceProperties.Started  then
+    if not m_service.Started  then
       ShowMessage('Der Service wurde gestoppt')
     else
       ShowMessage('Der Service wurde NICHT gestoppt');
   end;
-  ServiceInfo1.Active := false;
-
 end;
 
 procedure TMainSetupForm.BitBtn11Click(Sender: TObject);
@@ -556,7 +555,6 @@ begin
     exit;
   end;
 
-//  run('Service_Install.bat');
   run ( Trim(Edit2.Text), '/install');
 
   if findService then
@@ -572,19 +570,17 @@ begin
     exit;
   end;
 
-//  run('Service_Start.bat', '');
   run('net', 'start ArchivService');
 
-  if not findService(false) then
+  if not findService then
     ShowMessage('Der Service wurde nicht gefunden!')
   else begin
 
-    if ServiceInfo1.ServiceProperties.Started  then
+    if m_service.Started  then
       ShowMessage('Der Service wurde gestarted')
     else
       ShowMessage('Der Service wurde NICHT gestarted');
   end;
-  ServiceInfo1.Active := false;
 end;
 
 procedure TMainSetupForm.btnCreateClick(Sender: TObject);
@@ -807,22 +803,10 @@ begin
    Result := StringReplace(Result, '\\', '\', [rfReplaceAll]);
 end;
 
-function TMainSetupForm.findService(auto_close : boolean): boolean;
-var
-  i : integer;
+function TMainSetupForm.findService: boolean;
 begin
-  Result := false;
-  ServiceInfo1.Active := true;
-  for i := 1 to ServiceInfo1.ObjectsCount do begin
-    ServiceInfo1.ObjectIndex := i;
-
-    if SameText(ServiceInfo1.ServiceProperties.DisplayName, 'ArchivarService') then begin
-      Result := true;
-      break;
-    end;
-  end;
-  if auto_close then
-    ServiceInfo1.Active := false;
+  m_service.execute;
+  Result := m_service.Loaded;
 end;
 
 procedure TMainSetupForm.FormCreate(Sender: TObject);
@@ -831,7 +815,10 @@ begin
   m_ini     := TiniFile.Create(TPath.Combine(ExtractFileDir(Application.ExeName), 'ArchivServer.exe.ini'));
   m_berMap  := TDictionary<string, integer>.create;
 
-  JvWizard1.ActivePage := Sicherheit;
+  m_service := TServiceDetect.create;
+  m_service.ServiceName := 'ArchivService';
+
+  JvWizard1.ActivePage := Mail; //Sicherheit;
   IdSSLOpenSSLHeaders.IdOpenSSLSetLibPath(ExtractFileDir(Application.ExeName));
 end;
 
@@ -839,6 +826,7 @@ procedure TMainSetupForm.FormDestroy(Sender: TObject);
 begin
   m_berMap.Free;
   m_ini.Free;
+  m_service.Free;
 end;
 
 function TMainSetupForm.getNewDir: integer;
@@ -851,7 +839,6 @@ begin
   DRTab.FieldByName('DR_GROUP').AsInteger := Result;
   DRTab.Post;
   DRTab.Close;
-
 end;
 
 procedure TMainSetupForm.IdHTTPServer1CommandGet(AContext: TIdContext;
@@ -1746,6 +1733,7 @@ procedure TMainSetupForm.updateLV;
 begin
   LV.Invalidate;
   Application.ProcessMessages;
+
 end;
 
 end.

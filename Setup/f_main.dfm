@@ -1,7 +1,7 @@
 object MainSetupForm: TMainSetupForm
   Left = 0
   Top = 0
-  ActiveControl = LabeledEdit1
+  ActiveControl = LabeledEdit10
   Caption = 'Setup'
   ClientHeight = 591
   ClientWidth = 558
@@ -29,7 +29,7 @@ object MainSetupForm: TMainSetupForm
     Top = 0
     Width = 558
     Height = 572
-    ActivePage = Sicherheit
+    ActivePage = Mail
     ButtonBarHeight = 42
     ButtonStart.Caption = 'To &Start Page'
     ButtonStart.NumGlyphs = 1
@@ -2471,7 +2471,7 @@ object MainSetupForm: TMainSetupForm
     SSLOptions.VerifyMode = []
     SSLOptions.VerifyDepth = 0
     Left = 456
-    Top = 240
+    Top = 184
   end
   object GRTyTab: TFDTable
     Connection = ArchivarConnection
@@ -2488,18 +2488,6 @@ object MainSetupForm: TMainSetupForm
     TableName = 'PL_PLUGIN'
     Left = 288
     Top = 232
-  end
-  object ServiceInfo1: TServiceInfo
-    Host = '.'
-    Active = False
-    Left = 232
-    Top = 286
-  end
-  object ProcessInfo1: TProcessInfo
-    Host = '.'
-    Active = False
-    Left = 288
-    Top = 288
   end
   object MailKonto: TFDTable
     Connection = ArchivarConnection
