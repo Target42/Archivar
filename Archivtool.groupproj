@@ -117,4 +117,54 @@
         <CallTarget Targets="Setup:Make;Launcher:Make;ArchivServer:Make;guard:Make;Archivar:Make;Plugin_base:Make;Dairy:Make;mail_imap:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+    <ItemGroup Condition="'$(BuildGroup)'=='test'">
+        <BuildGroupProject Include="Guard\guard.dproj">
+            <ProjectGuid>{6D933FD2-5F32-4744-B50F-FD96F2FFE761}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="Server\ArchivServer.dproj">
+            <ProjectGuid>{6CB196A7-2ADE-4E6F-AEA3-6A806AE34FE9}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="Packages\base\Plugin_base.dproj">
+            <ProjectGuid>{2EA01738-53F6-442F-8206-5FE463F33AB2}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="Packages\imap\mail_imap.dproj">
+            <ProjectGuid>{60D709F6-3E64-4A11-8305-9DBE3BA55413}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="Launcher\Launcher.dproj">
+            <ProjectGuid>{9080F451-4032-43B6-A429-9E5F6877CA05}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="client\Archivar.dproj">
+            <ProjectGuid>{847F11B8-1E84-43FC-B6E5-67DEBA0E48E3}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="Setup\Setup.dproj">
+            <ProjectGuid>{8FC8E06E-CDBB-47A4-898A-320938CA12D8}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+        <BuildGroupProject Include="Packages\Dairy\Dairy.dproj">
+            <ProjectGuid>{ECDDB354-9A30-4764-95A7-9F35C1D2D616}</ProjectGuid>
+            <Configurations>Release</Configurations>
+            <Platforms>Win32</Platforms>
+            <Enabled>True</Enabled>
+        </BuildGroupProject>
+    </ItemGroup>
 </Project>

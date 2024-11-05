@@ -254,7 +254,8 @@ uses
   fr_gaeste in 'Sitzung2\fr_gaeste.pas' {GaesteFrame: TFrame},
   f_rtf2html in 'misc\f_rtf2html.pas' {RtfToHtmlform},
   f_epub_show in 'ePub\f_epub_show.pas' {ePubShowForm},
-  fr_epub in 'ePub\fr_epub.pas' {ePupFrame: TFrame};
+  fr_epub in 'ePub\fr_epub.pas' {ePupFrame: TFrame},
+  f_importStatus in 'misc\f_importStatus.pas' {STatusForm};
 
 {$R *.res}
 

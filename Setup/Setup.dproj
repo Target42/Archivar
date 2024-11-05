@@ -131,6 +131,7 @@
         </DCCReference>
         <DCCReference Include="u_texte.pas"/>
         <DCCReference Include="..\misc\xsd_Betriebsrat.pas"/>
+        <DCCReference Include="u_service.pas"/>
         <None Include="..\readme.md"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
@@ -161,10 +162,22 @@
             </Delphi.Personality>
             <Deployment Version="4">
                 <DeployFile LocalName="..\Bin\Server\Setup.exe" Configuration="Debug" Class="ProjectOutput"/>
+                <DeployFile LocalName="..\Bin\Server\Setup.exe" Configuration="Debug" Class="ProjectOutput">
+                    <Platform Name="Win32">
+                        <RemoteName>Setup.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
                 <DeployFile LocalName="..\Bin\Server\Setup.exe" Configuration="Release" Class="ProjectOutput"/>
                 <DeployFile LocalName="..\Bin\Server\Setup.exe" Configuration="Release" Class="ProjectOutput">
                     <Platform Name="Win32">
                         <RemoteName>Setup.exe</RemoteName>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="..\readme.md" Configuration="Debug" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
