@@ -12,7 +12,7 @@ uses
   IdComponent, m_db, FireDAC.Stan.Intf, FireDAC.Stan.Option, FireDAC.Stan.Param,
   FireDAC.Stan.Error, FireDAC.DatS, FireDAC.Phys.Intf, FireDAC.DApt.Intf,
   FireDAC.Stan.Async, FireDAC.DApt, Data.DB, FireDAC.Comp.DataSet,
-  FireDAC.Comp.Client;
+  FireDAC.Comp.Client, System.Generics.Collections;
 
 type
   THttpMod = class(TDataModule)
@@ -33,6 +33,7 @@ type
   private
     m_dataDir : string;
     m_config  : TStringList;
+    m_map     : TDictionary<string, string>;
 
     procedure buildZip( AResponseInfo: TIdHTTPResponseInfo );
     function status( clid : string ) : string;
@@ -116,6 +117,14 @@ begin
   if FileExists(fname) then
     PageProducer2.HTMLFile := fname;
 
+  m_map     := TDictionary<string, string>.create;
+
+  m_map.Add('/logo.png',                  'html\logo.png');
+  m_map.Add('/zulassen.png',              'html\zulassen.png');
+  m_map.Add('/server.zip',                'server.zip');
+  m_map.Add('/Archivar.pdf',              'Archivar.pdf');
+  m_map.Add('/ArchivarSandbox.zip',       'ArchivarSandbox.zip');
+  m_map.Add('/html/background.jpg',        'html\background.jpg');
 
   GrijjyLog.ExitMethod(self, 'DataModuleCreate');
 end;
@@ -123,6 +132,7 @@ end;
 procedure THttpMod.DataModuleDestroy(Sender: TObject);
 begin
   m_config.Free;
+  m_map.Free;
 end;
 
 procedure THttpMod.ende;
@@ -147,19 +157,9 @@ begin
     buildZip( AResponseInfo );
   end
   else
-  if SameText(ARequestInfo.Document, '/logo.png') then
+  if  m_map.ContainsKey(ARequestInfo.Document) then
   begin
-    fname := ExpandFileName(TPath.Combine( IniOptions.DNLwwwroot, 'html\logo.png'));
-    if FileExists(fname) then
-    begin
-      AResponseInfo.ContentStream := TFileStream.Create(fname, fmOpenRead + fmShareDenyNone);
-      AResponseInfo.FreeContentStream := true;
-      AResponseInfo.ResponseNo := 200;
-    end;
-  end
-  else if SameText(ARequestInfo.Document, '/zulassen.png') then
-  begin
-    fname := ExpandFileName(TPath.Combine( IniOptions.DNLwwwroot, 'html\zulassen.png'));
+    fname := ExpandFileName(TPath.Combine( IniOptions.DNLwwwroot, m_map[ARequestInfo.Document]));
     if FileExists(fname) then
     begin
       AResponseInfo.ContentStream := TFileStream.Create(fname, fmOpenRead + fmShareDenyNone);
@@ -171,17 +171,6 @@ begin
   if SameText(ARequestInfo.Document, '/facicon.ico') then
   begin
     AResponseInfo.ResponseNo := 404;
-  end
-  else
-  if SameText(ARequestInfo.Document, '/server.zip') then
-  begin
-    fname := ExpandFileName(TPath.Combine( IniOptions.DNLwwwroot, 'server.zip'));
-    if FileExists(fname) then
-    begin
-      AResponseInfo.ContentStream := TFileStream.Create(fname, fmOpenRead + fmShareDenyNone);
-      AResponseInfo.FreeContentStream := true;
-      AResponseInfo.ResponseNo := 200;
-    end;
   end
   else
   if SameText(ARequestInfo.Document, '/status/status.html') then
@@ -255,8 +244,6 @@ begin
 end;
 
 function THttpMod.status(clid: string): string;
-var
-  filename : string;
 begin
   StatusQry.ParamByName('TA_CLID').AsString := clid;
   StatusQry.Open;

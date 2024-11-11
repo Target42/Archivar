@@ -3,19 +3,50 @@
 <head>
 <style>
 
+body {
+  background-image: url('/html/background.jpg');
+  background-size: cover;
+  color: black;
+}
 .center {
   display: block;
   margin-left: auto;
   margin-right: auto;
   width: 50%;
 }
+.center-div {
+  margin: auto;
+  width: 50%; 
+  padding: 10px;
+}
+.center-tab {
+  margin-left: auto;
+  margin-right: auto;
+}
+.center-img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+div.container {
+  text-align: center;
+}
+
+ul.myUL {
+  display: inline-block;
+  text-align: left;
+}
 </style>
 
 </head>
 <body>
-<h1><u>Archivar</u></h1>
+
+<div class="center-div">
  <img src="/logo.png" alt="logo" class="center"> 
 <br>
+
+
+
 Den <a href="launcher.zip" download>Launcher</a> (Speichern
 unter)auf die
 Platte kopieren, Auspacken und starten. Dann wird das eigentliche
@@ -23,8 +54,10 @@ Download-Tool gestartet. <span
  style="font-weight: bold; color: rgb(255, 0, 0);"><br>
 <br>
 </span>
+
+
 <table style="text-align: left;" border="1"
- cellpadding="0" cellspacing="0">
+ cellpadding="0" cellspacing="0" class="center-tab">
   <tbody>
     <tr>
       <td style="font-weight: bold;">Name</td>
@@ -52,37 +85,46 @@ Download-Tool gestartet. <span
     </tr>
   </tbody>
 </table>
+
+
 <span style="font-weight: bold; color: rgb(255, 0, 0);"><br>
 </span>Nach einem normalen Setup haben die Benutzer kein
 Passwort. Au&szlig;er der Admin, wenn dem eines w&auml;hrend
 der Installation erteilt wurde.<br>
 <br>
 Verbindungen:<br>
-<ul>
+<div class="container">
+<ul class="myUL">
   <li>ds://<#xxhost>:<#xxtcpport></li>
   <li>http://<#xxhost>:<#xxhttpport></li>
   <li>https://<#xxhost>/<#xxhttpsport></li>
 </ul>
+</div>
+
 <br>
 <p>
-Das Archiv mit dem Server <a href="server.zip" download>Server.zip</a> runterladen und auspacken. Danach das Setup.exe ausführen um den Server einzurichten.
+Das Archiv mit dem Server <a href="/dnl/server.zip" download>Server.zip</a> runterladen und auspacken. Danach das Setup.exe ausführen um den Server einzurichten.
 </p>
-Die Anleitung als PDF <a href="Archivar.pdf" download>Archivar.pdf</a>
-
+<p>
+Die Anleitung als PDF <a href="/dnl/Archivar.pdf" download>Archivar.pdf</a>
+</p>
 <p>
 <b>Achtung</b>
 Einige Virenscanner (u.a. der Bitdefender) blockieren den Download des Programmes, bzw. l&ouml;schen nach dem Download die Programmdateien.
 Daher ist zu empfehlen solche Tools zu Deaktivieren.
 Für einen ersten Installationsversuch ist die "Windows Sandbox" die ideale Wahl.<br>
-Hier ein Setup für den Test in der Windows-Sandbox: <a href="ArchivarSandbox.zip" download>SandboxInstaller</a><br>
+Hier ein Setup für den Test in der Windows-Sandbox: <a href="/dnl/ArchivarSandbox.zip" download>SandboxInstaller</a><br>
 Windows 11 verweigert oft den Start von nicht signierten Programmen aus dem Internet.
 
 In den Eigenschaften des Programmes kann man das Programm als Vertrauensw&uuml;rdig erkl&auml;ren.
-</p>
-<p>
-<img src="/zulassen.png" alt="Eigenschaften Windows 11" class="center">
+<br>
+<br>
+<img src="/zulassen.png" alt="Eigenschaften Windows 11" width="363" height="548" class="center-img">
+
+
 </p>
 <br>
+</div>
+
 </body>
 </html>
- 
