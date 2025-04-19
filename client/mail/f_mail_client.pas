@@ -110,7 +110,7 @@ type
     procedure setKategorie( name : string; var elements: TStringList );
     procedure setStatus( name : string; var elements: TStringList );
   public
-    { Public-Deklarationen }
+    class procedure ShowMailClient;
   end;
 
 var
@@ -338,6 +338,8 @@ begin
   m_files.Free;
 
   DropEmptySource1.FlushClipboard;
+
+  MailClientForm := NIL;
 end;
 
 function TMailClientForm.handle_mails(const Arg: TJSONObject): boolean;
@@ -572,6 +574,17 @@ begin
   MailFrame1.UpdateTreeView;
 end;
 
+class procedure TMailClientForm.ShowMailClient;
+begin
+  if Assigned(MailClientForm) then
+  begin
+    MailClientForm.WindowState := TWindowState.wsNormal;
+    MailClientForm.BringToFront;
+  end
+  else
+    Application.CreateForm(TMailClientForm, MailClientForm);
+end;
+
 procedure TMailClientForm.Status1Click(Sender: TObject);
 var
   list : TList<TMail>;
@@ -732,5 +745,7 @@ begin
 end;
 
 
+initialization
+  MailClientForm := NIL;
 
 end.

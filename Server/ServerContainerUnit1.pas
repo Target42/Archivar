@@ -138,6 +138,7 @@ type
     procedure createTimer;
     procedure execShutdown( sender : TObject );
     procedure execTimeToDie( sender : TObject );
+    procedure execReconnect( sender : TObject );
 
     procedure fillMailHandler;
   protected
@@ -397,6 +398,17 @@ begin
   Input.ki := KeybdInput;
 
   SendInput(1, Input, SizeOf(Input));
+end;
+
+procedure TArchivService.execReconnect(sender: TObject);
+begin
+  DBMod.stopDB;
+  HttpMod.ende;
+
+  if SameText(IniOptions.DNLactive, 'true') and (IniOptions.DNLport >0 ) then
+    HttpMod.start(IniOptions.DNLport);
+
+  DBMod.startDB;
 end;
 
 procedure TArchivService.execShutdown(sender: TObject);
@@ -1012,6 +1024,7 @@ begin
     end;
   end;
 
+  m_timer.newTimer(0, 0, true, execReconnect);
   m_timer.newTimer(3, 1, true, execTimeToDie);
 
 

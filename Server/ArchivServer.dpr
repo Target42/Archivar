@@ -66,10 +66,11 @@ uses
   ds_mail in 'ds_mail.pas' {DSMail: TDSServerModule},
   u_meeting_status in '..\misc\u_meeting_status.pas';
 
+{$ifdef DEBUG}
 var
   MyDummyBoolean  : Boolean;
-
   s               : string;
+{$ENDIF}
 
 {$IFDEF DEBUG}
 //{$e console.exe}

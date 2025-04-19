@@ -81,6 +81,7 @@ end;
 function TDBMod.startDB: boolean;
 var
   db : string;
+  def : IFDStanConnectionDef;
 begin
   GrijjyLog.EnterMethod(self, 'startDB');
   findClientDLL;
@@ -92,11 +93,20 @@ begin
   Writeln( 'DB:'+db);
 {$endif}
 
+  FDManager1.ConnectionDefFileName := ExpandFileName(FDManager1.ConnectionDefFileName);
+  FDManager1.Active := true;
 
-//  ArchivarConnection.ConnectionDefName := 'Archivar_pooled';
-  ArchivarConnection.Params.Clear;
-  ArchivarConnection.DriverName := 'FB';
-  ArchivarConnection.LoginPrompt := false;
+  def := FDManager1.ConnectionDefs.FindConnectionDef('FirebirdPooled');
+  if Assigned(def) then
+  begin
+    ArchivarConnection.Params.Assign(def.Params);
+  end
+  else
+  begin
+    ArchivarConnection.Params.Clear;
+    ArchivarConnection.DriverName := 'FB';
+    ArchivarConnection.LoginPrompt := false;
+  end;
   with ArchivarConnection.Params as TFDPhysFBConnectionDefParams do
   begin
     Protocol  := ipTCPIP;
@@ -106,10 +116,18 @@ begin
     Password  := IniOptions.DBpwd;
     SQLDialect:= 3;
     PageSize  := ps4096;
-    Pooled    := true;
+    Pooled    := false;
     MonitorBy := mbRemote;
   end;
-  FDManager.AddConnectionDef('FirebirdPooled', 'FB', ArchivarConnection.Params );
+  if not Assigned(def) then
+  begin
+    FDManager1.AddConnectionDef('FirebirdPooled', 'FB', ArchivarConnection.Params, true );
+  end
+  else
+  begin
+    def.Params.Assign(ArchivarConnection.Params);
+  end;
+  FDManager1.SaveConnectionDefFile;
 
   FDPhysFBDriverLink1.VendorLib := m_clientDLL;
 

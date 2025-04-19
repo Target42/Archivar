@@ -204,14 +204,6 @@ type
     ac_view_epub: TAction;
     ePubanzeigen1: TMenuItem;
     N24: TMenuItem;
-    ToolBar1: TToolBar;
-    ToolButton1: TToolButton;
-    ToolButton2: TToolButton;
-    ToolButton3: TToolButton;
-    ToolButton4: TToolButton;
-    ToolButton5: TToolButton;
-    ToolButton6: TToolButton;
-    PngImageList1: TPngImageList;
     procedure ac_prg_closeExecute(Sender: TObject);
     procedure ApplicationEvents1Message(var Msg: tagMSG; var Handled: Boolean);
     procedure ac_prg_disconExecute(Sender: TObject);
@@ -449,9 +441,27 @@ end;
 
 procedure TMainForm.ac_mailExecute(Sender: TObject);
 begin
-    Application.CreateForm(TMailClientForm, MailClientForm);
+  TMailClientForm.ShowMailClient;
 end;
 
+{//************ Explanation ***************
+This code is defining a procedure which is triggered to execute some process when a certain action (in this case, "ac_me_delete") is called in a software application's User Interface (UI). Here's what it does:
+
+1. It first creates a new instance of the `TSelectMeetingForm` form, which is probably a UI component to select a certain meeting.
+
+2. It sets a filter on the `SelectMeetingForm`. The filter is defined by the `buildMeetingFilter` function, which takes in an array of strings. In this case, this could be for selecting certain meetings based on their type ('O' and 'E' in the context aren't well defined).
+
+3. If the form is shown and the user has given some input (indicated by ShowModal = mrok), it does further actions if the `EL_ID` attribute of the `SelectMeetingForm` is greater than 0 (signifying that a valid meeting is selected).
+
+4. It prompts the user to confirm deletion for the selected meeting element through a dialog box, with the meeting title `SelectMeetingForm.Title` mentioned therein. The mtConfirmation parameter means that the dialog box that appears will be a confirmation box, and `mbYes/mbNo` specify the available options to choose from on that dialog box.
+
+5. If 'Yes' is selected (signifying by `mrYes`), it deletes the selected meeting by calling the `DeleteMeeting` procedure, passing the `EL_ID` attribute from the `SelectMeetingForm` (which identifies the selected meeting) as a parameter.
+
+6. Finally, it releases resources occupied by the `SelectMeetingForm`.
+
+These explanations are assuming that the `TSelectMeetingForm` object has been well-structured from elsewhere in the codebase, and that the `DeleteMeeting` function behaves as expected (to delete a meeting).
+
+}
 procedure TMainForm.ac_me_deleteExecute(Sender: TObject);
 begin
   Application.CreateForm(TSelectMeetingForm, SelectMeetingForm);
@@ -470,6 +480,7 @@ begin
 
 end;
 
+
 procedure TMainForm.ac_me_editExecute(Sender: TObject);
 begin
   Application.CreateForm(TSelectMeetingForm, SelectMeetingForm);
@@ -483,6 +494,21 @@ begin
   end;
   SelectMeetingForm.free;
 end;
+{//************ Add Comment ***************
+This Delphi code is a procedure for handling the execution of an action called "ac_me_edit".
+
+Here's a breakdown of what the code does:
+
+1. It creates an instance of the form called "TSelectMeetingForm" using the Application.CreateForm method.
+2. It sets the Filter property of the SelectMeetingForm using the buildMeetingFilter function, which is passed an array of meeting types (Meeting_Created and Meeting_Invited).
+3. It shows the SelectMeetingForm as a modal dialog using the ShowModal method.
+4. If the user clicks the "OK" button on the SelectMeetingForm, the code checks if the EL_ID property of the SelectMeetingForm is greater than 0.
+5. If EL_ID is greater than 0, it calls the showMeeting function with the EL_ID and a boolean value of true as arguments.
+6. The SelectMeetingForm is then freed (released from memory) using the .free method.
+
+Overall, this code creates an instance of a form, sets its filter, displays it as a modal dialog, and performs an action based on the user's selection from the form.
+
+}
 
 procedure TMainForm.ac_me_endExecute(Sender: TObject);
 var

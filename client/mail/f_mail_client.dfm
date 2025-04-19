@@ -2,8 +2,8 @@ object MailClientForm: TMailClientForm
   Left = 0
   Top = 0
   Caption = 'Mails'
-  ClientHeight = 556
-  ClientWidth = 951
+  ClientHeight = 550
+  ClientWidth = 941
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -52,15 +52,15 @@ object MailClientForm: TMailClientForm
   object Splitter2: TSplitter
     Left = 417
     Top = 0
-    Height = 537
+    Height = 531
     ExplicitLeft = 832
     ExplicitTop = 80
     ExplicitHeight = 100
   end
   object StatusBar1: TStatusBar
     Left = 0
-    Top = 537
-    Width = 951
+    Top = 531
+    Width = 941
     Height = 19
     Panels = <>
     ExplicitTop = 533
@@ -70,13 +70,12 @@ object MailClientForm: TMailClientForm
     Left = 0
     Top = 0
     Width = 417
-    Height = 537
+    Height = 531
     Align = alLeft
     BevelOuter = bvNone
     Caption = 'Panel1'
     ShowCaption = False
     TabOrder = 1
-    ExplicitHeight = 533
     object Splitter1: TSplitter
       Left = 0
       Top = 160
@@ -110,7 +109,7 @@ object MailClientForm: TMailClientForm
       Left = 0
       Top = 163
       Width = 417
-      Height = 374
+      Height = 368
       Align = alClient
       Caption = 'Mails'
       TabOrder = 1
@@ -129,10 +128,12 @@ object MailClientForm: TMailClientForm
         inherited VST: TVirtualDrawTree
           Width = 413
           Height = 357
+          Colors.DisabledColor = clGray
+          Colors.SelectionTextColor = clBlack
           PopupMenu = PopupMenu2
           OnChange = MailFrame1VSTChange
           ExplicitWidth = 413
-          ExplicitHeight = 353
+          ExplicitHeight = 357
         end
       end
     end
@@ -140,8 +141,8 @@ object MailClientForm: TMailClientForm
   object Panel2: TPanel
     Left = 420
     Top = 0
-    Width = 531
-    Height = 537
+    Width = 521
+    Height = 531
     Align = alClient
     BevelOuter = bvNone
     Caption = 'Panel2'
@@ -166,6 +167,8 @@ object MailClientForm: TMailClientForm
       Height = 369
       Align = alClient
       TabOrder = 0
+      ExplicitWidth = 529
+      ExplicitHeight = 365
       ControlData = {
         4C000000E1360000232600000000000000000000000000000000000000000000
         000000004C000000000000000000000001000000E0D057007335CF11AE690800

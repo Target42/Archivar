@@ -2,32 +2,30 @@ object MailimapConfigForm: TMailimapConfigForm
   Left = 0
   Top = 0
   Caption = 'IMAP/SMTP-Konfiguration'
-  ClientHeight = 434
-  ClientWidth = 552
+  ClientHeight = 432
+  ClientWidth = 544
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
-  OldCreateOrder = False
   Position = poOwnerFormCenter
   OnCreate = FormCreate
   OnDestroy = FormDestroy
-  PixelsPerInch = 96
   TextHeight = 13
   object Splitter1: TSplitter
     Left = 241
     Top = 115
-    Height = 147
+    Height = 145
     ExplicitLeft = 320
     ExplicitTop = 144
     ExplicitHeight = 100
   end
   inline BaseFrame1: TBaseFrame
     Left = 0
-    Top = 374
-    Width = 552
+    Top = 372
+    Width = 544
     Height = 60
     Align = alBottom
     AutoSize = True
@@ -51,11 +49,12 @@ object MailimapConfigForm: TMailimapConfigForm
   object GroupBox6: TGroupBox
     Left = 0
     Top = 0
-    Width = 552
+    Width = 544
     Height = 115
     Align = alTop
     Caption = 'IMAP4'
     TabOrder = 1
+    ExplicitWidth = 552
     object LabeledEdit10: TLabeledEdit
       Left = 16
       Top = 80
@@ -65,6 +64,7 @@ object MailimapConfigForm: TMailimapConfigForm
       EditLabel.Height = 13
       EditLabel.Caption = 'Host'
       TabOrder = 0
+      Text = ''
     end
     object LabeledEdit11: TLabeledEdit
       Left = 143
@@ -75,6 +75,7 @@ object MailimapConfigForm: TMailimapConfigForm
       EditLabel.Height = 13
       EditLabel.Caption = 'Port'
       TabOrder = 1
+      Text = ''
     end
     object LabeledEdit12: TLabeledEdit
       Left = 16
@@ -85,6 +86,7 @@ object MailimapConfigForm: TMailimapConfigForm
       EditLabel.Height = 13
       EditLabel.Caption = 'Username'
       TabOrder = 2
+      Text = ''
     end
     object LabeledEdit13: TLabeledEdit
       Left = 247
@@ -96,6 +98,7 @@ object MailimapConfigForm: TMailimapConfigForm
       EditLabel.Caption = 'Passwort'
       PasswordChar = '*'
       TabOrder = 3
+      Text = ''
     end
     object BitBtn5: TBitBtn
       Left = 207
@@ -144,12 +147,14 @@ object MailimapConfigForm: TMailimapConfigForm
   end
   object GroupBox7: TGroupBox
     Left = 0
-    Top = 262
-    Width = 552
+    Top = 260
+    Width = 544
     Height = 112
     Align = alBottom
     Caption = 'SMTP (Server)'
     TabOrder = 2
+    ExplicitTop = 262
+    ExplicitWidth = 552
     object LabeledEdit14: TLabeledEdit
       Left = 16
       Top = 72
@@ -159,6 +164,7 @@ object MailimapConfigForm: TMailimapConfigForm
       EditLabel.Height = 13
       EditLabel.Caption = 'Host'
       TabOrder = 0
+      Text = ''
     end
     object LabeledEdit15: TLabeledEdit
       Left = 159
@@ -169,6 +175,7 @@ object MailimapConfigForm: TMailimapConfigForm
       EditLabel.Height = 13
       EditLabel.Caption = 'Port'
       TabOrder = 1
+      Text = ''
     end
     object LabeledEdit16: TLabeledEdit
       Left = 16
@@ -179,6 +186,7 @@ object MailimapConfigForm: TMailimapConfigForm
       EditLabel.Height = 13
       EditLabel.Caption = 'Username'
       TabOrder = 2
+      Text = ''
     end
     object LabeledEdit17: TLabeledEdit
       Left = 257
@@ -190,6 +198,7 @@ object MailimapConfigForm: TMailimapConfigForm
       EditLabel.Caption = 'Passwort'
       PasswordChar = '*'
       TabOrder = 3
+      Text = ''
     end
     object BitBtn6: TBitBtn
       Left = 463
@@ -244,13 +253,14 @@ object MailimapConfigForm: TMailimapConfigForm
       EditLabel.Height = 13
       EditLabel.Caption = 'Test-Empf'#228'nger'
       TabOrder = 5
+      Text = ''
     end
   end
   object GroupBox2: TGroupBox
     Left = 0
     Top = 115
     Width = 241
-    Height = 147
+    Height = 145
     Align = alLeft
     Caption = 'Ausgw'#228'hlte Ordner'
     TabOrder = 3
@@ -258,7 +268,7 @@ object MailimapConfigForm: TMailimapConfigForm
       Left = 2
       Top = 15
       Width = 237
-      Height = 130
+      Height = 128
       Align = alClient
       ItemHeight = 13
       Sorted = True
@@ -269,16 +279,16 @@ object MailimapConfigForm: TMailimapConfigForm
   object GroupBox1: TGroupBox
     Left = 244
     Top = 115
-    Width = 308
-    Height = 147
+    Width = 300
+    Height = 145
     Align = alClient
     Caption = 'M'#246'gliche Ordner'
     TabOrder = 4
     object LB2: TListBox
       Left = 2
       Top = 15
-      Width = 304
-      Height = 130
+      Width = 296
+      Height = 128
       Align = alClient
       ItemHeight = 13
       Sorted = True

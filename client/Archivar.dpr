@@ -255,7 +255,8 @@ uses
   f_rtf2html in 'misc\f_rtf2html.pas' {RtfToHtmlform},
   f_epub_show in 'ePub\f_epub_show.pas' {ePubShowForm},
   fr_epub in 'ePub\fr_epub.pas' {ePupFrame: TFrame},
-  f_importStatus in 'misc\f_importStatus.pas' {STatusForm};
+  f_importStatus in 'misc\f_importStatus.pas' {STatusForm},
+  f_splash in 'f_splash.pas', System.SysUtils {SplashForm};
 
 {$R *.res}
 
@@ -274,10 +275,20 @@ begin
 {$endif}
 
   Application.Initialize;
+
+  SplashForm := NIL;
+  if not FindCmdLineSwitch('NoSplash', true)  then
+  begin
+    SplashForm := TSplashForm.Create(NIL);
+    SplashForm.Show;
+    SplashForm.Update;
+    Sleep(2000);
+  end;
+
   Application.MainFormOnTaskbar := True;
   Application.DefaultFont.Size  := 10;
 
-  TStyleManager.TrySetStyle('Sapphire Kamri');
+
   Application.CreateForm(TGM, GM);
   Application.CreateForm(THttpMod, HttpMod);
   Application.CreateForm(TWindowHandler, WindowHandler);
@@ -286,9 +297,13 @@ begin
   Application.CreateForm(TFileCacheMod, FileCacheMod);
   Application.CreateForm(TCryptMod, CryptMod);
   Application.CreateForm(TMainForm, MainForm);
+  if Assigned(SplashForm) then
+    SplashForm.Hide;
   try
     Application.Run;
   except
 
   end;
+  if Assigned(SplashForm) then
+    SplashForm.Free;
 end.

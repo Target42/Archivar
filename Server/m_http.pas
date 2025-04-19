@@ -171,6 +171,11 @@ begin
   if SameText(ARequestInfo.Document, '/facicon.ico') then
   begin
     AResponseInfo.ResponseNo := 404;
+  end else
+  if SameText(ARequestInfo.Document, '/ping') then
+  begin
+    AResponseInfo.ResponseText := 'pong';
+    AResponseInfo.ResponseNo := 200;
   end
   else
   if SameText(ARequestInfo.Document, '/status/status.html') then

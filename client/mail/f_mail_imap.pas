@@ -5,7 +5,7 @@ interface
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.CheckLst, Vcl.Buttons,
-  Vcl.ExtCtrls, fr_base, m_mail, System.JSON;
+  Vcl.ExtCtrls, fr_base, m_mail, System.JSON, Vcl.Mask;
 
 type
   TMailimapConfigForm = class(TForm)
@@ -37,7 +37,6 @@ type
     procedure LB2DblClick(Sender: TObject);
   private
     m_mailMod : TMailMod;
-    m_changed : boolean;
     m_folder  : TStringList;
     m_data    : TJSONObject;
     m_folderUpdate : boolean;
@@ -70,7 +69,7 @@ end;
 
 procedure TMailimapConfigForm.BitBtn5Click(Sender: TObject);
 var
-  i, inx : integer;
+  i : integer;
 begin
   saveImap;
   try
@@ -114,9 +113,7 @@ end;
 
 procedure TMailimapConfigForm.FillData;
 var
-  bst   : TStream;
   obj   : TJSONObject;
-  i     : integer;
 begin
   if not Assigned(m_data) then exit;
   obj := JObject( m_data, 'smtp');
@@ -173,7 +170,6 @@ end;
 procedure TMailimapConfigForm.move(src, dest: TListBox);
 var
   s : string;
-  inx : integer;
 begin
   if src.ItemIndex = -1 then exit;
 
@@ -185,8 +181,6 @@ begin
 end;
 
 procedure TMailimapConfigForm.saveImap;
-var
-  i : integer;
 begin
   m_mailMod.IMapHost  := LabeledEdit10.Text;
   m_mailMod.IMapUser  := LabeledEdit12.Text;

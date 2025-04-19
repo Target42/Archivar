@@ -1,5 +1,4 @@
 object FileCacheMod: TFileCacheMod
-  OldCreateOrder = False
   OnCreate = DataModuleCreate
   OnDestroy = DataModuleDestroy
   Height = 263
